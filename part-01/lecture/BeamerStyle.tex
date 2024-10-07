@@ -1,0 +1,59 @@
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage[flushleft]{threeparttable}
+\usepackage{subcaption}
+\usepackage{soul}
+\usepackage[style=authoryear, backend=bibtex, dashed=false]{biblatex} % Citations
+
+% Theme
+\usetheme[progressbar=frametitle]{metropolis}
+\usefonttheme{professionalfonts}
+
+% UHH Colours
+\definecolor{UHHred}{RGB}{226,0,26}
+\definecolor{UHHblue}{RGB}{2,113,187}
+\definecolor{UHHgrey}{RGB}{59,81,91}
+\definecolor{UHHblack}{RGB}{0,0,0}
+\setbeamercolor{normal text}{bg=white,fg=UHHgrey}
+\setbeamercolor{alerted text}{bg=white,fg=UHHblue}
+\setbeamercolor{example text}{bg=white,fg=UHHblue}
+
+\setbeamerfont{alerted text}{family=\sffamily, series=\bfseries\boldmath}
+
+% Footer
+\setbeamertemplate{footline}{
+		\hbox{%
+		 \begin{beamercolorbox}[wd=0.8\paperwidth,ht=2.5ex,dp=1ex,left]{page number in head/foot}%
+		\ifnum\value{section}=0{}
+		\else
+		{\hspace{7pt}\insertshortauthor \quad (\insertshortinstitute) \quad - \quad \insertsubtitle: \secname}
+		\fi
+		\end{beamercolorbox}
+		\begin{beamercolorbox}[wd=.2\paperwidth,ht=2.5ex,dp=1ex,right]{page number in head/foot}
+			\insertframenumber{} / \inserttotalframenumber \hspace{5pt}
+		\end{beamercolorbox}
+		}
+		\vspace{3pt}
+	}
+
+% Arrow
+\usetikzlibrary{tikzmark,decorations.pathreplacing,calc}
+\newcommand\Arrow[4][0pt]{
+\begin{tikzpicture}[overlay, remember picture]
+\draw [UHHblue, ->,>=stealth]
+   ( $ ({pic cs:#3}|-{pic cs:#2}) - (#1,5ex) $ ) --  
+    node[anchor=east,xshift=5pt,text width=5cm] {#4} 
+  ( $ (pic cs:#3) - (#1,0) $ );
+\end{tikzpicture}}
+\usetikzlibrary{arrows.meta}
+
+% Next Year
+\newcommand\NextYear{%
+  \advance\year by 1 \the\year\advance\year by -1}
+  
