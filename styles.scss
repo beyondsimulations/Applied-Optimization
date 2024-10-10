@@ -1,84 +1,90 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
 
 /*-- scss:defaults --*/
 $presentation-title-slide-text-align: left;
 
-// fonts
-$font-family-sans-serif: "Roboto", "Book Antiqua", Palatino,
-  FreeSerif, serif !default;
+// fonts from Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
+// colors background
+$background-color: #ffffff;
+
+// theme colors
+$theme-color-primary: #025259;
+$theme-color-secondary: #F29325;
+$theme-color-tertiary: #D94F04;
+$theme-color-quaternary: #F4E2DE;
+
+// fonts colors
+$font-color: #000000;
+$font-color-inverted: $background-color;
+$font-color-loud: $theme-color-secondary;
 
 // colors
-$body-bg: #ffffff !default;
-$body-color: #191717 !default;
-$link-color: #a60000 !default;
+$body-bg: $background-color;
+$body-color: $font-color;
+$link-color: $theme-color-tertiary;
 
 // headings
-$presentation-heading-font: "Palatino Linotype", "Book Antiqua", Palatino,
-  FreeSerif, serif !default;
-$presentation-heading-color: #1a1b1b !default;
+$presentation-heading-font: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif !default;
+
+// line height
 $presentation-line-height: 1.5 !default;
 $presentation-heading-line-height: 1.5 !default;
 
-
 /*-- scss:rules --*/
 
-.title-slide.title {
-  color: #ffffff;
+.reveal .title {
+  background-color: $theme-color-primary;
 }
 
-.question {
-  color: #AD5769;
+.title-slide.title {
+  background-color: $theme-color-quaternary !important;
+}
+
+.highlight {
+  color: $theme-color-primary;
   font-weight: bold;
 }
 
 .task {
-  color: #4d6749;
+  color: $theme-color-secondary;
   font-weight: bold;
 }
 
-.highlight {
-  color: #579dad;
+.question {
+  color: $theme-color-tertiary;
   font-weight: bold;
 }
 
-.errors {
-  color: #e3a14a;
-  font-weight: bold;
+.invert-font {
+  color: $font-color-inverted;
+  background-color: #000000;
+  border-width: 10px;
+  border-radius: 0px;
+  border-color: #000000;
+  border-style: solid;
 }
 
-.white {
-  color: #ffffff;
-}
-
-.picture {
-  margin: auto;
-  padding: 10pt;
-  width: auto;
-}
-
-.reveal a {
-  line-height: 1.8em;
-}
-
-.reveal .title {
-  background-color: #7e0015;
+.loud-slide {
+  background-color: $theme-color-primary !important; 
+  color: $font-color-loud !important;
+  font-weight: bold !important;
 }
 
 .flow {
-  background-image: url(https://images.unsplash.com/photo-1557761469-f29c6e201784);
-  background-attachment: fixed;
+  background-image: url("https://unsplash.com/photos/XgeZu2jBaVI/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTB8fGdyYWRpZW50fGVufDB8fHx8MTcyODM1NzExNHww&force=true&w=3840");
+  background-size: 3840px 2160px;
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
-	animation: animate 40s linear infinite;
-	font-weight: 900;
+  animation: animate 60s linear infinite;
 }
 
 @keyframes animate {
-	0% {
-		background-position: left 700px top 100px;
-	}
-	40% {
-		background-position: left 700px top 500px;
-	}
+  0% {
+    background-position: left 384px top 216px;
+  }
+  100% {
+    background-position: left 3456px top 1944px;
+  }
 }
