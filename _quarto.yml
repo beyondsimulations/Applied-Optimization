@@ -1,10 +1,16 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - index.qmd
+    - general/*.qmd
+    - part-01/*.qmd
+    - part-02/*.qmd
 
 website:
   title: "Applied Optimization with Julia"
   repo-url: https://github.com/beyondsimulations/Applied-Optimization
+  repo-actions: [edit, source, issue]
   site-url: https://beyondsimulations.github.io/Applied-Optimization
   bread-crumbs: true
   sidebar:
@@ -37,5 +43,10 @@ format:
     theme: litera
     css: styles.css
     toc: true
+  pdf:
+    include-in-header: 
+      text: |
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
 
 

@@ -43,4 +43,331 @@ execute:
     echo: true
 ---
 
-# [Introduction to Variables and Types in Julia]{.flow} {.title}
+---
+title: "Lecture: Applied Optimization III"
+subtitle: "Beer Production Planning (CLSP)"
+author: "Dr. Tobias Vlcek"
+institute: "UHH, Institute of Logistics, Transport and Production @Helmut Schmidt University"
+date: "Wintertrimester 2024"
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    show-slide-number: all
+    footer: "Applied Optimization III - Beer Production Planning (CLSP)"
+bibliography: ClspBib.bib
+---
+
+# Introduction
+
+## Case Study {.columns}
+
+::: {.column width="40%"}
+![](images/feldschlosschen.pdf)
+:::
+
+::: {.column width="60%"}
+- Largest brewery and wholesaler in Switzerland
+- Located in Rheinfelden
+- Brews and sells beer
+- In Cooperation with our institute since 2016
+:::
+
+## Challenges {.columns}
+
+::: {.column width="40%"}
+![](images/markus-spiske-0376tfLb89c-unsplash.jpg)
+:::
+
+::: {.column width="60%"}
+### Competitive environment
+
+- Large competition among breweries
+- Customer demand is changing
+- Craft beer gains popularity
+- Variety of beer types is increasing 
+- Batch sizes of breweries are getting smaller 
+:::
+
+## Brewing process
+
+![](images/brewing_all.pdf)
+
+## Brewing process
+
+![](images/brewing_lasttwo.pdf)
+
+## Challenges {.columns}
+
+::: {.column width="40%"}
+![](images/crystal-kwok-h20daABLd08-unsplash.jpg)
+:::
+
+::: {.column width="60%"}
+### Different costs
+
+- The bottling plant can fill multiple types of beers into bottles
+- The bottling time depends on the beer type and batch size
+- Changing beer type leads to set-up costs due to preparation and cleaning
+- Unsold bottled beer can be stored in the warehouse, which leads to inventory costs
+:::
+
+## Challenges
+
+**Where exactly is the challenge here?**
+
+# Problem Structure
+
+## Objective {.columns}
+
+::: {.column width="40%"}
+![](images/clsp_oneperiod.pdf)
+:::
+
+::: {.column width="60%"}
+### What could be the objective?
+
+::: {.fragment}
+Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.
+:::
+
+### What is the trade-off?
+
+::: {.fragment}
+Larger batches require less setup cost per bottle, but increase the storage cost.
+:::
+:::
+
+## Available data
+
+**Sets**
+
+$\mathcal{I}$: Set of beer types indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
+$\mathcal{T}$: Set of time periods of the planning horizon indexed by $t \in \{1,2,...,|\mathcal{T}|\}$
+
+**Parameters**
+
+$a_t$: Available time on the bottling plant in period $t\in\mathcal{T}$
+$b_i$: Time used for bottling one unit of beer type $i\in\mathcal{I}$
+$g_i$: Setup time for beer type $i\in\mathcal{I}$
+
+$f_i$: Setup cost of beer type $i\in\mathcal{I}$
+$c_i$: Inventory holding cost for one unit of beer type $i\in\mathcal{I}$
+
+$d_{i,t}$: Demand of beer type $i\in\mathcal{I}$ in period $t\in\mathcal{T}$
+
+## Decision variable/s
+
+### We have the following sets:
+
+- Beer types indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
+- Time periods of the planning horizon indexed by $t \in \{1,2,...,|\mathcal{T}|\}$
+
+### Objective
+
+Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.
+
+### What could be our decision variable/s?
+
+::: {.fragment}
+$W_{i,t}$: Inventory of beer type $i\in\mathcal{I}$ at the end of period $t\in\mathcal{T}$
+$Y_{i,t}$: 1, if beer type $i\in\mathcal{I}$ is bottled in period $t\in\mathcal{T}$, 0 otherwise
+$X_{i,t}$: Batch size of beer type $i\in\mathcal{I}$ in $t\in\mathcal{T}$
+:::
+
+# Model Formulation
+
+## Objective
+
+### Objective
+
+Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.
+
+### What could be our objective function?
+
+$W_{i,t}$: Inventory of beer type $i\in\mathcal{I}$ at the end of period $t\in\mathcal{T}$
+$Y_{i,t}$: 1, if beer type $i\in\mathcal{I}$ is bottled in period $t\in\mathcal{T}$, 0 otherwise
+
+::: {.fragment}
+$$
+\text{Minimize} \quad \sum_{i=1}^{\mathcal{I}} \sum_{t=1}^{\mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})
+$$
+:::
+
+## Constraints {.columns}
+
+::: {.column width="40%"}
+![](images/clsp_oneperiod.pdf)
+:::
+
+::: {.column width="60%"}
+### What kind of constraints do we need?
+
+::: {.fragment}
+- Transfer the unused inventory of the last period
+- Fulfill the customer demand in each period
+- Calculate the batch size per set-up beer
+- Compute the remaining inventory per period
+- Set up beer types where the batch size is $\geq 0$
+- Limit the capacity of the bottling plant
+:::
+:::
+
+## Constraints
+
+### Fulfill the customer demand in each period (while considering the current inventory and batch sizes) and compute the remaining inventory
+
+$W_{i,t}$: Inventory of beer type $i\in\mathcal{I}$ at the end of period $t\in\mathcal{T}$
+$X_{i,t}$: Batch size of beer type $i\in\mathcal{I}$ in $t\in\mathcal{T}$
+$d_{i,t}$: Demand of beer type $i\in\mathcal{I}$ in period $t\in\mathcal{T}$
+
+::: {.fragment}
+$$
+W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I},t\in\mathcal{T}|t>1
+$$
+:::
+
+## Constraints
+
+### Set up beer types where the batch size is $\geq$ 0 to explicitly enforce the addition of setup costs in the objective function
+
+$Y_{i,t}$: 1, if beer type $i\in\mathcal{I}$ is bottled in period $t\in\mathcal{T}$, 0 otherwise
+$X_{i,t}$: Batch size of beer type $i\in\mathcal{I}$ in $t\in\mathcal{T}$
+$d_{i,t}$: Demand of beer type $i\in\mathcal{I}$ in period $t\in\mathcal{T}$
+
+::: {.fragment}
+$$
+X_{i,t} \leq Y_{i,t} \times \sum_{\tau=1}^{\mathcal{T}} d_{i\tau} \quad \forall i\in\mathcal{I},\forall t\in\mathcal{T}
+$$
+:::
+
+::: {.fragment}
+This type of constraint is also called a "Big-M" constraint!
+:::
+
+## Constraints
+
+### Limit the capacity of the bottling plant
+
+$Y_{i,t}$: 1, if beer type $i\in\mathcal{I}$ is bottled in period $t\in\mathcal{T}$, 0 otherwise
+$X_{i,t}$: Batch size of beer type $i\in\mathcal{I}$ in $t\in\mathcal{T}$
+$a_t$: Available time on the bottling plant in period $t\in\mathcal{T}$
+$b_i$: Time used for bottling one unit of beer type $i\in\mathcal{I}$
+$g_i$: Setup time for beer type $i\in\mathcal{I}$
+
+::: {.fragment}
+$$
+\sum_{i=1}^{\mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t\in\mathcal{T}
+$$
+:::
+
+## Capacitated Lot-Sizing Problem [@Haase1998]
+
+$$
+\begin{align}
+& \text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})
+\end{align}
+$$
+
+subject to
+
+$$
+\begin{align}
+& W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} && \forall i\in\mathcal{I},t\in\mathcal{T}|t>1\\
+& X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} && \forall i\in\mathcal{I},\forall t\in\mathcal{T}\\
+& \sum_{i \in \mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t && \forall t\in\mathcal{T}\\
+& Y_{i,t}\in\{0,1\} && \forall i\in\mathcal{I},t\in\mathcal{T} \\ 
+& W_{i,t}, X_{i,t}\geq 0 && \forall i\in\mathcal{I},t\in\mathcal{T}
+\end{align}
+$$
+
+# Model Characteristics
+
+## Some Basics: Algebraic Modeling
+
+### Main types of optimization problems
+
+- Linear (LP)
+- Mixed-integer (MIP) 
+- Non-linear (NLP)
+- Mixed-integer non-linear (MINLP)
+
+## Some Basics: Algorithms to solve Optimization Problems
+
+### Examples
+
+- Simplex algorithm to solve linear Problems (LP)
+- Graph theoretical methods (network flow, shortest path) 
+- Branch & Bound  to solve mixed-integer problems (MIP) 
+- Outer-Approximation for (convex) mixed-integer non-linear problems (MINLP)
+- Math-Heuristics (e.g., Fix-and-Optimize, Tabu-Search, ...)
+- Decomposition methods (Lagrange relaxation, Benders, column generation, ...)
+- Heuristics (greedy, construction method, n-opt)
+- Simulation-based optimization (stochastic problems)
+
+## Capacitated Lot-Sizing Problem
+
+### Model characteristics
+
+- Is the model formulation linear/ non-linear?
+- What kind of variable domains do we have?
+- What kind of solver could we use to derive solutions to the problem?
+- Can the Big-M constraint be tightened?
+
+### Model assumptions
+
+- What assumptions have we made?
+- What is the problem with the planning horizon, and how can it be solved?
+
+# Impact
+
+## Can this be applied in the real world? {.standout}
+
+## Brewing process
+
+![](images/brewing_all.pdf)
+
+## Case Study {.columns}
+
+::: {.column width="40%"}
+![](images/ricardo-gomez-angel-41X6FwTwPh4-unsplash.png)
+:::
+
+::: {.column width="60%"}
+### Problem: All stages of the brewing process have to be considered
+
+- 220 finished products
+- 100 semi-finished products
+- 13 production resources
+- 8 storage resources
+- 3 main production levels
+- 52 weeks planning horizon
+:::
+
+## Case Study {.columns}
+
+::: {.column width="40%"}
+![](images/images_large_inte.2021.1101f6.jpeg)
+:::
+
+::: {.column width="60%"}
+### Solution: Decision-Support System [@doi:10.1287/inte.2021.1101]
+
+- Multi-level Capacitated Lot-Sizing Problem
+- Difficult to solve and requires heuristics
+- Cloud-based tool for planners
+- Reduction of operating costs by 5%
+- Reduction of planning effort by 40%
+:::
+
+# Conclusion
+
+## Conclusion
+
+### Summary
+
+- The CLSP is a problem occurring in different industries
+- Improving production planning can lead to cost savings
+- Demand is usually not fixed in reality
+- Mathematical Optimization of "full" problem not solvable on realistic instances
+- Applicable instances can be approached with heuristics

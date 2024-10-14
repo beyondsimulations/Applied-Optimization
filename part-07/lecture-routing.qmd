@@ -43,4 +43,599 @@ execute:
     echo: true
 ---
 
-# [Introduction to Variables and Types in Julia]{.flow} {.title}
+# Introduction
+
+## Book Deliveries by Central Libraries {.columns}
+
+::: {.column width="35%"}
+![](images/emil-widlund-xrbbXIXAWY0-unsplash)
+:::
+
+::: {.column width="65%"}
+### Central Libraries
+
+- Central Libraries in Germany have the task to supply all local libraries within the same state
+- This is a rather complex task, as the number of supplied libraries can be quite large
+- For example, in the state Schleswig-Holstein there exist 167 different libraries 
+- Furthermore, the books and media in the libraries change often, making it necessary to supply most libraries biweekly
+:::
+
+## Book Deliveries by Central Libraries {.columns}
+
+::: {.column width="35%"}
+![](images/tom-hermans-9BoqXzEeQqM-unsplash.jpg)
+:::
+
+::: {.column width="65%"}
+### Structure of the Deliveries
+
+- For the delivery of the books, the libraries have several employees and cars
+- Furthermore, the local libraries differ in size, thus some receive more items than others  	
+- In addition, items are also collected again during the tours to be transported back to the central library
+- Due to regulations, the delivery tours cannot exceed a certain duration
+:::
+
+## Book Deliveries by Central Libraries {.columns}
+
+::: {.column width="35%"}
+![](images/mika-korhonen-mIXhh8IfXqg-unsplash.jpg)
+:::
+
+::: {.column width="65%"}
+### How to route the vehicles?
+
+- Central libraries have to decide in which order to visit the libraries and which car to use
+- Thus, they have to divide their set of local libraries into several ordered tours
+- This has an impact on the environment, as longer driving routes increase the footprint of the deliveries         	
+- Furthermore, it increases the operating costs of the central libraries, as longer routes require more time, fuel and repairs
+:::
+
+## Visualization of several Tours
+
+::: {.r-fit-text}
+Live-Example: <https://libraries.byndsim.com/W1P1Optimization.html>
+:::
+
+![](images/example_optimization.png){width="60%"}
+
+# Problem Structure
+
+## Objective {.columns}
+
+::: {.column width="70%"}
+### What could be the objective for central libraries?
+
+::: {.fragment}
+- Lowering their costs through improved tours
+- Improvement of their carbon footprint through shorter driving distances
+- Faster fulfillment of the deliveries (either to utilize the employees in other areas or to have the same service level with less employees)
+:::
+
+::: {.fragment}
+### What could we try to model?
+
+::: {.fragment}
+Minimization of the travel time while supplying all libraries in the state and adhering to the vehicle capacities and driving time restrictions.
+:::
+:::
+:::
+
+## {.standout}
+
+This problem is close to the so-called "Capacitated Vehicle Routing Problem".
+
+If you are familiar with OR, you might already have heard of it.
+
+## {.standout}
+
+It is a subproblem of the Vehicle routing problem, which is a whole class of problems about how to design routes for a fleet of vehicles to serve a set of customers.
+
+## Basic Problem Setting
+
+![](images/visuals_bare.pdf)
+
+## Basic Problem Setting
+
+![](images/visuals_street.pdf)
+
+## Basic Problem Setting
+
+![](images/visuals_vehicles.pdf)
+
+## Basic Problem Setting
+
+![](images/visuals_tours.pdf)
+
+# Model Formulation
+
+## Available data
+
+### Sets
+
+- $\mathcal{V}$: Set of all nodes, index $i \in \{0,1,2,...,n\}$
+- $\mathcal{A}$: Set of all arcs (complete graph!) between the nodes, index $(i,j) \in \mathcal{A}$
+- $\mathcal{K}$: Set of vehicles with identical capacity, index $k \in \mathcal{K}$
+- $0$: Depot where the vehicles start, with $0 \in \mathcal{V}$
+
+### Parameters
+
+- $b$: Capacity per vehicle
+- $t$: Maximal duration of each tour
+- $d_i$: Demand at node $i$
+- $c_{i,j}$: Travel time on an arc from $i$ to $j$
+
+## Decision variable/s
+
+### We have the following sets:
+
+- All nodes, including the depot, $i \in \mathcal{V}$
+- All arcs between the nodes, $(i,j) \in \mathcal{A}$
+- The available vehicles, $k \in \mathcal{K}$
+
+### Objective
+
+Minimization of the travel time (or driving distance), while supplying all customers and adhering to the vehicle capacities and duration restrictions.
+
+### What could be our decision variable/s?
+
+::: {.fragment}
+$X_{i,j,k}$: 1, if vehicle $k$ passes the arc between $i$ and $j$ on its tour, 0 otherwise.
+:::
+
+## {.standout}
+
+This is certainly possible!
+
+But not necessarily the smartest way...
+
+## Decision variable/s
+
+### We have the following sets:
+
+- All nodes, including the depot, $i \in \mathcal{V}$
+- All arcs between the nodes, $(i,j) \in \mathcal{A}$
+- The available vehicles, $k \in \mathcal{K}$
+
+### Objective
+
+Minimization of the travel time (or driving distance), while supplying all customers and adhering to the vehicle capacities and duration restrictions. **Hint:** Even with many vehicles, each arc can maximally be passed once!
+
+### What could be our decision variable/s?
+
+::: {.fragment}
+$X_{i,j}$: 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise.
+
+**Important:** Only possible, if time and capacity constraints are equal for all vehicles!
+:::
+
+## Objective
+
+### Objective
+
+Minimization of the travel time (or driving distance), while supplying all customers and adhering to the vehicle capacities and duration restrictions. **Hint:** Even with many vehicles, each arc can maximally be passed once!
+
+### What could be our objective function?
+
+::: {.fragment}
+$$\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \cdot X_{i,j}$$
+
+Where:
+
+- $c_{i,j}$: Travel time on an arc from $i$ to $j$
+- $X_{i,j}$: 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise
+:::
+
+## Constraints
+
+![](images/visuals_tours.pdf)
+
+## Constraints {.columns}
+
+::: {.column width="40%"}
+![](images/ishan-seefromthesky-N2HtDFA-AgM-unsplash.jpg)
+:::
+
+::: {.column width="55%"}
+### What constraints do we need?
+
+::: {.fragment}
+- Each customer has to be visited once
+- The depot has to be entered and left exactly $|\mathcal{K}|$ times
+- We have to ensure that the capacity of our vehicles is not exceeded
+- In addition, we have to enforce a maximal duration of each tour
+- **AND** we have to prevent subtours!
+:::
+:::
+
+## Subtours
+
+![](images/visuals_subtours.pdf)
+
+## Constraints
+
+### Each customer has to be visited once
+
+$X_{i,j}$: 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise.
+
+Essentially, we could also say that each node has to be entered and left exactly once.
+
+::: {.fragment}
+$$\begin{align*}
+& \sum_{i \in \mathcal{V}} X_{i,j} = 1 && \forall j \in \mathcal{V}\setminus0:i\neq 0\\
+& \sum_{j \in \mathcal{V}} X_{i,j} = 1 && \forall i \in \mathcal{V}\setminus0:j\neq 0
+\end{align*}$$
+:::
+
+## Constraints
+
+### The depot has to be entered and left exactly $|\mathcal{K}|$ times
+
+$X_{i,j}$: 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise
+$\mathcal{K}$: Set of vehicles with identical capacity, index $k \in \mathcal{K}$
+
+This should now be easy after the last slide.
+
+::: {.fragment}
+$$\begin{align*}
+& \sum_{i \in \mathcal{V}} X_{i,0} = |\mathcal{K}| \\
+& \sum_{j \in \mathcal{V}} X_{0,j} = |\mathcal{K}|
+\end{align*}$$
+:::
+
+## {.standout}
+
+The next ones are a little bit tricky.
+
+## Constraints
+
+### Ensure the capacity limit of the vehicles **AND** prevent subtours
+
+We use the Miller-Tucker-Zemlin formulation [@KARA2004793]. It prevents subtours and tracks the route of each individual vehicle.
+
+First, we need an additional variable that represents the current capacity utilization of a vehicle on its individual tour:
+
+$U_{i}$: Capacity utilization at the node $i$ of a vehicle on its tour with $i \in \mathcal{I}$.
+
+$X_{i,j}$: 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise
+$d_i$: Demand at node $i$
+$b$: Capacity per vehicle
+
+$$\begin{align*}
+& U_i - U_j + b * X_{ij} \leq b - d_j && \forall i,j \in V\setminus0:i \neq j\\
+& d_i \leq U_i \leq b && \forall i \in V \setminus0
+\end{align*}$$
+
+## {.standout}
+
+Complicated?
+
+## Constraints {.columns}
+
+::: {.column width="50%"}
+![](images/subtour_nodir_0.pdf)
+:::
+
+::: {.column width="50%"}
+### Not really. We just have to consider the meaning of the constraints.
+
+- Let us assume that the demand $d_i$ of all customers is 1
+- The capacity $b$ per vehicle is 5
+- The variable $U_i$ is the capacity utilization at node $i \in \mathcal{I}$
+:::
+
+## Constraints {.columns}
+
+::: {.column width="50%"}
+![](images/subtour_nodir_0.pdf)
+:::
+
+::: {.column width="50%"}
+### No connection between nodes
+
+In case of no connection between two nodes, hence $X_{ij} = 0$, the logic is 
+
+$$U_i - U_j \leq b - d_j.$$
+
+Thus, it is non-binding for the relation between the two variables, as it is perfectly fine if e.g. $U_i \leq b$ and $U_j \geq d_j$.
+:::
+
+## Constraints {.columns}
+
+::: {.column width="50%"}
+![](images/subtour_nodir_0.pdf)
+:::
+
+::: {.column width="50%"}
+### Connection between two nodes
+
+In case of a connection between two nodes, hence $X_{ij} = 1$, the logic is 
+
+$$U_i - U_j + b \leq b - d_j$$
+
+which can be summarized to
+
+$$U_j \geq d_j + U_i.$$
+
+Now, it is binding as $U_j$ has to be at least as large as $d_i + U_i$. Hence, the demand of $i$ was added to the vehicle.
+:::
+
+## Constraints {.columns}
+
+::: {.column width="50%"}
+![](images/subtour_nodir_5.pdf)
+:::
+
+::: {.column width="50%"}
+### What does that mean?
+
+The solution on the left wouldn't work, as the cycle is not permitted. There is a connection from $H$ to $C$, but $U_C \leq U_H$.
+
+::: {.fragment}
+The connection in the other direction wouldn't work as well. The only "reset" is the depot, as the constraints are not applied here.
+:::
+:::
+
+## Constraints {.columns}
+
+::: {.column width="50%"}
+![](images/subtour_nodir_5.pdf)
+:::
+
+::: {.column width="50%"}
+### What about the capacity?
+
+Remember the variable domain of $U_i$?
+
+It is $d_i \leq U_i \leq b$. Therefore, the overall capacity limit is enforced as well.
+:::
+
+## Constraints
+
+### Ensure the time limit of the vehicles **AND** prevent subtours
+
+These constraints basically follow the same idea as before.
+
+First, we again need an additional variable. Here, it represents the current time traveled of a vehicle on its individual tour:
+
+$T_{i}$: Time spent on tour at the node $i$ of a vehicle with $i \in \mathcal{I}$.
+
+$X_{i,j}$: 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise
+$t$: Maximal duration of a tour
+$c_{i,j}$: Travel time on an arc from $i$ to $j$
+
+$$\begin{align*}
+& T_i - T_j + t * X_{i,j} \leq t - c_{i,j} && \forall i,j \in V\setminus0:i \neq j\\
+& 0 \leq T_{i} \leq t  && \forall i \in \mathcal{V}\setminus0
+\end{align*}$$
+
+## Asymmetric Vehicle Routing Problem - Part 1
+
+$$\begin{align}
+\text{minimize} \quad & \sum_{(i,j) \in \mathcal{A}} c_{i,j} \cdot X_{i,j} 
+\end{align}$$
+
+subject to:
+
+$$\begin{align}
+& \sum_{i \in \mathcal{V}} X_{i,j} = 1 && \forall j \in \mathcal{V}\setminus0: i \neq j\\
+& \sum_{j \in \mathcal{V}} X_{i,j} = 1 && \forall i \in \mathcal{V}\setminus0: i \neq j\\
+& \sum_{i \in \mathcal{V}} X_{i,0} = |\mathcal{K}| \\
+& \sum_{j \in \mathcal{V}} X_{0,j} = |\mathcal{K}|
+\end{align}$$
+
+## Asymmetric Vehicle Routing Problem - Part 2
+
+$$\begin{align}
+& U_i - U_j + b * X_{i,j} \leq b - d_j && \forall i,j \in V\setminus0:i \neq j \\
+& T_i - T_j + t * X_{i,j} \leq t - c_{i,j} && \forall i,j \in V\setminus0:i \neq j \\
+& d_i \leq U_{i} \leq b  && \forall i \in \mathcal{V}\setminus0 \\
+& 0 \leq T_{i} \leq t  && \forall i \in \mathcal{V}\setminus0 \\
+& X_{i,j} \in \{0,1\}  && \forall i \in \mathcal{V}, \forall j \in \mathcal{V}
+\end{align}$$
+
+## Asymmetric Vehicle Routing Problem
+
+### Model characteristics
+
+- Is the model formulation linear/ non-linear?
+- What kind of variable domains do we have?
+- What do you think, can the model be solved quickly?
+
+### Model assumptions
+
+- What assumptions have we made?
+- What are likely issues that can arise if the model is applied?
+- Have we considered service times?
+
+## Potential Model Extensions
+
+### Common extensions of the CVRP
+
+- time windows (TW)
+- soft time windows (STW)
+- multiple time windows (MTW)
+- multiple depots (MD) 
+- heterogeneous fleet (HF)
+- backhauls (B)
+- pickup and delivery (PD)
+
+# Implementation and Impact
+
+## Case Study in Schleswig-Holstein {.columns}
+
+::: {.column width="40%"}
+![](images/emil-widlund-xrbbXIXAWY0-unsplash.jpg)
+:::
+
+::: {.column width="60%"}
+### Central Library
+
+- Improve the current routing plan that was made by hand based on best guesses
+- 165 libraries, 119 are visited biweekly
+- Up to 9 different tours are possible
+- Time-Limit of 8 hours for each tour
+:::
+
+## Visualization of the current routing plan
+
+::: {.r-fit-text}
+Current tours: <https://libraries.byndsim.com/W1P1Benchmark.html>
+:::
+
+![](images/example_benchmark.png){width="70%"}
+
+## {.standout}
+
+Can our model formulation from the lecture solve the problem instance?
+
+## {.standout}
+
+No, although we can find solutions within one hour, the gap is still very large (40%-45%).
+
+## Asymmetric Vehicle Routing Problem {.columns}
+
+::: {.column width="80%"}
+### The problem is NP-hard
+
+- Classification from complexity theory
+- It is likely, that there are no polynomial-time algorithms for NP-hard problems
+- **BUT** that doesn't mean that there are no instances that can be solved easily! E.g. the police districting problem was also NP-hard but we could solve large instances
+- We won't go deeper into this, but if you have questions feel free to ask me!
+:::
+
+## {.standout}
+
+So we cannot do anything to solve the model?
+
+## Heuristics {.columns}
+
+::: {.column width="80%"}
+### Approach to the problem via a heuristic
+
+- We can still solve the problem with a heuristic
+- We likely won't find the optimal solution, but a lot of research goes into these problems and into efficient algorithms to solve them
+- In our case study we applied the Hybrid Genetic Search for the CVRP (HGS-CVRP) [@Vidal_2022]
+- The results were much better than the best solutions found after one hour of optimization. 
+:::
+
+## Visualization of the optimized routing plan
+
+::: {.r-fit-text}
+Optimized tours: <https://libraries.byndsim.com/example_optimization.html>
+:::
+
+![](images/W1P1Optimization.html){width="60%"}
+
+## Improvements {.columns}
+
+::: {.column width="40%"}
+![](images/emil-widlund-xrbbXIXAWY0-unsplash.jpg)
+:::
+
+::: {.column width="60%"}
+### Summary of the potential of the new tours
+
+- Still, there are 9 tours necessary!
+- Reduction of driving time by up to 96.86 hours per month
+- Reduction of driven kilometers by 27.94 % or 6971.8 km per month.
+:::
+
+# Conclusion
+
+## Conclusion {.columns}
+
+::: {.column width="80%"}
+### Summary
+
+- The vehicle routing problem is a standard problem that occurs in many different places
+- Solving the problem with a mathematical model is difficult, but nowadays there are many good heuristics
+- Google, DHL, UPS, Mapbox and many more companies are working on the problem
+- In our case study, the improved tour plans could potentially reduce the driving time by up to 6.86 hours per month 
+:::
+
+# Tutorial
+
+## 5.a Implementation of the 2-D CVRP
+
+Implement the CVRP from the lecture. A file with a first structure to solve the task is given. In addition, the demand per node and the cost matrix are given as CSV files. Furthermore, the coordinates of the locations are provided as well in a CSV file. The parameter $c_{ij}$ represents the driving distance in km and not the driving time as in the lecture. The number of vehicles is 6 and each vehicle can transport up to 50 boxes of books. Note, that the duration of a tour is irrelevant and the capacity of each vehicle is identical.
+
+Please provide us with a working model in a .jl file.
+
+## 5.b Minimization of Costs {.columns}
+
+::: {.column width="40%"}
+![](images/mika-korhonen-mIXhh8IfXqg-unsplash.jpg){width="60%"}
+:::
+
+::: {.column width="60%"}
+After some consideration, the central library decided to change its approach. In the future, the operational costs are more important and the objective is a minimization of the operational costs within the timeframe of four weeks. Each driven kilometer is associated with costs of 0.6 EUR per kilometer (fuel, repairs and costs for the driver) and each location has to be visited daily from Monday to Friday.
+:::
+
+## 5.b Minimization of Costs {.columns}
+
+::: {.column width="40%"}
+![](images/mika-korhonen-mIXhh8IfXqg-unsplash.jpg){width="60%"}
+:::
+
+::: {.column width="60%"}
+Extend your code to include these changes in your model and compute the associated costs of the best tour plan.
+
+Based on your results, what are the costs of the optimal tour plan? Please provide us with a working model in a .jl file and a short written comment in your code to answer the question.
+:::
+
+## 5.c Optimal Solution? {.columns}
+
+::: {.column width="40%"}
+![](images/emil-widlund-xrbbXIXAWY0-unsplash.jpg){width="80%"}
+:::
+
+::: {.column width="60%"}
+Although the costs are included in the model, the tour plan has not changed so far. The central library asks you whether you have an idea of how to lower the costs associated with the book deliveries. Take a look at your current solutions and try to come up with an idea.
+
+Discuss the potential shortcoming and assumptions of the current model in a few sentences, and propose at least one idea of how to lower the costs in the future. You can do this in a comment in your code.
+:::
+
+## 5.d Number of vehicles {.columns}
+
+::: {.column width="40%"}
+![](images/henry-be-lc7xcWebECc-unsplash.jpg){width="80%"}
+:::
+
+::: {.column width="60%"}
+Together, you realize one potential area of improvement involves the number of vehicles: it might potentially not be necessary to have 6 vehicles which deliver the books to the libraries.
+
+How can the problem be changed, if the number of vehicles is not fixed during the optimization? Note, that the library leases its vehicles and it has to pay 450 EUR every four weeks for each vehicle in use.
+:::
+
+## 5.d Number of vehicles {.columns}
+
+::: {.column width="40%"}
+![](images/henry-be-lc7xcWebECc-unsplash.jpg){width="80%"}
+:::
+
+::: {.column width="60%"}
+Implement these changes in your model and compute the optimal number of vehicles and the best tour plan. In case the computation takes too long, think about a way to divide the problem into subproblems.
+
+Based on your results, what are the expected costs savings when compared to task b. and how many vehicles does the central library need? Please provide us with a working model in .jl file and a visualization of the resulting routes.
+:::
+
+## 5.e Additional Dimensions (Optional, + 1 Bonus Point)
+
+Unfortunately, the driving time will have to be restricted in the future as you have one full-time employee (8 hours) and the other employees are part-time employees (4 hours). From past observations, you know that the road conditions in the entire area under consideration are roughly equal and that vehicles drive with 50 km per hour on average. Can you come up with a formulation of the 3-D CVRP to incorporate this change?
+
+Based on your results, what are the overall costs and how many vehicles does the central library need? Please provide us with a working model in .jl syntax and a visualization of the final routes.
+
+# Literature
+
+::: {#refs}
+:::
+
+## Image Sources
+
+Below a list of image sources for all images not taken by our institute:
+
+- Slide 2: Emil Widlund from Unsplash
+- Slide 3: Tom Hermans from Unsplash
+- Slide 4: Mika Korhonen from Unsplash
+- Slide 22: Ishan See From The Sky from Unsplash
+- Slide 59: Henry Be from Unsplash

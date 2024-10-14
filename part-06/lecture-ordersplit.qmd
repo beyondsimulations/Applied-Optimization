@@ -43,4 +43,680 @@ execute:
     echo: true
 ---
 
-# [Introduction to Variables and Types in Julia]{.flow} {.title}
+# Introduction
+
+## E-Commerce Trends
+
+### E-Commerce sales are growing fast:
+
+- Products are no longer bound between borders, while product variety is rising.
+- Consumer shopping patterns are shifting from brick-and-mortar stores to the internet. [@Swaminathan2003]
+- Covid-19 accelerates this trend
+
+### The number of parcels is rising:
+
+- 2014: 44 billion parcels [@PitneyBowes2017]
+- 2019: 103 billion parcels [@PitneyBowes2019]
+- 2026: Forecast of 220 – 262 billion parcels [@PitneyBowes2020]
+
+## E-Commerce Challenges {#pic_chuttersnap}
+
+::: {.columns}
+::: {.column width="50%"}
+
+### Pressure on infrastructure:
+
+- Plenty of consumers nowadays expect free and fast deliveries and returns.
+- Existing warehouses have to store an increasing range of products.
+- Incurred fulfillment costs are fixed per dispatched parcel, not per order.
+
+:::
+
+::: {.column width="50%"}
+![](images/chuttersnap-BNBA1h-NgdY-unsplash.jpg)
+:::
+:::
+
+## E-Commerce Challenges {#pic_schwarz}
+
+::: {.columns}
+::: {.column width="50%"}
+![](images/claudio-schwarz-a85IYeAXgxU-unsplash.jpg)
+:::
+
+::: {.column width="50%"}
+::: {.block}
+### Pressure on the environment:
+
+- Each parcel packaging consumes resources during production.
+- Every dispatched parcel to the customer causes CO~2~ emissions.
+- In the case of return shippings, more parcels cause more emissions.
+:::
+:::
+:::
+
+## Split-Orders
+
+::: {.alert}
+### Split-Orders are part of the challenge:
+
+- They occur, if a customers' order has to be fulfilled through multiple deliveries.
+- Multiple deliveries increase the environmental impact of an order.
+- The additional costs cannot be allocated to the customers.
+:::
+
+## Split-Orders
+
+### They have two main reasons:
+
+1. SKUs are stored in different warehouses
+
+2. SKUs are temporarily unavailable
+
+## Split-Orders
+
+::: {.block}
+### What can we do to prevent them?
+
+![](images/konsolidierung.pdf){width=25%}
+![](images/zwischenlager.pdf){width=33%}
+![](images/optimierung_zuordnung.pdf){width=25%}
+
+a) Consolidation via transshipments
+b) Consolidation in an interim warehouse
+c) Improve SKU-warehouse allocation
+:::
+
+# Problem Structure
+
+## Case Study {#pic_nebov}
+
+::: {.columns}
+::: {.column width="60%"}
+::: {.block}
+### Key information about the case:
+
+- a large German e-commerce retailer
+- the retailer has two warehouses
+- the whole product range cannot be stored in either of the warehouses
+- products are located in shelf sections
+- new product deliveries or subsequent deliveries can be made to both warehouses
+- products do not have to be stored exclusively in only one warehouse
+:::
+:::
+
+::: {.column width="40%"}
+![](images/jake-nebov-OPjxGV7ubsY-unsplash.jpg)
+:::
+:::
+
+## Split-Order Minimization
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/optimierung_zuordnung.pdf)
+:::
+
+::: {.column width="50%"}
+::: {.block}
+### What could be the objective?
+
+We aim to improve the SKU-warehouse allocation to minimize the number of split parcels resulting from SKUs being stored in different warehouses.
+:::
+:::
+:::
+
+## Split-Order Minimization
+
+::: {.columns}
+::: {.column width="60%"}
+::: {.block}
+### Available data
+
+- List of all products available indexed by $i \in \{1,\dots,|\mathcal{I}|\}$
+- Past transactional data $\boldsymbol{T}= (t_{m,i})$ where customer orders are indexed by $m \in \{1,\dots,|\mathcal{M}|\}$ and the products are indexed by $i \in \{1,\dots,|\mathcal{I}|\}$ as shown in Table \ref{tab:trans_example}
+- List of warehouses where each warehouse $k \in \{1,\dots,|\mathcal{K}|\}$ has a storage space $c_k$
+:::
+:::
+
+::: {.column width="40%"}
+| $t_{m,i}$ | A | B | C | D |
+|-----------|---|---|---|---|
+| 1         | 1 | 1 | 1 | 0 |
+| 2         | 1 | 1 | 1 | 0 |
+| 3         | 1 | 1 | 0 | 0 |
+| 4         | 1 | 0 | 0 | 1 |
+| 5         | 1 | 0 | 0 | 1 |
+| 6         | 1 | 0 | 0 | 1 |
+| 7         | 1 | 0 | 0 | 1 |
+| 8         | 0 | 0 | 1 | 1 |
+
+: Example: Transactions $\boldsymbol{T}$ {#tbl-trans_example}
+:::
+:::
+
+## Split-Order Minimization
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/optimierung_zuordnung.pdf)
+:::
+
+::: {.column width="50%"}
+::: {.block}
+### We have the following sets:
+
+- Customer orders $m \in \{1,\dots,|\mathcal{M}|\}$
+- Products $i \in \{1,\dots,|\mathcal{I}|\}$
+- Warehouses $k \in \{1,\dots,|\mathcal{K}|\}$
+:::
+
+::: {.block}
+### How could we approach the objective?
+
+Allocate the SKUs to the warehouses to minimize the number of split parcels.
+:::
+:::
+:::
+
+## Split-Order Minimization
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/optimierung_zuordnung.pdf)
+:::
+
+::: {.column width="50%"}
+::: {.block}
+### We have the following sets:
+
+- Customer orders $m \in \{1,\dots,|\mathcal{M}|\}$
+- Products $i \in \{1,\dots,|\mathcal{I}|\}$
+- Warehouses $k \in \{1,\dots,|\mathcal{K}|\}$
+:::
+
+::: {.block}
+### What could be our decision variable/s?
+
+$$
+\begin{align*}
+X_{i,k} \in \{0,1\}  && \forall i \in \mathcal{I}, \forall k \in \mathcal{K}\\
+Y_{m,i,k} \in \{0,1\} && \forall m \in \mathcal{M}, \forall i \in \mathcal{I}, \forall k \in \mathcal{K}
+\end{align*}
+$$
+:::
+:::
+:::
+
+## Split-Order Minimization
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/optimierung_zuordnung.pdf)
+:::
+
+::: {.column width="55%"}
+::: {.block}
+### Integer Programming Model
+
+- [@Catalan2012] formulated the problem as integer-programming model
+- Number of products of E-Commerce retailers can easily be between 10,000 - 100,000
+- Number of customer orders necessary for "stable" results have to be much higher in the order of 100,000 - 10,000,000
+:::
+:::
+:::
+
+## Split-Order Minimization
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/optimierung_zuordnung.pdf)
+:::
+
+::: {.column width="55%"}
+::: {.block}
+### Integer Programming Model
+
+- Using CPLEX 20.1.0 it takes roughly 3100 seconds to solve the problem for 10 Products and 1000 customer orders based on different capacity constellations
+- Computation time scales exponentially, no solution within reasonable time
+- **Problem** → not useful in real application
+:::
+:::
+:::
+
+## Split-Order Minimization?
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/optimierung_zuordnung.pdf)
+:::
+
+::: {.column width="50%"}
+::: {.block}
+### Heuristic Approach: Different view
+
+- Minimize Split-Orders
+- Minimize number of shipped parcels
+- Maximize the coappearance of products that are often part of the same customer order [@Catalan2012]
+:::
+:::
+:::
+
+## Product Coappearance Maximization
+
+::: {.columns}
+::: {.column width="50%"}
+| $t_{mi}$ | A | B | C | D |
+|----------|---|---|---|---|
+| 1        | 1 | 1 | 1 | 0 |
+| 2        | 1 | 1 | 1 | 0 |
+| 3        | 1 | 1 | 0 | 0 |
+| 4        | 1 | 0 | 0 | 1 |
+| 5        | 1 | 0 | 0 | 1 |
+| 6        | 1 | 0 | 0 | 1 |
+| 7        | 1 | 0 | 0 | 1 |
+| 8        | 0 | 0 | 1 | 1 |
+
+: Example: Transactions $\boldsymbol{T}$
+:::
+
+::: {.column width="50%"}
+The coappearance between products can simply be calculated by:
+$\boldsymbol{Q} = (\boldsymbol{T}^T \cdot \boldsymbol{T})$ where $\boldsymbol{Q} = (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}$.
+
+| $q_{ij}$ | A | B | C | D |
+|----------|---|---|---|---|
+| A        | 7 | 3 | 2 | 4 |
+| B        | 3 | 3 | 2 | 0 |
+| C        | 2 | 2 | 3 | 1 |
+| D        | 4 | 0 | 1 | 5 |
+
+: Example: Coappearance $\boldsymbol{Q}$
+:::
+:::
+
+## How can we do that?
+
+## Product Coappearance Maximization
+
+::: {.block}
+### Possible options in the current literature
+
+- Greedy Heuristics as proposed by [@Catalan2012]
+- Mathematical Optimisation with CPLEX as proposed by [@Zhu2021]
+:::
+
+::: {.block}
+### Our new proposals
+
+- Mathematical Optimisation with Solver
+- Statistical Heuristic based on Chi-Square Tests
+:::
+
+# Model Formulation
+
+## Product Coappearance Maximization
+
+::: {.block}
+### Available data
+
+- List of all products available indexed by $i \in \{1,\dots,\mathcal{I}\}$
+- The coappearance matrix $\boldsymbol{Q} = (q_{i,j})_{i \in \{1,\dots,|\mathcal{I}|\},j \in \{1,\dots,|\mathcal{I}|\}}$ based on the transactional data of the e-commerce retailer (Example shown in Table \ref{tab:coapp_example})
+- List of warehouses where each warehouse $k \in \{1,\dots\mathcal{K}\}$ has a storage space $c_k$
+:::
+
+## Product Coappearance Maximization
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/optimierung_zuordnung.pdf)
+:::
+
+::: {.column width="50%"}
+::: {.block}
+### We have the following sets:
+
+- Customer orders $m \in \{1,\dots,\mathcal{M}\}$
+- Products $i \in \{1,\dots,\mathcal{I}\}$
+- Warehouses $k \in \{1,\dots\mathcal{K}\}$
+:::
+
+::: {.block}
+### How could we approach the objective?
+
+Maximize the sum of all unique pair-wise values $q_{i,j}$ of all SKUs that are stored within the same warehouse.
+:::
+:::
+:::
+
+## Product Coappearance Maximization
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/optimierung_zuordnung.pdf)
+:::
+
+::: {.column width="50%"}
+::: {.block}
+### We have the following sets:
+
+- Customer orders $m \in \{1,\dots,\mathcal{M}\}$
+- SKUs (Stock-Keeping-Units) $i \in \{1,\dots,|\mathcal{I}|\}$
+- Warehouses $k \in \{1,\dots |\mathcal{K}|\}$
+:::
+
+::: {.block}
+### What could be our decision variable/s?
+
+$$
+\begin{align*}
+X_{i,k} \in \{0,1\}  && \forall i \in \mathcal{I}, \forall k \in \mathcal{K}
+\end{align*}
+$$
+
+The value of the variable is 1, if a SKU $i$ is stored in $k$, else 0.
+:::
+:::
+:::
+
+## Quadratic-Multiple-Knapsack
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/mqkp.pdf)
+:::
+
+::: {.column width="55%"}
+::: {.block}
+### Objective
+
+Maximize the sum of all unique pair-wise values $q_{i,j}$ of all SKUs stored in the same warehouse.
+:::
+
+::: {.block}
+### What could be our objective function?
+
+| Symbol   | Description                               |
+|----------|-------------------------------------------|
+| $q_{i,j}$| Coappearance of SKUs with $i,j \in \mathcal{I}$ |
+| $X_{i,k}$| 1, if SKU $i$ in $k$, 0 otherwise         |
+
+$$
+\begin{align*}
+\text{maximise} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}
+\end{align*}
+$$
+:::
+:::
+:::
+
+## Quadratic-Multiple-Knapsack
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/mqkp.pdf)
+:::
+
+::: {.column width="55%"}
+::: {.block}
+### What constraints do we need?
+
+- Each SKU has to be allocated at least once 
+- The number of SKUs in a warehouse has to be within the allowed capacity of the warehouse
+:::
+:::
+:::
+
+## Constraints
+
+::: {.block}
+### Each SKU has to be allocated at least once
+
+| Symbol   | Description                               |
+|----------|-------------------------------------------|
+| $X_{i,k}$| 1, if a SKU $i$ is stored in warehouse $k$, 0 otherwise |
+
+$$
+\begin{align*}
+& \sum_{k \in \mathcal{K}} X_{ik} \geq 1 && \forall i \in \mathcal{I}
+\end{align*}
+$$
+:::
+
+## Constraints
+
+::: {.block}
+### The number of SKUs in a warehouse has to be within the allowed capacity of the warehouse
+
+| Symbol   | Description                               |
+|----------|-------------------------------------------|
+| $c_{k}$  | available capacity at warehouse $k$ with $k \in \mathcal{K}$ |
+| $X_{i,k}$| 1, if a SKU $i$ is stored in warehouse $k$, 0 otherwise |
+
+$$
+\begin{align*}
+& \sum_{i \in \mathcal{I}} X_{ik} \leq c_{k} && \forall k \in \mathcal{K}
+\end{align*}
+$$
+:::
+
+## Quadratic-Multiple-Knapsack Problem
+
+::: {.columns}
+::: {.column width="70%"}
+$$
+\begin{align}
+\text{maximise} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}
+\end{align}
+$$
+
+subject to:
+
+$$
+\begin{align}
+& \sum_{k \in \mathcal{K}} X_{ik} \geq 1 && \forall i \in \mathcal{I}\\
+& \sum_{i \in \mathcal{I}} X_{ik} \leq c_{k} && \forall k \in \mathcal{K}\\
+& X_{ik} \in \{0,1\}  && \forall i \in \mathcal{I}, \forall k \in \mathcal{K}
+\end{align}
+$$
+:::
+:::
+
+## Quadratic-Multiple-Knapsack Problem
+
+::: {.block}
+### Model characteristics
+
+- Is the model formulation linear/ non-linear?
+- What kind of variable domain do we have?
+- Do we know the number of split-orders based on the objective value?
+- What kind of solver could we use to derive solutions to the problem?
+:::
+
+::: {.block}
+### Model assumptions
+
+- What assumptions have we made?
+:::
+
+## Choosing a solver
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.block}
+### What solver can I use?
+
+- Identify problem structure, e.g. LP, MIP, NLP, QCP, MIQCP, ...
+- Is a local optima enough or do you need the global optimum?
+:::
+:::
+
+::: {.column width="50%"}
+![](images/Local-Global-Optimum.png)
+
+Optima: Local v. global by Christoph Roser at AllAboutLean.com under CC-BY-SA 4.0 license
+:::
+:::
+
+## Summary
+
+![](images/heuristic_steps.pdf)
+
+::: {.block}
+### Chance
+
+Detect correlations between products and allocate them accordingly, as products within orders can have dependencies and products are bought with different frequencies!	
+:::
+
+# Impact
+
+## Can this be applied in the real world?
+
+## Case Study
+
+::: {.block}
+### Comparing heuristics against random allocation on synthetic transactional data
+
+- QMK: Quadratic-Multiple-Knapsack with BONMIN as solver	
+- CHI: Heuristic based on Chi-Square tests (as BONMIN cannot solve instances with more than 2000 products)
+- KLINK: Heuristic based on greedy algorithm [@Zhu2021]
+- GP: Heuristic based on greedy algorithm [@Catalan2012]
+- GS: Heuristic based on greedy algorithm [@Catalan2012]
+- BS: Heuristic based on greedy algorithm [@Catalan2012]
+:::
+
+## Synthetical Data Sets
+
+![](images/Constellations_Warehouse.pdf)
+
+## Real Data Set
+
+![](images/Casestudy_Splitratio.pdf)
+
+# Conclusion
+
+## Conclusion
+
+::: {.block}
+### Summary
+
+- Split orders are of no benefit but rather increase the workload, the packaging costs and the shipping costs for retailers
+- Improving product-allocation can lead to cost savings without additional overhead
+- Mathematical Optimisation of "full" problem not solvable on realistic instances
+- Mathematical Optimisation with BONMIN can be applied independently of the customer orders on instances of up to 2,000 products
+- Heuristic based on Chi-Square tests is close to mathematical optimisation and allows for up to 100,000 products
+:::
+
+## 4.a Calculating Coappearances
+
+::: {.columns}
+::: {.column width="40%"}
+| $t_{mi}$ | A | B | C | D |
+|----------|---|---|---|---|
+| 1        | 1 | 1 | 1 | 0 |
+| 2        | 1 | 1 | 1 | 0 |
+| 3        | 1 | 1 | 0 | 0 |
+| 4        | 1 | 0 | 0 | 1 |
+| 5        | 1 | 0 | 0 | 1 |
+| 6        | 1 | 0 | 0 | 1 |
+| 7        | 1 | 0 | 0 | 1 |
+| 8        | 0 | 0 | 1 | 1 |
+
+: Transactions $\boldsymbol{T}$ {#tbl-trans_example1}
+:::
+
+::: {.column width="50%"}
+Take a look at the transactional data in table @tbl-trans_example1 on the left site. 
+Determine the coappearance matrix of the transactional data set.
+:::
+:::
+
+## 4.b Maximising Coappearances
+
+::: {.columns}
+::: {.column width="40%"}
+| $t_{mi}$ | A | B | C | D |
+|----------|---|---|---|---|
+| 1        | 1 | 1 | 1 | 0 |
+| 2        | 1 | 1 | 1 | 0 |
+| 3        | 1 | 1 | 0 | 0 |
+| 4        | 1 | 0 | 0 | 1 |
+| 5        | 1 | 0 | 0 | 1 |
+| 6        | 1 | 0 | 0 | 1 |
+| 7        | 1 | 0 | 0 | 1 |
+| 8        | 0 | 0 | 1 | 1 |
+
+: Transactions $\boldsymbol{T}$ {#tbl-trans_example}
+:::
+
+::: {.column width="50%"}
+You are an e-commerce retailer with two warehouses, each with a capacity for 3 SKUs. Based on the coappearance matrix you have determined in the previous assignment, use the model from the lecture to maximise the coappearances manually.
+
+What is the resulting objective function value of the assignment?
+:::
+:::
+
+## 4.c Split Parcels
+
+::: {.columns}
+::: {.column width="40%"}
+| $t_{mi}$ | A | B | C | D |
+|----------|---|---|---|---|
+| 1        | 1 | 1 | 1 | 0 |
+| 2        | 1 | 1 | 1 | 0 |
+| 3        | 1 | 1 | 0 | 0 |
+| 4        | 1 | 0 | 0 | 1 |
+| 5        | 1 | 0 | 0 | 1 |
+| 6        | 1 | 0 | 0 | 1 |
+| 7        | 1 | 0 | 0 | 1 |
+| 8        | 0 | 0 | 1 | 1 |
+
+: Transactions $\boldsymbol{T}$ {#tbl-trans_example}
+:::
+
+::: {.column width="50%"}
+Based on the output of the optimisation, we don't know the number of split orders. Calculate the number of split orders manually from your previous solution.
+
+Is the solution of the QMKP the optimal solution for the underlying split parcel minimisation problem? Try to come up with an equally good or better solution.
+:::
+:::
+
+## 4.d SKU weights {#pic_nebov}
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/jake-nebov-seTS7bvcr0A-unsplash.jpg)
+:::
+
+::: {.column width="50%"}
+In the future, the e-commerce retailer wants to restrict each SKU allocation to **solely one warehouse**. Furthermore, the SKUs won't consume one unit of capacity any more, but each SKU will consume a capacity **based on the number of appearances (sum) in the transactional data set.**
+:::
+:::
+
+## 4.d SKU weights {#pic_bandura}
+
+::: {.columns}
+::: {.column width="40%"}
+![](images/ivan-bandura-N_FDXbXwQmc-unsplash.jpg)
+:::
+
+::: {.column width="50%"}
+Implement and solve the adjusted model in Julia. Please comment each constraint and objective function in your code with a sentence describing its purpose.
+
+Note, that the available capacity for each of the two warehouses has changed from 3 to 12. Please provide us with a functional model in a .jl file that incorporates the aforementioned parameters and constraints.
+:::
+:::
+
+# Literature
+
+::: {#refs}
+:::
+
+## Image Sources
+
+Below a list of image sources for all images not taken by our institute:
+
+- Slide @pic_chuttersnap: Chuttersnap from Unsplash
+- Slide @pic_schwarz: Claudio Schwarz from Unsplash
+- Slide @pic_nebov: Jake Nebov from Unsplash
+- Slide @pic_bandura: Ivan Bandura from Unsplash
