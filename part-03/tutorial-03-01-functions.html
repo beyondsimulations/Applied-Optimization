@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Frequently Asked Questions – Applied Optimization with Julia</title>
+<title>Tutorial III.I - Functions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,186 +23,91 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
-  "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
-  }
-}</script>
+<script src="tutorial-03-01-functions_files/libs/clipboard/clipboard.min.js"></script>
+<script src="tutorial-03-01-functions_files/libs/quarto-html/quarto.js"></script>
+<script src="tutorial-03-01-functions_files/libs/quarto-html/popper.min.js"></script>
+<script src="tutorial-03-01-functions_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="tutorial-03-01-functions_files/libs/quarto-html/anchor.min.js"></script>
+<link href="tutorial-03-01-functions_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="tutorial-03-01-functions_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="tutorial-03-01-functions_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="tutorial-03-01-functions_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="tutorial-03-01-functions_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-sidebar floating">
+<body>
 
-<div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../general/faq.html">FAQs</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
-    </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
-<!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
-    <div class="sidebar-title mb-0 py-0">
-      <a href="../">Applied Optimization with Julia</a> 
-    </div>
-      </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Welcome</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../general/syllabus.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Syllabus</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">01 Introduction </span></span>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
- <span class="menu-text">02 First Steps</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../part-02/lecture-firststeps.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../part-02/tutorial-02-01-variables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial 02-01</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../part-02/tutorial-02-02-vectors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial 02-02</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../part-02/tutorial-02-03-comparisons.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial 02-03</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../part-02/tutorial-02-04-loops.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial 02-04</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../part-02/tutorial-02-05-scope.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial 02-05</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../general/faq.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">FAQs</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../general/literature.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Literature</span></a>
-  </div>
-</li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#unanswered-questions" id="toc-unanswered-questions" class="nav-link active" data-scroll-target="#unanswered-questions">Unanswered Questions</a></li>
-  <li><a href="#contribution-and-mistakes" id="toc-contribution-and-mistakes" class="nav-link" data-scroll-target="#contribution-and-mistakes">Contribution and Mistakes</a></li>
-  <li><a href="#faqs" id="toc-faqs" class="nav-link" data-scroll-target="#faqs">FAQs</a></li>
+  <li><a href="#functions-in-julia" id="toc-functions-in-julia" class="nav-link active" data-scroll-target="#functions-in-julia">Functions in Julia</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">==============================</a>
+  <ul class="collapse">
+  <li><a href="#section-1-creating-and-calling-functions" id="toc-section-1-creating-and-calling-functions" class="nav-link" data-scroll-target="#section-1-creating-and-calling-functions">Section 1: Creating and Calling Functions</a></li>
+  </ul></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">—————————————–</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1.1" id="toc-exercise-1.1" class="nav-link" data-scroll-target="#exercise-1.1">Exercise 1.1:</a></li>
+  </ul></li>
+  <li><a href="#your-code-below" id="toc-your-code-below" class="nav-link" data-scroll-target="#your-code-below">YOUR CODE BELOW</a></li>
+  <li><a href="#your-code-above" id="toc-your-code-above" class="nav-link" data-scroll-target="#your-code-above">YOUR CODE ABOVE</a></li>
+  <li><a href="#test-your-function" id="toc-test-your-function" class="nav-link" data-scroll-target="#test-your-function">Test your function</a>
+  <ul class="collapse">
+  <li><a href="#section-2-scope-within-functions" id="toc-section-2-scope-within-functions" class="nav-link" data-scroll-target="#section-2-scope-within-functions">Section 2: Scope within Functions</a></li>
+  </ul></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">———————————</a>
+  <ul class="collapse">
+  <li><a href="#exercise-2.1" id="toc-exercise-2.1" class="nav-link" data-scroll-target="#exercise-2.1">Exercise 2.1:</a></li>
+  </ul></li>
+  <li><a href="#your-changes-below" id="toc-your-changes-below" class="nav-link" data-scroll-target="#your-changes-below">YOUR CHANGES BELOW</a></li>
+  <li><a href="#your-changes-above" id="toc-your-changes-above" class="nav-link" data-scroll-target="#your-changes-above">YOUR CHANGES ABOVE</a></li>
+  <li><a href="#test-your-function-1" id="toc-test-your-function-1" class="nav-link" data-scroll-target="#test-your-function-1">Test your function</a>
+  <ul class="collapse">
+  <li><a href="#exercise-2.2" id="toc-exercise-2.2" class="nav-link" data-scroll-target="#exercise-2.2">Exercise 2.2:</a></li>
+  </ul></li>
+  <li><a href="#your-code-below-1" id="toc-your-code-below-1" class="nav-link" data-scroll-target="#your-code-below-1">YOUR CODE BELOW</a></li>
+  <li><a href="#your-code-above-1" id="toc-your-code-above-1" class="nav-link" data-scroll-target="#your-code-above-1">YOUR CODE ABOVE</a></li>
+  <li><a href="#test-your-function-2" id="toc-test-your-function-2" class="nav-link" data-scroll-target="#test-your-function-2">Test your function</a>
+  <ul class="collapse">
+  <li><a href="#section-3-anonymous-functions" id="toc-section-3-anonymous-functions" class="nav-link" data-scroll-target="#section-3-anonymous-functions">Section 3: Anonymous Functions</a></li>
+  </ul></li>
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">——————————</a>
+  <ul class="collapse">
+  <li><a href="#exercise-3.1" id="toc-exercise-3.1" class="nav-link" data-scroll-target="#exercise-3.1">Exercise 3.1:</a></li>
+  </ul></li>
+  <li><a href="#create-an-anonymous-function-multiply-that-multiplies-two-numbers." id="toc-create-an-anonymous-function-multiply-that-multiplies-two-numbers." class="nav-link" data-scroll-target="#create-an-anonymous-function-multiply-that-multiplies-two-numbers.">Create an anonymous function ‘multiply’ that multiplies two numbers.</a></li>
+  <li><a href="#your-code-below-2" id="toc-your-code-below-2" class="nav-link" data-scroll-target="#your-code-below-2">YOUR CODE BELOW</a></li>
+  <li><a href="#your-code-above-2" id="toc-your-code-above-2" class="nav-link" data-scroll-target="#your-code-above-2">YOUR CODE ABOVE</a></li>
+  <li><a href="#test-your-function-3" id="toc-test-your-function-3" class="nav-link" data-scroll-target="#test-your-function-3">Test your function</a>
+  <ul class="collapse">
+  <li><a href="#section-4-multiple-dispatch" id="toc-section-4-multiple-dispatch" class="nav-link" data-scroll-target="#section-4-multiple-dispatch">Section 4: Multiple Dispatch</a></li>
+  </ul></li>
+  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">—————————-</a></li>
+  <li><a href="#the-specific-implementations-are" id="toc-the-specific-implementations-are" class="nav-link" data-scroll-target="#the-specific-implementations-are">The specific implementations are:</a></li>
+  <li><a href="#test-with-different-types-of-arguments." id="toc-test-with-different-types-of-arguments." class="nav-link" data-scroll-target="#test-with-different-types-of-arguments.">Test with different types of arguments.</a>
+  <ul class="collapse">
+  <li><a href="#exercise-4.1" id="toc-exercise-4.1" class="nav-link" data-scroll-target="#exercise-4.1">Exercise 4.1:</a></li>
+  </ul></li>
+  <li><a href="#your-changes-below-1" id="toc-your-changes-below-1" class="nav-link" data-scroll-target="#your-changes-below-1">YOUR CHANGES BELOW</a></li>
+  <li><a href="#your-changes-above-1" id="toc-your-changes-above-1" class="nav-link" data-scroll-target="#your-changes-above-1">YOUR CHANGES ABOVE</a>
+  <ul class="collapse">
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">———–</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/general/faq.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/general/faq.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="faq.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
-    </div>
-<!-- main -->
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../tutorial-03-01-functions.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Frequently Asked Questions</h1>
-<p class="subtitle lead">Answers to common questions</p>
+<h1 class="title">Tutorial III.I - Functions</h1>
+<p class="subtitle lead">Applied Optimization with Julia</p>
 </div>
 
 
@@ -219,22 +124,136 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="unanswered-questions" class="level2">
-<h2 class="anchored" data-anchor-id="unanswered-questions">Unanswered Questions</h2>
-<p>If you have a question that is not answered here, please let me know by sending me an e-mail to <a href="mailto:tobias.vlcek@uni-hamburg.de?subject=Applied%20Optimization%3A%20%3CYour%20subject%3E">tobias.vlcek@uni-hamburg.de</a> or by creating an issue on <a href="https://github.com/beyondsimulations/Applied-Optimization/issues">GitHub</a>.</p>
+<section id="functions-in-julia" class="level1">
+<h1>Functions in Julia</h1>
 </section>
-<section id="contribution-and-mistakes" class="level2">
-<h2 class="anchored" data-anchor-id="contribution-and-mistakes">Contribution and Mistakes</h2>
-<p>If you have found a mistake in the course material or if you have any suggestion on how to improve the course, please let me know in the <a href="https://tally.so/r/3qWY8d">following form</a> or by creating an issue on <a href="https://github.com/beyondsimulations/Applied-Optimization/issues">GitHub</a>.</p>
+<section id="section" class="level1">
+<h1>==============================</h1>
+<p>println() println(“Functions in Julia”) println()</p>
+<p>#= This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with <span class="citation" data-cites="assert">@assert</span> statements. =#</p>
+<section id="section-1-creating-and-calling-functions" class="level2">
+<h2 class="anchored" data-anchor-id="section-1-creating-and-calling-functions">Section 1: Creating and Calling Functions</h2>
 </section>
-<section id="faqs" class="level2">
-<h2 class="anchored" data-anchor-id="faqs">FAQs</h2>
-<p>So far, I haven’t received any questions.</p>
-
-
+</section>
+<section id="section-1" class="level1">
+<h1>—————————————–</h1>
+<p>println(“Section 1: Creating and Calling Functions”)</p>
+<p>#= Functions in Julia encapsulate reusable code and can be defined using the ‘function’ keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. For example:</p>
+<p>function multiply(a,b) a * b end</p>
+<p>This function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the ‘return’ keyword optional. =#</p>
+<section id="exercise-1.1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1.1">Exercise 1.1:</h2>
+<p>#= Define and Test a Simple Addition Function. Define a function ‘add’ that takes two parameters and returns their sum. =#</p>
+</section>
+</section>
+<section id="your-code-below" class="level1">
+<h1>YOUR CODE BELOW</h1>
+</section>
+<section id="your-code-above" class="level1">
+<h1>YOUR CODE ABOVE</h1>
+</section>
+<section id="test-your-function" class="level1">
+<h1>Test your function</h1>
+<p><span class="citation" data-cites="assert">@assert</span> add(10, 5) == 15 “The sum computed is $(add(10, 5)) but should be 15.”</p>
+<section id="section-2-scope-within-functions" class="level2">
+<h2 class="anchored" data-anchor-id="section-2-scope-within-functions">Section 2: Scope within Functions</h2>
+</section>
+</section>
+<section id="section-2" class="level1">
+<h1>———————————</h1>
+<p>println(“Section 2: Scope within Functions”)</p>
+<p>#= Variables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it. You can do this by passing ‘return’ in front of the variable you want to return from the function. =#</p>
+<section id="exercise-2.1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.1">Exercise 2.1:</h2>
+<p>#= Try to execude the following block of code. The objective is to understand how to return the ‘local_variable_one’ from the function ‘scope_test’. Your task is to change the function, to return the value of ‘local_variable_one’. =#</p>
+</section>
+</section>
+<section id="your-changes-below" class="level1">
+<h1>YOUR CHANGES BELOW</h1>
+<p>function scope_test() local_variable_one = 10 local_variable_two = 20 end</p>
+</section>
+<section id="your-changes-above" class="level1">
+<h1>YOUR CHANGES ABOVE</h1>
+</section>
+<section id="test-your-function-1" class="level1">
+<h1>Test your function</h1>
+<p><span class="citation" data-cites="assert">@assert</span> scope_test() == 10 “The value exported is $(scope_test()).”</p>
+<section id="exercise-2.2" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.2">Exercise 2.2:</h2>
+<p>#= Define and Test an Implicit Return Function. Define a function ‘subtract’ that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise. =#</p>
+</section>
+</section>
+<section id="your-code-below-1" class="level1">
+<h1>YOUR CODE BELOW</h1>
+</section>
+<section id="your-code-above-1" class="level1">
+<h1>YOUR CODE ABOVE</h1>
+</section>
+<section id="test-your-function-2" class="level1">
+<h1>Test your function</h1>
+<p><span class="citation" data-cites="assert">@assert</span> subtract(10, 5) == 5 “The difference computed is $(subtract(10, 5)) but should be 5.”</p>
+<section id="section-3-anonymous-functions" class="level2">
+<h2 class="anchored" data-anchor-id="section-3-anonymous-functions">Section 3: Anonymous Functions</h2>
+</section>
+</section>
+<section id="section-3" class="level1">
+<h1>——————————</h1>
+<p>println(“Section 3: Anonymous Functions”)</p>
+<p>#= Anonymous functions in Julia are unnamed functions, useful for concise and short operations. They are particularly useful for operations that are passed as arguments to higher-order functions or used for short, one-off computations. Syntax for anonymous functions can be either of the following: add_two = (a,b) -&gt; a + b add_two(a,b) = a + b =#</p>
+<section id="exercise-3.1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-3.1">Exercise 3.1:</h2>
+</section>
+</section>
+<section id="create-an-anonymous-function-multiply-that-multiplies-two-numbers." class="level1">
+<h1>Create an anonymous function ‘multiply’ that multiplies two numbers.</h1>
+</section>
+<section id="your-code-below-2" class="level1">
+<h1>YOUR CODE BELOW</h1>
+</section>
+<section id="your-code-above-2" class="level1">
+<h1>YOUR CODE ABOVE</h1>
+</section>
+<section id="test-your-function-3" class="level1">
+<h1>Test your function</h1>
+<p><span class="citation" data-cites="assert">@assert</span> multiply(10, 5) == 50 “The result is $(multiply(10, 5)) but should be 50.”</p>
+<section id="section-4-multiple-dispatch" class="level2">
+<h2 class="anchored" data-anchor-id="section-4-multiple-dispatch">Section 4: Multiple Dispatch</h2>
+</section>
+</section>
+<section id="section-4" class="level1">
+<h1>—————————-</h1>
+<p>println(“Section 4: Multiple Dispatch”)</p>
+<p>#= Multiple dispatch in Julia allows defining function behavior based on argument types, promoting code reuse and clarity. It’s a powerful feature for designing flexible and extensible functions. We first define a generic version and then provide specific implementations for different types: =# function operation(a, b) “Generic operation for objects of type $(typeof(a)) and $(typeof(b))” end</p>
+</section>
+<section id="the-specific-implementations-are" class="level1">
+<h1>The specific implementations are:</h1>
+<p>operation(a::Number, b::Number) = a + b # Specific method for Number types. operation(a::String, b::String) = string(a, b) # Specific method for String types.</p>
+</section>
+<section id="test-with-different-types-of-arguments." class="level1">
+<h1>Test with different types of arguments.</h1>
+<p>result1 = operation(10, 20) # Numeric addition. result2 = operation(“Hello,”, “World!”) # String concatenation. result3 = operation(“Hello,”, 20) # Generic implementation.</p>
+<section id="exercise-4.1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-4.1">Exercise 4.1:</h2>
+<p>#= Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement. Hint: The answer is easy, you just have to change the comparisons. =#</p>
+</section>
+</section>
+<section id="your-changes-below-1" class="level1">
+<h1>YOUR CHANGES BELOW</h1>
+<p><span class="citation" data-cites="assert">@assert</span> result1 == “Hello, World!” <span class="citation" data-cites="assert">@assert</span> result3 == 30 <span class="citation" data-cites="assert">@assert</span> result2 == “Generic operation for objects of type String and Int64”</p>
+</section>
+<section id="your-changes-above-1" class="level1">
+<h1>YOUR CHANGES ABOVE</h1>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+</section>
+</section>
+<section id="section-5" class="level1">
+<h1>———–</h1>
+<p>println() println(“Great work! You’ve just completed the tutorial on functions in Julia.”) println(“You now have a first understanding of how to create, use, and understand”) println(“functions in Julia. Continue to the next file to learn more.”)</p>
 </section>
 
-</main> <!-- /main -->
+</main>
+<!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -327,7 +346,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/beyondsimulations\.github\.io\/Applied-Optimization");
+      var filterRegex = new RegExp('/' + window.location.host + '/');
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -656,32 +675,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-      &nbsp;
-    </div>   
-    <div class="nav-footer-center">
-<p>Applied Optimization with Julia, Tobias Vlćek<br>CC BY-NC-SA 4.0</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/general/faq.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/general/faq.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
-    <div class="nav-footer-right">
-      <ul class="footer-items list-unstyled">
-    <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/beyondsimulations/Applied-Optimization">
-      <i class="bi bi-github" role="img">
-</i> 
-    </a>
-  </li>  
-    <li class="nav-item compact">
-    <a class="nav-link" href="https://linkedin.com/in/tobiasvlcek">
-      <i class="bi bi-linkedin" role="img">
-</i> 
-    </a>
-  </li>  
-</ul>
-    </div>
-  </div>
-</footer>
 
 
 
