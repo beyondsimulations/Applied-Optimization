@@ -132,144 +132,224 @@
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html",
-    "href": "part-03/tutorial-03-05-Plotting.html",
-    "title": "Tutorial III.V - Plotting Graphs",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html",
+    "href": "part-03/tutorial-03-03-DataFrames.html",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "This interactive Julia script introduces the basics of plotting in Julia using the Plots.jl package. It covers creating basic plots, customizing them to your needs, and saving them as files for further use. Follow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.\nEnsure you have the Plots package installed to follow along with this tutorial. If you followed the course so far, you first have to install the Plots Package before you can start using it:\n\nimport Pkg; Pkg.add(\"Plots\")\n\n\nusing Plots\n\n\n\nThe Plots.jl package simplifies the process of creating a wide array of plots, from simple line plots to complex 3D visualizations. The following illustrates the basic syntax of a line plot for some random data. First, we define a variable x with a range from 1 to 10 for the x axis. Then, we define y with 10 random numbers. For example:\n\nx = 1:10      \ny = rand(10)\nline_plot = plot(x, y, title=\"Simple Line Plot\", xlabel=\"x axis\", ylabel=\"y axis\", legend=false)\ndisplay(line_plot)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWe call plot() and use x and y as main arguments. Furthermore, we have a variety of choices to add further information, such as the title, labels, a legend, colors, opacity and so on. More on this later.\n\n\n\nCreate a scatter plot called scatter_plot for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace plot by scatter. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n\n# Create a scatter plot called 'scatter_plot' for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace 'plot' by 'scatter'. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined scatter_plot\nprintln(\"Simple scatter plot created successfully!\")\ndisplay(scatter_plot)\n\n\n\n\nPlots.jl allows extensive customization options to tailor your plots. You can change colors, markers, line styles, and much more. For example, you could dash the line by adding line=:dash, change the width with linewidth=3 and the color by adding color=:red.\n\n\n\nCustomize a line plot and save the plot in the variable custom_line_plot.\n\n# Customize a line plot and save the plot in the variable `custom_line_plot`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined custom_line_plot\nprintln(\"Customized line plot created successfully!\")\ndisplay(custom_line_plot)\n\n\n\n\n\n\n\nNote\n\n\n\nYou can customize the appearance of a random line plot as you like.\n\n\nAdd multiple series to a plot. Instead of one series, we can also add multiple series. This is done, for example, by defining one plot (as before) and then calling plot!() while using the first plot as first argument in the function plot!().\nFor example:\n\nx = 1:20\na = rand(20)\nb = rand(20)\nmulti_plot = plot(x, a, title=\"Many Series\", xlabel=\"x axis\", ylabel=\"y axis\", label=\"a\")\nplot!(multi_plot, x, b, label=\"b\")\ndisplay(multi_plot)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe ! after plot adds to the existing plot.\n\n\n\n\n\nNow, create a plot called multi_series_plot with three data series y1, y2 and y3.\n\n# Now, create a plot called `multi_series_plot` with three data series `y1`, `y2` and `y3`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined y1\n@assert @isdefined y2\n@assert @isdefined y3\n@assert @isdefined multi_series_plot\nprintln(\"Multiple series plot created successfully!\")\ndisplay(multi_series_plot)\n\n\n\n\nPlots.jl supports saving your plots to various file formats including PNG, SVG, and PDF, enabling you to use your plots outside of Julia. The function to save plots is savefig(), the first argument is the plot itself and the second argument is the path/filename format as string. Replace path with the path, the filename with the actual name and format with the file format, e.g. pdf, png, … . For example, if you want to save your file as PDF, you would just name it path/filename.pdf.\n\n\n\nSave the previously created plot multi_series_plot to a file as PNG. Save it in the folder ExampleData and name it saved_plot.png.\n\n# Save the previously created plot `multi_series_plot` to a file as PNG. Save it in the folder `ExampleData` and name it `saved_plot.png`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert  isfile(\"ExampleData/saved_plot.png\") \"File does not exist yet.\"\nprintln(\"Plot saved to 'saved_plot.pdf' successfully!\")\n\n\n\n\nFantastic! You’ve completed the tutorial on basic plotting in Julia. You’ve learned how to create basic plots and customize and save them. Continue to the next file to learn more."
+    "text": "This interactive Julia script is your comprehensive guide to understanding DataFrames in Julia. Work on creating DataFrames, accessing, modifying, and filtering data, alongside basic data manipulation techniques. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements. Note: Ensure you have the DataFrames package installed to effectively follow this tutorial!\n\n# Import the DataFrames package\nusing DataFrames\n\n\n\nA DataFrame in Julia is akin to a table in SQL or a spreadsheet - each column can have its own type, making it highly versatile. A DataFrame can be created using the DataFrame constructor and passing key-value pairs where the key is the column name and the value is an array of data. For more help, use ? in the REPL and type DataFrame.\n\n\n\nCreate and Test a DataFrame. Create a DataFrame named employees with the columns Name, Age, and Salary, and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n\n# Create and Test a DataFrame. Create a DataFrame named 'employees' with the columns 'Name', 'Age', and 'Salary', and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert employees == DataFrame(Name = [\"John\", \"Mike\", \"Frank\"], \n    Age = [28, 23, 37], Salary = [50000, 62000, 90000])\nprintln(\"DataFrame created successfully!\")\nprintln(employees)\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, for more help, use ? in the REPL and type DataFrame.\n\n\n\n\n\nAccessing columns in a DataFrame can be done using the dot syntax, while rows can be accessed via indexing. Modification of data is straightforward; just assign a new value to the desired cell. To access the column ‘name’ in our DataFrame with employees, we could do:\nemployees.Name \nTo access the third name specifically, we could do:\nemployees.Name[3] \n\n\n\nAccess the Age column from the DataFrame and save it in a new variable ages.\n\n# Access the 'Age' column from the DataFrame and save it in a new variable 'ages'.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert ages == [28, 23, 37]\nprintln(\"Correct, the Ages column is: \", ages)\n\n\n\n\nUpdate John’s salary to 59000.\n\n# Update John's salary to 59000.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert employees.Salary[1] == 59000\nprintln(\"Modified DataFrame: \")\nprintln(employees)\n\n\n\n\nLogical indexing can be used to filter rows in a DataFrame based on conditions. To filter the DataFrame to include only employees names “Frank” we could do:\nallFranks = employees[employees.Name .== \"Frank\", :]\nAlternatively, the filter function provides a powerful tool to extract subsets of data based on a condition:\nallFranks = filter(row -&gt; row.Name == \"Frank\", employees) \n\n\n\nFilter the DataFrame to include only employees with salaries above 60000. Save the resulting employees in the DataFrame high_earners.\n\n# Filter the DataFrame to include only employees with salaries above 60000. Save \n# the resulting employees in the DataFrame 'high_earners'. \n# YOUR CODE BELOW\n\n# Test your answer\n@assert nrow(high_earners) == 2\nprintln(\"High earners: \")\nprintln(high_earners)\n\n\n\n\nJulia provides functions for basic data manipulation tasks, including sorting, grouping, and joining DataFrames. The sort function can be used to order the rows in a DataFrame based on the values in one or more columns. To see how to use the function, type ? into the REPL (terminal) and type sort.\n\n\n\nSort the DataFrame based on the Age column and save it as sorted_df.\n\n# Sort the DataFrame based on the 'Age' column and save it as 'sorted_df'.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sorted_df.Age[1] == 23\nprintln(\"DataFrame sorted by age: \")\nprintln(sorted_df)\n\n\n\n\n\n\n\nTip\n\n\n\nIf you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets.\n\n\n\n\n\nFantastic work! You’ve completed the tutorial on DataFrames in Julia. You’ve seen how to create DataFrames and access, modify and filter data. Continue to the next file to learn more.",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#section-1-creating-basic-plots",
-    "href": "part-03/tutorial-03-05-Plotting.html#section-1-creating-basic-plots",
-    "title": "Tutorial III.V - Plotting Graphs",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#section-1-creating-dataframes",
+    "href": "part-03/tutorial-03-03-DataFrames.html#section-1-creating-dataframes",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "The Plots.jl package simplifies the process of creating a wide array of plots, from simple line plots to complex 3D visualizations. The following illustrates the basic syntax of a line plot for some random data. First, we define a variable x with a range from 1 to 10 for the x axis. Then, we define y with 10 random numbers. For example:\n\nx = 1:10      \ny = rand(10)\nline_plot = plot(x, y, title=\"Simple Line Plot\", xlabel=\"x axis\", ylabel=\"y axis\", legend=false)\ndisplay(line_plot)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWe call plot() and use x and y as main arguments. Furthermore, we have a variety of choices to add further information, such as the title, labels, a legend, colors, opacity and so on. More on this later."
+    "text": "A DataFrame in Julia is akin to a table in SQL or a spreadsheet - each column can have its own type, making it highly versatile. A DataFrame can be created using the DataFrame constructor and passing key-value pairs where the key is the column name and the value is an array of data. For more help, use ? in the REPL and type DataFrame.",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-1.1",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-1.1",
-    "title": "Tutorial III.V - Plotting Graphs",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-1.1",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-1.1",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "Create a scatter plot called scatter_plot for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace plot by scatter. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n\n# Create a scatter plot called 'scatter_plot' for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace 'plot' by 'scatter'. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined scatter_plot\nprintln(\"Simple scatter plot created successfully!\")\ndisplay(scatter_plot)"
+    "text": "Create and Test a DataFrame. Create a DataFrame named employees with the columns Name, Age, and Salary, and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n\n# Create and Test a DataFrame. Create a DataFrame named 'employees' with the columns 'Name', 'Age', and 'Salary', and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert employees == DataFrame(Name = [\"John\", \"Mike\", \"Frank\"], \n    Age = [28, 23, 37], Salary = [50000, 62000, 90000])\nprintln(\"DataFrame created successfully!\")\nprintln(employees)\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, for more help, use ? in the REPL and type DataFrame.",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#section-2-customizing-plots",
-    "href": "part-03/tutorial-03-05-Plotting.html#section-2-customizing-plots",
-    "title": "Tutorial III.V - Plotting Graphs",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#section-2-accessing-and-modifying-data",
+    "href": "part-03/tutorial-03-03-DataFrames.html#section-2-accessing-and-modifying-data",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "Plots.jl allows extensive customization options to tailor your plots. You can change colors, markers, line styles, and much more. For example, you could dash the line by adding line=:dash, change the width with linewidth=3 and the color by adding color=:red."
+    "text": "Accessing columns in a DataFrame can be done using the dot syntax, while rows can be accessed via indexing. Modification of data is straightforward; just assign a new value to the desired cell. To access the column ‘name’ in our DataFrame with employees, we could do:\nemployees.Name \nTo access the third name specifically, we could do:\nemployees.Name[3]",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.1",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.1",
-    "title": "Tutorial III.V - Plotting Graphs",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-2.1",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-2.1",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "Customize a line plot and save the plot in the variable custom_line_plot.\n\n# Customize a line plot and save the plot in the variable `custom_line_plot`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined custom_line_plot\nprintln(\"Customized line plot created successfully!\")\ndisplay(custom_line_plot)\n\n\n\n\n\n\n\nNote\n\n\n\nYou can customize the appearance of a random line plot as you like.\n\n\nAdd multiple series to a plot. Instead of one series, we can also add multiple series. This is done, for example, by defining one plot (as before) and then calling plot!() while using the first plot as first argument in the function plot!().\nFor example:\n\nx = 1:20\na = rand(20)\nb = rand(20)\nmulti_plot = plot(x, a, title=\"Many Series\", xlabel=\"x axis\", ylabel=\"y axis\", label=\"a\")\nplot!(multi_plot, x, b, label=\"b\")\ndisplay(multi_plot)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe ! after plot adds to the existing plot."
+    "text": "Access the Age column from the DataFrame and save it in a new variable ages.\n\n# Access the 'Age' column from the DataFrame and save it in a new variable 'ages'.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert ages == [28, 23, 37]\nprintln(\"Correct, the Ages column is: \", ages)",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.2",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.2",
-    "title": "Tutorial III.V - Plotting Graphs",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-2.2",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-2.2",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "Now, create a plot called multi_series_plot with three data series y1, y2 and y3.\n\n# Now, create a plot called `multi_series_plot` with three data series `y1`, `y2` and `y3`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined y1\n@assert @isdefined y2\n@assert @isdefined y3\n@assert @isdefined multi_series_plot\nprintln(\"Multiple series plot created successfully!\")\ndisplay(multi_series_plot)"
+    "text": "Update John’s salary to 59000.\n\n# Update John's salary to 59000.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert employees.Salary[1] == 59000\nprintln(\"Modified DataFrame: \")\nprintln(employees)",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#section-3-saving-plots-to-files",
-    "href": "part-03/tutorial-03-05-Plotting.html#section-3-saving-plots-to-files",
-    "title": "Tutorial III.V - Plotting Graphs",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#section-3-filtering-data",
+    "href": "part-03/tutorial-03-03-DataFrames.html#section-3-filtering-data",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "Plots.jl supports saving your plots to various file formats including PNG, SVG, and PDF, enabling you to use your plots outside of Julia. The function to save plots is savefig(), the first argument is the plot itself and the second argument is the path/filename format as string. Replace path with the path, the filename with the actual name and format with the file format, e.g. pdf, png, … . For example, if you want to save your file as PDF, you would just name it path/filename.pdf."
+    "text": "Logical indexing can be used to filter rows in a DataFrame based on conditions. To filter the DataFrame to include only employees names “Frank” we could do:\nallFranks = employees[employees.Name .== \"Frank\", :]\nAlternatively, the filter function provides a powerful tool to extract subsets of data based on a condition:\nallFranks = filter(row -&gt; row.Name == \"Frank\", employees)",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1",
-    "title": "Tutorial III.V - Plotting Graphs",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-3.1",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-3.1",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "Save the previously created plot multi_series_plot to a file as PNG. Save it in the folder ExampleData and name it saved_plot.png.\n\n# Save the previously created plot `multi_series_plot` to a file as PNG. Save it in the folder `ExampleData` and name it `saved_plot.png`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert  isfile(\"ExampleData/saved_plot.png\") \"File does not exist yet.\"\nprintln(\"Plot saved to 'saved_plot.pdf' successfully!\")"
+    "text": "Filter the DataFrame to include only employees with salaries above 60000. Save the resulting employees in the DataFrame high_earners.\n\n# Filter the DataFrame to include only employees with salaries above 60000. Save \n# the resulting employees in the DataFrame 'high_earners'. \n# YOUR CODE BELOW\n\n# Test your answer\n@assert nrow(high_earners) == 2\nprintln(\"High earners: \")\nprintln(high_earners)",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#conclusion",
-    "href": "part-03/tutorial-03-05-Plotting.html#conclusion",
-    "title": "Tutorial III.V - Plotting Graphs",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#section-4-basic-data-manipulation",
+    "href": "part-03/tutorial-03-03-DataFrames.html#section-4-basic-data-manipulation",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "Fantastic! You’ve completed the tutorial on basic plotting in Julia. You’ve learned how to create basic plots and customize and save them. Continue to the next file to learn more."
+    "text": "Julia provides functions for basic data manipulation tasks, including sorting, grouping, and joining DataFrames. The sort function can be used to order the rows in a DataFrame based on the values in one or more columns. To see how to use the function, type ? into the REPL (terminal) and type sort.",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html",
-    "href": "part-03/tutorial-03-01-functions.html",
-    "title": "Tutorial III.I - Functions in Julia",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-4.1",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-4.1",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.\n\n\nFunctions in Julia encapsulate reusable code and can be defined using the function keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. For example:\nfunction multiply(a,b)\n   a * b\nend\nThis function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the return keyword optional. If you explicitly use the return keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition.\n\n\n\nDefine and Test a Simple Addition Function. Define a function add that takes two parameters and returns their sum.\n\n# Define and Test a Simple Addition Function. Define a function `add` that takes two parameters and returns their sum.\n# YOUR CODE BELOW\n\n# Test your function\n@assert add(10, 5) == 15 \"The sum computed is $(add(10, 5)) but should be 15.\"\nprintln(\"The sum computed is $(add(10, 5)), wonderful!\")\n\n\n\n\nVariables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it. You can do this by passing return in front of the variable you want to return from the function.\n\n\n\nTry to execude the following block of code. The objective is to understand how to return the local_variable_one from the function scope_test. Your task is to change the function, to return the value of local_variable_one.\n\n# Try to execude the following block of code. The objective is to understand how to return the 'local_variable_one' from the function 'scope_test'. Your task is to change the function, to return the value of 'local_variable_one'.\n\n# YOUR CHANGES BELOW\nfunction scope_test()\n    local_variable_one = 10\n    local_variable_two = 20\nend\n\n# YOUR CHANGES ABOVE\n# Test your function\n@assert scope_test() == 10 \"The value exported is $(scope_test()).\"\nprintln(\"The value exported is $(scope_test()), you solved it!\")\n\n\n\n\nDefine and test an implicit return function. Define a function subtract that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n\n# Define and test an implicit return function. Define a function 'subtract' that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n# YOUR CODE BELOW\n\n# Test your function\n@assert subtract(10, 5) == 5  \"The difference computed is $(subtract(10, 5)) but should be 5.\"\nprintln(\"The difference computed is $(subtract(10, 5)), perfect!\")\n\n\n\n\nAnonymous functions in Julia are unnamed functions, useful for concise and short operations. They are particularly useful for operations that are passed as arguments to higher-order functions or used for short, one-off computations. Syntax for anonymous functions can be either of the following:\nadd_two = (a,b) -&gt; a + b\nadd_two(a,b) = a + b\n\n\n\nCreate an anonymous function multiply that multiplies two numbers.\n\n# Create an anonymous function 'multiply' that multiplies two numbers.\n# YOUR CODE BELOW\n\n# Test your function\n@assert multiply(10, 5) == 50  \"The result is $(multiply(10, 5)) but should be 50.\"\nprintln(\"Great job! You created an anonymous function that multiplies two numbers.\")\n\n\n\n\nMultiple dispatch in Julia allows defining function behavior based on argument types, promoting code reuse and clarity. It’s a powerful feature for designing flexible and extensible functions. We first define a generic version and then provide specific implementations for different types:\n\n# Generic operation for objects of all types.\nfunction operation(a, b)\n    \"Generic operation for objects of type $(typeof(a)) and $(typeof(b))\"\nend\n\n# The specific implementations are:\noperation(a::Number, b::Number) = a + b        # Specific method for Number types.\noperation(a::String, b::String) = string(a, b) # Specific method for String types.\n\n# Test with different types of arguments.\nresult1 = operation(10, 20)               # Numeric addition.\nresult2 = operation(\"Hello, \", \"World!\")  # String concatenation.\nresult3 = operation(\"Hello, \", 20)        # Generic implementation.\n\n\"Generic operation for objects of type String and Int64\"\n\n\n\n\n\nChoose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement.\n\n# Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement. Hint: The answer is easy, you just have to change the comparisons.\n\n# YOUR CHANGES BELOW\n@assert result1 == \"Hello, World!\"\n@assert result3 == 30\n@assert result2 == \"Generic operation for objects of type String and Int64\"\nprintln(\"You solved it, the order is now correct!\")\n\n\n\n\n\n\n\nTip\n\n\n\nHint: The answer is easy, you just have to change the comparisons.\n\n\n\n\n\nGreat work! You’ve just completed the tutorial on functions in Julia. You now have a first understanding of how to create, use, and understand functions in Julia. Continue to the next file to learn more."
+    "text": "Sort the DataFrame based on the Age column and save it as sorted_df.\n\n# Sort the DataFrame based on the 'Age' column and save it as 'sorted_df'.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sorted_df.Age[1] == 23\nprintln(\"DataFrame sorted by age: \")\nprintln(sorted_df)\n\n\n\n\n\n\n\nTip\n\n\n\nIf you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets.",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#section-1-creating-and-calling-functions",
-    "href": "part-03/tutorial-03-01-functions.html#section-1-creating-and-calling-functions",
-    "title": "Tutorial III.I - Functions in Julia",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#conclusion",
+    "href": "part-03/tutorial-03-03-DataFrames.html#conclusion",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "Functions in Julia encapsulate reusable code and can be defined using the function keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. For example:\nfunction multiply(a,b)\n   a * b\nend\nThis function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the return keyword optional. If you explicitly use the return keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition."
+    "text": "Fantastic work! You’ve completed the tutorial on DataFrames in Julia. You’ve seen how to create DataFrames and access, modify and filter data. Continue to the next file to learn more.",
+    "crumbs": [
+      "03 Data Management",
+      "03 - Comparisons"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#exercise-1.1",
-    "href": "part-03/tutorial-03-01-functions.html#exercise-1.1",
-    "title": "Tutorial III.I - Functions in Julia",
+    "objectID": "part-02/tutorial-02-04-loops.html",
+    "href": "part-02/tutorial-02-04-loops.html",
+    "title": "Tutorial II.IV - Loops",
     "section": "",
-    "text": "Define and Test a Simple Addition Function. Define a function add that takes two parameters and returns their sum.\n\n# Define and Test a Simple Addition Function. Define a function `add` that takes two parameters and returns their sum.\n# YOUR CODE BELOW\n\n# Test your function\n@assert add(10, 5) == 15 \"The sum computed is $(add(10, 5)) but should be 15.\"\nprintln(\"The sum computed is $(add(10, 5)), wonderful!\")"
+    "text": "This interactive Julia script is an extensive tutorial introducing you to the robust loop structures in Julia. Improve your skills in for and while loops for performing repetitive tasks, manipulating loop flow with break and continue, and applying nested loops to iterate through multi-dimensional structures. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#section-2-scope-within-functions",
-    "href": "part-03/tutorial-03-01-functions.html#section-2-scope-within-functions",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "",
-    "text": "Variables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it. You can do this by passing return in front of the variable you want to return from the function."
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.1",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-1.1",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 1.1",
+    "text": "Exercise 1.1\nSum the numbers from 1 to 5 in a loop. Don’t worry about the let here, it just starts a scope block. More on this later in the tutorial on variable scope. The next line initializes sum_numbers to 0. The sum you compute should accumulate in this variable.\n\n# Calculate the sum of numbers from 1 to 5 in a loop. Don't worry about the let here, it just starts a scope block. More on this later in the tutorial on variable scope. The next line initializes sum_numbers to 0. The sum you compute should accumulate in this variable.\nlet \nsum_numbers = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sum_numbers == 15\nprintln(\"Sum of numbers from 1 to 5: \", sum_numbers)\nend # This ends the scope of the previously started scope block.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#exercise-2.1",
-    "href": "part-03/tutorial-03-01-functions.html#exercise-2.1",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "",
-    "text": "Try to execude the following block of code. The objective is to understand how to return the local_variable_one from the function scope_test. Your task is to change the function, to return the value of local_variable_one.\n\n# Try to execude the following block of code. The objective is to understand how to return the 'local_variable_one' from the function 'scope_test'. Your task is to change the function, to return the value of 'local_variable_one'.\n\n# YOUR CHANGES BELOW\nfunction scope_test()\n    local_variable_one = 10\n    local_variable_two = 20\nend\n\n# YOUR CHANGES ABOVE\n# Test your function\n@assert scope_test() == 10 \"The value exported is $(scope_test()).\"\nprintln(\"The value exported is $(scope_test()), you solved it!\")"
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.2",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-1.2",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 1.2",
+    "text": "Exercise 1.2\nSum only the even numbers from 1 to 10. Again, we initialize a variable sum_evens to 0. The sum you compute should accumulate in this variable.\n\n# Sum only the even numbers from 1 to 10. Again, we initialize a variable 'sum_evens' to 0. The sum you compute should accumulate in this variable.\nlet # First, we start a scope block for the loop!\nsum_evens = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sum_evens == 30\nprintln(\"Sum of even numbers from 1 to 10: \", sum_evens)\nend # Here we end the scope block again.\n\n\n\n\n\n\n\nNote\n\n\n\nHint: Utilize the remainder operator (%) to verify if a number is even. number % 2 == 0 implies that number is even.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#exercise-2.2",
-    "href": "part-03/tutorial-03-01-functions.html#exercise-2.2",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "",
-    "text": "Define and test an implicit return function. Define a function subtract that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n\n# Define and test an implicit return function. Define a function 'subtract' that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n# YOUR CODE BELOW\n\n# Test your function\n@assert subtract(10, 5) == 5  \"The difference computed is $(subtract(10, 5)) but should be 5.\"\nprintln(\"The difference computed is $(subtract(10, 5)), perfect!\")"
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.3",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-1.3",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 1.3",
+    "text": "Exercise 1.3\nIterate over each fruit in the fruits array, store the current fruit in current_fruit, and exit the loop if current_fruit is banana. The next lines initialize the fruits array and current_fruit variable.\n\n# Iterate over each fruit in the 'fruits' array, store the current fruit  in 'current_fruit', and exit the loop if 'current_fruit' is \"banana\". The next lines initialize the 'fruits' array and 'current_fruit' variable. But first, another scope block.\nlet \nfruits = [\"apple\", \"banana\", \"cherry\"]\ncurrent_fruit = \"None\"\n# YOUR CODE BELOW\n\n# Test your answer\n@assert current_fruit == \"banana\"\nprintln(\"The current fruit is: \", current_fruit)\nend # Here we end the scope block again.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#section-3-anonymous-functions",
-    "href": "part-03/tutorial-03-01-functions.html#section-3-anonymous-functions",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "",
-    "text": "Anonymous functions in Julia are unnamed functions, useful for concise and short operations. They are particularly useful for operations that are passed as arguments to higher-order functions or used for short, one-off computations. Syntax for anonymous functions can be either of the following:\nadd_two = (a,b) -&gt; a + b\nadd_two(a,b) = a + b"
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-2.1",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-2.1",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 2.1",
+    "text": "Exercise 2.1\nSubtract from 10 in increments of 1 until the result is less than 3. The next line initializes current_value to 10. The result should be in this variable.\n\n# Subtract from 10 in increments of 1 until the result is less than 3. The next line initializes current_value to 10. The result should be in this variable. But first, we startnew scope block.\nlet \ncurrent_value = 10\n# YOUR CODE BELOW\n\n# Test your answer\n@assert current_value == 2\nprintln(\"The first value smaller than 3 is: \", current_value)\nend # Scope block closed again.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#exercise-3.1",
-    "href": "part-03/tutorial-03-01-functions.html#exercise-3.1",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "",
-    "text": "Create an anonymous function multiply that multiplies two numbers.\n\n# Create an anonymous function 'multiply' that multiplies two numbers.\n# YOUR CODE BELOW\n\n# Test your function\n@assert multiply(10, 5) == 50  \"The result is $(multiply(10, 5)) but should be 50.\"\nprintln(\"Great job! You created an anonymous function that multiplies two numbers.\")"
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-2.2",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-2.2",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 2.2",
+    "text": "Exercise 2.2\nFind the first multiple of 7 greater than 50 using an indefinite loop. The next line initializes first_multiple_of_7 to 0. The first multiple should be in this variable.\n\n# Find the first multiple of 7 greater than 50 using an indefinite loop.  The next line initializes 'first_multiple_of_7' to 0. The first multiple should be in this variable. But first, we start a new scope block.\nlet \nfirst_multiple_of_7 = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert first_multiple_of_7 == 56\nprintln(\"First multiple of 7 greater than 50: \", first_multiple_of_7)\nend # End of scope block\n\n\n\n\n\n\n\nTip\n\n\n\n‘while true … end’ constructs an infinite loop. You can exit the loop using a ‘break’ statement if a condition is met.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#section-4-multiple-dispatch",
-    "href": "part-03/tutorial-03-01-functions.html#section-4-multiple-dispatch",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "",
-    "text": "Multiple dispatch in Julia allows defining function behavior based on argument types, promoting code reuse and clarity. It’s a powerful feature for designing flexible and extensible functions. We first define a generic version and then provide specific implementations for different types:\n\n# Generic operation for objects of all types.\nfunction operation(a, b)\n    \"Generic operation for objects of type $(typeof(a)) and $(typeof(b))\"\nend\n\n# The specific implementations are:\noperation(a::Number, b::Number) = a + b        # Specific method for Number types.\noperation(a::String, b::String) = string(a, b) # Specific method for String types.\n\n# Test with different types of arguments.\nresult1 = operation(10, 20)               # Numeric addition.\nresult2 = operation(\"Hello, \", \"World!\")  # String concatenation.\nresult3 = operation(\"Hello, \", 20)        # Generic implementation.\n\n\"Generic operation for objects of type String and Int64\""
+    "objectID": "part-02/tutorial-02-04-loops.html#section-3-nested-loops",
+    "href": "part-02/tutorial-02-04-loops.html#section-3-nested-loops",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Section 3: Nested Loops",
+    "text": "Section 3: Nested Loops\nNested loops are loops within another loop, useful for iterating over multi-dimensional data structures.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#exercise-4.1",
-    "href": "part-03/tutorial-03-01-functions.html#exercise-4.1",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "",
-    "text": "Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement.\n\n# Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement. Hint: The answer is easy, you just have to change the comparisons.\n\n# YOUR CHANGES BELOW\n@assert result1 == \"Hello, World!\"\n@assert result3 == 30\n@assert result2 == \"Generic operation for objects of type String and Int64\"\nprintln(\"You solved it, the order is now correct!\")\n\n\n\n\n\n\n\nTip\n\n\n\nHint: The answer is easy, you just have to change the comparisons."
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-3.1",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-3.1",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 3.1",
+    "text": "Exercise 3.1\nCompute the product of each pair of elements from two arrays. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results.\n\n# Compute the product of each pair of elements from two arrays. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results. But first, we start a new scope block.\nlet \nnumbers1 = [1, 2, 3]\nnumbers2 = [4, 5, 6]\nproducts = []\n# YOUR CODE BELOW\n\n# Test your answer\n@assert products == [4, 5, 6, 8, 10, 12, 12, 15, 18]\nprintln(\"Products of each pair from two arrays: \", products)\nend # End scope block\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, you can use push!() to append elements to an array.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#conclusion",
-    "href": "part-03/tutorial-03-01-functions.html#conclusion",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "",
-    "text": "Great work! You’ve just completed the tutorial on functions in Julia. You now have a first understanding of how to create, use, and understand functions in Julia. Continue to the next file to learn more."
+    "objectID": "part-02/tutorial-02-04-loops.html#conclusion",
+    "href": "part-02/tutorial-02-04-loops.html#conclusion",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Conclusion",
+    "text": "Conclusion\nGreat work! You’ve successfully navigated through the basics of loops in Julia. You’ve seen for and while loops, tackled iterable structure, and worked on nested loops. Continue to the next file to learn more.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
   },
   {
     "objectID": "part-02/tutorial-02-01-variables.html",
@@ -828,70 +908,110 @@
     "href": "part-03/lecture-packages.html",
     "title": "Lecture III - Packages and Data Management",
     "section": "",
-    "text": "Variables are used to store values\nAssign a value to a variable using the = operator\nYou can use different data types for variables\nYou can change the value of a variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the typeof function to check the type of a variable.\n\n\n\n\n\n\nVectors and matrices are used to store multiple values\nYou can create a them using the [ and ] operators\nAccess their elements using square brackets\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the push! function to add elements to a vector or the pop! function to remove elements from a vector.\n\n\n\n\n\n\nComparisons are used to compare values\n== checks if two values are equal\n!= checks if two values are not equal\n&lt; checks if one value is smaller than the other\n&gt;= checks if one value is greater than or equal to the other\n&& checks if two values are true\n|| checks if at least one of two values is true\n\n\n\n\n\nLoops are used to repeat code\nfor loop repeats code for a fixed number of times\nwhile loop repeats code until a condition is met\nif statement checks if a condition is true\nelse executes code if a condition is false\nelseif checks if a condition is true and executes if it is\n\n\n\n\n\nScope determines where a variable is defined and lives\nglobal keyword defines a global variable\nlocal keyword defines a local variable\nlet keyword defines a local variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nGlobal variables usually make your code much slower, if they are not defined as constants. But for this leeture this is not that important.\n\n\n\n\n\n\nThe tutorials from last week will be available on Friday\nYou can access them in the project folder on Github\nClick on the little cat icon on the bottom right\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can ask questions anytime in class or via email!"
+    "text": "Variables are used to store values\nAssign a value to a variable using the = operator\nYou can use different data types for variables\nYou can change the value of a variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the typeof function to check the type of a variable.\n\n\n\n\n\n\nVectors and matrices are used to store multiple values\nYou can create a them using the [ and ] operators\nAccess their elements using square brackets\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the push! function to add elements to a vector or the pop! function to remove elements from a vector.\n\n\n\n\n\n\nComparisons are used to compare values\n== checks if two values are equal\n!= checks if two values are not equal\n&lt; checks if one value is smaller than the other\n&gt;= checks if one value is greater than or equal to the other\n&& checks if two values are true\n|| checks if at least one of two values is true\n\n\n\n\n\nLoops are used to repeat code\nfor loop repeats code for a fixed number of times\nwhile loop repeats code until a condition is met\nif statement checks if a condition is true\nelse executes code if a condition is false\nelseif checks if a condition is true and executes if it is\n\n\n\n\n\nScope determines where a variable is defined and lives\nglobal keyword defines a global variable\nlocal keyword defines a local variable\nlet keyword defines a local variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nGlobal variables usually make your code much slower, if they are not defined as constants. But for this leeture this is not that important.\n\n\n\n\n\n\nThe tutorials from last week will be available on Friday\nYou can access them in the project folder on Github\nClick on the little cat icon on the bottom right\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can ask questions anytime in class or via email!",
+    "crumbs": [
+      "03 Data Management",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-03/lecture-packages.html#variables-and-data-types",
     "href": "part-03/lecture-packages.html#variables-and-data-types",
     "title": "Lecture III - Packages and Data Management",
     "section": "",
-    "text": "Variables are used to store values\nAssign a value to a variable using the = operator\nYou can use different data types for variables\nYou can change the value of a variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the typeof function to check the type of a variable."
+    "text": "Variables are used to store values\nAssign a value to a variable using the = operator\nYou can use different data types for variables\nYou can change the value of a variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the typeof function to check the type of a variable.",
+    "crumbs": [
+      "03 Data Management",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-03/lecture-packages.html#vectors-and-matrices",
     "href": "part-03/lecture-packages.html#vectors-and-matrices",
     "title": "Lecture III - Packages and Data Management",
     "section": "",
-    "text": "Vectors and matrices are used to store multiple values\nYou can create a them using the [ and ] operators\nAccess their elements using square brackets\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the push! function to add elements to a vector or the pop! function to remove elements from a vector."
+    "text": "Vectors and matrices are used to store multiple values\nYou can create a them using the [ and ] operators\nAccess their elements using square brackets\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the push! function to add elements to a vector or the pop! function to remove elements from a vector.",
+    "crumbs": [
+      "03 Data Management",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-03/lecture-packages.html#comparisons-and-logic",
     "href": "part-03/lecture-packages.html#comparisons-and-logic",
     "title": "Lecture III - Packages and Data Management",
     "section": "",
-    "text": "Comparisons are used to compare values\n== checks if two values are equal\n!= checks if two values are not equal\n&lt; checks if one value is smaller than the other\n&gt;= checks if one value is greater than or equal to the other\n&& checks if two values are true\n|| checks if at least one of two values is true"
+    "text": "Comparisons are used to compare values\n== checks if two values are equal\n!= checks if two values are not equal\n&lt; checks if one value is smaller than the other\n&gt;= checks if one value is greater than or equal to the other\n&& checks if two values are true\n|| checks if at least one of two values is true",
+    "crumbs": [
+      "03 Data Management",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-03/lecture-packages.html#loops",
     "href": "part-03/lecture-packages.html#loops",
     "title": "Lecture III - Packages and Data Management",
     "section": "",
-    "text": "Loops are used to repeat code\nfor loop repeats code for a fixed number of times\nwhile loop repeats code until a condition is met\nif statement checks if a condition is true\nelse executes code if a condition is false\nelseif checks if a condition is true and executes if it is"
+    "text": "Loops are used to repeat code\nfor loop repeats code for a fixed number of times\nwhile loop repeats code until a condition is met\nif statement checks if a condition is true\nelse executes code if a condition is false\nelseif checks if a condition is true and executes if it is",
+    "crumbs": [
+      "03 Data Management",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-03/lecture-packages.html#scope",
     "href": "part-03/lecture-packages.html#scope",
     "title": "Lecture III - Packages and Data Management",
     "section": "",
-    "text": "Scope determines where a variable is defined and lives\nglobal keyword defines a global variable\nlocal keyword defines a local variable\nlet keyword defines a local variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nGlobal variables usually make your code much slower, if they are not defined as constants. But for this leeture this is not that important."
+    "text": "Scope determines where a variable is defined and lives\nglobal keyword defines a global variable\nlocal keyword defines a local variable\nlet keyword defines a local variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nGlobal variables usually make your code much slower, if they are not defined as constants. But for this leeture this is not that important.",
+    "crumbs": [
+      "03 Data Management",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-03/lecture-packages.html#solutions-from-last-week",
     "href": "part-03/lecture-packages.html#solutions-from-last-week",
     "title": "Lecture III - Packages and Data Management",
     "section": "",
-    "text": "The tutorials from last week will be available on Friday\nYou can access them in the project folder on Github\nClick on the little cat icon on the bottom right\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can ask questions anytime in class or via email!"
+    "text": "The tutorials from last week will be available on Friday\nYou can access them in the project folder on Github\nClick on the little cat icon on the bottom right\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can ask questions anytime in class or via email!",
+    "crumbs": [
+      "03 Data Management",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-03/lecture-packages.html#topics-of-the-tutorials",
     "href": "part-03/lecture-packages.html#topics-of-the-tutorials",
     "title": "Lecture III - Packages and Data Management",
     "section": "Topics of the Tutorials",
-    "text": "Topics of the Tutorials\n\nFunctions: Learn how to define and use functions\nPackages: Learn how to install and use packages\nDataFrames: Learn how to work with tabular data in Julia\nIO: Learn how to read and write data in Julia\nPlots: Learn how to create plots in Julia"
+    "text": "Topics of the Tutorials\n\nFunctions: Learn how to define and use functions\nPackages: Learn how to install and use packages\nDataFrames: Learn how to work with tabular data in Julia\nIO: Learn how to read and write data in Julia\nPlots: Learn how to create plots in Julia",
+    "crumbs": [
+      "03 Data Management",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-03/lecture-packages.html#get-started-with-the-tutorials",
     "href": "part-03/lecture-packages.html#get-started-with-the-tutorials",
     "title": "Lecture III - Packages and Data Management",
     "section": "Get started with the tutorials",
-    "text": "Get started with the tutorials\n\nDownload this weeks tutorials and start with the first one\nRemember, you can ask questions anytime!\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nAnd that’s it for this lecture!\nThe remaining time we will already start working on the problems of the third lecture."
+    "text": "Get started with the tutorials\n\nDownload this weeks tutorials and start with the first one\nRemember, you can ask questions anytime!\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nAnd that’s it for this lecture!\nThe remaining time we will already start working on the problems of the third lecture.",
+    "crumbs": [
+      "03 Data Management",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-03/lecture-packages.html#literature-1",
     "href": "part-03/lecture-packages.html#literature-1",
     "title": "Lecture III - Packages and Data Management",
     "section": "Literature",
-    "text": "Literature\n\nLauwens, B., & Downey, A. B. (2019). Think Julia: How to think like a computer scientist (First edition). O’Reilly®. Link to the free book website.\nJulia Documentation\n\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course."
+    "text": "Literature\n\nLauwens, B., & Downey, A. B. (2019). Think Julia: How to think like a computer scientist (First edition). O’Reilly®. Link to the free book website.\nJulia Documentation\n\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.",
+    "crumbs": [
+      "03 Data Management",
+      "Lecture"
+    ]
   },
   {
     "objectID": "general/literature.html",
@@ -2156,105 +2276,165 @@
     "href": "part-03/tutorial-03-02-handling.html",
     "title": "Tutorial III.II - Package Management",
     "section": "",
-    "text": "This interactive script serves as an in-depth guide to understanding packages and package management in Julia. Delve into the utilization of the package manager, the processes of adding, updating, and removing packages, and management of distinct environments. First off all, we briefly need to introduce what a package is: a package is a collection of code that is used to extend the functionality of Julia. There are a lot of packages available for Julia, ranging from basic packages like LinearAlgebra to more specialized packages like JuMP for optimization. This means that most of the time you don’nt have to invent the wheel by yourself but can rely on the work of others. The great thing: Almost all packages available for Julia are available for free and can be used under the MIT license.\n\n\n\n\n\n\nNote\n\n\n\nNote: While this script offers guidance, package management commands should usually be executed in Julia’s REPL.\n\n\n\n\nJulia’s built-in package manager, Pkg, provides a robust set of tools for managing packages. To utilize these tools, start by importing the Pkg module. This module allows you to add, update, and remove packages, and manage environments efficiently. Note, import PackageName lets you access exported functions with PackageName.function, while using PackageName imports all exported names into the local namespace for direct access.\n\n\n\nImport the Pkg module to start managing packages effectively.\n\n# Import the Pkg module to start managing packages effectively.\n# YOUR CODE BELOW\n\n# Test your answer\ntry \n    Pkg.update()\n    println(\"Pkg module imported successfully and packages were updated!\")\ncatch e\n    @error \"The Pkg module was not imported yet! Have you used the correct syntax?\"\nend\n\n\n\n\nAdding packages in Julia is straightforward using the Pkg.add(\"PackageName\") function. Replace PackageName with the actual package name you wish to add.\n\n\n\nUse Pkg.add() to add the Package DataFrames that we will use later.\n\n# Use Pkg.add() to add the Package 'DataFrames' that we will use later.\n# YOUR CODE BELOW\n\n# Test your answer\ntry \n    using DataFrames\n    println(\"Package added successfully!\")\ncatch e\n    @error \"Package was not added yet! Have you used the correct syntax?\"\nend\n\nPackage added successfully!\n\n\n\n\n\nMaintaining your Julia environment involves keeping your packages up-to-date and removing those that are no longer necessary. Use Pkg.update(\"PackageName\") to update individual packages, or simply Pkg.update() to update all packages. To remove an obsolete package, use Pkg.rm(\"PackageName\"). Remember to replace PackageName with the actual name of the package you wish to manage.\n\n\n\nJulia environments are essential for keeping project dependencies isolated and organized. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with Pkg.activate(\"new_environment\") and add packages to it with Pkg.add(\"PackageName\"). This ensures that each of your projects has a clean, dedicated set of dependencies.\n\n\n\n\n\n\nNote\n\n\n\nIf you plan to stick to working with notebooks, you don’t have to worry about environments yet. Just use the global environment for the course and you don’t have to activate anything.\n\n\n\n\n\nCongratulations! You’ve completed the tutorial on packages and package management in Julia. These skills are important for effectively managing and utilizing external libraries. Continue to the next file to learn more."
+    "text": "This interactive script serves as an in-depth guide to understanding packages and package management in Julia. Delve into the utilization of the package manager, the processes of adding, updating, and removing packages, and management of distinct environments. First off all, we briefly need to introduce what a package is: a package is a collection of code that is used to extend the functionality of Julia. There are a lot of packages available for Julia, ranging from basic packages like LinearAlgebra to more specialized packages like JuMP for optimization. This means that most of the time you don’nt have to invent the wheel by yourself but can rely on the work of others. The great thing: Almost all packages available for Julia are available for free and can be used under the MIT license.\n\n\n\n\n\n\nNote\n\n\n\nNote: While this script offers guidance, package management commands should usually be executed in Julia’s REPL.\n\n\n\n\nJulia’s built-in package manager, Pkg, provides a robust set of tools for managing packages. To utilize these tools, start by importing the Pkg module. This module allows you to add, update, and remove packages, and manage environments efficiently. Note, import PackageName lets you access exported functions with PackageName.function, while using PackageName imports all exported names into the local namespace for direct access.\n\n\n\nImport the Pkg module to start managing packages effectively.\n\n# Import the Pkg module to start managing packages effectively.\n# YOUR CODE BELOW\n\n# Test your answer\ntry \n    Pkg.update()\n    println(\"Pkg module imported successfully and packages were updated!\")\ncatch e\n    @error \"The Pkg module was not imported yet! Have you used the correct syntax?\"\nend\n\n\n\n\nAdding packages in Julia is straightforward using the Pkg.add(\"PackageName\") function. Replace PackageName with the actual package name you wish to add.\n\n\n\nUse Pkg.add() to add the Package DataFrames that we will use later.\n\n# Use Pkg.add() to add the Package 'DataFrames' that we will use later.\n# YOUR CODE BELOW\n\n# Test your answer\ntry \n    using DataFrames\n    println(\"Package added successfully!\")\ncatch e\n    @error \"Package was not added yet! Have you used the correct syntax?\"\nend\n\nPackage added successfully!\n\n\n\n\n\nMaintaining your Julia environment involves keeping your packages up-to-date and removing those that are no longer necessary. Use Pkg.update(\"PackageName\") to update individual packages, or simply Pkg.update() to update all packages. To remove an obsolete package, use Pkg.rm(\"PackageName\"). Remember to replace PackageName with the actual name of the package you wish to manage.\n\n\n\nJulia environments are essential for keeping project dependencies isolated and organized. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with Pkg.activate(\"new_environment\") and add packages to it with Pkg.add(\"PackageName\"). This ensures that each of your projects has a clean, dedicated set of dependencies.\n\n\n\n\n\n\nNote\n\n\n\nIf you plan to stick to working with notebooks, you don’t have to worry about environments yet. Just use the global environment for the course and you don’t have to activate anything.\n\n\n\n\n\nCongratulations! You’ve completed the tutorial on packages and package management in Julia. These skills are important for effectively managing and utilizing external libraries. Continue to the next file to learn more.",
+    "crumbs": [
+      "03 Data Management",
+      "02 - Handling Data"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-02-handling.html#section-1-using-the-package-manager",
     "href": "part-03/tutorial-03-02-handling.html#section-1-using-the-package-manager",
     "title": "Tutorial III.II - Package Management",
     "section": "",
-    "text": "Julia’s built-in package manager, Pkg, provides a robust set of tools for managing packages. To utilize these tools, start by importing the Pkg module. This module allows you to add, update, and remove packages, and manage environments efficiently. Note, import PackageName lets you access exported functions with PackageName.function, while using PackageName imports all exported names into the local namespace for direct access."
+    "text": "Julia’s built-in package manager, Pkg, provides a robust set of tools for managing packages. To utilize these tools, start by importing the Pkg module. This module allows you to add, update, and remove packages, and manage environments efficiently. Note, import PackageName lets you access exported functions with PackageName.function, while using PackageName imports all exported names into the local namespace for direct access.",
+    "crumbs": [
+      "03 Data Management",
+      "02 - Handling Data"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-02-handling.html#exercise-1.1",
     "href": "part-03/tutorial-03-02-handling.html#exercise-1.1",
     "title": "Tutorial III.II - Package Management",
     "section": "",
-    "text": "Import the Pkg module to start managing packages effectively.\n\n# Import the Pkg module to start managing packages effectively.\n# YOUR CODE BELOW\n\n# Test your answer\ntry \n    Pkg.update()\n    println(\"Pkg module imported successfully and packages were updated!\")\ncatch e\n    @error \"The Pkg module was not imported yet! Have you used the correct syntax?\"\nend"
+    "text": "Import the Pkg module to start managing packages effectively.\n\n# Import the Pkg module to start managing packages effectively.\n# YOUR CODE BELOW\n\n# Test your answer\ntry \n    Pkg.update()\n    println(\"Pkg module imported successfully and packages were updated!\")\ncatch e\n    @error \"The Pkg module was not imported yet! Have you used the correct syntax?\"\nend",
+    "crumbs": [
+      "03 Data Management",
+      "02 - Handling Data"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-02-handling.html#section-2-adding-packages",
     "href": "part-03/tutorial-03-02-handling.html#section-2-adding-packages",
     "title": "Tutorial III.II - Package Management",
     "section": "",
-    "text": "Adding packages in Julia is straightforward using the Pkg.add(\"PackageName\") function. Replace PackageName with the actual package name you wish to add."
+    "text": "Adding packages in Julia is straightforward using the Pkg.add(\"PackageName\") function. Replace PackageName with the actual package name you wish to add.",
+    "crumbs": [
+      "03 Data Management",
+      "02 - Handling Data"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-02-handling.html#exercise-2.1",
     "href": "part-03/tutorial-03-02-handling.html#exercise-2.1",
     "title": "Tutorial III.II - Package Management",
     "section": "",
-    "text": "Use Pkg.add() to add the Package DataFrames that we will use later.\n\n# Use Pkg.add() to add the Package 'DataFrames' that we will use later.\n# YOUR CODE BELOW\n\n# Test your answer\ntry \n    using DataFrames\n    println(\"Package added successfully!\")\ncatch e\n    @error \"Package was not added yet! Have you used the correct syntax?\"\nend\n\nPackage added successfully!"
+    "text": "Use Pkg.add() to add the Package DataFrames that we will use later.\n\n# Use Pkg.add() to add the Package 'DataFrames' that we will use later.\n# YOUR CODE BELOW\n\n# Test your answer\ntry \n    using DataFrames\n    println(\"Package added successfully!\")\ncatch e\n    @error \"Package was not added yet! Have you used the correct syntax?\"\nend\n\nPackage added successfully!",
+    "crumbs": [
+      "03 Data Management",
+      "02 - Handling Data"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-02-handling.html#section-3-updating-and-removing-packages",
     "href": "part-03/tutorial-03-02-handling.html#section-3-updating-and-removing-packages",
     "title": "Tutorial III.II - Package Management",
     "section": "",
-    "text": "Maintaining your Julia environment involves keeping your packages up-to-date and removing those that are no longer necessary. Use Pkg.update(\"PackageName\") to update individual packages, or simply Pkg.update() to update all packages. To remove an obsolete package, use Pkg.rm(\"PackageName\"). Remember to replace PackageName with the actual name of the package you wish to manage."
+    "text": "Maintaining your Julia environment involves keeping your packages up-to-date and removing those that are no longer necessary. Use Pkg.update(\"PackageName\") to update individual packages, or simply Pkg.update() to update all packages. To remove an obsolete package, use Pkg.rm(\"PackageName\"). Remember to replace PackageName with the actual name of the package you wish to manage.",
+    "crumbs": [
+      "03 Data Management",
+      "02 - Handling Data"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-02-handling.html#section-4-managing-environments",
     "href": "part-03/tutorial-03-02-handling.html#section-4-managing-environments",
     "title": "Tutorial III.II - Package Management",
     "section": "",
-    "text": "Julia environments are essential for keeping project dependencies isolated and organized. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with Pkg.activate(\"new_environment\") and add packages to it with Pkg.add(\"PackageName\"). This ensures that each of your projects has a clean, dedicated set of dependencies.\n\n\n\n\n\n\nNote\n\n\n\nIf you plan to stick to working with notebooks, you don’t have to worry about environments yet. Just use the global environment for the course and you don’t have to activate anything."
+    "text": "Julia environments are essential for keeping project dependencies isolated and organized. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with Pkg.activate(\"new_environment\") and add packages to it with Pkg.add(\"PackageName\"). This ensures that each of your projects has a clean, dedicated set of dependencies.\n\n\n\n\n\n\nNote\n\n\n\nIf you plan to stick to working with notebooks, you don’t have to worry about environments yet. Just use the global environment for the course and you don’t have to activate anything.",
+    "crumbs": [
+      "03 Data Management",
+      "02 - Handling Data"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-02-handling.html#conclusion",
     "href": "part-03/tutorial-03-02-handling.html#conclusion",
     "title": "Tutorial III.II - Package Management",
     "section": "",
-    "text": "Congratulations! You’ve completed the tutorial on packages and package management in Julia. These skills are important for effectively managing and utilizing external libraries. Continue to the next file to learn more."
+    "text": "Congratulations! You’ve completed the tutorial on packages and package management in Julia. These skills are important for effectively managing and utilizing external libraries. Continue to the next file to learn more.",
+    "crumbs": [
+      "03 Data Management",
+      "02 - Handling Data"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-04-IO.html",
     "href": "part-03/tutorial-03-04-IO.html",
     "title": "Tutorial III.IV - Input and Output",
     "section": "",
-    "text": "This interactive Julia script introduces the essentials of interacting with external files. It covers reading and writing text files, handling CSV, and working with delimited files using DelimitedFiles. Follow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.\n\n\nDelimited files, such as .csv, can be handled efficiently using the DelimitedFiles package in Julia. This requires the DelimitedFiles package. But as it is part of the Julia Standard Library, you can use it directly without the need to use Pkg.add() before.\n\nusing DelimitedFiles\n\nThe following code writes a matrix to a CSV file, seperating values with ,.\n\nnew_data = [10 12 6; 13 25 1; 40 30 7]\nmkdir(\"ExampleData\")\nopen(\"ExampleData/matrix.csv\", \"w\") do io\n    writedlm(io, new_data, ',')\nend\nprintln(\"CSV file 'matrix.csv' written successfully to folder ExampleData!\")\n\n\n\n\nRead the just written CSV file ‘matrix.csv’ using the function readdlm(). Save the matrix in the variable read_matrix. To learn the syntax, use the inbuild help by typing ? in the terminal. Afterwards, just type the function name for an explanation.\n\n# Read the just written CSV file 'matrix.csv' using the function `readdlm()`. Save the matrix in the variable `read_matrix`. To learn the syntax, use the inbuild help by typing `?` in the terminal. Afterwards, just type the function name for an explanation.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert read_matrix == new_data\nprintln(\"File 'matrix.csv' read successfully!\")\n\n\n\n\nThe CSV package in Julia provides powerful tools for reading and writing CSV files to and from DataFrames, a common requirement in data analysis and data science projects. This requires the CSV and DataFrames packages. If you solely followed the course so far, you first have to install the CSV Package before you can start using it:\nimport Pkg; Pkg.add(\"CSV\")\n\n\n\nWrite the following given DataFrame to a CSV file table_out.csv in the folder ExampleData. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with ? and the function name.\n\nusing CSV, DataFrames\n# Write the following given DataFrame to a CSV file 'table_out.csv' in the folder 'ExampleData'. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with '?' and the function name.\n\ndata = DataFrame(Name = [\"Alice\", \"Bob\", \"Charlie\"], Age = [25, 30, 35])\ncsv_file_path = \"ExampleData/table_out.csv\"\n# YOUR CODE BELOW\n\n# Test your answer\n@assert isfile(\"ExampleData/table_out.csv\") \"Sorry, the file could not be found. \n    Have you followed all steps?\"\nprintln(\"CSV file 'data.csv' written successfully!\")\n\n\n\n\nRead the CSV file table_in.csv in the folder ExampleData into the variable read_data. Here you can use the function CSV.read(). Again, use the inbuild help to familiarize yourself with the syntax. Note, that you need to provide a sink for the data when using CSV.read(), e.g. a DataFrame.\n\n# Read the CSV file `table_in.csv` in the folder `ExampleData` into the variable `read_data`. Here you can use the function `CSV.read()`. Again, use the inbuild help to familiarize yourself with the syntax. Note, that you need to provide a sink for the data when using `CSV.read()`, e.g. a DataFrame.\n# YOUR CODE BELOW\n\n# Test your CSV reading\n@assert read_data[1,1] == \"Lisa\"\nprintln(\"CSV file 'table_in.csv' read successfully!\")\n\n\n\n\nCongratulations! You’ve successfully completed the tutorial on reading and writing external files in Julia. Continue to the next file to learn more."
+    "text": "This interactive Julia script introduces the essentials of interacting with external files. It covers reading and writing text files, handling CSV, and working with delimited files using DelimitedFiles. Follow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.\n\n\nDelimited files, such as .csv, can be handled efficiently using the DelimitedFiles package in Julia. This requires the DelimitedFiles package. But as it is part of the Julia Standard Library, you can use it directly without the need to use Pkg.add() before.\n\nusing DelimitedFiles\n\nThe following code writes a matrix to a CSV file, seperating values with ,.\n\nnew_data = [10 12 6; 13 25 1; 40 30 7]\nmkdir(\"ExampleData\")\nopen(\"ExampleData/matrix.csv\", \"w\") do io\n    writedlm(io, new_data, ',')\nend\nprintln(\"CSV file 'matrix.csv' written successfully to folder ExampleData!\")\n\n\n\n\nRead the just written CSV file ‘matrix.csv’ using the function readdlm(). Save the matrix in the variable read_matrix. To learn the syntax, use the inbuild help by typing ? in the terminal. Afterwards, just type the function name for an explanation.\n\n# Read the just written CSV file 'matrix.csv' using the function `readdlm()`. Save the matrix in the variable `read_matrix`. To learn the syntax, use the inbuild help by typing `?` in the terminal. Afterwards, just type the function name for an explanation.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert read_matrix == new_data\nprintln(\"File 'matrix.csv' read successfully!\")\n\n\n\n\nThe CSV package in Julia provides powerful tools for reading and writing CSV files to and from DataFrames, a common requirement in data analysis and data science projects. This requires the CSV and DataFrames packages. If you solely followed the course so far, you first have to install the CSV Package before you can start using it:\nimport Pkg; Pkg.add(\"CSV\")\n\n\n\nWrite the following given DataFrame to a CSV file table_out.csv in the folder ExampleData. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with ? and the function name.\n\nusing CSV, DataFrames\n# Write the following given DataFrame to a CSV file 'table_out.csv' in the folder 'ExampleData'. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with '?' and the function name.\n\ndata = DataFrame(Name = [\"Alice\", \"Bob\", \"Charlie\"], Age = [25, 30, 35])\ncsv_file_path = \"ExampleData/table_out.csv\"\n# YOUR CODE BELOW\n\n# Test your answer\n@assert isfile(\"ExampleData/table_out.csv\") \"Sorry, the file could not be found. \n    Have you followed all steps?\"\nprintln(\"CSV file 'data.csv' written successfully!\")\n\n\n\n\nRead the CSV file table_in.csv in the folder ExampleData into the variable read_data. Here you can use the function CSV.read(). Again, use the inbuild help to familiarize yourself with the syntax. Note, that you need to provide a sink for the data when using CSV.read(), e.g. a DataFrame.\n\n# Read the CSV file `table_in.csv` in the folder `ExampleData` into the variable `read_data`. Here you can use the function `CSV.read()`. Again, use the inbuild help to familiarize yourself with the syntax. Note, that you need to provide a sink for the data when using `CSV.read()`, e.g. a DataFrame.\n# YOUR CODE BELOW\n\n# Test your CSV reading\n@assert read_data[1,1] == \"Lisa\"\nprintln(\"CSV file 'table_in.csv' read successfully!\")\n\n\n\n\nCongratulations! You’ve successfully completed the tutorial on reading and writing external files in Julia. Continue to the next file to learn more.",
+    "crumbs": [
+      "03 Data Management",
+      "04 - Input and Output"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-04-IO.html#section-1-working-with-delimited-files",
     "href": "part-03/tutorial-03-04-IO.html#section-1-working-with-delimited-files",
     "title": "Tutorial III.IV - Input and Output",
     "section": "",
-    "text": "Delimited files, such as .csv, can be handled efficiently using the DelimitedFiles package in Julia. This requires the DelimitedFiles package. But as it is part of the Julia Standard Library, you can use it directly without the need to use Pkg.add() before.\n\nusing DelimitedFiles\n\nThe following code writes a matrix to a CSV file, seperating values with ,.\n\nnew_data = [10 12 6; 13 25 1; 40 30 7]\nmkdir(\"ExampleData\")\nopen(\"ExampleData/matrix.csv\", \"w\") do io\n    writedlm(io, new_data, ',')\nend\nprintln(\"CSV file 'matrix.csv' written successfully to folder ExampleData!\")"
+    "text": "Delimited files, such as .csv, can be handled efficiently using the DelimitedFiles package in Julia. This requires the DelimitedFiles package. But as it is part of the Julia Standard Library, you can use it directly without the need to use Pkg.add() before.\n\nusing DelimitedFiles\n\nThe following code writes a matrix to a CSV file, seperating values with ,.\n\nnew_data = [10 12 6; 13 25 1; 40 30 7]\nmkdir(\"ExampleData\")\nopen(\"ExampleData/matrix.csv\", \"w\") do io\n    writedlm(io, new_data, ',')\nend\nprintln(\"CSV file 'matrix.csv' written successfully to folder ExampleData!\")",
+    "crumbs": [
+      "03 Data Management",
+      "04 - Input and Output"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-04-IO.html#exercise-1.1",
     "href": "part-03/tutorial-03-04-IO.html#exercise-1.1",
     "title": "Tutorial III.IV - Input and Output",
     "section": "",
-    "text": "Read the just written CSV file ‘matrix.csv’ using the function readdlm(). Save the matrix in the variable read_matrix. To learn the syntax, use the inbuild help by typing ? in the terminal. Afterwards, just type the function name for an explanation.\n\n# Read the just written CSV file 'matrix.csv' using the function `readdlm()`. Save the matrix in the variable `read_matrix`. To learn the syntax, use the inbuild help by typing `?` in the terminal. Afterwards, just type the function name for an explanation.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert read_matrix == new_data\nprintln(\"File 'matrix.csv' read successfully!\")"
+    "text": "Read the just written CSV file ‘matrix.csv’ using the function readdlm(). Save the matrix in the variable read_matrix. To learn the syntax, use the inbuild help by typing ? in the terminal. Afterwards, just type the function name for an explanation.\n\n# Read the just written CSV file 'matrix.csv' using the function `readdlm()`. Save the matrix in the variable `read_matrix`. To learn the syntax, use the inbuild help by typing `?` in the terminal. Afterwards, just type the function name for an explanation.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert read_matrix == new_data\nprintln(\"File 'matrix.csv' read successfully!\")",
+    "crumbs": [
+      "03 Data Management",
+      "04 - Input and Output"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-04-IO.html#section-2-working-with-csv-files-and-dataframes",
     "href": "part-03/tutorial-03-04-IO.html#section-2-working-with-csv-files-and-dataframes",
     "title": "Tutorial III.IV - Input and Output",
     "section": "",
-    "text": "The CSV package in Julia provides powerful tools for reading and writing CSV files to and from DataFrames, a common requirement in data analysis and data science projects. This requires the CSV and DataFrames packages. If you solely followed the course so far, you first have to install the CSV Package before you can start using it:\nimport Pkg; Pkg.add(\"CSV\")"
+    "text": "The CSV package in Julia provides powerful tools for reading and writing CSV files to and from DataFrames, a common requirement in data analysis and data science projects. This requires the CSV and DataFrames packages. If you solely followed the course so far, you first have to install the CSV Package before you can start using it:\nimport Pkg; Pkg.add(\"CSV\")",
+    "crumbs": [
+      "03 Data Management",
+      "04 - Input and Output"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-04-IO.html#exercise-2.1",
     "href": "part-03/tutorial-03-04-IO.html#exercise-2.1",
     "title": "Tutorial III.IV - Input and Output",
     "section": "",
-    "text": "Write the following given DataFrame to a CSV file table_out.csv in the folder ExampleData. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with ? and the function name.\n\nusing CSV, DataFrames\n# Write the following given DataFrame to a CSV file 'table_out.csv' in the folder 'ExampleData'. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with '?' and the function name.\n\ndata = DataFrame(Name = [\"Alice\", \"Bob\", \"Charlie\"], Age = [25, 30, 35])\ncsv_file_path = \"ExampleData/table_out.csv\"\n# YOUR CODE BELOW\n\n# Test your answer\n@assert isfile(\"ExampleData/table_out.csv\") \"Sorry, the file could not be found. \n    Have you followed all steps?\"\nprintln(\"CSV file 'data.csv' written successfully!\")"
+    "text": "Write the following given DataFrame to a CSV file table_out.csv in the folder ExampleData. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with ? and the function name.\n\nusing CSV, DataFrames\n# Write the following given DataFrame to a CSV file 'table_out.csv' in the folder 'ExampleData'. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with '?' and the function name.\n\ndata = DataFrame(Name = [\"Alice\", \"Bob\", \"Charlie\"], Age = [25, 30, 35])\ncsv_file_path = \"ExampleData/table_out.csv\"\n# YOUR CODE BELOW\n\n# Test your answer\n@assert isfile(\"ExampleData/table_out.csv\") \"Sorry, the file could not be found. \n    Have you followed all steps?\"\nprintln(\"CSV file 'data.csv' written successfully!\")",
+    "crumbs": [
+      "03 Data Management",
+      "04 - Input and Output"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-04-IO.html#exercise-2.2",
     "href": "part-03/tutorial-03-04-IO.html#exercise-2.2",
     "title": "Tutorial III.IV - Input and Output",
     "section": "",
-    "text": "Read the CSV file table_in.csv in the folder ExampleData into the variable read_data. Here you can use the function CSV.read(). Again, use the inbuild help to familiarize yourself with the syntax. Note, that you need to provide a sink for the data when using CSV.read(), e.g. a DataFrame.\n\n# Read the CSV file `table_in.csv` in the folder `ExampleData` into the variable `read_data`. Here you can use the function `CSV.read()`. Again, use the inbuild help to familiarize yourself with the syntax. Note, that you need to provide a sink for the data when using `CSV.read()`, e.g. a DataFrame.\n# YOUR CODE BELOW\n\n# Test your CSV reading\n@assert read_data[1,1] == \"Lisa\"\nprintln(\"CSV file 'table_in.csv' read successfully!\")"
+    "text": "Read the CSV file table_in.csv in the folder ExampleData into the variable read_data. Here you can use the function CSV.read(). Again, use the inbuild help to familiarize yourself with the syntax. Note, that you need to provide a sink for the data when using CSV.read(), e.g. a DataFrame.\n\n# Read the CSV file `table_in.csv` in the folder `ExampleData` into the variable `read_data`. Here you can use the function `CSV.read()`. Again, use the inbuild help to familiarize yourself with the syntax. Note, that you need to provide a sink for the data when using `CSV.read()`, e.g. a DataFrame.\n# YOUR CODE BELOW\n\n# Test your CSV reading\n@assert read_data[1,1] == \"Lisa\"\nprintln(\"CSV file 'table_in.csv' read successfully!\")",
+    "crumbs": [
+      "03 Data Management",
+      "04 - Input and Output"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-04-IO.html#conclusion",
     "href": "part-03/tutorial-03-04-IO.html#conclusion",
     "title": "Tutorial III.IV - Input and Output",
     "section": "",
-    "text": "Congratulations! You’ve successfully completed the tutorial on reading and writing external files in Julia. Continue to the next file to learn more."
+    "text": "Congratulations! You’ve successfully completed the tutorial on reading and writing external files in Julia. Continue to the next file to learn more.",
+    "crumbs": [
+      "03 Data Management",
+      "04 - Input and Output"
+    ]
   },
   {
     "objectID": "part-02/tutorial-02-03-comparisons.html",
@@ -2356,179 +2536,223 @@
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html",
-    "href": "part-03/tutorial-03-03-DataFrames.html",
-    "title": "Tutorial III.III - DataFrames in Julia",
+    "objectID": "part-03/tutorial-03-01-functions.html",
+    "href": "part-03/tutorial-03-01-functions.html",
+    "title": "Tutorial III.I - Functions in Julia",
     "section": "",
-    "text": "This interactive Julia script is your comprehensive guide to understanding DataFrames in Julia. Work on creating DataFrames, accessing, modifying, and filtering data, alongside basic data manipulation techniques. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements. Note: Ensure you have the DataFrames package installed to effectively follow this tutorial!\n\n# Import the DataFrames package\nusing DataFrames\n\n\n\nA DataFrame in Julia is akin to a table in SQL or a spreadsheet - each column can have its own type, making it highly versatile. A DataFrame can be created using the DataFrame constructor and passing key-value pairs where the key is the column name and the value is an array of data. For more help, use ? in the REPL and type DataFrame.\n\n\n\nCreate and Test a DataFrame. Create a DataFrame named employees with the columns Name, Age, and Salary, and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n\n# Create and Test a DataFrame. Create a DataFrame named 'employees' with the columns 'Name', 'Age', and 'Salary', and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert employees == DataFrame(Name = [\"John\", \"Mike\", \"Frank\"], \n    Age = [28, 23, 37], Salary = [50000, 62000, 90000])\nprintln(\"DataFrame created successfully!\")\nprintln(employees)\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, for more help, use ? in the REPL and type DataFrame.\n\n\n\n\n\nAccessing columns in a DataFrame can be done using the dot syntax, while rows can be accessed via indexing. Modification of data is straightforward; just assign a new value to the desired cell. To access the column ‘name’ in our DataFrame with employees, we could do:\nemployees.Name \nTo access the third name specifically, we could do:\nemployees.Name[3] \n\n\n\nAccess the Age column from the DataFrame and save it in a new variable ages.\n\n# Access the 'Age' column from the DataFrame and save it in a new variable 'ages'.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert ages == [28, 23, 37]\nprintln(\"Correct, the Ages column is: \", ages)\n\n\n\n\nUpdate John’s salary to 59000.\n\n# Update John's salary to 59000.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert employees.Salary[1] == 59000\nprintln(\"Modified DataFrame: \")\nprintln(employees)\n\n\n\n\nLogical indexing can be used to filter rows in a DataFrame based on conditions. To filter the DataFrame to include only employees names “Frank” we could do:\nallFranks = employees[employees.Name .== \"Frank\", :]\nAlternatively, the filter function provides a powerful tool to extract subsets of data based on a condition:\nallFranks = filter(row -&gt; row.Name == \"Frank\", employees) \n\n\n\nFilter the DataFrame to include only employees with salaries above 60000. Save the resulting employees in the DataFrame high_earners.\n\n# Filter the DataFrame to include only employees with salaries above 60000. Save \n# the resulting employees in the DataFrame 'high_earners'. \n# YOUR CODE BELOW\n\n# Test your answer\n@assert nrow(high_earners) == 2\nprintln(\"High earners: \")\nprintln(high_earners)\n\n\n\n\nJulia provides functions for basic data manipulation tasks, including sorting, grouping, and joining DataFrames. The sort function can be used to order the rows in a DataFrame based on the values in one or more columns. To see how to use the function, type ? into the REPL (terminal) and type sort.\n\n\n\nSort the DataFrame based on the Age column and save it as sorted_df.\n\n# Sort the DataFrame based on the 'Age' column and save it as 'sorted_df'.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sorted_df.Age[1] == 23\nprintln(\"DataFrame sorted by age: \")\nprintln(sorted_df)\n\n\n\n\n\n\n\nTip\n\n\n\nIf you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets.\n\n\n\n\n\nFantastic work! You’ve completed the tutorial on DataFrames in Julia. You’ve seen how to create DataFrames and access, modify and filter data. Continue to the next file to learn more."
-  },
-  {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#section-1-creating-dataframes",
-    "href": "part-03/tutorial-03-03-DataFrames.html#section-1-creating-dataframes",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "",
-    "text": "A DataFrame in Julia is akin to a table in SQL or a spreadsheet - each column can have its own type, making it highly versatile. A DataFrame can be created using the DataFrame constructor and passing key-value pairs where the key is the column name and the value is an array of data. For more help, use ? in the REPL and type DataFrame."
-  },
-  {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-1.1",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-1.1",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "",
-    "text": "Create and Test a DataFrame. Create a DataFrame named employees with the columns Name, Age, and Salary, and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n\n# Create and Test a DataFrame. Create a DataFrame named 'employees' with the columns 'Name', 'Age', and 'Salary', and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert employees == DataFrame(Name = [\"John\", \"Mike\", \"Frank\"], \n    Age = [28, 23, 37], Salary = [50000, 62000, 90000])\nprintln(\"DataFrame created successfully!\")\nprintln(employees)\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, for more help, use ? in the REPL and type DataFrame."
-  },
-  {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#section-2-accessing-and-modifying-data",
-    "href": "part-03/tutorial-03-03-DataFrames.html#section-2-accessing-and-modifying-data",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "",
-    "text": "Accessing columns in a DataFrame can be done using the dot syntax, while rows can be accessed via indexing. Modification of data is straightforward; just assign a new value to the desired cell. To access the column ‘name’ in our DataFrame with employees, we could do:\nemployees.Name \nTo access the third name specifically, we could do:\nemployees.Name[3]"
-  },
-  {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-2.1",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-2.1",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "",
-    "text": "Access the Age column from the DataFrame and save it in a new variable ages.\n\n# Access the 'Age' column from the DataFrame and save it in a new variable 'ages'.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert ages == [28, 23, 37]\nprintln(\"Correct, the Ages column is: \", ages)"
-  },
-  {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-2.2",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-2.2",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "",
-    "text": "Update John’s salary to 59000.\n\n# Update John's salary to 59000.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert employees.Salary[1] == 59000\nprintln(\"Modified DataFrame: \")\nprintln(employees)"
-  },
-  {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#section-3-filtering-data",
-    "href": "part-03/tutorial-03-03-DataFrames.html#section-3-filtering-data",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "",
-    "text": "Logical indexing can be used to filter rows in a DataFrame based on conditions. To filter the DataFrame to include only employees names “Frank” we could do:\nallFranks = employees[employees.Name .== \"Frank\", :]\nAlternatively, the filter function provides a powerful tool to extract subsets of data based on a condition:\nallFranks = filter(row -&gt; row.Name == \"Frank\", employees)"
-  },
-  {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-3.1",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-3.1",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "",
-    "text": "Filter the DataFrame to include only employees with salaries above 60000. Save the resulting employees in the DataFrame high_earners.\n\n# Filter the DataFrame to include only employees with salaries above 60000. Save \n# the resulting employees in the DataFrame 'high_earners'. \n# YOUR CODE BELOW\n\n# Test your answer\n@assert nrow(high_earners) == 2\nprintln(\"High earners: \")\nprintln(high_earners)"
-  },
-  {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#section-4-basic-data-manipulation",
-    "href": "part-03/tutorial-03-03-DataFrames.html#section-4-basic-data-manipulation",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "",
-    "text": "Julia provides functions for basic data manipulation tasks, including sorting, grouping, and joining DataFrames. The sort function can be used to order the rows in a DataFrame based on the values in one or more columns. To see how to use the function, type ? into the REPL (terminal) and type sort."
-  },
-  {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-4.1",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-4.1",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "",
-    "text": "Sort the DataFrame based on the Age column and save it as sorted_df.\n\n# Sort the DataFrame based on the 'Age' column and save it as 'sorted_df'.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sorted_df.Age[1] == 23\nprintln(\"DataFrame sorted by age: \")\nprintln(sorted_df)\n\n\n\n\n\n\n\nTip\n\n\n\nIf you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets."
-  },
-  {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#conclusion",
-    "href": "part-03/tutorial-03-03-DataFrames.html#conclusion",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "",
-    "text": "Fantastic work! You’ve completed the tutorial on DataFrames in Julia. You’ve seen how to create DataFrames and access, modify and filter data. Continue to the next file to learn more."
-  },
-  {
-    "objectID": "part-02/tutorial-02-04-loops.html",
-    "href": "part-02/tutorial-02-04-loops.html",
-    "title": "Tutorial II.IV - Loops",
-    "section": "",
-    "text": "This interactive Julia script is an extensive tutorial introducing you to the robust loop structures in Julia. Improve your skills in for and while loops for performing repetitive tasks, manipulating loop flow with break and continue, and applying nested loops to iterate through multi-dimensional structures. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.",
+    "text": "This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.\n\n\nFunctions in Julia encapsulate reusable code and can be defined using the function keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. For example:\nfunction multiply(a,b)\n   a * b\nend\nThis function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the return keyword optional. If you explicitly use the return keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition.\n\n\n\nDefine and Test a Simple Addition Function. Define a function add that takes two parameters and returns their sum.\n\n# Define and Test a Simple Addition Function. Define a function `add` that takes two parameters and returns their sum.\n# YOUR CODE BELOW\n\n# Test your function\n@assert add(10, 5) == 15 \"The sum computed is $(add(10, 5)) but should be 15.\"\nprintln(\"The sum computed is $(add(10, 5)), wonderful!\")\n\n\n\n\nVariables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it. You can do this by passing return in front of the variable you want to return from the function.\n\n\n\nTry to execude the following block of code. The objective is to understand how to return the local_variable_one from the function scope_test. Your task is to change the function, to return the value of local_variable_one.\n\n# Try to execude the following block of code. The objective is to understand how to return the 'local_variable_one' from the function 'scope_test'. Your task is to change the function, to return the value of 'local_variable_one'.\n\n# YOUR CHANGES BELOW\nfunction scope_test()\n    local_variable_one = 10\n    local_variable_two = 20\nend\n\n# YOUR CHANGES ABOVE\n# Test your function\n@assert scope_test() == 10 \"The value exported is $(scope_test()).\"\nprintln(\"The value exported is $(scope_test()), you solved it!\")\n\n\n\n\nDefine and test an implicit return function. Define a function subtract that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n\n# Define and test an implicit return function. Define a function 'subtract' that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n# YOUR CODE BELOW\n\n# Test your function\n@assert subtract(10, 5) == 5  \"The difference computed is $(subtract(10, 5)) but should be 5.\"\nprintln(\"The difference computed is $(subtract(10, 5)), perfect!\")\n\n\n\n\nAnonymous functions in Julia are unnamed functions, useful for concise and short operations. They are particularly useful for operations that are passed as arguments to higher-order functions or used for short, one-off computations. Syntax for anonymous functions can be either of the following:\nadd_two = (a,b) -&gt; a + b\nadd_two(a,b) = a + b\n\n\n\nCreate an anonymous function multiply that multiplies two numbers.\n\n# Create an anonymous function 'multiply' that multiplies two numbers.\n# YOUR CODE BELOW\n\n# Test your function\n@assert multiply(10, 5) == 50  \"The result is $(multiply(10, 5)) but should be 50.\"\nprintln(\"Great job! You created an anonymous function that multiplies two numbers.\")\n\n\n\n\nMultiple dispatch in Julia allows defining function behavior based on argument types, promoting code reuse and clarity. It’s a powerful feature for designing flexible and extensible functions. We first define a generic version and then provide specific implementations for different types:\n\n# Generic operation for objects of all types.\nfunction operation(a, b)\n    \"Generic operation for objects of type $(typeof(a)) and $(typeof(b))\"\nend\n\n# The specific implementations are:\noperation(a::Number, b::Number) = a + b        # Specific method for Number types.\noperation(a::String, b::String) = string(a, b) # Specific method for String types.\n\n# Test with different types of arguments.\nresult1 = operation(10, 20)               # Numeric addition.\nresult2 = operation(\"Hello, \", \"World!\")  # String concatenation.\nresult3 = operation(\"Hello, \", 20)        # Generic implementation.\n\n\"Generic operation for objects of type String and Int64\"\n\n\n\n\n\nChoose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement.\n\n# Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement. Hint: The answer is easy, you just have to change the comparisons.\n\n# YOUR CHANGES BELOW\n@assert result1 == \"Hello, World!\"\n@assert result3 == 30\n@assert result2 == \"Generic operation for objects of type String and Int64\"\nprintln(\"You solved it, the order is now correct!\")\n\n\n\n\n\n\n\nTip\n\n\n\nHint: The answer is easy, you just have to change the comparisons.\n\n\n\n\n\nGreat work! You’ve just completed the tutorial on functions in Julia. You now have a first understanding of how to create, use, and understand functions in Julia. Continue to the next file to learn more.",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.1",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-1.1",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 1.1",
-    "text": "Exercise 1.1\nSum the numbers from 1 to 5 in a loop. Don’t worry about the let here, it just starts a scope block. More on this later in the tutorial on variable scope. The next line initializes sum_numbers to 0. The sum you compute should accumulate in this variable.\n\n# Calculate the sum of numbers from 1 to 5 in a loop. Don't worry about the let here, it just starts a scope block. More on this later in the tutorial on variable scope. The next line initializes sum_numbers to 0. The sum you compute should accumulate in this variable.\nlet \nsum_numbers = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sum_numbers == 15\nprintln(\"Sum of numbers from 1 to 5: \", sum_numbers)\nend # This ends the scope of the previously started scope block.",
+    "objectID": "part-03/tutorial-03-01-functions.html#section-1-creating-and-calling-functions",
+    "href": "part-03/tutorial-03-01-functions.html#section-1-creating-and-calling-functions",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "",
+    "text": "Functions in Julia encapsulate reusable code and can be defined using the function keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. For example:\nfunction multiply(a,b)\n   a * b\nend\nThis function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the return keyword optional. If you explicitly use the return keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition.",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.2",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-1.2",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 1.2",
-    "text": "Exercise 1.2\nSum only the even numbers from 1 to 10. Again, we initialize a variable sum_evens to 0. The sum you compute should accumulate in this variable.\n\n# Sum only the even numbers from 1 to 10. Again, we initialize a variable 'sum_evens' to 0. The sum you compute should accumulate in this variable.\nlet # First, we start a scope block for the loop!\nsum_evens = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sum_evens == 30\nprintln(\"Sum of even numbers from 1 to 10: \", sum_evens)\nend # Here we end the scope block again.\n\n\n\n\n\n\n\nNote\n\n\n\nHint: Utilize the remainder operator (%) to verify if a number is even. number % 2 == 0 implies that number is even.",
+    "objectID": "part-03/tutorial-03-01-functions.html#exercise-1.1",
+    "href": "part-03/tutorial-03-01-functions.html#exercise-1.1",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "",
+    "text": "Define and Test a Simple Addition Function. Define a function add that takes two parameters and returns their sum.\n\n# Define and Test a Simple Addition Function. Define a function `add` that takes two parameters and returns their sum.\n# YOUR CODE BELOW\n\n# Test your function\n@assert add(10, 5) == 15 \"The sum computed is $(add(10, 5)) but should be 15.\"\nprintln(\"The sum computed is $(add(10, 5)), wonderful!\")",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.3",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-1.3",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 1.3",
-    "text": "Exercise 1.3\nIterate over each fruit in the fruits array, store the current fruit in current_fruit, and exit the loop if current_fruit is banana. The next lines initialize the fruits array and current_fruit variable.\n\n# Iterate over each fruit in the 'fruits' array, store the current fruit  in 'current_fruit', and exit the loop if 'current_fruit' is \"banana\". The next lines initialize the 'fruits' array and 'current_fruit' variable. But first, another scope block.\nlet \nfruits = [\"apple\", \"banana\", \"cherry\"]\ncurrent_fruit = \"None\"\n# YOUR CODE BELOW\n\n# Test your answer\n@assert current_fruit == \"banana\"\nprintln(\"The current fruit is: \", current_fruit)\nend # Here we end the scope block again.",
+    "objectID": "part-03/tutorial-03-01-functions.html#section-2-scope-within-functions",
+    "href": "part-03/tutorial-03-01-functions.html#section-2-scope-within-functions",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "",
+    "text": "Variables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it. You can do this by passing return in front of the variable you want to return from the function.",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-2.1",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-2.1",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 2.1",
-    "text": "Exercise 2.1\nSubtract from 10 in increments of 1 until the result is less than 3. The next line initializes current_value to 10. The result should be in this variable.\n\n# Subtract from 10 in increments of 1 until the result is less than 3. The next line initializes current_value to 10. The result should be in this variable. But first, we startnew scope block.\nlet \ncurrent_value = 10\n# YOUR CODE BELOW\n\n# Test your answer\n@assert current_value == 2\nprintln(\"The first value smaller than 3 is: \", current_value)\nend # Scope block closed again.",
+    "objectID": "part-03/tutorial-03-01-functions.html#exercise-2.1",
+    "href": "part-03/tutorial-03-01-functions.html#exercise-2.1",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "",
+    "text": "Try to execude the following block of code. The objective is to understand how to return the local_variable_one from the function scope_test. Your task is to change the function, to return the value of local_variable_one.\n\n# Try to execude the following block of code. The objective is to understand how to return the 'local_variable_one' from the function 'scope_test'. Your task is to change the function, to return the value of 'local_variable_one'.\n\n# YOUR CHANGES BELOW\nfunction scope_test()\n    local_variable_one = 10\n    local_variable_two = 20\nend\n\n# YOUR CHANGES ABOVE\n# Test your function\n@assert scope_test() == 10 \"The value exported is $(scope_test()).\"\nprintln(\"The value exported is $(scope_test()), you solved it!\")",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-2.2",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-2.2",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 2.2",
-    "text": "Exercise 2.2\nFind the first multiple of 7 greater than 50 using an indefinite loop. The next line initializes first_multiple_of_7 to 0. The first multiple should be in this variable.\n\n# Find the first multiple of 7 greater than 50 using an indefinite loop.  The next line initializes 'first_multiple_of_7' to 0. The first multiple should be in this variable. But first, we start a new scope block.\nlet \nfirst_multiple_of_7 = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert first_multiple_of_7 == 56\nprintln(\"First multiple of 7 greater than 50: \", first_multiple_of_7)\nend # End of scope block\n\n\n\n\n\n\n\nTip\n\n\n\n‘while true … end’ constructs an infinite loop. You can exit the loop using a ‘break’ statement if a condition is met.",
+    "objectID": "part-03/tutorial-03-01-functions.html#exercise-2.2",
+    "href": "part-03/tutorial-03-01-functions.html#exercise-2.2",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "",
+    "text": "Define and test an implicit return function. Define a function subtract that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n\n# Define and test an implicit return function. Define a function 'subtract' that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n# YOUR CODE BELOW\n\n# Test your function\n@assert subtract(10, 5) == 5  \"The difference computed is $(subtract(10, 5)) but should be 5.\"\nprintln(\"The difference computed is $(subtract(10, 5)), perfect!\")",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#section-3-nested-loops",
-    "href": "part-02/tutorial-02-04-loops.html#section-3-nested-loops",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Section 3: Nested Loops",
-    "text": "Section 3: Nested Loops\nNested loops are loops within another loop, useful for iterating over multi-dimensional data structures.",
+    "objectID": "part-03/tutorial-03-01-functions.html#section-3-anonymous-functions",
+    "href": "part-03/tutorial-03-01-functions.html#section-3-anonymous-functions",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "",
+    "text": "Anonymous functions in Julia are unnamed functions, useful for concise and short operations. They are particularly useful for operations that are passed as arguments to higher-order functions or used for short, one-off computations. Syntax for anonymous functions can be either of the following:\nadd_two = (a,b) -&gt; a + b\nadd_two(a,b) = a + b",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-3.1",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-3.1",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 3.1",
-    "text": "Exercise 3.1\nCompute the product of each pair of elements from two arrays. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results.\n\n# Compute the product of each pair of elements from two arrays. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results. But first, we start a new scope block.\nlet \nnumbers1 = [1, 2, 3]\nnumbers2 = [4, 5, 6]\nproducts = []\n# YOUR CODE BELOW\n\n# Test your answer\n@assert products == [4, 5, 6, 8, 10, 12, 12, 15, 18]\nprintln(\"Products of each pair from two arrays: \", products)\nend # End scope block\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, you can use push!() to append elements to an array.",
+    "objectID": "part-03/tutorial-03-01-functions.html#exercise-3.1",
+    "href": "part-03/tutorial-03-01-functions.html#exercise-3.1",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "",
+    "text": "Create an anonymous function multiply that multiplies two numbers.\n\n# Create an anonymous function 'multiply' that multiplies two numbers.\n# YOUR CODE BELOW\n\n# Test your function\n@assert multiply(10, 5) == 50  \"The result is $(multiply(10, 5)) but should be 50.\"\nprintln(\"Great job! You created an anonymous function that multiplies two numbers.\")",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#conclusion",
-    "href": "part-02/tutorial-02-04-loops.html#conclusion",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Conclusion",
-    "text": "Conclusion\nGreat work! You’ve successfully navigated through the basics of loops in Julia. You’ve seen for and while loops, tackled iterable structure, and worked on nested loops. Continue to the next file to learn more.",
+    "objectID": "part-03/tutorial-03-01-functions.html#section-4-multiple-dispatch",
+    "href": "part-03/tutorial-03-01-functions.html#section-4-multiple-dispatch",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "",
+    "text": "Multiple dispatch in Julia allows defining function behavior based on argument types, promoting code reuse and clarity. It’s a powerful feature for designing flexible and extensible functions. We first define a generic version and then provide specific implementations for different types:\n\n# Generic operation for objects of all types.\nfunction operation(a, b)\n    \"Generic operation for objects of type $(typeof(a)) and $(typeof(b))\"\nend\n\n# The specific implementations are:\noperation(a::Number, b::Number) = a + b        # Specific method for Number types.\noperation(a::String, b::String) = string(a, b) # Specific method for String types.\n\n# Test with different types of arguments.\nresult1 = operation(10, 20)               # Numeric addition.\nresult2 = operation(\"Hello, \", \"World!\")  # String concatenation.\nresult3 = operation(\"Hello, \", 20)        # Generic implementation.\n\n\"Generic operation for objects of type String and Int64\"",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "01 - Functions"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-01-functions.html#exercise-4.1",
+    "href": "part-03/tutorial-03-01-functions.html#exercise-4.1",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "",
+    "text": "Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement.\n\n# Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement. Hint: The answer is easy, you just have to change the comparisons.\n\n# YOUR CHANGES BELOW\n@assert result1 == \"Hello, World!\"\n@assert result3 == 30\n@assert result2 == \"Generic operation for objects of type String and Int64\"\nprintln(\"You solved it, the order is now correct!\")\n\n\n\n\n\n\n\nTip\n\n\n\nHint: The answer is easy, you just have to change the comparisons.",
+    "crumbs": [
+      "03 Data Management",
+      "01 - Functions"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-01-functions.html#conclusion",
+    "href": "part-03/tutorial-03-01-functions.html#conclusion",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "",
+    "text": "Great work! You’ve just completed the tutorial on functions in Julia. You now have a first understanding of how to create, use, and understand functions in Julia. Continue to the next file to learn more.",
+    "crumbs": [
+      "03 Data Management",
+      "01 - Functions"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html",
+    "href": "part-03/tutorial-03-05-Plotting.html",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "This interactive Julia script introduces the basics of plotting in Julia using the Plots.jl package. It covers creating basic plots, customizing them to your needs, and saving them as files for further use. Follow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.\nEnsure you have the Plots package installed to follow along with this tutorial. If you followed the course so far, you first have to install the Plots Package before you can start using it:\n\nimport Pkg; Pkg.add(\"Plots\")\n\n\nusing Plots\n\n\n\nThe Plots.jl package simplifies the process of creating a wide array of plots, from simple line plots to complex 3D visualizations. The following illustrates the basic syntax of a line plot for some random data. First, we define a variable x with a range from 1 to 10 for the x axis. Then, we define y with 10 random numbers. For example:\n\nx = 1:10      \ny = rand(10)\nline_plot = plot(x, y, title=\"Simple Line Plot\", xlabel=\"x axis\", ylabel=\"y axis\", legend=false)\n# Create a folder called \"images\" if it does not exist\nif !isdir(\"images\")\n    mkdir(\"images\")\nend\n# Save the plot to the \"images\" folder\nsavefig(line_plot, \"images/line_plot.png\")\n\n\n\n\nSimple Line Plot\n\n\nWe call plot() and use x and y as main arguments. Furthermore, we have a variety of choices to add further information, such as the title, labels, a legend, colors, opacity and so on. More on this later.\n\n\n\nCreate a scatter plot called scatter_plot for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace plot by scatter. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n\n# Create a scatter plot called 'scatter_plot' for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace 'plot' by 'scatter'. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined scatter_plot\nprintln(\"Simple scatter plot created successfully!\")\ndisplay(scatter_plot)\n\n\n\n\nPlots.jl allows extensive customization options to tailor your plots. You can change colors, markers, line styles, and much more. For example, you could dash the line by adding line=:dash, change the width with linewidth=3 and the color by adding color=:red.\n\n\n\nCustomize a line plot and save the plot in the variable custom_line_plot.\n\n# Customize a line plot and save the plot in the variable `custom_line_plot`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined custom_line_plot\nprintln(\"Customized line plot created successfully!\")\ndisplay(custom_line_plot)\n\n\n\n\n\n\n\nNote\n\n\n\nYou can customize the appearance of a random line plot as you like.\n\n\nAdd multiple series to a plot. Instead of one series, we can also add multiple series. This is done, for example, by defining one plot (as before) and then calling plot!() while using the first plot as first argument in the function plot!().\nFor example:\n\nx = 1:20\na = rand(20)\nb = rand(20)\nmulti_plot = plot(x, a, title=\"Many Series\", xlabel=\"x axis\", ylabel=\"y axis\", label=\"a\")\nplot!(multi_plot, x, b, label=\"b\")\n# Save the plot to the \"images\" folder\nsavefig(multi_plot, \"images/multi_plot.png\")\n\n\n\n\nMultiple Series Plot\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe ! after plot adds to the existing plot.\n\n\n\n\n\nNow, create a plot called multi_series_plot with three data series y1, y2 and y3.\n\n# Now, create a plot called `multi_series_plot` with three data series `y1`, `y2` and `y3`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined y1\n@assert @isdefined y2\n@assert @isdefined y3\n@assert @isdefined multi_series_plot\nprintln(\"Multiple series plot created successfully!\")\ndisplay(multi_series_plot)\n\n\n\n\nPlots.jl supports saving your plots to various file formats including PNG, SVG, and PDF, enabling you to use your plots outside of Julia. The function to save plots is savefig(), the first argument is the plot itself and the second argument is the path/filename format as string. Replace path with the path, the filename with the actual name and format with the file format, e.g. pdf, png, … . For example, if you want to save your file as PDF, you would just name it path/filename.pdf.\n\n\n\nSave the previously created plot multi_series_plot to a file as PNG. Save it in the folder ExampleData and name it saved_plot.png.\n\n# Save the previously created plot `multi_series_plot` to a file as PNG. Save it in the folder `ExampleData` and name it `saved_plot.png`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert  isfile(\"ExampleData/saved_plot.png\") \"File does not exist yet.\"\nprintln(\"Plot saved to 'saved_plot.pdf' successfully!\")\n\n\n\n\nFantastic! You’ve completed the tutorial on basic plotting in Julia. You’ve learned how to create basic plots and customize and save them. Continue to the next file to learn more.",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#section-1-creating-basic-plots",
+    "href": "part-03/tutorial-03-05-Plotting.html#section-1-creating-basic-plots",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "The Plots.jl package simplifies the process of creating a wide array of plots, from simple line plots to complex 3D visualizations. The following illustrates the basic syntax of a line plot for some random data. First, we define a variable x with a range from 1 to 10 for the x axis. Then, we define y with 10 random numbers. For example:\n\nx = 1:10      \ny = rand(10)\nline_plot = plot(x, y, title=\"Simple Line Plot\", xlabel=\"x axis\", ylabel=\"y axis\", legend=false)\n# Create a folder called \"images\" if it does not exist\nif !isdir(\"images\")\n    mkdir(\"images\")\nend\n# Save the plot to the \"images\" folder\nsavefig(line_plot, \"images/line_plot.png\")\n\n\n\n\nSimple Line Plot\n\n\nWe call plot() and use x and y as main arguments. Furthermore, we have a variety of choices to add further information, such as the title, labels, a legend, colors, opacity and so on. More on this later.",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-1.1",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-1.1",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "Create a scatter plot called scatter_plot for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace plot by scatter. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n\n# Create a scatter plot called 'scatter_plot' for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace 'plot' by 'scatter'. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined scatter_plot\nprintln(\"Simple scatter plot created successfully!\")\ndisplay(scatter_plot)",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#section-2-customizing-plots",
+    "href": "part-03/tutorial-03-05-Plotting.html#section-2-customizing-plots",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "Plots.jl allows extensive customization options to tailor your plots. You can change colors, markers, line styles, and much more. For example, you could dash the line by adding line=:dash, change the width with linewidth=3 and the color by adding color=:red.",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.1",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.1",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "Customize a line plot and save the plot in the variable custom_line_plot.\n\n# Customize a line plot and save the plot in the variable `custom_line_plot`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined custom_line_plot\nprintln(\"Customized line plot created successfully!\")\ndisplay(custom_line_plot)\n\n\n\n\n\n\n\nNote\n\n\n\nYou can customize the appearance of a random line plot as you like.\n\n\nAdd multiple series to a plot. Instead of one series, we can also add multiple series. This is done, for example, by defining one plot (as before) and then calling plot!() while using the first plot as first argument in the function plot!().\nFor example:\n\nx = 1:20\na = rand(20)\nb = rand(20)\nmulti_plot = plot(x, a, title=\"Many Series\", xlabel=\"x axis\", ylabel=\"y axis\", label=\"a\")\nplot!(multi_plot, x, b, label=\"b\")\n# Save the plot to the \"images\" folder\nsavefig(multi_plot, \"images/multi_plot.png\")\n\n\n\n\nMultiple Series Plot\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe ! after plot adds to the existing plot.",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.2",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.2",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "Now, create a plot called multi_series_plot with three data series y1, y2 and y3.\n\n# Now, create a plot called `multi_series_plot` with three data series `y1`, `y2` and `y3`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined y1\n@assert @isdefined y2\n@assert @isdefined y3\n@assert @isdefined multi_series_plot\nprintln(\"Multiple series plot created successfully!\")\ndisplay(multi_series_plot)",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#section-3-saving-plots-to-files",
+    "href": "part-03/tutorial-03-05-Plotting.html#section-3-saving-plots-to-files",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "Plots.jl supports saving your plots to various file formats including PNG, SVG, and PDF, enabling you to use your plots outside of Julia. The function to save plots is savefig(), the first argument is the plot itself and the second argument is the path/filename format as string. Replace path with the path, the filename with the actual name and format with the file format, e.g. pdf, png, … . For example, if you want to save your file as PDF, you would just name it path/filename.pdf.",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "Save the previously created plot multi_series_plot to a file as PNG. Save it in the folder ExampleData and name it saved_plot.png.\n\n# Save the previously created plot `multi_series_plot` to a file as PNG. Save it in the folder `ExampleData` and name it `saved_plot.png`.\n# YOUR CODE BELOW\n\n# Test your answer\n@assert  isfile(\"ExampleData/saved_plot.png\") \"File does not exist yet.\"\nprintln(\"Plot saved to 'saved_plot.pdf' successfully!\")",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#conclusion",
+    "href": "part-03/tutorial-03-05-Plotting.html#conclusion",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "Fantastic! You’ve completed the tutorial on basic plotting in Julia. You’ve learned how to create basic plots and customize and save them. Continue to the next file to learn more.",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
     ]
   }
 ]
