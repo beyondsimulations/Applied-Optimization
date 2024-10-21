@@ -121,6 +121,94 @@
     ]
   },
   {
+    "objectID": "part-03/tutorial-03-05-Plotting.html",
+    "href": "part-03/tutorial-03-05-Plotting.html",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "This interactive Julia script introduces the basics of plotting in Julia using the Plots.jl package. It covers creating basic plots, customizing them to your needs, and saving them as files for further use. Follow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.\nEnsure you have the Plots package installed to follow along with this tutorial. If you followed the course so far, you first have to install the Plots and the StatsPlots package before you can start using it:\n\nimport Pkg; Pkg.add([\"Plots\",\"StatsPlots\"])\n\n\nusing Plots, StatsPlots",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 1.1 - Create a Scatter Plot",
+    "text": "Exercise 1.1 - Create a Scatter Plot\nCreate a scatter plot called scatter_plot for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace plot by scatter. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert @isdefined scatter_plot\nprintln(\"Simple scatter plot created successfully!\")\ndisplay(scatter_plot)",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 2.1 - Customize a Line Plot",
+    "text": "Exercise 2.1 - Customize a Line Plot\nCustomize a line plot and save the plot in the variable custom_line_plot.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert @isdefined custom_line_plot\nprintln(\"Customized line plot created successfully!\")\ndisplay(custom_line_plot)\n\n\n\n\n\n\n\n\nNote\n\n\n\nYou can customize the appearance of a random line plot as you like.\n\n\nAdd multiple series to a plot. Instead of one series, we can also add multiple series. This is done, for example, by defining one plot (as before) and then calling plot!() while using the first plot as first argument in the function plot!().\nFor example:\n\nx = 1:20\na = rand(20)\nb = rand(20)\nmulti_plot = plot(x, a, title=\"Many Series\", xlabel=\"x axis\", ylabel=\"y axis\", label=\"a\")\nplot!(multi_plot, x, b, label=\"b\")\ndisplay(multi_plot)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe ! after plot adds to the existing plot.",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.2---create-a-multiple-series-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.2---create-a-multiple-series-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 2.2 - Create a Multiple Series Plot",
+    "text": "Exercise 2.2 - Create a Multiple Series Plot\nNow, create a plot called multi_series_plot with three data series y1, y2 and y3.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert @isdefined y1\n@assert @isdefined y2\n@assert @isdefined y3\n@assert @isdefined multi_series_plot\nprintln(\"Multiple series plot created successfully!\")\ndisplay(multi_series_plot)",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 3.1 - Save a Plot to a File",
+    "text": "Exercise 3.1 - Save a Plot to a File\nSave the previously created plot multi_series_plot to a file as PNG. Save it in the folder ExampleData and name it saved_plot.png.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert  isfile(\"ExampleData/saved_plot.png\") \"File does not exist yet.\"\nprintln(\"Plot saved to 'saved_plot.pdf' successfully!\")",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#bar-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#bar-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Bar Plot",
+    "text": "Bar Plot\n\n# Bar plot\nx_categories = [\"A\", \"B\", \"C\", \"D\"]\ny_values = [15, 23, 18, 30]\nbar_plot = bar(x_categories, y_values, title=\"Bar Plot Example\")\ndisplay(bar_plot)",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#histogram",
+    "href": "part-03/tutorial-03-05-Plotting.html#histogram",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Histogram",
+    "text": "Histogram\n\ndata = randn(1000)\nhist_plot = histogram(data, bins=30, title=\"Histogram Example\")\ndisplay(hist_plot)",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#box-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#box-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Box Plot",
+    "text": "Box Plot\n\n# Box plot\ngroup = repeat(1:4, inner=50)\ny = randn(200) .+ group\nbox_plot = boxplot(group, y, title=\"Box Plot Example\")\ndisplay(box_plot)",
+    "crumbs": [
+      "03 Data Management",
+      "05 - Plotting"
+    ]
+  },
+  {
     "objectID": "part-02/tutorial-02-03-comparisons.html",
     "href": "part-02/tutorial-02-03-comparisons.html",
     "title": "Tutorial II.III - Comparison Operators",
@@ -198,201 +286,91 @@
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html",
-    "href": "part-02/tutorial-02-04-loops.html",
-    "title": "Tutorial II.IV - Loops",
+    "objectID": "part-03/tutorial-03-04-IO.html",
+    "href": "part-03/tutorial-03-04-IO.html",
+    "title": "Tutorial III.IV - Input and Output",
     "section": "",
-    "text": "This interactive Julia script is an extensive tutorial introducing you to the robust loop structures in Julia. Improve your skills in for and while loops for performing repetitive tasks, manipulating loop flow with break and continue, and applying nested loops to iterate through multi-dimensional structures. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.",
+    "text": "This interactive Julia script introduces the essentials of interacting with external files. File Input/Output (I/O) operations are crucial in programming and data analysis, allowing us to persist data, share information between programs, and work with large datasets that don’t fit in memory. In this tutorial, we’ll cover reading and writing text files, handling CSV files, and working with delimited files using various Julia packages. These skills are fundamental for data preprocessing, analysis, and result storage in real-world applications.\nFollow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "04 - Input and Output"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.1---sum-the-numbers-from-1-to-5",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-1.1---sum-the-numbers-from-1-to-5",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 1.1 - Sum the Numbers from 1 to 5",
-    "text": "Exercise 1.1 - Sum the Numbers from 1 to 5\nSum the numbers from 1 to 5 in a loop. Don’t worry about the let here, it just starts a scope block. More on this later in the tutorial on variable scope. The next lines initialize sum_numbers to 0. The sum you compute should accumulate in this variable.\n\nlet \nsum_numbers = 0\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert sum_numbers == 15\nprintln(\"Sum of numbers from 1 to 5: \", sum_numbers)\nend # This ends the scope of the previously started scope block.",
+    "objectID": "part-03/tutorial-03-04-IO.html#exercise-1.1---read-a-csv-file",
+    "href": "part-03/tutorial-03-04-IO.html#exercise-1.1---read-a-csv-file",
+    "title": "Tutorial III.IV - Input and Output",
+    "section": "Exercise 1.1 - Read a CSV File",
+    "text": "Exercise 1.1 - Read a CSV File\nRead the just written CSV file ‘matrix.csv’ using the function readdlm(). Save the matrix in the variable read_matrix. To learn the syntax, use the inbuild help by typing ? in the terminal. Afterwards, just type the function name for an explanation.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert read_matrix == new_data\nprintln(\"File 'matrix.csv' read successfully!\")",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "04 - Input and Output"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.2---sum-only-the-even-numbers-from-1-to-10",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-1.2---sum-only-the-even-numbers-from-1-to-10",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 1.2 - Sum Only the Even Numbers from 1 to 10",
-    "text": "Exercise 1.2 - Sum Only the Even Numbers from 1 to 10\nSum only the even numbers from 1 to 10. Again, we initialize a variable sum_evens to 0. The sum you compute should accumulate in this variable.\n\nlet # First, we start a scope block for the loop!\nsum_evens = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sum_evens == 30\nprintln(\"Sum of even numbers from 1 to 10: \", sum_evens)\nend # Here we end the scope block again.\n\n\n\n\n\n\n\nTip\n\n\n\nHint: You can use the modulo operator % to check if a number is even. The modulo operator returns the remainder of the division of two numbers. If a number is divisible by another number, the remainder is 0. The following example checks if 4 is even: 4 % 2 == 0.",
+    "objectID": "part-03/tutorial-03-04-IO.html#exercise-2.1---write-a-dataframe-to-a-csv-file",
+    "href": "part-03/tutorial-03-04-IO.html#exercise-2.1---write-a-dataframe-to-a-csv-file",
+    "title": "Tutorial III.IV - Input and Output",
+    "section": "Exercise 2.1 - Write a DataFrame to a CSV File",
+    "text": "Exercise 2.1 - Write a DataFrame to a CSV File\nWrite the following given DataFrame to a CSV file table_out.csv in the folder ExampleData. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with ? and the function name.\n\nusing CSV, DataFrames\ndata = DataFrame(Name = [\"Alice\", \"Bob\", \"Charlie\"], Age = [25, 30, 35])\ncsv_file_path = \"ExampleData/table_out.csv\"\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert isfile(\"ExampleData/table_out.csv\") \"Sorry, the file could not be found. \n    Have you followed all steps?\"\nprintln(\"CSV file 'data.csv' written successfully!\")",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "04 - Input and Output"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.3---exit-the-loop-if-the-current-fruit-is-banana",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-1.3---exit-the-loop-if-the-current-fruit-is-banana",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 1.3 - Exit the Loop if the Current Fruit is Banana",
-    "text": "Exercise 1.3 - Exit the Loop if the Current Fruit is Banana\nIterate over each fruit in the fruits array, store the current fruit in current_fruit, and exit the loop if current_fruit is banana. The next lines initialize the fruits array and current_fruit variable.\n\nlet \nfruits = [\"apple\", \"banana\", \"cherry\"]\ncurrent_fruit = \"None\"\n# YOUR CODE BELOW\n\n# Test your answer\n@assert current_fruit == \"banana\"\nprintln(\"The current fruit is: \", current_fruit)\nend # Here we end the scope block again.",
+    "objectID": "part-03/tutorial-03-04-IO.html#exercise-2.2---read-a-csv-file-in",
+    "href": "part-03/tutorial-03-04-IO.html#exercise-2.2---read-a-csv-file-in",
+    "title": "Tutorial III.IV - Input and Output",
+    "section": "Exercise 2.2 - Read a CSV File in",
+    "text": "Exercise 2.2 - Read a CSV File in\nRead the CSV file table_in.csv in the folder ExampleData into the variable read_data. Here you can use the function CSV.read(), e.g.:\nread_data = CSV.read(\"Path/datatable.csv\", DataFrame)\n\n\n\n\n\n\nNote\n\n\n\nNote, that you need to provide a sink for the data when using CSV.read(), e.g. a DataFrame.\n\n\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert read_data[1,1] == \"Lisa\"\nprintln(\"CSV file 'table_in.csv' read successfully!\")",
     "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
+      "03 Data Management",
+      "04 - Input and Output"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-2.1---subtract-from-10-in-increments-of-1-until-the-result-is-less-than-3",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-2.1---subtract-from-10-in-increments-of-1-until-the-result-is-less-than-3",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 2.1 - Subtract from 10 in Increments of 1 Until the Result is Less Than 3",
-    "text": "Exercise 2.1 - Subtract from 10 in Increments of 1 Until the Result is Less Than 3\nSubtract from 10 in increments of 1 until the result is less than 3. The next line initializes current_value to 10. The result should be in this variable.\n\n# Start a new scope block\nlet \ncurrent_value = 10\n# YOUR CODE BELOW\n\n# Test your answer\n@assert current_value == 2\nprintln(\"The first value smaller than 3 is: \", current_value)\nend # Scope block closed again.",
-    "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-2.2---find-the-first-multiple-of-7-greater-than-50",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-2.2---find-the-first-multiple-of-7-greater-than-50",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 2.2 - Find the First Multiple of 7 Greater Than 50",
-    "text": "Exercise 2.2 - Find the First Multiple of 7 Greater Than 50\nFind the first multiple of 7 greater than 50 using an indefinite loop. The next line initializes first_multiple_of_7 to 0. The first multiple should be in this variable.\n\n# New scope block\nlet \nfirst_multiple_of_7 = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert first_multiple_of_7 == 56\nprintln(\"First multiple of 7 greater than 50: \", first_multiple_of_7)\nend # End of scope block\n\n\n\n\n\n\n\nTip\n\n\n\n‘while true … end’ constructs an infinite loop. You can exit the loop using a ‘break’ statement if a condition is met.",
-    "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-3.1---compute-the-product-of-each-pair-of-elements-from-two-arrays",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-3.1---compute-the-product-of-each-pair-of-elements-from-two-arrays",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays",
-    "text": "Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays\nCompute the product of each pair of elements from two arrays. For example, the product of two numbers a and b is a * b. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results.\n\n# First, we start a new scope block.\nlet \nnumbers1 = [1, 2, 3]\nnumbers2 = [4, 5, 6]\nproducts = []\n# YOUR CODE BELOW\n\n# Test your answer\n@assert products == [4, 5, 6, 8, 10, 12, 12, 15, 18]\nprintln(\"Products of each pair from two arrays: \", products)\nend # End scope block\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, you can use push!() to append elements to an array.",
-    "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-04-loops.html#exercise-4.1---create-a-list-of-even-numbers",
-    "href": "part-02/tutorial-02-04-loops.html#exercise-4.1---create-a-list-of-even-numbers",
-    "title": "Tutorial II.IV - Loops",
-    "section": "Exercise 4.1 - Create a List of Even Numbers",
-    "text": "Exercise 4.1 - Create a List of Even Numbers\nCreate a list of even numbers from 1 to 10 using a list comprehension.\n\nlet\n# YOUR CODE BELOW\n\n# Test your answer\n@assert even_numbers == [2, 4, 6, 8, 10]\nprintln(\"Even numbers from 1 to 10: \", even_numbers)\nend",
-    "crumbs": [
-      "02 First Steps",
-      "04 - Loops"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-01-functions.html",
-    "href": "part-03/tutorial-03-01-functions.html",
-    "title": "Tutorial III.I - Functions in Julia",
+    "objectID": "part-03/tutorial-03-02-handling.html",
+    "href": "part-03/tutorial-03-02-handling.html",
+    "title": "Tutorial III.II - Package Management",
     "section": "",
-    "text": "This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.",
+    "text": "This interactive script serves as an in-depth guide to understanding packages and package management in Julia. Delve into the utilization of the package manager, the processes of adding, updating, and removing packages, and management of distinct environments. First off all, we briefly need to introduce what a package is: a package is a collection of code that is used to extend the functionality of Julia. There are a lot of packages available for Julia, ranging from basic packages like LinearAlgebra to more specialized packages like JuMP for optimization. This means that most of the time you don’nt have to invent the wheel by yourself but can rely on the work of others. The great thing: Almost all packages available for Julia are available for free and can be used under the MIT license.\n\n\n\n\n\n\nNote\n\n\n\nNote: While this script offers guidance, package management commands are usually executed in Julia’s REPL. The REPL is the command line interface to Julia where you can interact with the language.",
     "crumbs": [
       "03 Data Management",
-      "01 - Functions"
+      "02 - Handling Data"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#exercise-1.1---define-and-test-a-simple-addition-function",
-    "href": "part-03/tutorial-03-01-functions.html#exercise-1.1---define-and-test-a-simple-addition-function",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "Exercise 1.1 - Define and Test a Simple Addition Function",
-    "text": "Exercise 1.1 - Define and Test a Simple Addition Function\nDefine and Test a Simple Addition Function. Define a function add that takes two parameters and returns their sum.\n\n# YOUR CODE BELOW\n\n# Test your function\n@assert add(10, 5) == 15 \"The sum computed is $(add(10, 5)) but should be 15.\"\nprintln(\"The sum computed is $(add(10, 5)), wonderful!\")",
+    "objectID": "part-03/tutorial-03-02-handling.html#exercise-1.1---import-the-pkg-module",
+    "href": "part-03/tutorial-03-02-handling.html#exercise-1.1---import-the-pkg-module",
+    "title": "Tutorial III.II - Package Management",
+    "section": "Exercise 1.1 - Import the Pkg Module",
+    "text": "Exercise 1.1 - Import the Pkg Module\nImport the Pkg module to start managing packages effectively.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\ntry \n    Pkg.update()\n    println(\"Pkg module imported successfully and packages were updated!\")\ncatch e\n    @error \"The Pkg module was not imported yet! Have you used the correct syntax?\"\nend",
     "crumbs": [
       "03 Data Management",
-      "01 - Functions"
+      "02 - Handling Data"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#exercise-2.1---return-a-local-variable",
-    "href": "part-03/tutorial-03-01-functions.html#exercise-2.1---return-a-local-variable",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "Exercise 2.1 - Return a Local Variable",
-    "text": "Exercise 2.1 - Return a Local Variable\nTry to execute the following block of code. The objective is to understand how to return the local_variable_one from the function scope_test. Your task is to change the function, to return the value of local_variable_one.\n\n# YOUR CHANGES BELOW\nfunction scope_test()\n    local_variable_one = 10\n    local_variable_two = 20\nend\n\n# YOUR CHANGES ABOVE\n# Test your function\n@assert scope_test() == 10 \"The value exported is $(scope_test()).\"\nprintln(\"The value exported is $(scope_test()), you solved it!\")",
+    "objectID": "part-03/tutorial-03-02-handling.html#exercise-2.1---add-the-dataframes-package",
+    "href": "part-03/tutorial-03-02-handling.html#exercise-2.1---add-the-dataframes-package",
+    "title": "Tutorial III.II - Package Management",
+    "section": "Exercise 2.1 - Add the DataFrames Package",
+    "text": "Exercise 2.1 - Add the DataFrames Package\nUse Pkg.add() to add the Package DataFrames that we will use later.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\ntry \n    using DataFrames\n    println(\"Package added successfully!\")\ncatch e\n    @error \"Package was not added yet! Have you used the correct syntax?\"\nend",
     "crumbs": [
       "03 Data Management",
-      "01 - Functions"
+      "02 - Handling Data"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-01-functions.html#exercise-2.2---define-an-implicit-return-function",
-    "href": "part-03/tutorial-03-01-functions.html#exercise-2.2---define-an-implicit-return-function",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "Exercise 2.2 - Define an Implicit Return Function",
-    "text": "Exercise 2.2 - Define an Implicit Return Function\nDefine and test an implicit return function. Define a function subtract that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n\n# YOUR CODE BELOW\n\n# Test your function\n@assert subtract(10, 5) == 5  \"The difference computed is $(subtract(10, 5)) but should be 5.\"\nprintln(\"The difference computed is $(subtract(10, 5)), perfect!\")",
-    "crumbs": [
-      "03 Data Management",
-      "01 - Functions"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-01-functions.html#exercise-3.1---match-results-to-assertions",
-    "href": "part-03/tutorial-03-01-functions.html#exercise-3.1---match-results-to-assertions",
-    "title": "Tutorial III.I - Functions in Julia",
-    "section": "Exercise 3.1 - Match Results to Assertions",
-    "text": "Exercise 3.1 - Match Results to Assertions\nMatch the results from the previous example to the correct assertions:\n\n# YOUR CHANGES BELOW\n@assert result2 == 30 \"result1 should be the sum of two numbers\"\n@assert result3 == \"Hello, World!\" \"result2 should be the concatenation of two strings\"\n@assert result1 == \"Generic operation for objects of type String and Int64\" \"result3 should use the generic operation\"\nprintln(\"You solved it, the assertions are now correct!\")\n\n\n\n\n\n\n\nTip\n\n\n\nHint: Look at the types of arguments used in each operation call and match them to the appropriate method.",
-    "crumbs": [
-      "03 Data Management",
-      "01 - Functions"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-05-scope.html",
-    "href": "part-02/tutorial-02-05-scope.html",
-    "title": "Tutorial II.V - Variable Scope",
-    "section": "",
-    "text": "This interactive Julia script is a look on variable scopes in Julia. Understand the intricacies of local and global scopes, comprehend the significance of local and global keywords, and discern the scope behaviors in different contexts. Follow the structured instructions, implement your code in the designated blocks, and affirm your comprehension with @assert statements.",
-    "crumbs": [
-      "02 First Steps",
-      "05 - Scope"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-05-scope.html#exercise-1.1---experiment-with-local-variables-in-a-for-loop",
-    "href": "part-02/tutorial-02-05-scope.html#exercise-1.1---experiment-with-local-variables-in-a-for-loop",
-    "title": "Tutorial II.V - Variable Scope",
-    "section": "Exercise 1.1 - Experiment with Local Variables in a for Loop",
-    "text": "Exercise 1.1 - Experiment with Local Variables in a for Loop\nExperiment with local variables in a for loop and try to execute the following block of code.\n\nprintln(\"Defining a local variable within a loop:\")\nfor i in 1:3\n    loop_variable = i\n    println(\"Inside the loop, loop_variable is: \", loop_variable)\nend\nprintln(\"Outside the loop, loop_variable is: \", loop_variable)\n\n# Test your answer\n@assert loop_variable == 3\nprintln(\"Now, the loop works and the value of the 'loop_variable' is: \", loop_variable)\n\n\n\n\n\n\n\nNote\n\n\n\nAttempting to access loop_variable here should result in an error because its scope is local to the loop. Can you come up with a way to solve this issue? Extend the code above to allow the execution of the code.",
-    "crumbs": [
-      "02 First Steps",
-      "05 - Scope"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-05-scope.html#exercise-1.2---experiment-with-local-variables-in-a-nested-loop",
-    "href": "part-02/tutorial-02-05-scope.html#exercise-1.2---experiment-with-local-variables-in-a-nested-loop",
-    "title": "Tutorial II.V - Variable Scope",
-    "section": "Exercise 1.2 - Experiment with Local Variables in a Nested Loop",
-    "text": "Exercise 1.2 - Experiment with Local Variables in a Nested Loop\nExperiment with local variables in a nested loop. Try to execute the following block of code.\n\nprintln(\"Defining a local variable within a loop:\")\nfor i in 1:3\n    nestedloop_variable = 0\n    for j in 1:3\n        nestedloop_variable = i * 3\n        println(\"Inside the nested loop, loop_variable is: \", nestedloop_variable)\n    end\nend\nprintln(\"Outside the nested loop, loop_variable is: \", nestedloop_variable)\n\n# Test your answer\n@assert nestedloop_variable == 9\nprintln(\"Now, the loop works and the value of the 'nestedloop_variable' is: \", nestedloop_variable)\n\n\n\n\n\n\n\nNote\n\n\n\nAttempting to access nestedloop_variable here should result in an error because its scope is only accessible in the first loop, where it is defined, and the second loop below. Can you come up with a way to solve this issue? Extend the code above to allow the execution of the code.",
-    "crumbs": [
-      "02 First Steps",
-      "05 - Scope"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-05-scope.html#exercise-2.1---experiment-with-local-variables-in-a-potentially-global-context",
-    "href": "part-02/tutorial-02-05-scope.html#exercise-2.1---experiment-with-local-variables-in-a-potentially-global-context",
-    "title": "Tutorial II.V - Variable Scope",
-    "section": "Exercise 2.1 - Experiment with Local Variables in a Potentially Global Context",
-    "text": "Exercise 2.1 - Experiment with Local Variables in a Potentially Global Context\nExperiment with local variables in a potentially global context using local. The objective is to redefine the value of explicit_local_variable to “end” within the following loop. Try to execute the following block of code.\n\nexplicit_local_variable = \"start\"\nprintln(\"At the start of the loop, explicit_local_variable is: \", explicit_local_variable)\nfor i in 1:3\n    local explicit_local_variable = \"end\"\n    println(\"Inside the loop, explicit_local_variable is: \", explicit_local_variable)\nend\nprintln(\"Outside the loop, explicit_local_variable is: \", explicit_local_variable)\n\n# Test your answer\n@assert explicit_local_variable == \"end\" \"Currently, the value of 'explicit_local_variable' is $explicit_local_variable.\"\n\n\n\n\n\n\n\nNote\n\n\n\nAttempting to access explicit_local_variable here should result in an error because its scope is local to the loop. Can you come up with a way to solve this issue? Extend the code above to allow the execution of the code.",
-    "crumbs": [
-      "02 First Steps",
-      "05 - Scope"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-05-scope.html#conclusion",
-    "href": "part-02/tutorial-02-05-scope.html#conclusion",
-    "title": "Tutorial II.V - Variable Scope",
+    "objectID": "part-03/tutorial-03-02-handling.html#conclusion",
+    "href": "part-03/tutorial-03-02-handling.html#conclusion",
+    "title": "Tutorial III.II - Package Management",
     "section": "Conclusion",
-    "text": "Conclusion\nGreat! You’ve just navigated through the variable scopes in Julia. Although this is quite complicated at first, it will save you much time later on if you understand this concept. Continue to the next file to learn more.",
+    "text": "Conclusion\nCongratulations! You’ve completed the tutorial on packages and package management in Julia. These skills are important for effectively managing and utilizing external libraries. Continue to the next file to learn more.",
     "crumbs": [
-      "02 First Steps",
-      "05 - Scope"
+      "03 Data Management",
+      "02 - Handling Data"
     ]
   },
   {
@@ -2162,91 +2140,201 @@
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-02-handling.html",
-    "href": "part-03/tutorial-03-02-handling.html",
-    "title": "Tutorial III.II - Package Management",
+    "objectID": "part-02/tutorial-02-05-scope.html",
+    "href": "part-02/tutorial-02-05-scope.html",
+    "title": "Tutorial II.V - Variable Scope",
     "section": "",
-    "text": "This interactive script serves as an in-depth guide to understanding packages and package management in Julia. Delve into the utilization of the package manager, the processes of adding, updating, and removing packages, and management of distinct environments. First off all, we briefly need to introduce what a package is: a package is a collection of code that is used to extend the functionality of Julia. There are a lot of packages available for Julia, ranging from basic packages like LinearAlgebra to more specialized packages like JuMP for optimization. This means that most of the time you don’nt have to invent the wheel by yourself but can rely on the work of others. The great thing: Almost all packages available for Julia are available for free and can be used under the MIT license.\n\n\n\n\n\n\nNote\n\n\n\nNote: While this script offers guidance, package management commands are usually executed in Julia’s REPL. The REPL is the command line interface to Julia where you can interact with the language.",
+    "text": "This interactive Julia script is a look on variable scopes in Julia. Understand the intricacies of local and global scopes, comprehend the significance of local and global keywords, and discern the scope behaviors in different contexts. Follow the structured instructions, implement your code in the designated blocks, and affirm your comprehension with @assert statements.",
     "crumbs": [
-      "03 Data Management",
-      "02 - Handling Data"
+      "02 First Steps",
+      "05 - Scope"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-02-handling.html#exercise-1.1---import-the-pkg-module",
-    "href": "part-03/tutorial-03-02-handling.html#exercise-1.1---import-the-pkg-module",
-    "title": "Tutorial III.II - Package Management",
-    "section": "Exercise 1.1 - Import the Pkg Module",
-    "text": "Exercise 1.1 - Import the Pkg Module\nImport the Pkg module to start managing packages effectively.\n\n# YOUR CODE BELOW\n\n# Test your answer\ntry \n    Pkg.update()\n    println(\"Pkg module imported successfully and packages were updated!\")\ncatch e\n    @error \"The Pkg module was not imported yet! Have you used the correct syntax?\"\nend",
+    "objectID": "part-02/tutorial-02-05-scope.html#exercise-1.1---experiment-with-local-variables-in-a-for-loop",
+    "href": "part-02/tutorial-02-05-scope.html#exercise-1.1---experiment-with-local-variables-in-a-for-loop",
+    "title": "Tutorial II.V - Variable Scope",
+    "section": "Exercise 1.1 - Experiment with Local Variables in a for Loop",
+    "text": "Exercise 1.1 - Experiment with Local Variables in a for Loop\nExperiment with local variables in a for loop and try to execute the following block of code.\n\nprintln(\"Defining a local variable within a loop:\")\nfor i in 1:3\n    loop_variable = i\n    println(\"Inside the loop, loop_variable is: \", loop_variable)\nend\nprintln(\"Outside the loop, loop_variable is: \", loop_variable)\n\n# Test your answer\n@assert loop_variable == 3\nprintln(\"Now, the loop works and the value of the 'loop_variable' is: \", loop_variable)\n\n\n\n\n\n\n\nNote\n\n\n\nAttempting to access loop_variable here should result in an error because its scope is local to the loop. Can you come up with a way to solve this issue? Extend the code above to allow the execution of the code.",
     "crumbs": [
-      "03 Data Management",
-      "02 - Handling Data"
+      "02 First Steps",
+      "05 - Scope"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-02-handling.html#exercise-2.1---add-the-dataframes-package",
-    "href": "part-03/tutorial-03-02-handling.html#exercise-2.1---add-the-dataframes-package",
-    "title": "Tutorial III.II - Package Management",
-    "section": "Exercise 2.1 - Add the DataFrames Package",
-    "text": "Exercise 2.1 - Add the DataFrames Package\nUse Pkg.add() to add the Package DataFrames that we will use later.\n\n# YOUR CODE BELOW\n\n# Test your answer\ntry \n    using DataFrames\n    println(\"Package added successfully!\")\ncatch e\n    @error \"Package was not added yet! Have you used the correct syntax?\"\nend\n\nPackage added successfully!",
+    "objectID": "part-02/tutorial-02-05-scope.html#exercise-1.2---experiment-with-local-variables-in-a-nested-loop",
+    "href": "part-02/tutorial-02-05-scope.html#exercise-1.2---experiment-with-local-variables-in-a-nested-loop",
+    "title": "Tutorial II.V - Variable Scope",
+    "section": "Exercise 1.2 - Experiment with Local Variables in a Nested Loop",
+    "text": "Exercise 1.2 - Experiment with Local Variables in a Nested Loop\nExperiment with local variables in a nested loop. Try to execute the following block of code.\n\nprintln(\"Defining a local variable within a loop:\")\nfor i in 1:3\n    nestedloop_variable = 0\n    for j in 1:3\n        nestedloop_variable = i * 3\n        println(\"Inside the nested loop, loop_variable is: \", nestedloop_variable)\n    end\nend\nprintln(\"Outside the nested loop, loop_variable is: \", nestedloop_variable)\n\n# Test your answer\n@assert nestedloop_variable == 9\nprintln(\"Now, the loop works and the value of the 'nestedloop_variable' is: \", nestedloop_variable)\n\n\n\n\n\n\n\nNote\n\n\n\nAttempting to access nestedloop_variable here should result in an error because its scope is only accessible in the first loop, where it is defined, and the second loop below. Can you come up with a way to solve this issue? Extend the code above to allow the execution of the code.",
     "crumbs": [
-      "03 Data Management",
-      "02 - Handling Data"
+      "02 First Steps",
+      "05 - Scope"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-02-handling.html#conclusion",
-    "href": "part-03/tutorial-03-02-handling.html#conclusion",
-    "title": "Tutorial III.II - Package Management",
+    "objectID": "part-02/tutorial-02-05-scope.html#exercise-2.1---experiment-with-local-variables-in-a-potentially-global-context",
+    "href": "part-02/tutorial-02-05-scope.html#exercise-2.1---experiment-with-local-variables-in-a-potentially-global-context",
+    "title": "Tutorial II.V - Variable Scope",
+    "section": "Exercise 2.1 - Experiment with Local Variables in a Potentially Global Context",
+    "text": "Exercise 2.1 - Experiment with Local Variables in a Potentially Global Context\nExperiment with local variables in a potentially global context using local. The objective is to redefine the value of explicit_local_variable to “end” within the following loop. Try to execute the following block of code.\n\nexplicit_local_variable = \"start\"\nprintln(\"At the start of the loop, explicit_local_variable is: \", explicit_local_variable)\nfor i in 1:3\n    local explicit_local_variable = \"end\"\n    println(\"Inside the loop, explicit_local_variable is: \", explicit_local_variable)\nend\nprintln(\"Outside the loop, explicit_local_variable is: \", explicit_local_variable)\n\n# Test your answer\n@assert explicit_local_variable == \"end\" \"Currently, the value of 'explicit_local_variable' is $explicit_local_variable.\"\n\n\n\n\n\n\n\nNote\n\n\n\nAttempting to access explicit_local_variable here should result in an error because its scope is local to the loop. Can you come up with a way to solve this issue? Extend the code above to allow the execution of the code.",
+    "crumbs": [
+      "02 First Steps",
+      "05 - Scope"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-05-scope.html#conclusion",
+    "href": "part-02/tutorial-02-05-scope.html#conclusion",
+    "title": "Tutorial II.V - Variable Scope",
     "section": "Conclusion",
-    "text": "Conclusion\nCongratulations! You’ve completed the tutorial on packages and package management in Julia. These skills are important for effectively managing and utilizing external libraries. Continue to the next file to learn more.",
+    "text": "Conclusion\nGreat! You’ve just navigated through the variable scopes in Julia. Although this is quite complicated at first, it will save you much time later on if you understand this concept. Continue to the next file to learn more.",
     "crumbs": [
-      "03 Data Management",
-      "02 - Handling Data"
+      "02 First Steps",
+      "05 - Scope"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-04-IO.html",
-    "href": "part-03/tutorial-03-04-IO.html",
-    "title": "Tutorial III.IV - Input and Output",
+    "objectID": "part-03/tutorial-03-01-functions.html",
+    "href": "part-03/tutorial-03-01-functions.html",
+    "title": "Tutorial III.I - Functions in Julia",
     "section": "",
-    "text": "This interactive Julia script introduces the essentials of interacting with external files. File Input/Output (I/O) operations are crucial in programming and data analysis, allowing us to persist data, share information between programs, and work with large datasets that don’t fit in memory. In this tutorial, we’ll cover reading and writing text files, handling CSV files, and working with delimited files using various Julia packages. These skills are fundamental for data preprocessing, analysis, and result storage in real-world applications.\nFollow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.",
+    "text": "This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.",
     "crumbs": [
       "03 Data Management",
-      "04 - Input and Output"
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-04-IO.html#exercise-1.1---read-a-csv-file",
-    "href": "part-03/tutorial-03-04-IO.html#exercise-1.1---read-a-csv-file",
-    "title": "Tutorial III.IV - Input and Output",
-    "section": "Exercise 1.1 - Read a CSV File",
-    "text": "Exercise 1.1 - Read a CSV File\nRead the just written CSV file ‘matrix.csv’ using the function readdlm(). Save the matrix in the variable read_matrix. To learn the syntax, use the inbuild help by typing ? in the terminal. Afterwards, just type the function name for an explanation.\n\n# YOUR CODE BELOW\n\n# Test your answer\n@assert read_matrix == new_data\nprintln(\"File 'matrix.csv' read successfully!\")",
+    "objectID": "part-03/tutorial-03-01-functions.html#exercise-1.1---define-and-test-a-simple-addition-function",
+    "href": "part-03/tutorial-03-01-functions.html#exercise-1.1---define-and-test-a-simple-addition-function",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "Exercise 1.1 - Define and Test a Simple Addition Function",
+    "text": "Exercise 1.1 - Define and Test a Simple Addition Function\nDefine and Test a Simple Addition Function. Define a function add that takes two parameters and returns their sum.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert add(10, 5) == 15 \"The sum computed is $(add(10, 5)) but should be 15.\"\nprintln(\"The sum computed is $(add(10, 5)), wonderful!\")",
     "crumbs": [
       "03 Data Management",
-      "04 - Input and Output"
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-04-IO.html#exercise-2.1---write-a-dataframe-to-a-csv-file",
-    "href": "part-03/tutorial-03-04-IO.html#exercise-2.1---write-a-dataframe-to-a-csv-file",
-    "title": "Tutorial III.IV - Input and Output",
-    "section": "Exercise 2.1 - Write a DataFrame to a CSV File",
-    "text": "Exercise 2.1 - Write a DataFrame to a CSV File\nWrite the following given DataFrame to a CSV file table_out.csv in the folder ExampleData. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with ? and the function name.\n\nusing CSV, DataFrames\ndata = DataFrame(Name = [\"Alice\", \"Bob\", \"Charlie\"], Age = [25, 30, 35])\ncsv_file_path = \"ExampleData/table_out.csv\"\n# YOUR CODE BELOW\n\n# Test your answer\n@assert isfile(\"ExampleData/table_out.csv\") \"Sorry, the file could not be found. \n    Have you followed all steps?\"\nprintln(\"CSV file 'data.csv' written successfully!\")",
+    "objectID": "part-03/tutorial-03-01-functions.html#exercise-2.1---return-a-local-variable",
+    "href": "part-03/tutorial-03-01-functions.html#exercise-2.1---return-a-local-variable",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "Exercise 2.1 - Return a Local Variable",
+    "text": "Exercise 2.1 - Return a Local Variable\nTry to execute the following block of code. The objective is to understand how to return the local_variable_one from the function scope_test. Your task is to change the function, to return the value of local_variable_one.\n\n# YOUR CHANGES BELOW\nfunction scope_test()\n    local_variable_one = 10\n    local_variable_two = 20\nend\n\n# YOUR CHANGES ABOVE\n# Test your function\n@assert scope_test() == 10 \"The value exported is $(scope_test()).\"\nprintln(\"The value exported is $(scope_test()), you solved it!\")",
     "crumbs": [
       "03 Data Management",
-      "04 - Input and Output"
+      "01 - Functions"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-04-IO.html#exercise-2.2---read-a-csv-file-in",
-    "href": "part-03/tutorial-03-04-IO.html#exercise-2.2---read-a-csv-file-in",
-    "title": "Tutorial III.IV - Input and Output",
-    "section": "Exercise 2.2 - Read a CSV File in",
-    "text": "Exercise 2.2 - Read a CSV File in\nRead the CSV file table_in.csv in the folder ExampleData into the variable read_data. Here you can use the function CSV.read(), e.g.:\nread_data = CSV.read(\"Path/datatable.csv\", DataFrame)\n\n\n\n\n\n\nNote\n\n\n\nNote, that you need to provide a sink for the data when using CSV.read(), e.g. a DataFrame.\n\n\n\n# YOUR CODE BELOW\n\n# Test your CSV reading\n@assert read_data[1,1] == \"Lisa\"\nprintln(\"CSV file 'table_in.csv' read successfully!\")",
+    "objectID": "part-03/tutorial-03-01-functions.html#exercise-2.2---define-an-implicit-return-function",
+    "href": "part-03/tutorial-03-01-functions.html#exercise-2.2---define-an-implicit-return-function",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "Exercise 2.2 - Define an Implicit Return Function",
+    "text": "Exercise 2.2 - Define an Implicit Return Function\nDefine and test an implicit return function. Define a function subtract that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert subtract(10, 5) == 5  \"The difference computed is $(subtract(10, 5)) but should be 5.\"\nprintln(\"The difference computed is $(subtract(10, 5)), perfect!\")",
     "crumbs": [
       "03 Data Management",
-      "04 - Input and Output"
+      "01 - Functions"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-01-functions.html#exercise-3.1---match-results-to-assertions",
+    "href": "part-03/tutorial-03-01-functions.html#exercise-3.1---match-results-to-assertions",
+    "title": "Tutorial III.I - Functions in Julia",
+    "section": "Exercise 3.1 - Match Results to Assertions",
+    "text": "Exercise 3.1 - Match Results to Assertions\nMatch the results from the previous example to the correct assertions:\n\n# YOUR CHANGES BELOW\n@assert result2 == 30 \"result1 should be the sum of two numbers\"\n@assert result3 == \"Hello, World!\" \"result2 should be the concatenation of two strings\"\n@assert result1 == \"Generic operation for objects of type String and Int64\" \"result3 should use the generic operation\"\nprintln(\"You solved it, the assertions are now correct!\")\n\n\n\n\n\n\n\nTip\n\n\n\nHint: Look at the types of arguments used in each operation call and match them to the appropriate method.",
+    "crumbs": [
+      "03 Data Management",
+      "01 - Functions"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-04-loops.html",
+    "href": "part-02/tutorial-02-04-loops.html",
+    "title": "Tutorial II.IV - Loops",
+    "section": "",
+    "text": "This interactive Julia script is an extensive tutorial introducing you to the robust loop structures in Julia. Improve your skills in for and while loops for performing repetitive tasks, manipulating loop flow with break and continue, and applying nested loops to iterate through multi-dimensional structures. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.1---sum-the-numbers-from-1-to-5",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-1.1---sum-the-numbers-from-1-to-5",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 1.1 - Sum the Numbers from 1 to 5",
+    "text": "Exercise 1.1 - Sum the Numbers from 1 to 5\nSum the numbers from 1 to 5 in a loop. Don’t worry about the let here, it just starts a scope block. More on this later in the tutorial on variable scope. The next lines initialize sum_numbers to 0. The sum you compute should accumulate in this variable.\n\nlet \nsum_numbers = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sum_numbers == 15\nprintln(\"Sum of numbers from 1 to 5: \", sum_numbers)\nend # This ends the scope of the previously started scope block.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.2---sum-only-the-even-numbers-from-1-to-10",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-1.2---sum-only-the-even-numbers-from-1-to-10",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 1.2 - Sum Only the Even Numbers from 1 to 10",
+    "text": "Exercise 1.2 - Sum Only the Even Numbers from 1 to 10\nSum only the even numbers from 1 to 10. Again, we initialize a variable sum_evens to 0. The sum you compute should accumulate in this variable.\n\nlet # First, we start a scope block for the loop!\nsum_evens = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sum_evens == 30\nprintln(\"Sum of even numbers from 1 to 10: \", sum_evens)\nend # Here we end the scope block again.\n\n\n\n\n\n\n\nTip\n\n\n\nHint: You can use the modulo operator % to check if a number is even. The modulo operator returns the remainder of the division of two numbers. If a number is divisible by another number, the remainder is 0. The following example checks if 4 is even: 4 % 2 == 0.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-1.3---exit-the-loop-if-the-current-fruit-is-banana",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-1.3---exit-the-loop-if-the-current-fruit-is-banana",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 1.3 - Exit the Loop if the Current Fruit is Banana",
+    "text": "Exercise 1.3 - Exit the Loop if the Current Fruit is Banana\nIterate over each fruit in the fruits array, store the current fruit in current_fruit, and exit the loop if current_fruit is banana. The next lines initialize the fruits array and current_fruit variable.\n\nlet \nfruits = [\"apple\", \"banana\", \"cherry\"]\ncurrent_fruit = \"None\"\n# YOUR CODE BELOW\n\n# Test your answer\n@assert current_fruit == \"banana\"\nprintln(\"The current fruit is: \", current_fruit)\nend # Here we end the scope block again.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-2.1---subtract-from-10-in-increments-of-1-until-the-result-is-less-than-3",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-2.1---subtract-from-10-in-increments-of-1-until-the-result-is-less-than-3",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 2.1 - Subtract from 10 in Increments of 1 Until the Result is Less Than 3",
+    "text": "Exercise 2.1 - Subtract from 10 in Increments of 1 Until the Result is Less Than 3\nSubtract from 10 in increments of 1 until the result is less than 3. The next line initializes current_value to 10. The result should be in this variable.\n\n# Start a new scope block\nlet \ncurrent_value = 10\n# YOUR CODE BELOW\n\n# Test your answer\n@assert current_value == 2\nprintln(\"The first value smaller than 3 is: \", current_value)\nend # Scope block closed again.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-2.2---find-the-first-multiple-of-7-greater-than-50",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-2.2---find-the-first-multiple-of-7-greater-than-50",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 2.2 - Find the First Multiple of 7 Greater Than 50",
+    "text": "Exercise 2.2 - Find the First Multiple of 7 Greater Than 50\nFind the first multiple of 7 greater than 50 using an indefinite loop. The next line initializes first_multiple_of_7 to 0. The first multiple should be in this variable.\n\n# New scope block\nlet \nfirst_multiple_of_7 = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert first_multiple_of_7 == 56\nprintln(\"First multiple of 7 greater than 50: \", first_multiple_of_7)\nend # End of scope block\n\n\n\n\n\n\n\nTip\n\n\n\n‘while true … end’ constructs an infinite loop. You can exit the loop using a ‘break’ statement if a condition is met.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-3.1---compute-the-product-of-each-pair-of-elements-from-two-arrays",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-3.1---compute-the-product-of-each-pair-of-elements-from-two-arrays",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays",
+    "text": "Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays\nCompute the product of each pair of elements from two arrays. For example, the product of two numbers a and b is a * b. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results.\n\n# First, we start a new scope block.\nlet \nnumbers1 = [1, 2, 3]\nnumbers2 = [4, 5, 6]\nproducts = []\n# YOUR CODE BELOW\n\n# Test your answer\n@assert products == [4, 5, 6, 8, 10, 12, 12, 15, 18]\nprintln(\"Products of each pair from two arrays: \", products)\nend # End scope block\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, you can use push!() to append elements to an array.",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-04-loops.html#exercise-4.1---create-a-list-of-even-numbers",
+    "href": "part-02/tutorial-02-04-loops.html#exercise-4.1---create-a-list-of-even-numbers",
+    "title": "Tutorial II.IV - Loops",
+    "section": "Exercise 4.1 - Create a List of Even Numbers",
+    "text": "Exercise 4.1 - Create a List of Even Numbers\nCreate a list of even numbers from 1 to 10 using a list comprehension.\n\nlet\n# YOUR CODE BELOW\n\n# Test your answer\n@assert even_numbers == [2, 4, 6, 8, 10]\nprintln(\"Even numbers from 1 to 10: \", even_numbers)\nend",
+    "crumbs": [
+      "02 First Steps",
+      "04 - Loops"
     ]
   },
   {
@@ -2265,7 +2353,7 @@
     "href": "part-03/tutorial-03-03-DataFrames.html#exercise-1.1---create-a-dataframe",
     "title": "Tutorial III.III - DataFrames in Julia",
     "section": "Exercise 1.1 - Create a DataFrame",
-    "text": "Exercise 1.1 - Create a DataFrame\nCreate and Test a DataFrame. Create a DataFrame named employees with the columns Name, Age, and Salary, and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n\n# YOUR CODE BELOW\n\n# Test your answer\n@assert employees == DataFrame(Name = [\"John\", \"Mike\", \"Frank\"], Age = [28, 23, 37], Salary = [50000, 62000, 90000])\nprintln(\"DataFrame created successfully!\")\nprintln(employees)\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, for more help, use ? in the REPL and type DataFrame.",
+    "text": "Exercise 1.1 - Create a DataFrame\nCreate and Test a DataFrame. Create a DataFrame named employees with the columns Name, Age, and Salary, and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert employees == DataFrame(Name = [\"John\", \"Mike\", \"Frank\"], Age = [28, 23, 37], Salary = [50000, 62000, 90000])\nprintln(\"DataFrame created successfully!\")\nprintln(employees)\n\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, for more help, use ? in the REPL and type DataFrame.",
     "crumbs": [
       "03 Data Management",
       "03 - Comparisons"
@@ -2276,7 +2364,7 @@
     "href": "part-03/tutorial-03-03-DataFrames.html#exercise-2.1---access-the-age-column",
     "title": "Tutorial III.III - DataFrames in Julia",
     "section": "Exercise 2.1 - Access the Age Column",
-    "text": "Exercise 2.1 - Access the Age Column\nAccess the Age column from the DataFrame and save it in a new variable ages.\n\n# YOUR CODE BELOW\n\n# Test your answer\n@assert ages == [28, 23, 37]\nprintln(\"Correct, the Ages column is: \", ages)",
+    "text": "Exercise 2.1 - Access the Age Column\nAccess the Age column from the DataFrame and save it in a new variable ages.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert ages == [28, 23, 37]\nprintln(\"Correct, the Ages column is: \", ages)",
     "crumbs": [
       "03 Data Management",
       "03 - Comparisons"
@@ -2287,7 +2375,7 @@
     "href": "part-03/tutorial-03-03-DataFrames.html#exercise-2.2---update-johns-salary",
     "title": "Tutorial III.III - DataFrames in Julia",
     "section": "Exercise 2.2 - Update John’s Salary",
-    "text": "Exercise 2.2 - Update John’s Salary\nUpdate John’s salary to 59000.\n\n# YOUR CODE BELOW\n\n# Test your answer\n@assert employees.Salary[1] == 59000\nprintln(\"Modified DataFrame: \")\nprintln(employees)",
+    "text": "Exercise 2.2 - Update John’s Salary\nUpdate John’s salary to 59000.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert employees.Salary[1] == 59000\nprintln(\"Modified DataFrame: \")\nprintln(employees)",
     "crumbs": [
       "03 Data Management",
       "03 - Comparisons"
@@ -2298,7 +2386,7 @@
     "href": "part-03/tutorial-03-03-DataFrames.html#exercise-3.1---filter-the-dataframe",
     "title": "Tutorial III.III - DataFrames in Julia",
     "section": "Exercise 3.1 - Filter the DataFrame",
-    "text": "Exercise 3.1 - Filter the DataFrame\nFilter the DataFrame to include only employees with salaries above 60000. Save the resulting employees in the DataFrame high_earners.\n\n# YOUR CODE BELOW\n\n# Test your answer\n@assert nrow(high_earners) == 2\nprintln(\"High earners: \")\nprintln(high_earners)",
+    "text": "Exercise 3.1 - Filter the DataFrame\nFilter the DataFrame to include only employees with salaries above 60000. Save the resulting employees in the DataFrame high_earners.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert nrow(high_earners) == 2\nprintln(\"High earners: \")\nprintln(high_earners)",
     "crumbs": [
       "03 Data Management",
       "03 - Comparisons"
@@ -2309,98 +2397,10 @@
     "href": "part-03/tutorial-03-03-DataFrames.html#exercise-4.1---sort-the-dataframe",
     "title": "Tutorial III.III - DataFrames in Julia",
     "section": "Exercise 4.1 - Sort the DataFrame",
-    "text": "Exercise 4.1 - Sort the DataFrame\nSort the DataFrame based on the Age column and save it as sorted_df.\n\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sorted_df.Age[1] == 23\nprintln(\"DataFrame sorted by age: \")\nprintln(sorted_df)\n\n\n\n\n\n\n\nTip\n\n\n\nIf you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets.",
+    "text": "Exercise 4.1 - Sort the DataFrame\nSort the DataFrame based on the Age column and save it as sorted_df.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert sorted_df.Age[1] == 23\nprintln(\"DataFrame sorted by age: \")\nprintln(sorted_df)\n\n\n\n\n\n\n\n\nTip\n\n\n\nIf you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets.",
     "crumbs": [
       "03 Data Management",
       "03 - Comparisons"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html",
-    "href": "part-03/tutorial-03-05-Plotting.html",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "",
-    "text": "This interactive Julia script introduces the basics of plotting in Julia using the Plots.jl package. It covers creating basic plots, customizing them to your needs, and saving them as files for further use. Follow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.\nEnsure you have the Plots package installed to follow along with this tutorial. If you followed the course so far, you first have to install the Plots and the StatsPlots package before you can start using it:\n\nimport Pkg; Pkg.add([\"Plots\",\"StatsPlots\"])\n\n\nusing Plots, StatsPlots",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 1.1 - Create a Scatter Plot",
-    "text": "Exercise 1.1 - Create a Scatter Plot\nCreate a scatter plot called scatter_plot for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace plot by scatter. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined scatter_plot\nprintln(\"Simple scatter plot created successfully!\")\ndisplay(scatter_plot)",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 2.1 - Customize a Line Plot",
-    "text": "Exercise 2.1 - Customize a Line Plot\nCustomize a line plot and save the plot in the variable custom_line_plot.\n\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined custom_line_plot\nprintln(\"Customized line plot created successfully!\")\ndisplay(custom_line_plot)\n\n\n\n\n\n\n\nNote\n\n\n\nYou can customize the appearance of a random line plot as you like.\n\n\nAdd multiple series to a plot. Instead of one series, we can also add multiple series. This is done, for example, by defining one plot (as before) and then calling plot!() while using the first plot as first argument in the function plot!().\nFor example:\n\nx = 1:20\na = rand(20)\nb = rand(20)\nmulti_plot = plot(x, a, title=\"Many Series\", xlabel=\"x axis\", ylabel=\"y axis\", label=\"a\")\nplot!(multi_plot, x, b, label=\"b\")\ndisplay(multi_plot)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe ! after plot adds to the existing plot.",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.2---create-a-multiple-series-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.2---create-a-multiple-series-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 2.2 - Create a Multiple Series Plot",
-    "text": "Exercise 2.2 - Create a Multiple Series Plot\nNow, create a plot called multi_series_plot with three data series y1, y2 and y3.\n\n# YOUR CODE BELOW\n\n# Test your answer\n@assert @isdefined y1\n@assert @isdefined y2\n@assert @isdefined y3\n@assert @isdefined multi_series_plot\nprintln(\"Multiple series plot created successfully!\")\ndisplay(multi_series_plot)",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 3.1 - Save a Plot to a File",
-    "text": "Exercise 3.1 - Save a Plot to a File\nSave the previously created plot multi_series_plot to a file as PNG. Save it in the folder ExampleData and name it saved_plot.png.\n\n# YOUR CODE BELOW\n\n# Test your answer\n@assert  isfile(\"ExampleData/saved_plot.png\") \"File does not exist yet.\"\nprintln(\"Plot saved to 'saved_plot.pdf' successfully!\")",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#bar-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#bar-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Bar Plot",
-    "text": "Bar Plot\n\n# Bar plot\nx_categories = [\"A\", \"B\", \"C\", \"D\"]\ny_values = [15, 23, 18, 30]\nbar_plot = bar(x_categories, y_values, title=\"Bar Plot Example\")\ndisplay(bar_plot)",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#histogram",
-    "href": "part-03/tutorial-03-05-Plotting.html#histogram",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Histogram",
-    "text": "Histogram\n\ndata = randn(1000)\nhist_plot = histogram(data, bins=30, title=\"Histogram Example\")\ndisplay(hist_plot)",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#box-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#box-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Box Plot",
-    "text": "Box Plot\n\n# Box plot\ngroup = repeat(1:4, inner=50)\ny = randn(200) .+ group\nbox_plot = boxplot(group, y, title=\"Box Plot Example\")\ndisplay(box_plot)",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
     ]
   },
   {

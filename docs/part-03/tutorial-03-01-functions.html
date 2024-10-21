@@ -356,11 +356,15 @@ The result of do_something(5, 10) is 15</code></pre>
 <h2 class="anchored" data-anchor-id="exercise-1.1---define-and-test-a-simple-addition-function">Exercise 1.1 - Define and Test a Simple Addition Function</h2>
 <p>Define and Test a Simple Addition Function. Define a function <code>add</code> that takes two parameters and returns their sum.</p>
 <div id="6" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>) <span class="op">==</span> <span class="fl">15</span> <span class="st">"The sum computed is </span><span class="sc">$</span>(<span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st"> but should be 15."</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The sum computed is </span><span class="sc">$</span>(<span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">, wonderful!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="8" class="cell" data-execution_count="0">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>) <span class="op">==</span> <span class="fl">15</span> <span class="st">"The sum computed is </span><span class="sc">$</span>(<span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st"> but should be 15."</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The sum computed is </span><span class="sc">$</span>(<span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">, wonderful!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 </section>
@@ -370,51 +374,55 @@ The result of do_something(5, 10) is 15</code></pre>
 <section id="exercise-2.1---return-a-local-variable" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---return-a-local-variable">Exercise 2.1 - Return a Local Variable</h2>
 <p>Try to execute the following block of code. The objective is to understand how to return the <code>local_variable_one</code> from the function <code>scope_test</code>. Your task is to change the function, to return the value of <code>local_variable_one</code>.</p>
-<div id="8" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES BELOW</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">scope_test</span>()</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    local_variable_one <span class="op">=</span> <span class="fl">10</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    local_variable_two <span class="op">=</span> <span class="fl">20</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES ABOVE</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">scope_test</span>() <span class="op">==</span> <span class="fl">10</span> <span class="st">"The value exported is </span><span class="sc">$</span>(<span class="fu">scope_test</span>())<span class="st">."</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The value exported is </span><span class="sc">$</span>(<span class="fu">scope_test</span>())<span class="st">, you solved it!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="10" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES BELOW</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">scope_test</span>()</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    local_variable_one <span class="op">=</span> <span class="fl">10</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    local_variable_two <span class="op">=</span> <span class="fl">20</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES ABOVE</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">scope_test</span>() <span class="op">==</span> <span class="fl">10</span> <span class="st">"The value exported is </span><span class="sc">$</span>(<span class="fu">scope_test</span>())<span class="st">."</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The value exported is </span><span class="sc">$</span>(<span class="fu">scope_test</span>())<span class="st">, you solved it!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exercise-2.2---define-an-implicit-return-function" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.2---define-an-implicit-return-function">Exercise 2.2 - Define an Implicit Return Function</h2>
 <p>Define and test an implicit return function. Define a function <code>subtract</code> that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.</p>
-<div id="10" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>) <span class="op">==</span> <span class="fl">5</span>  <span class="st">"The difference computed is </span><span class="sc">$</span>(<span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st"> but should be 5."</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The difference computed is </span><span class="sc">$</span>(<span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">, perfect!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="12" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="14" class="cell" data-execution_count="0">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>) <span class="op">==</span> <span class="fl">5</span>  <span class="st">"The difference computed is </span><span class="sc">$</span>(<span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st"> but should be 5."</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The difference computed is </span><span class="sc">$</span>(<span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">, perfect!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 </section>
 <section id="section-3---multiple-dispatch" class="level1">
 <h1>Section 3 - Multiple Dispatch</h1>
 <p>Multiple dispatch in Julia allows defining function behavior based on argument types, promoting code reuse and clarity. It’s a powerful feature for designing flexible and extensible functions. We first define a generic version and then provide specific implementations for different types:</p>
-<div id="12" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generic operation for objects of all types.</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">operation</span>(a, b)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Generic operation for objects of type </span><span class="sc">$</span>(<span class="fu">typeof</span>(a))<span class="st"> and </span><span class="sc">$</span>(<span class="fu">typeof</span>(b))<span class="st">"</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># The specific implementations are:</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">operation</span>(a<span class="op">::</span><span class="dt">Number</span>, b<span class="op">::</span><span class="dt">Number</span>) <span class="op">=</span> a <span class="op">+</span> b        <span class="co"># Specific method for Number types.</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">operation</span>(a<span class="op">::</span><span class="dt">String</span>, b<span class="op">::</span><span class="dt">String</span>) <span class="op">=</span> <span class="fu">string</span>(a, b) <span class="co"># Specific method for String types.</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with different types of arguments.</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>result1 <span class="op">=</span> <span class="fu">operation</span>(<span class="fl">10</span>, <span class="fl">20</span>)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(result1)</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>result2 <span class="op">=</span> <span class="fu">operation</span>(<span class="st">"Hello, "</span>, <span class="st">"World!"</span>)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(result2)</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>result3 <span class="op">=</span> <span class="fu">operation</span>(<span class="st">"Hello, "</span>, <span class="fl">20</span>)</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(result3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="16" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generic operation for objects of all types.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">operation</span>(a, b)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Generic operation for objects of type </span><span class="sc">$</span>(<span class="fu">typeof</span>(a))<span class="st"> and </span><span class="sc">$</span>(<span class="fu">typeof</span>(b))<span class="st">"</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># The specific implementations are:</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">operation</span>(a<span class="op">::</span><span class="dt">Number</span>, b<span class="op">::</span><span class="dt">Number</span>) <span class="op">=</span> a <span class="op">+</span> b        <span class="co"># Specific method for Number types.</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">operation</span>(a<span class="op">::</span><span class="dt">String</span>, b<span class="op">::</span><span class="dt">String</span>) <span class="op">=</span> <span class="fu">string</span>(a, b) <span class="co"># Specific method for String types.</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with different types of arguments.</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>result1 <span class="op">=</span> <span class="fu">operation</span>(<span class="fl">10</span>, <span class="fl">20</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(result1)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>result2 <span class="op">=</span> <span class="fu">operation</span>(<span class="st">"Hello, "</span>, <span class="st">"World!"</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(result2)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>result3 <span class="op">=</span> <span class="fu">operation</span>(<span class="st">"Hello, "</span>, <span class="fl">20</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(result3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>30
 Hello, World!
@@ -424,12 +432,12 @@ Generic operation for objects of type String and Int64</code></pre>
 <section id="exercise-3.1---match-results-to-assertions" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-3.1---match-results-to-assertions">Exercise 3.1 - Match Results to Assertions</h2>
 <p>Match the results from the previous example to the correct assertions:</p>
-<div id="14" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES BELOW</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result2 <span class="op">==</span> <span class="fl">30</span> <span class="st">"result1 should be the sum of two numbers"</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result3 <span class="op">==</span> <span class="st">"Hello, World!"</span> <span class="st">"result2 should be the concatenation of two strings"</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result1 <span class="op">==</span> <span class="st">"Generic operation for objects of type String and Int64"</span> <span class="st">"result3 should use the generic operation"</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"You solved it, the assertions are now correct!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="18" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES BELOW</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result2 <span class="op">==</span> <span class="fl">30</span> <span class="st">"result1 should be the sum of two numbers"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result3 <span class="op">==</span> <span class="st">"Hello, World!"</span> <span class="st">"result2 should be the concatenation of two strings"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result1 <span class="op">==</span> <span class="st">"Generic operation for objects of type String and Int64"</span> <span class="st">"result3 should use the generic operation"</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"You solved it, the assertions are now correct!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
