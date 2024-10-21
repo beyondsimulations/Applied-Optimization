@@ -278,14 +278,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#section-1---using-the-package-manager" id="toc-section-1---using-the-package-manager" class="nav-link" data-scroll-target="#section-1---using-the-package-manager">Section 1 - Using the Package Manager</a>
   <ul class="collapse">
-  <li><a href="#section-1---using-the-package-manager" id="toc-section-1---using-the-package-manager" class="nav-link" data-scroll-target="#section-1---using-the-package-manager">Section 1 - Using the Package Manager</a></li>
   <li><a href="#exercise-1.1---import-the-pkg-module" id="toc-exercise-1.1---import-the-pkg-module" class="nav-link" data-scroll-target="#exercise-1.1---import-the-pkg-module">Exercise 1.1 - Import the Pkg Module</a></li>
-  <li><a href="#section-2---adding-packages" id="toc-section-2---adding-packages" class="nav-link" data-scroll-target="#section-2---adding-packages">Section 2 - Adding Packages</a></li>
+  </ul></li>
+  <li><a href="#section-2---adding-packages" id="toc-section-2---adding-packages" class="nav-link" data-scroll-target="#section-2---adding-packages">Section 2 - Adding Packages</a>
+  <ul class="collapse">
   <li><a href="#exercise-2.1---add-the-dataframes-package" id="toc-exercise-2.1---add-the-dataframes-package" class="nav-link" data-scroll-target="#exercise-2.1---add-the-dataframes-package">Exercise 2.1 - Add the DataFrames Package</a></li>
+  </ul></li>
   <li><a href="#section-3---updating-and-removing-packages" id="toc-section-3---updating-and-removing-packages" class="nav-link" data-scroll-target="#section-3---updating-and-removing-packages">Section 3 - Updating and Removing Packages</a></li>
-  <li><a href="#section-4---managing-environments" id="toc-section-4---managing-environments" class="nav-link" data-scroll-target="#section-4---managing-environments">Section 4 - Managing Environments</a></li>
+  <li><a href="#section-4---managing-environments" id="toc-section-4---managing-environments" class="nav-link" data-scroll-target="#section-4---managing-environments">Section 4 - Managing Environments</a>
+  <ul class="collapse">
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
@@ -331,10 +335,10 @@ Note
 <p>Note: While this script offers guidance, package management commands are usually executed in Julia’s REPL. The REPL is the command line interface to Julia where you can interact with the language.</p>
 </div>
 </div>
-<section id="section-1---using-the-package-manager" class="level2">
-<h2 class="anchored" data-anchor-id="section-1---using-the-package-manager">Section 1 - Using the Package Manager</h2>
-<p>Julia’s built-in package manager, Pkg, provides a robust set of tools for managing packages. To utilize these tools, start by importing the Pkg module. This module allows you to add, update, and remove packages, and manage environments efficiently. Note, <code>import PackageName</code> lets you access exported functions with <code>PackageName.function</code>, while <code>using PackageName</code> imports all exported names into the local namespace for direct access.</p>
 </section>
+<section id="section-1---using-the-package-manager" class="level1">
+<h1>Section 1 - Using the Package Manager</h1>
+<p>Julia’s built-in package manager, Pkg, provides a robust set of tools for managing packages. To utilize these tools, start by importing the Pkg module. This module allows you to add, update, and remove packages, and manage environments efficiently. Note, <code>import PackageName</code> lets you access exported functions with <code>PackageName.function</code>, while <code>using PackageName</code> imports all exported names into the local namespace for direct access.</p>
 <section id="exercise-1.1---import-the-pkg-module" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---import-the-pkg-module">Exercise 1.1 - Import the Pkg Module</h2>
 <p>Import the Pkg module to start managing packages effectively.</p>
@@ -350,10 +354,10 @@ Note
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-2---adding-packages" class="level2">
-<h2 class="anchored" data-anchor-id="section-2---adding-packages">Section 2 - Adding Packages</h2>
-<p>Adding packages in Julia is straightforward using the <code>Pkg.add("PackageName")</code> function. Replace <code>PackageName</code> with the actual package name you wish to add.</p>
 </section>
+<section id="section-2---adding-packages" class="level1">
+<h1>Section 2 - Adding Packages</h1>
+<p>Adding packages in Julia is straightforward using the <code>Pkg.add("PackageName")</code> function. Replace <code>PackageName</code> with the actual package name you wish to add.</p>
 <section id="exercise-2.1---add-the-dataframes-package" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---add-the-dataframes-package">Exercise 2.1 - Add the DataFrames Package</h2>
 <p>Use <code>Pkg.add()</code> to add the Package <code>DataFrames</code> that we will use later.</p>
@@ -372,12 +376,13 @@ Note
 </div>
 </div>
 </section>
-<section id="section-3---updating-and-removing-packages" class="level2">
-<h2 class="anchored" data-anchor-id="section-3---updating-and-removing-packages">Section 3 - Updating and Removing Packages</h2>
+</section>
+<section id="section-3---updating-and-removing-packages" class="level1">
+<h1>Section 3 - Updating and Removing Packages</h1>
 <p>Maintaining your Julia environment involves keeping your packages up-to-date and removing those that are no longer necessary. Use <code>Pkg.update("PackageName")</code> to update individual packages, or simply <code>Pkg.update()</code> to update all packages. To remove an obsolete package, use <code>Pkg.rm("PackageName")</code>. Remember to replace <code>PackageName</code> with the actual name of the package you wish to manage.</p>
 </section>
-<section id="section-4---managing-environments" class="level2">
-<h2 class="anchored" data-anchor-id="section-4---managing-environments">Section 4 - Managing Environments</h2>
+<section id="section-4---managing-environments" class="level1">
+<h1>Section 4 - Managing Environments</h1>
 <p>Julia environments are essential for keeping project dependencies isolated and organized. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with <code>Pkg.activate("new_environment")</code> and add packages to it with <code>Pkg.add("PackageName")</code>. This ensures that each of your projects has a clean, dedicated set of dependencies. When you create a new environment, Julia generates two important files:</p>
 <ol type="1">
 <li><code>Project.toml</code>: Lists direct dependencies of your project.</li>
@@ -397,7 +402,6 @@ Note
 <p>If you plan to stick to working with notebooks, you don’t have to care about environments yet. Just use the regular environment for the course and you don’t have to activate anything.</p>
 </div>
 </div>
-</section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>Congratulations! You’ve completed the tutorial on packages and package management in Julia. These skills are important for effectively managing and utilizing external libraries. Continue to the next file to learn more.</p>

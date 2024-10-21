@@ -278,17 +278,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#section-1---creating-and-calling-functions" id="toc-section-1---creating-and-calling-functions" class="nav-link" data-scroll-target="#section-1---creating-and-calling-functions">Section 1 - Creating and Calling Functions</a>
   <ul class="collapse">
-  <li><a href="#section-1---creating-and-calling-functions" id="toc-section-1---creating-and-calling-functions" class="nav-link" data-scroll-target="#section-1---creating-and-calling-functions">Section 1 - Creating and Calling Functions</a></li>
   <li><a href="#exercise-1.1---define-and-test-a-simple-addition-function" id="toc-exercise-1.1---define-and-test-a-simple-addition-function" class="nav-link" data-scroll-target="#exercise-1.1---define-and-test-a-simple-addition-function">Exercise 1.1 - Define and Test a Simple Addition Function</a></li>
-  <li><a href="#section-2---scope-within-functions" id="toc-section-2---scope-within-functions" class="nav-link" data-scroll-target="#section-2---scope-within-functions">Section 2 - Scope within Functions</a></li>
+  </ul></li>
+  <li><a href="#section-2---scope-within-functions" id="toc-section-2---scope-within-functions" class="nav-link" data-scroll-target="#section-2---scope-within-functions">Section 2 - Scope within Functions</a>
+  <ul class="collapse">
   <li><a href="#exercise-2.1---return-a-local-variable" id="toc-exercise-2.1---return-a-local-variable" class="nav-link" data-scroll-target="#exercise-2.1---return-a-local-variable">Exercise 2.1 - Return a Local Variable</a></li>
   <li><a href="#exercise-2.2---define-an-implicit-return-function" id="toc-exercise-2.2---define-an-implicit-return-function" class="nav-link" data-scroll-target="#exercise-2.2---define-an-implicit-return-function">Exercise 2.2 - Define an Implicit Return Function</a></li>
-  <li><a href="#section-3---multiple-dispatch" id="toc-section-3---multiple-dispatch" class="nav-link" data-scroll-target="#section-3---multiple-dispatch">Section 3 - Multiple Dispatch</a></li>
-  <li><a href="#exercise-3.1---match-results-to-assertions" id="toc-exercise-3.1---match-results-to-assertions" class="nav-link" data-scroll-target="#exercise-3.1---match-results-to-assertions">Exercise 3.1 - Match Results to Assertions</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
+  <li><a href="#section-3---multiple-dispatch" id="toc-section-3---multiple-dispatch" class="nav-link" data-scroll-target="#section-3---multiple-dispatch">Section 3 - Multiple Dispatch</a>
+  <ul class="collapse">
+  <li><a href="#exercise-3.1---match-results-to-assertions" id="toc-exercise-3.1---match-results-to-assertions" class="nav-link" data-scroll-target="#exercise-3.1---match-results-to-assertions">Exercise 3.1 - Match Results to Assertions</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-03/tutorial-03-01-functions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-03/tutorial-03-01-functions.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-03-01-functions.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="tutorial-03-01-functions.ipynb" download="tutorial-03-01-functions.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
@@ -319,8 +323,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with <code>@assert</code> statements.</p>
-<section id="section-1---creating-and-calling-functions" class="level2">
-<h2 class="anchored" data-anchor-id="section-1---creating-and-calling-functions">Section 1 - Creating and Calling Functions</h2>
+</section>
+<section id="section-1---creating-and-calling-functions" class="level1">
+<h1>Section 1 - Creating and Calling Functions</h1>
 <p>Functions in Julia encapsulate reusable code and can be defined using the <code>function</code> keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. Later, you can call the function by writing the name of the function followed by the parameters in parentheses. For example:</p>
 <div id="2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">multiply</span>(a,b)</span>
@@ -347,7 +352,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 The result of do_something(5, 10) is 15</code></pre>
 </div>
 </div>
-</section>
 <section id="exercise-1.1---define-and-test-a-simple-addition-function" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---define-and-test-a-simple-addition-function">Exercise 1.1 - Define and Test a Simple Addition Function</h2>
 <p>Define and Test a Simple Addition Function. Define a function <code>add</code> that takes two parameters and returns their sum.</p>
@@ -359,10 +363,10 @@ The result of do_something(5, 10) is 15</code></pre>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The sum computed is </span><span class="sc">$</span>(<span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">, wonderful!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-2---scope-within-functions" class="level2">
-<h2 class="anchored" data-anchor-id="section-2---scope-within-functions">Section 2 - Scope within Functions</h2>
-<p>Variables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it as already shown above. You can do this by passing <code>return</code> in front of the variable you want to return from the function.</p>
 </section>
+<section id="section-2---scope-within-functions" class="level1">
+<h1>Section 2 - Scope within Functions</h1>
+<p>Variables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it as already shown above. You can do this by passing <code>return</code> in front of the variable you want to return from the function.</p>
 <section id="exercise-2.1---return-a-local-variable" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---return-a-local-variable">Exercise 2.1 - Return a Local Variable</h2>
 <p>Try to execute the following block of code. The objective is to understand how to return the <code>local_variable_one</code> from the function <code>scope_test</code>. Your task is to change the function, to return the value of <code>local_variable_one</code>.</p>
@@ -390,8 +394,9 @@ The result of do_something(5, 10) is 15</code></pre>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The difference computed is </span><span class="sc">$</span>(<span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">, perfect!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-3---multiple-dispatch" class="level2">
-<h2 class="anchored" data-anchor-id="section-3---multiple-dispatch">Section 3 - Multiple Dispatch</h2>
+</section>
+<section id="section-3---multiple-dispatch" class="level1">
+<h1>Section 3 - Multiple Dispatch</h1>
 <p>Multiple dispatch in Julia allows defining function behavior based on argument types, promoting code reuse and clarity. It’s a powerful feature for designing flexible and extensible functions. We first define a generic version and then provide specific implementations for different types:</p>
 <div id="12" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generic operation for objects of all types.</span></span>
@@ -416,7 +421,6 @@ Hello, World!
 Generic operation for objects of type String and Int64</code></pre>
 </div>
 </div>
-</section>
 <section id="exercise-3.1---match-results-to-assertions" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-3.1---match-results-to-assertions">Exercise 3.1 - Match Results to Assertions</h2>
 <p>Match the results from the previous example to the correct assertions:</p>
@@ -441,10 +445,10 @@ Tip
 </div>
 </div>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>Great work! You’ve just completed the tutorial on functions in Julia. You now have a first understanding of how to create, use, and understand functions in Julia. Continue to the next file to learn more.</p>
 </section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Great work! You’ve just completed the tutorial on functions in Julia. You now have a first understanding of how to create, use, and understand functions in Julia. Continue to the next file to learn more.</p>
 </section>
 <section id="solutions" class="level1">
 <h1>Solutions</h1>

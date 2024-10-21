@@ -281,19 +281,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#section-1---creating-dataframes" id="toc-section-1---creating-dataframes" class="nav-link" data-scroll-target="#section-1---creating-dataframes">Section 1 - Creating DataFrames</a>
   <ul class="collapse">
-  <li><a href="#section-1---creating-dataframes" id="toc-section-1---creating-dataframes" class="nav-link" data-scroll-target="#section-1---creating-dataframes">Section 1 - Creating DataFrames</a></li>
   <li><a href="#exercise-1.1---create-a-dataframe" id="toc-exercise-1.1---create-a-dataframe" class="nav-link" data-scroll-target="#exercise-1.1---create-a-dataframe">Exercise 1.1 - Create a DataFrame</a></li>
-  <li><a href="#section-2---accessing-and-modifying-data" id="toc-section-2---accessing-and-modifying-data" class="nav-link" data-scroll-target="#section-2---accessing-and-modifying-data">Section 2 - Accessing and Modifying Data</a></li>
+  </ul></li>
+  <li><a href="#section-2---accessing-and-modifying-data" id="toc-section-2---accessing-and-modifying-data" class="nav-link" data-scroll-target="#section-2---accessing-and-modifying-data">Section 2 - Accessing and Modifying Data</a>
+  <ul class="collapse">
   <li><a href="#exercise-2.1---access-the-age-column" id="toc-exercise-2.1---access-the-age-column" class="nav-link" data-scroll-target="#exercise-2.1---access-the-age-column">Exercise 2.1 - Access the <code>Age</code> Column</a></li>
   <li><a href="#exercise-2.2---update-johns-salary" id="toc-exercise-2.2---update-johns-salary" class="nav-link" data-scroll-target="#exercise-2.2---update-johns-salary">Exercise 2.2 - Update John’s Salary</a></li>
-  <li><a href="#section-3---filtering-data" id="toc-section-3---filtering-data" class="nav-link" data-scroll-target="#section-3---filtering-data">Section 3 - Filtering Data</a></li>
-  <li><a href="#exercise-3.1---filter-the-dataframe" id="toc-exercise-3.1---filter-the-dataframe" class="nav-link" data-scroll-target="#exercise-3.1---filter-the-dataframe">Exercise 3.1 - Filter the DataFrame</a></li>
-  <li><a href="#section-4---basic-data-manipulation" id="toc-section-4---basic-data-manipulation" class="nav-link" data-scroll-target="#section-4---basic-data-manipulation">Section 4 - Basic Data Manipulation</a></li>
-  <li><a href="#exercise-4.1---sort-the-dataframe" id="toc-exercise-4.1---sort-the-dataframe" class="nav-link" data-scroll-target="#exercise-4.1---sort-the-dataframe">Exercise 4.1 - Sort the DataFrame</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
+  <li><a href="#section-3---filtering-data" id="toc-section-3---filtering-data" class="nav-link" data-scroll-target="#section-3---filtering-data">Section 3 - Filtering Data</a>
+  <ul class="collapse">
+  <li><a href="#exercise-3.1---filter-the-dataframe" id="toc-exercise-3.1---filter-the-dataframe" class="nav-link" data-scroll-target="#exercise-3.1---filter-the-dataframe">Exercise 3.1 - Filter the DataFrame</a></li>
+  </ul></li>
+  <li><a href="#section-4---basic-data-manipulation" id="toc-section-4---basic-data-manipulation" class="nav-link" data-scroll-target="#section-4---basic-data-manipulation">Section 4 - Basic Data Manipulation</a>
+  <ul class="collapse">
+  <li><a href="#exercise-4.1---sort-the-dataframe" id="toc-exercise-4.1---sort-the-dataframe" class="nav-link" data-scroll-target="#exercise-4.1---sort-the-dataframe">Exercise 4.1 - Sort the DataFrame</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-03/tutorial-03-03-DataFrames.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-03/tutorial-03-03-DataFrames.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-03-03-DataFrames.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="tutorial-03-03-DataFrames.ipynb" download="tutorial-03-03-DataFrames.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
@@ -328,10 +334,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the DataFrames package</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="section-1---creating-dataframes" class="level2">
-<h2 class="anchored" data-anchor-id="section-1---creating-dataframes">Section 1 - Creating DataFrames</h2>
-<p>A DataFrame in Julia is akin to a table in SQL or a spreadsheet - each column can have its own type, making it highly versatile. A DataFrame can be created using the DataFrame constructor and passing key-value pairs where the key is the column name and the value is an array of data. For more help, use <code>?</code> in the REPL and type <code>DataFrame</code>.</p>
 </section>
+<section id="section-1---creating-dataframes" class="level1">
+<h1>Section 1 - Creating DataFrames</h1>
+<p>A DataFrame in Julia is akin to a table in SQL or a spreadsheet - each column can have its own type, making it highly versatile. A DataFrame can be created using the DataFrame constructor and passing key-value pairs where the key is the column name and the value is an array of data. For more help, use <code>?</code> in the REPL and type <code>DataFrame</code>.</p>
 <section id="exercise-1.1---create-a-dataframe" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---create-a-dataframe">Exercise 1.1 - Create a DataFrame</h2>
 <p>Create and Test a DataFrame. Create a DataFrame named <code>employees</code> with the columns <code>Name</code>, <code>Age</code>, and <code>Salary</code>, and populate it with the specified data: John is <code>28</code> years old and earns <code>50000</code>, Mike is <code>23</code> years old and earns <code>62000</code>. Frank is <code>37</code> years old and earns <code>90000</code>.</p>
@@ -357,8 +363,9 @@ Tip
 </div>
 </div>
 </section>
-<section id="section-2---accessing-and-modifying-data" class="level2">
-<h2 class="anchored" data-anchor-id="section-2---accessing-and-modifying-data">Section 2 - Accessing and Modifying Data</h2>
+</section>
+<section id="section-2---accessing-and-modifying-data" class="level1">
+<h1>Section 2 - Accessing and Modifying Data</h1>
 <p>Accessing columns in a DataFrame can be done using the dot syntax, while rows can be accessed via indexing. Modification of data is straightforward; just assign a new value to the desired cell. To access the column ‘name’ in our DataFrame with <code>employees</code>, we could do:</p>
 <div id="8" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>employees.Name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -376,7 +383,6 @@ Tip
 <pre><code>"Frank"</code></pre>
 </div>
 </div>
-</section>
 <section id="exercise-2.1---access-the-age-column" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---access-the-age-column">Exercise 2.1 - Access the <code>Age</code> Column</h2>
 <p>Access the <code>Age</code> column from the DataFrame and save it in a new variable <code>ages</code>.</p>
@@ -400,8 +406,9 @@ Tip
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(employees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-3---filtering-data" class="level2">
-<h2 class="anchored" data-anchor-id="section-3---filtering-data">Section 3 - Filtering Data</h2>
+</section>
+<section id="section-3---filtering-data" class="level1">
+<h1>Section 3 - Filtering Data</h1>
 <p>Logical indexing can be used to filter rows in a DataFrame based on conditions. To filter the DataFrame to include only employees names “Frank” we could do:</p>
 <div id="16" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>allFranks <span class="op">=</span> employees[employees.Name <span class="op">.==</span> <span class="st">"Frank"</span>, <span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -466,7 +473,6 @@ Tip
 </div>
 </div>
 </div>
-</section>
 <section id="exercise-3.1---filter-the-dataframe" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-3.1---filter-the-dataframe">Exercise 3.1 - Filter the DataFrame</h2>
 <p>Filter the DataFrame to include only employees with salaries above <code>60000</code>. Save the resulting employees in the DataFrame <code>high_earners</code>.</p>
@@ -479,10 +485,10 @@ Tip
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(high_earners)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-4---basic-data-manipulation" class="level2">
-<h2 class="anchored" data-anchor-id="section-4---basic-data-manipulation">Section 4 - Basic Data Manipulation</h2>
-<p>Julia provides functions for basic data manipulation tasks, including sorting, grouping, and joining DataFrames. The <code>sort</code> function can be used to order the rows in a DataFrame based on the values in one or more columns. To see how to use the function, type <code>?</code> into the REPL (terminal) and type <code>sort</code>.</p>
 </section>
+<section id="section-4---basic-data-manipulation" class="level1">
+<h1>Section 4 - Basic Data Manipulation</h1>
+<p>Julia provides functions for basic data manipulation tasks, including sorting, grouping, and joining DataFrames. The <code>sort</code> function can be used to order the rows in a DataFrame based on the values in one or more columns. To see how to use the function, type <code>?</code> into the REPL (terminal) and type <code>sort</code>.</p>
 <section id="exercise-4.1---sort-the-dataframe" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-4.1---sort-the-dataframe">Exercise 4.1 - Sort the DataFrame</h2>
 <p>Sort the DataFrame based on the <code>Age</code> column and save it as <code>sorted_df</code>.</p>
@@ -508,10 +514,10 @@ Tip
 </div>
 </div>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>Fantastic work! You’ve completed the tutorial on DataFrames in Julia. You’ve seen how to create DataFrames and access, modify and filter data. Continue to the next file to learn more.</p>
 </section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Fantastic work! You’ve completed the tutorial on DataFrames in Julia. You’ve seen how to create DataFrames and access, modify and filter data. Continue to the next file to learn more.</p>
 </section>
 <section id="solutions" class="level1">
 <h1>Solutions</h1>

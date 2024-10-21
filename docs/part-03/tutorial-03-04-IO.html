@@ -278,15 +278,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#section-1---working-with-delimited-files" id="toc-section-1---working-with-delimited-files" class="nav-link" data-scroll-target="#section-1---working-with-delimited-files">Section 1 - Working with Delimited Files</a>
   <ul class="collapse">
-  <li><a href="#section-1---working-with-delimited-files" id="toc-section-1---working-with-delimited-files" class="nav-link" data-scroll-target="#section-1---working-with-delimited-files">Section 1 - Working with Delimited Files</a></li>
   <li><a href="#exercise-1.1---read-a-csv-file" id="toc-exercise-1.1---read-a-csv-file" class="nav-link" data-scroll-target="#exercise-1.1---read-a-csv-file">Exercise 1.1 - Read a CSV File</a></li>
-  <li><a href="#section-2---working-with-csv-files-and-dataframes" id="toc-section-2---working-with-csv-files-and-dataframes" class="nav-link" data-scroll-target="#section-2---working-with-csv-files-and-dataframes">Section 2 - Working with CSV Files and DataFrames</a></li>
+  </ul></li>
+  <li><a href="#section-2---working-with-csv-files-and-dataframes" id="toc-section-2---working-with-csv-files-and-dataframes" class="nav-link" data-scroll-target="#section-2---working-with-csv-files-and-dataframes">Section 2 - Working with CSV Files and DataFrames</a>
+  <ul class="collapse">
   <li><a href="#exercise-2.1---write-a-dataframe-to-a-csv-file" id="toc-exercise-2.1---write-a-dataframe-to-a-csv-file" class="nav-link" data-scroll-target="#exercise-2.1---write-a-dataframe-to-a-csv-file">Exercise 2.1 - Write a DataFrame to a CSV File</a></li>
   <li><a href="#exercise-2.2---read-a-csv-file-in" id="toc-exercise-2.2---read-a-csv-file-in" class="nav-link" data-scroll-target="#exercise-2.2---read-a-csv-file-in">Exercise 2.2 - Read a CSV File in</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-03/tutorial-03-04-IO.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-03/tutorial-03-04-IO.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-03-04-IO.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="tutorial-03-04-IO.ipynb" download="tutorial-03-04-IO.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
@@ -318,8 +320,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Introduction</h1>
 <p>This interactive Julia script introduces the essentials of interacting with external files. File Input/Output (I/O) operations are crucial in programming and data analysis, allowing us to persist data, share information between programs, and work with large datasets that don’t fit in memory. In this tutorial, we’ll cover reading and writing text files, handling CSV files, and working with delimited files using various Julia packages. These skills are fundamental for data preprocessing, analysis, and result storage in real-world applications.</p>
 <p>Follow the instructions, write your code in the designated code blocks, and validate your results with <code>@assert</code> statements.</p>
-<section id="section-1---working-with-delimited-files" class="level2">
-<h2 class="anchored" data-anchor-id="section-1---working-with-delimited-files">Section 1 - Working with Delimited Files</h2>
+</section>
+<section id="section-1---working-with-delimited-files" class="level1">
+<h1>Section 1 - Working with Delimited Files</h1>
 <p>Delimited files, such as <code>.csv</code>, can be handled efficiently using the DelimitedFiles package in Julia. This requires the DelimitedFiles package. But as it is part of the Julia Standard Library, you can use it directly without the need to use <code>Pkg.add()</code> before.</p>
 <div id="2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DelimitedFiles</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -333,7 +336,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"CSV file 'matrix.csv' written successfully to folder ExampleData!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
 <section id="exercise-1.1---read-a-csv-file" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---read-a-csv-file">Exercise 1.1 - Read a CSV File</h2>
 <p>Read the just written CSV file ‘matrix.csv’ using the function <code>readdlm()</code>. Save the matrix in the variable <code>read_matrix</code>. To learn the syntax, use the inbuild help by typing <code>?</code> in the terminal. Afterwards, just type the function name for an explanation.</p>
@@ -345,13 +347,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"File 'matrix.csv' read successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-2---working-with-csv-files-and-dataframes" class="level2">
-<h2 class="anchored" data-anchor-id="section-2---working-with-csv-files-and-dataframes">Section 2 - Working with CSV Files and DataFrames</h2>
+</section>
+<section id="section-2---working-with-csv-files-and-dataframes" class="level1">
+<h1>Section 2 - Working with CSV Files and DataFrames</h1>
 <p>The CSV package in Julia provides powerful tools for reading and writing CSV files to and from DataFrames, a common requirement in data analysis and data science projects. This requires the CSV and DataFrames packages. If you solely followed the course so far, you first have to install the CSV Package before you can start using it:</p>
 <div id="8" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg;</span> Pkg.add("CSV")</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
 <section id="exercise-2.1---write-a-dataframe-to-a-csv-file" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---write-a-dataframe-to-a-csv-file">Exercise 2.1 - Write a DataFrame to a CSV File</h2>
 <p>Write the following given DataFrame to a CSV file <code>table_out.csv</code> in the folder <code>ExampleData</code>. This can be done by using the function <code>CSV.write()</code>. To learn the syntax, ask the inbuild help with <code>?</code> and the function name.</p>
@@ -392,10 +394,10 @@ Note
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"CSV file 'table_in.csv' read successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>Congratulations! You’ve successfully completed the tutorial on reading and writing external files in Julia. Continue to the next file to learn more.</p>
 </section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Congratulations! You’ve successfully completed the tutorial on reading and writing external files in Julia. Continue to the next file to learn more.</p>
 </section>
 <section id="solutions" class="level1">
 <h1>Solutions</h1>
