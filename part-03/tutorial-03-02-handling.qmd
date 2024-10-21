@@ -26,25 +26,24 @@ format:
 engine: julia
 ---
 
-# Guide to Packages and Package Management in Julia
+# Introduction
 
 This interactive script serves as an in-depth guide to understanding packages and package management in Julia. Delve into the utilization of the package manager, the processes of adding, updating, and removing packages, and management of distinct environments. First off all, we briefly need to introduce what a package is: a package is a collection of code that is used to extend the functionality of Julia. There are a lot of packages available for Julia, ranging from basic packages like `LinearAlgebra` to more specialized packages like `JuMP` for optimization. This means that most of the time you don'nt have to invent the wheel by yourself but can rely on the work of others. The great thing: Almost all packages available for Julia are available for free and can be used under the `MIT license`.
 
 ::: {.callout-note}
-Note: While this script offers guidance, package management commands should usually be executed in Julia's REPL.
+Note: While this script offers guidance, package management commands are usually executed in Julia's REPL. The REPL is the command line interface to Julia where you can interact with the language.
 :::
 
-## Section 1: Using the Package Manager
+## Section 1 - Using the Package Manager
 
 Julia's built-in package manager, Pkg, provides a robust set of tools for managing packages. To utilize these tools, start by importing the Pkg module. This module allows you to add, update, and remove packages, and manage environments efficiently. Note, `import PackageName` lets you access exported functions with `PackageName.function`, while `using PackageName` imports all exported names into the local namespace for direct access.
 
-## Exercise 1.1
+## Exercise 1.1 - Import the Pkg Module
 
 Import the Pkg module to start managing packages effectively.
 
 ```{julia}
 #| eval: false
-# Import the Pkg module to start managing packages effectively.
 # YOUR CODE BELOW
 
 # Test your answer
@@ -56,15 +55,14 @@ catch e
 end
 ```
 
-## Section 2: Adding Packages
+## Section 2 - Adding Packages
 
 Adding packages in Julia is straightforward using the `Pkg.add("PackageName")` function. Replace `PackageName` with the actual package name you wish to add.
 
-## Exercise 2.1:
+## Exercise 2.1 - Add the DataFrames Package
 Use `Pkg.add()` to add the Package `DataFrames` that we will use later.
 
 ```{julia}
-# Use Pkg.add() to add the Package 'DataFrames' that we will use later.
 # YOUR CODE BELOW
 
 # Test your answer
@@ -76,16 +74,21 @@ catch e
 end
 ```
 
-## Section 3: Updating and Removing Packages
+## Section 3 - Updating and Removing Packages
 
 Maintaining your Julia environment involves keeping your packages up-to-date and removing those that are no longer necessary. Use `Pkg.update("PackageName")` to update individual packages, or simply `Pkg.update()` to update all packages. To remove an obsolete package, use `Pkg.rm("PackageName")`. Remember to replace `PackageName` with the actual name of the package you wish to manage.
 
-## Section 4: Managing Environments
+## Section 4 - Managing Environments
 
-Julia environments are essential for keeping project dependencies isolated and organized. It's a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with `Pkg.activate("new_environment")` and add packages to it with `Pkg.add("PackageName")`. This ensures that each of your projects has a clean, dedicated set of dependencies.
+Julia environments are essential for keeping project dependencies isolated and organized. It's a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with `Pkg.activate("new_environment")` and add packages to it with `Pkg.add("PackageName")`. This ensures that each of your projects has a clean, dedicated set of dependencies. When you create a new environment, Julia generates two important files:
+
+1. `Project.toml`: Lists direct dependencies of your project.
+2. `Manifest.toml`: Contains a complete dependency graph of your project.
+
+These files help ensure reproducibility and should be version controlled with your project. But don't worry, you don't have to worry about this yet.
 
 ::: {.callout-note}
-If you plan to stick to working with notebooks, you don't have to worry about environments yet. Just use the global environment for the course and you don't have to activate anything.
+If you plan to stick to working with notebooks, you don't have to care about environments yet. Just use the regular environment for the course and you don't have to activate anything.
 :::
 
 ## Conclusion

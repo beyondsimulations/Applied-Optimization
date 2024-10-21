@@ -26,29 +26,41 @@ format:
 engine: julia
 ---
 
-# Functions in Julia
+# Introduction
 
-This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.
+This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with `@assert` statements.
 
-## Section 1: Creating and Calling Functions
+## Section 1 - Creating and Calling Functions
 
-Functions in Julia encapsulate reusable code and can be defined using the `function` keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. For example:
+Functions in Julia encapsulate reusable code and can be defined using the `function` keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. Later, you can call the function by writing the name of the function followed by the parameters in parentheses. For example:
 
-```julia
+```{julia}
 function multiply(a,b)
    a * b
 end
+multiply(10, 5)
 ```
 
-This function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the `return` keyword optional. If you explicitly use the `return` keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition.
+This function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the `return` keyword optional. If you explicitly use the `return` keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition. For example:
 
-## Exercise 1.1
+```{julia}
+function do_something(a,b)
+   if a > b
+      return a * b
+   else
+      return a + b
+   end
+end
+println("The result of do_something(10, 5) is $(do_something(10, 5))")
+println("The result of do_something(5, 10) is $(do_something(5, 10))")
+```
+
+## Exercise 1.1 - Define and Test a Simple Addition Function
 
 Define and Test a Simple Addition Function. Define a function `add` that takes two parameters and returns their sum.
 
 ```{julia}
 #| eval: false
-# Define and Test a Simple Addition Function. Define a function `add` that takes two parameters and returns their sum.
 # YOUR CODE BELOW
 
 # Test your function
@@ -56,18 +68,16 @@ Define and Test a Simple Addition Function. Define a function `add` that takes t
 println("The sum computed is $(add(10, 5)), wonderful!")
 ```
 
-## Section 2: Scope within Functions
+## Section 2 - Scope within Functions
     
-Variables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it. You can do this by passing `return` in front of the variable you want to return from the function.
+Variables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it as already shown above. You can do this by passing `return` in front of the variable you want to return from the function.
 
-## Exercise 2.1
+## Exercise 2.1 - Return a Local Variable
 
-Try to execude the following block of code. The objective is to understand how to return the `local_variable_one` from the function `scope_test`. Your task is to change the function, to return the value of `local_variable_one`.
+Try to execute the following block of code. The objective is to understand how to return the `local_variable_one` from the function `scope_test`. Your task is to change the function, to return the value of `local_variable_one`.
 
 ```{julia}
 #| eval: false
-# Try to execude the following block of code. The objective is to understand how to return the 'local_variable_one' from the function 'scope_test'. Your task is to change the function, to return the value of 'local_variable_one'.
-
 # YOUR CHANGES BELOW
 function scope_test()
     local_variable_one = 10
@@ -80,13 +90,12 @@ end
 println("The value exported is $(scope_test()), you solved it!")
 ```
 
-## Exercise 2.2
+## Exercise 2.2 - Define an Implicit Return Function
 
 Define and test an implicit return function. Define a function `subtract` that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.
 
 ```{julia}
 #| eval: false
-# Define and test an implicit return function. Define a function 'subtract' that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.
 # YOUR CODE BELOW
 
 # Test your function
@@ -94,30 +103,7 @@ Define and test an implicit return function. Define a function `subtract` that t
 println("The difference computed is $(subtract(10, 5)), perfect!")
 ```
 
-## Section 3: Anonymous Functions
-
-Anonymous functions in Julia are unnamed functions, useful for concise and short operations. They are particularly useful for operations that are passed as arguments to higher-order functions or used for short, one-off computations. Syntax for anonymous functions can be either of the following:
-
-```julia
-add_two = (a,b) -> a + b
-add_two(a,b) = a + b
-```
-
-## Exercise 3.1
-
-Create an anonymous function `multiply` that multiplies two numbers.
-
-```{julia}
-#| eval: false
-# Create an anonymous function 'multiply' that multiplies two numbers.
-# YOUR CODE BELOW
-
-# Test your function
-@assert multiply(10, 5) == 50  "The result is $(multiply(10, 5)) but should be 50."
-println("Great job! You created an anonymous function that multiplies two numbers.")
-```
-
-## Section 4: Multiple Dispatch
+## Section 3 - Multiple Dispatch
 
 Multiple dispatch in Julia allows defining function behavior based on argument types, promoting code reuse and clarity. It's a powerful feature for designing flexible and extensible functions. We first define a generic version and then provide specific implementations for different types:
 
@@ -133,28 +119,29 @@ operation(a::Number, b::Number) = a + b        # Specific method for Number type
 operation(a::String, b::String) = string(a, b) # Specific method for String types.
 
 # Test with different types of arguments.
-result1 = operation(10, 20)               # Numeric addition.
-result2 = operation("Hello, ", "World!")  # String concatenation.
-result3 = operation("Hello, ", 20)        # Generic implementation.
+result1 = operation(10, 20)
+println(result1)
+result2 = operation("Hello, ", "World!")
+println(result2)
+result3 = operation("Hello, ", 20)
+println(result3)
 ```
 
-## Exercise 4.1
+## Exercise 3.1 - Match Results to Assertions
 
-Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement.
+Match the results from the previous example to the correct assertions:
 
 ```{julia}
 #| eval: false
-# Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement. Hint: The answer is easy, you just have to change the comparisons.
-
 # YOUR CHANGES BELOW
-@assert result1 == "Hello, World!"
-@assert result3 == 30
-@assert result2 == "Generic operation for objects of type String and Int64"
-println("You solved it, the order is now correct!")
+@assert result2 == 30 "result1 should be the sum of two numbers"
+@assert result3 == "Hello, World!" "result2 should be the concatenation of two strings"
+@assert result1 == "Generic operation for objects of type String and Int64" "result3 should use the generic operation"
+println("You solved it, the assertions are now correct!")
 ```
 
 ::: {.callout-tip}
-**Hint**: The answer is easy, you just have to change the comparisons.
+**Hint**: Look at the types of arguments used in each `operation` call and match them to the appropriate method.
 :::
 
 ## Conclusion

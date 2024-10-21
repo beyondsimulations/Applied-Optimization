@@ -278,14 +278,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#guide-to-packages-and-package-management-in-julia" id="toc-guide-to-packages-and-package-management-in-julia" class="nav-link active" data-scroll-target="#guide-to-packages-and-package-management-in-julia">Guide to Packages and Package Management in Julia</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
-  <li><a href="#section-1-using-the-package-manager" id="toc-section-1-using-the-package-manager" class="nav-link" data-scroll-target="#section-1-using-the-package-manager">Section 1: Using the Package Manager</a></li>
-  <li><a href="#exercise-1.1" id="toc-exercise-1.1" class="nav-link" data-scroll-target="#exercise-1.1">Exercise 1.1</a></li>
-  <li><a href="#section-2-adding-packages" id="toc-section-2-adding-packages" class="nav-link" data-scroll-target="#section-2-adding-packages">Section 2: Adding Packages</a></li>
-  <li><a href="#exercise-2.1" id="toc-exercise-2.1" class="nav-link" data-scroll-target="#exercise-2.1">Exercise 2.1:</a></li>
-  <li><a href="#section-3-updating-and-removing-packages" id="toc-section-3-updating-and-removing-packages" class="nav-link" data-scroll-target="#section-3-updating-and-removing-packages">Section 3: Updating and Removing Packages</a></li>
-  <li><a href="#section-4-managing-environments" id="toc-section-4-managing-environments" class="nav-link" data-scroll-target="#section-4-managing-environments">Section 4: Managing Environments</a></li>
+  <li><a href="#section-1---using-the-package-manager" id="toc-section-1---using-the-package-manager" class="nav-link" data-scroll-target="#section-1---using-the-package-manager">Section 1 - Using the Package Manager</a></li>
+  <li><a href="#exercise-1.1---import-the-pkg-module" id="toc-exercise-1.1---import-the-pkg-module" class="nav-link" data-scroll-target="#exercise-1.1---import-the-pkg-module">Exercise 1.1 - Import the Pkg Module</a></li>
+  <li><a href="#section-2---adding-packages" id="toc-section-2---adding-packages" class="nav-link" data-scroll-target="#section-2---adding-packages">Section 2 - Adding Packages</a></li>
+  <li><a href="#exercise-2.1---add-the-dataframes-package" id="toc-exercise-2.1---add-the-dataframes-package" class="nav-link" data-scroll-target="#exercise-2.1---add-the-dataframes-package">Exercise 2.1 - Add the DataFrames Package</a></li>
+  <li><a href="#section-3---updating-and-removing-packages" id="toc-section-3---updating-and-removing-packages" class="nav-link" data-scroll-target="#section-3---updating-and-removing-packages">Section 3 - Updating and Removing Packages</a></li>
+  <li><a href="#section-4---managing-environments" id="toc-section-4---managing-environments" class="nav-link" data-scroll-target="#section-4---managing-environments">Section 4 - Managing Environments</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
@@ -315,8 +315,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="guide-to-packages-and-package-management-in-julia" class="level1">
-<h1>Guide to Packages and Package Management in Julia</h1>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
 <p>This interactive script serves as an in-depth guide to understanding packages and package management in Julia. Delve into the utilization of the package manager, the processes of adding, updating, and removing packages, and management of distinct environments. First off all, we briefly need to introduce what a package is: a package is a collection of code that is used to extend the functionality of Julia. There are a lot of packages available for Julia, ranging from basic packages like <code>LinearAlgebra</code> to more specialized packages like <code>JuMP</code> for optimization. This means that most of the time you don’nt have to invent the wheel by yourself but can rely on the work of others. The great thing: Almost all packages available for Julia are available for free and can be used under the <code>MIT license</code>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -328,60 +328,62 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Note: While this script offers guidance, package management commands should usually be executed in Julia’s REPL.</p>
+<p>Note: While this script offers guidance, package management commands are usually executed in Julia’s REPL. The REPL is the command line interface to Julia where you can interact with the language.</p>
 </div>
 </div>
-<section id="section-1-using-the-package-manager" class="level2">
-<h2 class="anchored" data-anchor-id="section-1-using-the-package-manager">Section 1: Using the Package Manager</h2>
+<section id="section-1---using-the-package-manager" class="level2">
+<h2 class="anchored" data-anchor-id="section-1---using-the-package-manager">Section 1 - Using the Package Manager</h2>
 <p>Julia’s built-in package manager, Pkg, provides a robust set of tools for managing packages. To utilize these tools, start by importing the Pkg module. This module allows you to add, update, and remove packages, and manage environments efficiently. Note, <code>import PackageName</code> lets you access exported functions with <code>PackageName.function</code>, while <code>using PackageName</code> imports all exported names into the local namespace for direct access.</p>
 </section>
-<section id="exercise-1.1" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-1.1">Exercise 1.1</h2>
+<section id="exercise-1.1---import-the-pkg-module" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1.1---import-the-pkg-module">Exercise 1.1 - Import the Pkg Module</h2>
 <p>Import the Pkg module to start managing packages effectively.</p>
 <div id="2" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the Pkg module to start managing packages effectively.</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>try </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Pkg</span>.<span class="fu">update</span>()</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Pkg module imported successfully and packages were updated!"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>catch <span class="cn">e</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"The Pkg module was not imported yet! Have you used the correct syntax?"</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>try </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Pkg</span>.<span class="fu">update</span>()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Pkg module imported successfully and packages were updated!"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>catch <span class="cn">e</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"The Pkg module was not imported yet! Have you used the correct syntax?"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-2-adding-packages" class="level2">
-<h2 class="anchored" data-anchor-id="section-2-adding-packages">Section 2: Adding Packages</h2>
+<section id="section-2---adding-packages" class="level2">
+<h2 class="anchored" data-anchor-id="section-2---adding-packages">Section 2 - Adding Packages</h2>
 <p>Adding packages in Julia is straightforward using the <code>Pkg.add("PackageName")</code> function. Replace <code>PackageName</code> with the actual package name you wish to add.</p>
 </section>
-<section id="exercise-2.1" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-2.1">Exercise 2.1:</h2>
+<section id="exercise-2.1---add-the-dataframes-package" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.1---add-the-dataframes-package">Exercise 2.1 - Add the DataFrames Package</h2>
 <p>Use <code>Pkg.add()</code> to add the Package <code>DataFrames</code> that we will use later.</p>
 <div id="4" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use Pkg.add() to add the Package 'DataFrames' that we will use later.</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>try </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="im">using</span> <span class="bu">DataFrames</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Package added successfully!"</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>catch <span class="cn">e</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"Package was not added yet! Have you used the correct syntax?"</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>try </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Package added successfully!"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>catch <span class="cn">e</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"Package was not added yet! Have you used the correct syntax?"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>┌ Error: Package was not added yet! Have you used the correct syntax?
-└ @ Main.Notebook ~/Documents/git-projects/Applied-Optimization/part-03/tutorial-03-02-handling.qmd:103</code></pre>
+<pre><code>Package added successfully!</code></pre>
 </div>
 </div>
 </section>
-<section id="section-3-updating-and-removing-packages" class="level2">
-<h2 class="anchored" data-anchor-id="section-3-updating-and-removing-packages">Section 3: Updating and Removing Packages</h2>
+<section id="section-3---updating-and-removing-packages" class="level2">
+<h2 class="anchored" data-anchor-id="section-3---updating-and-removing-packages">Section 3 - Updating and Removing Packages</h2>
 <p>Maintaining your Julia environment involves keeping your packages up-to-date and removing those that are no longer necessary. Use <code>Pkg.update("PackageName")</code> to update individual packages, or simply <code>Pkg.update()</code> to update all packages. To remove an obsolete package, use <code>Pkg.rm("PackageName")</code>. Remember to replace <code>PackageName</code> with the actual name of the package you wish to manage.</p>
 </section>
-<section id="section-4-managing-environments" class="level2">
-<h2 class="anchored" data-anchor-id="section-4-managing-environments">Section 4: Managing Environments</h2>
-<p>Julia environments are essential for keeping project dependencies isolated and organized. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with <code>Pkg.activate("new_environment")</code> and add packages to it with <code>Pkg.add("PackageName")</code>. This ensures that each of your projects has a clean, dedicated set of dependencies.</p>
+<section id="section-4---managing-environments" class="level2">
+<h2 class="anchored" data-anchor-id="section-4---managing-environments">Section 4 - Managing Environments</h2>
+<p>Julia environments are essential for keeping project dependencies isolated and organized. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with <code>Pkg.activate("new_environment")</code> and add packages to it with <code>Pkg.add("PackageName")</code>. This ensures that each of your projects has a clean, dedicated set of dependencies. When you create a new environment, Julia generates two important files:</p>
+<ol type="1">
+<li><code>Project.toml</code>: Lists direct dependencies of your project.</li>
+<li><code>Manifest.toml</code>: Contains a complete dependency graph of your project.</li>
+</ol>
+<p>These files help ensure reproducibility and should be version controlled with your project. But don’t worry, you don’t have to worry about this yet.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -392,7 +394,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you plan to stick to working with notebooks, you don’t have to worry about environments yet. Just use the global environment for the course and you don’t have to activate anything.</p>
+<p>If you plan to stick to working with notebooks, you don’t have to care about environments yet. Just use the regular environment for the course and you don’t have to activate anything.</p>
 </div>
 </div>
 </section>

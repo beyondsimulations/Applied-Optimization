@@ -26,34 +26,41 @@ format:
 engine: julia
 ---
 
-# Introduction to Vectors, Matrices, and Tuples in Julia
+# Introduction
 
 This interactive Julia script introduces the basics of vectors, matrices, and tuples. Vectors and matrices are fundamental in numerical computing and data analysis, while tuples are essential for grouping different types of data. Understanding these data structures and how to manipulate them is crucial in Julia. Follow the instructions, write your code in the designated code blocks, and execute the corresponding code cell.
 
 :::{.callout-note}
-Always replace 'YOUR CODE BELOW' with your actual code.
+If a cell is marked with `YOUR CODE BELOW`, you are expected to write your code in that cell.
 :::
 
-# Section 1: Vectors
+# Section 1 - Vectors   
 
 Vectors in Julia are one-dimensional arrays used to store sequences of elements. They're powerful for numerical operations and data handling. Create matrices with square brackets, separate elements with commas. For example:
-```julia
+```{julia}
 myvector = [1,2,3,4,5]
 ```
 
-This creates a vector 'myvector' that contains the elements `1,2,3,4,5`. Vectors are mutable, and you can add elements with `push!()` or `pushfirst!()` (the '!' denotes function modification of the input). Remove elements with `pop!()` or `popfirst!()`. Use '?' in the REPL for function details. Access elements with square brackets, e.g., `fib[1:4]`. 
+This creates a vector 'myvector' that contains the elements `1,2,3,4,5`.
+
+Vectors are mutable, and you can add elements with `push!()` or `pushfirst!()` (the '!' denotes function modification of the input). 
+
+Remove elements with `pop!()` or `popfirst!()`.  
+
+Access elements with square brackets, e.g., `fib[1:4]`.
+
+Use '?' in the REPL for function details.
 
 :::{.callout-tip}
 Remember, Julia is 1-based indexed.
 :::
 
-## Exercise 1.1
+## Exercise 1.1 - Create a Vector
 
 Create a vector 'fib' with the first five Fibonacci numbers: `1, 1, 2, 3, 5`.
 
 ```{julia}
 #| eval: false
-# Create a vector 'fib' with the first five Fibonacci numbers: 1, 1, 2, 3, 5
 # YOUR CODE BELOW
 
 # Test your answer
@@ -61,13 +68,12 @@ Create a vector 'fib' with the first five Fibonacci numbers: `1, 1, 2, 3, 5`.
 println("The 'fib' vector: ", fib)
 ```
 
-## Exercise 1.2
+## Exercise 1.2 - Append to a Vector
 
 Append the number 8 to the `fib` vector.
 
 ```{julia}
 #| eval: false
-# Append the number 8 to the 'fib' vector.
 # YOUR CODE BELOW
 
 # Test your answer
@@ -75,13 +81,12 @@ Append the number 8 to the `fib` vector.
 println("The 'fib' vector after appending 8: ", fib)
 ```
 
-## Exercise 1.3
+## Exercise 1.3 - Remove the First Element
 
 Remove the first element of the `fib` vector. 
 
 ```{julia}
 #| eval: false
-# Remove the first element of the 'fib' vector. 
 # YOUR CODE BELOW
 
 # Test your answer
@@ -89,13 +94,12 @@ Remove the first element of the `fib` vector.
 println("The 'fib' vector after removing the first element: ", fib)
 ```
 
-## Exercise 1.4
+## Exercise 1.4 - Access and Save the First Three Elements
 
 Access and save the first three elements of `fib`, to `first_three_elements`.
 
 ```{julia}
 #| eval: false
-# Access and save the first three elements of 'fib', to 'first_three_elements'.
 # YOUR CODE BELOW
 
 # Test your answer
@@ -103,37 +107,48 @@ Access and save the first three elements of `fib`, to `first_three_elements`.
 println("The first three elements of the 'fib' vector: ", first_three_elements)
 ```
 
-# Section 2: Matrices
+# Section 2 - Matrices
 
-A matrix in Julia is a 2D array, great for linear algebra and data representation.
-Create matrices with square brackets, separate elements with spaces, rows with 
-semicolons. Access elements with square brackets (e.g., `matrix[2,2]`). You can add or
-substract matrices of the same dimensions element-wise if you add or substract them.
+A matrix in Julia is a 2D array, great for linear algebra and data representation. Create matrices with square brackets, separate elements with spaces, rows with semicolons. Access elements with square brackets (e.g., `matrix[2,2]`). You can add or substract matrices of the same dimensions element-wise if you add or substract them.
+
 For example:
-```julia
+```{julia}    
 matrix1 = [2 2; 3 3] + [1 2; 3 4]
-matrix2 = [2 2; 3 3] - [1 2; 3 4]   
+matrix2 = [2 2; 3 3] - [1 2; 3 4]
+println("matrix1 is $matrix1.")
+println("matrix2 is $matrix2.")
+```
+
+If you want to perform multiplications, things are a bit different, as matrix multiplications are not performed element-wise!
+
+```{julia}
+matrix3 = [2 2; 3 3] * [1 2; 3 4]   # Not element-wise
+matrix4 = [2 2; 3 3] .* [1 2; 3 4]  # Element-wise
+println("matrix3 is $matrix3.")
+println("matrix4 is $matrix4.")
 ```
 :::{.callout-tip}
-Note: Matrix multiplication is not performed element-wise!
+Julia's broadcasting feature allows you to apply functions element-wise to arrays of different sizes. This is denoted by adding a dot (.) before the operator or function. It is extremely useful for performing operations on arrays without the need to loop through each element.
 :::
 
-```julia
-matrix3 = [2 2; 3 3] * [1 2; 3 4]   # Not element-wise multiplication
-matrix4 = [2 2; 3 3] .* [1 2; 3 4]  # Element-wise multiplication
-```
-Use the '.' syntax for element-wise operations to add single elements to a vector:
-```julia
-matrix = matrix .+ 1
+```{julia}
+matrix4 = [1 2; 3 4]
+matrix4 = matrix4 .+ 1
+println("matrix4 is $matrix4.")
 ```
 
-## Exercise 2.1
+We can also use this to perform element-wise multiplications, as shown below:
+```{julia}
+matrix5 = [2 2; 3 3] .* [1 2; 3 4]  # Element-wise
+println("matrix5 is $matrix5.")
+```
+
+## Exercise 2.1 - Create a Matrix
 
 Create a 2x3 matrix `my_matrix` with the values: `1 2 3; 4 5 6`.
 
 ```{julia}
 #| eval: false
-# Create a 2x3 matrix 'my_matrix' with the values: 1 2 3; 4 5 6
 # YOUR CODE BELOW
 
 # Test your answer
@@ -141,13 +156,12 @@ Create a 2x3 matrix `my_matrix` with the values: `1 2 3; 4 5 6`.
 println("The 'my_matrix':\n", my_matrix)
 ```
 
-## Exercise 2.2
+## Exercise 2.2 - Change the 3rd Column of the 2nd Row
 
 Change the 3rd column of the 2nd row to `17` by accessing and changing the element.
 
 ```{julia}
 #| eval: false
-# Change the 3rd column of the 2nd row to 17 by accessing and changing the element.
 
 # YOUR CODE BELOW
 
@@ -157,13 +171,12 @@ Change the 3rd column of the 2nd row to `17` by accessing and changing the eleme
 println("The 'my_matrix' after modification:\n", my_matrix)
 ```
 
-## Exercise 2.3
+## Exercise 2.3 - Perform Matrix Addition
 
 Perform matrix addition with `my_matrix` and `another_matrix`. Call the resulting matrix `added_matrices`.
 
 ```{julia}
 #| eval: false
-# Perform matrix addition with 'my_matrix' and 'another_matrix'. Call the resulting matrix 'added_matrices'.
 another_matrix = [10 20 30; 40 50 60]
 # YOUR CODE BELOW
 
@@ -172,13 +185,12 @@ another_matrix = [10 20 30; 40 50 60]
 println("Result of adding 'my_matrix' and 'another_matrix':\n", added_matrices)
 ```
 
-## Exercise 2.4
+## Exercise 2.4 - Add 10 to Each Element
 
 Add `10` to each element in `added_matrices`.
 
 ```{julia}
 #| eval: false
-# Add '10' to each element in 'added_matrices'.
 # YOUR CODE BELOW
 
 # Test your answer
@@ -191,15 +203,17 @@ println("Result of adding 10 to each element in 'added_matrices':\n", added_matr
 Tuples are immutable collections used to group different types of elements. They 
 are useful for functions that need to return multiple values. Create a tuple using 
 parentheses and separating elements with commas. Access tuple elements with square 
-brackets, e.g., `tuple[1]`. 
+brackets, e.g., `tuple[1]`. For example:
+```{julia}
+new_tuple = (1.0, "I'm Bob")
+```
 
-## Exercise 3.1
+## Exercise 3.1 - Create a Tuple
 
 Create a tuple `my_tuple` with three elements: `4.0`, your matrix `added_matrices`, and `"Hi there!"`.
 
 ```{julia}
 #| eval: false
-# Create a tuple 'my_tuple' with three elements: 4.0, your matrix 'added_matrices', and "Hi there!".
 # YOUR CODE BELOW
 
 # Test your answer
@@ -207,13 +221,12 @@ Create a tuple `my_tuple` with three elements: `4.0`, your matrix `added_matrice
 println("The 'my_tuple': ", my_tuple)
 ```
 
-## Exercise 3.2
+## Exercise 3.2 - Access the Second Element
 
 Access the second element of `my_tuple`, store it in `second_element`.
 
 ```{julia}
 #| eval: false
-# Access the second element of 'my_tuple', store it in 'second_element'.
 # YOUR CODE BELOW
 
 # Test your answer

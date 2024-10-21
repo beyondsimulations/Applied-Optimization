@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -100,6 +100,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -278,17 +281,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#dataframes-in-julia" id="toc-dataframes-in-julia" class="nav-link active" data-scroll-target="#dataframes-in-julia">DataFrames in Julia</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
-  <li><a href="#section-1-creating-dataframes" id="toc-section-1-creating-dataframes" class="nav-link" data-scroll-target="#section-1-creating-dataframes">Section 1: Creating DataFrames</a></li>
-  <li><a href="#exercise-1.1" id="toc-exercise-1.1" class="nav-link" data-scroll-target="#exercise-1.1">Exercise 1.1</a></li>
-  <li><a href="#section-2-accessing-and-modifying-data" id="toc-section-2-accessing-and-modifying-data" class="nav-link" data-scroll-target="#section-2-accessing-and-modifying-data">Section 2: Accessing and Modifying Data</a></li>
-  <li><a href="#exercise-2.1" id="toc-exercise-2.1" class="nav-link" data-scroll-target="#exercise-2.1">Exercise 2.1</a></li>
-  <li><a href="#exercise-2.2" id="toc-exercise-2.2" class="nav-link" data-scroll-target="#exercise-2.2">Exercise 2.2</a></li>
-  <li><a href="#section-3-filtering-data" id="toc-section-3-filtering-data" class="nav-link" data-scroll-target="#section-3-filtering-data">Section 3: Filtering Data</a></li>
-  <li><a href="#exercise-3.1" id="toc-exercise-3.1" class="nav-link" data-scroll-target="#exercise-3.1">Exercise 3.1:</a></li>
-  <li><a href="#section-4-basic-data-manipulation" id="toc-section-4-basic-data-manipulation" class="nav-link" data-scroll-target="#section-4-basic-data-manipulation">Section 4: Basic Data Manipulation</a></li>
-  <li><a href="#exercise-4.1" id="toc-exercise-4.1" class="nav-link" data-scroll-target="#exercise-4.1">Exercise 4.1</a></li>
+  <li><a href="#section-1---creating-dataframes" id="toc-section-1---creating-dataframes" class="nav-link" data-scroll-target="#section-1---creating-dataframes">Section 1 - Creating DataFrames</a></li>
+  <li><a href="#exercise-1.1---create-a-dataframe" id="toc-exercise-1.1---create-a-dataframe" class="nav-link" data-scroll-target="#exercise-1.1---create-a-dataframe">Exercise 1.1 - Create a DataFrame</a></li>
+  <li><a href="#section-2---accessing-and-modifying-data" id="toc-section-2---accessing-and-modifying-data" class="nav-link" data-scroll-target="#section-2---accessing-and-modifying-data">Section 2 - Accessing and Modifying Data</a></li>
+  <li><a href="#exercise-2.1---access-the-age-column" id="toc-exercise-2.1---access-the-age-column" class="nav-link" data-scroll-target="#exercise-2.1---access-the-age-column">Exercise 2.1 - Access the <code>Age</code> Column</a></li>
+  <li><a href="#exercise-2.2---update-johns-salary" id="toc-exercise-2.2---update-johns-salary" class="nav-link" data-scroll-target="#exercise-2.2---update-johns-salary">Exercise 2.2 - Update John’s Salary</a></li>
+  <li><a href="#section-3---filtering-data" id="toc-section-3---filtering-data" class="nav-link" data-scroll-target="#section-3---filtering-data">Section 3 - Filtering Data</a></li>
+  <li><a href="#exercise-3.1---filter-the-dataframe" id="toc-exercise-3.1---filter-the-dataframe" class="nav-link" data-scroll-target="#exercise-3.1---filter-the-dataframe">Exercise 3.1 - Filter the DataFrame</a></li>
+  <li><a href="#section-4---basic-data-manipulation" id="toc-section-4---basic-data-manipulation" class="nav-link" data-scroll-target="#section-4---basic-data-manipulation">Section 4 - Basic Data Manipulation</a></li>
+  <li><a href="#exercise-4.1---sort-the-dataframe" id="toc-exercise-4.1---sort-the-dataframe" class="nav-link" data-scroll-target="#exercise-4.1---sort-the-dataframe">Exercise 4.1 - Sort the DataFrame</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
@@ -318,29 +321,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="dataframes-in-julia" class="level1">
-<h1>DataFrames in Julia</h1>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
 <p>This interactive Julia script is your comprehensive guide to understanding DataFrames in Julia. Work on creating DataFrames, accessing, modifying, and filtering data, alongside basic data manipulation techniques. Follow the instructions, input your code in the designated areas, and verify your implementations with <span class="citation" data-cites="assert">@assert</span> statements. Note: Ensure you have the DataFrames package installed to effectively follow this tutorial!</p>
 <div id="2" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the DataFrames package</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="section-1-creating-dataframes" class="level2">
-<h2 class="anchored" data-anchor-id="section-1-creating-dataframes">Section 1: Creating DataFrames</h2>
+<section id="section-1---creating-dataframes" class="level2">
+<h2 class="anchored" data-anchor-id="section-1---creating-dataframes">Section 1 - Creating DataFrames</h2>
 <p>A DataFrame in Julia is akin to a table in SQL or a spreadsheet - each column can have its own type, making it highly versatile. A DataFrame can be created using the DataFrame constructor and passing key-value pairs where the key is the column name and the value is an array of data. For more help, use <code>?</code> in the REPL and type <code>DataFrame</code>.</p>
 </section>
-<section id="exercise-1.1" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-1.1">Exercise 1.1</h2>
+<section id="exercise-1.1---create-a-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1.1---create-a-dataframe">Exercise 1.1 - Create a DataFrame</h2>
 <p>Create and Test a DataFrame. Create a DataFrame named <code>employees</code> with the columns <code>Name</code>, <code>Age</code>, and <code>Salary</code>, and populate it with the specified data: John is <code>28</code> years old and earns <code>50000</code>, Mike is <code>23</code> years old and earns <code>62000</code>. Frank is <code>37</code> years old and earns <code>90000</code>.</p>
 <div id="4" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create and Test a DataFrame. Create a DataFrame named 'employees' with the columns 'Name', 'Age', and 'Salary', and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> employees <span class="op">==</span> <span class="fu">DataFrame</span>(Name <span class="op">=</span> [<span class="st">"John"</span>, <span class="st">"Mike"</span>, <span class="st">"Frank"</span>], </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    Age <span class="op">=</span> [<span class="fl">28</span>, <span class="fl">23</span>, <span class="fl">37</span>], Salary <span class="op">=</span> [<span class="fl">50000</span>, <span class="fl">62000</span>, <span class="fl">90000</span>])</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"DataFrame created successfully!"</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(employees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> employees <span class="op">==</span> <span class="fu">DataFrame</span>(Name <span class="op">=</span> [<span class="st">"John"</span>, <span class="st">"Mike"</span>, <span class="st">"Frank"</span>], Age <span class="op">=</span> [<span class="fl">28</span>, <span class="fl">23</span>, <span class="fl">37</span>], Salary <span class="op">=</span> [<span class="fl">50000</span>, <span class="fl">62000</span>, <span class="fl">90000</span>])</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"DataFrame created successfully!"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(employees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -356,74 +357,142 @@ Tip
 </div>
 </div>
 </section>
-<section id="section-2-accessing-and-modifying-data" class="level2">
-<h2 class="anchored" data-anchor-id="section-2-accessing-and-modifying-data">Section 2: Accessing and Modifying Data</h2>
+<section id="section-2---accessing-and-modifying-data" class="level2">
+<h2 class="anchored" data-anchor-id="section-2---accessing-and-modifying-data">Section 2 - Accessing and Modifying Data</h2>
 <p>Accessing columns in a DataFrame can be done using the dot syntax, while rows can be accessed via indexing. Modification of data is straightforward; just assign a new value to the desired cell. To access the column ‘name’ in our DataFrame with <code>employees</code>, we could do:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>employees.Name </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>employees.Name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>3-element Vector{String}:
+ "John"
+ "Mike"
+ "Frank"</code></pre>
+</div>
+</div>
 <p>To access the third name specifically, we could do:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>employees.Name[<span class="fl">3</span>] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="10" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>employees.Name[<span class="fl">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>"Frank"</code></pre>
+</div>
+</div>
 </section>
-<section id="exercise-2.1" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-2.1">Exercise 2.1</h2>
+<section id="exercise-2.1---access-the-age-column" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.1---access-the-age-column">Exercise 2.1 - Access the <code>Age</code> Column</h2>
 <p>Access the <code>Age</code> column from the DataFrame and save it in a new variable <code>ages</code>.</p>
-<div id="6" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the 'Age' column from the DataFrame and save it in a new variable 'ages'.</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> ages <span class="op">==</span> [<span class="fl">28</span>, <span class="fl">23</span>, <span class="fl">37</span>]</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Correct, the Ages column is: "</span>, ages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="12" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> ages <span class="op">==</span> [<span class="fl">28</span>, <span class="fl">23</span>, <span class="fl">37</span>]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Correct, the Ages column is: "</span>, ages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="exercise-2.2" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-2.2">Exercise 2.2</h2>
+<section id="exercise-2.2---update-johns-salary" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.2---update-johns-salary">Exercise 2.2 - Update John’s Salary</h2>
 <p>Update John’s salary to <code>59000</code>.</p>
-<div id="8" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Update John's salary to 59000.</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> employees.Salary[<span class="fl">1</span>] <span class="op">==</span> <span class="fl">59000</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Modified DataFrame: "</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(employees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="14" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> employees.Salary[<span class="fl">1</span>] <span class="op">==</span> <span class="fl">59000</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Modified DataFrame: "</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(employees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-3-filtering-data" class="level2">
-<h2 class="anchored" data-anchor-id="section-3-filtering-data">Section 3: Filtering Data</h2>
+<section id="section-3---filtering-data" class="level2">
+<h2 class="anchored" data-anchor-id="section-3---filtering-data">Section 3 - Filtering Data</h2>
 <p>Logical indexing can be used to filter rows in a DataFrame based on conditions. To filter the DataFrame to include only employees names “Frank” we could do:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>allFranks <span class="op">=</span> employees[employees.Name <span class="op">.==</span> <span class="st">"Frank"</span>, <span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="16" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>allFranks <span class="op">=</span> employees[employees.Name <span class="op">.==</span> <span class="st">"Frank"</span>, <span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>1×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Age</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Salary</th>
+</tr>
+<tr class="odd subheader headerLastRow">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">Frank</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">90000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <p>Alternatively, the filter function provides a powerful tool to extract subsets of data based on a condition:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>allFranks <span class="op">=</span> <span class="fu">filter</span>(row <span class="op">-&gt;</span> row.Name <span class="op">==</span> <span class="st">"Frank"</span>, employees) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="exercise-3.1" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-3.1">Exercise 3.1:</h2>
-<p>Filter the DataFrame to include only employees with salaries above <code>60000</code>. Save the resulting employees in the DataFrame <code>high_earners</code>.</p>
-<div id="10" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the DataFrame to include only employees with salaries above 60000. Save </span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the resulting employees in the DataFrame 'high_earners'. </span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">nrow</span>(high_earners) <span class="op">==</span> <span class="fl">2</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"High earners: "</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(high_earners)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="18" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>allFranks <span class="op">=</span> <span class="fu">filter</span>(row <span class="op">-&gt;</span> row.Name <span class="op">==</span> <span class="st">"Frank"</span>, employees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>1×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Age</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Salary</th>
+</tr>
+<tr class="odd subheader headerLastRow">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">Frank</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">90000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </section>
-<section id="section-4-basic-data-manipulation" class="level2">
-<h2 class="anchored" data-anchor-id="section-4-basic-data-manipulation">Section 4: Basic Data Manipulation</h2>
+<section id="exercise-3.1---filter-the-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-3.1---filter-the-dataframe">Exercise 3.1 - Filter the DataFrame</h2>
+<p>Filter the DataFrame to include only employees with salaries above <code>60000</code>. Save the resulting employees in the DataFrame <code>high_earners</code>.</p>
+<div id="20" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">nrow</span>(high_earners) <span class="op">==</span> <span class="fl">2</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"High earners: "</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(high_earners)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="section-4---basic-data-manipulation" class="level2">
+<h2 class="anchored" data-anchor-id="section-4---basic-data-manipulation">Section 4 - Basic Data Manipulation</h2>
 <p>Julia provides functions for basic data manipulation tasks, including sorting, grouping, and joining DataFrames. The <code>sort</code> function can be used to order the rows in a DataFrame based on the values in one or more columns. To see how to use the function, type <code>?</code> into the REPL (terminal) and type <code>sort</code>.</p>
 </section>
-<section id="exercise-4.1" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-4.1">Exercise 4.1</h2>
+<section id="exercise-4.1---sort-the-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-4.1---sort-the-dataframe">Exercise 4.1 - Sort the DataFrame</h2>
 <p>Sort the DataFrame based on the <code>Age</code> column and save it as <code>sorted_df</code>.</p>
-<div id="12" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort the DataFrame based on the 'Age' column and save it as 'sorted_df'.</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> sorted_df.Age[<span class="fl">1</span>] <span class="op">==</span> <span class="fl">23</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"DataFrame sorted by age: "</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(sorted_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="22" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> sorted_df.Age[<span class="fl">1</span>] <span class="op">==</span> <span class="fl">23</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"DataFrame sorted by age: "</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(sorted_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">

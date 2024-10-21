@@ -26,11 +26,14 @@ format:
 engine: julia
 ---
 
-# Introduction to Reading and Writing Files in Julia
+# Introduction
 
-This interactive Julia script introduces the essentials of interacting with external files. It covers reading and writing text files, handling CSV, and working with delimited files using DelimitedFiles. Follow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.
+This interactive Julia script introduces the essentials of interacting with external files. File Input/Output (I/O) operations are crucial in programming and data analysis, allowing us to persist data, share information between programs, and work with large datasets that don't fit in memory. In this tutorial, we'll cover reading and writing text files, handling CSV files, and working with delimited files using various Julia packages. These skills are fundamental for data preprocessing, analysis, and result storage in real-world applications.
 
-## Section 1: Working with Delimited Files
+Follow the instructions, write your code in the designated code blocks, and validate your results with `@assert` statements.
+
+
+## Section 1 - Working with Delimited Files
 
 Delimited files, such as `.csv`, can be handled efficiently using the DelimitedFiles package in Julia. This requires the DelimitedFiles package. But as it is part of the Julia Standard Library, you can use it directly without the need to use `Pkg.add()` before.
 
@@ -50,13 +53,12 @@ end
 println("CSV file 'matrix.csv' written successfully to folder ExampleData!")
 ```
 
-## Exercise 1.1
+## Exercise 1.1 - Read a CSV File
 
 Read the just written CSV file 'matrix.csv' using the function `readdlm()`. Save the matrix in the variable `read_matrix`. To learn the syntax, use the inbuild help by typing `?` in the terminal. Afterwards, just type the function name for an explanation.
 
 ```{julia}
 #| eval: false
-# Read the just written CSV file 'matrix.csv' using the function `readdlm()`. Save the matrix in the variable `read_matrix`. To learn the syntax, use the inbuild help by typing `?` in the terminal. Afterwards, just type the function name for an explanation.
 # YOUR CODE BELOW
 
 # Test your answer
@@ -64,23 +66,22 @@ Read the just written CSV file 'matrix.csv' using the function `readdlm()`. Save
 println("File 'matrix.csv' read successfully!")
 ```
 
-## Section 2: Working with CSV Files and DataFrames
+## Section 2 - Working with CSV Files and DataFrames
 
 The CSV package in Julia provides powerful tools for reading and writing CSV files to and from DataFrames, a common requirement in data analysis and data science projects. This requires the CSV and DataFrames packages. If you solely followed the course so far, you first have to install the CSV Package before you can start using it:
 
-```julia
+```{julia}
+#| eval: false
 import Pkg; Pkg.add("CSV")
 ```
 
-## Exercise 2.1
+## Exercise 2.1 - Write a DataFrame to a CSV File
 
 Write the following given DataFrame to a CSV file `table_out.csv` in the folder `ExampleData`. This can be done by using the function `CSV.write()`. To learn the syntax, ask the inbuild help with `?` and the function name.
 
 ```{julia}
 #| eval: false
 using CSV, DataFrames
-# Write the following given DataFrame to a CSV file 'table_out.csv' in the folder 'ExampleData'. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with '?' and the function name.
-
 data = DataFrame(Name = ["Alice", "Bob", "Charlie"], Age = [25, 30, 35])
 csv_file_path = "ExampleData/table_out.csv"
 # YOUR CODE BELOW
@@ -91,13 +92,21 @@ csv_file_path = "ExampleData/table_out.csv"
 println("CSV file 'data.csv' written successfully!")
 ```
 
-## Exercise 2.2
+## Exercise 2.2 - Read a CSV File in
 
-Read the CSV file `table_in.csv` in the folder `ExampleData` into the variable `read_data`. Here you can use the function `CSV.read()`. Again, use the inbuild help to familiarize yourself with the syntax. Note, that you need to provide a sink for the data when using `CSV.read()`, e.g. a DataFrame.
+Read the CSV file `table_in.csv` in the folder `ExampleData` into the variable `read_data`. Here you can use the function `CSV.read()`, e.g.:
+
+```julia
+read_data = CSV.read("Path/datatable.csv", DataFrame)
+```
+
+::: {.callout-note}
+Note, that you need to provide a sink for the data when using `CSV.read()`, e.g. a DataFrame.
+:::
+
 
 ```{julia}
 #| eval: false
-# Read the CSV file `table_in.csv` in the folder `ExampleData` into the variable `read_data`. Here you can use the function `CSV.read()`. Again, use the inbuild help to familiarize yourself with the syntax. Note, that you need to provide a sink for the data when using `CSV.read()`, e.g. a DataFrame.
 # YOUR CODE BELOW
 
 # Test your CSV reading

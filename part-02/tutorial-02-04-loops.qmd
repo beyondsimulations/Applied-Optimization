@@ -26,16 +26,11 @@ format:
 engine: julia
 ---
 
-# Comprehensive Guide to Loops in Julia
+# Introduction
 
-This interactive Julia script is an extensive tutorial introducing you to the 
-robust loop structures in Julia. Improve your skills in for and while loops for 
-performing repetitive tasks, manipulating loop flow with break and continue, and 
-applying nested loops to iterate through multi-dimensional structures. Follow the 
-instructions, input your code in the designated areas, and verify your 
-implementations with @assert statements.
+This interactive Julia script is an extensive tutorial introducing you to the robust loop structures in Julia. Improve your skills in for and while loops for performing repetitive tasks, manipulating loop flow with break and continue, and applying nested loops to iterate through multi-dimensional structures. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.
 
-# Section 1: For Loops
+# Section 1 - For Loops
 
 `for` loops iterate over a sequence such as a range or collection, executing a block of code for each item. Basic syntax:
 
@@ -46,35 +41,40 @@ end
 ```
 
 Iterating over a range (1 to 3):
-```julia
+```{julia}
 for i in 1:3
     println(i) 
 end
 ```
-This will print `1`, `2`, and `3`.
+This prints `1`, `2`, and `3`.
 
 Iterating over an array:
-```julia
+```{julia}
 fruits = ["apple", "banana", "cherry"]
 for fruit in fruits
     println(fruit)
 end
 ```
-This will print each fruit in the fruits array. The `break` statement can be utilized to exit the loop based on a condition. To check some condition, we can use `if` statements. For example:
+This prints each fruit in the `fruits` array. 
 
-```julia
+The `break` statement can be utilized to exit the loop based on a condition. To check some condition, we can use `if` statements. For example:
+
+```{julia}
 loop_number = 0
 for x in 1:10
     loop_number = x
+    println(loop_number)
     if loop_number == 4
         break
     end
 end
 ```
 
-This would exit the loop in iteration `4`, as the condition `loop_number == 4` would be true here. We can also chain `if` statements.For example:
+This exits the loop in iteration `4`, as the condition `loop_number == 4` is true here.
 
-```julia
+We can also chain `if` statements. For example:
+
+```{julia}
 loop_number = 0
 for x in 1:10
     loop_number = x
@@ -88,15 +88,14 @@ for x in 1:10
 end
 ```
 
-This would print `1`, then `2`, then `We reached 3!`. Afterwards the loop would end, as the break statement kicks in. 
+This prints `1`, then `2`, then `We reached 3!`. Afterwards the loop ends, as the `break` statement kicks in. 
 
-## Exercise 1.1
+## Exercise 1.1 - Sum the Numbers from 1 to 5
 
-Sum the numbers from `1` to `5` in a loop. Don't worry about the `let` here, it just starts a scope block. More on this later in the tutorial on variable scope. The next line initializes `sum_numbers` to `0`. The sum you compute should accumulate in this variable.
+Sum the numbers from `1` to `5` in a loop. Don't worry about the `let` here, it just starts a scope block. More on this later in the tutorial on variable scope. The next lines initialize `sum_numbers` to `0`. The sum you compute should accumulate in this variable.
 
 ```{julia}
 #| eval: false  
-# Calculate the sum of numbers from 1 to 5 in a loop. Don't worry about the let here, it just starts a scope block. More on this later in the tutorial on variable scope. The next line initializes sum_numbers to 0. The sum you compute should accumulate in this variable.
 let 
 sum_numbers = 0
 # YOUR CODE BELOW
@@ -107,13 +106,12 @@ println("Sum of numbers from 1 to 5: ", sum_numbers)
 end # This ends the scope of the previously started scope block.
 ```
 
-## Exercise 1.2
+## Exercise 1.2 - Sum Only the Even Numbers from 1 to 10
 
 Sum only the even numbers from `1` to `10`. Again, we initialize a variable `sum_evens` to `0`. The sum you compute should accumulate in this variable.
 
 ```{julia}
 #| eval: false
-# Sum only the even numbers from 1 to 10. Again, we initialize a variable 'sum_evens' to 0. The sum you compute should accumulate in this variable.
 let # First, we start a scope block for the loop!
 sum_evens = 0
 # YOUR CODE BELOW
@@ -123,17 +121,16 @@ sum_evens = 0
 println("Sum of even numbers from 1 to 10: ", sum_evens)
 end # Here we end the scope block again.
 ```
-:::{.callout-note}
-Hint: Utilize the remainder operator (`%`) to verify if a number is even. `number % 2 == 0` implies that `number` is even. 
+:::{.callout-tip}
+Hint: You can use the modulo operator `%` to check if a number is even. The modulo operator returns the remainder of the division of two numbers. If a number is divisible by another number, the remainder is `0`. The following example checks if `4` is even: `4 % 2 == 0`.
 :::
 
-## Exercise 1.3
+## Exercise 1.3 - Exit the Loop if the Current Fruit is Banana
 
 Iterate over each fruit in the `fruits` array, store the current fruit  in `current_fruit`, and exit the loop if `current_fruit` is `banana`. The next lines initialize the `fruits` array and `current_fruit` variable.
 
 ```{julia}
 #| eval: false
-# Iterate over each fruit in the 'fruits' array, store the current fruit  in 'current_fruit', and exit the loop if 'current_fruit' is "banana". The next lines initialize the 'fruits' array and 'current_fruit' variable. But first, another scope block.
 let 
 fruits = ["apple", "banana", "cherry"]
 current_fruit = "None"
@@ -145,19 +142,19 @@ println("The current fruit is: ", current_fruit)
 end # Here we end the scope block again.
 ```
 
-# Section 2: While Loops for Conditional Execution
+# Section 2 - While Loops for Conditional Execution
 
 `while` loops execute as long as a specified condition holds true. They're 
 particularly useful when the number of iterations is dynamic or unknown in 
 advance.
 
-## Exercise 2.1
+## Exercise 2.1 - Subtract from 10 in Increments of 1 Until the Result is Less Than 3
 
 Subtract from `10` in increments of `1` until the result is less than `3`. The next line initializes `current_value` to `10`. The result should be in this variable.
 
 ```{julia}
 #| eval: false
-# Subtract from 10 in increments of 1 until the result is less than 3. The next line initializes current_value to 10. The result should be in this variable. But first, we startnew scope block.
+# Start a new scope block
 let 
 current_value = 10
 # YOUR CODE BELOW
@@ -168,13 +165,13 @@ println("The first value smaller than 3 is: ", current_value)
 end # Scope block closed again.
 ```
 
-## Exercise 2.2
+## Exercise 2.2 - Find the First Multiple of 7 Greater Than 50
 
 Find the first multiple of `7` greater than `50` using an indefinite loop. The next line initializes `first_multiple_of_7` to `0`. The first multiple should be in this variable.
 
 ```{julia}
 #| eval: false
-# Find the first multiple of 7 greater than 50 using an indefinite loop.  The next line initializes 'first_multiple_of_7' to 0. The first multiple should be in this variable. But first, we start a new scope block.
+# New scope block
 let 
 first_multiple_of_7 = 0
 # YOUR CODE BELOW
@@ -189,17 +186,18 @@ end # End of scope block
 'break' statement if a condition is met.
 :::
 
-## Section 3: Nested Loops
+## Section 3 - Nested Loops
 
 Nested loops are loops within another loop, useful for iterating over multi-dimensional data structures. 
 
-## Exercise 3.1
+## Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays
 
-Compute the product of each pair of elements from two arrays. The next lines initialize `numbers1`, `numbers2` arrays, and the `products` array to store your results.
+Compute the product of **each pair of elements** from two arrays. For example, the product of two numbers `a` and `b` is `a * b`.
+The next lines initialize `numbers1`, `numbers2` arrays, and the `products` array to store your results.
 
 ```{julia}
 #| eval: false
-# Compute the product of each pair of elements from two arrays. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results. But first, we start a new scope block.
+# First, we start a new scope block.
 let 
 numbers1 = [1, 2, 3]
 numbers2 = [4, 5, 6]
@@ -214,6 +212,34 @@ end # End scope block
 :::{.callout-tip}
 Remember, you can use push!() to append elements to an array.
 :::
+
+# Section 4 - List Comprehensions
+
+List comprehensions provide a concise way to create lists based on existing lists. They can often replace for loops and are considered more "Julia-like". Basic syntax:
+```julia
+[expression for item in collection if condition]
+```
+
+For example, the following list comprehension squares the numbers from `1` to `5` if they are smaller than `4`:
+```{julia}
+squares = [x^2 for x in 1:5 if x < 4]
+println(squares)
+```
+
+## Exercise 4.1 - Create a List of Even Numbers
+
+Create a list of even numbers from 1 to 10 using a list comprehension.
+
+```{julia}
+#| eval: false
+let
+# YOUR CODE BELOW
+
+# Test your answer
+@assert even_numbers == [2, 4, 6, 8, 10]
+println("Even numbers from 1 to 10: ", even_numbers)
+end
+```
 
 ## Conclusion
 

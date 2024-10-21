@@ -278,17 +278,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#functions-in-julia" id="toc-functions-in-julia" class="nav-link active" data-scroll-target="#functions-in-julia">Functions in Julia</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
-  <li><a href="#section-1-creating-and-calling-functions" id="toc-section-1-creating-and-calling-functions" class="nav-link" data-scroll-target="#section-1-creating-and-calling-functions">Section 1: Creating and Calling Functions</a></li>
-  <li><a href="#exercise-1.1" id="toc-exercise-1.1" class="nav-link" data-scroll-target="#exercise-1.1">Exercise 1.1</a></li>
-  <li><a href="#section-2-scope-within-functions" id="toc-section-2-scope-within-functions" class="nav-link" data-scroll-target="#section-2-scope-within-functions">Section 2: Scope within Functions</a></li>
-  <li><a href="#exercise-2.1" id="toc-exercise-2.1" class="nav-link" data-scroll-target="#exercise-2.1">Exercise 2.1</a></li>
-  <li><a href="#exercise-2.2" id="toc-exercise-2.2" class="nav-link" data-scroll-target="#exercise-2.2">Exercise 2.2</a></li>
-  <li><a href="#section-3-anonymous-functions" id="toc-section-3-anonymous-functions" class="nav-link" data-scroll-target="#section-3-anonymous-functions">Section 3: Anonymous Functions</a></li>
-  <li><a href="#exercise-3.1" id="toc-exercise-3.1" class="nav-link" data-scroll-target="#exercise-3.1">Exercise 3.1</a></li>
-  <li><a href="#section-4-multiple-dispatch" id="toc-section-4-multiple-dispatch" class="nav-link" data-scroll-target="#section-4-multiple-dispatch">Section 4: Multiple Dispatch</a></li>
-  <li><a href="#exercise-4.1" id="toc-exercise-4.1" class="nav-link" data-scroll-target="#exercise-4.1">Exercise 4.1</a></li>
+  <li><a href="#section-1---creating-and-calling-functions" id="toc-section-1---creating-and-calling-functions" class="nav-link" data-scroll-target="#section-1---creating-and-calling-functions">Section 1 - Creating and Calling Functions</a></li>
+  <li><a href="#exercise-1.1---define-and-test-a-simple-addition-function" id="toc-exercise-1.1---define-and-test-a-simple-addition-function" class="nav-link" data-scroll-target="#exercise-1.1---define-and-test-a-simple-addition-function">Exercise 1.1 - Define and Test a Simple Addition Function</a></li>
+  <li><a href="#section-2---scope-within-functions" id="toc-section-2---scope-within-functions" class="nav-link" data-scroll-target="#section-2---scope-within-functions">Section 2 - Scope within Functions</a></li>
+  <li><a href="#exercise-2.1---return-a-local-variable" id="toc-exercise-2.1---return-a-local-variable" class="nav-link" data-scroll-target="#exercise-2.1---return-a-local-variable">Exercise 2.1 - Return a Local Variable</a></li>
+  <li><a href="#exercise-2.2---define-an-implicit-return-function" id="toc-exercise-2.2---define-an-implicit-return-function" class="nav-link" data-scroll-target="#exercise-2.2---define-an-implicit-return-function">Exercise 2.2 - Define an Implicit Return Function</a></li>
+  <li><a href="#section-3---multiple-dispatch" id="toc-section-3---multiple-dispatch" class="nav-link" data-scroll-target="#section-3---multiple-dispatch">Section 3 - Multiple Dispatch</a></li>
+  <li><a href="#exercise-3.1---match-results-to-assertions" id="toc-exercise-3.1---match-results-to-assertions" class="nav-link" data-scroll-target="#exercise-3.1---match-results-to-assertions">Exercise 3.1 - Match Results to Assertions</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
@@ -318,114 +316,116 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="functions-in-julia" class="level1">
-<h1>Functions in Julia</h1>
-<p>This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with <span class="citation" data-cites="assert">@assert</span> statements.</p>
-<section id="section-1-creating-and-calling-functions" class="level2">
-<h2 class="anchored" data-anchor-id="section-1-creating-and-calling-functions">Section 1: Creating and Calling Functions</h2>
-<p>Functions in Julia encapsulate reusable code and can be defined using the <code>function</code> keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. For example:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">multiply</span>(a,b)</span>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with <code>@assert</code> statements.</p>
+<section id="section-1---creating-and-calling-functions" class="level2">
+<h2 class="anchored" data-anchor-id="section-1---creating-and-calling-functions">Section 1 - Creating and Calling Functions</h2>
+<p>Functions in Julia encapsulate reusable code and can be defined using the <code>function</code> keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. Later, you can call the function by writing the name of the function followed by the parameters in parentheses. For example:</p>
+<div id="2" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">multiply</span>(a,b)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>   a <span class="op">*</span> b</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the <code>return</code> keyword optional. If you explicitly use the <code>return</code> keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition.</p>
-</section>
-<section id="exercise-1.1" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-1.1">Exercise 1.1</h2>
-<p>Define and Test a Simple Addition Function. Define a function <code>add</code> that takes two parameters and returns their sum.</p>
-<div id="2" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define and Test a Simple Addition Function. Define a function `add` that takes two parameters and returns their sum.</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>) <span class="op">==</span> <span class="fl">15</span> <span class="st">"The sum computed is </span><span class="sc">$</span>(<span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st"> but should be 15."</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The sum computed is </span><span class="sc">$</span>(<span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">, wonderful!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="section-2-scope-within-functions" class="level2">
-<h2 class="anchored" data-anchor-id="section-2-scope-within-functions">Section 2: Scope within Functions</h2>
-<p>Variables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it. You can do this by passing <code>return</code> in front of the variable you want to return from the function.</p>
-</section>
-<section id="exercise-2.1" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-2.1">Exercise 2.1</h2>
-<p>Try to execude the following block of code. The objective is to understand how to return the <code>local_variable_one</code> from the function <code>scope_test</code>. Your task is to change the function, to return the value of <code>local_variable_one</code>.</p>
-<div id="4" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Try to execude the following block of code. The objective is to understand how to return the 'local_variable_one' from the function 'scope_test'. Your task is to change the function, to return the value of 'local_variable_one'.</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES BELOW</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">scope_test</span>()</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    local_variable_one <span class="op">=</span> <span class="fl">10</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    local_variable_two <span class="op">=</span> <span class="fl">20</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES ABOVE</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">scope_test</span>() <span class="op">==</span> <span class="fl">10</span> <span class="st">"The value exported is </span><span class="sc">$</span>(<span class="fu">scope_test</span>())<span class="st">."</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The value exported is </span><span class="sc">$</span>(<span class="fu">scope_test</span>())<span class="st">, you solved it!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="exercise-2.2" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-2.2">Exercise 2.2</h2>
-<p>Define and test an implicit return function. Define a function <code>subtract</code> that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.</p>
-<div id="6" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define and test an implicit return function. Define a function 'subtract' that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>) <span class="op">==</span> <span class="fl">5</span>  <span class="st">"The difference computed is </span><span class="sc">$</span>(<span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st"> but should be 5."</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The difference computed is </span><span class="sc">$</span>(<span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">, perfect!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="section-3-anonymous-functions" class="level2">
-<h2 class="anchored" data-anchor-id="section-3-anonymous-functions">Section 3: Anonymous Functions</h2>
-<p>Anonymous functions in Julia are unnamed functions, useful for concise and short operations. They are particularly useful for operations that are passed as arguments to higher-order functions or used for short, one-off computations. Syntax for anonymous functions can be either of the following:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>add_two <span class="op">=</span> (a,b) <span class="op">-&gt;</span> a <span class="op">+</span> b</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">add_two</span>(a,b) <span class="op">=</span> a <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="exercise-3.1" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-3.1">Exercise 3.1</h2>
-<p>Create an anonymous function <code>multiply</code> that multiplies two numbers.</p>
-<div id="8" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an anonymous function 'multiply' that multiplies two numbers.</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">multiply</span>(<span class="fl">10</span>, <span class="fl">5</span>) <span class="op">==</span> <span class="fl">50</span>  <span class="st">"The result is </span><span class="sc">$</span>(<span class="fu">multiply</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st"> but should be 50."</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great job! You created an anonymous function that multiplies two numbers."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="section-4-multiple-dispatch" class="level2">
-<h2 class="anchored" data-anchor-id="section-4-multiple-dispatch">Section 4: Multiple Dispatch</h2>
-<p>Multiple dispatch in Julia allows defining function behavior based on argument types, promoting code reuse and clarity. It’s a powerful feature for designing flexible and extensible functions. We first define a generic version and then provide specific implementations for different types:</p>
-<div id="10" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generic operation for objects of all types.</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">operation</span>(a, b)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Generic operation for objects of type </span><span class="sc">$</span>(<span class="fu">typeof</span>(a))<span class="st"> and </span><span class="sc">$</span>(<span class="fu">typeof</span>(b))<span class="st">"</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># The specific implementations are:</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">operation</span>(a<span class="op">::</span><span class="dt">Number</span>, b<span class="op">::</span><span class="dt">Number</span>) <span class="op">=</span> a <span class="op">+</span> b        <span class="co"># Specific method for Number types.</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">operation</span>(a<span class="op">::</span><span class="dt">String</span>, b<span class="op">::</span><span class="dt">String</span>) <span class="op">=</span> <span class="fu">string</span>(a, b) <span class="co"># Specific method for String types.</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with different types of arguments.</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>result1 <span class="op">=</span> <span class="fu">operation</span>(<span class="fl">10</span>, <span class="fl">20</span>)               <span class="co"># Numeric addition.</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>result2 <span class="op">=</span> <span class="fu">operation</span>(<span class="st">"Hello, "</span>, <span class="st">"World!"</span>)  <span class="co"># String concatenation.</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>result3 <span class="op">=</span> <span class="fu">operation</span>(<span class="st">"Hello, "</span>, <span class="fl">20</span>)        <span class="co"># Generic implementation.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">multiply</span>(<span class="fl">10</span>, <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"Generic operation for objects of type String and Int64"</code></pre>
+<pre><code>50</code></pre>
+</div>
+</div>
+<p>This function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the <code>return</code> keyword optional. If you explicitly use the <code>return</code> keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition. For example:</p>
+<div id="4" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">do_something</span>(a,b)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> a <span class="op">&gt;</span> b</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> a <span class="op">*</span> b</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">else</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>   <span class="cf">end</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The result of do_something(10, 5) is </span><span class="sc">$</span>(<span class="fu">do_something</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The result of do_something(5, 10) is </span><span class="sc">$</span>(<span class="fu">do_something</span>(<span class="fl">5</span>, <span class="fl">10</span>))<span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The result of do_something(10, 5) is 50
+The result of do_something(5, 10) is 15</code></pre>
 </div>
 </div>
 </section>
-<section id="exercise-4.1" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-4.1">Exercise 4.1</h2>
-<p>Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement.</p>
-<div id="12" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Choose the result that should be asserted in the following to equal the expected value on the right side of the conditional statement. Hint: The answer is easy, you just have to change the comparisons.</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES BELOW</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result1 <span class="op">==</span> <span class="st">"Hello, World!"</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result3 <span class="op">==</span> <span class="fl">30</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result2 <span class="op">==</span> <span class="st">"Generic operation for objects of type String and Int64"</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"You solved it, the order is now correct!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="exercise-1.1---define-and-test-a-simple-addition-function" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1.1---define-and-test-a-simple-addition-function">Exercise 1.1 - Define and Test a Simple Addition Function</h2>
+<p>Define and Test a Simple Addition Function. Define a function <code>add</code> that takes two parameters and returns their sum.</p>
+<div id="6" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>) <span class="op">==</span> <span class="fl">15</span> <span class="st">"The sum computed is </span><span class="sc">$</span>(<span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st"> but should be 15."</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The sum computed is </span><span class="sc">$</span>(<span class="fu">add</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">, wonderful!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="section-2---scope-within-functions" class="level2">
+<h2 class="anchored" data-anchor-id="section-2---scope-within-functions">Section 2 - Scope within Functions</h2>
+<p>Variables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it as already shown above. You can do this by passing <code>return</code> in front of the variable you want to return from the function.</p>
+</section>
+<section id="exercise-2.1---return-a-local-variable" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.1---return-a-local-variable">Exercise 2.1 - Return a Local Variable</h2>
+<p>Try to execute the following block of code. The objective is to understand how to return the <code>local_variable_one</code> from the function <code>scope_test</code>. Your task is to change the function, to return the value of <code>local_variable_one</code>.</p>
+<div id="8" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES BELOW</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">scope_test</span>()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    local_variable_one <span class="op">=</span> <span class="fl">10</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    local_variable_two <span class="op">=</span> <span class="fl">20</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES ABOVE</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">scope_test</span>() <span class="op">==</span> <span class="fl">10</span> <span class="st">"The value exported is </span><span class="sc">$</span>(<span class="fu">scope_test</span>())<span class="st">."</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The value exported is </span><span class="sc">$</span>(<span class="fu">scope_test</span>())<span class="st">, you solved it!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exercise-2.2---define-an-implicit-return-function" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.2---define-an-implicit-return-function">Exercise 2.2 - Define an Implicit Return Function</h2>
+<p>Define and test an implicit return function. Define a function <code>subtract</code> that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.</p>
+<div id="10" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your function</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>) <span class="op">==</span> <span class="fl">5</span>  <span class="st">"The difference computed is </span><span class="sc">$</span>(<span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st"> but should be 5."</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"The difference computed is </span><span class="sc">$</span>(<span class="fu">subtract</span>(<span class="fl">10</span>, <span class="fl">5</span>))<span class="st">, perfect!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="section-3---multiple-dispatch" class="level2">
+<h2 class="anchored" data-anchor-id="section-3---multiple-dispatch">Section 3 - Multiple Dispatch</h2>
+<p>Multiple dispatch in Julia allows defining function behavior based on argument types, promoting code reuse and clarity. It’s a powerful feature for designing flexible and extensible functions. We first define a generic version and then provide specific implementations for different types:</p>
+<div id="12" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generic operation for objects of all types.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">operation</span>(a, b)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Generic operation for objects of type </span><span class="sc">$</span>(<span class="fu">typeof</span>(a))<span class="st"> and </span><span class="sc">$</span>(<span class="fu">typeof</span>(b))<span class="st">"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># The specific implementations are:</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">operation</span>(a<span class="op">::</span><span class="dt">Number</span>, b<span class="op">::</span><span class="dt">Number</span>) <span class="op">=</span> a <span class="op">+</span> b        <span class="co"># Specific method for Number types.</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">operation</span>(a<span class="op">::</span><span class="dt">String</span>, b<span class="op">::</span><span class="dt">String</span>) <span class="op">=</span> <span class="fu">string</span>(a, b) <span class="co"># Specific method for String types.</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with different types of arguments.</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>result1 <span class="op">=</span> <span class="fu">operation</span>(<span class="fl">10</span>, <span class="fl">20</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(result1)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>result2 <span class="op">=</span> <span class="fu">operation</span>(<span class="st">"Hello, "</span>, <span class="st">"World!"</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(result2)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>result3 <span class="op">=</span> <span class="fu">operation</span>(<span class="st">"Hello, "</span>, <span class="fl">20</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(result3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>30
+Hello, World!
+Generic operation for objects of type String and Int64</code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-3.1---match-results-to-assertions" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-3.1---match-results-to-assertions">Exercise 3.1 - Match Results to Assertions</h2>
+<p>Match the results from the previous example to the correct assertions:</p>
+<div id="14" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CHANGES BELOW</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result2 <span class="op">==</span> <span class="fl">30</span> <span class="st">"result1 should be the sum of two numbers"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result3 <span class="op">==</span> <span class="st">"Hello, World!"</span> <span class="st">"result2 should be the concatenation of two strings"</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> result1 <span class="op">==</span> <span class="st">"Generic operation for objects of type String and Int64"</span> <span class="st">"result3 should use the generic operation"</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"You solved it, the assertions are now correct!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -437,7 +437,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Hint</strong>: The answer is easy, you just have to change the comparisons.</p>
+<p><strong>Hint</strong>: Look at the types of arguments used in each <code>operation</code> call and match them to the appropriate method.</p>
 </div>
 </div>
 </section>

@@ -26,11 +26,11 @@ format:
 engine: julia
 ---
 
-# Introduction to Comparisons and Logical Operators in Julia
+# Introduction
 
 This interactive Julia script introduces the basics of comparisons and logical operators. These are fundamental for controlling the flow of programs and making decisions. Follow the instructions, write your code in the designated code blocks, and execute the corresponding code cell.
 
-## Section 1: Comparisons
+## Section 1 - Comparisons
 
 In Julia, comparison operators allow you to compare values and make decisions based on these comparisons. Common comparison operators include 
 
@@ -43,17 +43,17 @@ In Julia, comparison operators allow you to compare values and make decisions ba
 
 Comparisons return a boolean value (true or false). You can use these directly or store them in a variable. For example: 
 
-```julia
-comparison = 5 == 5  # This will store 'true' in 'comparison'.
+```{julia}
+comparison = 5 == 5 # Store the result in 'comparison'.
+println("comparison is $comparison.")
 ```
 
-## Exercise 1.1:
+## Exercise 1.1 - Compare if 10 is greater than 5
 
 Compare if 10 is greater than 5 and store the result in `comparison1`.
 
 ```{julia}
 #| eval: false
-# Compare if 10 is greater than 5 and store the result in 'comparison1'.
 # YOUR CODE BELOW
 
 # Test your answer
@@ -61,12 +61,12 @@ Compare if 10 is greater than 5 and store the result in `comparison1`.
 println("comparison1 is ", comparison1)
 ```
 
-## Exercise 1.2:
+## Exercise 1.2 - Compare if x is not equal to y
 
-Compare if `x` is not equal to `y` and store the result in `comparison2`.
+Define variables `x` with value `"Hello"` and `y` with value `"world"`. Compare if `x` is not equal to `y` and store the result in `comparison2`.
+
 ```{julia}
 #| eval: false
-# Define variables 'x' with value "Hello" and 'y' with value "world". Compare if 'x' is not equal to 'y' and store the result in 'comparison2'.
 # YOUR CODE BELOW
 
 # Test your answer
@@ -76,7 +76,7 @@ Compare if `x` is not equal to `y` and store the result in `comparison2`.
 println("Comparison2 is ", comparison2)
 ```
 
-## Section 2: Logical Operators
+## Section 2 - Logical Operators
 
 Logical operators combine or invert boolean values. In Julia, use 
 
@@ -86,13 +86,12 @@ Logical operators combine or invert boolean values. In Julia, use
 
 These are useful in complex conditions and controlling program flow.
 
-## Exercise 2.1:
+## Exercise 2.1 - Use the AND operator
 
-Use the AND operator to check if 10 is greater than 5 and `hello` is equal to `hello`. Store the result in `logic1`.
+Use the `AND` operator to check if `10` is greater than `5` and `hello` is equal to `hello`. Store the result in `logic1`.
 
 ```{julia}
 #| eval: false
-# Use the AND operator to check if 10 is greater than 5 and 'hello' is equal to 'hello'. Store the result in 'logic1'.
 # YOUR CODE BELOW
 
 # Test your answer
@@ -100,13 +99,12 @@ Use the AND operator to check if 10 is greater than 5 and `hello` is equal to `h
 println("logic1 is ", logic1)
 ```
     
-## Exercise 2.2:
+## Exercise 2.2 - Use the OR operator
 
-Use the OR operator to check if 10 is less than 5 or `hello` is equal to `hello`. Store the result in `logic2`.
+Use the `OR` operator to check if `10` is less than `5` or `hello` is equal to `hello`. Store the result in `logic2`.
 
 ```{julia}
 #| eval: false
-# Use the OR operator to check if 10 is less than 5 or `hello` is equal to `hello`. Store the result in `logic2`.
 # YOUR CODE BELOW
 
 # Test your answer
@@ -114,19 +112,44 @@ Use the OR operator to check if 10 is less than 5 or `hello` is equal to `hello`
 println("logic2 is ", logic2)
 ```
 
-## Exercise 2.3:
+::: {.callout-tip}
+Julia uses short-circuit evaluation for `&&` and `||` operators. This means that the second operand is only evaluated if necessary.
+:::
 
-Check whether 10 is greater than 5 and store the result in `logic3`. Then, use the NOT operator to invert `logic3`. Store the result in `logic4`.
+## Exercise 2.3 - Use the NOT operator
+
+Check whether `10` is greater than `5` and store the result in `logic3`. Then, use the `NOT` operator to invert `logic3`. Store the result in `logic4`.
 
 ```{julia}
 #| eval: false
-# Check whether 10 is greater than 5 and store the result in `logic3`. Then, use the NOT operator to invert `logic3`. Store the result in `logic4`.
 # YOUR CODE BELOW
 
 # Test your answer
 @assert logic3 == true
 @assert logic4 == false
 println("logic3 is ", logic3," and logic4 is", logic4)
+```
+
+## Exercise 2.4 - Chaining Comparisons
+
+Julia allows you to chain multiple comparisons:
+
+```{julia}
+y = 2
+result = 1 < y < 5  # Equivalent to (1 < y) && (y < 5)
+println("result is $result.")
+```
+
+Check if `x` is between `1` and `10` (exclusive) using a chained comparison. Store the result in `chained_comparison`.
+
+```{julia}
+#| eval: false
+x = 5
+# YOUR CODE BELOW
+
+# Test your answer
+@assert chained_comparison == true
+println("chained_comparison is ", chained_comparison)
 ```
 
 ## Conclusion

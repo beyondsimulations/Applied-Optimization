@@ -21,7 +21,7 @@ format:
         colorlinks: true
 ---
 
-# Introduction to Mathematical Optimization with JuMP and HiGHS
+# Introduction
 
 This Julia script is an interactive tutorial to introduce you to mathematical optimization using JuMP and the HiGHS solver. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements.
 
@@ -33,18 +33,19 @@ ressource: [JuMP Documentation](https://jump.dev/JuMP.jl/stable/tutorials/gettin
 We are going to structure this tutorial based on a small example instance: 
 
 - Suppose we are planning the production of two products
-- The profit from each unit of Product A is 100
-- From Product B it is 150
-- The production of these products is constrained by the available hours in two different departments: Cutting and Finishing
-- Each unit of Product A requires 2 hours of Cutting and 4 hours of Finishing
-- Each unit of Product B requires 4 hours of Cutting and 3 hours of Finishing
-- There are 40 hours available in the Cutting department
-- 60 hours are available in the Finishing department
+    - The profit from each unit of Product A is 100
+    - The profit from each unit of Product B is 150
+- The production is constrained by the available hours in two departments
+    - Each unit of Product A requires 2 hours of Cutting and 4 hours of Finishing
+    - Each unit of Product B requires 4 hours of Cutting and 3 hours of Finishing
+    - 40 hours are available in total in the Cutting department
+    - 60 hours are available in total in the Finishing department
 - We want to maximize the profit given these constraints
 
 If you followed the struture of the tutorials, you first have to install the JuMP Package and the HiGHS Package before you can start using it:
 
 ```{julia}
+#| eval: false
 import Pkg; Pkg.add(["JuMP","HiGHS"])
 ```
 
@@ -52,7 +53,7 @@ import Pkg; Pkg.add(["JuMP","HiGHS"])
 using JuMP, HiGHS
 ```
 
-## Section 1: Defining an Optimization Model
+## Section 1 - Defining an Optimization Model
 
 An optimization model in JuMP is defined within a Model object.
 
@@ -61,7 +62,7 @@ model = Model(HiGHS.Optimizer)
 println("Optimization model created successfully!")
 ```
 
-## Section 2: Adding Variables to the Model
+## Section 2 - Adding Variables
 
 To define a variable for the model, we can call the Macro @variable(). Inside the brackets, we need to specify the model, the variable name and it's type and/or bounds. For example:
 
@@ -71,7 +72,7 @@ To define a variable for the model, we can call the Macro @variable(). Inside th
 
 This defines a continous variable equal or larger 0.
 
-## Exercise 2.1: 
+## Exercise 2.1 - Create Variables
 Create two continous variables equal or larger 0 called `productA` and `productB` that represent the the number of units produced in our problem for our model `model`.
 
 ```{julia}
@@ -93,7 +94,7 @@ Create two continous variables equal or larger 0 called `productA` and `productB
 println("Variables added to the model successfully!")
 ```
 
-## Section 3: Setting Up Constraints
+## Section 3 - Adding Constraints
 
 To define constraints, we use the Macro constraint(). Inside the brackets, we need to specify the model and the actual constraint. For example:
 
@@ -103,7 +104,7 @@ constraint(modelName, constraintName, 4 * variableName <= 100)
 
 This defines a constraint that ensures, that the variable `variableName` can maximally be 25. Note, that you will have to change `modelName`, `constraintName` and `variableName` according to your instance.
 
-## Exercise 3.1: 
+## Exercise 3.1 - Create Constraints
 Create two constraints based on the on the Cutting and Finishing department hours of the problem description in this tutorial. Call the first constraint `cutting_constraint` and the second constraint `finishing_constraint`.
 
 ```{julia}
@@ -119,7 +120,7 @@ println("Note, that only the existence of these constraints was checked!")
 println("The optimization later will show, whether the formulation was correct.")
 ```
 
-## Section 4: Defining the Objective Function
+## Section 4 - Defining the Objective Function
 
 To define an objective function for the model, we can call the Macro @objective(). Inside the brackets, we first specify the model, the direction - `Max` or `Min` and the actual objective. For example:
 
@@ -127,7 +128,7 @@ To define an objective function for the model, we can call the Macro @objective(
 @objective(modelName, Max, 2*variableA + 3*variableB) 
 ```
 
-## Exercise 3.1: 
+## Exercise 4.1 - Create the Objective Function
 Create the objective function based on the problem description of this tutorial. The objective is to maximize profit based on the values of `productA` and `productB`.
 
 ```{julia}
@@ -141,7 +142,7 @@ println("An objective function defined successfully!")
 println("The optimization later will show, whether the formulation was correct.")
 ```
 
-## Section 5: Solving the Model
+## Section 5 - Solving the Model
 
 We can then solve the model you created in the previous sections as follows:
 ```{julia}
@@ -154,14 +155,18 @@ To check the status of the solution, the following is often included in the code
 ```{julia}
 #| eval: false
 begin
-    if termination_status(model) == OPTIMAL
+    # Check if the solution is optimal
+    if termination_status(model) == OPTIMAL 
         println("Solution is optimal")
-    elseif termination_status(model) == TIME_LIMIT && has_values(model)
+    # Check if the solution is suboptimal due to a time limit
+    elseif termination_status(model) == TIME_LIMIT && has_values(model) 
         println("Solution is suboptimal due to a time limit, 
             but a primal solution is available") 
+    # State that the model was not solved correctly
     else
         error("The model was not solved correctly.") 
     end
+    # Print the objective value
     println("Objective value = ", objective_value(model)) 
 end
 ```
@@ -186,16 +191,15 @@ The following code tests whether the solution is correct or whether you have mad
 ```{julia}
 #| eval: false
 # Test your answer
-@assert termination_status(model) == MOI.OPTIMAL "Sorry, something didn't work out 
-    as the model status is $termination_status(model)".
+@assert termination_status(model) == MOI.OPTIMAL "Sorry, something didn't work out as the model status is $termination_status(model)".
 println("Solution: Product A = ", val_productA, ", Product B = ", val_productB)
-@assert val_productA ≈ 12 atol=1e-4 "Although you have a solution, 
-    val_productA should be 12 not $val_productA"
-@assert val_productB ≈ 4 atol=1e-4 "Although you have a solution, 
-    val_productB should be 4 not $val_productB"
+@assert val_productA ≈ 12 atol=1e-4 "Although you have a solution, val_productA should be 12 not $val_productA"
+@assert val_productB ≈ 4 atol=1e-4 "Although you have a solution, val_productB should be 4 not $val_productB"
 println("You have solved the model correctly!")
 ```
 
 ## Conclusion
 
 Excellent! You've completed the tutorial on mathematical optimization with JuMP and HiGHS. You've learned how to define optimization models, add variables and constraints, define an objective function, and solve the model. Continue to the next file to learn more.
+
+{{< include ../include/tutorial_end.qmd >}}

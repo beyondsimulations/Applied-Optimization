@@ -26,11 +26,11 @@ format:
 engine: julia
 ---
 
-# Introduction to Variables and Types in Julia
+# Introduction
 
 Welcome to this interactive Julia tutorial which introduces the basics of variables and types. Understanding variables and their types is crucial as they are the building blocks of any program. They determine how data is stored, manipulated, and how efficiently your code runs.
 
-This script is designed to be interactive. Follow the instructions, write your code in the designated code blocks, and then execute the corresponding code. Each exercise is followed by an @assert statement that checks your solution.
+This script is designed to be interactive. Follow the instructions, write your code in the designated code blocks, and then execute the corresponding code. Each exercise is followed by an `@assert` statement that checks your solution.
 
 The easiest way to run the code is by using IJulia. Start Julia, and type `using IJulia; notebook()` in the Julia prompt. This will open a new browser window where you can run the code. If you have not installed IJulia yet, you can do so by typing `]` in the Julia prompt to open the package manager, and then installing IJulia by typing `add IJulia`.
 
@@ -38,17 +38,16 @@ The easiest way to run the code is by using IJulia. Start Julia, and type `using
 Always replace 'YOUR CODE BELOW' with your actual code.
 :::
 
-# Section 1: Variables
+# Section 1 - Variables 
 
 Introduction to Variables: A variable in Julia can be used to store data like numbers, text, or more complex types. To declare a variable in Julia, simply assign a value to a name: `variable_name = value`.
 
-## Exercise 1.1
+## Exercise 1.1 - Declare a Variable
 
-Declare a variable named 'x' and assign it the value 1.
+Declare a variable named `x` and assign it the value `1`.
 
 ```{julia}
 #| eval: false
-# Declare a variable named 'x' and assign it the value 1
 # YOUR CODE BELOW
 
 # Test your answer
@@ -56,13 +55,12 @@ Declare a variable named 'x' and assign it the value 1.
 println("Great, you have correctly assigned the value $x to the variable 'x'.")
 ```
 
-## Exercise 1.2
+## Exercise 1.2 - Declare a String Variable
 
-Declare a variable named 'hi' and assign it the string  "Hello, Optimization!".
+Declare a variable named `hi` and assign it the string `"Hello, Optimization!"`.
 
 ```{julia}
 #| eval: false
-# Declare a variable named 'hi' and assign it the string  "Hello, Optimization!"
 # YOUR CODE BELOW
 
 # Test your answer
@@ -70,17 +68,16 @@ Declare a variable named 'hi' and assign it the string  "Hello, Optimization!".
 println("Good, the variable 'hi' now states \"$hi\".")
 ```
 
-# Section 2: Basic Types
+# Section 2 - Basic Types
 
 Julia is a dynamically typed language, yet it allows you to indicate types explicitly. Understanding types is crucial for writing efficient Julia code. Common basic types include Integers, Floats, Booleans, and Strings. To check the type of a variable, use the `typeof()` function.
 
-## Exercise 2.1
+## Exercise 2.1 - Create an Integer Variable
 
-Create an Integer variable 'answerUniverse' and set it to 42.
+Create an Integer variable `answerUniverse` and set it to `42`.
 
 ```{julia}
 #| eval: false
-# Create an Integer variable 'answerUniverse' and set it to 42
 # YOUR CODE BELOW
 
 # Test your answer
@@ -88,13 +85,12 @@ Create an Integer variable 'answerUniverse' and set it to 42.
 println("Great, the answer to all questions on the universe is $answerUniverse now.")
 ```
 
-## Exercise 2.2
+## Exercise 2.2 - Create a Float Variable
 
-Create a Float variable 'money' and set it to 1.35.
+Create a Float variable `money` and set it to `1.35`.
 
 ```{julia}
 #| eval: false
-# Create a Float variable 'money' and set it to 1.35
 # YOUR CODE BELOW
 
 # Test your answer
@@ -102,18 +98,62 @@ Create a Float variable 'money' and set it to 1.35.
 println("Perfect, the you have stored $money in the variable 'money'.")
 ```
 
-## Exercise 2.3
+## Exercise 2.3 - Create a Boolean Variable
 
-Create a Boolean variable 'isStudent' and set it to true.
+Create a Boolean variable `isStudent` and set it to `true`.
 
 ```{julia}
 #| eval: false
-# Create a Boolean variable 'isStudent' and set it to true
 # YOUR CODE BELOW
 
 # Test your answer
 @assert isStudent == true "The variable 'isStudent' should be set to true."
 println("Correct, you are a student now.")
+```
+
+# Section 3 - Type Annotations and Inference
+
+Julia allows you to specify types explicitly, which can improve performance and catch errors early. For example, to assign an Float64 to a variable, you can do the following:
+
+```{julia}
+x::Float64 = 3
+typeof(x)
+``` 
+
+## Exercise 3.1 - Type Annotation
+
+Declare a variable `y` with an explicit type annotation of `Int64` and assign it the value `5`.
+
+```{julia}
+#| eval: false
+# YOUR CODE BELOW
+
+# Test your answer
+@assert y == 5 && typeof(y) == Int64 "Make sure 'y' is of type Int64 and has the value 5."
+println("Great! You've created an Int64 variable 'y' with the value $y.")
+```
+
+# Section 4 - String Interpolation
+
+String interpolation allows you to embed expressions into string literals. In Julia, this is done using the `$` symbol. If you have paid attention to the previous excercise, you have already seen this in action. The following example illustrates this again:
+
+```{julia}
+#| eval: true
+language = "Julia"
+println("I'm learning $language")
+```
+
+## Exercise 4.1 - String Interpolation
+
+Create a string `message` that says `"y is [value of y]"` using string interpolation.
+
+```{julia}
+#| eval: false
+# YOUR CODE BELOW
+
+# Test your answer
+@assert message == "y is 5" "Make sure your string includes the correct value of y."
+println("Excellent! Your interpolated string is: $message")
 ```
 
 ## Conclusion
