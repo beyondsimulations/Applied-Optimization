@@ -23,6 +23,7 @@ format:
     ipynb:
         code-copy: true
         code-overflow: wrap
+
 ---
 
 # Introduction to Basic Plotting in Julia
@@ -32,11 +33,12 @@ This interactive Julia script introduces the basics of plotting in Julia using t
 Ensure you have the Plots package installed to follow along with this tutorial. If you followed the course so far, you first have to install the Plots Package before you can start using it: 
 
 ```{julia}
-#| eval: false
+#| eval: true
 import Pkg; Pkg.add("Plots")
 ```
 
 ```{julia}
+#| eval: true
 using Plots
 ```
 
@@ -49,15 +51,16 @@ The Plots.jl package simplifies the process of creating a wide array of plots, f
 x = 1:10      
 y = rand(10)
 line_plot = plot(x, y, title="Simple Line Plot", xlabel="x axis", ylabel="y axis", legend=false)
+#display(line_plot)
 # Create a folder called "images" if it does not exist
-if !isdir("images")
-    mkdir("images")
-end
+#if !isdir("images")
+#    mkdir("images")
+#end
 # Save the plot to the "images" folder
-savefig(line_plot, "images/line_plot.png")
+#savefig(line_plot, "images/line_plot.png")
 ```
 
- ![Simple Line Plot](images/line_plot.png)
+![Simple Line Plot](images/line_plot.png)
 
 We call `plot()` and use x and y as main arguments. Furthermore, we have a variety of choices to add further information, such as the title, labels, a legend, colors, opacity and so on. More on this later.
 
@@ -110,8 +113,9 @@ a = rand(20)
 b = rand(20)
 multi_plot = plot(x, a, title="Many Series", xlabel="x axis", ylabel="y axis", label="a")
 plot!(multi_plot, x, b, label="b")
+#display(multi_plot)
 # Save the plot to the "images" folder
-savefig(multi_plot, "images/multi_plot.png")
+#savefig(multi_plot, "images/multi_plot.png")
 ```
 
  ![Multiple Series Plot](images/multi_plot.png)
