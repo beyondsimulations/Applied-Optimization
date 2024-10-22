@@ -54,12 +54,19 @@ Now, we can define an objective function with the container. For example:
 ```
 
 ## Exercise 1.1 - Define an array of variables and an objective function
+
+Scenario: Imagine you're optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.
+
 Define an array of variables and an objective function for `another_model`. The variables should be called `profits` and have a range from `1:8`. It has a lower bound of `0`. The objective should be a Maximization of the sum of all `profits`.
 
 ```{julia}
 #| eval: false
 # YOUR CODE BELOW
 
+```
+```{julia}
+#| eval: false
+#| code-fold: true
 # Test your answer
 @assert length(profits) == 8 && all(lower_bound(profits[i]) == 0 for i in 1:8)
 @assert typeof(objective_function(another_model)) == AffExpr
@@ -79,7 +86,9 @@ Defining constraints within containers allows for structured and easily manageab
 
 This would create a constraint called `constraintName` for each `i` - thus `1`,`2`, and `3` - where `variableName[1]`, `variableName[2]`, and `variableName[3]` are restricted to be maximally `100`.
 
-## Exercise 2.1 - Define constraints called 'maxProfit' using an array of variables
+# Exercise 2.1 - Define constraints called 'maxProfit' using an array of variables
+
+Continuing our factory scenario: Each product has a maximum daily production capacity due to machine limitations.
 
 Define constraints called `maxProfit` using an array of variables. The logic: Each profit defined in the previous task should be less than or equal to `12`.
 
@@ -87,6 +96,10 @@ Define constraints called `maxProfit` using an array of variables. The logic: Ea
 #| eval: false
 # YOUR CODE BELOW
 
+```
+```{julia}
+#| eval: false
+#| code-fold: true
 # Test your answer
 @assert all(is_valid(another_model, maxProfit[i]) for i in 1:8)
 println("Constraints within containers defined successfully!")
@@ -107,12 +120,18 @@ This would create a constraint called `constraintName` for each `i` - thus `1`,`
 
 ## Exercise 3.1 - Add a conditional constraint 'smallProfit' to the previous model
 
+Scenario extension: The first 4 products are new and have limited market demand.
+
 Add a conditional constraint `smallProfit` to the previous model. Condition: Only the first 4 variables profit have to be lower than 5.
 
 ```{julia}
 #| eval: false
 # YOUR CODE BELOW
 
+```
+```{julia}
+#| eval: false
+#| code-fold: true
 # Test your answer
 @assert all(is_valid(another_model, smallProfit[i]) for i in 1:4)
 println("Conditional constraint implemented successfully!")
@@ -123,6 +142,23 @@ status = termination_status(another_model)
 @assert objective_value(another_model) ≈ 68 atol=1e-4 "Although you have an optimal solution, 
     the should be 68 not $(objective_value(another_model)). Is the model correct?"
 println("Model components validated successfully!")
+```
+
+# Visualization of Results
+
+Let's visualize our optimal solution:
+
+```{julia}
+#| eval: false
+using Plots
+# Assuming the model has been solved!!!
+optimal_profits = value.(profits)
+
+bar(1:8, optimal_profits, 
+    title="Optimal Production Levels", 
+    xlabel="Product", 
+    ylabel="Profit", 
+    legend=false)
 ```
 
 # Conclusion

@@ -21,49 +21,79 @@ format:
         colorlinks: true
 ---
 
-# Advanced Solver Options with HiGHS in JuMP
-# ==================================================
-println()
-println("Advanced Solver Options with HiGHS in JuMP")
-println()
+# Introduction
 
-#= This Julia script is an interactive tutorial to introduce you to advanced solver 
-options in HiGHS using JuMP. You'll learn about setting solver parameters to control 
-the optimization process and improve performance. Follow the instructions and 
-confirm your understanding with the examples. Make sure to have the JuMP package and 
-the HiGHS solver installed to follow this tutorial. =#
+This Julia script is an interactive tutorial to introduce you to advanced solver options in HiGHS using JuMP. You'll learn about setting solver parameters to control the optimization process and improve performance. Follow the instructions and confirm your understanding with the examples. Make sure to have the JuMP package and the HiGHS solver installed to follow this tutorial.
 
+```{julia}
+#| eval: true
+#| output: false
 using JuMP, HiGHS
+```
 
-## Section 1: Setting HiGHS Solver Options
-# ---------------------------
-println("Section 1: Setting HiGHS Solver Options")
+# Section 1: Setting HiGHS Solver Options
 
-#= HiGHS offers various advanced options that can be set to control the solving 
-process. To change some advanced settings, we first need to create a model with 
-HiGHS. =#
+HiGHS offers various advanced options that can be set to control the solving process. To change some advanced settings, we first need to create a model with HiGHS.
 
+```{julia}
+#| eval: true
 model = Model(HiGHS.Optimizer)
+```
 
-#= Different options for the HiGHS solver can be found here: 
-https://ergo-code.github.io/HiGHS/dev/options/definitions/ 
+Different options for the HiGHS solver can be found here: [HiGHS Options](https://ergo-code.github.io/HiGHS/dev/options/definitions/).
 
-Note, that some options are solver specific and some options apply to all solvers, 
-as JuMP itself can work with many different solvers just by changing the model 
-definition and the solver-specific options. =#
+Note, that some options are solver specific and some options apply to all solvers, as JuMP itself can work with many different solvers just by changing the model definition and the solver-specific options.
 
+```{julia}
+#| eval: true
 # Set options for the solver
 set_optimizer_attribute(model, "presolve", "on")
-# Transforms a model in an "similiar" model that might be easier or smaller in size.
+# Enables presolve, which transforms the model to potentially reduce its size or complexity.
+
 set_optimizer_attribute(model, "time_limit", 60.0)
-# Sets the time limit for the solver.
+# Sets the time limit for the solver to 60 seconds. This is useful for large problems or when you need a solution within a specific timeframe.
+
 set_optimizer_attribute(model, "mip_rel_gap", 0.0)
-# Specifies the relative gap at which the solver might abort the search.
+# Sets the relative MIP gap tolerance to 0.0, aiming for the exact optimal solution. In practice, a small non-zero value is often used as a trade-off between solution quality and solving time.
 
 println("HiGHS solver options set successfully!")
+```
 
-## Conclusion
-# ---------------------------
-println("Well done! You've completed the tutorial on advanced solver options with")
-println("HiGHS in JuMP. You've learned how to set advanced solver options.")
-println("Continue to the next file to learn more.")
+# Section 2: Understanding the Impact of Solver Options
+
+Let's explore how these options can affect the solving process with a simple example:
+
+```{julia}
+#| eval: true
+# Create a simple mixed-integer programming model
+model = Model(HiGHS.Optimizer)
+
+@variable(model, 0 <= x <= 10, Int)
+@variable(model, 0 <= y <= 10)
+
+@objective(model, Max, x + y)
+
+@constraint(model, x + 2y <= 15)
+
+# Solve with default options
+optimize!(model)
+println("Default solution: x = ", value(x), ", y = ", value(y))
+println("Solve time: ", solve_time(model), " seconds")
+
+# Now, let's adjust some options
+set_optimizer_attribute(model, "mip_rel_gap", 0.1)
+set_optimizer_attribute(model, "time_limit", 1.0)
+
+# Solve again with new options
+optimize!(model)
+println("Solution with new options: x = ", value(x), ", y = ", value(y))
+println("Solve time: ", solve_time(model), " seconds")
+```
+
+This example demonstrates how changing solver options can affect the solution process, even for a simple problem. For more complex models, these options can have a significant impact on solve time and solution quality.
+
+# Conclusion
+
+Well done! You've completed the tutorial on advanced solver options with HiGHS in JuMP. You've learned how to set advanced solver options. Continue to the next file to learn more.
+
+{{< include ../include/tutorial_end.qmd >}}

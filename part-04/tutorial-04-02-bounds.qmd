@@ -42,7 +42,13 @@ new_model = Model()
 
 # Section 1 - Managing Different Types of Variables
 
-JuMP allows creating continuous, integer, and binary variables. For example:
+## Why Different Variable Types?
+
+- **Continuous variables**: Represent quantities that can take any real value within a range (e.g., amount of raw materials in a production process).
+- **Integer variables**: Represent indivisible quantities (e.g., number of products manufactured).
+- **Binary variables**: Represent yes/no decisions (e.g., whether to build a facility at a specific location).
+
+For example:
 
 ```{julia}
 @variable(model, variableName)    
@@ -71,6 +77,10 @@ Create continuous, integer, and binary variables. Create three different variabl
 #| eval: false
 # YOUR CODE BELOW
 
+```
+```{julia}
+#| eval: false
+#| code-fold: true
 # Test your answer
 @assert typeof(continuous_var) == VariableRef && typeof(integer_var) == VariableRef
 @assert typeof(binary_var) == VariableRef
@@ -79,7 +89,13 @@ println("Continuous, integer, and binary variables created successfully!")
 
 # Section 2 - Creating Variables in Containers
 
-If we need to define larger models, creating each variable manually can become impossible. JuMP supports creating variables in containers like arrays, sets, dictionaries, and matrices. For example:
+When dealing with large-scale problems, creating variables individually becomes impractical. Containers like arrays, matrices, and indexed sets allow us to:
+
+1. Efficiently create and manage many variables.
+2. Represent complex relationships between variables.
+3. Simplify model formulation for problems with repetitive structures.
+
+For example:
 
 ```{julia}
 @variable(modelName, variableName[1:20], Bin)
@@ -105,6 +121,10 @@ Create an array `X` for `new_model` containing 8 variables with non-negative low
 ```{julia}
 # YOUR CODE BELOW
 
+```
+```{julia}
+#| eval: false
+#| code-fold: true
 # Test your answer
 @assert length(X) == 8 && all(lower_bound(X[i]) == 0 for i in 1:8)
 println("Array of variables created successfully!")
@@ -117,6 +137,10 @@ Create a matrix `Y` for `new_model` containing binary variables with a size of 3
 #| eval: false
 # YOUR CODE BELOW
 
+```
+```{julia}
+#| eval: false
+#| code-fold: true
 # Test your answer
 @assert size(Y, 1) == 3 && size(Y, 2) == 3
 @assert all(has_lower_bound(Y[i, j]) == false for i in 1:3, j in 1:3)
@@ -131,9 +155,30 @@ Create indexed variables based on a set. Create variables `W` indexed by set `N`
 #| eval: false
 # YOUR CODE BELOW
 
+```
+```{julia}
+#| eval: false
+#| code-fold: true
 # Test your answer
 @assert length(W) == 6 && all(lower_bound(W[i]) == 0 for i in N)
 println("Indexed variables created successfully!")
+```
+
+## Exercise 2.4 - Create Nested Containers
+Create a 3-dimensional array `Z` for `new_model` containing integer variables with dimensions 2 x 3 x 4, where each variable has a lower bound of 0 and an upper bound of 10.
+
+```{julia}
+# YOUR CODE BELOW
+
+```
+```{julia}
+#| eval: false
+#| code-fold: true
+# Test your answer
+@assert size(Z) == (2, 3, 4)
+@assert all(is_integer(Z[i,j,k]) && lower_bound(Z[i,j,k]) == 0 && upper_bound(Z[i,j,k]) == 10 
+            for i in 1:2, j in 1:3, k in 1:4)
+println("3D array of integer variables created successfully!")
 ```
 
 # Conclusion
