@@ -4,56 +4,88 @@
     "href": "part-04/tutorial-04-05-transport.html",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
     "section": "",
-    "text": "This Julia script is an interactive tutorial to introduce you to the transportation problem using JuMP. Here, you will learn how to model the transportation problem and solve it using JuMP and HiGHS. Follow the instructions and confirm your understanding with some small tasks below.\nMake sure to have the JuMP, DataFrames and CSV package as well as the HiGHS solver installed to follow this tutorial.\n\nusing JuMP, HiGHS\nusing DataFrames, CSV"
+    "text": "This Julia script is an interactive tutorial to introduce you to the transportation problem using JuMP. Here, you will learn how to model the transportation problem and solve it using JuMP and HiGHS. Follow the instructions and confirm your understanding with some small tasks below.\nMake sure to have the JuMP, DataFrames and CSV package as well as the HiGHS solver installed to follow this tutorial.\n\nusing JuMP, HiGHS\nusing DataFrames, CSV",
+    "crumbs": [
+      "04 Optimization",
+      "05 - Transport"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-05-transport.html#exercise-1.1---define-the-fixed-parameters",
     "href": "part-04/tutorial-04-05-transport.html#exercise-1.1---define-the-fixed-parameters",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
     "section": "Exercise 1.1 - Define the fixed parameters",
-    "text": "Exercise 1.1 - Define the fixed parameters\nStart by defining the fixed scalar parameters that are given. Call them revenue, varCosts.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert revenue == 11000 && varCosts == 6300\nprintln(\"Fixed parameters defined successfully!\")"
+    "text": "Exercise 1.1 - Define the fixed parameters\nStart by defining the fixed scalar parameters that are given. Call them revenue, varCosts.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert revenue == 11000 && varCosts == 6300\nprintln(\"Fixed parameters defined successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "05 - Transport"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-05-transport.html#loading-the-parameters-from-files",
     "href": "part-04/tutorial-04-05-transport.html#loading-the-parameters-from-files",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
     "section": "Loading the parameters from files",
-    "text": "Loading the parameters from files\nNext, we load the data from the given files. Remember, you can use the CSV.read function to load the data from a CSV file into a DataFrame. If we want to access the directory of the current file, we can use the @__DIR__ macro.\nFor example, to access the file my_file.csv in the same directory as the current file, you can use the path \"$(@__DIR__)/my_file.csv\". If the file is in a subdirectory called new_data, you can use the path \"$(@__DIR__)/new_data/my_file.csv\".\n\navailable = CSV.read(\"$(@__DIR__)/data/available-panels.csv\",DataFrame)\nrequested = CSV.read(\"$(@__DIR__)/data/panel-demand.csv\",DataFrame)\ntravelCosts = CSV.read(\"$(@__DIR__)/data/cost.csv\",DataFrame)\n\n\n\n\n\n\n\nTip\n\n\n\nMake sure, that you donwload the datasets from Github and store them in a folder called data in the same directory as the script you are currently working on. You can find the data sets in the GitHub repository for this tutorial. Note, that you don’t need to preprocess the data in any way. This tutorial we will focus on the modeling part.\n\n\nNow, we can check out the data by printing the first few rows of each DataFrame. We can use the first function to get the first few rows of a DataFrame.\n\nprintln(\"Available panels:\")\nfirst(available,5)\n\nAvailable panels:\n\n\n5×2 DataFrame\n\n\n\nRow\nsupplier\ntruckloads_available\n\n\n\nString7\nInt64\n\n\n\n\n1\na_1\n478\n\n\n2\na_2\n371\n\n\n3\na_3\n361\n\n\n4\na_4\n415\n\n\n5\na_5\n354\n\n\n\n\n\n\n\nprintln(\"Requested panels:\")\nfirst(requested,5)\n\nRequested panels:\n\n\n5×2 DataFrame\n\n\n\nRow\nsolar_farm\ntruckload_demand\n\n\n\nString7\nInt64\n\n\n\n\n1\nb_1\n9\n\n\n2\nb_2\n31\n\n\n3\nb_3\n47\n\n\n4\nb_4\n46\n\n\n5\nb_5\n12\n\n\n\n\n\n\n\nprintln(\"Travel costs:\")\nfirst(travelCosts,5)\n\nTravel costs:\n\n\n5×3 DataFrame\n\n\n\nRow\nsupplier\nsolar_farm\ncosts\n\n\n\nString7\nString7\nInt64\n\n\n\n\n1\na_1\nb_1\n8052\n\n\n2\na_2\nb_1\n11845\n\n\n3\na_3\nb_1\n6103\n\n\n4\na_4\nb_1\n11099\n\n\n5\na_5\nb_1\n5625"
+    "text": "Loading the parameters from files\nNext, we load the data from the given files. Remember, you can use the CSV.read function to load the data from a CSV file into a DataFrame. If we want to access the directory of the current file, we can use the @__DIR__ macro.\nFor example, to access the file my_file.csv in the same directory as the current file, you can use the path \"$(@__DIR__)/my_file.csv\". If the file is in a subdirectory called new_data, you can use the path \"$(@__DIR__)/new_data/my_file.csv\".\n\navailable = CSV.read(\"$(@__DIR__)/data/available-panels.csv\",DataFrame)\nrequested = CSV.read(\"$(@__DIR__)/data/panel-demand.csv\",DataFrame)\ntravelCosts = CSV.read(\"$(@__DIR__)/data/cost.csv\",DataFrame)\n\n\n\n\n\n\n\nTip\n\n\n\nMake sure, that you donwload the datasets from Github and store them in a folder called data in the same directory as the script you are currently working on. You can find the data sets in the GitHub repository for this tutorial. Note, that you don’t need to preprocess the data in any way. This tutorial we will focus on the modeling part.\n\n\nNow, we can check out the data by printing the first few rows of each DataFrame. We can use the first function to get the first few rows of a DataFrame.\n\nprintln(\"Available panels:\")\nfirst(available,5)\n\nAvailable panels:\n\n\n5×2 DataFrame\n\n\n\nRow\nsupplier\ntruckloads_available\n\n\n\nString7\nInt64\n\n\n\n\n1\na_1\n478\n\n\n2\na_2\n371\n\n\n3\na_3\n361\n\n\n4\na_4\n415\n\n\n5\na_5\n354\n\n\n\n\n\n\n\nprintln(\"Requested panels:\")\nfirst(requested,5)\n\nRequested panels:\n\n\n5×2 DataFrame\n\n\n\nRow\nsolar_farm\ntruckload_demand\n\n\n\nString7\nInt64\n\n\n\n\n1\nb_1\n9\n\n\n2\nb_2\n31\n\n\n3\nb_3\n47\n\n\n4\nb_4\n46\n\n\n5\nb_5\n12\n\n\n\n\n\n\n\nprintln(\"Travel costs:\")\nfirst(travelCosts,5)\n\nTravel costs:\n\n\n5×3 DataFrame\n\n\n\nRow\nsupplier\nsolar_farm\ncosts\n\n\n\nString7\nString7\nInt64\n\n\n\n\n1\na_1\nb_1\n8052\n\n\n2\na_2\nb_1\n11845\n\n\n3\na_3\nb_1\n6103\n\n\n4\na_4\nb_1\n11099\n\n\n5\na_5\nb_1\n5625",
+    "crumbs": [
+      "04 Optimization",
+      "05 - Transport"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-05-transport.html#exercise-3.1---creating-the-model-instance",
     "href": "part-04/tutorial-04-05-transport.html#exercise-3.1---creating-the-model-instance",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
     "section": "Exercise 3.1 - Creating the model instance",
-    "text": "Exercise 3.1 - Creating the model instance\nFrom the last tutorial, you should know how to do this. Create a model instance called transport_model and set the optimizer to HiGHS.\n\n# YOUR CODE BELOW\ntransport_model = Model(HiGHS.Optimizer)\n\nA JuMP Model\n├ solver: HiGHS\n├ objective_sense: FEASIBILITY_SENSE\n├ num_variables: 0\n├ num_constraints: 0\n└ Names registered in the model: none\n\n\n\n\nCode\n# Test your answer\n@assert typeof(transport_model) == JuMP.Model\nprintln(\"Model instance created successfully!\")\n\n\nModel instance created successfully!"
+    "text": "Exercise 3.1 - Creating the model instance\nFrom the last tutorial, you should know how to do this. Create a model instance called transport_model and set the optimizer to HiGHS.\n\n# YOUR CODE BELOW\ntransport_model = Model(HiGHS.Optimizer)\n\nA JuMP Model\n├ solver: HiGHS\n├ objective_sense: FEASIBILITY_SENSE\n├ num_variables: 0\n├ num_constraints: 0\n└ Names registered in the model: none\n\n\n\n\nCode\n# Test your answer\n@assert typeof(transport_model) == JuMP.Model\nprintln(\"Model instance created successfully!\")\n\n\nModel instance created successfully!",
+    "crumbs": [
+      "04 Optimization",
+      "05 - Transport"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-05-transport.html#define-the-variables",
     "href": "part-04/tutorial-04-05-transport.html#define-the-variables",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
     "section": "Define the variables",
-    "text": "Define the variables\nWe can now define the variables of our model. We need to define a variable for each supplier and customer pair. As before, we can use the @variable macro to define the variables. The syntax is @variable(model, varname[index1,index2] &gt;= 0), where model is the model instance, varname is the name of the variable, and index1 and index2 are the indices of the variable. We can use vectors as input for the indices, but we could also use the keys of the dictionaries. In the following code block we mixed both options, to show you that it is possible.\n\n# Define variable\n@variable(\n    transport_model, \n    X[available.supplier,keys(requested_dict)] &gt;= 0\n)\n\n2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:\n    Dimension 1, String7[\"a_1\", \"a_2\", \"a_3\", \"a_4\", \"a_5\", \"a_6\", \"a_7\", \"a_8\", \"a_9\", \"a_10\"  …  \"a_91\", \"a_92\", \"a_93\", \"a_94\", \"a_95\", \"a_96\", \"a_97\", \"a_98\", \"a_99\", \"a_100\"]\n    Dimension 2, String7[\"b_435\", \"b_727\", \"b_634\", \"b_542\", \"b_434\", \"b_658\", \"b_241\", \"b_230\", \"b_336\", \"b_549\"  …  \"b_123\", \"b_245\", \"b_345\", \"b_553\", \"b_379\", \"b_322\", \"b_143\", \"b_803\", \"b_742\", \"b_724\"]\nAnd data, a 100×1000 Matrix{VariableRef}:\n X[a_1,b_435]    X[a_1,b_727]    …  X[a_1,b_742]    X[a_1,b_724]\n X[a_2,b_435]    X[a_2,b_727]       X[a_2,b_742]    X[a_2,b_724]\n X[a_3,b_435]    X[a_3,b_727]       X[a_3,b_742]    X[a_3,b_724]\n X[a_4,b_435]    X[a_4,b_727]       X[a_4,b_742]    X[a_4,b_724]\n X[a_5,b_435]    X[a_5,b_727]       X[a_5,b_742]    X[a_5,b_724]\n X[a_6,b_435]    X[a_6,b_727]    …  X[a_6,b_742]    X[a_6,b_724]\n X[a_7,b_435]    X[a_7,b_727]       X[a_7,b_742]    X[a_7,b_724]\n X[a_8,b_435]    X[a_8,b_727]       X[a_8,b_742]    X[a_8,b_724]\n X[a_9,b_435]    X[a_9,b_727]       X[a_9,b_742]    X[a_9,b_724]\n X[a_10,b_435]   X[a_10,b_727]      X[a_10,b_742]   X[a_10,b_724]\n X[a_11,b_435]   X[a_11,b_727]   …  X[a_11,b_742]   X[a_11,b_724]\n X[a_12,b_435]   X[a_12,b_727]      X[a_12,b_742]   X[a_12,b_724]\n X[a_13,b_435]   X[a_13,b_727]      X[a_13,b_742]   X[a_13,b_724]\n ⋮                               ⋱                  \n X[a_89,b_435]   X[a_89,b_727]      X[a_89,b_742]   X[a_89,b_724]\n X[a_90,b_435]   X[a_90,b_727]      X[a_90,b_742]   X[a_90,b_724]\n X[a_91,b_435]   X[a_91,b_727]   …  X[a_91,b_742]   X[a_91,b_724]\n X[a_92,b_435]   X[a_92,b_727]      X[a_92,b_742]   X[a_92,b_724]\n X[a_93,b_435]   X[a_93,b_727]      X[a_93,b_742]   X[a_93,b_724]\n X[a_94,b_435]   X[a_94,b_727]      X[a_94,b_742]   X[a_94,b_724]\n X[a_95,b_435]   X[a_95,b_727]      X[a_95,b_742]   X[a_95,b_724]\n X[a_96,b_435]   X[a_96,b_727]   …  X[a_96,b_742]   X[a_96,b_724]\n X[a_97,b_435]   X[a_97,b_727]      X[a_97,b_742]   X[a_97,b_724]\n X[a_98,b_435]   X[a_98,b_727]      X[a_98,b_742]   X[a_98,b_724]\n X[a_99,b_435]   X[a_99,b_727]      X[a_99,b_742]   X[a_99,b_724]\n X[a_100,b_435]  X[a_100,b_727]     X[a_100,b_742]  X[a_100,b_724]"
+    "text": "Define the variables\nWe can now define the variables of our model. We need to define a variable for each supplier and customer pair. As before, we can use the @variable macro to define the variables. The syntax is @variable(model, varname[index1,index2] &gt;= 0), where model is the model instance, varname is the name of the variable, and index1 and index2 are the indices of the variable. We can use vectors as input for the indices, but we could also use the keys of the dictionaries. In the following code block we mixed both options, to show you that it is possible.\n\n# Define variable\n@variable(\n    transport_model, \n    X[available.supplier,keys(requested_dict)] &gt;= 0\n)\n\n2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:\n    Dimension 1, String7[\"a_1\", \"a_2\", \"a_3\", \"a_4\", \"a_5\", \"a_6\", \"a_7\", \"a_8\", \"a_9\", \"a_10\"  …  \"a_91\", \"a_92\", \"a_93\", \"a_94\", \"a_95\", \"a_96\", \"a_97\", \"a_98\", \"a_99\", \"a_100\"]\n    Dimension 2, String7[\"b_435\", \"b_727\", \"b_634\", \"b_542\", \"b_434\", \"b_658\", \"b_241\", \"b_230\", \"b_336\", \"b_549\"  …  \"b_123\", \"b_245\", \"b_345\", \"b_553\", \"b_379\", \"b_322\", \"b_143\", \"b_803\", \"b_742\", \"b_724\"]\nAnd data, a 100×1000 Matrix{VariableRef}:\n X[a_1,b_435]    X[a_1,b_727]    …  X[a_1,b_742]    X[a_1,b_724]\n X[a_2,b_435]    X[a_2,b_727]       X[a_2,b_742]    X[a_2,b_724]\n X[a_3,b_435]    X[a_3,b_727]       X[a_3,b_742]    X[a_3,b_724]\n X[a_4,b_435]    X[a_4,b_727]       X[a_4,b_742]    X[a_4,b_724]\n X[a_5,b_435]    X[a_5,b_727]       X[a_5,b_742]    X[a_5,b_724]\n X[a_6,b_435]    X[a_6,b_727]    …  X[a_6,b_742]    X[a_6,b_724]\n X[a_7,b_435]    X[a_7,b_727]       X[a_7,b_742]    X[a_7,b_724]\n X[a_8,b_435]    X[a_8,b_727]       X[a_8,b_742]    X[a_8,b_724]\n X[a_9,b_435]    X[a_9,b_727]       X[a_9,b_742]    X[a_9,b_724]\n X[a_10,b_435]   X[a_10,b_727]      X[a_10,b_742]   X[a_10,b_724]\n X[a_11,b_435]   X[a_11,b_727]   …  X[a_11,b_742]   X[a_11,b_724]\n X[a_12,b_435]   X[a_12,b_727]      X[a_12,b_742]   X[a_12,b_724]\n X[a_13,b_435]   X[a_13,b_727]      X[a_13,b_742]   X[a_13,b_724]\n ⋮                               ⋱                  \n X[a_89,b_435]   X[a_89,b_727]      X[a_89,b_742]   X[a_89,b_724]\n X[a_90,b_435]   X[a_90,b_727]      X[a_90,b_742]   X[a_90,b_724]\n X[a_91,b_435]   X[a_91,b_727]   …  X[a_91,b_742]   X[a_91,b_724]\n X[a_92,b_435]   X[a_92,b_727]      X[a_92,b_742]   X[a_92,b_724]\n X[a_93,b_435]   X[a_93,b_727]      X[a_93,b_742]   X[a_93,b_724]\n X[a_94,b_435]   X[a_94,b_727]      X[a_94,b_742]   X[a_94,b_724]\n X[a_95,b_435]   X[a_95,b_727]      X[a_95,b_742]   X[a_95,b_724]\n X[a_96,b_435]   X[a_96,b_727]   …  X[a_96,b_742]   X[a_96,b_724]\n X[a_97,b_435]   X[a_97,b_727]      X[a_97,b_742]   X[a_97,b_724]\n X[a_98,b_435]   X[a_98,b_727]      X[a_98,b_742]   X[a_98,b_724]\n X[a_99,b_435]   X[a_99,b_727]      X[a_99,b_742]   X[a_99,b_724]\n X[a_100,b_435]  X[a_100,b_727]     X[a_100,b_742]  X[a_100,b_724]",
+    "crumbs": [
+      "04 Optimization",
+      "05 - Transport"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-05-transport.html#define-the-objective",
     "href": "part-04/tutorial-04-05-transport.html#define-the-objective",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
     "section": "Define the objective",
-    "text": "Define the objective\nNext, we can define the objective of our model. We want to maximize the profit, which is the revenue minus the variable costs and the transportation costs. As before, we can use the @objective macro to define the objective. The syntax is @objective(model, Max, expression), where model is the model instance, Max indicates that we want to maximize the expression, and expression is the expression we want to maximize.\n\n@objective(transport_model, Max, \n    sum((revenue-varCosts-travelCosts_dict[(i,j)]) * X[i,j] \n    for i in keys(available_dict), j in keys(requested_dict))\n)"
+    "text": "Define the objective\nNext, we can define the objective of our model. We want to maximize the profit, which is the revenue minus the variable costs and the transportation costs. As before, we can use the @objective macro to define the objective. The syntax is @objective(model, Max, expression), where model is the model instance, Max indicates that we want to maximize the expression, and expression is the expression we want to maximize.\n\n@objective(transport_model, Max, \n    sum((revenue-varCosts-travelCosts_dict[(i,j)]) * X[i,j] \n    for i in keys(available_dict), j in keys(requested_dict))\n)",
+    "crumbs": [
+      "04 Optimization",
+      "05 - Transport"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-05-transport.html#define-the-constraints",
     "href": "part-04/tutorial-04-05-transport.html#define-the-constraints",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
     "section": "Define the constraints",
-    "text": "Define the constraints\nWe can now define the constraints of our model. We need to ensure that the supply from each supplier is enough to cover the demand of each customer. We can use the @constraint macro to define the constraints. The syntax is @constraint(model, expression), where model is the model instance and expression is the expression we want to constrain.\nTo illustrate the use of dictionaries, we will again use the keys of the dictionaries to define the constraints in the following code block.\n\n@constraint(transport_model, \n    restrictAvailable[i in keys(available_dict)], \n    sum(X[i,j] for j in keys(requested_dict)) &lt;= available_dict[i]\n)\n\nNaturally, we could also use the vectors with the names from the DataFrames to define the constraints or we could also just work with ranges from the beginning, e.g. 1:length(available.supplier) and 1:length(requested.solar_farm). Working with names is often more convenient, though.\n\n@constraint(transport_model,\n    restrictDemand[j in requested.solar_farm], \n    sum(X[i,j] for i in available.supplier) &lt;= requested_dict[j]\n)\n\nAnd that’s it! We have now defined the model and can start optimizing."
+    "text": "Define the constraints\nWe can now define the constraints of our model. We need to ensure that the supply from each supplier is enough to cover the demand of each customer. We can use the @constraint macro to define the constraints. The syntax is @constraint(model, expression), where model is the model instance and expression is the expression we want to constrain.\nTo illustrate the use of dictionaries, we will again use the keys of the dictionaries to define the constraints in the following code block.\n\n@constraint(transport_model, \n    restrictAvailable[i in keys(available_dict)], \n    sum(X[i,j] for j in keys(requested_dict)) &lt;= available_dict[i]\n)\n\nNaturally, we could also use the vectors with the names from the DataFrames to define the constraints or we could also just work with ranges from the beginning, e.g. 1:length(available.supplier) and 1:length(requested.solar_farm). Working with names is often more convenient, though.\n\n@constraint(transport_model,\n    restrictDemand[j in requested.solar_farm], \n    sum(X[i,j] for i in available.supplier) &lt;= requested_dict[j]\n)\n\nAnd that’s it! We have now defined the model and can start optimizing.",
+    "crumbs": [
+      "04 Optimization",
+      "05 - Transport"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-05-transport.html#exercise-5.1---start-optimization",
     "href": "part-04/tutorial-04-05-transport.html#exercise-5.1---start-optimization",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
     "section": "Exercise 5.1 - Start optimization",
-    "text": "Exercise 5.1 - Start optimization\nStart the optimization as usual by calling the optimize! function on the model instance.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert termination_status(transport_model) == MOI.OPTIMAL\nprintln(\"Model optimized successfully!\")\n\n\nNow, we can access the values of the variables at the optimal solution. But remember, we defined the variables with the keys of the dictionaries, so we need to convert the result back to a DataFrame. Calling the variable itself will just show the structure of the variable, not the values.\n\nfirst(X,5)\n\nThus, we need to use the value function to extract the values from the variable.\n\ntransport_values = value.(X)\n\nThe result is a DenseAxisArray{Float64,2,...} with index sets. To convert it to a DataFrame, we just need to iterate over the keys dictionaries and store the values in a new DataFrame. As we are not interested in values which are zero, we can skip those.\nFirst, we need to initialize an empty DataFrame with the correct column names.\n\ntransport_df = DataFrame(\n    supplier = [],\n    solar_farm = [],\n    truckloads = []\n)\n\n0×3 DataFrame\n\n\n\nRow\nsupplier\nsolar_farm\ntruckloads\n\n\n\nAny\nAny\nAny\n\n\n\n\n\n\n\n\nThen, we can iterate over the keys of the dictionaries and store the values in the DataFrame if they are greater than zero.\n\nfor i in keys(available_dict)\n    for j in keys(requested_dict)\n        if transport_values[i,j] &gt; 0\n            push!(transport_df, (\n                supplier = i,\n                solar_farm = j,\n                truckloads = transport_values[i,j]\n                )\n            )\n        end\n    end\nend\n\nFinally, we can print the first few rows of the transportation plan to check if it looks correct.\n\nprintln(\"Begining of the transportation plan:\")\nfirst(transport_df,5)\n\n\n\n\n\n\n\nNote\n\n\n\nAlthough the above code looks rather complicated, it is essentially just iterating over the keys of the dictionaries and storing the values in a new DataFrame. This is a common pattern in optimization, as we often want to convert the result of an optimization problem into a more convenient format for reporting or further processing."
+    "text": "Exercise 5.1 - Start optimization\nStart the optimization as usual by calling the optimize! function on the model instance.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert termination_status(transport_model) == MOI.OPTIMAL\nprintln(\"Model optimized successfully!\")\n\n\nNow, we can access the values of the variables at the optimal solution. But remember, we defined the variables with the keys of the dictionaries, so we need to convert the result back to a DataFrame. Calling the variable itself will just show the structure of the variable, not the values.\n\nfirst(X,5)\n\nThus, we need to use the value function to extract the values from the variable.\n\ntransport_values = value.(X)\n\nThe result is a DenseAxisArray{Float64,2,...} with index sets. To convert it to a DataFrame, we just need to iterate over the keys dictionaries and store the values in a new DataFrame. As we are not interested in values which are zero, we can skip those.\nFirst, we need to initialize an empty DataFrame with the correct column names.\n\ntransport_df = DataFrame(\n    supplier = [],\n    solar_farm = [],\n    truckloads = []\n)\n\n0×3 DataFrame\n\n\n\nRow\nsupplier\nsolar_farm\ntruckloads\n\n\n\nAny\nAny\nAny\n\n\n\n\n\n\n\n\nThen, we can iterate over the keys of the dictionaries and store the values in the DataFrame if they are greater than zero.\n\nfor i in keys(available_dict)\n    for j in keys(requested_dict)\n        if transport_values[i,j] &gt; 0\n            push!(transport_df, (\n                supplier = i,\n                solar_farm = j,\n                truckloads = transport_values[i,j]\n                )\n            )\n        end\n    end\nend\n\nFinally, we can print the first few rows of the transportation plan to check if it looks correct.\n\nprintln(\"Begining of the transportation plan:\")\nfirst(transport_df,5)\n\n\n\n\n\n\n\nNote\n\n\n\nAlthough the above code looks rather complicated, it is essentially just iterating over the keys of the dictionaries and storing the values in a new DataFrame. This is a common pattern in optimization, as we often want to convert the result of an optimization problem into a more convenient format for reporting or further processing.",
+    "crumbs": [
+      "04 Optimization",
+      "05 - Transport"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-03-DataFrames.html",
@@ -445,7 +477,11 @@
     "href": "part-04/tutorial-04-04-advanced.html",
     "title": "Tutorial IV.IV - Advanced Solver Options with HiGHS in JuMP",
     "section": "",
-    "text": "Introduction\nThis Julia script is an interactive tutorial to introduce you to advanced solver options in HiGHS using JuMP. You’ll learn about setting solver parameters to control the optimization process and improve performance. Follow the instructions and confirm your understanding with the examples. Make sure to have the JuMP package and the HiGHS solver installed to follow this tutorial.\n\nusing JuMP, HiGHS\n\n\n\nSection 1: Setting HiGHS Solver Options\nHiGHS offers various advanced options that can be set to control the solving process. To change some advanced settings, we first need to create a model with HiGHS.\n\nmodel = Model(HiGHS.Optimizer)\n\nA JuMP Model\n├ solver: HiGHS\n├ objective_sense: FEASIBILITY_SENSE\n├ num_variables: 0\n├ num_constraints: 0\n└ Names registered in the model: none\n\n\nDifferent options for the HiGHS solver can be found here: HiGHS Options.\nNote, that some options are solver specific and some options apply to all solvers, as JuMP itself can work with many different solvers just by changing the model definition and the solver-specific options.\n\n# Set options for the solver\nset_optimizer_attribute(model, \"presolve\", \"on\")\n# Enables presolve, which transforms the model to potentially reduce its size or complexity.\n\nset_optimizer_attribute(model, \"time_limit\", 60.0)\n# Sets the time limit for the solver to 60 seconds. This is useful for large problems or when you need a solution within a specific timeframe.\n\nset_optimizer_attribute(model, \"mip_rel_gap\", 0.0)\n# Sets the relative MIP gap tolerance to 0.0, aiming for the exact optimal solution. In practice, a small non-zero value is often used as a trade-off between solution quality and solving time.\n\nprintln(\"HiGHS solver options set successfully!\")\n\nHiGHS solver options set successfully!\n\n\n\n\nSection 2: Understanding the Impact of Solver Options\nLet’s explore how these options can affect the solving process with a simple example:\n\n# Create a simple mixed-integer programming model\nmodel = Model(HiGHS.Optimizer)\n\n@variable(model, 0 &lt;= x &lt;= 10, Int)\n@variable(model, 0 &lt;= y &lt;= 10)\n\n@objective(model, Max, x + y)\n\n@constraint(model, x + 2y &lt;= 15)\n\n# Solve with default options\noptimize!(model)\nprintln(\"Default solution: x = \", value(x), \", y = \", value(y))\nprintln(\"Solve time: \", solve_time(model), \" seconds\")\n\n# Now, let's adjust some options\nset_optimizer_attribute(model, \"mip_rel_gap\", 0.1)\nset_optimizer_attribute(model, \"time_limit\", 1.0)\n\n# Solve again with new options\noptimize!(model)\nprintln(\"Solution with new options: x = \", value(x), \", y = \", value(y))\nprintln(\"Solve time: \", solve_time(model), \" seconds\")\n\nRunning HiGHS 1.7.2 (git hash: 5ce7a2753): Copyright (c) 2024 HiGHS under MIT licence terms\nCoefficient ranges:\n  Matrix [1e+00, 2e+00]\n  Cost   [1e+00, 1e+00]\n  Bound  [1e+01, 1e+01]\n  RHS    [2e+01, 2e+01]\nPresolving model\n1 rows, 2 cols, 2 nonzeros  0s\n0 rows, 0 cols, 0 nonzeros  0s\nPresolve: Optimal\n\nSolving report\n  Status            Optimal\n  Primal bound      12.5\n  Dual bound        12.5\n  Gap               0% (tolerance: 0.01%)\n  Solution status   feasible\n                    12.5 (objective)\n                    0 (bound viol.)\n                    0 (int. viol.)\n                    0 (row viol.)\n  Timing            0.00 (total)\n                    0.00 (presolve)\n                    0.00 (postsolve)\n  Nodes             0\n  LP iterations     0 (total)\n                    0 (strong br.)\n                    0 (separation)\n                    0 (heuristics)\nDefault solution: x = 10.0, y = 2.5\nSolve time: 0.00016075000166893005 seconds\nCoefficient ranges:\n  Matrix [1e+00, 2e+00]\n  Cost   [1e+00, 1e+00]\n  Bound  [1e+01, 1e+01]\n  RHS    [2e+01, 2e+01]\nAssessing feasibility of MIP using primal feasibility and integrality tolerance of       1e-06\nSolution has               num          max          sum\nCol     infeasibilities      0            0            0\nInteger infeasibilities      0            0            0\nRow     infeasibilities      0            0            0\nRow     residuals            0            0            0\nPresolving model\n1 rows, 2 cols, 2 nonzeros  0s\n0 rows, 0 cols, 0 nonzeros  0s\nPresolve: Optimal\n\nSolving report\n  Status            Optimal\n  Primal bound      12.5\n  Dual bound        12.5\n  Gap               0% (tolerance: 10%)\n  Solution status   feasible\n                    12.5 (objective)\n                    0 (bound viol.)\n                    0 (int. viol.)\n                    0 (row viol.)\n  Timing            0.00 (total)\n                    0.00 (presolve)\n                    0.00 (postsolve)\n  Nodes             0\n  LP iterations     0 (total)\n                    0 (strong br.)\n                    0 (separation)\n                    0 (heuristics)\nSolution with new options: x = 10.0, y = 2.5\nSolve time: 0.00013858301099389791 seconds\n\n\nThis example demonstrates how changing solver options can affect the solution process, even for a simple problem. For more complex models, these options can have a significant impact on solve time and solution quality.\n\n\nConclusion\nWell done! You’ve completed the tutorial on advanced solver options with HiGHS in JuMP. You’ve learned how to set advanced solver options. Continue to the next file to learn more.\n\n\nSolutions\nYou will likely find solutions to most exercises online. However, I strongly encourage you to work on these exercises independently without searching explicitly for the exact answers to the exercises. Understanding someone else’s solution is very different from developing your own. Use the lecture notes and try to solve the exercises on your own. This approach will significantly enhance your learning and problem-solving skills.\nRemember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities. If you encounter difficulties, review the lecture materials, experiment with different approaches, and don’t hesitate to ask for clarification during class discussions.\nLater, you will find the solutions to these exercises online in the associated GitHub repository, but we will also quickly go over them in next week’s tutorial. To access the solutions, click on the Github button on the lower right and search for the folder with today’s lecture and tutorial. Alternatively, you can ask ChatGPT or Claude to explain them to you. But please remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities."
+    "text": "Introduction\nThis Julia script is an interactive tutorial to introduce you to advanced solver options in HiGHS using JuMP. You’ll learn about setting solver parameters to control the optimization process and improve performance. Follow the instructions and confirm your understanding with the examples. Make sure to have the JuMP package and the HiGHS solver installed to follow this tutorial.\n\nusing JuMP, HiGHS\n\n\n\nSection 1: Setting HiGHS Solver Options\nHiGHS offers various advanced options that can be set to control the solving process. To change some advanced settings, we first need to create a model with HiGHS.\n\nmodel = Model(HiGHS.Optimizer)\n\nA JuMP Model\n├ solver: HiGHS\n├ objective_sense: FEASIBILITY_SENSE\n├ num_variables: 0\n├ num_constraints: 0\n└ Names registered in the model: none\n\n\nDifferent options for the HiGHS solver can be found here: HiGHS Options.\nNote, that some options are solver specific and some options apply to all solvers, as JuMP itself can work with many different solvers just by changing the model definition and the solver-specific options.\n\n# Set options for the solver\nset_optimizer_attribute(model, \"presolve\", \"on\")\n# Enables presolve, which transforms the model to potentially reduce its size or complexity.\n\nset_optimizer_attribute(model, \"time_limit\", 60.0)\n# Sets the time limit for the solver to 60 seconds. This is useful for large problems or when you need a solution within a specific timeframe.\n\nset_optimizer_attribute(model, \"mip_rel_gap\", 0.0)\n# Sets the relative MIP gap tolerance to 0.0, aiming for the exact optimal solution. In practice, a small non-zero value is often used as a trade-off between solution quality and solving time.\n\nprintln(\"HiGHS solver options set successfully!\")\n\nHiGHS solver options set successfully!\n\n\n\n\nSection 2: Understanding the Impact of Solver Options\nLet’s explore how these options can affect the solving process with a simple example:\n\n# Create a simple mixed-integer programming model\nmodel = Model(HiGHS.Optimizer)\n\n@variable(model, 0 &lt;= x &lt;= 10, Int)\n@variable(model, 0 &lt;= y &lt;= 10)\n\n@objective(model, Max, x + y)\n\n@constraint(model, x + 2y &lt;= 15)\n\n# Solve with default options\noptimize!(model)\nprintln(\"Default solution: x = \", value(x), \", y = \", value(y))\nprintln(\"Solve time: \", solve_time(model), \" seconds\")\n\n# Now, let's adjust some options\nset_optimizer_attribute(model, \"mip_rel_gap\", 0.1)\nset_optimizer_attribute(model, \"time_limit\", 1.0)\n\n# Solve again with new options\noptimize!(model)\nprintln(\"Solution with new options: x = \", value(x), \", y = \", value(y))\nprintln(\"Solve time: \", solve_time(model), \" seconds\")\n\nRunning HiGHS 1.7.2 (git hash: 5ce7a2753): Copyright (c) 2024 HiGHS under MIT licence terms\nCoefficient ranges:\n  Matrix [1e+00, 2e+00]\n  Cost   [1e+00, 1e+00]\n  Bound  [1e+01, 1e+01]\n  RHS    [2e+01, 2e+01]\nPresolving model\n1 rows, 2 cols, 2 nonzeros  0s\n0 rows, 0 cols, 0 nonzeros  0s\nPresolve: Optimal\n\nSolving report\n  Status            Optimal\n  Primal bound      12.5\n  Dual bound        12.5\n  Gap               0% (tolerance: 0.01%)\n  Solution status   feasible\n                    12.5 (objective)\n                    0 (bound viol.)\n                    0 (int. viol.)\n                    0 (row viol.)\n  Timing            0.00 (total)\n                    0.00 (presolve)\n                    0.00 (postsolve)\n  Nodes             0\n  LP iterations     0 (total)\n                    0 (strong br.)\n                    0 (separation)\n                    0 (heuristics)\nDefault solution: x = 10.0, y = 2.5\nSolve time: 0.00016125000547617674 seconds\nCoefficient ranges:\n  Matrix [1e+00, 2e+00]\n  Cost   [1e+00, 1e+00]\n  Bound  [1e+01, 1e+01]\n  RHS    [2e+01, 2e+01]\nAssessing feasibility of MIP using primal feasibility and integrality tolerance of       1e-06\nSolution has               num          max          sum\nCol     infeasibilities      0            0            0\nInteger infeasibilities      0            0            0\nRow     infeasibilities      0            0            0\nRow     residuals            0            0            0\nPresolving model\n1 rows, 2 cols, 2 nonzeros  0s\n0 rows, 0 cols, 0 nonzeros  0s\nPresolve: Optimal\n\nSolving report\n  Status            Optimal\n  Primal bound      12.5\n  Dual bound        12.5\n  Gap               0% (tolerance: 10%)\n  Solution status   feasible\n                    12.5 (objective)\n                    0 (bound viol.)\n                    0 (int. viol.)\n                    0 (row viol.)\n  Timing            0.00 (total)\n                    0.00 (presolve)\n                    0.00 (postsolve)\n  Nodes             0\n  LP iterations     0 (total)\n                    0 (strong br.)\n                    0 (separation)\n                    0 (heuristics)\nSolution with new options: x = 10.0, y = 2.5\nSolve time: 0.00013470801059156656 seconds\n\n\nThis example demonstrates how changing solver options can affect the solution process, even for a simple problem. For more complex models, these options can have a significant impact on solve time and solution quality.\n\n\nConclusion\nWell done! You’ve completed the tutorial on advanced solver options with HiGHS in JuMP. You’ve learned how to set advanced solver options. Continue to the next file to learn more.\n\n\nSolutions\nYou will likely find solutions to most exercises online. However, I strongly encourage you to work on these exercises independently without searching explicitly for the exact answers to the exercises. Understanding someone else’s solution is very different from developing your own. Use the lecture notes and try to solve the exercises on your own. This approach will significantly enhance your learning and problem-solving skills.\nRemember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities. If you encounter difficulties, review the lecture materials, experiment with different approaches, and don’t hesitate to ask for clarification during class discussions.\nLater, you will find the solutions to these exercises online in the associated GitHub repository, but we will also quickly go over them in next week’s tutorial. To access the solutions, click on the Github button on the lower right and search for the folder with today’s lecture and tutorial. Alternatively, you can ask ChatGPT or Claude to explain them to you. But please remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities.",
+    "crumbs": [
+      "04 Optimization",
+      "04 - Advanced"
+    ]
   },
   {
     "objectID": "part-02/tutorial-02-05-scope.html",
@@ -1938,70 +1974,110 @@
     "href": "part-04/lecture-jump.html",
     "title": "Lecture IV - Modelling with JuMP",
     "section": "",
-    "text": "Functions are reusable blocks of code\nDefine functions using the function keyword\nFunctions can take arguments and return values\nUse return to specify the output of a function\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can create anonymous functions using the -&gt; syntax for quick, one-off operations.\n\n\n\n\n\n\nPackages extend Julia’s functionality\nUse using Pkg to access package management\nInstall packages with Pkg.add(\"PackageName\")\nImport packages with using PackageName or import PackageName\n\n\n\n\n\nDataFrames are used for working with tabular data\nCreate DataFrames using the DataFrame constructor\nAccess columns using dot notation or square brackets\nPerform operations on columns and rows\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nUse describe(df) to get a quick summary of your DataFrame.\n\n\n\n\n\n\nIO operations allow reading from and writing to files\nReading and writing CSV files can be done with the CSV package\nUse CSV.read() to read a CSV file into a DataFrame\nUse CSV.write() to write a DataFrame to a CSV file\n\n\n\n\n\nPlotting in Julia is done through packages like Plots.jl\nCreate basic plots with functions like plot(), scatter(), bar()\nCustomize plots with attributes like title, xlabel, ylabel\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nExplore different plot types and in the long term even backends for various output formats and interactivity.\n\n\n\n\n\n\nThe tutorials from last week will again be available on Friday\nYou can access them in the project folder on Github\nClick on the little cat icon on the bottom right\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can ask questions anytime in class or via email!"
+    "text": "Functions are reusable blocks of code\nDefine functions using the function keyword\nFunctions can take arguments and return values\nUse return to specify the output of a function\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can create anonymous functions using the -&gt; syntax for quick, one-off operations.\n\n\n\n\n\n\nPackages extend Julia’s functionality\nUse using Pkg to access package management\nInstall packages with Pkg.add(\"PackageName\")\nImport packages with using PackageName or import PackageName\n\n\n\n\n\nDataFrames are used for working with tabular data\nCreate DataFrames using the DataFrame constructor\nAccess columns using dot notation or square brackets\nPerform operations on columns and rows\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nUse describe(df) to get a quick summary of your DataFrame.\n\n\n\n\n\n\nIO operations allow reading from and writing to files\nReading and writing CSV files can be done with the CSV package\nUse CSV.read() to read a CSV file into a DataFrame\nUse CSV.write() to write a DataFrame to a CSV file\n\n\n\n\n\nPlotting in Julia is done through packages like Plots.jl\nCreate basic plots with functions like plot(), scatter(), bar()\nCustomize plots with attributes like title, xlabel, ylabel\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nExplore different plot types and in the long term even backends for various output formats and interactivity.\n\n\n\n\n\n\nThe tutorials from last week will again be available on Friday\nYou can access them in the project folder on Github\nClick on the little cat icon on the bottom right\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can ask questions anytime in class or via email!",
+    "crumbs": [
+      "04 Optimization",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-04/lecture-jump.html#functions",
     "href": "part-04/lecture-jump.html#functions",
     "title": "Lecture IV - Modelling with JuMP",
     "section": "",
-    "text": "Functions are reusable blocks of code\nDefine functions using the function keyword\nFunctions can take arguments and return values\nUse return to specify the output of a function\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can create anonymous functions using the -&gt; syntax for quick, one-off operations."
+    "text": "Functions are reusable blocks of code\nDefine functions using the function keyword\nFunctions can take arguments and return values\nUse return to specify the output of a function\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can create anonymous functions using the -&gt; syntax for quick, one-off operations.",
+    "crumbs": [
+      "04 Optimization",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-04/lecture-jump.html#packages",
     "href": "part-04/lecture-jump.html#packages",
     "title": "Lecture IV - Modelling with JuMP",
     "section": "",
-    "text": "Packages extend Julia’s functionality\nUse using Pkg to access package management\nInstall packages with Pkg.add(\"PackageName\")\nImport packages with using PackageName or import PackageName"
+    "text": "Packages extend Julia’s functionality\nUse using Pkg to access package management\nInstall packages with Pkg.add(\"PackageName\")\nImport packages with using PackageName or import PackageName",
+    "crumbs": [
+      "04 Optimization",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-04/lecture-jump.html#dataframes",
     "href": "part-04/lecture-jump.html#dataframes",
     "title": "Lecture IV - Modelling with JuMP",
     "section": "",
-    "text": "DataFrames are used for working with tabular data\nCreate DataFrames using the DataFrame constructor\nAccess columns using dot notation or square brackets\nPerform operations on columns and rows\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nUse describe(df) to get a quick summary of your DataFrame."
+    "text": "DataFrames are used for working with tabular data\nCreate DataFrames using the DataFrame constructor\nAccess columns using dot notation or square brackets\nPerform operations on columns and rows\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nUse describe(df) to get a quick summary of your DataFrame.",
+    "crumbs": [
+      "04 Optimization",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-04/lecture-jump.html#inputoutput-io",
     "href": "part-04/lecture-jump.html#inputoutput-io",
     "title": "Lecture IV - Modelling with JuMP",
     "section": "",
-    "text": "IO operations allow reading from and writing to files\nReading and writing CSV files can be done with the CSV package\nUse CSV.read() to read a CSV file into a DataFrame\nUse CSV.write() to write a DataFrame to a CSV file"
+    "text": "IO operations allow reading from and writing to files\nReading and writing CSV files can be done with the CSV package\nUse CSV.read() to read a CSV file into a DataFrame\nUse CSV.write() to write a DataFrame to a CSV file",
+    "crumbs": [
+      "04 Optimization",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-04/lecture-jump.html#plots",
     "href": "part-04/lecture-jump.html#plots",
     "title": "Lecture IV - Modelling with JuMP",
     "section": "",
-    "text": "Plotting in Julia is done through packages like Plots.jl\nCreate basic plots with functions like plot(), scatter(), bar()\nCustomize plots with attributes like title, xlabel, ylabel\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nExplore different plot types and in the long term even backends for various output formats and interactivity."
+    "text": "Plotting in Julia is done through packages like Plots.jl\nCreate basic plots with functions like plot(), scatter(), bar()\nCustomize plots with attributes like title, xlabel, ylabel\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nExplore different plot types and in the long term even backends for various output formats and interactivity.",
+    "crumbs": [
+      "04 Optimization",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-04/lecture-jump.html#solutions-from-last-week",
     "href": "part-04/lecture-jump.html#solutions-from-last-week",
     "title": "Lecture IV - Modelling with JuMP",
     "section": "",
-    "text": "The tutorials from last week will again be available on Friday\nYou can access them in the project folder on Github\nClick on the little cat icon on the bottom right\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can ask questions anytime in class or via email!"
+    "text": "The tutorials from last week will again be available on Friday\nYou can access them in the project folder on Github\nClick on the little cat icon on the bottom right\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can ask questions anytime in class or via email!",
+    "crumbs": [
+      "04 Optimization",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-04/lecture-jump.html#topics-of-the-tutorials",
     "href": "part-04/lecture-jump.html#topics-of-the-tutorials",
     "title": "Lecture IV - Modelling with JuMP",
     "section": "Topics of the Tutorials",
-    "text": "Topics of the Tutorials\n\nJuMP: Learn how to use JuMP to define optimization problems\nVariable Bounds: Learn how to set variable bounds\nConstrains: Learn how to add constraints to your model\nAdvanced Modeling: Learn how to model more complex problems\nTransport Problem: Learn how to solve a transportation problem"
+    "text": "Topics of the Tutorials\n\nJuMP: Learn how to use JuMP to define optimization problems\nVariable Bounds: Learn how to set variable bounds\nConstrains: Learn how to add constraints to your model\nAdvanced Modeling: Learn how to model more complex problems\nTransport Problem: Learn how to solve a transportation problem",
+    "crumbs": [
+      "04 Optimization",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-04/lecture-jump.html#get-started-with-the-tutorials",
     "href": "part-04/lecture-jump.html#get-started-with-the-tutorials",
     "title": "Lecture IV - Modelling with JuMP",
     "section": "Get started with the tutorials",
-    "text": "Get started with the tutorials\n\nDownload this weeks tutorials and start with the first one\nRemember, you can ask questions anytime!\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nAnd that’s it for this lecture!\nThe remaining time we will already start working on the problems of the fourth lecture. From next week, we will start with different optimizations problems and topics, that we address together in the course."
+    "text": "Get started with the tutorials\n\nDownload this weeks tutorials and start with the first one\nRemember, you can ask questions anytime!\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nAnd that’s it for this lecture!\nThe remaining time we will already start working on the problems of the fourth lecture. From next week, we will start with different optimizations problems and topics, that we address together in the course.",
+    "crumbs": [
+      "04 Optimization",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-04/lecture-jump.html#literature-1",
     "href": "part-04/lecture-jump.html#literature-1",
     "title": "Lecture IV - Modelling with JuMP",
     "section": "Literature",
-    "text": "Literature\n\nLauwens, B., & Downey, A. B. (2019). Think Julia: How to think like a computer scientist (First edition). O’Reilly®. Link to the free book website.\nJulia Documentation\n\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course."
+    "text": "Literature\n\nLauwens, B., & Downey, A. B. (2019). Think Julia: How to think like a computer scientist (First edition). O’Reilly®. Link to the free book website.\nJulia Documentation\n\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.",
+    "crumbs": [
+      "04 Optimization",
+      "Lecture"
+    ]
   },
   {
     "objectID": "part-04/lecture-presentation.html#functions",
@@ -2468,21 +2544,33 @@
     "href": "part-04/tutorial-04-03-constraints.html",
     "title": "Tutorial IV.III - Constraints in JuMP",
     "section": "",
-    "text": "This Julia script is an interactive tutorial to introduce you to advanced handling of objective functions and constraints in JuMP. You’ll learn about defining and managing objective functions and constraints within containers (arrays, dictionaries, matrices), and how to implement conditional constraints effectively.\nFollow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements. Make sure to have the JuMP package installed to follow this tutorial."
+    "text": "This Julia script is an interactive tutorial to introduce you to advanced handling of objective functions and constraints in JuMP. You’ll learn about defining and managing objective functions and constraints within containers (arrays, dictionaries, matrices), and how to implement conditional constraints effectively.\nFollow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements. Make sure to have the JuMP package installed to follow this tutorial.",
+    "crumbs": [
+      "04 Optimization",
+      "03 - Comparisons"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-03-constraints.html#exercise-1.1---define-an-array-of-variables-and-an-objective-function",
     "href": "part-04/tutorial-04-03-constraints.html#exercise-1.1---define-an-array-of-variables-and-an-objective-function",
     "title": "Tutorial IV.III - Constraints in JuMP",
     "section": "Exercise 1.1 - Define an array of variables and an objective function",
-    "text": "Exercise 1.1 - Define an array of variables and an objective function\nScenario: Imagine you’re optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.\nDefine an array of variables and an objective function for another_model. The variables should be called profits and have a range from 1:8. It has a lower bound of 0. The objective should be a Maximization of the sum of all profits.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(profits) == 8 && all(lower_bound(profits[i]) == 0 for i in 1:8)\n@assert typeof(objective_function(another_model)) == AffExpr\nprintln(\"Objective function with container variables defined successfully!\")"
+    "text": "Exercise 1.1 - Define an array of variables and an objective function\nScenario: Imagine you’re optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.\nDefine an array of variables and an objective function for another_model. The variables should be called profits and have a range from 1:8. It has a lower bound of 0. The objective should be a Maximization of the sum of all profits.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(profits) == 8 && all(lower_bound(profits[i]) == 0 for i in 1:8)\n@assert typeof(objective_function(another_model)) == AffExpr\nprintln(\"Objective function with container variables defined successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "03 - Comparisons"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-03-constraints.html#exercise-3.1---add-a-conditional-constraint-smallprofit-to-the-previous-model",
     "href": "part-04/tutorial-04-03-constraints.html#exercise-3.1---add-a-conditional-constraint-smallprofit-to-the-previous-model",
     "title": "Tutorial IV.III - Constraints in JuMP",
     "section": "Exercise 3.1 - Add a conditional constraint ‘smallProfit’ to the previous model",
-    "text": "Exercise 3.1 - Add a conditional constraint ‘smallProfit’ to the previous model\nScenario extension: The first 4 products are new and have limited market demand.\nAdd a conditional constraint smallProfit to the previous model. Condition: Only the first 4 variables profit have to be lower than 5.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert all(is_valid(another_model, smallProfit[i]) for i in 1:4)\nprintln(\"Conditional constraint implemented successfully!\")\nprintln(\"Checking successful implementation.\")\noptimize!(another_model)\nstatus = termination_status(another_model)\n@assert status == MOI.OPTIMAL \"Sorry, something didn't work out as the model status is $status\"\n@assert objective_value(another_model) ≈ 68 atol=1e-4 \"Although you have an optimal solution, \n    the should be 68 not $(objective_value(another_model)). Is the model correct?\"\nprintln(\"Model components validated successfully!\")"
+    "text": "Exercise 3.1 - Add a conditional constraint ‘smallProfit’ to the previous model\nScenario extension: The first 4 products are new and have limited market demand.\nAdd a conditional constraint smallProfit to the previous model. Condition: Only the first 4 variables profit have to be lower than 5.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert all(is_valid(another_model, smallProfit[i]) for i in 1:4)\nprintln(\"Conditional constraint implemented successfully!\")\nprintln(\"Checking successful implementation.\")\noptimize!(another_model)\nstatus = termination_status(another_model)\n@assert status == MOI.OPTIMAL \"Sorry, something didn't work out as the model status is $status\"\n@assert objective_value(another_model) ≈ 68 atol=1e-4 \"Although you have an optimal solution, \n    the should be 68 not $(objective_value(another_model)). Is the model correct?\"\nprintln(\"Model components validated successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "03 - Comparisons"
+    ]
   },
   {
     "objectID": "part-03/tutorial-03-04-IO.html",
@@ -2533,77 +2621,121 @@
     "href": "part-04/tutorial-04-02-bounds.html",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "",
-    "text": "This Julia script is an interactive tutorial to introduce you to advanced variable handling in JuMP. You’ll learn about creating variables in containers, managing different types of variables, and working with indexed variables. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements. Make sure to have the JuMP package installed to follow this tutorial.\n\nusing JuMP\n\nNow, we need a model. As we don’t solve anything in this tutorial, we don’t need to add the solver and can solely define the abstract model.\n\nnew_model = Model()\n\nA JuMP Model\n├ solver: none\n├ objective_sense: FEASIBILITY_SENSE\n├ num_variables: 0\n├ num_constraints: 0\n└ Names registered in the model: none"
+    "text": "This Julia script is an interactive tutorial to introduce you to advanced variable handling in JuMP. You’ll learn about creating variables in containers, managing different types of variables, and working with indexed variables. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements. Make sure to have the JuMP package installed to follow this tutorial.\n\nusing JuMP\n\nNow, we need a model. As we don’t solve anything in this tutorial, we don’t need to add the solver and can solely define the abstract model.\n\nnew_model = Model()\n\nA JuMP Model\n├ solver: none\n├ objective_sense: FEASIBILITY_SENSE\n├ num_variables: 0\n├ num_constraints: 0\n└ Names registered in the model: none",
+    "crumbs": [
+      "04 Optimization",
+      "02 - Bounds"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-02-bounds.html#why-different-variable-types",
     "href": "part-04/tutorial-04-02-bounds.html#why-different-variable-types",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "Why Different Variable Types?",
-    "text": "Why Different Variable Types?\n\nContinuous variables: Represent quantities that can take any real value within a range (e.g., amount of raw materials in a production process).\nInteger variables: Represent indivisible quantities (e.g., number of products manufactured).\nBinary variables: Represent yes/no decisions (e.g., whether to build a facility at a specific location).\n\nFor example:\n@variable(model, variableName)    \nThis defines a continuous variable without any bound.\n@variable(model, 0 &lt;= variableName &lt;= 1) \nThis defines a continuous variable in an interval.\n@variable(model, 0 &lt;= variableName, Bin) \nThis defines a binary variable.\n@variable(model, 0 &lt;= variableName, Int) \nThis defines an integer variable. Note that you will have to change modelName and variableName according to your instance."
+    "text": "Why Different Variable Types?\n\nContinuous variables: Represent quantities that can take any real value within a range (e.g., amount of raw materials in a production process).\nInteger variables: Represent indivisible quantities (e.g., number of products manufactured).\nBinary variables: Represent yes/no decisions (e.g., whether to build a facility at a specific location).\n\nFor example:\n@variable(model, variableName)    \nThis defines a continuous variable without any bound.\n@variable(model, 0 &lt;= variableName &lt;= 1) \nThis defines a continuous variable in an interval.\n@variable(model, 0 &lt;= variableName, Bin) \nThis defines a binary variable.\n@variable(model, 0 &lt;= variableName, Int) \nThis defines an integer variable. Note that you will have to change modelName and variableName according to your instance.",
+    "crumbs": [
+      "04 Optimization",
+      "02 - Bounds"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-02-bounds.html#exercise-1.1---create-variables",
     "href": "part-04/tutorial-04-02-bounds.html#exercise-1.1---create-variables",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "Exercise 1.1 - Create Variables",
-    "text": "Exercise 1.1 - Create Variables\nCreate continuous, integer, and binary variables. Create three different variables of different types without any additional bound: continuous_var as a continuous variable for new_model, integer_var as an integer variable for new_model, and binary_var as a binary variable for new_model.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert typeof(continuous_var) == VariableRef && typeof(integer_var) == VariableRef\n@assert typeof(binary_var) == VariableRef\nprintln(\"Continuous, integer, and binary variables created successfully!\")"
+    "text": "Exercise 1.1 - Create Variables\nCreate continuous, integer, and binary variables. Create three different variables of different types without any additional bound: continuous_var as a continuous variable for new_model, integer_var as an integer variable for new_model, and binary_var as a binary variable for new_model.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert typeof(continuous_var) == VariableRef && typeof(integer_var) == VariableRef\n@assert typeof(binary_var) == VariableRef\nprintln(\"Continuous, integer, and binary variables created successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "02 - Bounds"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-02-bounds.html#exercise-2.1---create-an-array",
     "href": "part-04/tutorial-04-02-bounds.html#exercise-2.1---create-an-array",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "Exercise 2.1 - Create an Array",
-    "text": "Exercise 2.1 - Create an Array\nCreate an array X for new_model containing 8 variables with non-negative lower bounds.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(X) == 8 && all(lower_bound(X[i]) == 0 for i in 1:8)\nprintln(\"Array of variables created successfully!\")"
+    "text": "Exercise 2.1 - Create an Array\nCreate an array X for new_model containing 8 variables with non-negative lower bounds.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(X) == 8 && all(lower_bound(X[i]) == 0 for i in 1:8)\nprintln(\"Array of variables created successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "02 - Bounds"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-02-bounds.html#exercise-2.2---create-a-matrix",
     "href": "part-04/tutorial-04-02-bounds.html#exercise-2.2---create-a-matrix",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "Exercise 2.2 - Create a Matrix",
-    "text": "Exercise 2.2 - Create a Matrix\nCreate a matrix Y for new_model containing binary variables with a size of 3 x 3.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert size(Y, 1) == 3 && size(Y, 2) == 3\n@assert all(has_lower_bound(Y[i, j]) == false for i in 1:3, j in 1:3)\n@assert all(has_upper_bound(Y[i, j]) == false for i in 1:3, j in 1:3)\nprintln(\"Matrix of variables created successfully!\")"
+    "text": "Exercise 2.2 - Create a Matrix\nCreate a matrix Y for new_model containing binary variables with a size of 3 x 3.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert size(Y, 1) == 3 && size(Y, 2) == 3\n@assert all(has_lower_bound(Y[i, j]) == false for i in 1:3, j in 1:3)\n@assert all(has_upper_bound(Y[i, j]) == false for i in 1:3, j in 1:3)\nprintln(\"Matrix of variables created successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "02 - Bounds"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-02-bounds.html#exercise-2.3---create-indexed-variables",
     "href": "part-04/tutorial-04-02-bounds.html#exercise-2.3---create-indexed-variables",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "Exercise 2.3 - Create Indexed Variables",
-    "text": "Exercise 2.3 - Create Indexed Variables\nCreate indexed variables based on a set. Create variables W indexed by set N of size 1, 2, …, 6 with non-negative lower bounds.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(W) == 6 && all(lower_bound(W[i]) == 0 for i in N)\nprintln(\"Indexed variables created successfully!\")"
+    "text": "Exercise 2.3 - Create Indexed Variables\nCreate indexed variables based on a set. Create variables W indexed by set N of size 1, 2, …, 6 with non-negative lower bounds.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(W) == 6 && all(lower_bound(W[i]) == 0 for i in N)\nprintln(\"Indexed variables created successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "02 - Bounds"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-02-bounds.html#exercise-2.4---create-nested-containers",
     "href": "part-04/tutorial-04-02-bounds.html#exercise-2.4---create-nested-containers",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "Exercise 2.4 - Create Nested Containers",
-    "text": "Exercise 2.4 - Create Nested Containers\nCreate a 3-dimensional array Z for new_model containing integer variables with dimensions 2 x 3 x 4, where each variable has a lower bound of 0 and an upper bound of 10.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert size(Z) == (2, 3, 4)\n@assert all(is_integer(Z[i,j,k]) && lower_bound(Z[i,j,k]) == 0 && upper_bound(Z[i,j,k]) == 10 \n            for i in 1:2, j in 1:3, k in 1:4)\nprintln(\"3D array of integer variables created successfully!\")"
+    "text": "Exercise 2.4 - Create Nested Containers\nCreate a 3-dimensional array Z for new_model containing integer variables with dimensions 2 x 3 x 4, where each variable has a lower bound of 0 and an upper bound of 10.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert size(Z) == (2, 3, 4)\n@assert all(is_integer(Z[i,j,k]) && lower_bound(Z[i,j,k]) == 0 && upper_bound(Z[i,j,k]) == 10 \n            for i in 1:2, j in 1:3, k in 1:4)\nprintln(\"3D array of integer variables created successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "02 - Bounds"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-01-jump.html",
     "href": "part-04/tutorial-04-01-jump.html",
     "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
     "section": "",
-    "text": "This Julia script is an interactive tutorial to introduce you to mathematical optimization using JuMP and the HiGHS solver. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements.\nJuMP is a general framework to formulate mathematical models in Julia, HiGHS is a open source solver with a MIT license and draws quiet some attention, as it is pretty fast for an open source solver. Nonetheless, we could also use other solvers in JuMP by only changing of a few lines of code, making it more versatile as for example GurobiPy in Python.\nIf you ever feel like you need more information, the JuMP Documentation is a great ressource: JuMP Documentation\nWe are going to structure this tutorial based on a small example instance:\n\nSuppose we are planning the production of two products\n\nThe profit from each unit of Product A is 100\nThe profit from each unit of Product B is 150\n\nThe production is constrained by the available hours in two departments\n\nEach unit of Product A requires 2 hours of Cutting and 4 hours of Finishing\nEach unit of Product B requires 4 hours of Cutting and 3 hours of Finishing\n40 hours are available in total in the Cutting department\n60 hours are available in total in the Finishing department\n\nWe want to maximize the profit given these constraints\n\nIf you followed the struture of the tutorials, you first have to install the JuMP Package and the HiGHS Package before you can start using it:\n\nimport Pkg; Pkg.add([\"JuMP\",\"HiGHS\"])\n\n\nusing JuMP, HiGHS"
+    "text": "This Julia script is an interactive tutorial to introduce you to mathematical optimization using JuMP and the HiGHS solver. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements.\nJuMP is a general framework to formulate mathematical models in Julia, HiGHS is a open source solver with a MIT license and draws quiet some attention, as it is pretty fast for an open source solver. Nonetheless, we could also use other solvers in JuMP by only changing of a few lines of code, making it more versatile as for example GurobiPy in Python.\nIf you ever feel like you need more information, the JuMP Documentation is a great ressource: JuMP Documentation\nWe are going to structure this tutorial based on a small example instance:\n\nSuppose we are planning the production of two products\n\nThe profit from each unit of Product A is 100\nThe profit from each unit of Product B is 150\n\nThe production is constrained by the available hours in two departments\n\nEach unit of Product A requires 2 hours of Cutting and 4 hours of Finishing\nEach unit of Product B requires 4 hours of Cutting and 3 hours of Finishing\n40 hours are available in total in the Cutting department\n60 hours are available in total in the Finishing department\n\nWe want to maximize the profit given these constraints\n\nIf you followed the struture of the tutorials, you first have to install the JuMP Package and the HiGHS Package before you can start using it:\n\nimport Pkg; Pkg.add([\"JuMP\",\"HiGHS\"])\n\n\nusing JuMP, HiGHS",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-01-jump.html#exercise-2.1---create-variables",
     "href": "part-04/tutorial-04-01-jump.html#exercise-2.1---create-variables",
     "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
     "section": "Exercise 2.1 - Create Variables",
-    "text": "Exercise 2.1 - Create Variables\nCreate two continous variables equal or larger 0 called productA and productB that represent the the number of units produced in our problem for our model model.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert @isdefined productA\n@assert typeof(productA) == VariableRef\n@assert has_upper_bound(productA) == false\n@assert has_lower_bound(productA) == true\n@assert lower_bound(productA) == 0\n@assert @isdefined productA\n@assert typeof(productB) == VariableRef\n@assert has_upper_bound(productB) == false\n@assert has_lower_bound(productB) == true\n@assert lower_bound(productB) == 0\nprintln(\"Variables added to the model successfully!\")"
+    "text": "Exercise 2.1 - Create Variables\nCreate two continous variables equal or larger 0 called productA and productB that represent the the number of units produced in our problem for our model model.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert @isdefined productA\n@assert typeof(productA) == VariableRef\n@assert has_upper_bound(productA) == false\n@assert has_lower_bound(productA) == true\n@assert lower_bound(productA) == 0\n@assert @isdefined productA\n@assert typeof(productB) == VariableRef\n@assert has_upper_bound(productB) == false\n@assert has_lower_bound(productB) == true\n@assert lower_bound(productB) == 0\nprintln(\"Variables added to the model successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-01-jump.html#exercise-3.1---create-constraints",
     "href": "part-04/tutorial-04-01-jump.html#exercise-3.1---create-constraints",
     "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
     "section": "Exercise 3.1 - Create Constraints",
-    "text": "Exercise 3.1 - Create Constraints\nCreate two constraints based on the on the Cutting and Finishing department hours of the problem description in this tutorial. Call the first constraint cutting_constraint and the second constraint finishing_constraint.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert is_valid(model, cutting_constraint)\n@assert is_valid(model, finishing_constraint)\nprintln(\"Constraints added to the model successfully!\")\nprintln(\"Note, that only the existence of these constraints was checked!\")\nprintln(\"The optimization later will show, whether the formulation was correct.\")"
+    "text": "Exercise 3.1 - Create Constraints\nCreate two constraints based on the on the Cutting and Finishing department hours of the problem description in this tutorial. Call the first constraint cutting_constraint and the second constraint finishing_constraint.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert is_valid(model, cutting_constraint)\n@assert is_valid(model, finishing_constraint)\nprintln(\"Constraints added to the model successfully!\")\nprintln(\"Note, that only the existence of these constraints was checked!\")\nprintln(\"The optimization later will show, whether the formulation was correct.\")",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
   },
   {
     "objectID": "part-04/tutorial-04-01-jump.html#exercise-4.1---create-the-objective-function",
     "href": "part-04/tutorial-04-01-jump.html#exercise-4.1---create-the-objective-function",
     "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
     "section": "Exercise 4.1 - Create the Objective Function",
-    "text": "Exercise 4.1 - Create the Objective Function\nCreate the objective function based on the problem description of this tutorial. The objective is to maximize profit based on the values of productA and productB.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert typeof(objective_function(model)) == AffExpr\nprintln(\"An objective function defined successfully!\")\nprintln(\"The optimization later will show, whether the formulation was correct.\")"
+    "text": "Exercise 4.1 - Create the Objective Function\nCreate the objective function based on the problem description of this tutorial. The objective is to maximize profit based on the values of productA and productB.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert typeof(objective_function(model)) == AffExpr\nprintln(\"An objective function defined successfully!\")\nprintln(\"The optimization later will show, whether the formulation was correct.\")",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
   },
   {
     "objectID": "part-02/tutorial-02-01-variables.html",
