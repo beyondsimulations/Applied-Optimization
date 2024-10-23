@@ -60,13 +60,12 @@ First, we need to load the data and define the fixed parameters. Assume that we 
 Start by defining the fixed scalar parameters that are given. Call them `revenue`, `varCosts`. 
 
 ```{julia}
-#| eval: true
+#| eval: false
 # YOUR CODE BELOW
-revenue = 11000
-varCosts = 6300
+
 ```
 ```{julia}
-#| eval: true
+#| eval: false
 #| code-fold: true
 # Test your answer
 @assert revenue == 11000 && varCosts == 6300
@@ -222,8 +221,10 @@ We can now define the variables of our model. We need to define a variable for e
 Next, we can define the objective of our model. We want to maximize the profit, which is the revenue minus the variable costs and the transportation costs. As before, we can use the `@objective` macro to define the objective. The syntax is `@objective(model, Max, expression)`, where `model` is the model instance, `Max` indicates that we want to maximize the expression, and `expression` is the expression we want to maximize.
 
 ```{julia}
+#| eval: false
 @objective(transport_model, Max, 
-    sum((revenue-varCosts-travelCosts_dict[(i,j)])* X[i,j] for i in keys(available_dict), j in keys(requested_dict))
+    sum((revenue-varCosts-travelCosts_dict[(i,j)]) * X[i,j] 
+    for i in keys(available_dict), j in keys(requested_dict))
 )
 ```
 
@@ -234,6 +235,7 @@ We can now define the constraints of our model. We need to ensure that the suppl
 To illustrate the use of dictionaries, we will again use the keys of the dictionaries to define the constraints in the following code block.
 
 ```{julia}
+#| eval: false
 @constraint(transport_model, 
     restrictAvailable[i in keys(available_dict)], 
     sum(X[i,j] for j in keys(requested_dict)) <= available_dict[i]
@@ -244,6 +246,7 @@ To illustrate the use of dictionaries, we will again use the keys of the diction
 Naturally, we could also use the vectors with the names from the DataFrames to define the constraints or we could also just work with ranges from the beginning, e.g. `1:length(available.supplier)` and `1:length(requested.solar_farm)`. Working with names is often more convenient, though.
 
 ```{julia}
+#| eval: false
 @constraint(transport_model,
     restrictDemand[j in requested.solar_farm], 
     sum(X[i,j] for i in available.supplier) <= requested_dict[j]
@@ -259,11 +262,12 @@ And that's it! We have now defined the model and can start optimizing.
 Start the optimization as usual by calling the `optimize!` function on the model instance.
 
 ```{julia}
-#| eval: true
-optimize!(transport_model)
+#| eval: false
+# YOUR CODE BELOW
+
 ```
 ```{julia}
-#| eval: true
+#| eval: false
 #| code-fold: true
 # Test your answer
 @assert termination_status(transport_model) == MOI.OPTIMAL
@@ -273,14 +277,14 @@ println("Model optimized successfully!")
 Now, we can access the values of the variables at the optimal solution. But remember, we defined the variables with the keys of the dictionaries, so we need to convert the result back to a DataFrame. Calling the variable itself will just show the structure of the variable, not the values.
 
 ```{julia}
-#| eval: true
+#| eval: false
 first(X,5)
 ```
 
 Thus, we need to use the `value` function to extract the values from the variable.
 
 ```{julia}
-#| eval: true
+#| eval: false
 transport_values = value.(X)
 ```
 
@@ -299,14 +303,14 @@ transport_df = DataFrame(
 Then, we can iterate over the keys of the dictionaries and store the values in the DataFrame if they are greater than zero.
 
 ```{julia}
-#| eval: true
+#| eval: false
 for i in keys(available_dict)
     for j in keys(requested_dict)
         if transport_values[i,j] > 0
             push!(transport_df, (
-                supplier=i,
-                solar_farm=j,
-                truckloads=transport_values[i,j]
+                supplier = i,
+                solar_farm = j,
+                truckloads = transport_values[i,j]
                 )
             )
         end
@@ -317,7 +321,7 @@ end
 Finally, we can print the first few rows of the transportation plan to check if it looks correct.
 
 ```{julia}
-#| eval: true
+#| eval: false
 println("Begining of the transportation plan:")
 first(transport_df,5)
 ```

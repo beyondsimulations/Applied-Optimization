@@ -41,7 +41,13 @@ The Plots.jl package simplifies the process of creating a wide array of plots, f
 #| output: true
 x = 1:10      
 y = rand(10)
-line_plot = plot(x, y, title="Simple Line Plot", xlabel="x axis", ylabel="y axis", legend=false)
+line_plot = plot(
+    x, y, 
+    title="Simple Line Plot", 
+    xlabel="x axis", 
+    ylabel="y axis", 
+    legend=false
+)
 display(line_plot)
 ```
 
@@ -100,8 +106,17 @@ For example:
 x = 1:20
 a = rand(20)
 b = rand(20)
-multi_plot = plot(x, a, title="Many Series", xlabel="x axis", ylabel="y axis", label="a")
-plot!(multi_plot, x, b, label="b")
+multi_plot = plot(
+    x, a, 
+    title="Many Series", 
+    xlabel="x axis", 
+    ylabel="y axis", 
+    label="a"
+)
+plot!(multi_plot, 
+    x, b, 
+    label="b"
+)
 display(multi_plot)
 ```
 
@@ -162,7 +177,11 @@ Let's explore some other common plot types. While you don't have to solve any ta
 # Bar plot
 x_categories = ["A", "B", "C", "D"]
 y_values = [15, 23, 18, 30]
-bar_plot = bar(x_categories, y_values, title="Bar Plot Example")
+bar_plot = bar(
+    x_categories, 
+    y_values, 
+    title="Bar Plot Example"
+)
 display(bar_plot)
 
 ```
@@ -172,7 +191,11 @@ display(bar_plot)
 ```{julia}
 #| output: true
 data = randn(1000)
-hist_plot = histogram(data, bins=30, title="Histogram Example")
+hist_plot = histogram(
+    data, 
+    bins=30, 
+    title="Histogram Example"
+)
 display(hist_plot)
 ```
 
@@ -183,7 +206,11 @@ display(hist_plot)
 # Box plot
 group = repeat(1:4, inner=50)
 y = randn(200) .+ group
-box_plot = boxplot(group, y, title="Box Plot Example")
+box_plot = boxplot(
+    group, 
+    y, 
+    title="Box Plot Example"
+)
 display(box_plot)
 ```
 

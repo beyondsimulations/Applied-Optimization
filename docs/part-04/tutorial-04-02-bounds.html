@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Tutorial III.IV - Input and Output – Applied Optimization with Julia</title>
+<title>Tutorial IV.II - Variables and Bounds in JuMP – Applied Optimization with Julia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part-03/lecture-packages.html">03 Data Management</a></li><li class="breadcrumb-item"><a href="../part-03/tutorial-03-04-IO.html">04 - Input and Output</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      Applied Optimization with Julia
+      </li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -208,13 +210,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
  <span class="menu-text">03 Data Management</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part-03/lecture-packages.html" class="sidebar-item-text sidebar-link">
@@ -241,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-03/tutorial-03-04-IO.html" class="sidebar-item-text sidebar-link active">
+  <a href="../part-03/tutorial-03-04-IO.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">04 - Input and Output</span></a>
   </div>
 </li>
@@ -279,26 +281,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#section-1---working-with-delimited-files" id="toc-section-1---working-with-delimited-files" class="nav-link" data-scroll-target="#section-1---working-with-delimited-files">Section 1 - Working with Delimited Files</a>
+  <li><a href="#section-1---managing-different-types-of-variables" id="toc-section-1---managing-different-types-of-variables" class="nav-link" data-scroll-target="#section-1---managing-different-types-of-variables">Section 1 - Managing Different Types of Variables</a>
   <ul class="collapse">
-  <li><a href="#exercise-1.1---read-a-csv-file" id="toc-exercise-1.1---read-a-csv-file" class="nav-link" data-scroll-target="#exercise-1.1---read-a-csv-file">Exercise 1.1 - Read a CSV File</a></li>
+  <li><a href="#why-different-variable-types" id="toc-why-different-variable-types" class="nav-link" data-scroll-target="#why-different-variable-types">Why Different Variable Types?</a></li>
+  <li><a href="#exercise-1.1---create-variables" id="toc-exercise-1.1---create-variables" class="nav-link" data-scroll-target="#exercise-1.1---create-variables">Exercise 1.1 - Create Variables</a></li>
   </ul></li>
-  <li><a href="#section-2---working-with-csv-files-and-dataframes" id="toc-section-2---working-with-csv-files-and-dataframes" class="nav-link" data-scroll-target="#section-2---working-with-csv-files-and-dataframes">Section 2 - Working with CSV Files and DataFrames</a>
+  <li><a href="#section-2---creating-variables-in-containers" id="toc-section-2---creating-variables-in-containers" class="nav-link" data-scroll-target="#section-2---creating-variables-in-containers">Section 2 - Creating Variables in Containers</a>
   <ul class="collapse">
-  <li><a href="#exercise-2.1---write-a-dataframe-to-a-csv-file" id="toc-exercise-2.1---write-a-dataframe-to-a-csv-file" class="nav-link" data-scroll-target="#exercise-2.1---write-a-dataframe-to-a-csv-file">Exercise 2.1 - Write a DataFrame to a CSV File</a></li>
-  <li><a href="#exercise-2.2---read-a-csv-file-in" id="toc-exercise-2.2---read-a-csv-file-in" class="nav-link" data-scroll-target="#exercise-2.2---read-a-csv-file-in">Exercise 2.2 - Read a CSV File in</a></li>
+  <li><a href="#exercise-2.1---create-an-array" id="toc-exercise-2.1---create-an-array" class="nav-link" data-scroll-target="#exercise-2.1---create-an-array">Exercise 2.1 - Create an Array</a></li>
+  <li><a href="#exercise-2.2---create-a-matrix" id="toc-exercise-2.2---create-a-matrix" class="nav-link" data-scroll-target="#exercise-2.2---create-a-matrix">Exercise 2.2 - Create a Matrix</a></li>
+  <li><a href="#exercise-2.3---create-indexed-variables" id="toc-exercise-2.3---create-indexed-variables" class="nav-link" data-scroll-target="#exercise-2.3---create-indexed-variables">Exercise 2.3 - Create Indexed Variables</a></li>
+  <li><a href="#exercise-2.4---create-nested-containers" id="toc-exercise-2.4---create-nested-containers" class="nav-link" data-scroll-target="#exercise-2.4---create-nested-containers">Exercise 2.4 - Create Nested Containers</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-03/tutorial-03-04-IO.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-03/tutorial-03-04-IO.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-03-04-IO.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="tutorial-03-04-IO.ipynb" download="tutorial-03-04-IO.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-04/tutorial-04-02-bounds.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-04/tutorial-04-02-bounds.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-04-02-bounds.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="tutorial-04-02-bounds.ipynb" download="tutorial-04-02-bounds.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part-03/lecture-packages.html">03 Data Management</a></li><li class="breadcrumb-item"><a href="../part-03/tutorial-03-04-IO.html">04 - Input and Output</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Tutorial III.IV - Input and Output</h1>
+<h1 class="title">Tutorial IV.II - Variables and Bounds in JuMP</h1>
 <p class="subtitle lead">Applied Optimization with Julia</p>
 </div>
 
@@ -318,98 +323,144 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This interactive Julia script introduces the essentials of interacting with external files. File Input/Output (I/O) operations are crucial in programming and data analysis, allowing us to persist data, share information between programs, and work with large datasets that don’t fit in memory. In this tutorial, we’ll cover reading and writing text files, handling CSV files, and working with delimited files using various Julia packages. These skills are fundamental for data preprocessing, analysis, and result storage in real-world applications.</p>
-<p>Follow the instructions, write your code in the designated code blocks, and validate your results with <code>@assert</code> statements.</p>
-</section>
-<section id="section-1---working-with-delimited-files" class="level1">
-<h1>Section 1 - Working with Delimited Files</h1>
-<p>Delimited files, such as <code>.csv</code>, can be handled efficiently using the DelimitedFiles package in Julia. This requires the DelimitedFiles package. But as it is part of the Julia Standard Library, you can use it directly without the need to use <code>Pkg.add()</code> before.</p>
+<p>This Julia script is an interactive tutorial to introduce you to advanced variable handling in JuMP. You’ll learn about creating variables in containers, managing different types of variables, and working with indexed variables. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with <code>@assert</code> statements. Make sure to have the JuMP package installed to follow this tutorial.</p>
 <div id="2" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DelimitedFiles</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The following code writes a matrix to a CSV file, seperating values with <code>,</code>.</p>
-<div id="4" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> [<span class="fl">10</span> <span class="fl">12</span> <span class="fl">6</span>; <span class="fl">13</span> <span class="fl">25</span> <span class="fl">1</span>; <span class="fl">40</span> <span class="fl">30</span> <span class="fl">7</span>]</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span>(<span class="st">"ExampleData"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">open</span>(<span class="st">"ExampleData/matrix.csv"</span>, <span class="st">"w"</span>) <span class="cf">do</span> io</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">writedlm</span>(io, new_data, <span class="ch">','</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"CSV file 'matrix.csv' written successfully to folder ExampleData!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now, we need a model. As we don’t solve anything in this tutorial, we don’t need to add the solver and can solely define the abstract model.</p>
+<div id="4" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>new_model <span class="op">=</span> <span class="fu">Model</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>A JuMP Model
+├ solver: none
+├ objective_sense: FEASIBILITY_SENSE
+├ num_variables: 0
+├ num_constraints: 0
+└ Names registered in the model: none</code></pre>
 </div>
-<section id="exercise-1.1---read-a-csv-file" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-1.1---read-a-csv-file">Exercise 1.1 - Read a CSV File</h2>
-<p>Read the just written CSV file ‘matrix.csv’ using the function <code>readdlm()</code>. Save the matrix in the variable <code>read_matrix</code>. To learn the syntax, use the inbuild help by typing <code>?</code> in the terminal. Afterwards, just type the function name for an explanation.</p>
+</div>
+</section>
+<section id="section-1---managing-different-types-of-variables" class="level1">
+<h1>Section 1 - Managing Different Types of Variables</h1>
+<section id="why-different-variable-types" class="level2">
+<h2 class="anchored" data-anchor-id="why-different-variable-types">Why Different Variable Types?</h2>
+<ul>
+<li><strong>Continuous variables</strong>: Represent quantities that can take any real value within a range (e.g., amount of raw materials in a production process).</li>
+<li><strong>Integer variables</strong>: Represent indivisible quantities (e.g., number of products manufactured).</li>
+<li><strong>Binary variables</strong>: Represent yes/no decisions (e.g., whether to build a facility at a specific location).</li>
+</ul>
+<p>For example:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, variableName)    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This defines a continuous variable without any bound.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName <span class="op">&lt;=</span> <span class="fl">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This defines a continuous variable in an interval.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName, Bin) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This defines a binary variable.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName, <span class="dt">Int</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This defines an integer variable. Note that you will have to change <code>modelName</code> and <code>variableName</code> according to your instance.</p>
+</section>
+<section id="exercise-1.1---create-variables" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1.1---create-variables">Exercise 1.1 - Create Variables</h2>
+<p>Create continuous, integer, and binary variables. Create three different variables of different types without any additional bound: <code>continuous_var</code> as a continuous variable for <code>new_model</code>, <code>integer_var</code> as an integer variable for <code>new_model</code>, and <code>binary_var</code> as a binary variable for <code>new_model</code>.</p>
 <div id="6" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="8" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> read_matrix <span class="op">==</span> new_data</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"File 'matrix.csv' read successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(continuous_var) <span class="op">==</span> VariableRef <span class="op">&amp;&amp;</span> <span class="fu">typeof</span>(integer_var) <span class="op">==</span> VariableRef</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(binary_var) <span class="op">==</span> VariableRef</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Continuous, integer, and binary variables created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
 </section>
-<section id="section-2---working-with-csv-files-and-dataframes" class="level1">
-<h1>Section 2 - Working with CSV Files and DataFrames</h1>
-<p>The CSV package in Julia provides powerful tools for reading and writing CSV files to and from DataFrames, a common requirement in data analysis and data science projects. This requires the CSV and DataFrames packages. If you solely followed the course so far, you first have to install the CSV Package before you can start using it:</p>
-<div id="10" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg;</span> Pkg.add("CSV")</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="section-2---creating-variables-in-containers" class="level1">
+<h1>Section 2 - Creating Variables in Containers</h1>
+<p>When dealing with large-scale problems, creating variables individually becomes impractical. Containers like arrays, matrices, and indexed sets allow us to:</p>
+<ol type="1">
+<li>Efficiently create and manage many variables.</li>
+<li>Represent complex relationships between variables.</li>
+<li>Simplify model formulation for problems with repetitive structures.</li>
+</ol>
+<p>For example:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(modelName, variableName[<span class="fl">1</span><span class="op">:</span><span class="fl">20</span>], Bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This would create a container with 20 variables. To create a set based on a range, we could do:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>new_range <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(modelName, variableName[i <span class="kw">in</span> new_range] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This would create a container with 100 continuous variables larger than 0.</p>
+<p>For a container with multiple dimensions:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(modelName, variableName[<span class="fl">1</span><span class="op">:</span><span class="fl">30</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This would create a container with a matrix of continuous variables without any bound. Note that you will have to change <code>modelName</code> and <code>variableName</code> according to your instance.</p>
+<section id="exercise-2.1---create-an-array" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.1---create-an-array">Exercise 2.1 - Create an Array</h2>
+<p>Create an array <code>X</code> for <code>new_model</code> containing 8 variables with non-negative lower bounds.</p>
+<div id="10" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="exercise-2.1---write-a-dataframe-to-a-csv-file" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-2.1---write-a-dataframe-to-a-csv-file">Exercise 2.1 - Write a DataFrame to a CSV File</h2>
-<p>Write the following given DataFrame to a CSV file <code>table_out.csv</code> in the folder <code>ExampleData</code>. This can be done by using the function <code>CSV.write()</code>. To learn the syntax, ask the inbuild help with <code>?</code> and the function name.</p>
 <div id="12" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> <span class="fu">DataFrame</span>(Name <span class="op">=</span> [<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Charlie"</span>], Age <span class="op">=</span> [<span class="fl">25</span>, <span class="fl">30</span>, <span class="fl">35</span>])</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>csv_file_path <span class="op">=</span> <span class="st">"ExampleData/table_out.csv"</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="14" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">isfile</span>(<span class="st">"ExampleData/table_out.csv"</span>) <span class="st">"Sorry, the file could not be found. </span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    Have you followed all steps?<span class="st">"</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"CSV file 'data.csv' written successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(X) <span class="op">==</span> <span class="fl">8</span> <span class="op">&amp;&amp;</span> <span class="fu">all</span>(<span class="fu">lower_bound</span>(X[i]) <span class="op">==</span> <span class="fl">0</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Array of variables created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
-<section id="exercise-2.2---read-a-csv-file-in" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-2.2---read-a-csv-file-in">Exercise 2.2 - Read a CSV File in</h2>
-<p>Read the CSV file <code>table_out.csv</code> in the folder <code>ExampleData</code> into the variable <code>read_data</code>. Here you can use the function <code>CSV.read()</code>, e.g.:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>read_data <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"Path/datatable.csv"</span>, DataFrame)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Note, that you need to provide a sink for the data when using <code>CSV.read()</code>, e.g.&nbsp;a DataFrame.</p>
-</div>
+<section id="exercise-2.2---create-a-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.2---create-a-matrix">Exercise 2.2 - Create a Matrix</h2>
+<p>Create a matrix <code>Y</code> for <code>new_model</code> containing binary variables with a size of 3 x 3.</p>
+<div id="14" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="16" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="18" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> read_data[<span class="fl">1</span>,<span class="fl">1</span>] <span class="op">==</span> <span class="st">"Alice"</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"CSV file 'table_out.csv' read successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">size</span>(Y, <span class="fl">1</span>) <span class="op">==</span> <span class="fl">3</span> <span class="op">&amp;&amp;</span> <span class="fu">size</span>(Y, <span class="fl">2</span>) <span class="op">==</span> <span class="fl">3</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">has_lower_bound</span>(Y[i, j]) <span class="op">==</span> <span class="cn">false</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">has_upper_bound</span>(Y[i, j]) <span class="op">==</span> <span class="cn">false</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Matrix of variables created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-2.3---create-indexed-variables" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.3---create-indexed-variables">Exercise 2.3 - Create Indexed Variables</h2>
+<p>Create indexed variables based on a set. Create variables <code>W</code> indexed by set <code>N</code> of size 1, 2, …, 6 with non-negative lower bounds.</p>
+<div id="18" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="20" class="cell" data-execution_count="0">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(W) <span class="op">==</span> <span class="fl">6</span> <span class="op">&amp;&amp;</span> <span class="fu">all</span>(<span class="fu">lower_bound</span>(W[i]) <span class="op">==</span> <span class="fl">0</span> <span class="cf">for</span> i <span class="kw">in</span> N)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Indexed variables created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-2.4---create-nested-containers" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.4---create-nested-containers">Exercise 2.4 - Create Nested Containers</h2>
+<p>Create a 3-dimensional array <code>Z</code> for <code>new_model</code> containing integer variables with dimensions 2 x 3 x 4, where each variable has a lower bound of 0 and an upper bound of 10.</p>
+<div id="22" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="24" class="cell" data-execution_count="0">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">size</span>(Z) <span class="op">==</span> (<span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">is_integer</span>(Z[i,j,k]) <span class="op">&amp;&amp;</span> <span class="fu">lower_bound</span>(Z[i,j,k]) <span class="op">==</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="fu">upper_bound</span>(Z[i,j,k]) <span class="op">==</span> <span class="fl">10</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, k <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"3D array of integer variables created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
-<p>Congratulations! You’ve successfully completed the tutorial on reading and writing external files in Julia. Continue to the next file to learn more.</p>
+<p>Fantastic! You’ve completed the tutorial on advanced variables in JuMP. You’ve learned how to create variables in containers, manage different types of variables, and work with indexed variables. Continue to the next file to learn more.</p>
 </section>
 <section id="solutions" class="level1">
 <h1>Solutions</h1>
@@ -849,7 +900,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>   
     <div class="nav-footer-center">
 <p>Applied Optimization with Julia, Tobias Vlćek<br>CC BY-NC-SA 4.0</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-03/tutorial-03-04-IO.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-03/tutorial-03-04-IO.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-04/tutorial-04-02-bounds.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-04/tutorial-04-02-bounds.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
