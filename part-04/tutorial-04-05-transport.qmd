@@ -42,7 +42,7 @@ Let's start by loading the necessary packages:
 ```{julia}
 #| eval: true
 #| echo: false
-#| 
+#| output: false
 using Pkg
 Pkg.add("JuMP")
 Pkg.add("HiGHS")
@@ -76,7 +76,7 @@ Let's set up our problem:
 - The transportation costs between suppliers and customers are given in the file `cost.csv`
 
 ::: {.callout-note}
-We can use the `CSV.read` function to load the data from a CSV file into a DataFrame. If we want to access the directory of the current file, we can use the convinient `@__DIR__` macro. For example, to access the file `my_file.csv` in the same directory as the current file, you can use the path `"$(@__DIR__)/my_file.csv"`. If the file is in a subdirectory called `new_data`, you can use the path `"$(@__DIR__)/new_data/my_file.csv"`.
+We can use the `CSV.read` function to load the data from a CSV file into a DataFrame. If we want to access the directory of the current file, we can again use the convinient `@__DIR__` macro.
 :::
 
 ```{julia}
@@ -192,7 +192,7 @@ print("Value associated with supplier 'a_1' and customer 'b_1': ")
 travelCosts_dict[("a_1","b_1")]
 ```
 
-We can also extract the keys and values of a dictionary using the `keys` and `values` functions.
+We can also extract the keys and values of a dictionary using the `keys` and `values` functions, as shown in the previous tutorial.
 
 ```{julia}
 #| eval: true
@@ -205,10 +205,6 @@ first(keys(travelCosts_dict),5)
 println("Values of the travel costs dictionary:")
 first(values(travelCosts_dict),5)
 ```
-
-::: {.callout-note}
-You can also use the `haskey` function to check if a key is in a dictionary. For example, `haskey(travelCosts_dict,("a_1","b_1"))` will return `true` if `("a_1","b_1")` is a key in `travelCosts_dict`, and `false` otherwise.
-:::
 
 Dictionaries make it a lot easier to access the data later on, as we can use the keys to directly access the desired value in our model. This will be useful when we want to define the constraints later on.
 
