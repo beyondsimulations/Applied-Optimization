@@ -488,10 +488,10 @@
     "href": "part-04/tutorial-04-03-constraints.html",
     "title": "Tutorial IV.III - Constraints in JuMP",
     "section": "",
-    "text": "Welcome to this tutorial on constraints in JuMP! In this lesson, we’ll explore how to add rules (constraints) to our optimization problems.\nBy the end of this tutorial, you’ll be able to: 1. Create simple constraints for your optimization problems 2. Use containers (like arrays) to manage multiple similar constraints 3. Create more complex constraints based on conditions\nLet’s start by loading the necessary packages:\n\nusing JuMP, HiGHS\n\nNow, let’s create a model that we’ll use throughout this tutorial:\n\nmodel = Model(HiGHS.Optimizer)\nprintln(\"Great! We've created a new optimization model.\")\n\nGreat! We've created a new optimization model.",
+    "text": "Welcome to this tutorial on constraints in JuMP! In this lesson, we’ll explore how to add rules (constraints) to our optimization problems.\nBy the end of this tutorial, you’ll be able to: 1. Create simple constraints for your optimization problems 2. Use containers (like arrays) to manage multiple similar constraints 3. Create more complex constraints based on conditions\nLet’s start by loading the necessary packages:\n\nusing JuMP, HiGHS\n\nNow, let’s create a model that we’ll use throughout this tutorial:\n\nanother_model = Model(HiGHS.Optimizer)\nprintln(\"Great! We've created a new optimization model.\")\n\nGreat! We've created a new optimization model.",
     "crumbs": [
       "04 Optimization",
-      "03 - Comparisons"
+      "03 - Constraints"
     ]
   },
   {
@@ -502,7 +502,7 @@
     "text": "Exercise 1.1 - Define arrays\nScenario: Imagine you’re optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.\nDefine an array of variables and an objective function for another_model. The variables should be called profits and have a range from 1:8. It has a lower bound of 0. The objective should be a Maximization of the sum of all profits.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(profits) == 8 && all(lower_bound(profits[i]) == 0 for i in 1:8)\n@assert typeof(objective_function(another_model)) == AffExpr\nprintln(\"Objective function with container variables defined successfully!\")",
     "crumbs": [
       "04 Optimization",
-      "03 - Comparisons"
+      "03 - Constraints"
     ]
   },
   {
@@ -513,7 +513,7 @@
     "text": "Exercise 3.1 - Add a conditional constraints\nScenario extension: The first 4 products are new and have limited market demand.\nAdd a conditional constraint smallProfit to the previous model. Condition: Only the first 4 variables profit have to be lower than 5.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert all(is_valid(another_model, smallProfit[i]) for i in 1:4)\nprintln(\"Conditional constraint implemented successfully!\")\nprintln(\"Checking successful implementation.\")\noptimize!(another_model)\nstatus = termination_status(another_model)\n@assert status == MOI.OPTIMAL \"Sorry, something didn't work out as the model status is $status\"\n@assert objective_value(another_model) ≈ 68 atol=1e-4 \"Although you have an optimal solution, \n    the should be 68 not $(objective_value(another_model)). Is the model correct?\"\nprintln(\"Model components validated successfully!\")",
     "crumbs": [
       "04 Optimization",
-      "03 - Comparisons"
+      "03 - Constraints"
     ]
   },
   {
