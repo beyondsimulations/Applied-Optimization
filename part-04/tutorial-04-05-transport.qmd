@@ -190,12 +190,12 @@ After the preprocessing and data loading, we now can create the model instance w
 From the last tutorial, you should know how to do this. Create a model instance called `transport_model` and set the optimizer to HiGHS.
 
 ```{julia}
-#| eval: true
+#| eval: false
 # YOUR CODE BELOW
-transport_model = Model(HiGHS.Optimizer)
+
 ```
 ```{julia}
-#| eval: true
+#| eval: false
 #| code-fold: true
 # Test your answer
 @assert typeof(transport_model) == JuMP.Model
@@ -209,6 +209,7 @@ println("Model instance created successfully!")
 We can now define the variables of our model. We need to define a variable for each supplier and customer pair. As before, we can use the `@variable` macro to define the variables. The syntax is `@variable(model, varname[index1,index2] >= 0)`, where `model` is the model instance, `varname` is the name of the variable, and `index1` and `index2` are the indices of the variable. We can use vectors as input for the indices, but we could also use the keys of the dictionaries. In the following code block we mixed both options, to show you that it is possible.
 
 ```{julia}
+#| eval: false
 # Define variable
 @variable(
     transport_model, 

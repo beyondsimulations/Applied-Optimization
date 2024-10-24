@@ -359,14 +359,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>This Julia script is an interactive tutorial to introduce you to advanced solver options in HiGHS using JuMP. You’ll learn about setting solver parameters to control the optimization process and improve performance. Follow the instructions and confirm your understanding with the examples. Make sure to have the JuMP package and the HiGHS solver installed to follow this tutorial.</p>
-<div id="8106f226" class="cell" data-execution_count="1">
+<div id="a947bf6c" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-1-setting-highs-solver-options" class="level1">
 <h1>Section 1: Setting HiGHS Solver Options</h1>
 <p>HiGHS offers various advanced options that can be set to control the solving process. To change some advanced settings, we first need to create a model with HiGHS.</p>
-<div id="afce6fcc" class="cell" data-execution_count="2">
+<div id="36ec7433" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>A JuMP Model
@@ -379,7 +379,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Different options for the HiGHS solver can be found here: <a href="https://ergo-code.github.io/HiGHS/dev/options/definitions/">HiGHS Options</a>.</p>
 <p>Note, that some options are solver specific and some options apply to all solvers, as JuMP itself can work with many different solvers just by changing the model definition and the solver-specific options.</p>
-<div id="c955f903" class="cell" data-execution_count="3">
+<div id="616b2e10" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set options for the solver</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set_optimizer_attribute</span>(model, <span class="st">"presolve"</span>, <span class="st">"on"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Enables presolve, which transforms the model to potentially reduce its size or complexity.</span></span>
@@ -399,7 +399,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="section-2-understanding-the-impact-of-solver-options" class="level1">
 <h1>Section 2: Understanding the Impact of Solver Options</h1>
 <p>Let’s explore how these options can affect the solving process with a simple example:</p>
-<div id="ebc6c945" class="cell" data-execution_count="4">
+<div id="ba8825fe" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a simple mixed-integer programming model</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -454,7 +454,7 @@ Solving report
                     0 (separation)
                     0 (heuristics)
 Default solution: x = 10.0, y = 2.5
-Solve time: 0.00016125000547617674 seconds
+Solve time: 0.0018042909796349704 seconds
 Coefficient ranges:
   Matrix [1e+00, 2e+00]
   Cost   [1e+00, 1e+00]
@@ -490,7 +490,7 @@ Solving report
                     0 (separation)
                     0 (heuristics)
 Solution with new options: x = 10.0, y = 2.5
-Solve time: 0.00013470801059156656 seconds</code></pre>
+Solve time: 0.00014212500536814332 seconds</code></pre>
 </div>
 </div>
 <p>This example demonstrates how changing solver options can affect the solution process, even for a simple problem. For more complex models, these options can have a significant impact on solve time and solution quality.</p>
