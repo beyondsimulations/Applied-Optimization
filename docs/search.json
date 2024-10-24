@@ -4,29 +4,18 @@
     "href": "part-04/tutorial-04-05-transport.html",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
     "section": "",
-    "text": "This Julia script is an interactive tutorial to introduce you to the transportation problem using JuMP. Here, you will learn how to model the transportation problem and solve it using JuMP and HiGHS. Follow the instructions and confirm your understanding with some small tasks below.\nMake sure to have the JuMP, DataFrames and CSV package as well as the HiGHS solver installed to follow this tutorial.\n\nusing JuMP, HiGHS\nusing DataFrames, CSV",
+    "text": "Welcome to this tutorial on the transportation problem using JuMP! As always, don’t worry if you’re new to optimization - we’ll walk through everything step by step using a real-world example.\nImagine you’re running a solar panel distribution company. You have several warehouses (suppliers) and need to ship solar panels to various solar farms (customers). Your goal is to minimize the total cost of transportation while meeting all customer demands.\nBy the end of this tutorial, you’ll be able to:\n\nUnderstand what a transportation problem is\nSet up a transportation problem using JuMP\nSolve the problem and interpret the results\n\nLet’s start by loading the necessary packages:\n\nusing JuMP, HiGHS\nusing DataFrames, CSV",
     "crumbs": [
       "04 Optimization",
       "05 - Transport"
     ]
   },
   {
-    "objectID": "part-04/tutorial-04-05-transport.html#exercise-1.1---define-the-fixed-parameters",
-    "href": "part-04/tutorial-04-05-transport.html#exercise-1.1---define-the-fixed-parameters",
+    "objectID": "part-04/tutorial-04-05-transport.html#exercise-1.1---understand-the-data",
+    "href": "part-04/tutorial-04-05-transport.html#exercise-1.1---understand-the-data",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
-    "section": "Exercise 1.1 - Define the fixed parameters",
-    "text": "Exercise 1.1 - Define the fixed parameters\nStart by defining the fixed scalar parameters that are given. Call them revenue, varCosts.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert revenue == 11000 && varCosts == 6300\nprintln(\"Fixed parameters defined successfully!\")",
-    "crumbs": [
-      "04 Optimization",
-      "05 - Transport"
-    ]
-  },
-  {
-    "objectID": "part-04/tutorial-04-05-transport.html#loading-the-parameters-from-files",
-    "href": "part-04/tutorial-04-05-transport.html#loading-the-parameters-from-files",
-    "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
-    "section": "Loading the parameters from files",
-    "text": "Loading the parameters from files\nNext, we load the data from the given files. Remember, you can use the CSV.read function to load the data from a CSV file into a DataFrame. If we want to access the directory of the current file, we can use the @__DIR__ macro.\nFor example, to access the file my_file.csv in the same directory as the current file, you can use the path \"$(@__DIR__)/my_file.csv\". If the file is in a subdirectory called new_data, you can use the path \"$(@__DIR__)/new_data/my_file.csv\".\n\navailable = CSV.read(\"$(@__DIR__)/data/available-panels.csv\",DataFrame)\nrequested = CSV.read(\"$(@__DIR__)/data/panel-demand.csv\",DataFrame)\ntravelCosts = CSV.read(\"$(@__DIR__)/data/cost.csv\",DataFrame)\n\n\n\n\n\n\n\nTip\n\n\n\nMake sure, that you donwload the datasets from Github and store them in a folder called data in the same directory as the script you are currently working on. You can find the data sets in the GitHub repository for this tutorial. Note, that you don’t need to preprocess the data in any way. This tutorial we will focus on the modeling part.\n\n\nNow, we can check out the data by printing the first few rows of each DataFrame. We can use the first function to get the first few rows of a DataFrame.\n\nprintln(\"Available panels:\")\nfirst(available,5)\n\nAvailable panels:\n\n\n5×2 DataFrame\n\n\n\nRow\nsupplier\ntruckloads_available\n\n\n\nString7\nInt64\n\n\n\n\n1\na_1\n478\n\n\n2\na_2\n371\n\n\n3\na_3\n361\n\n\n4\na_4\n415\n\n\n5\na_5\n354\n\n\n\n\n\n\n\nprintln(\"Requested panels:\")\nfirst(requested,5)\n\nRequested panels:\n\n\n5×2 DataFrame\n\n\n\nRow\nsolar_farm\ntruckload_demand\n\n\n\nString7\nInt64\n\n\n\n\n1\nb_1\n9\n\n\n2\nb_2\n31\n\n\n3\nb_3\n47\n\n\n4\nb_4\n46\n\n\n5\nb_5\n12\n\n\n\n\n\n\n\nprintln(\"Travel costs:\")\nfirst(travelCosts,5)\n\nTravel costs:\n\n\n5×3 DataFrame\n\n\n\nRow\nsupplier\nsolar_farm\ncosts\n\n\n\nString7\nString7\nInt64\n\n\n\n\n1\na_1\nb_1\n8052\n\n\n2\na_2\nb_1\n11845\n\n\n3\na_3\nb_1\n6103\n\n\n4\na_4\nb_1\n11099\n\n\n5\na_5\nb_1\n5625",
+    "section": "Exercise 1.1 - Understand the Data",
+    "text": "Exercise 1.1 - Understand the Data\nTake a moment to look at the data. Can you answer these questions?\n\nHow many warehouses do we have? Save the number in a variable called num_warehouses.\nHow many solar farms are we supplying? Save the number in a variable called num_solar_farms.\n\n\n# YOUR ANSWERS BELOW\n# Hint: Use the `nrow()` function to count rows\n\n\n\nCode\n# Test your understanding\nnum_warehouses = nrow(available)\nnum_solar_farms = nrow(requested)\n\nprintln(\"Great job! Here are the answers:\")\nprintln(\"Number of warehouses: \", num_warehouses)\nprintln(\"Number of solar farms: \", num_solar_farms)",
     "crumbs": [
       "04 Optimization",
       "05 - Transport"
@@ -88,168 +77,91 @@
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html",
-    "href": "part-03/tutorial-03-03-DataFrames.html",
-    "title": "Tutorial III.III - DataFrames in Julia",
+    "objectID": "part-02/tutorial-02-01-variables.html",
+    "href": "part-02/tutorial-02-01-variables.html",
+    "title": "Tutorial II.I - Variables and Types",
     "section": "",
-    "text": "This interactive Julia script is your comprehensive guide to understanding DataFrames in Julia. Work on creating DataFrames, accessing, modifying, and filtering data, alongside basic data manipulation techniques. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements. Note: Ensure you have the DataFrames package installed to effectively follow this tutorial!\n\n# Import the DataFrames package\nusing DataFrames",
+    "text": "Welcome to this interactive Julia tutorial which introduces the basics of variables and types. Understanding variables and their types is crucial as they are the building blocks of any program. They determine how data is stored, manipulated, and how efficiently your code runs.\nThis script is designed to be interactive. Follow the instructions, write your code in the designated code blocks, and then execute the corresponding code. Each exercise is followed by an @assert statement that checks your solution.\nThere are two ways to run the code:\n\nThe easiest way to run the code is by using VS Code. First, install the Julia and the Jupyter Extension. Then, you can open the downloaded .ipynb files and run the code from there.\nThe second way is by using IJulia. Start Julia, and type using IJulia; notebook() in the Julia prompt. This will open a new browser window where you can run the code. If you have not installed IJulia yet, you can do so by typing ] in the Julia prompt to open the package manager, and then installing IJulia by typing add IJulia.\n\n\n\n\n\n\n\nNote\n\n\n\nAlways replace ‘YOUR CODE BELOW’ with your actual code.",
     "crumbs": [
-      "03 Data Management",
-      "03 - Comparisons"
+      "02 First Steps",
+      "01 - Variables"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-1.1---create-a-dataframe",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-1.1---create-a-dataframe",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "Exercise 1.1 - Create a DataFrame",
-    "text": "Exercise 1.1 - Create a DataFrame\nCreate and Test a DataFrame. Create a DataFrame named employees with the columns Name, Age, and Salary, and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert employees == DataFrame(\n    Name = [\"John\", \"Mike\", \"Frank\"], \n    Age = [28, 23, 37], \n    Salary = [50000, 62000, 90000]\n)\nprintln(\"DataFrame created successfully!\")\nprintln(employees)\n\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, for more help, use ? in the REPL and type DataFrame.",
+    "objectID": "part-02/tutorial-02-01-variables.html#exercise-1.1---declare-a-variable",
+    "href": "part-02/tutorial-02-01-variables.html#exercise-1.1---declare-a-variable",
+    "title": "Tutorial II.I - Variables and Types",
+    "section": "Exercise 1.1 - Declare a Variable",
+    "text": "Exercise 1.1 - Declare a Variable\nDeclare a variable named x and assign it the value 1.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert x == 1 \"Check again, the value of x should be 1. Remember to assign the value directly to x.\"\nprintln(\"Great, you have correctly assigned the value $x to the variable 'x'.\")",
     "crumbs": [
-      "03 Data Management",
-      "03 - Comparisons"
+      "02 First Steps",
+      "01 - Variables"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-2.1---access-the-age-column",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-2.1---access-the-age-column",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "Exercise 2.1 - Access the Age Column",
-    "text": "Exercise 2.1 - Access the Age Column\nAccess the Age column from the DataFrame and save it in a new variable ages.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert ages == [28, 23, 37]\nprintln(\"Correct, the Ages column is: \", ages)",
+    "objectID": "part-02/tutorial-02-01-variables.html#exercise-1.2---declare-a-string-variable",
+    "href": "part-02/tutorial-02-01-variables.html#exercise-1.2---declare-a-string-variable",
+    "title": "Tutorial II.I - Variables and Types",
+    "section": "Exercise 1.2 - Declare a String Variable",
+    "text": "Exercise 1.2 - Declare a String Variable\nDeclare a variable named hi and assign it the string \"Hello, Optimization!\".\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert hi == \"Hello, Optimization!\" \"Make sure the variable 'hi' contains the exact string \\\"Hello, Optimization\\\"!\"\nprintln(\"Good, the variable 'hi' now states \\\"$hi\\\".\")",
     "crumbs": [
-      "03 Data Management",
-      "03 - Comparisons"
+      "02 First Steps",
+      "01 - Variables"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-2.2---update-johns-salary",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-2.2---update-johns-salary",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "Exercise 2.2 - Update John’s Salary",
-    "text": "Exercise 2.2 - Update John’s Salary\nUpdate John’s salary to 59000.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert employees.Salary[1] == 59000\nprintln(\"Modified DataFrame: \")\nprintln(employees)",
+    "objectID": "part-02/tutorial-02-01-variables.html#exercise-2.1---create-an-integer-variable",
+    "href": "part-02/tutorial-02-01-variables.html#exercise-2.1---create-an-integer-variable",
+    "title": "Tutorial II.I - Variables and Types",
+    "section": "Exercise 2.1 - Create an Integer Variable",
+    "text": "Exercise 2.1 - Create an Integer Variable\nCreate an Integer variable answerUniverse and set it to 42.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert answerUniverse == 42 \"The variable 'answerUniverse' should hold 42.\"\nprintln(\"Great, the answer to all questions on the universe is $answerUniverse now.\")",
     "crumbs": [
-      "03 Data Management",
-      "03 - Comparisons"
+      "02 First Steps",
+      "01 - Variables"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-3.1---filter-the-dataframe",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-3.1---filter-the-dataframe",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "Exercise 3.1 - Filter the DataFrame",
-    "text": "Exercise 3.1 - Filter the DataFrame\nFilter the DataFrame to include only employees with salaries above 60000. Save the resulting employees in the DataFrame high_earners.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert nrow(high_earners) == 2\nprintln(\"High earners: \")\nprintln(high_earners)",
+    "objectID": "part-02/tutorial-02-01-variables.html#exercise-2.2---create-a-float-variable",
+    "href": "part-02/tutorial-02-01-variables.html#exercise-2.2---create-a-float-variable",
+    "title": "Tutorial II.I - Variables and Types",
+    "section": "Exercise 2.2 - Create a Float Variable",
+    "text": "Exercise 2.2 - Create a Float Variable\nCreate a Float variable money and set it to 1.35.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert money == 1.35 \"The variable 'money' should hold the Float64 1.35.\"\nprintln(\"Perfect, the you have stored $money in the variable 'money'.\")",
     "crumbs": [
-      "03 Data Management",
-      "03 - Comparisons"
+      "02 First Steps",
+      "01 - Variables"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-4.1---sort-the-dataframe",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-4.1---sort-the-dataframe",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "Exercise 4.1 - Sort the DataFrame",
-    "text": "Exercise 4.1 - Sort the DataFrame\nSort the DataFrame based on the Age column and save it as sorted_df.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert sorted_df.Age[1] == 23\nprintln(\"DataFrame sorted by age: \")\nprintln(sorted_df)\n\n\n\n\n\n\n\n\nTip\n\n\n\nIf you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets.",
+    "objectID": "part-02/tutorial-02-01-variables.html#exercise-2.3---create-a-boolean-variable",
+    "href": "part-02/tutorial-02-01-variables.html#exercise-2.3---create-a-boolean-variable",
+    "title": "Tutorial II.I - Variables and Types",
+    "section": "Exercise 2.3 - Create a Boolean Variable",
+    "text": "Exercise 2.3 - Create a Boolean Variable\nCreate a Boolean variable isStudent and set it to true.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert isStudent == true \"The variable 'isStudent' should be set to true.\"\nprintln(\"Correct, you are a student now.\")",
     "crumbs": [
-      "03 Data Management",
-      "03 - Comparisons"
+      "02 First Steps",
+      "01 - Variables"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-5.1---loop-over-dataframe",
-    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-5.1---loop-over-dataframe",
-    "title": "Tutorial III.III - DataFrames in Julia",
-    "section": "Exercise 5.1 - Loop over DataFrame",
-    "text": "Exercise 5.1 - Loop over DataFrame\nCreate a new column called Bonus in the employees DataFrame. The bonus should be calculated as 10% of the salary for employees over 30, and 5% for those 30 and under. Use a loop to iterate over the rows and calculate the bonus.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert filter(\n    row -&gt; row.Bonus == 2500, \n    employees\n).Name == [\"John\"] \"John should have a bonus of 2500\"\n@assert filter(\n    row -&gt; row.Bonus == 3100, \n    employees\n).Name == [\"Mike\"] \"Mike should have a bonus of 3100\"\n@assert filter(\n    row -&gt; row.Bonus == 9000, \n    employees\n).Name == [\"Frank\"] \"Frank should have a bonus of 9000\"\nprintln(\"Great job! All the bonuses are correct!\")",
+    "objectID": "part-02/tutorial-02-01-variables.html#exercise-3.1---type-annotation",
+    "href": "part-02/tutorial-02-01-variables.html#exercise-3.1---type-annotation",
+    "title": "Tutorial II.I - Variables and Types",
+    "section": "Exercise 3.1 - Type Annotation",
+    "text": "Exercise 3.1 - Type Annotation\nDeclare a variable y with an explicit type annotation of Int64 and assign it the value 5.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert y == 5 && typeof(y) == Int64 \"Make sure 'y' is of type Int64 and has the value 5.\"\nprintln(\"Great! You've created an Int64 variable 'y' with the value $y.\")",
     "crumbs": [
-      "03 Data Management",
-      "03 - Comparisons"
+      "02 First Steps",
+      "01 - Variables"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html",
-    "href": "part-03/tutorial-03-05-Plotting.html",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "",
-    "text": "This interactive Julia script introduces the basics of plotting in Julia using the Plots.jl package. It covers creating basic plots, customizing them to your needs, and saving them as files for further use. Follow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.\nEnsure you have the Plots package installed to follow along with this tutorial. If you followed the course so far, you first have to install the Plots and the StatsPlots package before you can start using it:\n\nimport Pkg; Pkg.add([\"Plots\",\"StatsPlots\"])\n\n\nusing Plots, StatsPlots",
+    "objectID": "part-02/tutorial-02-01-variables.html#exercise-4.1---string-interpolation",
+    "href": "part-02/tutorial-02-01-variables.html#exercise-4.1---string-interpolation",
+    "title": "Tutorial II.I - Variables and Types",
+    "section": "Exercise 4.1 - String Interpolation",
+    "text": "Exercise 4.1 - String Interpolation\nCreate a string message that says \"y is [value of y]\" using string interpolation.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert message == \"y is 5\" \"Make sure your string includes the correct value of y.\"\nprintln(\"Excellent! Your interpolated string is: $message\")",
     "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 1.1 - Create a Scatter Plot",
-    "text": "Exercise 1.1 - Create a Scatter Plot\nCreate a scatter plot called scatter_plot for some random data on a range from 1 to 20. The arguments inside the functions can be the same as before, but we need to replace plot by scatter. Note, that the test are not so sophisticated here due to the structure of plots and their exploratory nature.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert @isdefined scatter_plot\nprintln(\"Simple scatter plot created successfully!\")\ndisplay(scatter_plot)",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 2.1 - Customize a Line Plot",
-    "text": "Exercise 2.1 - Customize a Line Plot\nCustomize a line plot and save the plot in the variable custom_line_plot.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert @isdefined custom_line_plot\nprintln(\"Customized line plot created successfully!\")\ndisplay(custom_line_plot)\n\n\n\n\n\n\n\n\nNote\n\n\n\nYou can customize the appearance of a random line plot as you like.\n\n\nAdd multiple series to a plot. Instead of one series, we can also add multiple series. This is done, for example, by defining one plot (as before) and then calling plot!() while using the first plot as first argument in the function plot!().\nFor example:\n\nx = 1:20\na = rand(20)\nb = rand(20)\nmulti_plot = plot(\n    x, a, \n    title=\"Many Series\", \n    xlabel=\"x axis\", \n    ylabel=\"y axis\", \n    label=\"a\"\n)\nplot!(multi_plot, \n    x, b, \n    label=\"b\"\n)\ndisplay(multi_plot)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe ! after plot adds to the existing plot.",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.2---create-a-multiple-series-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.2---create-a-multiple-series-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 2.2 - Create a Multiple Series Plot",
-    "text": "Exercise 2.2 - Create a Multiple Series Plot\nNow, create a plot called multi_series_plot with three data series y1, y2 and y3.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert @isdefined y1\n@assert @isdefined y2\n@assert @isdefined y3\n@assert @isdefined multi_series_plot\nprintln(\"Multiple series plot created successfully!\")\ndisplay(multi_series_plot)",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 3.1 - Save a Plot to a File",
-    "text": "Exercise 3.1 - Save a Plot to a File\nSave the previously created plot multi_series_plot to a file as PNG. Save it in the folder ExampleData and name it saved_plot.png.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert  isfile(\"ExampleData/saved_plot.png\") \"File does not exist yet.\"\nprintln(\"Plot saved to 'saved_plot.pdf' successfully!\")",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#bar-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#bar-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Bar Plot",
-    "text": "Bar Plot\n\n# Bar plot\nx_categories = [\"A\", \"B\", \"C\", \"D\"]\ny_values = [15, 23, 18, 30]\nbar_plot = bar(\n    x_categories, \n    y_values, \n    title=\"Bar Plot Example\"\n)\ndisplay(bar_plot)",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#histogram",
-    "href": "part-03/tutorial-03-05-Plotting.html#histogram",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Histogram",
-    "text": "Histogram\n\ndata = randn(1000)\nhist_plot = histogram(\n    data, \n    bins=30, \n    title=\"Histogram Example\"\n)\ndisplay(hist_plot)",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#box-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#box-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Box Plot",
-    "text": "Box Plot\n\n# Box plot\ngroup = repeat(1:4, inner=50)\ny = randn(200) .+ group\nbox_plot = boxplot(\n    group, \n    y, \n    title=\"Box Plot Example\"\n)\ndisplay(box_plot)",
-    "crumbs": [
-      "03 Data Management",
-      "05 - Plotting"
+      "02 First Steps",
+      "01 - Variables"
     ]
   },
   {
@@ -257,7 +169,7 @@
     "href": "part-02/tutorial-02-03-comparisons.html",
     "title": "Tutorial II.III - Comparison Operators",
     "section": "",
-    "text": "This interactive Julia script introduces the basics of comparisons and logical operators. These are fundamental for controlling the flow of programs and making decisions. Follow the instructions, write your code in the designated code blocks, and execute the corresponding code cell.",
+    "text": "Imagine you’re teaching a computer to make decisions. Just like we compare things in everyday life (“Is it raining?”, “Do I have enough money?”), computers need ways to compare values and make choices. This tutorial will show you how to help computers make these comparisons!\nFollow the instructions, write your code in the designated code blocks, and execute the corresponding code cell.",
     "crumbs": [
       "02 First Steps",
       "03 - Comparisons"
@@ -323,7 +235,7 @@
     "href": "part-02/tutorial-02-03-comparisons.html#exercise-2.4---chaining-comparisons",
     "title": "Tutorial II.III - Comparison Operators",
     "section": "Exercise 2.4 - Chaining Comparisons",
-    "text": "Exercise 2.4 - Chaining Comparisons\nJulia allows you to chain multiple comparisons:\n\ny = 2\nresult = 1 &lt; y &lt; 5  # Equivalent to (1 &lt; y) && (y &lt; 5)\nprintln(\"result is $result.\")\n\nresult is true.\n\n\nCheck if x is between 1 and 10 (exclusive) using a chained comparison. Store the result in chained_comparison.\n\nx = 5\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert chained_comparison == true\nprintln(\"chained_comparison is \", chained_comparison)",
+    "text": "Exercise 2.4 - Chaining Comparisons\nJulia has a neat feature that lets you write comparisons the way you think about them:\n# Instead of writing:\nage &gt;= 13 && age &lt;= 19    # Is age between 13 and 19?\n\n# You can write:\n13 &lt;= age &lt;= 19          # Much more natural!\nReal-world examples:\n# Is the body temperature normal?\nnormal_temperature = (36.5 &lt;= body_temp &lt;= 37.5)\n\n# Is the current hour within working hours?\nworking_hours = (9 &lt;= current_hour &lt; 17)\nCheck if x is between 1 and 10 (exclusive) using a chained comparison. Store the result in chained_comparison.\n\nx = 5\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert chained_comparison == true\nprintln(\"chained_comparison is \", chained_comparison)",
     "crumbs": [
       "02 First Steps",
       "03 - Comparisons"
@@ -334,7 +246,7 @@
     "href": "part-02/tutorial-02-04-loops.html",
     "title": "Tutorial II.IV - Loops",
     "section": "",
-    "text": "This interactive Julia script is an extensive tutorial introducing you to the robust loop structures in Julia. Improve your skills in for and while loops for performing repetitive tasks, manipulating loop flow with break and continue, and applying nested loops to iterate through multi-dimensional structures. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.",
+    "text": "Imagine you need to do the same task many times - like sending emails to 100 people or counting from 1 to 10. Instead of writing the same code over and over, we use loops! Loops are like having a helpful assistant who can repeat tasks for you.\nFollow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.",
     "crumbs": [
       "02 First Steps",
       "04 - Loops"
@@ -345,7 +257,7 @@
     "href": "part-02/tutorial-02-04-loops.html#exercise-1.1---sum-the-numbers-from-1-to-5",
     "title": "Tutorial II.IV - Loops",
     "section": "Exercise 1.1 - Sum the Numbers from 1 to 5",
-    "text": "Exercise 1.1 - Sum the Numbers from 1 to 5\nSum the numbers from 1 to 5 in a loop. Don’t worry about the let here, it just starts a scope block. More on this later in the tutorial on variable scope. The next lines initialize sum_numbers to 0. The sum you compute should accumulate in this variable.\n\nlet \nsum_numbers = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sum_numbers == 15\nprintln(\"Sum of numbers from 1 to 5: \", sum_numbers)\nend # This ends the scope of the previously started scope block.",
+    "text": "Exercise 1.1 - Sum the Numbers from 1 to 5\nSum the numbers from 1 to 5 in a loop. The next lines initialize sum_numbers to 0. The sum you compute should accumulate in this variable.\n\nsum_numbers = 0\n# YOUR CODE BELOW\n\n\n# Test your answer\n@assert sum_numbers == 15\nprintln(\"Sum of numbers from 1 to 5: \", sum_numbers)",
     "crumbs": [
       "02 First Steps",
       "04 - Loops"
@@ -356,7 +268,7 @@
     "href": "part-02/tutorial-02-04-loops.html#exercise-1.2---sum-only-the-even-numbers-from-1-to-10",
     "title": "Tutorial II.IV - Loops",
     "section": "Exercise 1.2 - Sum Only the Even Numbers from 1 to 10",
-    "text": "Exercise 1.2 - Sum Only the Even Numbers from 1 to 10\nSum only the even numbers from 1 to 10. Again, we initialize a variable sum_evens to 0. The sum you compute should accumulate in this variable.\n\nlet # First, we start a scope block for the loop!\nsum_evens = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert sum_evens == 30\nprintln(\"Sum of even numbers from 1 to 10: \", sum_evens)\nend # Here we end the scope block again.\n\n\n\n\n\n\n\nTip\n\n\n\nHint: You can use the modulo operator % to check if a number is even. The modulo operator returns the remainder of the division of two numbers. If a number is divisible by another number, the remainder is 0. The following example checks if 4 is even: 4 % 2 == 0.",
+    "text": "Exercise 1.2 - Sum Only the Even Numbers from 1 to 10\nSum only the even numbers from 1 to 10. Again, we initialize a variable sum_evens to 0. The sum you compute should accumulate in this variable.\n\nsum_evens = 0\n# YOUR CODE BELOW\n\n\n# Test your answer\n@assert sum_evens == 30\nprintln(\"Sum of even numbers from 1 to 10: \", sum_evens)\n\n\n\n\n\n\n\nTip\n\n\n\nHint: You can use the modulo operator % to check if a number is even. The modulo operator returns the remainder of the division of two numbers. If a number is divisible by another number, the remainder is 0. The following example checks if 4 is even: 4 % 2 == 0.",
     "crumbs": [
       "02 First Steps",
       "04 - Loops"
@@ -367,7 +279,7 @@
     "href": "part-02/tutorial-02-04-loops.html#exercise-1.3---exit-the-loop-if-the-current-fruit-is-banana",
     "title": "Tutorial II.IV - Loops",
     "section": "Exercise 1.3 - Exit the Loop if the Current Fruit is Banana",
-    "text": "Exercise 1.3 - Exit the Loop if the Current Fruit is Banana\nIterate over each fruit in the fruits array, store the current fruit in current_fruit, and exit the loop if current_fruit is banana. The next lines initialize the fruits array and current_fruit variable.\n\nlet \nfruits = [\"apple\", \"banana\", \"cherry\"]\ncurrent_fruit = \"None\"\n# YOUR CODE BELOW\n\n# Test your answer\n@assert current_fruit == \"banana\"\nprintln(\"The current fruit is: \", current_fruit)\nend # Here we end the scope block again.",
+    "text": "Exercise 1.3 - Exit the Loop if the Current Fruit is Banana\nIterate over each fruit in the fruits array, store the current fruit in current_fruit, and exit the loop if current_fruit is banana. The next lines initialize the fruits array and current_fruit variable.\n\nfruits = [\"apple\", \"banana\", \"cherry\"]\ncurrent_fruit = \"None\"\n# YOUR CODE BELOW\n\n\n# Test your answer\n@assert current_fruit == \"banana\"\nprintln(\"The current fruit is: \", current_fruit)",
     "crumbs": [
       "02 First Steps",
       "04 - Loops"
@@ -378,7 +290,7 @@
     "href": "part-02/tutorial-02-04-loops.html#exercise-2.1---subtract-from-10-in-increments-of-1-until-the-result-is-less-than-3",
     "title": "Tutorial II.IV - Loops",
     "section": "Exercise 2.1 - Subtract from 10 in Increments of 1 Until the Result is Less Than 3",
-    "text": "Exercise 2.1 - Subtract from 10 in Increments of 1 Until the Result is Less Than 3\nSubtract from 10 in increments of 1 until the result is less than 3. The next line initializes current_value to 10. The result should be in this variable.\n\n# Start a new scope block\nlet \ncurrent_value = 10\n# YOUR CODE BELOW\n\n# Test your answer\n@assert current_value == 2\nprintln(\"The first value smaller than 3 is: \", current_value)\nend # Scope block closed again.",
+    "text": "Exercise 2.1 - Subtract from 10 in Increments of 1 Until the Result is Less Than 3\nSubtract from 10 in increments of 1 until the result is less than 3. The next line initializes current_value to 10. The result should be in this variable.\n\ncurrent_value = 10\n# YOUR CODE BELOW\n\n\n# Test your answer\n@assert current_value == 2\nprintln(\"The first value smaller than 3 is: \", current_value)",
     "crumbs": [
       "02 First Steps",
       "04 - Loops"
@@ -389,7 +301,7 @@
     "href": "part-02/tutorial-02-04-loops.html#exercise-2.2---find-the-first-multiple-of-7-greater-than-50",
     "title": "Tutorial II.IV - Loops",
     "section": "Exercise 2.2 - Find the First Multiple of 7 Greater Than 50",
-    "text": "Exercise 2.2 - Find the First Multiple of 7 Greater Than 50\nFind the first multiple of 7 greater than 50 using an indefinite loop. The next line initializes first_multiple_of_7 to 0. The first multiple should be in this variable.\n\n# New scope block\nlet \nfirst_multiple_of_7 = 0\n# YOUR CODE BELOW\n\n# Test your answer\n@assert first_multiple_of_7 == 56\nprintln(\"First multiple of 7 greater than 50: \", first_multiple_of_7)\nend # End of scope block\n\n\n\n\n\n\n\nTip\n\n\n\n‘while true … end’ constructs an infinite loop. You can exit the loop using a ‘break’ statement if a condition is met.",
+    "text": "Exercise 2.2 - Find the First Multiple of 7 Greater Than 50\nFind the first multiple of 7 greater than 50 using an indefinite loop. The next line initializes first_multiple_of_7 to 0. The first multiple should be in this variable.\n\nfirst_multiple_of_7 = 0\n# YOUR CODE BELOW\n\n\n# Test your answer\n@assert first_multiple_of_7 == 56\nprintln(\"First multiple of 7 greater than 50: \", first_multiple_of_7)\n\n\n\n\n\n\n\nTip\n\n\n\n‘while true … end’ constructs an infinite loop. You can exit the loop using a ‘break’ statement if a condition is met.",
     "crumbs": [
       "02 First Steps",
       "04 - Loops"
@@ -400,7 +312,7 @@
     "href": "part-02/tutorial-02-04-loops.html#exercise-3.1---compute-the-product-of-each-pair-of-elements-from-two-arrays",
     "title": "Tutorial II.IV - Loops",
     "section": "Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays",
-    "text": "Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays\nCompute the product of each pair of elements from two arrays. For example, the product of two numbers a and b is a * b. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results.\n\n# First, we start a new scope block.\nlet \nnumbers1 = [1, 2, 3]\nnumbers2 = [4, 5, 6]\nproducts = []\n# YOUR CODE BELOW\n\n# Test your answer\n@assert products == [4, 5, 6, 8, 10, 12, 12, 15, 18]\nprintln(\"Products of each pair from two arrays: \", products)\nend # End scope block\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, you can use push!() to append elements to an array.",
+    "text": "Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays\nCompute the product of each pair of elements from two arrays. For example, the product of two numbers a and b is a * b. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results.\n\nnumbers1 = [1, 2, 3]\nnumbers2 = [4, 5, 6]\nproducts = []\n# YOUR CODE BELOW\n\n# Test your answer\n@assert products == [4, 5, 6, 8, 10, 12, 12, 15, 18]\nprintln(\"Products of each pair from two arrays: \", products)\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, you can use push!() to append elements to an array.",
     "crumbs": [
       "02 First Steps",
       "04 - Loops"
@@ -418,13 +330,101 @@
     ]
   },
   {
+    "objectID": "part-04/tutorial-04-01-jump.html",
+    "href": "part-04/tutorial-04-01-jump.html",
+    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
+    "section": "",
+    "text": "Welcome to this beginner-friendly tutorial on mathematical optimization using JuMP and the HiGHS solver in Julia! Don’t worry if these terms sound unfamiliar – we’ll explain everything step by step.\nIn this tutorial, you’ll learn how to: 1. Set up a simple optimization problem 2. Define variables and constraints 3. Create an objective function 4. Solve the problem and interpret the results\nWe’ll use a real-world example to make these concepts more relatable. Imagine you’re managing a small factory that produces two types of products. Your goal is to maximize profit while working within certain limitations. This is exactly the kind of problem that mathematical optimization can solve!\n\n\nJuMP (Julia for Mathematical Programming) is a powerful tool that helps us describe optimization problems in a way that computers can understand and solve. Think of it as a translator between your business problem and the mathematical solver.\n\n\n\nHiGHS is an open-source solver that can find solutions to the optimization problems we describe using JuMP. It’s like a very smart calculator that can handle complex problems quickly and efficiently.\n\n\n\nLet’s break down our factory management problem:\n\nYou produce two products: Product A and Product B\nEach product gives you a different profit:\n\nProduct A: 100 profit per unit\nProduct B: 150 profit per unit\n\nYou have two departments: Cutting and Finishing\nEach product requires different amounts of time in each department:\n\nProduct A: 2 hours in Cutting, 4 hours in Finishing\nProduct B: 4 hours in Cutting, 3 hours in Finishing\n\nYou have limited time available in each department:\n\nCutting: 40 hours total\nFinishing: 60 hours total\n\n\nYour goal is to decide how many of each product to make to maximize your total profit, while not exceeding the available time in each department.\n\n\n\nFirst, we need to install and load the necessary packages. If you haven’t already installed JuMP and HiGHS, run the following code:\n\nimport Pkg; Pkg.add([\"JuMP\",\"HiGHS\"])\n\nNow, let’s load these packages:\n\nusing JuMP, HiGHS\n\nGreat! We’re now ready to start building our optimization model.",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
+  },
+  {
+    "objectID": "part-04/tutorial-04-01-jump.html#what-is-jump",
+    "href": "part-04/tutorial-04-01-jump.html#what-is-jump",
+    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
+    "section": "",
+    "text": "JuMP (Julia for Mathematical Programming) is a powerful tool that helps us describe optimization problems in a way that computers can understand and solve. Think of it as a translator between your business problem and the mathematical solver.",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
+  },
+  {
+    "objectID": "part-04/tutorial-04-01-jump.html#what-is-highs",
+    "href": "part-04/tutorial-04-01-jump.html#what-is-highs",
+    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
+    "section": "",
+    "text": "HiGHS is an open-source solver that can find solutions to the optimization problems we describe using JuMP. It’s like a very smart calculator that can handle complex problems quickly and efficiently.",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
+  },
+  {
+    "objectID": "part-04/tutorial-04-01-jump.html#our-example-problem",
+    "href": "part-04/tutorial-04-01-jump.html#our-example-problem",
+    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
+    "section": "",
+    "text": "Let’s break down our factory management problem:\n\nYou produce two products: Product A and Product B\nEach product gives you a different profit:\n\nProduct A: 100 profit per unit\nProduct B: 150 profit per unit\n\nYou have two departments: Cutting and Finishing\nEach product requires different amounts of time in each department:\n\nProduct A: 2 hours in Cutting, 4 hours in Finishing\nProduct B: 4 hours in Cutting, 3 hours in Finishing\n\nYou have limited time available in each department:\n\nCutting: 40 hours total\nFinishing: 60 hours total\n\n\nYour goal is to decide how many of each product to make to maximize your total profit, while not exceeding the available time in each department.",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
+  },
+  {
+    "objectID": "part-04/tutorial-04-01-jump.html#setting-up",
+    "href": "part-04/tutorial-04-01-jump.html#setting-up",
+    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
+    "section": "",
+    "text": "First, we need to install and load the necessary packages. If you haven’t already installed JuMP and HiGHS, run the following code:\n\nimport Pkg; Pkg.add([\"JuMP\",\"HiGHS\"])\n\nNow, let’s load these packages:\n\nusing JuMP, HiGHS\n\nGreat! We’re now ready to start building our optimization model.",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
+  },
+  {
+    "objectID": "part-04/tutorial-04-01-jump.html#exercise-2.1---create-variables",
+    "href": "part-04/tutorial-04-01-jump.html#exercise-2.1---create-variables",
+    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
+    "section": "Exercise 2.1 - Create Variables",
+    "text": "Exercise 2.1 - Create Variables\nNow it’s your turn! Create two continuous variables equal to or larger than 0 called productA and productB that represent the number of units produced in our problem for our model model.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert @isdefined productA\n@assert typeof(productA) == VariableRef\n@assert has_upper_bound(productA) == false\n@assert has_lower_bound(productA) == true\n@assert lower_bound(productA) == 0\n@assert @isdefined productA\n@assert typeof(productB) == VariableRef\n@assert has_upper_bound(productB) == false\n@assert has_lower_bound(productB) == true\n@assert lower_bound(productB) == 0\nprintln(\"Variables added to the model successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
+  },
+  {
+    "objectID": "part-04/tutorial-04-01-jump.html#exercise-3.1---create-constraints",
+    "href": "part-04/tutorial-04-01-jump.html#exercise-3.1---create-constraints",
+    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
+    "section": "Exercise 3.1 - Create Constraints",
+    "text": "Exercise 3.1 - Create Constraints\nCreate two constraints based on the on the Cutting and Finishing department hours of the problem description in this tutorial. Call the first constraint cutting_constraint and the second constraint finishing_constraint.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert is_valid(model, cutting_constraint)\n@assert is_valid(model, finishing_constraint)\nprintln(\"Constraints added to the model successfully!\")\nprintln(\"Note, that only the existence of these constraints was checked!\")\nprintln(\"The optimization later will show, whether the formulation was correct.\")",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
+  },
+  {
+    "objectID": "part-04/tutorial-04-01-jump.html#exercise-4.1---create-the-objective-function",
+    "href": "part-04/tutorial-04-01-jump.html#exercise-4.1---create-the-objective-function",
+    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
+    "section": "Exercise 4.1 - Create the Objective Function",
+    "text": "Exercise 4.1 - Create the Objective Function\nCreate the objective function based on the problem description of this tutorial. The objective is to maximize profit based on the values of productA and productB.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert typeof(objective_function(model)) == AffExpr\nprintln(\"An objective function defined successfully!\")\nprintln(\"The optimization later will show, whether the formulation was correct.\")",
+    "crumbs": [
+      "04 Optimization",
+      "01 - JuMP"
+    ]
+  },
+  {
     "objectID": "part-03/tutorial-03-01-functions.html",
     "href": "part-03/tutorial-03-01-functions.html",
     "title": "Tutorial III.I - Functions in Julia",
     "section": "",
-    "text": "This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.",
+    "text": "Imagine you have a helpful worker. Instead of explaining every little task to it each time, you can teach it specific jobs once, and then just ask it to do those jobs later. In programming, these “jobs” are called functions! This tutorial will show you how to create and use functions in Julia, making your code more organized and reusable.\nFollow the instructions, input your code in the designated areas, and verify your implementations with @assert statements.",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "01 - Functions"
     ]
   },
@@ -433,9 +433,9 @@
     "href": "part-03/tutorial-03-01-functions.html#exercise-1.1---define-and-test-a-simple-addition-function",
     "title": "Tutorial III.I - Functions in Julia",
     "section": "Exercise 1.1 - Define and Test a Simple Addition Function",
-    "text": "Exercise 1.1 - Define and Test a Simple Addition Function\nDefine and Test a Simple Addition Function. Define a function add that takes two parameters and returns their sum.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert add(10, 5) == 15 \"The sum computed is $(add(10, 5)) but should be 15.\"\nprintln(\"The sum computed is $(add(10, 5)), wonderful!\")",
+    "text": "Exercise 1.1 - Define and Test a Simple Addition Function\nDefine and test a simple addition function. Define a function add that takes two parameters and returns their sum.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert add(10, 5) == 15 \"The sum computed is $(add(10, 5)) but should be 15.\"\nprintln(\"The sum computed is $(add(10, 5)), wonderful!\")",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "01 - Functions"
     ]
   },
@@ -446,7 +446,7 @@
     "section": "Exercise 2.1 - Return a Local Variable",
     "text": "Exercise 2.1 - Return a Local Variable\nTry to execute the following block of code. The objective is to understand how to return the local_variable_one from the function scope_test. Your task is to change the function, to return the value of local_variable_one.\n\n# YOUR CHANGES BELOW\nfunction scope_test()\n    local_variable_one = 10\n    local_variable_two = 20\nend\n\n# YOUR CHANGES ABOVE\n# Test your function\n@assert scope_test() == 10 \"The value exported is $(scope_test()).\"\nprintln(\"The value exported is $(scope_test()), you solved it!\")",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "01 - Functions"
     ]
   },
@@ -457,7 +457,7 @@
     "section": "Exercise 2.2 - Define an Implicit Return Function",
     "text": "Exercise 2.2 - Define an Implicit Return Function\nDefine and test an implicit return function. Define a function subtract that takes two parameters and implicitly returns their difference. The implicit return feature makes your code cleaner and more concise.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert subtract(10, 5) == 5  \"The difference computed is $(subtract(10, 5)) but should be 5.\"\nprintln(\"The difference computed is $(subtract(10, 5)), perfect!\")",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "01 - Functions"
     ]
   },
@@ -468,74 +468,85 @@
     "section": "Exercise 3.1 - Match Results to Assertions",
     "text": "Exercise 3.1 - Match Results to Assertions\nMatch the results from the previous example to the correct assertions:\n\n# YOUR CHANGES BELOW\n@assert result2 == 30 \"result1 should be the sum of two numbers\"\n@assert result3 == \"Hello, World!\" \"result2 should be the concatenation of two strings\"\n@assert result1 == \"Generic operation for objects of type String and Int64\" \"result3 should use the generic operation\"\nprintln(\"You solved it, the assertions are now correct!\")\n\n\n\n\n\n\n\nTip\n\n\n\nHint: Look at the types of arguments used in each operation call and match them to the appropriate method.",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "01 - Functions"
     ]
   },
   {
-    "objectID": "part-04/tutorial-04-04-advanced.html",
-    "href": "part-04/tutorial-04-04-advanced.html",
-    "title": "Tutorial IV.IV - Advanced Solver Options with HiGHS in JuMP",
+    "objectID": "part-04/tutorial-04-03-constraints.html",
+    "href": "part-04/tutorial-04-03-constraints.html",
+    "title": "Tutorial IV.III - Constraints in JuMP",
     "section": "",
-    "text": "Introduction\nThis Julia script is an interactive tutorial to introduce you to advanced solver options in HiGHS using JuMP. You’ll learn about setting solver parameters to control the optimization process and improve performance. Follow the instructions and confirm your understanding with the examples. Make sure to have the JuMP package and the HiGHS solver installed to follow this tutorial.\n\nusing JuMP, HiGHS\n\n\n\nSection 1: Setting HiGHS Solver Options\nHiGHS offers various advanced options that can be set to control the solving process. To change some advanced settings, we first need to create a model with HiGHS.\n\nmodel = Model(HiGHS.Optimizer)\n\nA JuMP Model\n├ solver: HiGHS\n├ objective_sense: FEASIBILITY_SENSE\n├ num_variables: 0\n├ num_constraints: 0\n└ Names registered in the model: none\n\n\nDifferent options for the HiGHS solver can be found here: HiGHS Options.\nNote, that some options are solver specific and some options apply to all solvers, as JuMP itself can work with many different solvers just by changing the model definition and the solver-specific options.\n\n# Set options for the solver\nset_optimizer_attribute(model, \"presolve\", \"on\")\n# Enables presolve, which transforms the model to potentially reduce its size or complexity.\n\nset_optimizer_attribute(model, \"time_limit\", 60.0)\n# Sets the time limit for the solver to 60 seconds. This is useful for large problems or when you need a solution within a specific timeframe.\n\nset_optimizer_attribute(model, \"mip_rel_gap\", 0.0)\n# Sets the relative MIP gap tolerance to 0.0, aiming for the exact optimal solution. In practice, a small non-zero value is often used as a trade-off between solution quality and solving time.\n\nprintln(\"HiGHS solver options set successfully!\")\n\nHiGHS solver options set successfully!\n\n\n\n\nSection 2: Understanding the Impact of Solver Options\nLet’s explore how these options can affect the solving process with a simple example:\n\n# Create a simple mixed-integer programming model\nmodel = Model(HiGHS.Optimizer)\n\n@variable(model, 0 &lt;= x &lt;= 10, Int)\n@variable(model, 0 &lt;= y &lt;= 10)\n\n@objective(model, Max, x + y)\n\n@constraint(model, x + 2y &lt;= 15)\n\n# Solve with default options\noptimize!(model)\nprintln(\"Default solution: x = \", value(x), \", y = \", value(y))\nprintln(\"Solve time: \", solve_time(model), \" seconds\")\n\n# Now, let's adjust some options\nset_optimizer_attribute(model, \"mip_rel_gap\", 0.1)\nset_optimizer_attribute(model, \"time_limit\", 1.0)\n\n# Solve again with new options\noptimize!(model)\nprintln(\"Solution with new options: x = \", value(x), \", y = \", value(y))\nprintln(\"Solve time: \", solve_time(model), \" seconds\")\n\nRunning HiGHS 1.7.2 (git hash: 5ce7a2753): Copyright (c) 2024 HiGHS under MIT licence terms\nCoefficient ranges:\n  Matrix [1e+00, 2e+00]\n  Cost   [1e+00, 1e+00]\n  Bound  [1e+01, 1e+01]\n  RHS    [2e+01, 2e+01]\nPresolving model\n1 rows, 2 cols, 2 nonzeros  0s\n0 rows, 0 cols, 0 nonzeros  0s\nPresolve: Optimal\n\nSolving report\n  Status            Optimal\n  Primal bound      12.5\n  Dual bound        12.5\n  Gap               0% (tolerance: 0.01%)\n  Solution status   feasible\n                    12.5 (objective)\n                    0 (bound viol.)\n                    0 (int. viol.)\n                    0 (row viol.)\n  Timing            0.00 (total)\n                    0.00 (presolve)\n                    0.00 (postsolve)\n  Nodes             0\n  LP iterations     0 (total)\n                    0 (strong br.)\n                    0 (separation)\n                    0 (heuristics)\nDefault solution: x = 10.0, y = 2.5\nSolve time: 0.0018042909796349704 seconds\nCoefficient ranges:\n  Matrix [1e+00, 2e+00]\n  Cost   [1e+00, 1e+00]\n  Bound  [1e+01, 1e+01]\n  RHS    [2e+01, 2e+01]\nAssessing feasibility of MIP using primal feasibility and integrality tolerance of       1e-06\nSolution has               num          max          sum\nCol     infeasibilities      0            0            0\nInteger infeasibilities      0            0            0\nRow     infeasibilities      0            0            0\nRow     residuals            0            0            0\nPresolving model\n1 rows, 2 cols, 2 nonzeros  0s\n0 rows, 0 cols, 0 nonzeros  0s\nPresolve: Optimal\n\nSolving report\n  Status            Optimal\n  Primal bound      12.5\n  Dual bound        12.5\n  Gap               0% (tolerance: 10%)\n  Solution status   feasible\n                    12.5 (objective)\n                    0 (bound viol.)\n                    0 (int. viol.)\n                    0 (row viol.)\n  Timing            0.00 (total)\n                    0.00 (presolve)\n                    0.00 (postsolve)\n  Nodes             0\n  LP iterations     0 (total)\n                    0 (strong br.)\n                    0 (separation)\n                    0 (heuristics)\nSolution with new options: x = 10.0, y = 2.5\nSolve time: 0.00014212500536814332 seconds\n\n\nThis example demonstrates how changing solver options can affect the solution process, even for a simple problem. For more complex models, these options can have a significant impact on solve time and solution quality.\n\n\nConclusion\nWell done! You’ve completed the tutorial on advanced solver options with HiGHS in JuMP. You’ve learned how to set advanced solver options. Continue to the next file to learn more.\n\n\nSolutions\nYou will likely find solutions to most exercises online. However, I strongly encourage you to work on these exercises independently without searching explicitly for the exact answers to the exercises. Understanding someone else’s solution is very different from developing your own. Use the lecture notes and try to solve the exercises on your own. This approach will significantly enhance your learning and problem-solving skills.\nRemember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities. If you encounter difficulties, review the lecture materials, experiment with different approaches, and don’t hesitate to ask for clarification during class discussions.\nLater, you will find the solutions to these exercises online in the associated GitHub repository, but we will also quickly go over them in next week’s tutorial. To access the solutions, click on the Github button on the lower right and search for the folder with today’s lecture and tutorial. Alternatively, you can ask ChatGPT or Claude to explain them to you. But please remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities.",
+    "text": "Welcome to this tutorial on constraints in JuMP! In this lesson, we’ll explore how to add rules (constraints) to our optimization problems.\nBy the end of this tutorial, you’ll be able to: 1. Create simple constraints for your optimization problems 2. Use containers (like arrays) to manage multiple similar constraints 3. Create more complex constraints based on conditions\nLet’s start by loading the necessary packages:\n\nusing JuMP, HiGHS\n\nNow, let’s create a model that we’ll use throughout this tutorial:\n\nmodel = Model(HiGHS.Optimizer)\nprintln(\"Great! We've created a new optimization model.\")\n\nGreat! We've created a new optimization model.",
     "crumbs": [
       "04 Optimization",
-      "04 - Advanced"
+      "03 - Comparisons"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-05-scope.html",
-    "href": "part-02/tutorial-02-05-scope.html",
-    "title": "Tutorial II.V - Variable Scope",
+    "objectID": "part-04/tutorial-04-03-constraints.html#exercise-1.1---define-arrays",
+    "href": "part-04/tutorial-04-03-constraints.html#exercise-1.1---define-arrays",
+    "title": "Tutorial IV.III - Constraints in JuMP",
+    "section": "Exercise 1.1 - Define arrays",
+    "text": "Exercise 1.1 - Define arrays\nScenario: Imagine you’re optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.\nDefine an array of variables and an objective function for another_model. The variables should be called profits and have a range from 1:8. It has a lower bound of 0. The objective should be a Maximization of the sum of all profits.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(profits) == 8 && all(lower_bound(profits[i]) == 0 for i in 1:8)\n@assert typeof(objective_function(another_model)) == AffExpr\nprintln(\"Objective function with container variables defined successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "03 - Comparisons"
+    ]
+  },
+  {
+    "objectID": "part-04/tutorial-04-03-constraints.html#exercise-3.1---add-a-conditional-constraints",
+    "href": "part-04/tutorial-04-03-constraints.html#exercise-3.1---add-a-conditional-constraints",
+    "title": "Tutorial IV.III - Constraints in JuMP",
+    "section": "Exercise 3.1 - Add a conditional constraints",
+    "text": "Exercise 3.1 - Add a conditional constraints\nScenario extension: The first 4 products are new and have limited market demand.\nAdd a conditional constraint smallProfit to the previous model. Condition: Only the first 4 variables profit have to be lower than 5.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert all(is_valid(another_model, smallProfit[i]) for i in 1:4)\nprintln(\"Conditional constraint implemented successfully!\")\nprintln(\"Checking successful implementation.\")\noptimize!(another_model)\nstatus = termination_status(another_model)\n@assert status == MOI.OPTIMAL \"Sorry, something didn't work out as the model status is $status\"\n@assert objective_value(another_model) ≈ 68 atol=1e-4 \"Although you have an optimal solution, \n    the should be 68 not $(objective_value(another_model)). Is the model correct?\"\nprintln(\"Model components validated successfully!\")",
+    "crumbs": [
+      "04 Optimization",
+      "03 - Comparisons"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-02-handling.html",
+    "href": "part-03/tutorial-03-02-handling.html",
+    "title": "Tutorial III.II - Package Management",
     "section": "",
-    "text": "This interactive Julia script is a look on variable scopes in Julia. Understand the intricacies of local and global scopes, comprehend the significance of local and global keywords, and discern the scope behaviors in different contexts. Follow the structured instructions, implement your code in the designated blocks, and affirm your comprehension with @assert statements.",
+    "text": "Welcome to this beginner-friendly guide on understanding packages and package management in Julia!\nThink of packages as pre-written sets of tools that extend what Julia can do. It’s like having a toolbox where you can add new tools (packages) to help you solve specific problems. For example, there are packages for working with data, creating visualizations, or solving complex math problems.\nThe best part? Most Julia packages are free to use, thanks to the open-source community!\n\n\n\n\n\n\nNote\n\n\n\nWhile we’ll practice some commands here, you’ll typically manage packages in Julia’s REPL (Read-Eval-Print Loop), which is like Julia’s command center.",
     "crumbs": [
-      "02 First Steps",
-      "05 - Scope"
+      "03 Data",
+      "02 - Packages"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-05-scope.html#exercise-1.1---experiment-with-local-variables-in-a-for-loop",
-    "href": "part-02/tutorial-02-05-scope.html#exercise-1.1---experiment-with-local-variables-in-a-for-loop",
-    "title": "Tutorial II.V - Variable Scope",
-    "section": "Exercise 1.1 - Experiment with Local Variables in a for Loop",
-    "text": "Exercise 1.1 - Experiment with Local Variables in a for Loop\nExperiment with local variables in a for loop and try to execute the following block of code.\n\nprintln(\"Defining a local variable within a loop:\")\nfor i in 1:3\n    loop_variable = i\n    println(\"Inside the loop, loop_variable is: \", loop_variable)\nend\nprintln(\"Outside the loop, loop_variable is: \", loop_variable)\n\n# Test your answer\n@assert loop_variable == 3\nprintln(\"Now, the loop works and the value of the 'loop_variable' is: \", loop_variable)\n\n\n\n\n\n\n\nNote\n\n\n\nAttempting to access loop_variable here should result in an error because its scope is local to the loop. Can you come up with a way to solve this issue? Extend the code above to allow the execution of the code.",
+    "objectID": "part-03/tutorial-03-02-handling.html#exercise-1.1---import-the-pkg-module",
+    "href": "part-03/tutorial-03-02-handling.html#exercise-1.1---import-the-pkg-module",
+    "title": "Tutorial III.II - Package Management",
+    "section": "Exercise 1.1 - Import the Pkg Module",
+    "text": "Exercise 1.1 - Import the Pkg Module\nImport the Pkg module to start managing packages effectively.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\ntry \n    Pkg.update()\n    println(\"Pkg module imported successfully and packages were updated!\")\ncatch e\n    @error \"The Pkg module was not imported yet! Have you used the correct syntax?\"\nend",
     "crumbs": [
-      "02 First Steps",
-      "05 - Scope"
+      "03 Data",
+      "02 - Packages"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-05-scope.html#exercise-1.2---experiment-with-local-variables-in-a-nested-loop",
-    "href": "part-02/tutorial-02-05-scope.html#exercise-1.2---experiment-with-local-variables-in-a-nested-loop",
-    "title": "Tutorial II.V - Variable Scope",
-    "section": "Exercise 1.2 - Experiment with Local Variables in a Nested Loop",
-    "text": "Exercise 1.2 - Experiment with Local Variables in a Nested Loop\nExperiment with local variables in a nested loop. Try to execute the following block of code.\n\nprintln(\"Defining a local variable within a loop:\")\nfor i in 1:3\n    nestedloop_variable = 0\n    for j in 1:3\n        nestedloop_variable = i * 3\n        println(\"Inside the nested loop, loop_variable is: \", nestedloop_variable)\n    end\nend\nprintln(\"Outside the nested loop, loop_variable is: \", nestedloop_variable)\n\n# Test your answer\n@assert nestedloop_variable == 9\nprintln(\"Now, the loop works and the value of the 'nestedloop_variable' is: \", nestedloop_variable)\n\n\n\n\n\n\n\nNote\n\n\n\nAttempting to access nestedloop_variable here should result in an error because its scope is only accessible in the first loop, where it is defined, and the second loop below. Can you come up with a way to solve this issue? Extend the code above to allow the execution of the code.",
+    "objectID": "part-03/tutorial-03-02-handling.html#exercise-2.1---add-the-dataframes-package",
+    "href": "part-03/tutorial-03-02-handling.html#exercise-2.1---add-the-dataframes-package",
+    "title": "Tutorial III.II - Package Management",
+    "section": "Exercise 2.1 - Add the DataFrames Package",
+    "text": "Exercise 2.1 - Add the DataFrames Package\nLet’s add a popular package called DataFrames. It’s great for working with structured data, like spreadsheets.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\ntry \n    using DataFrames\n    println(\"Package added successfully!\")\ncatch e\n    @error \"Package was not added yet! Have you used the correct syntax?\"\nend",
     "crumbs": [
-      "02 First Steps",
-      "05 - Scope"
+      "03 Data",
+      "02 - Packages"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-05-scope.html#exercise-2.1---experiment-with-local-variables-in-a-potentially-global-context",
-    "href": "part-02/tutorial-02-05-scope.html#exercise-2.1---experiment-with-local-variables-in-a-potentially-global-context",
-    "title": "Tutorial II.V - Variable Scope",
-    "section": "Exercise 2.1 - Experiment with Local Variables in a Potentially Global Context",
-    "text": "Exercise 2.1 - Experiment with Local Variables in a Potentially Global Context\nExperiment with local variables in a potentially global context using local. The objective is to redefine the value of explicit_local_variable to “end” within the following loop. Try to execute the following block of code.\n\nexplicit_local_variable = \"start\"\nprintln(\"At the start of the loop, explicit_local_variable is: \", explicit_local_variable)\nfor i in 1:3\n    local explicit_local_variable = \"end\"\n    println(\"Inside the loop, explicit_local_variable is: \", explicit_local_variable)\nend\nprintln(\"Outside the loop, explicit_local_variable is: \", explicit_local_variable)\n\n# Test your answer\n@assert explicit_local_variable == \"end\" \"Currently, the value of 'explicit_local_variable' is $explicit_local_variable.\"\n\n\n\n\n\n\n\nNote\n\n\n\nAttempting to access explicit_local_variable here should result in an error because its scope is local to the loop. Can you come up with a way to solve this issue? Extend the code above to allow the execution of the code.",
-    "crumbs": [
-      "02 First Steps",
-      "05 - Scope"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-05-scope.html#conclusion",
-    "href": "part-02/tutorial-02-05-scope.html#conclusion",
-    "title": "Tutorial II.V - Variable Scope",
+    "objectID": "part-03/tutorial-03-02-handling.html#conclusion",
+    "href": "part-03/tutorial-03-02-handling.html#conclusion",
+    "title": "Tutorial III.II - Package Management",
     "section": "Conclusion",
-    "text": "Conclusion\nGreat! You’ve just navigated through the variable scopes in Julia. Although this is quite complicated at first, it will save you much time later on if you understand this concept. Continue to the next file to learn more.",
+    "text": "Conclusion\nCongratulations! You’ve completed the tutorial on packages and package management in Julia. These skills are important for effectively managing and utilizing external libraries. Continue to the next file to learn more.",
     "crumbs": [
-      "02 First Steps",
-      "05 - Scope"
+      "03 Data",
+      "02 - Packages"
     ]
   },
   {
@@ -1696,7 +1707,7 @@
     "section": "",
     "text": "Variables are used to store values\nAssign a value to a variable using the = operator\nYou can use different data types for variables\nYou can change the value of a variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the typeof function to check the type of a variable.\n\n\n\n\n\n\nVectors and matrices are used to store multiple values\nYou can create a them using the [ and ] operators\nAccess their elements using square brackets\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the push! function to add elements to a vector or the pop! function to remove elements from a vector.\n\n\n\n\n\n\nComparisons are used to compare values\n== checks if two values are equal\n!= checks if two values are not equal\n&lt; checks if one value is smaller than the other\n&gt;= checks if one value is greater than or equal to the other\n&& checks if two values are true\n|| checks if at least one of two values is true\n\n\n\n\n\nLoops are used to repeat code\nfor loop repeats code for a fixed number of times\nwhile loop repeats code until a condition is met\nif statement checks if a condition is true\nelse executes code if a condition is false\nelseif checks if a condition is true and executes if it is\n\n\n\n\n\nScope determines where a variable is defined and lives\nglobal keyword defines a global variable\nlocal keyword defines a local variable\nlet keyword defines a local variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nGlobal variables usually make your code much slower, if they are not defined as constants. But for this leeture this is not that important.\n\n\n\n\n\n\nThe tutorials from last week will be available on Friday\nYou can access them in the project folder on Github\nClick on the little cat icon on the bottom right\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can ask questions anytime in class or via email!",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "Lecture"
     ]
   },
@@ -1707,7 +1718,7 @@
     "section": "",
     "text": "Variables are used to store values\nAssign a value to a variable using the = operator\nYou can use different data types for variables\nYou can change the value of a variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the typeof function to check the type of a variable.",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "Lecture"
     ]
   },
@@ -1718,7 +1729,7 @@
     "section": "",
     "text": "Vectors and matrices are used to store multiple values\nYou can create a them using the [ and ] operators\nAccess their elements using square brackets\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can use the push! function to add elements to a vector or the pop! function to remove elements from a vector.",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "Lecture"
     ]
   },
@@ -1729,7 +1740,7 @@
     "section": "",
     "text": "Comparisons are used to compare values\n== checks if two values are equal\n!= checks if two values are not equal\n&lt; checks if one value is smaller than the other\n&gt;= checks if one value is greater than or equal to the other\n&& checks if two values are true\n|| checks if at least one of two values is true",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "Lecture"
     ]
   },
@@ -1740,7 +1751,7 @@
     "section": "",
     "text": "Loops are used to repeat code\nfor loop repeats code for a fixed number of times\nwhile loop repeats code until a condition is met\nif statement checks if a condition is true\nelse executes code if a condition is false\nelseif checks if a condition is true and executes if it is",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "Lecture"
     ]
   },
@@ -1751,7 +1762,7 @@
     "section": "",
     "text": "Scope determines where a variable is defined and lives\nglobal keyword defines a global variable\nlocal keyword defines a local variable\nlet keyword defines a local variable\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nGlobal variables usually make your code much slower, if they are not defined as constants. But for this leeture this is not that important.",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "Lecture"
     ]
   },
@@ -1762,7 +1773,7 @@
     "section": "",
     "text": "The tutorials from last week will be available on Friday\nYou can access them in the project folder on Github\nClick on the little cat icon on the bottom right\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nYou can ask questions anytime in class or via email!",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "Lecture"
     ]
   },
@@ -1773,7 +1784,7 @@
     "section": "Topics of the Tutorials",
     "text": "Topics of the Tutorials\n\nFunctions: Learn how to define and use functions\nPackages: Learn how to install and use packages\nDataFrames: Learn how to work with tabular data in Julia\nIO: Learn how to read and write data in Julia\nPlots: Learn how to create plots in Julia",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "Lecture"
     ]
   },
@@ -1784,7 +1795,7 @@
     "section": "Get started with the tutorials",
     "text": "Get started with the tutorials\n\nDownload this weeks tutorials and start with the first one\nRemember, you can ask questions anytime!\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nAnd that’s it for this lecture!\nThe remaining time we will already start working on the problems of the third lecture.",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "Lecture"
     ]
   },
@@ -1795,7 +1806,7 @@
     "section": "Literature",
     "text": "Literature\n\nLauwens, B., & Downey, A. B. (2019). Think Julia: How to think like a computer scientist (First edition). O’Reilly®. Link to the free book website.\nJulia Documentation\n\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "Lecture"
     ]
   },
@@ -2496,80 +2507,36 @@
     "text": "Literature\n\nLauwens, B., & Downey, A. B. (2019). Think Julia: How to think like a computer scientist (First edition). O’Reilly®. Link to the free book website.\nJulia Documentation\n\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.\n\n\n\nLecture II - First Steps in Julia | Dr. Tobias Vlćek | Home"
   },
   {
-    "objectID": "part-03/tutorial-03-02-handling.html",
-    "href": "part-03/tutorial-03-02-handling.html",
-    "title": "Tutorial III.II - Package Management",
+    "objectID": "part-04/tutorial-04-04-advanced.html",
+    "href": "part-04/tutorial-04-04-advanced.html",
+    "title": "Tutorial IV.IV - Advanced Solver Options with HiGHS in JuMP",
     "section": "",
-    "text": "This interactive script serves as an in-depth guide to understanding packages and package management in Julia. Delve into the utilization of the package manager, the processes of adding, updating, and removing packages, and management of distinct environments. First off all, we briefly need to introduce what a package is: a package is a collection of code that is used to extend the functionality of Julia. There are a lot of packages available for Julia, ranging from basic packages like LinearAlgebra to more specialized packages like JuMP for optimization. This means that most of the time you don’nt have to invent the wheel by yourself but can rely on the work of others. The great thing: Almost all packages available for Julia are available for free and can be used under the MIT license.\n\n\n\n\n\n\nNote\n\n\n\nNote: While this script offers guidance, package management commands are usually executed in Julia’s REPL. The REPL is the command line interface to Julia where you can interact with the language.",
-    "crumbs": [
-      "03 Data Management",
-      "02 - Handling Data"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-02-handling.html#exercise-1.1---import-the-pkg-module",
-    "href": "part-03/tutorial-03-02-handling.html#exercise-1.1---import-the-pkg-module",
-    "title": "Tutorial III.II - Package Management",
-    "section": "Exercise 1.1 - Import the Pkg Module",
-    "text": "Exercise 1.1 - Import the Pkg Module\nImport the Pkg module to start managing packages effectively.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\ntry \n    Pkg.update()\n    println(\"Pkg module imported successfully and packages were updated!\")\ncatch e\n    @error \"The Pkg module was not imported yet! Have you used the correct syntax?\"\nend",
-    "crumbs": [
-      "03 Data Management",
-      "02 - Handling Data"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-02-handling.html#exercise-2.1---add-the-dataframes-package",
-    "href": "part-03/tutorial-03-02-handling.html#exercise-2.1---add-the-dataframes-package",
-    "title": "Tutorial III.II - Package Management",
-    "section": "Exercise 2.1 - Add the DataFrames Package",
-    "text": "Exercise 2.1 - Add the DataFrames Package\nUse Pkg.add() to add the Package DataFrames that we will use later.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\ntry \n    using DataFrames\n    println(\"Package added successfully!\")\ncatch e\n    @error \"Package was not added yet! Have you used the correct syntax?\"\nend",
-    "crumbs": [
-      "03 Data Management",
-      "02 - Handling Data"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-02-handling.html#conclusion",
-    "href": "part-03/tutorial-03-02-handling.html#conclusion",
-    "title": "Tutorial III.II - Package Management",
-    "section": "Conclusion",
-    "text": "Conclusion\nCongratulations! You’ve completed the tutorial on packages and package management in Julia. These skills are important for effectively managing and utilizing external libraries. Continue to the next file to learn more.",
-    "crumbs": [
-      "03 Data Management",
-      "02 - Handling Data"
-    ]
-  },
-  {
-    "objectID": "part-04/tutorial-04-03-constraints.html",
-    "href": "part-04/tutorial-04-03-constraints.html",
-    "title": "Tutorial IV.III - Constraints in JuMP",
-    "section": "",
-    "text": "This Julia script is an interactive tutorial to introduce you to advanced handling of objective functions and constraints in JuMP. You’ll learn about defining and managing objective functions and constraints within containers (arrays, dictionaries, matrices), and how to implement conditional constraints effectively.\nFollow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements. Make sure to have the JuMP package installed to follow this tutorial.",
+    "text": "Welcome to this tutorial on advanced solver options in JuMP using the HiGHS solver! Don’t worry if “advanced solver options” sounds intimidating - we’ll break everything down into simple, easy-to-understand concepts.\nImagine you’re using a GPS app to find the best route to a new restaurant. Just like how you can adjust settings in your GPS (like avoiding toll roads or preferring highways), we can adjust settings in our optimization solver to help it find solutions more efficiently or to meet specific requirements.\nBy the end of this tutorial, you’ll be able to: 1. Understand what solver options are and why they’re useful 2. Set basic solver options like time limits and solution tolerances 3. Interpret solver output to understand how well your problem was solved\nLet’s start by loading the necessary packages:\n\nusing JuMP, HiGHS",
     "crumbs": [
       "04 Optimization",
-      "03 - Comparisons"
+      "04 - Advanced"
     ]
   },
   {
-    "objectID": "part-04/tutorial-04-03-constraints.html#exercise-1.1---define-an-array-of-variables-and-an-objective-function",
-    "href": "part-04/tutorial-04-03-constraints.html#exercise-1.1---define-an-array-of-variables-and-an-objective-function",
-    "title": "Tutorial IV.III - Constraints in JuMP",
-    "section": "Exercise 1.1 - Define an array of variables and an objective function",
-    "text": "Exercise 1.1 - Define an array of variables and an objective function\nScenario: Imagine you’re optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.\nDefine an array of variables and an objective function for another_model. The variables should be called profits and have a range from 1:8. It has a lower bound of 0. The objective should be a Maximization of the sum of all profits.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(profits) == 8 && all(lower_bound(profits[i]) == 0 for i in 1:8)\n@assert typeof(objective_function(another_model)) == AffExpr\nprintln(\"Objective function with container variables defined successfully!\")",
+    "objectID": "part-04/tutorial-04-04-advanced.html#exercise-1.1---set-solver-options",
+    "href": "part-04/tutorial-04-04-advanced.html#exercise-1.1---set-solver-options",
+    "title": "Tutorial IV.IV - Advanced Solver Options with HiGHS in JuMP",
+    "section": "Exercise 1.1 - Set Solver Options",
+    "text": "Exercise 1.1 - Set Solver Options\nNow it’s your turn! Set the following solver options: 1. A time limit of 120 seconds 2. A MIP gap tolerance of 0.5% 3. Turn off presolve\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert time_limit_sec(model) == 120 \"The time limit should be 120 seconds but is $(time_limit_sec(model))\"\n@assert solver_name(model) == \"HiGHS\" \"The solver should be HiGHS but is $(solver_name(model))\"\n@assert MOI.get(model, MOI.RawOptimizerAttribute(\"mip_rel_gap\")) == 0.005 \"The MIP gap should be 0.5% but is $(MOI.get(model, MOI.RawOptimizerAttribute(\"mip_rel_gap\")))\"\n@assert MOI.get(model, MOI.RawOptimizerAttribute(\"presolve\")) == \"off\" \"Presolve should be off but is $(MOI.get(model, MOI.RawOptimizerAttribute(\"presolve\")))\"\nprintln(\"Great job! You've successfully set advanced solver options.\")",
     "crumbs": [
       "04 Optimization",
-      "03 - Comparisons"
+      "04 - Advanced"
     ]
   },
   {
-    "objectID": "part-04/tutorial-04-03-constraints.html#exercise-3.1---add-a-conditional-constraint-smallprofit-to-the-previous-model",
-    "href": "part-04/tutorial-04-03-constraints.html#exercise-3.1---add-a-conditional-constraint-smallprofit-to-the-previous-model",
-    "title": "Tutorial IV.III - Constraints in JuMP",
-    "section": "Exercise 3.1 - Add a conditional constraint ‘smallProfit’ to the previous model",
-    "text": "Exercise 3.1 - Add a conditional constraint ‘smallProfit’ to the previous model\nScenario extension: The first 4 products are new and have limited market demand.\nAdd a conditional constraint smallProfit to the previous model. Condition: Only the first 4 variables profit have to be lower than 5.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert all(is_valid(another_model, smallProfit[i]) for i in 1:4)\nprintln(\"Conditional constraint implemented successfully!\")\nprintln(\"Checking successful implementation.\")\noptimize!(another_model)\nstatus = termination_status(another_model)\n@assert status == MOI.OPTIMAL \"Sorry, something didn't work out as the model status is $status\"\n@assert objective_value(another_model) ≈ 68 atol=1e-4 \"Although you have an optimal solution, \n    the should be 68 not $(objective_value(another_model)). Is the model correct?\"\nprintln(\"Model components validated successfully!\")",
+    "objectID": "part-04/tutorial-04-04-advanced.html#exercise-2.1---modify-and-solve-the-problem",
+    "href": "part-04/tutorial-04-04-advanced.html#exercise-2.1---modify-and-solve-the-problem",
+    "title": "Tutorial IV.IV - Advanced Solver Options with HiGHS in JuMP",
+    "section": "Exercise 2.1 - Modify and Solve the Problem",
+    "text": "Exercise 2.1 - Modify and Solve the Problem\nNow it’s your turn! Modify the problem above by:\n\nChanging the production time constraint to 300 minutes\nIncreasing the profit for widgets to 30\nSolving the modified problem and printing the results\n\n\n# YOUR CODE BELOW\n# Hint: Copy the code above and make the necessary changes\nmodel = Model(HiGHS.Optimizer) # Don't forget to re-initialize the model\n\n\n\nCode\n# Test your answer\n@assert termination_status(model) == MOI.OPTIMAL \"The termination status should be OPTIMAL but is $(termination_status(model))\"\n@assert isapprox(objective_value(model), 3780, atol=1e-6) \"The objective value should be 3780 but is $(objective_value(model))\"\n@assert isapprox(value(widgets), 80, atol=1e-6) \"The number of widgets to produce should be 80 but is $(value(widgets))\"\n@assert isapprox(value(gadgets), 46, atol=1e-6) \"The number of gadgets to produce should be 46 but is $(value(gadgets))\"\nprintln(\"Excellent work! You've successfully modified and solved the optimization problem.\")",
     "crumbs": [
       "04 Optimization",
-      "03 - Comparisons"
+      "04 - Advanced"
     ]
   },
   {
@@ -2577,9 +2544,9 @@
     "href": "part-03/tutorial-03-04-IO.html",
     "title": "Tutorial III.IV - Input and Output",
     "section": "",
-    "text": "This interactive Julia script introduces the essentials of interacting with external files. File Input/Output (I/O) operations are crucial in programming and data analysis, allowing us to persist data, share information between programs, and work with large datasets that don’t fit in memory. In this tutorial, we’ll cover reading and writing text files, handling CSV files, and working with delimited files using various Julia packages. These skills are fundamental for data preprocessing, analysis, and result storage in real-world applications.\nFollow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.",
+    "text": "Welcome to this interactive Julia tutorial on working with external files! File Input/Output (I/O) operations are crucial in programming and data analysis, allowing us to persist data, share information between programs, and work with large datasets that don’t fit in memory. In this tutorial, we’ll cover reading and writing text files, handling CSV files, and working with delimited files using various Julia packages. These skills are fundamental for data preprocessing, analysis, and result storage in real-world applications.\nFollow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "04 - Input and Output"
     ]
   },
@@ -2588,9 +2555,9 @@
     "href": "part-03/tutorial-03-04-IO.html#exercise-1.1---read-a-csv-file",
     "title": "Tutorial III.IV - Input and Output",
     "section": "Exercise 1.1 - Read a CSV File",
-    "text": "Exercise 1.1 - Read a CSV File\nRead the just written CSV file ‘matrix.csv’ using the function readdlm(). Save the matrix in the variable read_matrix. To learn the syntax, use the inbuild help by typing ? in the terminal. Afterwards, just type the function name for an explanation.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert read_matrix == new_data\nprintln(\"File 'matrix.csv' read successfully!\")",
+    "text": "Exercise 1.1 - Read a CSV File\nNow it’s your turn! Let’s read the CSV file we just created.\n\n\n\n\n\n\nTip\n\n\n\nTo learn how to use a Julia function, you can type ? followed by the function name in the REPL (Julia’s command-line interface). For example, ?readdlm will show you information about the readdlm() function.\n\n\nUse the readdlm() function to read the ‘matrix.csv’ file we just created. Save the result in a variable called read_matrix.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert read_matrix == new_data\nprintln(\"File 'matrix.csv' read successfully!\")",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "04 - Input and Output"
     ]
   },
@@ -2599,9 +2566,9 @@
     "href": "part-03/tutorial-03-04-IO.html#exercise-2.1---write-a-dataframe-to-a-csv-file",
     "title": "Tutorial III.IV - Input and Output",
     "section": "Exercise 2.1 - Write a DataFrame to a CSV File",
-    "text": "Exercise 2.1 - Write a DataFrame to a CSV File\nWrite the following given DataFrame to a CSV file table_out.csv in the folder ExampleData. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with ? and the function name.\n\nusing CSV, DataFrames\ndata = DataFrame(Name = [\"Alice\", \"Bob\", \"Charlie\"], Age = [25, 30, 35])\ncsv_file_path = \"ExampleData/table_out.csv\"\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert isfile(\"ExampleData/table_out.csv\") \"Sorry, the file could not be found. \n    Have you followed all steps?\"\nprintln(\"CSV file 'data.csv' written successfully!\")",
+    "text": "Exercise 2.1 - Write a DataFrame to a CSV File\nWrite the following given DataFrame to a CSV file table_out.csv in the folder ExampleData. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with ? and the function name.\n\nusing CSV, DataFrames\ndata = DataFrame(Name = [\"Elio\", \"Bob\", \"Yola\"], Age = [18, 25, 29])\ncsv_file_path = \"ExampleData/table_out.csv\"\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert isfile(\"ExampleData/table_out.csv\") \"Sorry, the file could not be found. \n    Have you followed all steps?\"\nprintln(\"CSV file 'data.csv' written successfully!\")",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "04 - Input and Output"
     ]
   },
@@ -2612,8 +2579,52 @@
     "section": "Exercise 2.2 - Read a CSV File in",
     "text": "Exercise 2.2 - Read a CSV File in\nRead the CSV file table_out.csv in the folder ExampleData into the variable read_data. Here you can use the function CSV.read(), e.g.:\nread_data = CSV.read(\"Path/datatable.csv\", DataFrame)\n\n\n\n\n\n\nNote\n\n\n\nNote, that you need to provide a sink for the data when using CSV.read(), e.g. a DataFrame.\n\n\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert read_data[1,1] == \"Alice\"\nprintln(\"CSV file 'table_out.csv' read successfully!\")",
     "crumbs": [
-      "03 Data Management",
+      "03 Data",
       "04 - Input and Output"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-05-dicts.html",
+    "href": "part-02/tutorial-02-05-dicts.html",
+    "title": "Tutorial II.V - Dictionaries",
+    "section": "",
+    "text": "Imagine you have a school directory where each student’s name is associated with their unique student ID. This is similar to how dictionaries work in programming - they allow you to store and retrieve information using key-value pairs.\nFollow the structured instructions, implement your code in the designated blocks, and affirm your comprehension with @assert statements.",
+    "crumbs": [
+      "02 First Steps",
+      "05 - Dictionaries"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-05-dicts.html#exercise-1.1---create-and-modify-a-dictionary",
+    "href": "part-02/tutorial-02-05-dicts.html#exercise-1.1---create-and-modify-a-dictionary",
+    "title": "Tutorial II.V - Dictionaries",
+    "section": "Exercise 1.1 - Create and Modify a Dictionary",
+    "text": "Exercise 1.1 - Create and Modify a Dictionary\nAdd a new book called “Harry Potter and the Philosopher’s Stone” with the author “J.K. Rowling” to the created dictionary.\n\n# Creates a dictionary of books and authors\nbooks = Dict(\n    \"1984\" =&gt; \"George Orwell\", \n    \"Nexus\" =&gt; \"Yuval Noah Harari\"\n)\n# YOUR CODE BELOW\n\n\n# Test your answer\n\n@assert haskey(books, \"Harry Potter and the Philosopher's Stone\")\nprintln(\"Great! You've successfully added a new book to the books dictionary.\")",
+    "crumbs": [
+      "02 First Steps",
+      "05 - Dictionaries"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-05-dicts.html#exercise-1.2---modify-a-dictionary",
+    "href": "part-02/tutorial-02-05-dicts.html#exercise-1.2---modify-a-dictionary",
+    "title": "Tutorial II.V - Dictionaries",
+    "section": "Exercise 1.2 - Modify a Dictionary",
+    "text": "Exercise 1.2 - Modify a Dictionary\nChange the author of “1984” to “Eric Blair” (George Orwell’s real name).\n\n# YOUR CODE BELOW\n\n\n# Test your answer\n@assert books[\"1984\"] == \"Eric Blair\"\nprintln(\"Great! You've successfully modified the books dictionary.\")",
+    "crumbs": [
+      "02 First Steps",
+      "05 - Dictionaries"
+    ]
+  },
+  {
+    "objectID": "part-02/tutorial-02-05-dicts.html#conclusion",
+    "href": "part-02/tutorial-02-05-dicts.html#conclusion",
+    "title": "Tutorial II.V - Dictionaries",
+    "section": "Conclusion",
+    "text": "Conclusion\nGreat! You’ve just navigated through the basics of dictionaries in Julia. Dictionaries are powerful data structures that allow for efficient data organization and retrieval. Continue to the next file to learn more advanced Julia concepts.",
+    "crumbs": [
+      "02 First Steps",
+      "05 - Dictionaries"
     ]
   },
   {
@@ -2621,18 +2632,7 @@
     "href": "part-04/tutorial-04-02-bounds.html",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "",
-    "text": "This Julia script is an interactive tutorial to introduce you to advanced variable handling in JuMP. You’ll learn about creating variables in containers, managing different types of variables, and working with indexed variables. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements. Make sure to have the JuMP package installed to follow this tutorial.\n\nusing JuMP\n\nNow, we need a model. As we don’t solve anything in this tutorial, we don’t need to add the solver and can solely define the abstract model.\n\nnew_model = Model()\n\nA JuMP Model\n├ solver: none\n├ objective_sense: FEASIBILITY_SENSE\n├ num_variables: 0\n├ num_constraints: 0\n└ Names registered in the model: none",
-    "crumbs": [
-      "04 Optimization",
-      "02 - Bounds"
-    ]
-  },
-  {
-    "objectID": "part-04/tutorial-04-02-bounds.html#why-different-variable-types",
-    "href": "part-04/tutorial-04-02-bounds.html#why-different-variable-types",
-    "title": "Tutorial IV.II - Variables and Bounds in JuMP",
-    "section": "Why Different Variable Types?",
-    "text": "Why Different Variable Types?\n\nContinuous variables: Represent quantities that can take any real value within a range (e.g., amount of raw materials in a production process).\nInteger variables: Represent indivisible quantities (e.g., number of products manufactured).\nBinary variables: Represent yes/no decisions (e.g., whether to build a facility at a specific location).\n\nFor example:\n@variable(model, variableName)    \nThis defines a continuous variable without any bound.\n@variable(model, 0 &lt;= variableName &lt;= 1) \nThis defines a continuous variable in an interval.\n@variable(model, 0 &lt;= variableName, Bin) \nThis defines a binary variable.\n@variable(model, 0 &lt;= variableName, Int) \nThis defines an integer variable. Note that you will have to change modelName and variableName according to your instance.",
+    "text": "Welcome to this beginner-friendly tutorial on variables and bounds in JuMP! In this lesson, we’ll explore different types of variables and how to set limits (or bounds) on them. Don’t worry if you’re new to optimization - we’ll explain everything step by step using real-world examples.\nFollow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements. Make sure to have the JuMP package installed to follow this tutorial.\nLet’s start by loading the JuMP package:\n\nusing JuMP\n\nNow, let’s create a model that we’ll use throughout this tutorial:\n\nmodel = Model()\nprintln(\"Great! We've created a new optimization model.\")\n\nGreat! We've created a new optimization model.",
     "crumbs": [
       "04 Optimization",
       "02 - Bounds"
@@ -2643,7 +2643,7 @@
     "href": "part-04/tutorial-04-02-bounds.html#exercise-1.1---create-variables",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "Exercise 1.1 - Create Variables",
-    "text": "Exercise 1.1 - Create Variables\nCreate continuous, integer, and binary variables. Create three different variables of different types without any additional bound: continuous_var as a continuous variable for new_model, integer_var as an integer variable for new_model, and binary_var as a binary variable for new_model.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert typeof(continuous_var) == VariableRef && typeof(integer_var) == VariableRef\n@assert typeof(binary_var) == VariableRef\nprintln(\"Continuous, integer, and binary variables created successfully!\")",
+    "text": "Exercise 1.1 - Create Variables\nNow it’s your turn! Create three variables: 1. A continuous variable called water_amount 2. An integer variable called cars_produced 3. A binary variable called build_store\n\n# YOUR CODE BELOW\n# Hint: Use the @variable macro three times, once for each variable\n\n\n\nCode\n# Test your answer\n@assert typeof(water_amount) == VariableRef && !is_integer(water_amount) && !is_binary(water_amount)\n@assert typeof(cars_produced) == VariableRef && is_integer(cars_produced)\n@assert typeof(build_store) == VariableRef && is_binary(build_store)\nprintln(\"Excellent work! You've successfully created continuous, integer, and binary variables.\")",
     "crumbs": [
       "04 Optimization",
       "02 - Bounds"
@@ -2654,175 +2654,197 @@
     "href": "part-04/tutorial-04-02-bounds.html#exercise-2.1---create-an-array",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "Exercise 2.1 - Create an Array",
-    "text": "Exercise 2.1 - Create an Array\nCreate an array X for new_model containing 8 variables with non-negative lower bounds.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(X) == 8 && all(lower_bound(X[i]) == 0 for i in 1:8)\nprintln(\"Array of variables created successfully!\")",
+    "text": "Exercise 2.1 - Create an Array\nImagine you’re planning production for a week. Create an array daily_production with 7 non-negative variables, one for each day of the week.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(daily_production) == 7\n@assert all(lower_bound(daily_production[i]) == 0 for i in 1:7)\nprintln(\"Great job! You've created an array of 7 non-negative variables for daily production.\")",
     "crumbs": [
       "04 Optimization",
       "02 - Bounds"
     ]
   },
   {
-    "objectID": "part-04/tutorial-04-02-bounds.html#exercise-2.2---create-a-matrix",
-    "href": "part-04/tutorial-04-02-bounds.html#exercise-2.2---create-a-matrix",
+    "objectID": "part-04/tutorial-04-02-bounds.html#exercise-2.2---create-a-matrix-of-variables",
+    "href": "part-04/tutorial-04-02-bounds.html#exercise-2.2---create-a-matrix-of-variables",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
-    "section": "Exercise 2.2 - Create a Matrix",
-    "text": "Exercise 2.2 - Create a Matrix\nCreate a matrix Y for new_model containing binary variables with a size of 3 x 3.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert size(Y, 1) == 3 && size(Y, 2) == 3\n@assert all(has_lower_bound(Y[i, j]) == false for i in 1:3, j in 1:3)\n@assert all(has_upper_bound(Y[i, j]) == false for i in 1:3, j in 1:3)\nprintln(\"Matrix of variables created successfully!\")",
+    "section": "Exercise 2.2 - Create a Matrix of Variables",
+    "text": "Exercise 2.2 - Create a Matrix of Variables\nNow, imagine you’re deciding whether to stock 4 different products in 3 different stores. Create a 3x4 matrix of binary variables called stock_decision.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert size(stock_decision) == (3, 4)\n@assert all(is_binary(stock_decision[i,j]) for i in 1:3, j in 1:4)\nprintln(\"Excellent! You've created a 3x4 matrix of binary variables for stocking decisions.\")",
     "crumbs": [
       "04 Optimization",
       "02 - Bounds"
     ]
   },
   {
-    "objectID": "part-04/tutorial-04-02-bounds.html#exercise-2.3---create-indexed-variables",
-    "href": "part-04/tutorial-04-02-bounds.html#exercise-2.3---create-indexed-variables",
+    "objectID": "part-04/tutorial-04-02-bounds.html#exercise-3.1---set-bounds-on-a-variable",
+    "href": "part-04/tutorial-04-02-bounds.html#exercise-3.1---set-bounds-on-a-variable",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
-    "section": "Exercise 2.3 - Create Indexed Variables",
-    "text": "Exercise 2.3 - Create Indexed Variables\nCreate indexed variables based on a set. Create variables W indexed by set N of size 1, 2, …, 6 with non-negative lower bounds.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert length(W) == 6 && all(lower_bound(W[i]) == 0 for i in N)\nprintln(\"Indexed variables created successfully!\")",
+    "section": "Exercise 3.1 - Set Bounds on a Variable",
+    "text": "Exercise 3.1 - Set Bounds on a Variable\nCreate a variable temperature that represents the temperature setting on a thermostat. It should be between 0 and 37 degrees.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert lower_bound(temperature) == 0\n@assert upper_bound(temperature) == 37\nprintln(\"Well done! You've created a variable for temperature with appropriate bounds.\")",
     "crumbs": [
       "04 Optimization",
       "02 - Bounds"
     ]
   },
   {
-    "objectID": "part-04/tutorial-04-02-bounds.html#exercise-2.4---create-nested-containers",
-    "href": "part-04/tutorial-04-02-bounds.html#exercise-2.4---create-nested-containers",
-    "title": "Tutorial IV.II - Variables and Bounds in JuMP",
-    "section": "Exercise 2.4 - Create Nested Containers",
-    "text": "Exercise 2.4 - Create Nested Containers\nCreate a 3-dimensional array Z for new_model containing integer variables with dimensions 2 x 3 x 4, where each variable has a lower bound of 0 and an upper bound of 10.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert size(Z) == (2, 3, 4)\n@assert all(is_integer(Z[i,j,k]) && lower_bound(Z[i,j,k]) == 0 && upper_bound(Z[i,j,k]) == 10 \n            for i in 1:2, j in 1:3, k in 1:4)\nprintln(\"3D array of integer variables created successfully!\")",
-    "crumbs": [
-      "04 Optimization",
-      "02 - Bounds"
-    ]
-  },
-  {
-    "objectID": "part-04/tutorial-04-01-jump.html",
-    "href": "part-04/tutorial-04-01-jump.html",
-    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
+    "objectID": "part-03/tutorial-03-05-Plotting.html",
+    "href": "part-03/tutorial-03-05-Plotting.html",
+    "title": "Tutorial III.V - Plotting Graphs",
     "section": "",
-    "text": "This Julia script is an interactive tutorial to introduce you to mathematical optimization using JuMP and the HiGHS solver. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements.\nJuMP is a general framework to formulate mathematical models in Julia, HiGHS is a open source solver with a MIT license and draws quiet some attention, as it is pretty fast for an open source solver. Nonetheless, we could also use other solvers in JuMP by only changing of a few lines of code, making it more versatile as for example GurobiPy in Python.\nIf you ever feel like you need more information, the JuMP Documentation is a great ressource: JuMP Documentation\nWe are going to structure this tutorial based on a small example instance:\n\nSuppose we are planning the production of two products\n\nThe profit from each unit of Product A is 100\nThe profit from each unit of Product B is 150\n\nThe production is constrained by the available hours in two departments\n\nEach unit of Product A requires 2 hours of Cutting and 4 hours of Finishing\nEach unit of Product B requires 4 hours of Cutting and 3 hours of Finishing\n40 hours are available in total in the Cutting department\n60 hours are available in total in the Finishing department\n\nWe want to maximize the profit given these constraints\n\nIf you followed the struture of the tutorials, you first have to install the JuMP Package and the HiGHS Package before you can start using it:\n\nimport Pkg; Pkg.add([\"JuMP\",\"HiGHS\"])\n\n\nusing JuMP, HiGHS",
+    "text": "Welcome to this tutorial on plotting in Julia! We’ll be using the powerful Plots.jl package to create beautiful and informative visualizations. Don’t worry if you’re new to plotting – we’ll start with the basics and gradually build up to more advanced techniques.\nIn this tutorial, you’ll learn how to: 1. Create simple plots like line graphs and scatter plots 2. Customize your plots with colors, labels, and styles 3. Add multiple data series to a single plot 4. Save your plots as image files for use in reports or presentations\nFollow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.\nBefore we begin, let’s make sure you have the necessary packages installed. If you’ve been following the course, you’ll need to install the Plots and StatsPlots packages:\n\nimport Pkg; Pkg.add([\"Plots\",\"StatsPlots\"])\n\nNow, let’s load these packages:\n\nusing Plots, StatsPlots",
     "crumbs": [
-      "04 Optimization",
-      "01 - JuMP"
+      "03 Data",
+      "05 - Plotting"
     ]
   },
   {
-    "objectID": "part-04/tutorial-04-01-jump.html#exercise-2.1---create-variables",
-    "href": "part-04/tutorial-04-01-jump.html#exercise-2.1---create-variables",
-    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
-    "section": "Exercise 2.1 - Create Variables",
-    "text": "Exercise 2.1 - Create Variables\nCreate two continous variables equal or larger 0 called productA and productB that represent the the number of units produced in our problem for our model model.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert @isdefined productA\n@assert typeof(productA) == VariableRef\n@assert has_upper_bound(productA) == false\n@assert has_lower_bound(productA) == true\n@assert lower_bound(productA) == 0\n@assert @isdefined productA\n@assert typeof(productB) == VariableRef\n@assert has_upper_bound(productB) == false\n@assert has_lower_bound(productB) == true\n@assert lower_bound(productB) == 0\nprintln(\"Variables added to the model successfully!\")",
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 1.1 - Create a Scatter Plot",
+    "text": "Exercise 1.1 - Create a Scatter Plot\nNow it’s your turn! Create a scatter plot using the scatter() function instead of plot(). Use a range from 1 to 20 for x, and generate 20 random numbers for y.\n\n# YOUR CODE BELOW\n# Hint: Use x = 1:20 and y = rand(20)\n\n\n\nCode\n# Test your answer\n@assert @isdefined scatter_plot\nprintln(\"Great job! You've created your first scatter plot.\")\ndisplay(scatter_plot)",
     "crumbs": [
-      "04 Optimization",
-      "01 - JuMP"
+      "03 Data",
+      "05 - Plotting"
     ]
   },
   {
-    "objectID": "part-04/tutorial-04-01-jump.html#exercise-3.1---create-constraints",
-    "href": "part-04/tutorial-04-01-jump.html#exercise-3.1---create-constraints",
-    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
-    "section": "Exercise 3.1 - Create Constraints",
-    "text": "Exercise 3.1 - Create Constraints\nCreate two constraints based on the on the Cutting and Finishing department hours of the problem description in this tutorial. Call the first constraint cutting_constraint and the second constraint finishing_constraint.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert is_valid(model, cutting_constraint)\n@assert is_valid(model, finishing_constraint)\nprintln(\"Constraints added to the model successfully!\")\nprintln(\"Note, that only the existence of these constraints was checked!\")\nprintln(\"The optimization later will show, whether the formulation was correct.\")",
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 2.1 - Customize a Line Plot",
+    "text": "Exercise 2.1 - Customize a Line Plot\nNow it’s your turn to get creative! Customize a line plot with your choice of colors, line styles, and markers. Save your masterpiece in the variable custom_line_plot.\n\n# YOUR CODE BELOW\n# Hint: Try different line styles (:dash, :dot), colors (:blue, :green), and markers (:star, :diamond)\n\n\n\nCode\n# Test your answer\n@assert @isdefined custom_line_plot\nprintln(\"Excellent! You've created a custom line plot.\")\ndisplay(custom_line_plot)\n\n\n\n\n\n\n\n\nNote\n\n\n\nFeel free to experiment with different options. There’s no “right” answer here – it’s all about what looks good to you!",
     "crumbs": [
-      "04 Optimization",
-      "01 - JuMP"
+      "03 Data",
+      "05 - Plotting"
     ]
   },
   {
-    "objectID": "part-04/tutorial-04-01-jump.html#exercise-4.1---create-the-objective-function",
-    "href": "part-04/tutorial-04-01-jump.html#exercise-4.1---create-the-objective-function",
-    "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
-    "section": "Exercise 4.1 - Create the Objective Function",
-    "text": "Exercise 4.1 - Create the Objective Function\nCreate the objective function based on the problem description of this tutorial. The objective is to maximize profit based on the values of productA and productB.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert typeof(objective_function(model)) == AffExpr\nprintln(\"An objective function defined successfully!\")\nprintln(\"The optimization later will show, whether the formulation was correct.\")",
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---create-a-multiple-series-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---create-a-multiple-series-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 3.1 - Create a Multiple Series Plot",
+    "text": "Exercise 3.1 - Create a Multiple Series Plot\nNYour turn! Create a plot called multi_series_plot with three data series y1, y2, and y3. Make sure to give each series a different color and label.\n\n# YOUR CODE BELOW\n# Hint: Use plot() for the first series, then plot!() for the second and third\n\n\n\nCode\n# Test your answer\n@assert @isdefined y1\n@assert @isdefined y2\n@assert @isdefined y3\n@assert @isdefined multi_series_plot\nprintln(\"Fantastic! You've created a plot with multiple series.\")\ndisplay(multi_series_plot)",
     "crumbs": [
-      "04 Optimization",
-      "01 - JuMP"
+      "03 Data",
+      "05 - Plotting"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-01-variables.html",
-    "href": "part-02/tutorial-02-01-variables.html",
-    "title": "Tutorial II.I - Variables and Types",
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 3.1 - Save a Plot to a File",
+    "text": "Exercise 3.1 - Save a Plot to a File\nSave your multi_series_plot as a PNG file named “saved_plot.png” in the “ExampleData” folder.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert isfile(\"ExampleData/saved_plot.png\") \"File does not exist yet.\"\nprintln(\"Well done! You've saved your plot as an image file.\")",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#bar-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#bar-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Bar Plot",
+    "text": "Bar Plot\n\n# Bar plot\nx_categories = [\"A\", \"B\", \"C\", \"D\"]\ny_values = [15, 23, 18, 30]\nbar_plot = bar(\n    x_categories, \n    y_values, \n    title=\"Bar Plot Example\"\n)\ndisplay(bar_plot)",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#histogram",
+    "href": "part-03/tutorial-03-05-Plotting.html#histogram",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Histogram",
+    "text": "Histogram\n\ndata = randn(1000)\nhist_plot = histogram(\n    data, \n    bins=30, \n    title=\"Histogram Example\"\n)\ndisplay(hist_plot)",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#box-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#box-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Box Plot",
+    "text": "Box Plot\n\n# Box plot\ngroup = repeat(1:4, inner=50)\ny = randn(200) .+ group\nbox_plot = boxplot(\n    group, \n    y, \n    title=\"Box Plot Example\"\n)\ndisplay(box_plot)",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-03-DataFrames.html",
+    "href": "part-03/tutorial-03-03-DataFrames.html",
+    "title": "Tutorial III.III - DataFrames in Julia",
     "section": "",
-    "text": "Welcome to this interactive Julia tutorial which introduces the basics of variables and types. Understanding variables and their types is crucial as they are the building blocks of any program. They determine how data is stored, manipulated, and how efficiently your code runs.\nThis script is designed to be interactive. Follow the instructions, write your code in the designated code blocks, and then execute the corresponding code. Each exercise is followed by an @assert statement that checks your solution.\nThere are two ways to run the code:\n\nThe easiest way to run the code is by using VS Code. First, install the Julia and the Jupyter Extension. Then, you can open the downloaded .ipynb files and run the code from there.\nThe second way is by using IJulia. Start Julia, and type using IJulia; notebook() in the Julia prompt. This will open a new browser window where you can run the code. If you have not installed IJulia yet, you can do so by typing ] in the Julia prompt to open the package manager, and then installing IJulia by typing add IJulia.\n\n\n\n\n\n\n\nNote\n\n\n\nAlways replace ‘YOUR CODE BELOW’ with your actual code.",
+    "text": "Imagine a DataFrame as a digital spreadsheet. It’s a way to organize and work with data in rows and columns. Each column can hold different types of information, like names, ages, or salaries. In this tutorial, we’ll learn how to create DataFrames, add and change data, and perform simple operations on our data.\n\n\n\n\n\n\nNote\n\n\n\nBefore we start, make sure you have the DataFrames package installed. If you’re not sure how to do this, check the previous tutorial on package management!\n\n\nLet’s begin by importing the DataFrames package:\n\n# Import the DataFrames package\nusing DataFrames",
     "crumbs": [
-      "02 First Steps",
-      "01 - Variables"
+      "03 Data",
+      "03 - DataFrames"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-01-variables.html#exercise-1.1---declare-a-variable",
-    "href": "part-02/tutorial-02-01-variables.html#exercise-1.1---declare-a-variable",
-    "title": "Tutorial II.I - Variables and Types",
-    "section": "Exercise 1.1 - Declare a Variable",
-    "text": "Exercise 1.1 - Declare a Variable\nDeclare a variable named x and assign it the value 1.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert x == 1 \"Check again, the value of x should be 1. Remember to assign the value directly to x.\"\nprintln(\"Great, you have correctly assigned the value $x to the variable 'x'.\")",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-1.1---create-a-dataframe",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-1.1---create-a-dataframe",
+    "title": "Tutorial III.III - DataFrames in Julia",
+    "section": "Exercise 1.1 - Create a DataFrame",
+    "text": "Exercise 1.1 - Create a DataFrame\nCreate and Test a DataFrame. Create a DataFrame named employees with the columns Name, Age, and Salary, and populate it with the specified data: John is 28 years old and earns 50000, Mike is 23 years old and earns 62000. Frank is 37 years old and earns 90000.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert employees == DataFrame(\n    Name = [\"John\", \"Mike\", \"Frank\"], \n    Age = [28, 23, 37], \n    Salary = [50000, 62000, 90000]\n)\nprintln(\"DataFrame created successfully!\")\nprintln(employees)\n\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, for more help, use ? in the REPL and type DataFrame.",
     "crumbs": [
-      "02 First Steps",
-      "01 - Variables"
+      "03 Data",
+      "03 - DataFrames"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-01-variables.html#exercise-1.2---declare-a-string-variable",
-    "href": "part-02/tutorial-02-01-variables.html#exercise-1.2---declare-a-string-variable",
-    "title": "Tutorial II.I - Variables and Types",
-    "section": "Exercise 1.2 - Declare a String Variable",
-    "text": "Exercise 1.2 - Declare a String Variable\nDeclare a variable named hi and assign it the string \"Hello, Optimization!\".\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert hi == \"Hello, Optimization!\" \"Make sure the variable 'hi' contains the exact string \\\"Hello, Optimization\\\"!\"\nprintln(\"Good, the variable 'hi' now states \\\"$hi\\\".\")",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-2.1---access-the-age-column",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-2.1---access-the-age-column",
+    "title": "Tutorial III.III - DataFrames in Julia",
+    "section": "Exercise 2.1 - Access the Age Column",
+    "text": "Exercise 2.1 - Access the Age Column\nAccess the Age column from the DataFrame and save it in a new variable ages.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert ages == [28, 23, 37]\nprintln(\"Correct, the Ages column is: \", ages)",
     "crumbs": [
-      "02 First Steps",
-      "01 - Variables"
+      "03 Data",
+      "03 - DataFrames"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-01-variables.html#exercise-2.1---create-an-integer-variable",
-    "href": "part-02/tutorial-02-01-variables.html#exercise-2.1---create-an-integer-variable",
-    "title": "Tutorial II.I - Variables and Types",
-    "section": "Exercise 2.1 - Create an Integer Variable",
-    "text": "Exercise 2.1 - Create an Integer Variable\nCreate an Integer variable answerUniverse and set it to 42.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert answerUniverse == 42 \"The variable 'answerUniverse' should hold 42.\"\nprintln(\"Great, the answer to all questions on the universe is $answerUniverse now.\")",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-2.2---update-johns-salary",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-2.2---update-johns-salary",
+    "title": "Tutorial III.III - DataFrames in Julia",
+    "section": "Exercise 2.2 - Update John’s Salary",
+    "text": "Exercise 2.2 - Update John’s Salary\nUpdate John’s salary to 59000.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert employees.Salary[1] == 59000\nprintln(\"Modified DataFrame: \")\nprintln(employees)",
     "crumbs": [
-      "02 First Steps",
-      "01 - Variables"
+      "03 Data",
+      "03 - DataFrames"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-01-variables.html#exercise-2.2---create-a-float-variable",
-    "href": "part-02/tutorial-02-01-variables.html#exercise-2.2---create-a-float-variable",
-    "title": "Tutorial II.I - Variables and Types",
-    "section": "Exercise 2.2 - Create a Float Variable",
-    "text": "Exercise 2.2 - Create a Float Variable\nCreate a Float variable money and set it to 1.35.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert money == 1.35 \"The variable 'money' should hold the Float64 1.35.\"\nprintln(\"Perfect, the you have stored $money in the variable 'money'.\")",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-3.1---filter-the-dataframe",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-3.1---filter-the-dataframe",
+    "title": "Tutorial III.III - DataFrames in Julia",
+    "section": "Exercise 3.1 - Filter the DataFrame",
+    "text": "Exercise 3.1 - Filter the DataFrame\nFilter the DataFrame to include only employees with salaries above 60000. Save the resulting employees in the DataFrame high_earners.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert nrow(high_earners) == 2\nprintln(\"High earners: \")\nprintln(high_earners)",
     "crumbs": [
-      "02 First Steps",
-      "01 - Variables"
+      "03 Data",
+      "03 - DataFrames"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-01-variables.html#exercise-2.3---create-a-boolean-variable",
-    "href": "part-02/tutorial-02-01-variables.html#exercise-2.3---create-a-boolean-variable",
-    "title": "Tutorial II.I - Variables and Types",
-    "section": "Exercise 2.3 - Create a Boolean Variable",
-    "text": "Exercise 2.3 - Create a Boolean Variable\nCreate a Boolean variable isStudent and set it to true.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert isStudent == true \"The variable 'isStudent' should be set to true.\"\nprintln(\"Correct, you are a student now.\")",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-4.1---sort-the-dataframe",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-4.1---sort-the-dataframe",
+    "title": "Tutorial III.III - DataFrames in Julia",
+    "section": "Exercise 4.1 - Sort the DataFrame",
+    "text": "Exercise 4.1 - Sort the DataFrame\nSort the DataFrame based on the Age column and save it as sorted_df.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert sorted_df.Age[1] == 23\nprintln(\"DataFrame sorted by age: \")\nprintln(sorted_df)\n\n\n\n\n\n\n\n\nTip\n\n\n\nIf you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets.",
     "crumbs": [
-      "02 First Steps",
-      "01 - Variables"
+      "03 Data",
+      "03 - DataFrames"
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-01-variables.html#exercise-3.1---type-annotation",
-    "href": "part-02/tutorial-02-01-variables.html#exercise-3.1---type-annotation",
-    "title": "Tutorial II.I - Variables and Types",
-    "section": "Exercise 3.1 - Type Annotation",
-    "text": "Exercise 3.1 - Type Annotation\nDeclare a variable y with an explicit type annotation of Int64 and assign it the value 5.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert y == 5 && typeof(y) == Int64 \"Make sure 'y' is of type Int64 and has the value 5.\"\nprintln(\"Great! You've created an Int64 variable 'y' with the value $y.\")",
+    "objectID": "part-03/tutorial-03-03-DataFrames.html#exercise-5.1---loop-over-dataframe",
+    "href": "part-03/tutorial-03-03-DataFrames.html#exercise-5.1---loop-over-dataframe",
+    "title": "Tutorial III.III - DataFrames in Julia",
+    "section": "Exercise 5.1 - Loop over DataFrame",
+    "text": "Exercise 5.1 - Loop over DataFrame\nCreate a new column called Bonus in the employees DataFrame. The bonus should be calculated as 10% of the salary for employees over 30, and 5% for those 30 and under. Use a loop to iterate over the rows and calculate the bonus.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert filter(\n    row -&gt; row.Bonus == 2500, \n    employees\n).Name == [\"John\"] \"John should have a bonus of 2500\"\n@assert filter(\n    row -&gt; row.Bonus == 3100, \n    employees\n).Name == [\"Mike\"] \"Mike should have a bonus of 3100\"\n@assert filter(\n    row -&gt; row.Bonus == 9000, \n    employees\n).Name == [\"Frank\"] \"Frank should have a bonus of 9000\"\nprintln(\"Great job! All the bonuses are correct!\")",
     "crumbs": [
-      "02 First Steps",
-      "01 - Variables"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-01-variables.html#exercise-4.1---string-interpolation",
-    "href": "part-02/tutorial-02-01-variables.html#exercise-4.1---string-interpolation",
-    "title": "Tutorial II.I - Variables and Types",
-    "section": "Exercise 4.1 - String Interpolation",
-    "text": "Exercise 4.1 - String Interpolation\nCreate a string message that says \"y is [value of y]\" using string interpolation.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert message == \"y is 5\" \"Make sure your string includes the correct value of y.\"\nprintln(\"Excellent! Your interpolated string is: $message\")",
-    "crumbs": [
-      "02 First Steps",
-      "01 - Variables"
+      "03 Data",
+      "03 - DataFrames"
     ]
   },
   {
@@ -2830,7 +2852,7 @@
     "href": "part-02/tutorial-02-02-vectors.html",
     "title": "Tutorial II.II - Vectors and Matrices",
     "section": "",
-    "text": "This interactive Julia script introduces the basics of vectors, matrices, and tuples. Vectors and matrices are fundamental in numerical computing and data analysis, while tuples are essential for grouping different types of data. Understanding these data structures and how to manipulate them is crucial in Julia. Follow the instructions, write your code in the designated code blocks, and execute the corresponding code cell.\n\n\n\n\n\n\nNote\n\n\n\nIf a cell is marked with YOUR CODE BELOW, you are expected to write your code in that cell.",
+    "text": "This interactive Julia script introduces the basics of vectors, matrices, and tuples.\n\nA vector is like a single row in a spreadsheet or a shopping list - it stores items in a line\nA matrix is like a spreadsheet - it has rows and columns\nA tuple is like a sealed package containing different types of items\n\nUnderstanding these data structures and how to manipulate them is crucial in Julia. Follow the instructions, write your code in the designated code blocks, and execute the corresponding code cell.\n\n\n\n\n\n\nNote\n\n\n\nIf a cell is marked with YOUR CODE BELOW, you are expected to write your code in that cell.",
     "crumbs": [
       "02 First Steps",
       "02 - Vectors"

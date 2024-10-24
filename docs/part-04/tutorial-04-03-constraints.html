@@ -200,8 +200,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-02/tutorial-02-05-scope.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">05 - Scope</span></a>
+  <a href="../part-02/tutorial-02-05-dicts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 - Dictionaries</span></a>
   </div>
 </li>
       </ul>
@@ -209,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
- <span class="menu-text">03 Data Management</span></a>
+ <span class="menu-text">03 Data</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -230,13 +230,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part-03/tutorial-03-02-handling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">02 - Handling Data</span></a>
+ <span class="menu-text">02 - Packages</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part-03/tutorial-03-03-DataFrames.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">03 - Comparisons</span></a>
+ <span class="menu-text">03 - DataFrames</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -328,13 +328,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#section-1---objective-functions-with-container-variables" id="toc-section-1---objective-functions-with-container-variables" class="nav-link" data-scroll-target="#section-1---objective-functions-with-container-variables">Section 1 - Objective Functions with Container Variables</a>
   <ul class="collapse">
-  <li><a href="#exercise-1.1---define-an-array-of-variables-and-an-objective-function" id="toc-exercise-1.1---define-an-array-of-variables-and-an-objective-function" class="nav-link" data-scroll-target="#exercise-1.1---define-an-array-of-variables-and-an-objective-function">Exercise 1.1 - Define an array of variables and an objective function</a></li>
+  <li><a href="#exercise-1.1---define-arrays" id="toc-exercise-1.1---define-arrays" class="nav-link" data-scroll-target="#exercise-1.1---define-arrays">Exercise 1.1 - Define arrays</a></li>
   </ul></li>
   <li><a href="#section-2---constraints-within-containers" id="toc-section-2---constraints-within-containers" class="nav-link" data-scroll-target="#section-2---constraints-within-containers">Section 2 - Constraints within Containers</a></li>
-  <li><a href="#exercise-2.1---define-constraints-called-maxprofit-using-an-array-of-variables" id="toc-exercise-2.1---define-constraints-called-maxprofit-using-an-array-of-variables" class="nav-link" data-scroll-target="#exercise-2.1---define-constraints-called-maxprofit-using-an-array-of-variables">Exercise 2.1 - Define constraints called ‘maxProfit’ using an array of variables</a></li>
+  <li><a href="#exercise-2.1---define-constraints" id="toc-exercise-2.1---define-constraints" class="nav-link" data-scroll-target="#exercise-2.1---define-constraints">Exercise 2.1 - Define constraints</a></li>
   <li><a href="#section-3---implementing-conditional-constraints" id="toc-section-3---implementing-conditional-constraints" class="nav-link" data-scroll-target="#section-3---implementing-conditional-constraints">Section 3 - Implementing Conditional Constraints</a>
   <ul class="collapse">
-  <li><a href="#exercise-3.1---add-a-conditional-constraint-smallprofit-to-the-previous-model" id="toc-exercise-3.1---add-a-conditional-constraint-smallprofit-to-the-previous-model" class="nav-link" data-scroll-target="#exercise-3.1---add-a-conditional-constraint-smallprofit-to-the-previous-model">Exercise 3.1 - Add a conditional constraint ‘smallProfit’ to the previous model</a></li>
+  <li><a href="#exercise-3.1---add-a-conditional-constraints" id="toc-exercise-3.1---add-a-conditional-constraints" class="nav-link" data-scroll-target="#exercise-3.1---add-a-conditional-constraints">Exercise 3.1 - Add a conditional constraints</a></li>
   </ul></li>
   <li><a href="#visualization-of-results" id="toc-visualization-of-results" class="nav-link" data-scroll-target="#visualization-of-results">Visualization of Results</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
@@ -366,39 +366,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This Julia script is an interactive tutorial to introduce you to advanced handling of objective functions and constraints in JuMP. You’ll learn about defining and managing objective functions and constraints within containers (arrays, dictionaries, matrices), and how to implement conditional constraints effectively.</p>
-<p>Follow the instructions, write your code in the designated code blocks, and confirm your understanding with <code>@assert</code> statements. Make sure to have the JuMP package installed to follow this tutorial.</p>
+<p>Welcome to this tutorial on constraints in JuMP! In this lesson, we’ll explore how to add rules (constraints) to our optimization problems.</p>
+<p>By the end of this tutorial, you’ll be able to: 1. Create simple constraints for your optimization problems 2. Use containers (like arrays) to manage multiple similar constraints 3. Create more complex constraints based on conditions</p>
+<p>Let’s start by loading the necessary packages:</p>
+<div id="1acb38b1" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, let’s create a model that we’ll use throughout this tutorial:</p>
+<div id="99b5bd52" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! We've created a new optimization model."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Great! We've created a new optimization model.</code></pre>
+</div>
+</div>
 </section>
 <section id="section-1---objective-functions-with-container-variables" class="level1">
 <h1>Section 1 - Objective Functions with Container Variables</h1>
-<p>First, we need to load the JuMP and HiGHS packages.</p>
-<div id="92679d9d" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Then, we need a model first to assign something to it.</p>
-<div id="a6d08729" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>another_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>A JuMP Model
-├ solver: HiGHS
-├ objective_sense: FEASIBILITY_SENSE
-├ num_variables: 0
-├ num_constraints: 0
-└ Names registered in the model: none</code></pre>
-</div>
-</div>
 <p>Defining objective functions with variables in containers allows for scalable and dynamic model formulations. First, we need a container with variables for the objective function. For example:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(modelName, variableName[<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now, we can define an objective function with the container. For example:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(modelName, Max, <span class="fu">sum</span>(variableName[i] <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section id="exercise-1.1---define-an-array-of-variables-and-an-objective-function" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-1.1---define-an-array-of-variables-and-an-objective-function">Exercise 1.1 - Define an array of variables and an objective function</h2>
+<section id="exercise-1.1---define-arrays" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1.1---define-arrays">Exercise 1.1 - Define arrays</h2>
 <p>Scenario: Imagine you’re optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.</p>
 <p>Define an array of variables and an objective function for <code>another_model</code>. The variables should be called <code>profits</code> and have a range from <code>1:8</code>. It has a lower bound of <code>0</code>. The objective should be a Maximization of the sum of all <code>profits</code>.</p>
-<div id="b73ebf47" class="cell" data-execution_count="3">
+<div id="efa520af" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="6273950c" class="cell" data-execution_count="4">
+<div id="b8633a1e" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -418,14 +414,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This would create a constraint called <code>constraintName</code> for each <code>i</code> - thus <code>1</code>,<code>2</code>, and <code>3</code> - where <code>variableName[1]</code>, <code>variableName[2]</code>, and <code>variableName[3]</code> are restricted to be maximally <code>100</code>.</p>
 </section>
-<section id="exercise-2.1---define-constraints-called-maxprofit-using-an-array-of-variables" class="level1">
-<h1>Exercise 2.1 - Define constraints called ‘maxProfit’ using an array of variables</h1>
+<section id="exercise-2.1---define-constraints" class="level1">
+<h1>Exercise 2.1 - Define constraints</h1>
 <p>Continuing our factory scenario: Each product has a maximum daily production capacity due to machine limitations.</p>
 <p>Define constraints called <code>maxProfit</code> using an array of variables. The logic: Each profit defined in the previous task should be less than or equal to <code>12</code>.</p>
-<div id="5778a062" class="cell" data-execution_count="5">
+<div id="cde975bb" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="f67f69c3" class="cell" data-execution_count="6">
+<div id="c85cce73" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -442,14 +438,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    variableName[i] <span class="op">&lt;=</span> <span class="fl">50</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This would create a constraint called <code>constraintName</code> for each <code>i</code> - thus <code>1</code>,<code>2</code>, and <code>3</code> - where <code>variableName[1]</code>, <code>variableName[2]</code> are restricted to be maximally <code>50</code> and <code>variableName[3]</code> was not restricted.</p>
-<section id="exercise-3.1---add-a-conditional-constraint-smallprofit-to-the-previous-model" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-3.1---add-a-conditional-constraint-smallprofit-to-the-previous-model">Exercise 3.1 - Add a conditional constraint ‘smallProfit’ to the previous model</h2>
+<section id="exercise-3.1---add-a-conditional-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-3.1---add-a-conditional-constraints">Exercise 3.1 - Add a conditional constraints</h2>
 <p>Scenario extension: The first 4 products are new and have limited market demand.</p>
 <p>Add a conditional constraint <code>smallProfit</code> to the previous model. Condition: Only the first 4 variables profit have to be lower than 5.</p>
-<div id="4512d41f" class="cell" data-execution_count="7">
+<div id="5e4ede99" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="48840c7e" class="cell" data-execution_count="8">
+<div id="15eb21d0" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -469,7 +465,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="visualization-of-results" class="level1">
 <h1>Visualization of Results</h1>
 <p>Let’s visualize our optimal solution:</p>
-<div id="09e9d42d" class="cell" data-execution_count="9">
+<div id="6c8b5c7d" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming the model has been solved!!!</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>optimal_profits <span class="op">=</span> <span class="fu">value</span>.(profits)</span>

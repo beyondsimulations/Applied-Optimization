@@ -1,0 +1,159 @@
+---
+title: "Tutorial II.V - Dictionaries"
+subtitle: "Applied Optimization with Julia"
+
+format:
+    html:
+        theme: litera
+        highlight-style: arrow
+        linkcolor: "#a60000"
+        code-copy: true
+        code-link: true
+        toc: true
+        toc-location: right
+        code-overflow: wrap
+    pdf: 
+        documentclass: report
+        geometry:
+            - margin=1in
+        fontfamily: roboto
+        fontfamilyoptions: sfdefault
+        colorlinks: true
+    ipynb:
+        code-copy: true
+        code-overflow: wrap
+
+engine: julia
+---
+
+# Introduction
+
+Imagine you have a school directory where each student's name is associated with their unique student ID. This is similar to how dictionaries work in programming - they allow you to store and retrieve information using key-value pairs.
+
+Follow the structured instructions, implement your code in the designated blocks, and affirm your comprehension with `@assert` statements.
+
+# Section 1 - Creating and Accessing Dictionaries
+
+Think of it this way:
+
+- A dictionary is like a lookup table
+- Each entry has a unique key (like a student's name) 
+- And an associated value (like their ID number)
+
+Let's see some examples:
+
+```{julia}
+#| eval: true
+# Creating a dictionary
+student_ids = Dict(
+    "Elio" => 1001, 
+    "Bob" => 1002, 
+    "Yola" => 1003
+)
+```
+
+```{julia}
+#| eval: true
+# Accessing values
+println("Elio's ID: ", student_ids["Elio"])
+```
+
+```{julia}
+#| eval: true
+# Adding a new entry
+student_ids["David"] = 1004
+```
+
+```{julia}
+#| eval: true
+# Checking if a key exists
+if haskey(student_ids, "Eve")
+    println("Eve's ID: ", student_ids["Eve"])
+else
+    println("Eve is not in the directory")
+end
+```
+
+## Exercise 1.1 - Create and Modify a Dictionary
+
+Add a new book called "Harry Potter and the Philosopher's Stone" with the author "J.K. Rowling" to the created dictionary.
+
+```{julia}
+#| eval: false 
+# Creates a dictionary of books and authors
+books = Dict(
+    "1984" => "George Orwell", 
+    "Nexus" => "Yuval Noah Harari"
+)
+# YOUR CODE BELOW
+
+```
+
+```{julia}
+#| eval: false
+# Test your answer
+
+@assert haskey(books, "Harry Potter and the Philosopher's Stone")
+println("Great! You've successfully added a new book to the books dictionary.")
+```
+
+## Exercise 1.2 - Modify a Dictionary
+
+Change the author of "1984" to "Eric Blair" (George Orwell's real name).
+
+```{julia}
+#| eval: false
+# YOUR CODE BELOW
+```
+```{julia}
+#| eval: false
+# Test your answer
+@assert books["1984"] == "Eric Blair"
+println("Great! You've successfully modified the books dictionary.")
+```
+
+# Section 2 - Advanced Dictionary Operations
+
+Dictionaries can do more than just store simple information. Let's explore some features:
+
+```{julia}
+#| eval: true
+# A dictionary of student grades
+grades = Dict(
+    "Elio" => [85, 92, 78],
+    "Bob" => [76, 88, 94],
+    "Yola" => [90, 91, 89]
+)
+```
+
+```{julia}
+#| eval: true
+# Get all the keys (student names)
+student_names = keys(grades)
+println("Students: ", student_names)
+```
+
+```{julia}
+#| eval: true
+# Get all the values (grade lists)
+all_grades = values(grades)
+println("All grades: ", all_grades)
+```
+
+```{julia}
+#| eval: true
+# Calculate average grade for each student
+for (student, grade_list) in grades
+    average = sum(grade_list) / length(grade_list)
+    println("$student's average grade: $average")
+end
+```
+
+:::{.callout-note}
+The `(student, grade_list)` is a tuple that contains the key and value of each entry in the dictionary. We could also name the tuple as `(key, value)` or `(a, b)`.
+:::
+
+## Conclusion
+Great! You've just navigated through the basics of dictionaries in Julia. Dictionaries are powerful data structures that allow for efficient data organization and retrieval. Continue to the next file to learn more advanced Julia concepts.
+
+{{< include ../include/tutorial_end.qmd >}}

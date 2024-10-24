@@ -23,31 +23,36 @@ format:
 
 # Introduction
 
-This Julia script is an interactive tutorial to introduce you to the transportation problem using JuMP. Here, you will learn how to model the transportation problem and solve it using JuMP and HiGHS. Follow the instructions and confirm your understanding with some small tasks below. 
+Welcome to this tutorial on the transportation problem using JuMP! As always, don't worry if you're new to optimization - we'll walk through everything step by step using a real-world example.
 
-Make sure to have the JuMP, DataFrames and CSV package as well as the HiGHS solver installed to follow this tutorial.
+Imagine you're running a solar panel distribution company. You have several warehouses (suppliers) and need to ship solar panels to various solar farms (customers). Your goal is to minimize the total cost of transportation while meeting all customer demands.
 
-```{julia}
-#| eval: true
-#| echo: false
-#| output: false
-using Pkg
-Pkg.add("JuMP")
-Pkg.add("HiGHS")
-Pkg.add("DataFrames")
-Pkg.add("CSV")
-```
+By the end of this tutorial, you'll be able to:
+
+1. Understand what a transportation problem is
+2. Set up a transportation problem using JuMP
+3. Solve the problem and interpret the results
+
+Let's start by loading the necessary packages:
 
 ```{julia}
-#| eval: true
-#| output: false
 using JuMP, HiGHS
-using DataFrames, CSV    
+using DataFrames, CSV
 ```
 
-# Section 1 - Define the model
+# Section 1 - Understanding the Transportation Problem
 
-First, we need to load the data and define the fixed parameters. Assume that we are given the following data:
+The transportation problem involves:
+
+- Suppliers (our warehouses)
+- Customers (solar farms)
+- Transportation costs between each supplier and customer
+- Supply available at each warehouse
+- Demand required by each solar farm
+
+Our goal is to decide how many solar panels to ship from each warehouse to each solar farm to minimize total cost.
+
+Let's set up our problem:
 
 - The revenue from each truckload of solar panels is 11000
 - The variable costs from each truckload of solar panels is 6300
@@ -55,35 +60,21 @@ First, we need to load the data and define the fixed parameters. Assume that we 
 - The requested panels at the customer are given in the file `panel-demand.csv`
 - The transportation costs between suppliers and customers are given in the file `cost.csv`
 
-## Exercise 1.1 - Define the fixed parameters
-
-Start by defining the fixed scalar parameters that are given. Call them `revenue`, `varCosts`. 
-
-```{julia}
-#| eval: false
-# YOUR CODE BELOW
-
-```
-```{julia}
-#| eval: false
-#| code-fold: true
-# Test your answer
-@assert revenue == 11000 && varCosts == 6300
-println("Fixed parameters defined successfully!")
-```
-
-## Loading the parameters from files
-
-Next, we load the data from the given files. Remember, you can use the `CSV.read` function to load the data from a CSV file into a DataFrame. If we want to access the directory of the current file, we can use the `@__DIR__` macro. 
-
-For example, to access the file `my_file.csv` in the same directory as the current file, you can use the path `"$(@__DIR__)/my_file.csv"`. If the file is in a subdirectory called `new_data`, you can use the path `"$(@__DIR__)/new_data/my_file.csv"`.
+::: {.callout-note}
+We can use the `CSV.read` function to load the data from a CSV file into a DataFrame. If we want to access the directory of the current file, we can use the convinient `@__DIR__` macro. For example, to access the file `my_file.csv` in the same directory as the current file, you can use the path `"$(@__DIR__)/my_file.csv"`. If the file is in a subdirectory called `new_data`, you can use the path `"$(@__DIR__)/new_data/my_file.csv"`.
+:::
 
 ```{julia}
-#| eval: true
-#| output: false
-available = CSV.read("$(@__DIR__)/data/available-panels.csv",DataFrame)
-requested = CSV.read("$(@__DIR__)/data/panel-demand.csv",DataFrame)
-travelCosts = CSV.read("$(@__DIR__)/data/cost.csv",DataFrame)
+# Fixed parameters
+revenue = 11000  # Revenue per truckload of solar panels
+varCosts = 6300  # Variable costs per truckload
+
+# Load data from CSV files
+available = CSV.read("$(@__DIR__)/data/available-panels.csv", DataFrame)
+requested = CSV.read("$(@__DIR__)/data/panel-demand.csv", DataFrame)
+travelCosts = CSV.read("$(@__DIR__)/data/cost.csv", DataFrame)
+
+println("Data loaded successfully!")
 ```
 
 ::: {.callout-tip}
@@ -106,6 +97,31 @@ first(requested,5)
 #| eval: true
 println("Travel costs:")
 first(travelCosts,5)
+```
+
+## Exercise 1.1 - Understand the Data
+
+Take a moment to look at the data. Can you answer these questions?
+
+1. How many warehouses do we have? Save the number in a variable called `num_warehouses`.
+2. How many solar farms are we supplying? Save the number in a variable called `num_solar_farms`.
+
+```{julia}
+#| eval: false
+# YOUR ANSWERS BELOW
+# Hint: Use the `nrow()` function to count rows
+
+```
+```{julia}
+#| eval: false
+#| code-fold: true
+# Test your understanding
+num_warehouses = nrow(available)
+num_solar_farms = nrow(requested)
+
+println("Great job! Here are the answers:")
+println("Number of warehouses: ", num_warehouses)
+println("Number of solar farms: ", num_solar_farms)
 ```
 
 # Section 2 - Using dictionaries to store the data
@@ -145,7 +161,7 @@ println("Travel costs:")
 first(travelCosts_dict,5)
 ```
 
-We can also access the value associated with a specific key in a dictionary by using the key inside square brackets. For example: `available_dict["a_1"]` will return the value associated with the key `"a_1"`.
+Remember, we can also access the value associated with a specific key in a dictionary by using the key inside square brackets. For example: `available_dict["a_1"]` will return the value associated with the key `"a_1"`.
 
 ```{julia}
 #| eval: true

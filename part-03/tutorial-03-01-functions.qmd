@@ -28,11 +28,32 @@ engine: julia
 
 # Introduction
 
-This interactive Julia script is a comprehensive guide to understanding functions in Julia. Dive into the creation and usage of functions, grasp the concept of scope within functions, explore returning values, use anonymous functions, and leverage multiple dispatch for versatile function behavior. Follow the instructions, input your code in the designated areas, and verify your implementations with `@assert` statements.
+Imagine you have a helpful worker. Instead of explaining every little task to it each time, you can teach it specific jobs once, and then just ask it to do those jobs later. In programming, these "jobs" are called functions! This tutorial will show you how to create and use functions in Julia, making your code more organized and reusable.
+
+Follow the instructions, input your code in the designated areas, and verify your implementations with `@assert` statements.
 
 # Section 1 - Creating and Calling Functions
 
-Functions in Julia encapsulate reusable code and can be defined using the `function` keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. Later, you can call the function by writing the name of the function followed by the parameters in parentheses. For example:
+Functions in Julia encapsulate reusable code and can be defined using the `function` keyword or shorthand syntax. After the keyword, you name the function and write the parameters in parentheses. Later, you can call the function by writing the name of the function followed by the parameters in parentheses.
+
+Thus, think of a function like a recipe:
+
+1. It has a name (like "say_something")
+2. It might need ingredients (our "parameters")
+3. It has steps to follow (the code inside the function)
+4. It usually produces something (we call this the "return value")
+
+Let's see some examples:
+
+```julia
+# A simple function to greet someone
+function say_hello(name)
+    return "Hello, $name!"
+end
+
+# Using our function
+message = say_hello("Elio")
+```
 
 ```{julia}
 function multiply(a,b)
@@ -41,7 +62,7 @@ end
 multiply(10, 5)
 ```
 
-This function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the `return` keyword optional. If you explicitly use the `return` keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition. For example:
+The second function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the `return` keyword optional. If you explicitly use the `return` keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition. For example:
 
 ```{julia}
 function do_something(a,b)
@@ -55,9 +76,18 @@ println("The result of do_something(10, 5) is $(do_something(10, 5))")
 println("The result of do_something(5, 10) is $(do_something(5, 10))")
 ```
 
+:::{.callout-tip}
+Functions are like teaching a robot new skills:
+
+- The function name is like the skill name (e.g., "make_sandwich")
+- Parameters are things the robot needs to do the job (e.g., bread, filling)
+- The code inside are the steps to follow
+- The return value is the finished product
+:::
+
 ## Exercise 1.1 - Define and Test a Simple Addition Function
 
-Define and Test a Simple Addition Function. Define a function `add` that takes two parameters and returns their sum.
+Define and test a simple addition function. Define a function `add` that takes two parameters and returns their sum.
 
 ```{julia}
 #| eval: false
@@ -73,8 +103,24 @@ println("The sum computed is $(add(10, 5)), wonderful!")
 ```
 
 # Section 2 - Scope within Functions
-    
-Variables declared inside a function are local to that function and are not accessible outside. If you want to access the variable outside of the function, you have to explicitly return it as already shown above. You can do this by passing `return` in front of the variable you want to return from the function.
+
+When you create variables inside a function, they're like secret ingredients - they only exist inside that function's "kitchen". We call this "local scope". Thus, variables declared inside a function are local to that function and are not accessible outside. 
+
+```{julia}
+#| eval: true
+function bake_cake()
+    secret_ingredient = "vanilla extract"
+    println("Adding the secret ingredient: $secret_ingredient")
+end
+bake_cake()  # This works fine
+```
+```{julia}
+#| eval: false
+# But this would cause an error:
+# println(secret_ingredient)
+```
+
+If you want to access the variable outside of the function, you have to explicitly return it. You can do this by passing `return` in front of the variable you want to return from the function.
 
 ## Exercise 2.1 - Return a Local Variable
 

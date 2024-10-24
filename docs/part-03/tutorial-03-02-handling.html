@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part-03/lecture-packages.html">03 Data Management</a></li><li class="breadcrumb-item"><a href="../part-03/tutorial-03-02-handling.html">02 - Handling Data</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part-03/lecture-packages.html">03 Data</a></li><li class="breadcrumb-item"><a href="../part-03/tutorial-03-02-handling.html">02 - Packages</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -200,8 +200,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-02/tutorial-02-05-scope.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">05 - Scope</span></a>
+  <a href="../part-02/tutorial-02-05-dicts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 - Dictionaries</span></a>
   </div>
 </li>
       </ul>
@@ -209,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">03 Data Management</span></a>
+ <span class="menu-text">03 Data</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -230,13 +230,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part-03/tutorial-03-02-handling.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">02 - Handling Data</span></a>
+ <span class="menu-text">02 - Packages</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part-03/tutorial-03-03-DataFrames.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">03 - Comparisons</span></a>
+ <span class="menu-text">03 - DataFrames</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -346,7 +346,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part-03/lecture-packages.html">03 Data Management</a></li><li class="breadcrumb-item"><a href="../part-03/tutorial-03-02-handling.html">02 - Handling Data</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part-03/lecture-packages.html">03 Data</a></li><li class="breadcrumb-item"><a href="../part-03/tutorial-03-02-handling.html">02 - Packages</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Tutorial III.II - Package Management</h1>
 <p class="subtitle lead">Applied Optimization with Julia</p>
@@ -368,7 +368,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This interactive script serves as an in-depth guide to understanding packages and package management in Julia. Delve into the utilization of the package manager, the processes of adding, updating, and removing packages, and management of distinct environments. First off all, we briefly need to introduce what a package is: a package is a collection of code that is used to extend the functionality of Julia. There are a lot of packages available for Julia, ranging from basic packages like <code>LinearAlgebra</code> to more specialized packages like <code>JuMP</code> for optimization. This means that most of the time you don’nt have to invent the wheel by yourself but can rely on the work of others. The great thing: Almost all packages available for Julia are available for free and can be used under the <code>MIT license</code>.</p>
+<p>Welcome to this beginner-friendly guide on understanding packages and package management in Julia!</p>
+<p>Think of packages as pre-written sets of tools that extend what Julia can do. It’s like having a toolbox where you can add new tools (packages) to help you solve specific problems. For example, there are packages for working with data, creating visualizations, or solving complex math problems.</p>
+<p>The best part? Most Julia packages are free to use, thanks to the open-source community!</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -379,7 +381,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Note: While this script offers guidance, package management commands are usually executed in Julia’s REPL. The REPL is the command line interface to Julia where you can interact with the language.</p>
+<p>While we’ll practice some commands here, you’ll typically manage packages in Julia’s REPL (Read-Eval-Print Loop), which is like Julia’s command center.</p>
 </div>
 </div>
 </section>
@@ -411,7 +413,7 @@ Note
 <p>Adding packages in Julia is straightforward using the <code>Pkg.add("PackageName")</code> function. Replace <code>PackageName</code> with the actual package name you wish to add.</p>
 <section id="exercise-2.1---add-the-dataframes-package" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---add-the-dataframes-package">Exercise 2.1 - Add the DataFrames Package</h2>
-<p>Use <code>Pkg.add()</code> to add the Package <code>DataFrames</code> that we will use later.</p>
+<p>Let’s add a popular package called DataFrames. It’s great for working with structured data, like spreadsheets.</p>
 <div id="6" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -431,11 +433,19 @@ Note
 </section>
 <section id="section-3---updating-and-removing-packages" class="level1">
 <h1>Section 3 - Updating and Removing Packages</h1>
-<p>Maintaining your Julia environment involves keeping your packages up-to-date and removing those that are no longer necessary. Use <code>Pkg.update("PackageName")</code> to update individual packages, or simply <code>Pkg.update()</code> to update all packages. To remove an obsolete package, use <code>Pkg.rm("PackageName")</code>. Remember to replace <code>PackageName</code> with the actual name of the package you wish to manage.</p>
+<p>Just like apps on your phone, packages can be updated or removed when you no longer need them.</p>
+<ul>
+<li>To update a package: <code>Pkg.update("PackageName")</code></li>
+<li>To update all packages: <code>Pkg.update()</code></li>
+<li>To remove a package: <code>Pkg.rm("PackageName")</code></li>
+</ul>
+<div class="callout-example">
+<p>If you wanted to update DataFrames, you’d use <code>Pkg.update("DataFrames")</code>. To remove it, you’d use <code>Pkg.rm("DataFrames")</code>.</p>
+</div>
 </section>
 <section id="section-4---managing-environments" class="level1">
 <h1>Section 4 - Managing Environments</h1>
-<p>Julia environments are essential for keeping project dependencies isolated and organized. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with <code>Pkg.activate("new_environment")</code> and add packages to it with <code>Pkg.add("PackageName")</code>. This ensures that each of your projects has a clean, dedicated set of dependencies. When you create a new environment, Julia generates two important files:</p>
+<p>Think of environments as separate workspaces for different projects. It’s like having different folders for different school subjects. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with <code>Pkg.activate("new_environment")</code> and add packages to it with <code>Pkg.add("PackageName")</code>. This ensures that each of your projects has a clean, dedicated set of dependencies. When you create a new environment, Julia generates two important files:</p>
 <ol type="1">
 <li><code>Project.toml</code>: Lists direct dependencies of your project.</li>
 <li><code>Manifest.toml</code>: Contains a complete dependency graph of your project.</li>

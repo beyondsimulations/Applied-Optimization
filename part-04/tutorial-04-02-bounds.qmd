@@ -27,96 +27,113 @@ engine: julia
 
 # Introduction
 
-This Julia script is an interactive tutorial to introduce you to advanced variable handling in JuMP. You'll learn about creating variables in containers, managing different types of variables, and working with indexed variables. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with `@assert` statements. Make sure to have the JuMP package installed to follow this tutorial.
+Welcome to this beginner-friendly tutorial on variables and bounds in JuMP! In this lesson, we'll explore different types of variables and how to set limits (or bounds) on them. Don't worry if you're new to optimization - we'll explain everything step by step using real-world examples.
+
+Follow the instructions, write your code in the designated code blocks, and confirm your understanding with `@assert` statements. Make sure to have the JuMP package installed to follow this tutorial.
+
+Let's start by loading the JuMP package:
 
 ```{julia}
 #| output: false
 using JuMP
 ```
 
-Now, we need a model. As we don't solve anything in this tutorial, we don't need to add the solver and can solely define the abstract model.
+Now, let's create a model that we'll use throughout this tutorial:
 
 ```{julia}
-new_model = Model()
+model = Model()
+println("Great! We've created a new optimization model.")
 ```
 
-# Section 1 - Managing Different Types of Variables
+# Section 1 - Understanding Different Types of Variables
 
-## Why Different Variable Types?
+In optimization problems, we often need to represent different kinds of decisions. JuMP allows us to use three main types of variables:
 
-- **Continuous variables**: Represent quantities that can take any real value within a range (e.g., amount of raw materials in a production process).
-- **Integer variables**: Represent indivisible quantities (e.g., number of products manufactured).
-- **Binary variables**: Represent yes/no decisions (e.g., whether to build a facility at a specific location).
+1. **Continuous variables**: These can take any real value within a range. 
+   Example: The amount of water in a reservoir (can be any number, like 3.7 liters).
 
-For example:
+2. **Integer variables**: These can only be whole numbers. 
+   Example: The number of cars produced in a factory (we can't produce half a car!).
 
-```julia
+3. **Binary variables**: These can only be 0 or 1. 
+   Example: Whether to build a new store in a location (yes = 1, no = 0).
+
+Let's see how to create each type:
+
+```{julia}
+#| output: false
 @variable(model, variableName)    
 ```
 This defines a continuous variable without any bound.
 
-```julia    
-@variable(model, 0 <= variableName <= 1) 
+```{julia}    
+#| output: false
+@variable(model, 0 <= variableName2 <= 1) 
 ```
 This defines a continuous variable in an interval.
 
-```julia    
-@variable(model, 0 <= variableName, Bin) 
+```{julia}    
+#| output: false
+@variable(model, variableName3, Bin) 
 ```
 This defines a binary variable.
 
-```julia    
-@variable(model, 0 <= variableName, Int) 
+```{julia}    
+#| output: false
+@variable(model, 0 <= variableName4, Int) 
 ```
-This defines an integer variable. Note that you will have to change `modelName` and `variableName` according to your instance.
+This defines an integer variable. 
+
+::: {.callout-note}
+Note that you will have to change `model` and `variableName` according to your instance.
+:::
 
 ## Exercise 1.1 - Create Variables
-Create continuous, integer, and binary variables. Create three different variables of different types without any additional bound: `continuous_var` as a continuous variable for `new_model`, `integer_var` as an integer variable for `new_model`, and `binary_var` as a binary variable for `new_model`.
+
+Now it's your turn! Create three variables:
+1. A continuous variable called `water_amount`
+2. An integer variable called `cars_produced`
+3. A binary variable called `build_store`
 
 ```{julia}
 #| eval: false
 # YOUR CODE BELOW
+# Hint: Use the @variable macro three times, once for each variable
 
 ```
 ```{julia}
 #| eval: false
 #| code-fold: true
 # Test your answer
-@assert typeof(continuous_var) == VariableRef && typeof(integer_var) == VariableRef
-@assert typeof(binary_var) == VariableRef
-println("Continuous, integer, and binary variables created successfully!")
+@assert typeof(water_amount) == VariableRef && !is_integer(water_amount) && !is_binary(water_amount)
+@assert typeof(cars_produced) == VariableRef && is_integer(cars_produced)
+@assert typeof(build_store) == VariableRef && is_binary(build_store)
+println("Excellent work! You've successfully created continuous, integer, and binary variables.")
 ```
 
 # Section 2 - Creating Variables in Containers
 
-When dealing with large-scale problems, creating variables individually becomes impractical. Containers like arrays, matrices, and indexed sets allow us to:
+When we have many similar variables, it's helpful to group them together. JuMP allows us to use containers like arrays and matrices for this purpose. For example:
 
-1. Efficiently create and manage many variables.
-2. Represent complex relationships between variables.
-3. Simplify model formulation for problems with repetitive structures.
-
-For example:
-
-```julia    
-@variable(modelName, variableName[1:20], Bin)
+```{julia}    
+@variable(model, variableName5[1:20], Bin)
 ```
 This would create a container with 20 variables. To create a set based on a range, we could do:
 
-```julia    
+```{julia}    
 new_range = 1:100
-@variable(modelName, variableName[i in new_range] >= 0)
+@variable(model, variableName6[i in new_range] >= 0)
 ```
-This would create a container with 100 continuous variables larger than 0. 
+This would create a container with 100 continuous variables larger than 0. For a container with multiple dimensions:
 
-For a container with multiple dimensions:
-
-```julia    
-@variable(modelName, variableName[1:30, 1:30])
+```{julia}    
+@variable(model, variableName7[1:30, 1:30])
 ```
-This would create a container with a matrix of continuous variables without any bound. Note that you will have to change `modelName` and `variableName` according to your instance.
+This would create a container with a matrix of continuous variables without any bound. Note that you will have to change `model` and `variableName` according to your instance.
 
 ## Exercise 2.1 - Create an Array
-Create an array `X` for `new_model` containing 8 variables with non-negative lower bounds.
+
+Imagine you're planning production for a week. Create an array `daily_production` with 7 non-negative variables, one for each day of the week.
 
 ```{julia}
 # YOUR CODE BELOW
@@ -126,30 +143,14 @@ Create an array `X` for `new_model` containing 8 variables with non-negative low
 #| eval: false
 #| code-fold: true
 # Test your answer
-@assert length(X) == 8 && all(lower_bound(X[i]) == 0 for i in 1:8)
-println("Array of variables created successfully!")
-``` 
-
-## Exercise 2.2 - Create a Matrix
-Create a matrix `Y` for `new_model` containing binary variables with a size of 3 x 3.
-
-```{julia}
-#| eval: false
-# YOUR CODE BELOW
-
-```
-```{julia}
-#| eval: false
-#| code-fold: true
-# Test your answer
-@assert size(Y, 1) == 3 && size(Y, 2) == 3
-@assert all(has_lower_bound(Y[i, j]) == false for i in 1:3, j in 1:3)
-@assert all(has_upper_bound(Y[i, j]) == false for i in 1:3, j in 1:3)
-println("Matrix of variables created successfully!")
+@assert length(daily_production) == 7
+@assert all(lower_bound(daily_production[i]) == 0 for i in 1:7)
+println("Great job! You've created an array of 7 non-negative variables for daily production.")
 ```
 
-## Exercise 2.3 - Create Indexed Variables
-Create indexed variables based on a set. Create variables `W` indexed by set `N` of size 1, 2, ..., 6 with non-negative lower bounds.
+## Exercise 2.2 - Create a Matrix of Variables
+
+Now, imagine you're deciding whether to stock 4 different products in 3 different stores. Create a 3x4 matrix of binary variables called `stock_decision`.
 
 ```{julia}
 #| eval: false
@@ -160,12 +161,30 @@ Create indexed variables based on a set. Create variables `W` indexed by set `N`
 #| eval: false
 #| code-fold: true
 # Test your answer
-@assert length(W) == 6 && all(lower_bound(W[i]) == 0 for i in N)
-println("Indexed variables created successfully!")
+@assert size(stock_decision) == (3, 4)
+@assert all(is_binary(stock_decision[i,j]) for i in 1:3, j in 1:4)
+println("Excellent! You've created a 3x4 matrix of binary variables for stocking decisions.")
 ```
 
-## Exercise 2.4 - Create Nested Containers
-Create a 3-dimensional array `Z` for `new_model` containing integer variables with dimensions 2 x 3 x 4, where each variable has a lower bound of 0 and an upper bound of 10.
+# Section 3 - Setting Bounds on Variables
+
+Often, we know that a variable can't go below or above certain values. We can set these limits (called bounds) when we create the variable.
+
+For example, if a factory can produce between 100 and 500 units:
+
+```julia
+@variable(model, 100 <= production <= 500)
+```
+
+Or if we know a percentage must be between 0 and 100:
+
+```julia
+@variable(model, 0 <= percentage <= 100)
+```
+
+## Exercise 3.1 - Set Bounds on a Variable
+
+Create a variable `temperature` that represents the temperature setting on a thermostat. It should be between 0 and 37 degrees.
 
 ```{julia}
 # YOUR CODE BELOW
@@ -175,11 +194,11 @@ Create a 3-dimensional array `Z` for `new_model` containing integer variables wi
 #| eval: false
 #| code-fold: true
 # Test your answer
-@assert size(Z) == (2, 3, 4)
-@assert all(is_integer(Z[i,j,k]) && lower_bound(Z[i,j,k]) == 0 && upper_bound(Z[i,j,k]) == 10 
-            for i in 1:2, j in 1:3, k in 1:4)
-println("3D array of integer variables created successfully!")
+@assert lower_bound(temperature) == 0
+@assert upper_bound(temperature) == 37
+println("Well done! You've created a variable for temperature with appropriate bounds.")
 ```
+
 
 # Conclusion
 

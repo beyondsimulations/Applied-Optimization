@@ -200,8 +200,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-02/tutorial-02-05-scope.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">05 - Scope</span></a>
+  <a href="../part-02/tutorial-02-05-dicts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 - Dictionaries</span></a>
   </div>
 </li>
       </ul>
@@ -209,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
- <span class="menu-text">03 Data Management</span></a>
+ <span class="menu-text">03 Data</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -230,13 +230,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part-03/tutorial-03-02-handling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">02 - Handling Data</span></a>
+ <span class="menu-text">02 - Packages</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part-03/tutorial-03-03-DataFrames.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">03 - Comparisons</span></a>
+ <span class="menu-text">03 - DataFrames</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -326,17 +326,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#section-1---managing-different-types-of-variables" id="toc-section-1---managing-different-types-of-variables" class="nav-link" data-scroll-target="#section-1---managing-different-types-of-variables">Section 1 - Managing Different Types of Variables</a>
+  <li><a href="#section-1---understanding-different-types-of-variables" id="toc-section-1---understanding-different-types-of-variables" class="nav-link" data-scroll-target="#section-1---understanding-different-types-of-variables">Section 1 - Understanding Different Types of Variables</a>
   <ul class="collapse">
-  <li><a href="#why-different-variable-types" id="toc-why-different-variable-types" class="nav-link" data-scroll-target="#why-different-variable-types">Why Different Variable Types?</a></li>
   <li><a href="#exercise-1.1---create-variables" id="toc-exercise-1.1---create-variables" class="nav-link" data-scroll-target="#exercise-1.1---create-variables">Exercise 1.1 - Create Variables</a></li>
   </ul></li>
   <li><a href="#section-2---creating-variables-in-containers" id="toc-section-2---creating-variables-in-containers" class="nav-link" data-scroll-target="#section-2---creating-variables-in-containers">Section 2 - Creating Variables in Containers</a>
   <ul class="collapse">
   <li><a href="#exercise-2.1---create-an-array" id="toc-exercise-2.1---create-an-array" class="nav-link" data-scroll-target="#exercise-2.1---create-an-array">Exercise 2.1 - Create an Array</a></li>
-  <li><a href="#exercise-2.2---create-a-matrix" id="toc-exercise-2.2---create-a-matrix" class="nav-link" data-scroll-target="#exercise-2.2---create-a-matrix">Exercise 2.2 - Create a Matrix</a></li>
-  <li><a href="#exercise-2.3---create-indexed-variables" id="toc-exercise-2.3---create-indexed-variables" class="nav-link" data-scroll-target="#exercise-2.3---create-indexed-variables">Exercise 2.3 - Create Indexed Variables</a></li>
-  <li><a href="#exercise-2.4---create-nested-containers" id="toc-exercise-2.4---create-nested-containers" class="nav-link" data-scroll-target="#exercise-2.4---create-nested-containers">Exercise 2.4 - Create Nested Containers</a></li>
+  <li><a href="#exercise-2.2---create-a-matrix-of-variables" id="toc-exercise-2.2---create-a-matrix-of-variables" class="nav-link" data-scroll-target="#exercise-2.2---create-a-matrix-of-variables">Exercise 2.2 - Create a Matrix of Variables</a></li>
+  </ul></li>
+  <li><a href="#section-3---setting-bounds-on-variables" id="toc-section-3---setting-bounds-on-variables" class="nav-link" data-scroll-target="#section-3---setting-bounds-on-variables">Section 3 - Setting Bounds on Variables</a>
+  <ul class="collapse">
+  <li><a href="#exercise-3.1---set-bounds-on-a-variable" id="toc-exercise-3.1---set-bounds-on-a-variable" class="nav-link" data-scroll-target="#exercise-3.1---set-bounds-on-a-variable">Exercise 3.1 - Set Bounds on a Variable</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
@@ -368,137 +369,218 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This Julia script is an interactive tutorial to introduce you to advanced variable handling in JuMP. You’ll learn about creating variables in containers, managing different types of variables, and working with indexed variables. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with <code>@assert</code> statements. Make sure to have the JuMP package installed to follow this tutorial.</p>
+<p>Welcome to this beginner-friendly tutorial on variables and bounds in JuMP! In this lesson, we’ll explore different types of variables and how to set limits (or bounds) on them. Don’t worry if you’re new to optimization - we’ll explain everything step by step using real-world examples.</p>
+<p>Follow the instructions, write your code in the designated code blocks, and confirm your understanding with <code>@assert</code> statements. Make sure to have the JuMP package installed to follow this tutorial.</p>
+<p>Let’s start by loading the JuMP package:</p>
 <div id="2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Now, we need a model. As we don’t solve anything in this tutorial, we don’t need to add the solver and can solely define the abstract model.</p>
+<p>Now, let’s create a model that we’ll use throughout this tutorial:</p>
 <div id="4" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>new_model <span class="op">=</span> <span class="fu">Model</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>A JuMP Model
-├ solver: none
-├ objective_sense: FEASIBILITY_SENSE
-├ num_variables: 0
-├ num_constraints: 0
-└ Names registered in the model: none</code></pre>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! We've created a new optimization model."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Great! We've created a new optimization model.</code></pre>
 </div>
 </div>
 </section>
-<section id="section-1---managing-different-types-of-variables" class="level1">
-<h1>Section 1 - Managing Different Types of Variables</h1>
-<section id="why-different-variable-types" class="level2">
-<h2 class="anchored" data-anchor-id="why-different-variable-types">Why Different Variable Types?</h2>
-<ul>
-<li><strong>Continuous variables</strong>: Represent quantities that can take any real value within a range (e.g., amount of raw materials in a production process).</li>
-<li><strong>Integer variables</strong>: Represent indivisible quantities (e.g., number of products manufactured).</li>
-<li><strong>Binary variables</strong>: Represent yes/no decisions (e.g., whether to build a facility at a specific location).</li>
-</ul>
-<p>For example:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, variableName)    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="section-1---understanding-different-types-of-variables" class="level1">
+<h1>Section 1 - Understanding Different Types of Variables</h1>
+<p>In optimization problems, we often need to represent different kinds of decisions. JuMP allows us to use three main types of variables:</p>
+<ol type="1">
+<li><p><strong>Continuous variables</strong>: These can take any real value within a range. Example: The amount of water in a reservoir (can be any number, like 3.7 liters).</p></li>
+<li><p><strong>Integer variables</strong>: These can only be whole numbers. Example: The number of cars produced in a factory (we can’t produce half a car!).</p></li>
+<li><p><strong>Binary variables</strong>: These can only be 0 or 1. Example: Whether to build a new store in a location (yes = 1, no = 0).</p></li>
+</ol>
+<p>Let’s see how to create each type:</p>
+<div id="6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, variableName)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>This defines a continuous variable without any bound.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName <span class="op">&lt;=</span> <span class="fl">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName2 <span class="op">&lt;=</span> <span class="fl">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>This defines a continuous variable in an interval.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName, Bin) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="10" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, variableName3, Bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>This defines a binary variable.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName, <span class="dt">Int</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This defines an integer variable. Note that you will have to change <code>modelName</code> and <code>variableName</code> according to your instance.</p>
-</section>
+<div id="12" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName4, <span class="dt">Int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This defines an integer variable.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that you will have to change <code>model</code> and <code>variableName</code> according to your instance.</p>
+</div>
+</div>
 <section id="exercise-1.1---create-variables" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---create-variables">Exercise 1.1 - Create Variables</h2>
-<p>Create continuous, integer, and binary variables. Create three different variables of different types without any additional bound: <code>continuous_var</code> as a continuous variable for <code>new_model</code>, <code>integer_var</code> as an integer variable for <code>new_model</code>, and <code>binary_var</code> as a binary variable for <code>new_model</code>.</p>
-<div id="6" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now it’s your turn! Create three variables: 1. A continuous variable called <code>water_amount</code> 2. An integer variable called <code>cars_produced</code> 3. A binary variable called <code>build_store</code></p>
+<div id="14" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: Use the @variable macro three times, once for each variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="8" class="cell" data-execution_count="0">
+<div id="16" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(continuous_var) <span class="op">==</span> VariableRef <span class="op">&amp;&amp;</span> <span class="fu">typeof</span>(integer_var) <span class="op">==</span> VariableRef</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(binary_var) <span class="op">==</span> VariableRef</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Continuous, integer, and binary variables created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(water_amount) <span class="op">==</span> VariableRef <span class="op">&amp;&amp;</span> !<span class="fu">is_integer</span>(water_amount) <span class="op">&amp;&amp;</span> !<span class="fu">is_binary</span>(water_amount)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(cars_produced) <span class="op">==</span> VariableRef <span class="op">&amp;&amp;</span> <span class="fu">is_integer</span>(cars_produced)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(build_store) <span class="op">==</span> VariableRef <span class="op">&amp;&amp;</span> <span class="fu">is_binary</span>(build_store)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Excellent work! You've successfully created continuous, integer, and binary variables."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
 </section>
 <section id="section-2---creating-variables-in-containers" class="level1">
 <h1>Section 2 - Creating Variables in Containers</h1>
-<p>When dealing with large-scale problems, creating variables individually becomes impractical. Containers like arrays, matrices, and indexed sets allow us to:</p>
-<ol type="1">
-<li>Efficiently create and manage many variables.</li>
-<li>Represent complex relationships between variables.</li>
-<li>Simplify model formulation for problems with repetitive structures.</li>
-</ol>
-<p>For example:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(modelName, variableName[<span class="fl">1</span><span class="op">:</span><span class="fl">20</span>], Bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>When we have many similar variables, it’s helpful to group them together. JuMP allows us to use containers like arrays and matrices for this purpose. For example:</p>
+<div id="18" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, variableName5[<span class="fl">1</span><span class="op">:</span><span class="fl">20</span>], Bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>20-element Vector{VariableRef}:
+ variableName5[1]
+ variableName5[2]
+ variableName5[3]
+ variableName5[4]
+ variableName5[5]
+ variableName5[6]
+ variableName5[7]
+ variableName5[8]
+ variableName5[9]
+ variableName5[10]
+ variableName5[11]
+ variableName5[12]
+ variableName5[13]
+ variableName5[14]
+ variableName5[15]
+ variableName5[16]
+ variableName5[17]
+ variableName5[18]
+ variableName5[19]
+ variableName5[20]</code></pre>
+</div>
+</div>
 <p>This would create a container with 20 variables. To create a set based on a range, we could do:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>new_range <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(modelName, variableName[i <span class="kw">in</span> new_range] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This would create a container with 100 continuous variables larger than 0.</p>
-<p>For a container with multiple dimensions:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(modelName, variableName[<span class="fl">1</span><span class="op">:</span><span class="fl">30</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This would create a container with a matrix of continuous variables without any bound. Note that you will have to change <code>modelName</code> and <code>variableName</code> according to your instance.</p>
+<div id="20" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>new_range <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, variableName6[i <span class="kw">in</span> new_range] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>1-dimensional DenseAxisArray{JuMP.VariableRef,1,...} with index sets:
+    Dimension 1, 1:100
+And data, a 100-element Vector{JuMP.VariableRef}:
+ variableName6[1]
+ variableName6[2]
+ variableName6[3]
+ variableName6[4]
+ variableName6[5]
+ variableName6[6]
+ variableName6[7]
+ variableName6[8]
+ variableName6[9]
+ variableName6[10]
+ ⋮
+ variableName6[92]
+ variableName6[93]
+ variableName6[94]
+ variableName6[95]
+ variableName6[96]
+ variableName6[97]
+ variableName6[98]
+ variableName6[99]
+ variableName6[100]</code></pre>
+</div>
+</div>
+<p>This would create a container with 100 continuous variables larger than 0. For a container with multiple dimensions:</p>
+<div id="22" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, variableName7[<span class="fl">1</span><span class="op">:</span><span class="fl">30</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>30×30 Matrix{VariableRef}:
+ variableName7[1,1]   variableName7[1,2]   …  variableName7[1,30]
+ variableName7[2,1]   variableName7[2,2]      variableName7[2,30]
+ variableName7[3,1]   variableName7[3,2]      variableName7[3,30]
+ variableName7[4,1]   variableName7[4,2]      variableName7[4,30]
+ variableName7[5,1]   variableName7[5,2]      variableName7[5,30]
+ variableName7[6,1]   variableName7[6,2]   …  variableName7[6,30]
+ variableName7[7,1]   variableName7[7,2]      variableName7[7,30]
+ variableName7[8,1]   variableName7[8,2]      variableName7[8,30]
+ variableName7[9,1]   variableName7[9,2]      variableName7[9,30]
+ variableName7[10,1]  variableName7[10,2]     variableName7[10,30]
+ ⋮                                         ⋱  
+ variableName7[22,1]  variableName7[22,2]     variableName7[22,30]
+ variableName7[23,1]  variableName7[23,2]     variableName7[23,30]
+ variableName7[24,1]  variableName7[24,2]     variableName7[24,30]
+ variableName7[25,1]  variableName7[25,2]     variableName7[25,30]
+ variableName7[26,1]  variableName7[26,2]  …  variableName7[26,30]
+ variableName7[27,1]  variableName7[27,2]     variableName7[27,30]
+ variableName7[28,1]  variableName7[28,2]     variableName7[28,30]
+ variableName7[29,1]  variableName7[29,2]     variableName7[29,30]
+ variableName7[30,1]  variableName7[30,2]     variableName7[30,30]</code></pre>
+</div>
+</div>
+<p>This would create a container with a matrix of continuous variables without any bound. Note that you will have to change <code>model</code> and <code>variableName</code> according to your instance.</p>
 <section id="exercise-2.1---create-an-array" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---create-an-array">Exercise 2.1 - Create an Array</h2>
-<p>Create an array <code>X</code> for <code>new_model</code> containing 8 variables with non-negative lower bounds.</p>
-<div id="10" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Imagine you’re planning production for a week. Create an array <code>daily_production</code> with 7 non-negative variables, one for each day of the week.</p>
+<div id="24" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="12" class="cell" data-execution_count="0">
+<div id="26" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(X) <span class="op">==</span> <span class="fl">8</span> <span class="op">&amp;&amp;</span> <span class="fu">all</span>(<span class="fu">lower_bound</span>(X[i]) <span class="op">==</span> <span class="fl">0</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Array of variables created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(daily_production) <span class="op">==</span> <span class="fl">7</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">lower_bound</span>(daily_production[i]) <span class="op">==</span> <span class="fl">0</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">7</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great job! You've created an array of 7 non-negative variables for daily production."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
-<section id="exercise-2.2---create-a-matrix" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-2.2---create-a-matrix">Exercise 2.2 - Create a Matrix</h2>
-<p>Create a matrix <code>Y</code> for <code>new_model</code> containing binary variables with a size of 3 x 3.</p>
-<div id="14" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="exercise-2.2---create-a-matrix-of-variables" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.2---create-a-matrix-of-variables">Exercise 2.2 - Create a Matrix of Variables</h2>
+<p>Now, imagine you’re deciding whether to stock 4 different products in 3 different stores. Create a 3x4 matrix of binary variables called <code>stock_decision</code>.</p>
+<div id="28" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="16" class="cell" data-execution_count="0">
+<div id="30" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">size</span>(Y, <span class="fl">1</span>) <span class="op">==</span> <span class="fl">3</span> <span class="op">&amp;&amp;</span> <span class="fu">size</span>(Y, <span class="fl">2</span>) <span class="op">==</span> <span class="fl">3</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">has_lower_bound</span>(Y[i, j]) <span class="op">==</span> <span class="cn">false</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">has_upper_bound</span>(Y[i, j]) <span class="op">==</span> <span class="cn">false</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Matrix of variables created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">size</span>(stock_decision) <span class="op">==</span> (<span class="fl">3</span>, <span class="fl">4</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">is_binary</span>(stock_decision[i,j]) <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Excellent! You've created a 3x4 matrix of binary variables for stocking decisions."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
-<section id="exercise-2.3---create-indexed-variables" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-2.3---create-indexed-variables">Exercise 2.3 - Create Indexed Variables</h2>
-<p>Create indexed variables based on a set. Create variables <code>W</code> indexed by set <code>N</code> of size 1, 2, …, 6 with non-negative lower bounds.</p>
-<div id="18" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="20" class="cell" data-execution_count="0">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(W) <span class="op">==</span> <span class="fl">6</span> <span class="op">&amp;&amp;</span> <span class="fu">all</span>(<span class="fu">lower_bound</span>(W[i]) <span class="op">==</span> <span class="fl">0</span> <span class="cf">for</span> i <span class="kw">in</span> N)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Indexed variables created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
 </section>
-<section id="exercise-2.4---create-nested-containers" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-2.4---create-nested-containers">Exercise 2.4 - Create Nested Containers</h2>
-<p>Create a 3-dimensional array <code>Z</code> for <code>new_model</code> containing integer variables with dimensions 2 x 3 x 4, where each variable has a lower bound of 0 and an upper bound of 10.</p>
-<div id="22" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="section-3---setting-bounds-on-variables" class="level1">
+<h1>Section 3 - Setting Bounds on Variables</h1>
+<p>Often, we know that a variable can’t go below or above certain values. We can set these limits (called bounds) when we create the variable.</p>
+<p>For example, if a factory can produce between 100 and 500 units:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">100</span> <span class="op">&lt;=</span> production <span class="op">&lt;=</span> <span class="fl">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Or if we know a percentage must be between 0 and 100:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> percentage <span class="op">&lt;=</span> <span class="fl">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="exercise-3.1---set-bounds-on-a-variable" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-3.1---set-bounds-on-a-variable">Exercise 3.1 - Set Bounds on a Variable</h2>
+<p>Create a variable <code>temperature</code> that represents the temperature setting on a thermostat. It should be between 0 and 37 degrees.</p>
+<div id="32" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="24" class="cell" data-execution_count="0">
+<div id="34" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">size</span>(Z) <span class="op">==</span> (<span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">is_integer</span>(Z[i,j,k]) <span class="op">&amp;&amp;</span> <span class="fu">lower_bound</span>(Z[i,j,k]) <span class="op">==</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="fu">upper_bound</span>(Z[i,j,k]) <span class="op">==</span> <span class="fl">10</span> </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, k <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"3D array of integer variables created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">lower_bound</span>(temperature) <span class="op">==</span> <span class="fl">0</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">upper_bound</span>(temperature) <span class="op">==</span> <span class="fl">37</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Well done! You've created a variable for temperature with appropriate bounds."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>

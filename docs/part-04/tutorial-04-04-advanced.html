@@ -200,8 +200,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-02/tutorial-02-05-scope.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">05 - Scope</span></a>
+  <a href="../part-02/tutorial-02-05-dicts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 - Dictionaries</span></a>
   </div>
 </li>
       </ul>
@@ -209,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
- <span class="menu-text">03 Data Management</span></a>
+ <span class="menu-text">03 Data</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -230,13 +230,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part-03/tutorial-03-02-handling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">02 - Handling Data</span></a>
+ <span class="menu-text">02 - Packages</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part-03/tutorial-03-03-DataFrames.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">03 - Comparisons</span></a>
+ <span class="menu-text">03 - DataFrames</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -326,8 +326,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#section-1-setting-highs-solver-options" id="toc-section-1-setting-highs-solver-options" class="nav-link" data-scroll-target="#section-1-setting-highs-solver-options">Section 1: Setting HiGHS Solver Options</a></li>
-  <li><a href="#section-2-understanding-the-impact-of-solver-options" id="toc-section-2-understanding-the-impact-of-solver-options" class="nav-link" data-scroll-target="#section-2-understanding-the-impact-of-solver-options">Section 2: Understanding the Impact of Solver Options</a></li>
+  <li><a href="#section-1-understanding-solver-options" id="toc-section-1-understanding-solver-options" class="nav-link" data-scroll-target="#section-1-understanding-solver-options">Section 1: Understanding Solver Options</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1.1---set-solver-options" id="toc-exercise-1.1---set-solver-options" class="nav-link" data-scroll-target="#exercise-1.1---set-solver-options">Exercise 1.1 - Set Solver Options</a></li>
+  </ul></li>
+  <li><a href="#section-2-creating-and-solving-a-sample-problem" id="toc-section-2-creating-and-solving-a-sample-problem" class="nav-link" data-scroll-target="#section-2-creating-and-solving-a-sample-problem">Section 2: Creating and Solving a Sample Problem</a>
+  <ul class="collapse">
+  <li><a href="#exercise-2.1---modify-and-solve-the-problem" id="toc-exercise-2.1---modify-and-solve-the-problem" class="nav-link" data-scroll-target="#exercise-2.1---modify-and-solve-the-problem">Exercise 2.1 - Modify and Solve the Problem</a></li>
+  </ul></li>
+  <li><a href="#section-3-interpreting-solver-output" id="toc-section-3-interpreting-solver-output" class="nav-link" data-scroll-target="#section-3-interpreting-solver-output">Section 3: Interpreting Solver Output</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
@@ -358,142 +365,194 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This Julia script is an interactive tutorial to introduce you to advanced solver options in HiGHS using JuMP. You’ll learn about setting solver parameters to control the optimization process and improve performance. Follow the instructions and confirm your understanding with the examples. Make sure to have the JuMP package and the HiGHS solver installed to follow this tutorial.</p>
-<div id="a947bf6c" class="cell" data-execution_count="1">
+<p>Welcome to this tutorial on advanced solver options in JuMP using the HiGHS solver! Don’t worry if “advanced solver options” sounds intimidating - we’ll break everything down into simple, easy-to-understand concepts.</p>
+<p>Imagine you’re using a GPS app to find the best route to a new restaurant. Just like how you can adjust settings in your GPS (like avoiding toll roads or preferring highways), we can adjust settings in our optimization solver to help it find solutions more efficiently or to meet specific requirements.</p>
+<p>By the end of this tutorial, you’ll be able to: 1. Understand what solver options are and why they’re useful 2. Set basic solver options like time limits and solution tolerances 3. Interpret solver output to understand how well your problem was solved</p>
+<p>Let’s start by loading the necessary packages:</p>
+<div id="c04ce49e" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-1-setting-highs-solver-options" class="level1">
-<h1>Section 1: Setting HiGHS Solver Options</h1>
-<p>HiGHS offers various advanced options that can be set to control the solving process. To change some advanced settings, we first need to create a model with HiGHS.</p>
-<div id="36ec7433" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>A JuMP Model
-├ solver: HiGHS
-├ objective_sense: FEASIBILITY_SENSE
-├ num_variables: 0
-├ num_constraints: 0
-└ Names registered in the model: none</code></pre>
-</div>
-</div>
-<p>Different options for the HiGHS solver can be found here: <a href="https://ergo-code.github.io/HiGHS/dev/options/definitions/">HiGHS Options</a>.</p>
-<p>Note, that some options are solver specific and some options apply to all solvers, as JuMP itself can work with many different solvers just by changing the model definition and the solver-specific options.</p>
-<div id="616b2e10" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set options for the solver</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set_optimizer_attribute</span>(model, <span class="st">"presolve"</span>, <span class="st">"on"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Enables presolve, which transforms the model to potentially reduce its size or complexity.</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set_optimizer_attribute</span>(model, <span class="st">"time_limit"</span>, <span class="fl">60.0</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Sets the time limit for the solver to 60 seconds. This is useful for large problems or when you need a solution within a specific timeframe.</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set_optimizer_attribute</span>(model, <span class="st">"mip_rel_gap"</span>, <span class="fl">0.0</span>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Sets the relative MIP gap tolerance to 0.0, aiming for the exact optimal solution. In practice, a small non-zero value is often used as a trade-off between solution quality and solving time.</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"HiGHS solver options set successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="section-1-understanding-solver-options" class="level1">
+<h1>Section 1: Understanding Solver Options</h1>
+<p>Solver options are like the “advanced settings” of our optimization tool. They allow us to control how the solver approaches our problem. Here are a few common options:</p>
+<ol type="1">
+<li><strong>Time limit</strong>: How long the solver should try before giving up</li>
+<li><strong>Solution tolerance</strong>: How precise we need the answer to be</li>
+<li><strong>Presolve</strong>: Whether to simplify the problem before solving it</li>
+</ol>
+<p>Let’s create a model and set some of these options:</p>
+<div id="7325aba0" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set a time limit of 60 seconds</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set_time_limit_sec</span>(model, <span class="fl">60</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the relative MIP gap tolerance to 1%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set_optimizer_attribute</span>(model, <span class="st">"mip_rel_gap"</span>, <span class="fl">0.01</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Turn on presolve</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">set_optimizer_attribute</span>(model, <span class="st">"presolve"</span>, <span class="st">"on"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solver options set successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>HiGHS solver options set successfully!</code></pre>
+<pre><code>Solver options set successfully!</code></pre>
 </div>
+</div>
+<p>Let’s break this down:</p>
+<ul>
+<li><code>set_time_limit_sec(model, 60)</code> tells the solver to stop after 60 seconds if it hasn’t found a solution</li>
+<li><code>set_optimizer_attribute(model, "mip_rel_gap", 0.01)</code> sets how close to the best possible solution we need to be (within 1%)</li>
+<li><code>set_optimizer_attribute(model, "presolve", "on")</code> tells the solver to try simplifying the problem first</li>
+</ul>
+<section id="exercise-1.1---set-solver-options" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1.1---set-solver-options">Exercise 1.1 - Set Solver Options</h2>
+<p>Now it’s your turn! Set the following solver options: 1. A time limit of 120 seconds 2. A MIP gap tolerance of 0.5% 3. Turn off presolve</p>
+<div id="227b7cac" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="504ac5b5" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">time_limit_sec</span>(model) <span class="op">==</span> <span class="fl">120</span> <span class="st">"The time limit should be 120 seconds but is </span><span class="sc">$</span>(<span class="fu">time_limit_sec</span>(model))<span class="st">"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">solver_name</span>(model) <span class="op">==</span> <span class="st">"HiGHS"</span> <span class="st">"The solver should be HiGHS but is </span><span class="sc">$</span>(<span class="fu">solver_name</span>(model))<span class="st">"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> MOI.<span class="fu">get</span>(model, MOI.<span class="fu">RawOptimizerAttribute</span>(<span class="st">"mip_rel_gap"</span>)) <span class="op">==</span> <span class="fl">0.005</span> <span class="st">"The MIP gap should be 0.5% but is </span><span class="sc">$</span>(MOI.<span class="fu">get</span>(model, MOI.<span class="fu">RawOptimizerAttribute</span>(<span class="st">"mip_rel_gap"</span>)))<span class="st">"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> MOI.<span class="fu">get</span>(model, MOI.<span class="fu">RawOptimizerAttribute</span>(<span class="st">"presolve"</span>)) <span class="op">==</span> <span class="st">"off"</span> <span class="st">"Presolve should be off but is </span><span class="sc">$</span>(MOI.<span class="fu">get</span>(model, MOI.<span class="fu">RawOptimizerAttribute</span>(<span class="st">"presolve"</span>)))<span class="st">"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great job! You've successfully set advanced solver options."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
-<section id="section-2-understanding-the-impact-of-solver-options" class="level1">
-<h1>Section 2: Understanding the Impact of Solver Options</h1>
-<p>Let’s explore how these options can affect the solving process with a simple example:</p>
-<div id="ba8825fe" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a simple mixed-integer programming model</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> x <span class="op">&lt;=</span> <span class="fl">10</span>, <span class="dt">Int</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> y <span class="op">&lt;=</span> <span class="fl">10</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(model, Max, x <span class="op">+</span> y)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model, x <span class="op">+</span> <span class="fl">2</span>y <span class="op">&lt;=</span> <span class="fl">15</span>)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve with default options</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize!</span>(model)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Default solution: x = "</span>, <span class="fu">value</span>(x), <span class="st">", y = "</span>, <span class="fu">value</span>(y))</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solve time: "</span>, <span class="fu">solve_time</span>(model), <span class="st">" seconds"</span>)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Now, let's adjust some options</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="fu">set_optimizer_attribute</span>(model, <span class="st">"mip_rel_gap"</span>, <span class="fl">0.1</span>)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="fu">set_optimizer_attribute</span>(model, <span class="st">"time_limit"</span>, <span class="fl">1.0</span>)</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve again with new options</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize!</span>(model)</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solution with new options: x = "</span>, <span class="fu">value</span>(x), <span class="st">", y = "</span>, <span class="fu">value</span>(y))</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solve time: "</span>, <span class="fu">solve_time</span>(model), <span class="st">" seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="section-2-creating-and-solving-a-sample-problem" class="level1">
+<h1>Section 2: Creating and Solving a Sample Problem</h1>
+<p>To see how these options affect solving, let’s create a simple optimization problem. We’ll use a basic production planning scenario.</p>
+<p>Imagine you’re managing a small factory that produces two types of products: widgets and gadgets. You want to maximize profit while staying within your production capacity.</p>
+<div id="01335e9b" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define variables</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, widgets <span class="op">&gt;=</span> <span class="fl">0</span>, <span class="dt">Int</span>) </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, gadgets <span class="op">&gt;=</span> <span class="fl">0</span>, <span class="dt">Int</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define constraints</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model, </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    production_time, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fl">2</span><span class="op">*</span>widgets <span class="op">+</span> <span class="fl">3</span><span class="op">*</span>gadgets <span class="op">&lt;=</span> <span class="fl">240</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model, </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    widget_demand, </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    widgets <span class="op">&lt;=</span> <span class="fl">80</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)  </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model, </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    gadget_demand, </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    gadgets <span class="op">&lt;=</span> <span class="fl">60</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Define objective (profit)</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(model, </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    Max, </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="fl">25</span><span class="op">*</span>widgets <span class="op">+</span> <span class="fl">30</span><span class="op">*</span>gadgets</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve the problem</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize!</span>(model)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Optimization status: "</span>, <span class="fu">termination_status</span>(model))</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective value: "</span>, <span class="fu">objective_value</span>(model))</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Widgets to produce: "</span>, <span class="fu">value</span>(widgets))</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Gadgets to produce: "</span>, <span class="fu">value</span>(gadgets))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running HiGHS 1.7.2 (git hash: 5ce7a2753): Copyright (c) 2024 HiGHS under MIT licence terms
 Coefficient ranges:
-  Matrix [1e+00, 2e+00]
-  Cost   [1e+00, 1e+00]
-  Bound  [1e+01, 1e+01]
-  RHS    [2e+01, 2e+01]
+  Matrix [1e+00, 3e+00]
+  Cost   [2e+01, 3e+01]
+  Bound  [0e+00, 0e+00]
+  RHS    [6e+01, 2e+02]
 Presolving model
 1 rows, 2 cols, 2 nonzeros  0s
-0 rows, 0 cols, 0 nonzeros  0s
-Presolve: Optimal
+1 rows, 2 cols, 2 nonzeros  0s
+Objective function is integral with scale 0.2
+
+Solving MIP model with:
+   1 rows
+   2 cols (0 binary, 2 integer, 0 implied int., 0 continuous)
+   2 nonzeros
+
+        Nodes      |    B&amp;B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+     Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   3800            -inf                 inf        0      0      0         0     0.0s
+ S       0       0         0   0.00%   3800            2780              36.69%        0      0      0         0     0.0s
 
 Solving report
   Status            Optimal
-  Primal bound      12.5
-  Dual bound        12.5
-  Gap               0% (tolerance: 0.01%)
+  Primal bound      2780
+  Dual bound        2800
+  Gap               0.719% (tolerance: 1%)
   Solution status   feasible
-                    12.5 (objective)
+                    2780 (objective)
                     0 (bound viol.)
                     0 (int. viol.)
                     0 (row viol.)
   Timing            0.00 (total)
                     0.00 (presolve)
                     0.00 (postsolve)
-  Nodes             0
-  LP iterations     0 (total)
+  Nodes             1
+  LP iterations     1 (total)
                     0 (strong br.)
                     0 (separation)
                     0 (heuristics)
-Default solution: x = 10.0, y = 2.5
-Solve time: 0.0018042909796349704 seconds
-Coefficient ranges:
-  Matrix [1e+00, 2e+00]
-  Cost   [1e+00, 1e+00]
-  Bound  [1e+01, 1e+01]
-  RHS    [2e+01, 2e+01]
-Assessing feasibility of MIP using primal feasibility and integrality tolerance of       1e-06
-Solution has               num          max          sum
-Col     infeasibilities      0            0            0
-Integer infeasibilities      0            0            0
-Row     infeasibilities      0            0            0
-Row     residuals            0            0            0
-Presolving model
-1 rows, 2 cols, 2 nonzeros  0s
-0 rows, 0 cols, 0 nonzeros  0s
-Presolve: Optimal
-
-Solving report
-  Status            Optimal
-  Primal bound      12.5
-  Dual bound        12.5
-  Gap               0% (tolerance: 10%)
-  Solution status   feasible
-                    12.5 (objective)
-                    0 (bound viol.)
-                    0 (int. viol.)
-                    0 (row viol.)
-  Timing            0.00 (total)
-                    0.00 (presolve)
-                    0.00 (postsolve)
-  Nodes             0
-  LP iterations     0 (total)
-                    0 (strong br.)
-                    0 (separation)
-                    0 (heuristics)
-Solution with new options: x = 10.0, y = 2.5
-Solve time: 0.00014212500536814332 seconds</code></pre>
+Optimization status: OPTIMAL
+Objective value: 2780.0
+Widgets to produce: 80.0
+Gadgets to produce: 26.0</code></pre>
 </div>
 </div>
-<p>This example demonstrates how changing solver options can affect the solution process, even for a simple problem. For more complex models, these options can have a significant impact on solve time and solution quality.</p>
+<p>This problem determines how many widgets and gadgets to produce to maximize profit, given time constraints and maximum demand.</p>
+<section id="exercise-2.1---modify-and-solve-the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2.1---modify-and-solve-the-problem">Exercise 2.1 - Modify and Solve the Problem</h2>
+<p>Now it’s your turn! Modify the problem above by:</p>
+<ol type="1">
+<li>Changing the production time constraint to 300 minutes</li>
+<li>Increasing the profit for widgets to 30</li>
+<li>Solving the modified problem and printing the results</li>
+</ol>
+<div id="22805dac" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: Copy the code above and make the necessary changes</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer) <span class="co"># Don't forget to re-initialize the model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="d9ba04c3" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> MOI.OPTIMAL <span class="st">"The termination status should be OPTIMAL but is </span><span class="sc">$</span>(<span class="fu">termination_status</span>(model))<span class="st">"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">isapprox</span>(<span class="fu">objective_value</span>(model), <span class="fl">3780</span>, atol<span class="op">=</span><span class="fl">1e-6</span>) <span class="st">"The objective value should be 3780 but is </span><span class="sc">$</span>(<span class="fu">objective_value</span>(model))<span class="st">"</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">isapprox</span>(<span class="fu">value</span>(widgets), <span class="fl">80</span>, atol<span class="op">=</span><span class="fl">1e-6</span>) <span class="st">"The number of widgets to produce should be 80 but is </span><span class="sc">$</span>(<span class="fu">value</span>(widgets))<span class="st">"</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">isapprox</span>(<span class="fu">value</span>(gadgets), <span class="fl">46</span>, atol<span class="op">=</span><span class="fl">1e-6</span>) <span class="st">"The number of gadgets to produce should be 46 but is </span><span class="sc">$</span>(<span class="fu">value</span>(gadgets))<span class="st">"</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Excellent work! You've successfully modified and solved the optimization problem."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="section-3-interpreting-solver-output" class="level1">
+<h1>Section 3: Interpreting Solver Output</h1>
+<p>When we solve an optimization problem, the solver gives us information about how it went. Let’s look at some key pieces of information:</p>
+<div id="edb1f040" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Termination status: "</span>, <span class="fu">termination_status</span>(model))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Primal status: "</span>, <span class="fu">primal_status</span>(model))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Dual status: "</span>, <span class="fu">dual_status</span>(model))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective value: "</span>, <span class="fu">objective_value</span>(model))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solve time: "</span>, <span class="fu">solve_time</span>(model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s break this down:</p>
+<ul>
+<li><strong>Termination status</strong>: Tells if the solver found an optimal solution, ran out of time, etc.</li>
+<li><strong>Primal status</strong>: Indicates if we have a valid solution for our original problem</li>
+<li><strong>Dual status</strong>: Relates to the mathematical properties of the solution (don’t worry too much about this)</li>
+<li><strong>Objective value</strong>: The value of our objective function (in this case, our profit)</li>
+<li><strong>Solve time</strong>: How long it took to solve the problem</li>
+</ul>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>

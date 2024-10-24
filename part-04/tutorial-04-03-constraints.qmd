@@ -23,23 +23,27 @@ format:
 
 # Introduction
 
-This Julia script is an interactive tutorial to introduce you to advanced handling of objective functions and constraints in JuMP. You'll learn about defining and managing objective functions and constraints within containers (arrays, dictionaries, matrices), and how to implement conditional constraints effectively.
+Welcome to this tutorial on constraints in JuMP! In this lesson, we'll explore how to add rules (constraints) to our optimization problems.
 
-Follow the instructions, write your code in the designated code blocks, and confirm your understanding with `@assert` statements. Make sure to have the JuMP package installed to follow this tutorial.
+By the end of this tutorial, you'll be able to:
+1. Create simple constraints for your optimization problems
+2. Use containers (like arrays) to manage multiple similar constraints
+3. Create more complex constraints based on conditions
 
-# Section 1 - Objective Functions with Container Variables
+Let's start by loading the necessary packages:
 
-First, we need to load the JuMP and HiGHS packages.
 ```{julia}
-#| eval: true
-#| output: false
 using JuMP, HiGHS
 ```
 
-Then, we need a model first to assign something to it.
+Now, let's create a model that we'll use throughout this tutorial:
+
 ```{julia}
-another_model = Model(HiGHS.Optimizer)
+model = Model(HiGHS.Optimizer)
+println("Great! We've created a new optimization model.")
 ```
+
+# Section 1 - Objective Functions with Container Variables
 
 Defining objective functions with variables in containers allows for scalable and dynamic model formulations. First, we need a container with variables for the objective function. For example:
 
@@ -53,7 +57,7 @@ Now, we can define an objective function with the container. For example:
 @objective(modelName, Max, sum(variableName[i] for i in 1:3))
 ```
 
-## Exercise 1.1 - Define an array of variables and an objective function
+## Exercise 1.1 - Define arrays
 
 Scenario: Imagine you're optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.
 
@@ -86,7 +90,7 @@ Defining constraints within containers allows for structured and easily manageab
 
 This would create a constraint called `constraintName` for each `i` - thus `1`,`2`, and `3` - where `variableName[1]`, `variableName[2]`, and `variableName[3]` are restricted to be maximally `100`.
 
-# Exercise 2.1 - Define constraints called 'maxProfit' using an array of variables
+# Exercise 2.1 - Define constraints
 
 Continuing our factory scenario: Each product has a maximum daily production capacity due to machine limitations.
 
@@ -118,7 +122,7 @@ Conditional constraints are added to the model based on certain conditions, allo
 
 This would create a constraint called `constraintName` for each `i` - thus `1`,`2`, and `3` - where `variableName[1]`, `variableName[2]` are restricted to be maximally `50` and `variableName[3]` was not restricted.
 
-## Exercise 3.1 - Add a conditional constraint 'smallProfit' to the previous model
+## Exercise 3.1 - Add a conditional constraints
 
 Scenario extension: The first 4 products are new and have limited market demand.
 

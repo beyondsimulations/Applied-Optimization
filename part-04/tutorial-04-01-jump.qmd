@@ -27,26 +27,45 @@ engine: julia
 
 # Introduction
 
-This Julia script is an interactive tutorial to introduce you to mathematical optimization using JuMP and the HiGHS solver. Follow the instructions, write your code in the designated code blocks, and confirm your understanding with @assert statements.
+Welcome to this beginner-friendly tutorial on mathematical optimization using JuMP and the HiGHS solver in Julia! Don't worry if these terms sound unfamiliar – we'll explain everything step by step.
 
-JuMP is a general framework to formulate mathematical models in Julia, HiGHS is a open source solver with a MIT license and draws quiet some attention, as it is pretty fast for an open source solver. Nonetheless, we could also use other solvers in JuMP by only changing of a few lines of code, making it more versatile as for example GurobiPy in Python.
+In this tutorial, you'll learn how to:
+1. Set up a simple optimization problem
+2. Define variables and constraints
+3. Create an objective function
+4. Solve the problem and interpret the results
 
-If you ever feel like you need more information, the JuMP Documentation is a great 
-ressource: [JuMP Documentation](https://jump.dev/JuMP.jl/stable/tutorials/getting_started/getting_started_with_JuMP/)
+We'll use a real-world example to make these concepts more relatable. Imagine you're managing a small factory that produces two types of products. Your goal is to maximize profit while working within certain limitations. This is exactly the kind of problem that mathematical optimization can solve!
 
-We are going to structure this tutorial based on a small example instance: 
+## What is JuMP?
 
-- Suppose we are planning the production of two products
-    - The profit from each unit of Product A is 100
-    - The profit from each unit of Product B is 150
-- The production is constrained by the available hours in two departments
-    - Each unit of Product A requires 2 hours of Cutting and 4 hours of Finishing
-    - Each unit of Product B requires 4 hours of Cutting and 3 hours of Finishing
-    - 40 hours are available in total in the Cutting department
-    - 60 hours are available in total in the Finishing department
-- We want to maximize the profit given these constraints
+JuMP (Julia for Mathematical Programming) is a powerful tool that helps us describe optimization problems in a way that computers can understand and solve. Think of it as a translator between your business problem and the mathematical solver.
 
-If you followed the struture of the tutorials, you first have to install the JuMP Package and the HiGHS Package before you can start using it:
+## What is HiGHS?
+
+HiGHS is an open-source solver that can find solutions to the optimization problems we describe using JuMP. It's like a very smart calculator that can handle complex problems quickly and efficiently.
+
+## Our Example Problem
+
+Let's break down our factory management problem:
+
+- You produce two products: Product A and Product B
+- Each product gives you a different profit:
+  - Product A: 100 profit per unit
+  - Product B: 150 profit per unit
+- You have two departments: Cutting and Finishing
+- Each product requires different amounts of time in each department:
+  - Product A: 2 hours in Cutting, 4 hours in Finishing
+  - Product B: 4 hours in Cutting, 3 hours in Finishing
+- You have limited time available in each department:
+  - Cutting: 40 hours total
+  - Finishing: 60 hours total
+
+Your goal is to decide how many of each product to make to maximize your total profit, while not exceeding the available time in each department.
+
+## Setting Up
+
+First, we need to install and load the necessary packages. If you haven't already installed JuMP and HiGHS, run the following code:
 
 ```{julia}
 #| eval: true
@@ -54,24 +73,36 @@ If you followed the struture of the tutorials, you first have to install the JuM
 import Pkg; Pkg.add(["JuMP","HiGHS"])
 ```
 
+Now, let's load these packages:
+
 ```{julia}
 using JuMP, HiGHS
 ```
 
+Great! We're now ready to start building our optimization model.
+
 # Section 1 - Defining an Optimization Model
 
-An optimization model in JuMP is defined within a Model object.
+The first step in solving an optimization problem is to create a model. This model will contain all the information about our problem: the variables, constraints, and objective.
+
+In JuMP, we create a model like this:
 
 ```{julia}
 model = Model(HiGHS.Optimizer)
 println("Optimization model created successfully!")
 ```
 
+Let's break this down:
+- `Model()` creates a new optimization model
+- `HiGHS.Optimizer` tells JuMP to use the HiGHS solver for this model
+
+Think of this as creating a blank canvas where we'll paint our optimization problem.
+
 # Section 2 - Adding Variables
 
-In optimization models, variables represent the quantities we want to determine. In JuMP, we use the `@variable` macro to define these variables.
+Now that we have our model, we need to define our variables. In our factory problem, the variables represent the quantities of Product A and Product B that we want to produce.
 
-To define a variable for the model, we use the syntax:
+In JuMP, we use the `@variable` macro to define variables. Here's the general syntax:
 
 ```julia
 @variable(model_name, variable_name, [additional_properties])
@@ -91,7 +122,8 @@ For example, to create a continuous variable that's greater than or equal to 0:
 This defines a continuous variable that's equal to or larger than 0.
 
 ## Exercise 2.1 - Create Variables
-Create two continous variables equal or larger 0 called `productA` and `productB` that represent the the number of units produced in our problem for our model `model`.
+
+Now it's your turn! Create two continuous variables equal to or larger than 0 called `productA` and `productB` that represent the number of units produced in our problem for our model `model`.
 
 ```{julia}
 #| eval: false
@@ -199,7 +231,7 @@ println("The optimization later will show, whether the formulation was correct."
 
 # Section 5 - Solving the Model
 
-Once we have defined our variables, constraints, and objective function, we can solve the optimization model. Here's how to do it step by step:
+Now that we have defined our variables, constraints, and objective function, we're ready to solve the optimization model. Here's how to do it step by step:
 
 1. Solve the model:
 
@@ -240,8 +272,14 @@ println("Product A quantity: $(value(productA))")
 println("Product B quantity: $(value(productB))")
 ```
 
+Let's break this down:
+- `optimize!(model)` tells JuMP to solve our model
+- `termination_status(model)` checks if we found an optimal solution
+- `objective_value(model)` gives us the maximum profit we can achieve
+- `value(productA)` and `value(productB)` tell us how many of each product we should produce
+
 ::: {.callout-note}
-Note, that the values can be slightly off due to the nature of Float64 numbers!
+The values might be slightly off due to the nature of floating-point numbers in computers.
 :::
 
 The following code block tests whether the solution is correct or whether you have made a mistake in the formulation of the problem.
