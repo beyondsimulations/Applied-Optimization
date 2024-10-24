@@ -369,7 +369,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Imagine you’re using a GPS app to find the best route to a new restaurant. Just like how you can adjust settings in your GPS (like avoiding toll roads or preferring highways), we can adjust settings in our optimization solver to help it find solutions more efficiently or to meet specific requirements.</p>
 <p>By the end of this tutorial, you’ll be able to: 1. Understand what solver options are and why they’re useful 2. Set basic solver options like time limits and solution tolerances 3. Interpret solver output to understand how well your problem was solved</p>
 <p>Let’s start by loading the necessary packages:</p>
-<div id="c04ce49e" class="cell" data-execution_count="1">
+<div id="f2b3e689" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -382,7 +382,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Presolve</strong>: Whether to simplify the problem before solving it</li>
 </ol>
 <p>Let’s create a model and set some of these options:</p>
-<div id="7325aba0" class="cell" data-execution_count="2">
+<div id="f5df8793" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set a time limit of 60 seconds</span></span>
@@ -408,10 +408,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-1.1---set-solver-options" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---set-solver-options">Exercise 1.1 - Set Solver Options</h2>
 <p>Now it’s your turn! Set the following solver options: 1. A time limit of 120 seconds 2. A MIP gap tolerance of 0.5% 3. Turn off presolve</p>
-<div id="227b7cac" class="cell" data-execution_count="3">
+<div id="6af3af5e" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="504ac5b5" class="cell" data-execution_count="4">
+<div id="708f0c5c" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -428,7 +428,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Section 2: Creating and Solving a Sample Problem</h1>
 <p>To see how these options affect solving, let’s create a simple optimization problem. We’ll use a basic production planning scenario.</p>
 <p>Imagine you’re managing a small factory that produces two types of products: widgets and gadgets. You want to maximize profit while staying within your production capacity.</p>
-<div id="01335e9b" class="cell" data-execution_count="5">
+<div id="ccce9673" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define variables</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, widgets <span class="op">&gt;=</span> <span class="fl">0</span>, <span class="dt">Int</span>) </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, gadgets <span class="op">&gt;=</span> <span class="fl">0</span>, <span class="dt">Int</span>)</span>
@@ -517,12 +517,12 @@ Gadgets to produce: 26.0</code></pre>
 <li>Increasing the profit for widgets to 30</li>
 <li>Solving the modified problem and printing the results</li>
 </ol>
-<div id="22805dac" class="cell" data-execution_count="6">
+<div id="052d3cf5" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: Copy the code above and make the necessary changes</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer) <span class="co"># Don't forget to re-initialize the model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d9ba04c3" class="cell" data-execution_count="7">
+<div id="2bbb77fa" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -538,7 +538,7 @@ Gadgets to produce: 26.0</code></pre>
 <section id="section-3-interpreting-solver-output" class="level1">
 <h1>Section 3: Interpreting Solver Output</h1>
 <p>When we solve an optimization problem, the solver gives us information about how it went. Let’s look at some key pieces of information:</p>
-<div id="edb1f040" class="cell" data-execution_count="8">
+<div id="8ae3432e" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Termination status: "</span>, <span class="fu">termination_status</span>(model))</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Primal status: "</span>, <span class="fu">primal_status</span>(model))</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Dual status: "</span>, <span class="fu">dual_status</span>(model))</span>
