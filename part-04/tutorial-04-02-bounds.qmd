@@ -68,19 +68,22 @@ This defines a continuous variable without any bound.
 
 ```{julia}    
 #| output: false
-@variable(model, 0 <= variableName2 <= 1) 
+@variable(model, 0 <= variableName2 <= 1)
+has_lower_bound(variableName2) && has_upper_bound(variableName2)
 ```
 This defines a continuous variable in an interval.
 
 ```{julia}    
 #| output: false
-@variable(model, variableName3, Bin) 
+@variable(model, variableName3, Bin)
+is_binary(variableName3)
 ```
 This defines a binary variable.
 
 ```{julia}    
 #| output: false
 @variable(model, 0 <= variableName4, Int) 
+is_integer(variableName4)
 ```
 This defines an integer variable. 
 
@@ -91,6 +94,7 @@ Note that you will have to change `model` and `variableName` according to your i
 ## Exercise 1.1 - Create Variables
 
 Now it's your turn! Create three variables:
+
 1. A continuous variable called `water_amount`
 2. An integer variable called `cars_produced`
 3. A binary variable called `build_store`

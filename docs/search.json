@@ -4,7 +4,7 @@
     "href": "part-04/tutorial-04-05-transport.html",
     "title": "Tutorial IV.V - Modelling the Transportation Problem with JuMP",
     "section": "",
-    "text": "Welcome to this tutorial on the transportation problem using JuMP! As always, don’t worry if you’re new to optimization - we’ll walk through everything step by step using a real-world example.\nImagine you’re running a solar panel distribution company. You have several warehouses (suppliers) and need to ship solar panels to various solar farms (customers). Your goal is to minimize the total cost of transportation while meeting all customer demands.\nBy the end of this tutorial, you’ll be able to:\n\nUnderstand what a transportation problem is\nSet up a transportation problem using JuMP\nSolve the problem and interpret the results\n\nLet’s start by loading the necessary packages:\n\nusing JuMP, HiGHS\nusing DataFrames, CSV",
+    "text": "Welcome to this tutorial on the transportation problem using JuMP! As always, don’t worry if you’re new to optimization - we’ll walk through everything step by step using a real-world example.\nImagine you’re running a solar panel distribution company. You have several warehouses (suppliers) and need to ship solar panels to various solar farms (customers). Your goal is to minimize the total cost of transportation while meeting all customer demands.\nBy the end of this tutorial, you’ll be able to:\n\nUnderstand what a transportation problem is\nSet up a transportation problem using JuMP\nSolve the problem and interpret the results\n\nLet’s start by loading the necessary packages:\n\n\n   Resolving package versions...\n  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Project.toml`\n  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Manifest.toml`\n   Resolving package versions...\n  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Project.toml`\n  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Manifest.toml`\n   Resolving package versions...\n  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Project.toml`\n  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Manifest.toml`\n   Resolving package versions...\n    Updating `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Project.toml`\n  [336ed68f] + CSV v0.10.15\n    Updating `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Manifest.toml`\n  [336ed68f] + CSV v0.10.15\n  [48062228] + FilePathsBase v0.9.22\n  [ea10d353] + WeakRefStrings v1.4.2\n  [76eceee3] + WorkerUtilities v1.6.1\n\n\n\nusing JuMP, HiGHS\nusing DataFrames, CSV",
     "crumbs": [
       "04 Optimization",
       "05 - Transport"
@@ -165,83 +165,6 @@
     ]
   },
   {
-    "objectID": "part-02/tutorial-02-03-comparisons.html",
-    "href": "part-02/tutorial-02-03-comparisons.html",
-    "title": "Tutorial II.III - Comparison Operators",
-    "section": "",
-    "text": "Imagine you’re teaching a computer to make decisions. Just like we compare things in everyday life (“Is it raining?”, “Do I have enough money?”), computers need ways to compare values and make choices. This tutorial will show you how to help computers make these comparisons!\nFollow the instructions, write your code in the designated code blocks, and execute the corresponding code cell.",
-    "crumbs": [
-      "02 First Steps",
-      "03 - Comparisons"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-1.1---compare-if-10-is-greater-than-5",
-    "href": "part-02/tutorial-02-03-comparisons.html#exercise-1.1---compare-if-10-is-greater-than-5",
-    "title": "Tutorial II.III - Comparison Operators",
-    "section": "Exercise 1.1 - Compare if 10 is greater than 5",
-    "text": "Exercise 1.1 - Compare if 10 is greater than 5\nCompare if 10 is greater than 5 and store the result in comparison1.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert comparison1 == true\nprintln(\"comparison1 is \", comparison1)",
-    "crumbs": [
-      "02 First Steps",
-      "03 - Comparisons"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-1.2---compare-if-x-is-not-equal-to-y",
-    "href": "part-02/tutorial-02-03-comparisons.html#exercise-1.2---compare-if-x-is-not-equal-to-y",
-    "title": "Tutorial II.III - Comparison Operators",
-    "section": "Exercise 1.2 - Compare if x is not equal to y",
-    "text": "Exercise 1.2 - Compare if x is not equal to y\nDefine variables x with value \"Hello\" and y with value \"world\". Compare if x is not equal to y and store the result in comparison2.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert x == \"Hello\"\n@assert y == \"world\"\n@assert comparison2 == true\nprintln(\"Comparison2 is \", comparison2)",
-    "crumbs": [
-      "02 First Steps",
-      "03 - Comparisons"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-2.1---use-the-and-operator",
-    "href": "part-02/tutorial-02-03-comparisons.html#exercise-2.1---use-the-and-operator",
-    "title": "Tutorial II.III - Comparison Operators",
-    "section": "Exercise 2.1 - Use the AND operator",
-    "text": "Exercise 2.1 - Use the AND operator\nUse the AND operator to check if 10 is greater than 5 and hello is equal to hello. Store the result in logic1.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert logic1 == true\nprintln(\"logic1 is \", logic1)",
-    "crumbs": [
-      "02 First Steps",
-      "03 - Comparisons"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-2.2---use-the-or-operator",
-    "href": "part-02/tutorial-02-03-comparisons.html#exercise-2.2---use-the-or-operator",
-    "title": "Tutorial II.III - Comparison Operators",
-    "section": "Exercise 2.2 - Use the OR operator",
-    "text": "Exercise 2.2 - Use the OR operator\nUse the OR operator to check if 10 is less than 5 or hello is equal to hello. Store the result in logic2.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert logic2 == true\nprintln(\"logic2 is \", logic2)\n\n\n\n\n\n\n\n\nTip\n\n\n\nJulia uses short-circuit evaluation for && and || operators. This means that the second operand is only evaluated if necessary.",
-    "crumbs": [
-      "02 First Steps",
-      "03 - Comparisons"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-2.3---use-the-not-operator",
-    "href": "part-02/tutorial-02-03-comparisons.html#exercise-2.3---use-the-not-operator",
-    "title": "Tutorial II.III - Comparison Operators",
-    "section": "Exercise 2.3 - Use the NOT operator",
-    "text": "Exercise 2.3 - Use the NOT operator\nCheck whether 10 is greater than 5 and store the result in logic3. Then, use the NOT operator to invert logic3. Store the result in logic4.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert logic3 == true\n@assert logic4 == false\nprintln(\"logic3 is \", logic3,\" and logic4 is\", logic4)",
-    "crumbs": [
-      "02 First Steps",
-      "03 - Comparisons"
-    ]
-  },
-  {
-    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-2.4---chaining-comparisons",
-    "href": "part-02/tutorial-02-03-comparisons.html#exercise-2.4---chaining-comparisons",
-    "title": "Tutorial II.III - Comparison Operators",
-    "section": "Exercise 2.4 - Chaining Comparisons",
-    "text": "Exercise 2.4 - Chaining Comparisons\nJulia has a neat feature that lets you write comparisons the way you think about them:\n# Instead of writing:\nage &gt;= 13 && age &lt;= 19    # Is age between 13 and 19?\n\n# You can write:\n13 &lt;= age &lt;= 19          # Much more natural!\nReal-world examples:\n# Is the body temperature normal?\nnormal_temperature = (36.5 &lt;= body_temp &lt;= 37.5)\n\n# Is the current hour within working hours?\nworking_hours = (9 &lt;= current_hour &lt; 17)\nCheck if x is between 1 and 10 (exclusive) using a chained comparison. Store the result in chained_comparison.\n\nx = 5\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert chained_comparison == true\nprintln(\"chained_comparison is \", chained_comparison)",
-    "crumbs": [
-      "02 First Steps",
-      "03 - Comparisons"
-    ]
-  },
-  {
     "objectID": "part-02/tutorial-02-04-loops.html",
     "href": "part-02/tutorial-02-04-loops.html",
     "title": "Tutorial II.IV - Loops",
@@ -312,7 +235,7 @@
     "href": "part-02/tutorial-02-04-loops.html#exercise-3.1---compute-the-product-of-each-pair-of-elements-from-two-arrays",
     "title": "Tutorial II.IV - Loops",
     "section": "Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays",
-    "text": "Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays\nCompute the product of each pair of elements from two arrays. For example, the product of two numbers a and b is a * b. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results.\n\nnumbers1 = [1, 2, 3]\nnumbers2 = [4, 5, 6]\nproducts = []\n# YOUR CODE BELOW\n\n# Test your answer\n@assert products == [4, 5, 6, 8, 10, 12, 12, 15, 18]\nprintln(\"Products of each pair from two arrays: \", products)\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, you can use push!() to append elements to an array.",
+    "text": "Exercise 3.1 - Compute the Product of Each Pair of Elements from Two Arrays\nCompute the product of each pair of elements from two arrays. For example, the product of two numbers a and b is a * b. The next lines initialize numbers1, numbers2 arrays, and the products array to store your results.\n\nnumbers1 = [1, 2, 3]\nnumbers2 = [4, 5, 6]\nproducts = []\n# YOUR CODE BELOW\n\n\n# Test your answer\n@assert products == [4, 5, 6, 8, 10, 12, 12, 15, 18]\nprintln(\"Products of each pair from two arrays: \", products)\n\n\n\n\n\n\n\nTip\n\n\n\nRemember, you can use push!() to append elements to an array.",
     "crumbs": [
       "02 First Steps",
       "04 - Loops"
@@ -323,10 +246,98 @@
     "href": "part-02/tutorial-02-04-loops.html#exercise-4.1---create-a-list-of-even-numbers",
     "title": "Tutorial II.IV - Loops",
     "section": "Exercise 4.1 - Create a List of Even Numbers",
-    "text": "Exercise 4.1 - Create a List of Even Numbers\nCreate a list of even numbers from 1 to 10 using a list comprehension.\n\nlet\n# YOUR CODE BELOW\n\n# Test your answer\n@assert even_numbers == [2, 4, 6, 8, 10]\nprintln(\"Even numbers from 1 to 10: \", even_numbers)\nend",
+    "text": "Exercise 4.1 - Create a List of Even Numbers\nCreate a list of even numbers from 1 to 10 using a list comprehension.\n\n# YOUR CODE BELOW\n\n\n# Test your answer\n@assert even_numbers == [2, 4, 6, 8, 10]\nprintln(\"Even numbers from 1 to 10: \", even_numbers)",
     "crumbs": [
       "02 First Steps",
       "04 - Loops"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html",
+    "href": "part-03/tutorial-03-05-Plotting.html",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "",
+    "text": "Welcome to this tutorial on plotting in Julia! We’ll be using the powerful Plots.jl package to create beautiful and informative visualizations. Don’t worry if you’re new to plotting – we’ll start with the basics and gradually build up to more advanced techniques.\nIn this tutorial, you’ll learn how to: 1. Create simple plots like line graphs and scatter plots 2. Customize your plots with colors, labels, and styles 3. Add multiple data series to a single plot 4. Save your plots as image files for use in reports or presentations\nFollow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.\nBefore we begin, let’s make sure you have the necessary packages installed. If you’ve been following the course, you’ll need to install the Plots and StatsPlots packages:\n\nimport Pkg; Pkg.add([\"Plots\",\"StatsPlots\"])\n\nNow, let’s load these packages:\n\nusing Plots, StatsPlots",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 1.1 - Create a Scatter Plot",
+    "text": "Exercise 1.1 - Create a Scatter Plot\nNow it’s your turn! Create a scatter plot using the scatter() function instead of plot(). Use a range from 1 to 20 for x, and generate 20 random numbers for y.\n\n# YOUR CODE BELOW\n# Hint: Use x = 1:20 and y = rand(20)\n\n\n\nCode\n# Test your answer\n@assert @isdefined scatter_plot\nprintln(\"Great job! You've created your first scatter plot.\")",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 2.1 - Customize a Line Plot",
+    "text": "Exercise 2.1 - Customize a Line Plot\nNow it’s your turn to get creative! Customize a line plot with your choice of colors, line styles, and markers. Save your masterpiece in the variable custom_line_plot.\n\n# YOUR CODE BELOW\n# Hint: Try different line styles (:dash, :dot), colors (:blue, :green), and markers (:star, :diamond)\n\n\n\nCode\n# Test your answer\n@assert @isdefined custom_line_plot\nprintln(\"Excellent! You've created a custom line plot.\")\n\n\n\n\n\n\n\n\nNote\n\n\n\nFeel free to experiment with different options. There’s no “right” answer here – it’s all about what looks good to you!",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---create-a-multiple-series-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---create-a-multiple-series-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 3.1 - Create a Multiple Series Plot",
+    "text": "Exercise 3.1 - Create a Multiple Series Plot\nNYour turn! Create a plot called multi_series_plot with three data series y1, y2, and y3. Make sure to give each series a different color and label.\n\n# YOUR CODE BELOW\n# Hint: Use plot() for the first series, then plot!() for the second and third\n\n\n\nCode\n# Test your answer\n@assert @isdefined y1\n@assert @isdefined y2\n@assert @isdefined y3\n@assert @isdefined multi_series_plot\nprintln(\"Fantastic! You've created a plot with multiple series.\")",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
+    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Exercise 3.1 - Save a Plot to a File",
+    "text": "Exercise 3.1 - Save a Plot to a File\nSave your multi_series_plot as a PNG file named “saved_plot.png” in the “ExampleData” folder.\n\n# YOUR CODE BELOW\n# Don't forget to use the @__DIR__ macro to get the correct file path!\n\n\n\nCode\n# Test your answer\n@assert isfile(\"$(@__DIR__)/ExampleData/saved_plot.png\") \"File does not exist yet.\"\nprintln(\"Well done! You've saved your plot as an image file.\")",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#bar-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#bar-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Bar Plot",
+    "text": "Bar Plot\n\n# Bar plot\nx_categories = [\"A\", \"B\", \"C\", \"D\"]\ny_values = [15, 23, 18, 30]\nbar_plot = bar(\n    x_categories, \n    y_values, \n    title=\"Bar Plot Example\"\n)\ndisplay(bar_plot)",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#histogram",
+    "href": "part-03/tutorial-03-05-Plotting.html#histogram",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Histogram",
+    "text": "Histogram\n\ndata = randn(1000)\nhist_plot = histogram(\n    data, \n    bins=30, \n    title=\"Histogram Example\"\n)\ndisplay(hist_plot)",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
+    ]
+  },
+  {
+    "objectID": "part-03/tutorial-03-05-Plotting.html#box-plot",
+    "href": "part-03/tutorial-03-05-Plotting.html#box-plot",
+    "title": "Tutorial III.V - Plotting Graphs",
+    "section": "Box Plot",
+    "text": "Box Plot\n\n# Box plot\ngroup = repeat(1:4, inner=50)\ny = randn(200) .+ group\nbox_plot = boxplot(\n    group, \n    y, \n    title=\"Box Plot Example\"\n)\ndisplay(box_plot)",
+    "crumbs": [
+      "03 Data",
+      "05 - Plotting"
     ]
   },
   {
@@ -334,7 +345,7 @@
     "href": "part-04/tutorial-04-01-jump.html",
     "title": "Tutorial IV.I - Introduction to Mathematical Optimization with JuMP and HiGHS",
     "section": "",
-    "text": "Welcome to this beginner-friendly tutorial on mathematical optimization using JuMP and the HiGHS solver in Julia! Don’t worry if these terms sound unfamiliar – we’ll explain everything step by step.\nIn this tutorial, you’ll learn how to: 1. Set up a simple optimization problem 2. Define variables and constraints 3. Create an objective function 4. Solve the problem and interpret the results\nWe’ll use a real-world example to make these concepts more relatable. Imagine you’re managing a small factory that produces two types of products. Your goal is to maximize profit while working within certain limitations. This is exactly the kind of problem that mathematical optimization can solve!\n\n\nJuMP (Julia for Mathematical Programming) is a powerful tool that helps us describe optimization problems in a way that computers can understand and solve. Think of it as a translator between your business problem and the mathematical solver.\n\n\n\nHiGHS is an open-source solver that can find solutions to the optimization problems we describe using JuMP. It’s like a very smart calculator that can handle complex problems quickly and efficiently.\n\n\n\nLet’s break down our factory management problem:\n\nYou produce two products: Product A and Product B\nEach product gives you a different profit:\n\nProduct A: 100 profit per unit\nProduct B: 150 profit per unit\n\nYou have two departments: Cutting and Finishing\nEach product requires different amounts of time in each department:\n\nProduct A: 2 hours in Cutting, 4 hours in Finishing\nProduct B: 4 hours in Cutting, 3 hours in Finishing\n\nYou have limited time available in each department:\n\nCutting: 40 hours total\nFinishing: 60 hours total\n\n\nYour goal is to decide how many of each product to make to maximize your total profit, while not exceeding the available time in each department.\n\n\n\nFirst, we need to install and load the necessary packages. If you haven’t already installed JuMP and HiGHS, run the following code:\n\nimport Pkg; Pkg.add([\"JuMP\",\"HiGHS\"])\n\nNow, let’s load these packages:\n\nusing JuMP, HiGHS\n\nGreat! We’re now ready to start building our optimization model.",
+    "text": "Welcome to this beginner-friendly tutorial on mathematical optimization using JuMP and the HiGHS solver in Julia! Don’t worry if these terms sound unfamiliar – we’ll explain everything step by step.\nIn this tutorial, you’ll learn how to:\n\nSet up a simple optimization problem\nDefine variables and constraints\nCreate an objective function\nSolve the problem and interpret the results\n\nWe’ll use a real-world example to make these concepts more relatable. Imagine you’re managing a small factory that produces two types of products. Your goal is to maximize profit while working within certain limitations. This is exactly the kind of problem that mathematical optimization can solve!\n\n\nJuMP (Julia for Mathematical Programming) is a powerful tool that helps us describe optimization problems in a way that computers can understand and solve. Think of it as a translator between your business problem and the mathematical solver.\n\n\n\nHiGHS is an open-source solver that can find solutions to the optimization problems we describe using JuMP. It’s like a very smart calculator that can handle complex problems quickly and efficiently.\n\n\n\nLet’s break down our factory management problem:\n\nYou produce two products: Product A and Product B\nEach product gives you a different profit:\n\nProduct A: 100 profit per unit\nProduct B: 150 profit per unit\n\nYou have two departments: Cutting and Finishing\nEach product requires different amounts of time in each department:\n\nProduct A: 2 hours in Cutting, 4 hours in Finishing\nProduct B: 4 hours in Cutting, 3 hours in Finishing\n\nYou have limited time available in each department:\n\nCutting: 40 hours total\nFinishing: 60 hours total\n\n\nYour goal is to decide how many of each product to make to maximize your total profit, while not exceeding the available time in each department.\n\n\n\nFirst, we need to install and load the necessary packages. If you haven’t already installed JuMP and HiGHS, run the following code:\n\nimport Pkg; Pkg.add([\"JuMP\",\"HiGHS\"])\n\nNow, let’s load these packages:\n\nusing JuMP, HiGHS\n\nGreat! We’re now ready to start building our optimization model.",
     "crumbs": [
       "04 Optimization",
       "01 - JuMP"
@@ -444,7 +455,7 @@
     "href": "part-03/tutorial-03-01-functions.html#exercise-2.1---return-a-local-variable",
     "title": "Tutorial III.I - Functions in Julia",
     "section": "Exercise 2.1 - Return a Local Variable",
-    "text": "Exercise 2.1 - Return a Local Variable\nTry to execute the following block of code. The objective is to understand how to return the local_variable_one from the function scope_test. Your task is to change the function, to return the value of local_variable_one.\n\n# YOUR CHANGES BELOW\nfunction scope_test()\n    local_variable_one = 10\n    local_variable_two = 20\nend\n\n# YOUR CHANGES ABOVE\n# Test your function\n@assert scope_test() == 10 \"The value exported is $(scope_test()).\"\nprintln(\"The value exported is $(scope_test()), you solved it!\")",
+    "text": "Exercise 2.1 - Return a Local Variable\nTry to execute the following block of code. The objective is to understand how to return the local_variable_one from the function scope_test. Your task is to change the function, to return the value of local_variable_one.\n\n# YOUR CHANGES BELOW\nfunction scope_test()\n    local_variable_one = 10\n    local_variable_two = 20\nend\n# YOUR CHANGES ABOVE\n\n\n# Test your function\n@assert scope_test() == 10 \"The value exported is $(scope_test()).\"\nprintln(\"The value exported is $(scope_test()), you solved it!\")",
     "crumbs": [
       "03 Data",
       "01 - Functions"
@@ -2555,7 +2566,7 @@
     "href": "part-03/tutorial-03-04-IO.html#exercise-1.1---read-a-csv-file",
     "title": "Tutorial III.IV - Input and Output",
     "section": "Exercise 1.1 - Read a CSV File",
-    "text": "Exercise 1.1 - Read a CSV File\nNow it’s your turn! Let’s read the CSV file we just created.\n\n\n\n\n\n\nTip\n\n\n\nTo learn how to use a Julia function, you can type ? followed by the function name in the REPL (Julia’s command-line interface). For example, ?readdlm will show you information about the readdlm() function.\n\n\nUse the readdlm() function to read the ‘matrix.csv’ file we just created. Save the result in a variable called read_matrix.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert read_matrix == new_data\nprintln(\"File 'matrix.csv' read successfully!\")",
+    "text": "Exercise 1.1 - Read a CSV File\nNow it’s your turn! Let’s read the CSV file we just created.\n\n\n\n\n\n\nTip\n\n\n\nTo learn how to use a Julia function, you can type ? followed by the function name in the REPL (Julia’s command-line interface). For example, ?readdlm will show you information about the readdlm() function.\n\n\nUse the readdlm() function to read the ‘matrix.csv’ file we just created. Save the result in a variable called read_matrix.\n\n# YOUR CODE BELOW\n# Don't forget to use the @__DIR__ macro to get the correct file path!\n\n\n\nCode\n# Test your answer\n@assert read_matrix == new_data\nprintln(\"File 'matrix.csv' read successfully!\")",
     "crumbs": [
       "03 Data",
       "04 - Input and Output"
@@ -2566,7 +2577,7 @@
     "href": "part-03/tutorial-03-04-IO.html#exercise-2.1---write-a-dataframe-to-a-csv-file",
     "title": "Tutorial III.IV - Input and Output",
     "section": "Exercise 2.1 - Write a DataFrame to a CSV File",
-    "text": "Exercise 2.1 - Write a DataFrame to a CSV File\nWrite the following given DataFrame to a CSV file table_out.csv in the folder ExampleData. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with ? and the function name.\n\nusing CSV, DataFrames\ndata = DataFrame(Name = [\"Elio\", \"Bob\", \"Yola\"], Age = [18, 25, 29])\ncsv_file_path = \"ExampleData/table_out.csv\"\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert isfile(\"ExampleData/table_out.csv\") \"Sorry, the file could not be found. \n    Have you followed all steps?\"\nprintln(\"CSV file 'data.csv' written successfully!\")",
+    "text": "Exercise 2.1 - Write a DataFrame to a CSV File\nWrite the following given DataFrame to a CSV file table_out.csv in the folder ExampleData. This can be done by using the function CSV.write(). To learn the syntax, ask the inbuild help with ? and the function name.\n\nusing CSV, DataFrames\ndata = DataFrame(Name = [\"Elio\", \"Bob\", \"Yola\"], Age = [18, 25, 29])\ncsv_file_path = \"$(@__DIR__)/ExampleData/table_out.csv\"\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert isfile(\"ExampleData/table_out.csv\") \"Sorry, the file could not be found. \n    Have you followed all steps?\"\nprintln(\"CSV file 'data.csv' written successfully!\")",
     "crumbs": [
       "03 Data",
       "04 - Input and Output"
@@ -2577,7 +2588,7 @@
     "href": "part-03/tutorial-03-04-IO.html#exercise-2.2---read-a-csv-file-in",
     "title": "Tutorial III.IV - Input and Output",
     "section": "Exercise 2.2 - Read a CSV File in",
-    "text": "Exercise 2.2 - Read a CSV File in\nRead the CSV file table_out.csv in the folder ExampleData into the variable read_data. Here you can use the function CSV.read(), e.g.:\nread_data = CSV.read(\"Path/datatable.csv\", DataFrame)\n\n\n\n\n\n\nNote\n\n\n\nNote, that you need to provide a sink for the data when using CSV.read(), e.g. a DataFrame.\n\n\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert read_data[1,1] == \"Alice\"\nprintln(\"CSV file 'table_out.csv' read successfully!\")",
+    "text": "Exercise 2.2 - Read a CSV File in\nRead the CSV file table_out.csv in the folder ExampleData into the variable read_data. Here you can use the function CSV.read(), e.g.:\nread_data = CSV.read(\"Path/datatable.csv\", DataFrame)\n\n\n\n\n\n\nNote\n\n\n\nNote, that you need to provide a sink for the data when using CSV.read(), e.g. a DataFrame.\n\n\n\n# YOUR CODE BELOW\n# Again, don't forget to use the @__DIR__ macro to get the correct file path!\n\n\n\nCode\n# Test your answer\n@assert read_data[1,1] == \"Elio\"\nprintln(\"CSV file 'table_out.csv' read successfully!\")",
     "crumbs": [
       "03 Data",
       "04 - Input and Output"
@@ -2599,7 +2610,7 @@
     "href": "part-02/tutorial-02-05-dicts.html#exercise-1.1---create-and-modify-a-dictionary",
     "title": "Tutorial II.V - Dictionaries",
     "section": "Exercise 1.1 - Create and Modify a Dictionary",
-    "text": "Exercise 1.1 - Create and Modify a Dictionary\nAdd a new book called “Harry Potter and the Philosopher’s Stone” with the author “J.K. Rowling” to the created dictionary.\n\n# Creates a dictionary of books and authors\nbooks = Dict(\n    \"1984\" =&gt; \"George Orwell\", \n    \"Nexus\" =&gt; \"Yuval Noah Harari\"\n)\n# YOUR CODE BELOW\n\n\n# Test your answer\n\n@assert haskey(books, \"Harry Potter and the Philosopher's Stone\")\nprintln(\"Great! You've successfully added a new book to the books dictionary.\")",
+    "text": "Exercise 1.1 - Create and Modify a Dictionary\nAdd a new book called “Harry Potter and the Philosopher’s Stone” with the author “J.K. Rowling” to the created dictionary.\n\n# Creates a dictionary of books and authors\nbooks = Dict(\n    \"1984\" =&gt; \"George Orwell\", \n    \"Nexus\" =&gt; \"Yuval Noah Harari\"\n)\n# YOUR CODE BELOW\n\n\n# Test your answer\n@assert haskey(books, \"Harry Potter and the Philosopher's Stone\")\nprintln(\"Great! You've successfully added a new book to the books dictionary.\")",
     "crumbs": [
       "02 First Steps",
       "05 - Dictionaries"
@@ -2643,7 +2654,7 @@
     "href": "part-04/tutorial-04-02-bounds.html#exercise-1.1---create-variables",
     "title": "Tutorial IV.II - Variables and Bounds in JuMP",
     "section": "Exercise 1.1 - Create Variables",
-    "text": "Exercise 1.1 - Create Variables\nNow it’s your turn! Create three variables: 1. A continuous variable called water_amount 2. An integer variable called cars_produced 3. A binary variable called build_store\n\n# YOUR CODE BELOW\n# Hint: Use the @variable macro three times, once for each variable\n\n\n\nCode\n# Test your answer\n@assert typeof(water_amount) == VariableRef && !is_integer(water_amount) && !is_binary(water_amount)\n@assert typeof(cars_produced) == VariableRef && is_integer(cars_produced)\n@assert typeof(build_store) == VariableRef && is_binary(build_store)\nprintln(\"Excellent work! You've successfully created continuous, integer, and binary variables.\")",
+    "text": "Exercise 1.1 - Create Variables\nNow it’s your turn! Create three variables:\n\nA continuous variable called water_amount\nAn integer variable called cars_produced\nA binary variable called build_store\n\n\n# YOUR CODE BELOW\n# Hint: Use the @variable macro three times, once for each variable\n\n\n\nCode\n# Test your answer\n@assert typeof(water_amount) == VariableRef && !is_integer(water_amount) && !is_binary(water_amount)\n@assert typeof(cars_produced) == VariableRef && is_integer(cars_produced)\n@assert typeof(build_store) == VariableRef && is_binary(build_store)\nprintln(\"Excellent work! You've successfully created continuous, integer, and binary variables.\")",
     "crumbs": [
       "04 Optimization",
       "02 - Bounds"
@@ -2683,91 +2694,80 @@
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html",
-    "href": "part-03/tutorial-03-05-Plotting.html",
-    "title": "Tutorial III.V - Plotting Graphs",
+    "objectID": "part-02/tutorial-02-03-comparisons.html",
+    "href": "part-02/tutorial-02-03-comparisons.html",
+    "title": "Tutorial II.III - Comparison Operators",
     "section": "",
-    "text": "Welcome to this tutorial on plotting in Julia! We’ll be using the powerful Plots.jl package to create beautiful and informative visualizations. Don’t worry if you’re new to plotting – we’ll start with the basics and gradually build up to more advanced techniques.\nIn this tutorial, you’ll learn how to: 1. Create simple plots like line graphs and scatter plots 2. Customize your plots with colors, labels, and styles 3. Add multiple data series to a single plot 4. Save your plots as image files for use in reports or presentations\nFollow the instructions, write your code in the designated code blocks, and validate your results with @assert statements.\nBefore we begin, let’s make sure you have the necessary packages installed. If you’ve been following the course, you’ll need to install the Plots and StatsPlots packages:\n\nimport Pkg; Pkg.add([\"Plots\",\"StatsPlots\"])\n\nNow, let’s load these packages:\n\nusing Plots, StatsPlots",
+    "text": "Imagine you’re teaching a computer to make decisions. Just like we compare things in everyday life (“Is it raining?”, “Do I have enough money?”), computers need ways to compare values and make choices. This tutorial will show you how to help computers make these comparisons!\nFollow the instructions, write your code in the designated code blocks, and execute the corresponding code cell.",
     "crumbs": [
-      "03 Data",
-      "05 - Plotting"
+      "02 First Steps",
+      "03 - Comparisons"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-1.1---create-a-scatter-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 1.1 - Create a Scatter Plot",
-    "text": "Exercise 1.1 - Create a Scatter Plot\nNow it’s your turn! Create a scatter plot using the scatter() function instead of plot(). Use a range from 1 to 20 for x, and generate 20 random numbers for y.\n\n# YOUR CODE BELOW\n# Hint: Use x = 1:20 and y = rand(20)\n\n\n\nCode\n# Test your answer\n@assert @isdefined scatter_plot\nprintln(\"Great job! You've created your first scatter plot.\")\ndisplay(scatter_plot)",
+    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-1.1---compare-if-10-is-greater-than-5",
+    "href": "part-02/tutorial-02-03-comparisons.html#exercise-1.1---compare-if-10-is-greater-than-5",
+    "title": "Tutorial II.III - Comparison Operators",
+    "section": "Exercise 1.1 - Compare if 10 is greater than 5",
+    "text": "Exercise 1.1 - Compare if 10 is greater than 5\nCompare if 10 is greater than 5 and store the result in comparison1.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert comparison1 == true\nprintln(\"comparison1 is \", comparison1)",
     "crumbs": [
-      "03 Data",
-      "05 - Plotting"
+      "02 First Steps",
+      "03 - Comparisons"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-2.1---customize-a-line-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 2.1 - Customize a Line Plot",
-    "text": "Exercise 2.1 - Customize a Line Plot\nNow it’s your turn to get creative! Customize a line plot with your choice of colors, line styles, and markers. Save your masterpiece in the variable custom_line_plot.\n\n# YOUR CODE BELOW\n# Hint: Try different line styles (:dash, :dot), colors (:blue, :green), and markers (:star, :diamond)\n\n\n\nCode\n# Test your answer\n@assert @isdefined custom_line_plot\nprintln(\"Excellent! You've created a custom line plot.\")\ndisplay(custom_line_plot)\n\n\n\n\n\n\n\n\nNote\n\n\n\nFeel free to experiment with different options. There’s no “right” answer here – it’s all about what looks good to you!",
+    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-1.2---compare-if-x-is-not-equal-to-y",
+    "href": "part-02/tutorial-02-03-comparisons.html#exercise-1.2---compare-if-x-is-not-equal-to-y",
+    "title": "Tutorial II.III - Comparison Operators",
+    "section": "Exercise 1.2 - Compare if x is not equal to y",
+    "text": "Exercise 1.2 - Compare if x is not equal to y\nDefine variables x with value \"Hello\" and y with value \"world\". Compare if x is not equal to y and store the result in comparison2.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert x == \"Hello\"\n@assert y == \"world\"\n@assert comparison2 == true\nprintln(\"Comparison2 is \", comparison2)",
     "crumbs": [
-      "03 Data",
-      "05 - Plotting"
+      "02 First Steps",
+      "03 - Comparisons"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---create-a-multiple-series-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---create-a-multiple-series-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 3.1 - Create a Multiple Series Plot",
-    "text": "Exercise 3.1 - Create a Multiple Series Plot\nNYour turn! Create a plot called multi_series_plot with three data series y1, y2, and y3. Make sure to give each series a different color and label.\n\n# YOUR CODE BELOW\n# Hint: Use plot() for the first series, then plot!() for the second and third\n\n\n\nCode\n# Test your answer\n@assert @isdefined y1\n@assert @isdefined y2\n@assert @isdefined y3\n@assert @isdefined multi_series_plot\nprintln(\"Fantastic! You've created a plot with multiple series.\")\ndisplay(multi_series_plot)",
+    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-2.1---use-the-and-operator",
+    "href": "part-02/tutorial-02-03-comparisons.html#exercise-2.1---use-the-and-operator",
+    "title": "Tutorial II.III - Comparison Operators",
+    "section": "Exercise 2.1 - Use the AND operator",
+    "text": "Exercise 2.1 - Use the AND operator\nUse the AND operator to check if 10 is greater than 5 and hello is equal to hello. Store the result in logic1.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert logic1 == true\nprintln(\"logic1 is \", logic1)",
     "crumbs": [
-      "03 Data",
-      "05 - Plotting"
+      "02 First Steps",
+      "03 - Comparisons"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
-    "href": "part-03/tutorial-03-05-Plotting.html#exercise-3.1---save-a-plot-to-a-file",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Exercise 3.1 - Save a Plot to a File",
-    "text": "Exercise 3.1 - Save a Plot to a File\nSave your multi_series_plot as a PNG file named “saved_plot.png” in the “ExampleData” folder.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert isfile(\"ExampleData/saved_plot.png\") \"File does not exist yet.\"\nprintln(\"Well done! You've saved your plot as an image file.\")",
+    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-2.2---use-the-or-operator",
+    "href": "part-02/tutorial-02-03-comparisons.html#exercise-2.2---use-the-or-operator",
+    "title": "Tutorial II.III - Comparison Operators",
+    "section": "Exercise 2.2 - Use the OR operator",
+    "text": "Exercise 2.2 - Use the OR operator\nUse the OR operator to check if 10 is less than 5 or hello is equal to hello. Store the result in logic2.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert logic2 == true\nprintln(\"logic2 is \", logic2)\n\n\n\n\n\n\n\n\nTip\n\n\n\nJulia uses short-circuit evaluation for && and || operators. This means that the second operand is only evaluated if necessary.",
     "crumbs": [
-      "03 Data",
-      "05 - Plotting"
+      "02 First Steps",
+      "03 - Comparisons"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#bar-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#bar-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Bar Plot",
-    "text": "Bar Plot\n\n# Bar plot\nx_categories = [\"A\", \"B\", \"C\", \"D\"]\ny_values = [15, 23, 18, 30]\nbar_plot = bar(\n    x_categories, \n    y_values, \n    title=\"Bar Plot Example\"\n)\ndisplay(bar_plot)",
+    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-2.3---use-the-not-operator",
+    "href": "part-02/tutorial-02-03-comparisons.html#exercise-2.3---use-the-not-operator",
+    "title": "Tutorial II.III - Comparison Operators",
+    "section": "Exercise 2.3 - Use the NOT operator",
+    "text": "Exercise 2.3 - Use the NOT operator\nCheck whether 10 is greater than 5 and store the result in logic3. Then, use the NOT operator to invert logic3. Store the result in logic4.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert logic3 == true\n@assert logic4 == false\nprintln(\"logic3 is \", logic3,\" and logic4 is\", logic4)",
     "crumbs": [
-      "03 Data",
-      "05 - Plotting"
+      "02 First Steps",
+      "03 - Comparisons"
     ]
   },
   {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#histogram",
-    "href": "part-03/tutorial-03-05-Plotting.html#histogram",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Histogram",
-    "text": "Histogram\n\ndata = randn(1000)\nhist_plot = histogram(\n    data, \n    bins=30, \n    title=\"Histogram Example\"\n)\ndisplay(hist_plot)",
+    "objectID": "part-02/tutorial-02-03-comparisons.html#exercise-2.4---chaining-comparisons",
+    "href": "part-02/tutorial-02-03-comparisons.html#exercise-2.4---chaining-comparisons",
+    "title": "Tutorial II.III - Comparison Operators",
+    "section": "Exercise 2.4 - Chaining Comparisons",
+    "text": "Exercise 2.4 - Chaining Comparisons\nJulia has a neat feature that lets you write comparisons the way you think about them:\n# Instead of writing:\nage &gt;= 13 && age &lt;= 19    # Is age between 13 and 19?\n\n# You can write:\n13 &lt;= age &lt;= 19          # Much more natural!\nReal-world examples:\n# Is the body temperature normal?\nnormal_temperature = (36.5 &lt;= body_temp &lt;= 37.5)\n\n# Is the current hour within working hours?\nworking_hours = (9 &lt;= current_hour &lt; 17)\nCheck if x is between 1 and 10 (exclusive) using a chained comparison. Store the result in chained_comparison.\n\nx = 5\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert chained_comparison == true\nprintln(\"chained_comparison is \", chained_comparison)",
     "crumbs": [
-      "03 Data",
-      "05 - Plotting"
-    ]
-  },
-  {
-    "objectID": "part-03/tutorial-03-05-Plotting.html#box-plot",
-    "href": "part-03/tutorial-03-05-Plotting.html#box-plot",
-    "title": "Tutorial III.V - Plotting Graphs",
-    "section": "Box Plot",
-    "text": "Box Plot\n\n# Box plot\ngroup = repeat(1:4, inner=50)\ny = randn(200) .+ group\nbox_plot = boxplot(\n    group, \n    y, \n    title=\"Box Plot Example\"\n)\ndisplay(box_plot)",
-    "crumbs": [
-      "03 Data",
-      "05 - Plotting"
+      "02 First Steps",
+      "03 - Comparisons"
     ]
   },
   {
@@ -2841,7 +2841,7 @@
     "href": "part-03/tutorial-03-03-DataFrames.html#exercise-5.1---loop-over-dataframe",
     "title": "Tutorial III.III - DataFrames in Julia",
     "section": "Exercise 5.1 - Loop over DataFrame",
-    "text": "Exercise 5.1 - Loop over DataFrame\nCreate a new column called Bonus in the employees DataFrame. The bonus should be calculated as 10% of the salary for employees over 30, and 5% for those 30 and under. Use a loop to iterate over the rows and calculate the bonus.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert filter(\n    row -&gt; row.Bonus == 2500, \n    employees\n).Name == [\"John\"] \"John should have a bonus of 2500\"\n@assert filter(\n    row -&gt; row.Bonus == 3100, \n    employees\n).Name == [\"Mike\"] \"Mike should have a bonus of 3100\"\n@assert filter(\n    row -&gt; row.Bonus == 9000, \n    employees\n).Name == [\"Frank\"] \"Frank should have a bonus of 9000\"\nprintln(\"Great job! All the bonuses are correct!\")",
+    "text": "Exercise 5.1 - Loop over DataFrame\nCreate a new column called Bonus in the employees DataFrame. The bonus should be calculated as 10% of the salary for employees over 30, and 5% for those 30 and under. Use a loop to iterate over the rows and calculate the bonus.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your answer\n@assert filter(\n    row -&gt; row.Bonus == 2950, \n    employees\n).Name == [\"John\"] \"John should have a bonus of 2950\"\n@assert filter(\n    row -&gt; row.Bonus == 3100, \n    employees\n).Name == [\"Mike\"] \"Mike should have a bonus of 3100\"\n@assert filter(\n    row -&gt; row.Bonus == 9000, \n    employees\n).Name == [\"Frank\"] \"Frank should have a bonus of 9000\"\nprintln(\"Great job! All the bonuses are correct!\")",
     "crumbs": [
       "03 Data",
       "03 - DataFrames"

@@ -89,7 +89,6 @@ Now it's your turn! Create a scatter plot using the `scatter()` function instead
 # Test your answer
 @assert @isdefined scatter_plot
 println("Great job! You've created your first scatter plot.")
-display(scatter_plot)
 ```
 
 # Section 2 - Customizing Plots
@@ -130,7 +129,6 @@ Now it's your turn to get creative! Customize a line plot with your choice of co
 # Test your answer
 @assert @isdefined custom_line_plot
 println("Excellent! You've created a custom line plot.")
-display(custom_line_plot)
 ```
 
 ::: {.callout-note}
@@ -163,7 +161,7 @@ display(multi_plot)
 ```
 
 ::: {.callout-note}
-The `plot!()` function (with an exclamation mark) adds to an existing plot instead of creating a new one.
+The `plot!()` function (with an exclamation mark) adds to an existing plot instead of creating a new one. In addition, we used the label here to add a legend to the plot.
 :::
 
 ## Exercise 3.1 - Create a Multiple Series Plot
@@ -185,7 +183,6 @@ NYour turn! Create a plot called `multi_series_plot` with three data series `y1`
 @assert @isdefined y3
 @assert @isdefined multi_series_plot
 println("Fantastic! You've created a plot with multiple series.")
-display(multi_series_plot)
 ```
 
 # Section 3 - Saving Plots to Files
@@ -205,13 +202,14 @@ Save your `multi_series_plot` as a PNG file named "saved_plot.png" in the "Examp
 ```{julia}
 #| eval: false
 # YOUR CODE BELOW
+# Don't forget to use the @__DIR__ macro to get the correct file path!
 
 ```
 ```{julia}
 #| eval: false
 #| code-fold: true
 # Test your answer
-@assert isfile("ExampleData/saved_plot.png") "File does not exist yet."
+@assert isfile("$(@__DIR__)/ExampleData/saved_plot.png") "File does not exist yet."
 println("Well done! You've saved your plot as an image file.")
 ```
 

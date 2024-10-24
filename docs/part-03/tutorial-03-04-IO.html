@@ -393,14 +393,27 @@ Tip
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> [<span class="fl">10</span> <span class="fl">12</span> <span class="fl">6</span>; <span class="fl">13</span> <span class="fl">25</span> <span class="fl">1</span>; <span class="fl">40</span> <span class="fl">30</span> <span class="fl">7</span>]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new folder called "ExampleData"</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span>(<span class="st">"ExampleData"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span>(<span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/ExampleData"</span>)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Write the matrix to a CSV file</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">open</span>(<span class="st">"ExampleData/matrix.csv"</span>, <span class="st">"w"</span>) <span class="cf">do</span> io</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">open</span>(<span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/ExampleData/matrix.csv"</span>, <span class="st">"w"</span>) <span class="cf">do</span> io</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">writedlm</span>(io, new_data, <span class="ch">','</span>)</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"CSV file 'matrix.csv' written successfully to folder ExampleData!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note, that we used the <code>@__DIR__</code> macro to get the directory of the current file. This is a convenient way to ensure that the file path is correct, no matter where you run the script from. The reason is, that the <code>@__DIR__</code> macro returns the directory of the file in which the macro is called, not the directory of the script you are running.</p>
+</div>
 </div>
 <section id="exercise-1.1---read-a-csv-file" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---read-a-csv-file">Exercise 1.1 - Read a CSV File</h2>
@@ -420,7 +433,8 @@ Tip
 </div>
 <p>Use the <code>readdlm()</code> function to read the ‘matrix.csv’ file we just created. Save the result in a variable called <code>read_matrix</code>.</p>
 <div id="6" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Don't forget to use the @__DIR__ macro to get the correct file path!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="8" class="cell" data-execution_count="0">
 <details class="code-fold">
@@ -444,7 +458,7 @@ Tip
 <div id="12" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> <span class="fu">DataFrame</span>(Name <span class="op">=</span> [<span class="st">"Elio"</span>, <span class="st">"Bob"</span>, <span class="st">"Yola"</span>], Age <span class="op">=</span> [<span class="fl">18</span>, <span class="fl">25</span>, <span class="fl">29</span>])</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>csv_file_path <span class="op">=</span> <span class="st">"ExampleData/table_out.csv"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>csv_file_path <span class="op">=</span> <span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/ExampleData/table_out.csv"</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="14" class="cell" data-execution_count="0">
@@ -475,13 +489,14 @@ Note
 </div>
 </div>
 <div id="16" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Again, don't forget to use the @__DIR__ macro to get the correct file path!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="18" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> read_data[<span class="fl">1</span>,<span class="fl">1</span>] <span class="op">==</span> <span class="st">"Alice"</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> read_data[<span class="fl">1</span>,<span class="fl">1</span>] <span class="op">==</span> <span class="st">"Elio"</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"CSV file 'table_out.csv' read successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>

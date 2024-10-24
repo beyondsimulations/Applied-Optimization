@@ -53,15 +53,19 @@ Now, let's create a simple matrix and save it as a CSV file:
 new_data = [10 12 6; 13 25 1; 40 30 7]
 
 # Create a new folder called "ExampleData"
-mkdir("ExampleData")
+mkdir("$(@__DIR__)/ExampleData")
 
 # Write the matrix to a CSV file
-open("ExampleData/matrix.csv", "w") do io
+open("$(@__DIR__)/ExampleData/matrix.csv", "w") do io
     writedlm(io, new_data, ',')
 end
 
 println("CSV file 'matrix.csv' written successfully to folder ExampleData!")
 ```
+
+::: {.callout-note}
+Note, that we used the `@__DIR__` macro to get the directory of the current file. This is a convenient way to ensure that the file path is correct, no matter where you run the script from. The reason is, that the `@__DIR__` macro returns the directory of the file in which the macro is called, not the directory of the script you are running.
+:::
 
 ## Exercise 1.1 - Read a CSV File
 
@@ -77,6 +81,7 @@ Use the `readdlm()` function to read the 'matrix.csv' file we just created. Save
 ```{julia}
 #| eval: false
 # YOUR CODE BELOW
+# Don't forget to use the @__DIR__ macro to get the correct file path!
 
 ```
 ```{julia}
@@ -104,7 +109,7 @@ Write the following given DataFrame to a CSV file `table_out.csv` in the folder 
 #| eval: false
 using CSV, DataFrames
 data = DataFrame(Name = ["Elio", "Bob", "Yola"], Age = [18, 25, 29])
-csv_file_path = "ExampleData/table_out.csv"
+csv_file_path = "$(@__DIR__)/ExampleData/table_out.csv"
 # YOUR CODE BELOW
 
 ```
@@ -133,13 +138,14 @@ Note, that you need to provide a sink for the data when using `CSV.read()`, e.g.
 ```{julia}
 #| eval: false
 # YOUR CODE BELOW
+# Again, don't forget to use the @__DIR__ macro to get the correct file path!
 
 ```
 ```{julia}
 #| eval: false
 #| code-fold: true
 # Test your answer
-@assert read_data[1,1] == "Alice"
+@assert read_data[1,1] == "Elio"
 println("CSV file 'table_out.csv' read successfully!")
 ```
 # Conclusion

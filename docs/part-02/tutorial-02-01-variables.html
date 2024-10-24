@@ -400,15 +400,15 @@ Note
 <h1>Section 1 - Variables</h1>
 <p>Think of variables as labeled containers. Just like you might label a box “Books” to store books, in programming we label our data with variable names. For example:</p>
 <div id="2" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>age <span class="op">=</span> <span class="fl">25</span>        <span class="co"># A box labeled "age" containing the number 25</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>age <span class="op">=</span> <span class="fl">30</span>        <span class="co"># A box labeled "age" containing the number 30</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>25</code></pre>
+<pre><code>30</code></pre>
 </div>
 </div>
 <div id="4" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">"Alice"</span>  <span class="co"># A box labeled "name" containing the text "Alice"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">"Tobias"</span>  <span class="co"># A box labeled "name" containing the text "Tobias"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"Alice"</code></pre>
+<pre><code>"Tobias"</code></pre>
 </div>
 </div>
 <section id="exercise-1.1---declare-a-variable" class="level2">
@@ -546,22 +546,26 @@ Note
 <section id="section-4---string-interpolation" class="level1">
 <h1>Section 4 - String Interpolation</h1>
 <p>String interpolation is like filling in blanks in a sentence. Instead of writing:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">"Tobias"</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>age <span class="op">=</span> <span class="fl">30</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The hard way:</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>message <span class="op">=</span> <span class="st">"My name is "</span> <span class="op">*</span> name <span class="op">*</span> <span class="st">" and I am "</span> <span class="op">*</span> <span class="fu">string</span>(age) <span class="op">*</span> <span class="st">" years old"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>We can use the <code>$</code> symbol to insert variables directly into our text:</p>
 <div id="38" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>message <span class="op">=</span> <span class="st">"My name is </span><span class="sc">$</span>name<span class="st"> and I am </span><span class="sc">$</span>age<span class="st"> years old"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">"Tobias"</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>age <span class="op">=</span> <span class="fl">30</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The hard way:</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>message <span class="op">=</span> <span class="st">"My name is "</span> <span class="op">*</span> name <span class="op">*</span> <span class="st">" and I am "</span> <span class="op">*</span> <span class="fu">string</span>(age) <span class="op">*</span> <span class="st">" years old"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"My name is Alice and I am 25 years old"</code></pre>
+<pre><code>"My name is Tobias and I am 30 years old"</code></pre>
+</div>
+</div>
+<p>We can use the <code>$</code> symbol to insert variables directly into our text:</p>
+<div id="40" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>message <span class="op">=</span> <span class="st">"My name is </span><span class="sc">$</span>name<span class="st"> and I am </span><span class="sc">$</span>age<span class="st"> years old"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>"My name is Tobias and I am 30 years old"</code></pre>
 </div>
 </div>
 <p>It’s like having a template where Julia automatically fills in the values for you! If you have paid attention to the previous excercise, you have already seen this in action. The following example illustrates this again:</p>
-<div id="40" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>language <span class="op">=</span> <span class="st">"Julia"</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"I'm learning </span><span class="sc">$</span>language<span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="42" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>language <span class="op">=</span> <span class="st">"Julia"</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"I'm learning </span><span class="sc">$</span>language<span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>I'm learning Julia</code></pre>
 </div>
@@ -569,15 +573,15 @@ Note
 <section id="exercise-4.1---string-interpolation" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-4.1---string-interpolation">Exercise 4.1 - String Interpolation</h2>
 <p>Create a string <code>message</code> that says <code>"y is [value of y]"</code> using string interpolation.</p>
-<div id="42" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <div id="44" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="46" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> message <span class="op">==</span> <span class="st">"y is 5"</span> <span class="st">"Make sure your string includes the correct value of y."</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Excellent! Your interpolated string is: </span><span class="sc">$</span>message<span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> message <span class="op">==</span> <span class="st">"y is 5"</span> <span class="st">"Make sure your string includes the correct value of y."</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Excellent! Your interpolated string is: </span><span class="sc">$</span>message<span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>

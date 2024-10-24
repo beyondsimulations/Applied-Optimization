@@ -351,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-04/tutorial-04-05-transport.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-04/tutorial-04-05-transport.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-04-05-transport.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-04/tutorial-04-05-transport.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-04/tutorial-04-05-transport.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-04-05-transport.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="tutorial-04-05-transport.ipynb" download="tutorial-04-05-transport.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -387,9 +387,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Solve the problem and interpret the results</li>
 </ol>
 <p>Let’s start by loading the necessary packages:</p>
-<div id="1704746c" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span>, <span class="bu">CSV</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>   Resolving package versions...
+  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Project.toml`
+  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Project.toml`
+  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Project.toml`
+  No Changes to `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Manifest.toml`
+   Resolving package versions...
+    Updating `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Project.toml`
+  [336ed68f] + CSV v0.10.15
+    Updating `~/.julia/scratchspaces/4c0109c6-14e9-4c88-93f0-2b974d3468f4/loader.1.10.5.AL85NJCKddS/Manifest.toml`
+  [336ed68f] + CSV v0.10.15
+  [48062228] + FilePathsBase v0.9.22
+  [ea10d353] + WeakRefStrings v1.4.2
+  [76eceee3] + WorkerUtilities v1.6.1</code></pre>
+</div>
+</div>
+<div id="4" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span>, <span class="bu">CSV</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-1---understanding-the-transportation-problem" class="level1">
@@ -424,17 +445,17 @@ Note
 <p>We can use the <code>CSV.read</code> function to load the data from a CSV file into a DataFrame. If we want to access the directory of the current file, we can use the convinient <code>@__DIR__</code> macro. For example, to access the file <code>my_file.csv</code> in the same directory as the current file, you can use the path <code>"$(@__DIR__)/my_file.csv"</code>. If the file is in a subdirectory called <code>new_data</code>, you can use the path <code>"$(@__DIR__)/new_data/my_file.csv"</code>.</p>
 </div>
 </div>
-<div id="7406df71" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fixed parameters</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>revenue <span class="op">=</span> <span class="fl">11000</span>  <span class="co"># Revenue per truckload of solar panels</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>varCosts <span class="op">=</span> <span class="fl">6300</span>  <span class="co"># Variable costs per truckload</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data from CSV files</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>available <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/data/available-panels.csv"</span>, DataFrame)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>requested <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/data/panel-demand.csv"</span>, DataFrame)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>travelCosts <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/data/cost.csv"</span>, DataFrame)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Data loaded successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fixed parameters</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>revenue <span class="op">=</span> <span class="fl">11000</span>  <span class="co"># Revenue per truckload of solar panels</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>varCosts <span class="op">=</span> <span class="fl">6300</span>  <span class="co"># Variable costs per truckload</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data from CSV files</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>available <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/data/available-panels.csv"</span>, DataFrame)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>requested <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/data/panel-demand.csv"</span>, DataFrame)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>travelCosts <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/data/cost.csv"</span>, DataFrame)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Data loaded successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data loaded successfully!</code></pre>
 </div>
@@ -453,13 +474,13 @@ Tip
 </div>
 </div>
 <p>Now, we can check out the data by printing the first few rows of each DataFrame. We can use the <code>first</code> function to get the first few rows of a DataFrame.</p>
-<div id="f73b199e" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Available panels:"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(available,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Available panels:"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(available,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Available panels:</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>5×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -470,7 +491,7 @@ Tip
 </tr>
 <tr class="odd subheader headerLastRow">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="String7">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String7">String7</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
 </tr>
 </thead>
@@ -505,13 +526,13 @@ Tip
 </div>
 </div>
 </div>
-<div id="3bc9c722" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Requested panels:"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(requested,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="10" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Requested panels:"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(requested,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Requested panels:</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>5×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -522,7 +543,7 @@ Tip
 </tr>
 <tr class="odd subheader headerLastRow">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="String7">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String7">String7</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
 </tr>
 </thead>
@@ -557,13 +578,13 @@ Tip
 </div>
 </div>
 </div>
-<div id="67c02041" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Travel costs:"</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(travelCosts,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="12" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Travel costs:"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(travelCosts,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Travel costs:</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>5×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -575,8 +596,8 @@ Tip
 </tr>
 <tr class="odd subheader headerLastRow">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="String7">String7</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="String7">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String7">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String7">String7</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
 </tr>
 </thead>
@@ -623,20 +644,20 @@ Tip
 <li>How many warehouses do we have? Save the number in a variable called <code>num_warehouses</code>.</li>
 <li>How many solar farms are we supplying? Save the number in a variable called <code>num_solar_farms</code>.</li>
 </ol>
-<div id="57d4c441" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWERS BELOW</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: Use the `nrow()` function to count rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="14" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWERS BELOW</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: Use the `nrow()` function to count rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="b4ce65b2" class="cell" data-execution_count="7">
+<div id="16" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your understanding</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> num_warehouses <span class="op">==</span> <span class="fu">nrow</span>(available)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> num_solar_farms <span class="op">==</span> <span class="fu">nrow</span>(requested)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great job! Here are the answers:"</span>)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of warehouses: "</span>, num_warehouses)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of solar farms: "</span>, num_solar_farms)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your understanding</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> num_warehouses <span class="op">==</span> <span class="fu">nrow</span>(available)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> num_solar_farms <span class="op">==</span> <span class="fu">nrow</span>(requested)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great job! Here are the answers:"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of warehouses: "</span>, num_warehouses)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of solar farms: "</span>, num_solar_farms)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -644,17 +665,17 @@ Tip
 <section id="section-2---using-dictionaries-to-store-the-data" class="level1">
 <h1>Section 2 - Using dictionaries to store the data</h1>
 <p>Now, DataFrames are not a very convenient format for our purposes. We have several options now on how to deal with these data sets. As our suppliers and customers are given names, it might be useful to convert the data into dictionaries. Dictionaries are a great data structure that allow us to store key-value pairs, where the keys are unique identifiers and the values are the data associated with those keys. By using dictionaries, we can easily access and modify the data associated with a specific key.</p>
-<div id="bb02d81c" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>available_dict <span class="op">=</span> <span class="fu">Dict</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    available.supplier <span class="op">.=&gt;</span> available.truckloads_available</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>requested_dict <span class="op">=</span> <span class="fu">Dict</span>(</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    requested.solar_farm <span class="op">.=&gt;</span> requested.truckload_demand</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>travelCosts_dict <span class="op">=</span> <span class="fu">Dict</span>(</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    (row.supplier,row.solar_farm) <span class="op">=&gt;</span> row.costs </span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row <span class="kw">in</span> <span class="fu">eachrow</span>(travelCosts)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="18" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>available_dict <span class="op">=</span> <span class="fu">Dict</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    available.supplier <span class="op">.=&gt;</span> available.truckloads_available</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>requested_dict <span class="op">=</span> <span class="fu">Dict</span>(</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    requested.solar_farm <span class="op">.=&gt;</span> requested.truckload_demand</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>travelCosts_dict <span class="op">=</span> <span class="fu">Dict</span>(</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    (row.supplier,row.solar_farm) <span class="op">=&gt;</span> row.costs </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row <span class="kw">in</span> <span class="fu">eachrow</span>(travelCosts)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -670,13 +691,13 @@ Tip
 </div>
 </div>
 <p>Now, let us check out the dictionaries. We can use the <code>first</code> function to get the first few key-value pairs of a dictionary.</p>
-<div id="2cf3ecd3" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Available panels:"</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(available_dict,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="20" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Available panels:"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(available_dict,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Available panels:</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>5-element Vector{Pair{String7, Int64}}:
  "a_13" =&gt; 145
  "a_17" =&gt; 181
@@ -685,13 +706,13 @@ Tip
  "a_67" =&gt; 430</code></pre>
 </div>
 </div>
-<div id="60442a00" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Travel costs:"</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(travelCosts_dict,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="22" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Travel costs:"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(travelCosts_dict,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Travel costs:</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>5-element Vector{Pair{Tuple{String7, String7}, Int64}}:
  ("a_33", "b_450") =&gt; 1903
  ("a_99", "b_340") =&gt; 1749
@@ -701,35 +722,35 @@ Tip
 </div>
 </div>
 <p>Remember, we can also access the value associated with a specific key in a dictionary by using the key inside square brackets. For example: <code>available_dict["a_1"]</code> will return the value associated with the key <code>"a_1"</code>.</p>
-<div id="a95215f1" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Value associated with supplier 'a_1': "</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>available_dict[<span class="st">"a_1"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="24" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Value associated with supplier 'a_1': "</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>available_dict[<span class="st">"a_1"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Value associated with supplier 'a_1': </code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>478</code></pre>
 </div>
 </div>
 <p>Our travel costs dictionary is a bit more complex, as it is dictionary with tuples as keys. We can access the value associated with a specific supplier and customer by using two keys inside square brackets. For example: <code>travelCosts_dict[("a_1","b_1")]</code> will return the value associated with the keys <code>("a_1","b_1")</code>.</p>
-<div id="ab88f7c4" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Value associated with supplier 'a_1' and customer 'b_1': "</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>travelCosts_dict[(<span class="st">"a_1"</span>,<span class="st">"b_1"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="26" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Value associated with supplier 'a_1' and customer 'b_1': "</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>travelCosts_dict[(<span class="st">"a_1"</span>,<span class="st">"b_1"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Value associated with supplier 'a_1' and customer 'b_1': </code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>8052</code></pre>
 </div>
 </div>
 <p>We can also extract the keys and values of a dictionary using the <code>keys</code> and <code>values</code> functions.</p>
-<div id="ee7f4aa6" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Keys of the travel costs dictionary:"</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(<span class="fu">keys</span>(travelCosts_dict),<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="28" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Keys of the travel costs dictionary:"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(<span class="fu">keys</span>(travelCosts_dict),<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Keys of the travel costs dictionary:</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>5-element Vector{Tuple{String7, String7}}:
  ("a_33", "b_450")
  ("a_99", "b_340")
@@ -738,13 +759,13 @@ Tip
  ("a_40", "b_35")</code></pre>
 </div>
 </div>
-<div id="eecc0aeb" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Values of the travel costs dictionary:"</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(<span class="fu">values</span>(travelCosts_dict),<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="30" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Values of the travel costs dictionary:"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(<span class="fu">values</span>(travelCosts_dict),<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Values of the travel costs dictionary:</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>5-element Vector{Int64}:
   1903
   1749
@@ -774,15 +795,15 @@ Note
 <section id="exercise-3.1---creating-the-model-instance" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-3.1---creating-the-model-instance">Exercise 3.1 - Creating the model instance</h2>
 <p>From the last tutorial, you should know how to do this. Create a model instance called <code>transport_model</code> and set the optimizer to HiGHS.</p>
-<div id="f2612f91" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="32" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="e965d991" class="cell" data-execution_count="16">
+<div id="34" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(transport_model) <span class="op">==</span> JuMP.Model</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Model instance created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(transport_model) <span class="op">==</span> JuMP.Model</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Model instance created successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -792,40 +813,40 @@ Note
 <section id="define-the-variables" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-variables">Define the variables</h2>
 <p>We can now define the variables of our model. We need to define a variable for each supplier and customer pair. As before, we can use the <code>@variable</code> macro to define the variables. The syntax is <code>@variable(model, varname[index1,index2] &gt;= 0)</code>, where <code>model</code> is the model instance, <code>varname</code> is the name of the variable, and <code>index1</code> and <code>index2</code> are the indices of the variable. We can use vectors as input for the indices, but we could also use the keys of the dictionaries. In the following code block we mixed both options, to show you that it is possible.</p>
-<div id="d46303d5" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define variable</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    transport_model, </span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    X[available.supplier,<span class="fu">keys</span>(requested_dict)] <span class="op">&gt;=</span> <span class="fl">0</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="36" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define variable</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    transport_model, </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    X[available.supplier,<span class="fu">keys</span>(requested_dict)] <span class="op">&gt;=</span> <span class="fl">0</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="define-the-objective" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-objective">Define the objective</h2>
 <p>Next, we can define the objective of our model. We want to maximize the profit, which is the revenue minus the variable costs and the transportation costs. As before, we can use the <code>@objective</code> macro to define the objective. The syntax is <code>@objective(model, Max, expression)</code>, where <code>model</code> is the model instance, <code>Max</code> indicates that we want to maximize the expression, and <code>expression</code> is the expression we want to maximize.</p>
-<div id="d4cbd3b9" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(transport_model, Max, </span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>((revenue<span class="op">-</span>varCosts<span class="op">-</span>travelCosts_dict[(i,j)]) <span class="op">*</span> X[i,j] </span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(available_dict), j <span class="kw">in</span> <span class="fu">keys</span>(requested_dict))</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="38" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(transport_model, Max, </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>((revenue<span class="op">-</span>varCosts<span class="op">-</span>travelCosts_dict[(i,j)]) <span class="op">*</span> X[i,j] </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(available_dict), j <span class="kw">in</span> <span class="fu">keys</span>(requested_dict))</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="define-the-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-constraints">Define the constraints</h2>
 <p>We can now define the constraints of our model. We need to ensure that the supply from each supplier is enough to cover the demand of each customer. We can use the <code>@constraint</code> macro to define the constraints. The syntax is <code>@constraint(model, expression)</code>, where <code>model</code> is the model instance and <code>expression</code> is the expression we want to constrain.</p>
 <p>To illustrate the use of dictionaries, we will again use the keys of the dictionaries to define the constraints in the following code block.</p>
-<div id="ce1bdfd5" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(transport_model, </span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    restrictAvailable[i <span class="kw">in</span> <span class="fu">keys</span>(available_dict)], </span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> j <span class="kw">in</span> <span class="fu">keys</span>(requested_dict)) <span class="op">&lt;=</span> available_dict[i]</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="40" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(transport_model, </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    restrictAvailable[i <span class="kw">in</span> <span class="fu">keys</span>(available_dict)], </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> j <span class="kw">in</span> <span class="fu">keys</span>(requested_dict)) <span class="op">&lt;=</span> available_dict[i]</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Naturally, we could also use the vectors with the names from the DataFrames to define the constraints or we could also just work with ranges from the beginning, e.g.&nbsp;<code>1:length(available.supplier)</code> and <code>1:length(requested.solar_farm)</code>. Working with names is often more convenient, though.</p>
-<div id="d8f03d66" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(transport_model,</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    restrictDemand[j <span class="kw">in</span> requested.solar_farm], </span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> i <span class="kw">in</span> available.supplier) <span class="op">&lt;=</span> requested_dict[j]</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="42" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(transport_model,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    restrictDemand[j <span class="kw">in</span> requested.solar_farm], </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> i <span class="kw">in</span> available.supplier) <span class="op">&lt;=</span> requested_dict[j]</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And that’s it! We have now defined the model and can start optimizing.</p>
 </section>
@@ -835,34 +856,34 @@ Note
 <section id="exercise-5.1---start-optimization" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-5.1---start-optimization">Exercise 5.1 - Start optimization</h2>
 <p>Start the optimization as usual by calling the <code>optimize!</code> function on the model instance.</p>
-<div id="21df9496" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="44" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="967eb64c" class="cell" data-execution_count="22">
+<div id="46" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(transport_model) <span class="op">==</span> MOI.OPTIMAL</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Model optimized successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(transport_model) <span class="op">==</span> MOI.OPTIMAL</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Model optimized successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Now, we can access the values of the variables at the optimal solution. But remember, we defined the variables with the keys of the dictionaries, so we need to convert the result back to a DataFrame. Calling the variable itself will just show the structure of the variable, not the values.</p>
-<div id="5e76e932" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(X,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="48" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(X,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Thus, we need to use the <code>value</code> function to extract the values from the variable.</p>
-<div id="ee83ac97" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>transport_values <span class="op">=</span> <span class="fu">value</span>.(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="50" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>transport_values <span class="op">=</span> <span class="fu">value</span>.(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The result is a <code>DenseAxisArray{Float64,2,...}</code> with index sets. To convert it to a DataFrame, we just need to iterate over the keys dictionaries and store the values in a new DataFrame. As we are not interested in values which are zero, we can skip those.</p>
 <p>First, we need to initialize an empty DataFrame with the correct column names.</p>
-<div id="c9132a04" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>transport_df <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    supplier <span class="op">=</span> [],</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    solar_farm <span class="op">=</span> [],</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    truckloads <span class="op">=</span> []</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div id="52" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>transport_df <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    supplier <span class="op">=</span> [],</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    solar_farm <span class="op">=</span> [],</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    truckloads <span class="op">=</span> []</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>0×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true" style="margin-bottom: 6px;">
 <thead>
@@ -886,24 +907,24 @@ Note
 </div>
 </div>
 <p>Then, we can iterate over the keys of the dictionaries and store the values in the DataFrame if they are greater than zero.</p>
-<div id="e80eaf83" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(available_dict)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="fu">keys</span>(requested_dict)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> transport_values[i,j] <span class="op">&gt;</span> <span class="fl">0</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(transport_df, (</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                supplier <span class="op">=</span> i,</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                solar_farm <span class="op">=</span> j,</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                truckloads <span class="op">=</span> transport_values[i,j]</span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>                )</span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="54" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(available_dict)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="fu">keys</span>(requested_dict)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> transport_values[i,j] <span class="op">&gt;</span> <span class="fl">0</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(transport_df, (</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                supplier <span class="op">=</span> i,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                solar_farm <span class="op">=</span> j,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>                truckloads <span class="op">=</span> transport_values[i,j]</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Finally, we can print the first few rows of the transportation plan to check if it looks correct.</p>
-<div id="b94ac329" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Begining of the transportation plan:"</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(transport_df,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="56" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Begining of the transportation plan:"</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(transport_df,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">

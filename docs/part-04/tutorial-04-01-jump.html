@@ -377,7 +377,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>Welcome to this beginner-friendly tutorial on mathematical optimization using JuMP and the HiGHS solver in Julia! Don’t worry if these terms sound unfamiliar – we’ll explain everything step by step.</p>
-<p>In this tutorial, you’ll learn how to: 1. Set up a simple optimization problem 2. Define variables and constraints 3. Create an objective function 4. Solve the problem and interpret the results</p>
+<p>In this tutorial, you’ll learn how to:</p>
+<ol type="1">
+<li>Set up a simple optimization problem</li>
+<li>Define variables and constraints</li>
+<li>Create an objective function</li>
+<li>Solve the problem and interpret the results</li>
+</ol>
 <p>We’ll use a real-world example to make these concepts more relatable. Imagine you’re managing a small factory that produces two types of products. Your goal is to maximize profit while working within certain limitations. This is exactly the kind of problem that mathematical optimization can solve!</p>
 <section id="what-is-jump" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-jump">What is JuMP?</h2>
@@ -443,7 +449,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Now that we have our model, we need to define our variables. In our factory problem, the variables represent the quantities of Product A and Product B that we want to produce.</p>
 <p>In JuMP, we use the <code>@variable</code> macro to define variables. Here’s the general syntax:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model_name, variable_name, [additional_properties])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Where: - <code>model_name</code> is the name of your JuMP model - <code>variable_name</code> is what you want to call your variable - <code>[additional_properties]</code> can include bounds or variable types</p>
+<p>Where:</p>
+<ul>
+<li><code>model_name</code> is the name of your JuMP model</li>
+<li><code>variable_name</code> is what you want to call your variable</li>
+<li><code>[additional_properties]</code> can include bounds or variable types</li>
+</ul>
 <p>For example, to create a continuous variable that’s greater than or equal to 0:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model_name, variable_name <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This defines a continuous variable that’s equal to or larger than 0.</p>
@@ -477,7 +488,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Constraints are conditions that limit the possible values of the variables in our optimization problem. In JuMP, we use the <code>@constraint</code> macro to define these constraints.</p>
 <p>The general syntax for adding a constraint is:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model_name, constraint_name, constraint_expression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Where: - <code>model_name</code> is the name of your JuMP model - <code>constraint_name</code> is a label you give to the constraint (optional, but useful for reference) - <code>constraint_expression</code> is the mathematical expression of the constraint</p>
+<p>Where:</p>
+<ul>
+<li><code>model_name</code> is the name of your JuMP model</li>
+<li><code>constraint_name</code> is a label you give to the constraint (optional, but useful for reference)</li>
+<li><code>constraint_expression</code> is the mathematical expression of the constraint</li>
+</ul>
 <p>For example:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">constraint</span>(model_name, constraint_name, <span class="fl">4</span> <span class="op">*</span> variable_name <span class="op">&lt;=</span> <span class="fl">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This defines a constraint that ensures, that the variable <code>variable_name</code> can maximally be 25. Note, that you will have to change <code>model_name</code>, <code>constraint_name</code> and <code>variable_name</code> according to your instance.</p>
@@ -505,7 +521,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The objective function represents the goal of our optimization problem - what we want to maximize or minimize. In JuMP, we use the <code>@objective</code> macro to define this function.</p>
 <p>The general syntax for defining an objective function is:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(model_name, optimization_direction, objective_expression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Where: - <code>model_name</code> is the name of your JuMP model - <code>optimization_direction</code> is either <code>Max</code> for maximization or <code>Min</code> for minimization - <code>objective_expression</code> is the mathematical expression of the objective function</p>
+<p>Where:</p>
+<ul>
+<li><code>model_name</code> is the name of your JuMP model</li>
+<li><code>optimization_direction</code> is either <code>Max</code> for maximization or <code>Min</code> for minimization</li>
+<li><code>objective_expression</code> is the mathematical expression of the objective function</li>
+</ul>
 <p>For example:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(model_name, Max, <span class="fl">2</span><span class="op">*</span>variableA <span class="op">+</span> <span class="fl">3</span><span class="op">*</span>variableB) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This defines an objective function that maximizes something based on the values of <code>variableA</code> and <code>variableB</code>.</p>
@@ -562,7 +583,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Product A quantity: </span><span class="sc">$</span>(<span class="fu">value</span>(productA))<span class="st">"</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Product B quantity: </span><span class="sc">$</span>(<span class="fu">value</span>(productB))<span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Let’s break this down: - <code>optimize!(model)</code> tells JuMP to solve our model - <code>termination_status(model)</code> checks if we found an optimal solution - <code>objective_value(model)</code> gives us the maximum profit we can achieve - <code>value(productA)</code> and <code>value(productB)</code> tell us how many of each product we should produce</p>
+<p>Let’s break this down:</p>
+<ul>
+<li><code>optimize!(model)</code> tells JuMP to solve our model</li>
+<li><code>termination_status(model)</code> checks if we found an optimal solution</li>
+<li><code>objective_value(model)</code> gives us the maximum profit we can achieve</li>
+<li><code>value(productA)</code> and <code>value(productB)</code> tell us how many of each product we should produce</li>
+</ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -581,8 +608,8 @@ Note
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> MOI.OPTIMAL <span class="st">"Sorry, something didn't work out as the model status is </span><span class="sc">$</span>termination_status<span class="st">(model)"</span>.</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solution: Product A = "</span>, val_productA, <span class="st">", Product B = "</span>, val_productB)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> val_productA <span class="op">≈</span> <span class="fl">12</span> atol<span class="op">=</span><span class="fl">1e-4</span> <span class="st">"Although you have a solution, val_productA should be 12 not </span><span class="sc">$</span>val_productA<span class="st">"</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> val_productB <span class="op">≈</span> <span class="fl">4</span> atol<span class="op">=</span><span class="fl">1e-4</span> <span class="st">"Although you have a solution, val_productB should be 4 not </span><span class="sc">$</span>val_productB<span class="st">"</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">value</span>(productA) <span class="op">≈</span> <span class="fl">12</span> atol<span class="op">=</span><span class="fl">1e-4</span> <span class="st">"Although you have a solution, val_productA should be 12 not </span><span class="sc">$</span>val_productA<span class="st">"</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">value</span>(productB) <span class="op">≈</span> <span class="fl">4</span> atol<span class="op">=</span><span class="fl">1e-4</span> <span class="st">"Although you have a solution, val_productB should be 4 not </span><span class="sc">$</span>val_productB<span class="st">"</span></span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"You have solved the model correctly!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>

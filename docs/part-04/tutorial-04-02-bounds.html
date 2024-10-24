@@ -398,15 +398,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>This defines a continuous variable without any bound.</p>
 <div id="8" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName2 <span class="op">&lt;=</span> <span class="fl">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName2 <span class="op">&lt;=</span> <span class="fl">1</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">has_lower_bound</span>(variableName2) <span class="op">&amp;&amp;</span> <span class="fu">has_upper_bound</span>(variableName2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This defines a continuous variable in an interval.</p>
 <div id="10" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, variableName3, Bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, variableName3, Bin)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is_binary</span>(variableName3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This defines a binary variable.</p>
 <div id="12" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName4, <span class="dt">Int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, <span class="fl">0</span> <span class="op">&lt;=</span> variableName4, <span class="dt">Int</span>) </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is_integer</span>(variableName4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This defines an integer variable.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -424,7 +427,12 @@ Note
 </div>
 <section id="exercise-1.1---create-variables" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---create-variables">Exercise 1.1 - Create Variables</h2>
-<p>Now it’s your turn! Create three variables: 1. A continuous variable called <code>water_amount</code> 2. An integer variable called <code>cars_produced</code> 3. A binary variable called <code>build_store</code></p>
+<p>Now it’s your turn! Create three variables:</p>
+<ol type="1">
+<li>A continuous variable called <code>water_amount</code></li>
+<li>An integer variable called <code>cars_produced</code></li>
+<li>A binary variable called <code>build_store</code></li>
+</ol>
 <div id="14" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: Use the @variable macro three times, once for each variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

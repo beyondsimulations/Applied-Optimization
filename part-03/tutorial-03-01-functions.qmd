@@ -45,10 +45,10 @@ Thus, think of a function like a recipe:
 
 Let's see some examples:
 
-```julia
+```{julia}
 # A simple function to greet someone
 function say_hello(name)
-    return "Hello, $name!"
+    return "Hello, $(name)!"
 end
 
 # Using our function
@@ -117,7 +117,7 @@ bake_cake()  # This works fine
 ```{julia}
 #| eval: false
 # But this would cause an error:
-# println(secret_ingredient)
+println(secret_ingredient)
 ```
 
 If you want to access the variable outside of the function, you have to explicitly return it. You can do this by passing `return` in front of the variable you want to return from the function.
@@ -133,8 +133,10 @@ function scope_test()
     local_variable_one = 10
     local_variable_two = 20
 end
-
 # YOUR CHANGES ABOVE
+```
+```{julia}
+#| eval: false
 # Test your function
 @assert scope_test() == 10 "The value exported is $(scope_test())."
 println("The value exported is $(scope_test()), you solved it!")

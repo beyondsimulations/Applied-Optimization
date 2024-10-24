@@ -30,6 +30,7 @@ engine: julia
 Welcome to this beginner-friendly tutorial on mathematical optimization using JuMP and the HiGHS solver in Julia! Don't worry if these terms sound unfamiliar – we'll explain everything step by step.
 
 In this tutorial, you'll learn how to:
+
 1. Set up a simple optimization problem
 2. Define variables and constraints
 3. Create an objective function
@@ -109,6 +110,7 @@ In JuMP, we use the `@variable` macro to define variables. Here's the general sy
 ```
 
 Where:
+
 - `model_name` is the name of your JuMP model
 - `variable_name` is what you want to call your variable
 - `[additional_properties]` can include bounds or variable types
@@ -158,6 +160,7 @@ The general syntax for adding a constraint is:
 ```
 
 Where:
+
 - `model_name` is the name of your JuMP model
 - `constraint_name` is a label you give to the constraint (optional, but useful for reference)
 - `constraint_expression` is the mathematical expression of the constraint
@@ -200,6 +203,7 @@ The general syntax for defining an objective function is:
 ```
 
 Where:
+
 - `model_name` is the name of your JuMP model
 - `optimization_direction` is either `Max` for maximization or `Min` for minimization
 - `objective_expression` is the mathematical expression of the objective function
@@ -273,6 +277,7 @@ println("Product B quantity: $(value(productB))")
 ```
 
 Let's break this down:
+
 - `optimize!(model)` tells JuMP to solve our model
 - `termination_status(model)` checks if we found an optimal solution
 - `objective_value(model)` gives us the maximum profit we can achieve
@@ -289,8 +294,8 @@ The following code block tests whether the solution is correct or whether you ha
 # Test your answer
 @assert termination_status(model) == MOI.OPTIMAL "Sorry, something didn't work out as the model status is $termination_status(model)".
 println("Solution: Product A = ", val_productA, ", Product B = ", val_productB)
-@assert val_productA ≈ 12 atol=1e-4 "Although you have a solution, val_productA should be 12 not $val_productA"
-@assert val_productB ≈ 4 atol=1e-4 "Although you have a solution, val_productB should be 4 not $val_productB"
+@assert value(productA) ≈ 12 atol=1e-4 "Although you have a solution, val_productA should be 12 not $val_productA"
+@assert value(productB) ≈ 4 atol=1e-4 "Although you have a solution, val_productB should be 4 not $val_productB"
 println("You have solved the model correctly!")
 ```
 
