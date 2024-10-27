@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-21b7a74ce20c08f2a2a0c1dee925d012.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.30">
+
+  <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
+  <title>Applied Optimization with Julia – Lecture I - Welcome and Introduction</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #232629;
+        color: #7a7c7d;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #7a7c7d;  padding-left: 4px; }
+    div.sourceCode
+      { color: #cfcfc2; background-color: #232629; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #cfcfc2; } /* Normal */
+    code span.al { color: #95da4c; background-color: #4d1f24; font-weight: bold; } /* Alert */
+    code span.an { color: #3f8058; } /* Annotation */
+    code span.at { color: #2980b9; } /* Attribute */
+    code span.bn { color: #f67400; } /* BaseN */
+    code span.bu { color: #7f8c8d; } /* BuiltIn */
+    code span.cf { color: #fdbc4b; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #3daee9; } /* Char */
+    code span.cn { color: #27aeae; font-weight: bold; } /* Constant */
+    code span.co { color: #7a7c7d; } /* Comment */
+    code span.cv { color: #7f8c8d; } /* CommentVar */
+    code span.do { color: #a43340; } /* Documentation */
+    code span.dt { color: #2980b9; } /* DataType */
+    code span.dv { color: #f67400; } /* DecVal */
+    code span.er { color: #da4453; text-decoration: underline; } /* Error */
+    code span.ex { color: #0099ff; font-weight: bold; } /* Extension */
+    code span.fl { color: #f67400; } /* Float */
+    code span.fu { color: #8e44ad; } /* Function */
+    code span.im { color: #27ae60; } /* Import */
+    code span.in { color: #c45b00; } /* Information */
+    code span.kw { color: #cfcfc2; font-weight: bold; } /* Keyword */
+    code span.op { color: #cfcfc2; } /* Operator */
+    code span.ot { color: #27ae60; } /* Other */
+    code span.pp { color: #27ae60; } /* Preprocessor */
+    code span.re { color: #2980b9; background-color: #153042; } /* RegionMarker */
+    code span.sc { color: #3daee9; } /* SpecialChar */
+    code span.ss { color: #da4453; } /* SpecialString */
+    code span.st { color: #f44f4f; } /* String */
+    code span.va { color: #27aeae; } /* Variable */
+    code span.vs { color: #da4453; } /* VerbatimString */
+    code span.wa { color: #da4453; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-c9c5208547ebe13399826948e39a2351.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-titled.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-titled) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-titled .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-titled .callout-title  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-titled.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-titled.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-title {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-title {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-title {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-titled .callout-body > .callout-content > :last-child {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .callout.callout-titled .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-titled) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-title {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-title {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-title {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-title {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-title {
+    background-color: #ffe5d0
+  }
+
+  </style>
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-color="#025259" class="quarto-title-block center">
+  <h1 class="title">Lecture I - Welcome and Introduction</h1>
+  <p class="subtitle">Applied Optimization with Julia</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Dr.&nbsp;Tobias Vlćek 
+</div>
+        <p class="quarto-title-affiliation">
+            University of Hamburg - Fall 2024
+          </p>
+    </div>
+</div>
+
+</section>
+<section>
+<section id="about-this-course" class="title-slide slide level1 title center">
+<h1><span class="flow">About this Course</span></h1>
+
+</section>
+<section id="about-me" class="slide level2">
+<h2>About me</h2>
+<ul>
+<li><strong>Field:</strong> Optimizing and simulating complex systems</li>
+<li><strong>Languages:</strong> of choice: Julia, Python and Rust</li>
+<li><strong>Interest:</strong> Modelling, Simulations, Machine Learning</li>
+<li><strong>Teaching:</strong> OR, Algorithms, and Programming</li>
+<li><strong>Contact:</strong> <a href="mailto:tobias.vlcek@uni-hamburg.de">tobias.vlcek@uni-hamburg.de</a></li>
+</ul>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>I really appreciate active participation and interaction!</p>
+</div>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="course-structure" class="title-slide slide level1 title center">
+<h1><span class="flow">Course Structure</span></h1>
+
+</section>
+<section id="lectures" class="slide level2">
+<h2>Lectures</h2>
+<ul>
+<li>Every Tuesday between 10.15 AM and 11.45 AM</li>
+<li>First four lectures repeat modelling and programming</li>
+<li>Later lectures discuss practical problems and implementation</li>
+<li>Lectures are interactive → We discuss approaches!</li>
+<li>Communication takes place via OpenOlat and E-Mail</li>
+</ul>
+</section>
+<section id="tutorials" class="slide level2">
+<h2>Tutorials</h2>
+<ul>
+<li>Tutorials every Friday between 8.15 AM and 9.45 AM</li>
+<li>In these tutorials we are working on assignments</li>
+<li>Please bring a laptop with Windows, macOS, or Linux!</li>
+<li>This Friday there is <strong>no tutorial</strong>!</li>
+</ul>
+</section>
+<section id="assignments" class="slide level2">
+<h2>Assignments</h2>
+<ul>
+<li>Based on applied problems of the lecture</li>
+<li>Up to 3 students can solve assignments together</li>
+<li>Submitted solutions earn bonus points for the exam</li>
+<li>Max. 0.5 point per tutorial</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Bonus points only count if the mark is at least 4.0!</p>
+</div>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="course-objective" class="title-slide slide level1 title center">
+<h1><span class="flow">Course Objective</span></h1>
+
+</section>
+<section id="applied-optimization" class="slide level2">
+<h2>Applied Optimization</h2>
+<ul>
+<li>Real-world problems can be addressed with models</li>
+<li>Our objective is to foster your interest in the topic</li>
+<li>Enable you to recognize and solve problem structures</li>
+<li>Includes problem understanding and implementation</li>
+</ul>
+</section>
+<section id="research-in-operations-research" class="slide level2">
+<h2>Research in Operations Research</h2>
+<ul>
+<li>Part of the University of Hamburg Business School</li>
+<li>Aiming to solve real-world problems</li>
+<li>Or improving our theoretical understanding</li>
+<li>Publication in journals and conferences</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>We are also happy to supervise Bachelor and Master theses!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="national-and-international-journals" class="slide level2">
+<h2>National and international journals</h2>
+<ul>
+<li>European Journal of OR</li>
+<li>Journal of the Operational Research Society</li>
+<li>Journal on Applied Analytics</li>
+<li>Management Science</li>
+<li>Operations Research</li>
+<li>OR Spectrum</li>
+</ul>
+</section></section>
+<section>
+<section id="real-world-applications" class="title-slide slide level1 title center">
+<h1><span class="flow">Real-World Applications</span></h1>
+
+</section>
+<section id="brewery-production-planning" class="slide level2" data-background-color="#000000" data-background-image="https://unsplash.com/photos/DQpHtE5WY-U/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8OTF8fGJyZXdlcnl8ZW58MHx8fHwxNzI4MzcyOTA1fDA&amp;force=true" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Brewery Production Planning</span></h2>
+<div class="footer">
+<p><span class="citation" data-cites="mickein2022decision">Mickein, Koch, and Haase (<a href="#/literature-ii" role="doc-biblioref" onclick="">2022</a>)</span></p>
+</div>
+</section>
+<section id="police-service-district-planning" class="slide level2" data-background-color="#000000" data-background-image="https://unsplash.com/photos/HkF6feHrGBE/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8NjN8fGNpdHklMjBtYXB8ZW58MHx8fHwxNzI4Mzc3MjA0fDA&amp;force=true" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Police Service District Planning</span></h2>
+<div class="footer">
+<p><span class="citation" data-cites="vlcek_police_2024">Vlćek, Haase, Fliedner, et al. (<a href="#/literature-ii" role="doc-biblioref" onclick="">2024</a>)</span></p>
+</div>
+</section>
+<section id="venue-seating-under-covid-19" class="slide level2" data-background-color="#000000" data-background-image="https://unsplash.com/photos/qowyMze7jqg/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTh8fGZvb3RiYWxsfGVufDB8fHx8MTcyODM4MzA2OXww&amp;force=true&amp;w=2400" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Venue Seating under COVID-19</span></h2>
+<div class="footer">
+<p>Usama Dkaidik and Matthes Koch; Current research with a likely paper submission in 2024</p>
+</div>
+</section>
+<section id="metro-inflow-management" class="slide level2" data-background-color="#000000" data-background-image="https://unsplash.com/photos/d5SMvzrA45s/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mnx8bWV0cm8lMjBkb2hhfGVufDB8fHx8MTcyODQ3NDM2OXww&amp;force=true&amp;w=2400" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Metro Inflow Management</span></h2>
+<div class="footer">
+<p><span class="citation" data-cites="vlcek_controlling_2024">Vlćek, Haase, Koch, et al. (<a href="#/literature-ii" role="doc-biblioref" onclick="">2024</a>)</span></p>
+</div>
+</section>
+<section id="split-order-minimization" class="slide level2" data-background-color="#000000" data-background-image="https://unsplash.com/photos/d5SMvzrA45s/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mnx8bWV0cm8lMjBkb2hhfGVufDB8fHx8MTcyODQ3NDM2OXww&amp;force=true&amp;w=2400" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Split-Order Minimization</span></h2>
+<div class="footer">
+<p><span class="citation" data-cites="vlcek_optimizing_2024">Vlćek and Voigt (<a href="#/literature-ii" role="doc-biblioref" onclick="">2024</a>)</span></p>
+</div>
+</section>
+<section id="crowd-management" class="slide level2" data-background-color="#000000" data-background-image="https://unsplash.com/photos/sUXXO3xPBYo/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Nnx8Y3Jvd2R8ZW58MHx8fHwxNzI4NDI1OTM4fDA&amp;force=true&amp;w=2400" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Crowd Management</span></h2>
+<div class="footer">
+<p><span class="citation" data-cites="haase2016improving">Haase et al. (<a href="#/literature-ii" role="doc-biblioref" onclick="">2016</a>)</span></p>
+</div>
+</section></section>
+<section>
+<section id="lecture-preview" class="title-slide slide level1 title center">
+<h1><span class="flow">Lecture Preview</span></h1>
+
+</section>
+<section id="part-i" class="slide level2">
+<h2>Part I</h2>
+<ol type="1">
+<li>Welcome and Introduction</li>
+<li>First Steps in Julia</li>
+<li>Packages and Data Management</li>
+<li>Modelling with JuMP</li>
+</ol>
+</section>
+<section id="part-ii" class="slide level2">
+<h2>Part II</h2>
+<ol start="5" type="1">
+<li>Beer Production Planning</li>
+<li>Minimizing Split Orders in E-Commerce</li>
+<li>Periodic Library Routing</li>
+<li>Police Districting</li>
+</ol>
+</section>
+<section id="part-iii" class="slide level2">
+<h2>Part III</h2>
+<ol start="9" type="1">
+<li>Safety Planning for the Islamic Pilgrimage in Mecca</li>
+<li>Passenger Flow Control in Urban Rail</li>
+<li>Arena Seat Planning under Distancing Rules</li>
+<li>Sales Force Deployment for Teams</li>
+<li>Recap and Discussion</li>
+</ol>
+</section></section>
+<section>
+<section id="julia-programming-language" class="title-slide slide level1 title center">
+<h1><span class="flow">Julia Programming Language</span></h1>
+
+</section>
+<section id="choice-of-programming-language" class="slide level2">
+<h2>Choice of Programming Language</h2>
+<img data-src="../images/julia-programming-language.png" class="r-stretch" data-max-width="400px">
+<div class="fragment">
+<p><span class="question">Question:</span> Have you ever heard of Julia?</p>
+</div>
+</section>
+<section id="why-julia" class="slide level2">
+<h2>Why Julia?</h2>
+<ul>
+<li><strong>Designed to be:</strong>
+<ul>
+<li>as general as Python</li>
+<li>as statistics-friendly as R</li>
+<li>as fast as C++!</li>
+</ul></li>
+</ul>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Allows for fast data workflows</strong>, particularly in scientific computing!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="syntax" class="slide level2">
+<h2>Syntax</h2>
+<ul>
+<li>Dynamically-typed syntax just like Python</li>
+<li>Similar to R, Matlab and Python - <strong>not like C++</strong></li>
+<li>In comparison, accessible and easy to learn!</li>
+<li><strong>No need to worry about memory management!</strong></li>
+</ul>
+</section>
+<section id="jump" class="slide level2">
+<h2>JuMP</h2>
+<ul>
+<li>Package for <strong>algebraic modeling</strong> in Julia</li>
+<li>Simplifies solving complex optimization problems</li>
+<li>Provides a high-level, user-friendly interface</li>
+<li>Useful for operations research and data science</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>JuMP is an alternative to Pyomo, GAMS, and AMPL!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="must-it-be-a-new-language" class="slide level2">
+<h2>Must it be a new language?</h2>
+<ul>
+<li>Yes, but no need to worry!</li>
+<li>Julia is quite similar to Python and R</li>
+<li>We will learn the syntax together in the first part</li>
+<li>It is helpful to switch languages from time to time</li>
+</ul>
+</section></section>
+<section>
+<section id="algebraic-modeling" class="title-slide slide level1 title center">
+<h1><span class="flow">Algebraic Modeling</span></h1>
+
+</section>
+<section id="section" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Do you have</p>
+<p>experience with</p>
+<p>algebraic modeling?</p>
+</div>
+</section>
+<section id="what-is-algebraic-modeling" class="slide level2">
+<h2>What is algebraic modeling?</h2>
+<ul>
+<li>A “mathematical language” for optimization problems</li>
+<li>Allows for describing complex systems and constraints</li>
+<li>Based on linear algebra (Equations and Inequalities)</li>
+</ul>
+<div class="fragment">
+<div style="display: flex; justify-content: center; align-items: center; height: 300px;">
+<iframe src="https://giphy.com/embed/APqEbxBsVlkWSuFpth" height="320" style="" frameborder="0" class="giphy-embed" allowfullscreen="">
+</iframe>
+</div>
+</div>
+</section>
+<section id="how-to-learn-algebraic-modeling" class="slide level2">
+<h2>How to learn algebraic modeling?</h2>
+<ul>
+<li><strong>Practice, practice, and practice!</strong></li>
+<li>Understand standard models and their approach</li>
+<li>Develop an understanding of constraints</li>
+<li>Understand the structure of a models solution space</li>
+<li>Use an available algorithms to determine solutions</li>
+</ul>
+</section>
+<section id="central-questions" class="slide level2">
+<h2>Central Questions</h2>
+<ul>
+<li>What is to be decided?</li>
+<li>What is relevant to the decision?</li>
+<li>What information is given and relevant?</li>
+<li>What parameters (data) are needed?</li>
+<li>Which variables and of which type are needed?</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Modeling is a creative process!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="model-components" class="slide level2">
+<h2>Model Components</h2>
+<ol type="1">
+<li>Objective function</li>
+<li>Constraints</li>
+<li>Variables</li>
+</ol>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>We will go through these components step by step in each lecture!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="linear-optimization-model" class="slide level2">
+<h2>Linear Optimization Model</h2>
+<div class="columns" style="font-size: 75%;">
+<div class="column" style="width:50%;">
+<h4 id="basic-model-formulation">Basic Model Formulation</h4>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\text{maximize} \quad F = \sum_{j\in \mathcal{J}} c_j \times X_j
+\end{aligned}
+\]</span></p>
+<p>subject to</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\sum_{j\in \mathcal{J}} a_{i,j} \times X_j  \le b_i &amp;&amp; \forall i \in \mathcal{I} \\
+&amp;X_j \ge 0 &amp;&amp;  \forall  j \in \mathcal{J}
+\end{aligned}
+\]</span></p>
+</div><div class="column" style="width:50%;">
+<h4 id="model-components-1">Model Components</h4>
+<p><span class="math display">\[
+\begin{aligned}
+\mathcal{I} &amp;: \text{set of $i \in \mathcal{I}$,}\\
+\mathcal{J} &amp;: \text{set of $j \in \mathcal{J}$,}\\
+F   &amp;: \text{Objective function variable,}\\
+X_{j}   &amp;: \text{decision variables,}\\
+c_{j}   &amp;: \text{objective function coefficients,}\\
+a_{i,j} &amp;: \text{parameters,}\\
+b_{i}   &amp;: \text{parameters}
+\end{aligned}
+\]</span></p>
+</div></div>
+<div class="fragment">
+<p><span class="question">Question:</span> Have you ever seen something like this before?</p>
+</div>
+</section>
+<section id="what-is-this-good-for" class="slide level2">
+<h2>What is this good for?</h2>
+<ul>
+<li><span class="highlight">Good Question!</span> A lot of things:
+<ul>
+<li>Modeling real-world problems</li>
+<li>Solving complex systems</li>
+<li>Optimizing resource allocation</li>
+<li>Decision-making under constraints</li>
+<li>Simulation and prediction</li>
+</ul></li>
+</ul>
+</section></section>
+<section>
+<section id="solar-panel-transport" class="title-slide slide level1 title center">
+<h1><span class="flow">Solar Panel Transport</span></h1>
+
+</section>
+<section id="case-solar-panel-transport" class="slide level2" data-background-color="#000000" data-background-image="https://unsplash.com/photos/dCx2xFuPWks/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzI4NTUzNTU1fA&amp;force=true&amp;w=2400" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Case: Solar Panel Transport</span></h2>
+</section>
+<section id="description" class="slide level2">
+<h2>Description</h2>
+<p>A company is producing <strong>solar panels</strong> in Dresden and Laupheim and has to transport them to new solar farms near Hamburg, Munich, and Berlin. The quantities offered and demanded (truckloads) and the transport costs per truckload in Euro are summarized in the following table.</p>
+</section>
+<section id="transport-costs" class="slide level2">
+<h2>Transport Costs</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Origin/Destination</th>
+<th>Hamburg</th>
+<th>Munich</th>
+<th>Berlin</th>
+<th>Available</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dresden</td>
+<td>5010</td>
+<td>4640</td>
+<td>1980</td>
+<td>34</td>
+</tr>
+<tr class="even">
+<td>Laupheim</td>
+<td>7120</td>
+<td>1710</td>
+<td>6430</td>
+<td>41</td>
+</tr>
+<tr class="odd">
+<td>Demand</td>
+<td>21</td>
+<td>17</td>
+<td>29</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><span class="highlight">Example</span>: A truckload from Dresden <span class="math inline">\(i=1\)</span> to Munich <span class="math inline">\(j=2\)</span> costs <span class="math inline">\(c_{12}=4640\)</span> Euro. Moreover, it is necessary to <strong>fulfil all customer demands</strong>, as the contract has been signed.</p>
+</section>
+<section id="graphical-illustration" class="slide level2">
+<h2>Graphical Illustration</h2>
+
+<img data-src="../images/ao_1_transport.png" class="r-stretch"></section></section>
+<section>
+<section id="understanding-the-problem" class="title-slide slide level1 title center">
+<h1><span class="flow">Understanding the Problem</span></h1>
+
+</section>
+<section id="what-are-we-trying" class="slide level2">
+<h2>What are we trying?</h2>
+<p>First, we always need to understand the objectives.</p>
+<div class="fragment">
+<p><span class="question">Question:</span> What are our possible objectives?</p>
+<p><span class="fragment">Minimizing the <span class="highlight">transport costs</span> over all truckloads while <span class="highlight">meeting the demand</span> based on the <span class="highlight">available solar panels</span> adhering to the available panels.</span></p>
+</div>
+</section>
+<section id="section-1" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Let’s break it down</p>
+<p>step by step!</p>
+</div>
+</section>
+<section id="sets" class="slide level2">
+<h2>Sets</h2>
+<p>Remember, sets are <span class="highlight">collections of elements</span></p>
+<div class="fragment">
+<p><span class="question">Question:</span> What sets are needed?</p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[
+\begin{aligned}
+\mathcal{I} &amp;: \text{Set of production sites, indexed by } i \text{ with } i \in \{1, \ldots, |\mathcal{I}|\}, \\
+\mathcal{J} &amp;: \text{Set of customers, indexed by } j \text{ with } j \in \{1, \ldots, |\mathcal{J}|\}.
+\end{aligned}
+\]</span></p>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>We often use <strong>plural</strong> names for sets and a caligraphic letter, e.g., <span class="math inline">\(\mathcal{I}\)</span> and <span class="math inline">\(\mathcal{J}\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="parameters" class="slide level2">
+<h2>Parameters</h2>
+<p>Parameters are <span class="highlight">fixed values that are given.</span></p>
+<div class="fragment">
+<p><span class="question">Question:</span> What parameters are needed?</p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[
+\begin{aligned}
+c_{i,j} &amp;: \text{Costs per truck load for transport from } i \text{ to } j, \\
+a_i &amp;: \text{Available truck loads at } i, \\
+b_j &amp;: \text{Customer demands at } j.
+\end{aligned}
+\]</span></p>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>We usually use the corresponding lower-case letter, e.g., <span class="math inline">\(c\)</span>, <span class="math inline">\(a\)</span>, and <span class="math inline">\(b\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="decision-variable" class="slide level2">
+<h2>Decision Variable</h2>
+<ul>
+<li>Decision variables are the values we are trying to find</li>
+<li>Here, our objective is to minimize the transport costs</li>
+</ul>
+<div class="fragment">
+<p><span class="question">Question:</span> What decision variables are needed?</p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[
+X_{i,j} \text{Trucks that deliver panels from site } i \text{ to customer } j.
+\]</span></p>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>We use upper-case letters to distinguish variables from parameters, e.g., <span class="math inline">\(X\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="section-2" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>These are our</p>
+<p>building blocks!</p>
+</div>
+</section>
+<section id="objective-function" class="slide level2">
+<h2>Objective Function</h2>
+<ul>
+<li>The objective function is the value we are trying to minimize</li>
+<li>Formalized as a sum of decision variables and parameters</li>
+</ul>
+<div class="fragment">
+<p><span class="question">Question:</span> Do you remember the objective?</p>
+</div>
+</section>
+<section id="minimizing-the-transport-costs" class="slide level2">
+<h2>Minimizing the Transport Costs</h2>
+<p><span class="highlight">Minimize</span> the transport costs over all truckloads while meeting the demand based on the available solar panels adhering to the available panels.</p>
+<div class="fragment">
+<p><span class="question">Question:</span> How can we write this down?</p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[
+\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{i,j}
+\]</span></p>
+</div>
+</section>
+<section id="constraints" class="slide level2">
+<h2>Constraints</h2>
+<ul>
+<li>Constraints are <span class="highlight">conditions that must be met</span></li>
+<li>They limit the solution space!</li>
+</ul>
+<p><span class="question">Question:</span> Objective value without any constraints?</p>
+<div class="fragment">
+<ul>
+<li>The value is <span class="higlight">zero</span></li>
+<li>We can transport any number of panels</li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> What constraints are needed?</p>
+</div>
+</section>
+<section id="supply-constraints" class="slide level2">
+<h2>Supply Constraints</h2>
+<p>Ensure that the number of panels transported from a location does not exceed the available panels.</p>
+<div class="fragment">
+<p><span class="question">Question:</span> How can we formalize this?</p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[
+\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad \forall i \in \mathcal{I}
+\]</span></p>
+</div>
+</section>
+<section id="demand-constraints" class="slide level2">
+<h2>Demand Constraints</h2>
+<p>Ensure that the demand of each customer is covered.</p>
+<div class="fragment">
+<p><span class="question">Question:</span> Any ideas?</p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[
+\sum_{i \in \mathcal{I}} X_{i,j} = b_j \quad \forall j \in \mathcal{J}
+\]</span></p>
+</div>
+</section>
+<section id="non-negativity-constraints" class="slide level2">
+<h2>Non-negativity Constraints</h2>
+<p>Ensure no negative number of truckloads are transported.</p>
+<div class="fragment">
+<p><span class="question">Question:</span> Has anyone an idea how to write this down?</p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[
+X_{i,j} \geq 0 \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
+\]</span></p>
+</div>
+</section>
+<section id="transport-problem" class="slide level2">
+<h2>Transport Problem</h2>
+<p>The complete model can then be written as:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Minimize} \quad F &amp;= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{ij} \\
+\text{subject to:} \quad
+&amp;\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &amp;&amp;\forall i \in \mathcal{I} \\
+&amp;\sum_{i \in \mathcal{I}} X_{i,j} = b_j \quad &amp;&amp;\forall j \in \mathcal{J} \\
+&amp;X_{i,j} \geq 0 \quad &amp;&amp;\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="inequality-constraints" class="slide level2">
+<h2>Inequality Constraints</h2>
+<p><span class="question">Question:</span> Could we replace <span class="math inline">\(=\)</span> by <span class="math inline">\(\geq\)</span> in the demand constraint?</p>
+<div class="fragment">
+<ul>
+<li>Yes, we could!</li>
+<li>We could deliver more than the demand</li>
+<li>But this would not happen here</li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> Why won’t we transport more than the demand?</p>
+<ul>
+<li>Due to the associated costs</li>
+</ul>
+</div>
+</section>
+<section id="section-3" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Any</p>
+<p>questions?</p>
+</div>
+</section></section>
+<section>
+<section id="profit-maximization" class="title-slide slide level1 title center">
+<h1><span class="flow">Profit Maximization</span></h1>
+
+</section>
+<section id="description-1" class="slide level2">
+<h2>Description</h2>
+<p>Unfortunately, the margins on solar panels are low. After the previous contract has been fulfilled, the company produced the <span class="highlight">same number of panels</span> as before. In addition, all three customers want to order the <span class="highlight">same number of truckloads</span> with solar panels again. The sales volume per truckload of panels is 11,000 Euros. The complete production of a truckload of solar panels, including materials, costs 6,300 Euros.</p>
+</section>
+<section id="new-objective" class="slide level2">
+<h2>New Objective</h2>
+<p>In the new contract, the company wants to <span class="highlight">maximize its profits</span> while the demand does not have to be fulfilled.</p>
+<div class="fragment">
+<p><span class="question">Question:</span> What changes are necessary?</p>
+</div>
+<div class="fragment">
+<ul>
+<li>We need to change the objective function</li>
+<li>We need to change some parameters</li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> Does our decision variable change?</p>
+</div>
+<div class="fragment">
+<ul>
+<li>No, we still transport truckloads of solar panels</li>
+</ul>
+</div>
+</section>
+<section id="new-parameters" class="slide level2">
+<h2>New Parameters</h2>
+<p><span class="math display">\[
+\begin{aligned}
+p &amp;: \text{Sales volume per truckload of solar panels,} \\
+c &amp;: \text{Production costs per truckload of solar panels.}
+\end{aligned}
+\]</span></p>
+<div class="fragment">
+<p><span class="question">Question:</span> What is the profit per truckload of solar panels?</p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[
+p - c
+\]</span></p>
+</div>
+</section>
+<section id="former-model" class="slide level2">
+<h2>Former Model</h2>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Minimize} \quad F &amp;= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{i,j} \\
+\text{subject to:} \quad
+&amp;\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &amp;&amp;\forall i \in \mathcal{I} \\
+&amp;\sum_{i \in \mathcal{I}} X_{i,j} \geq b_j \quad &amp;&amp;\forall j \in \mathcal{J} \\
+&amp;X_{i,j} \geq 0 \quad &amp;&amp;\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="new-model" class="slide level2">
+<h2>New Model</h2>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Maximize} \quad F &amp;= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} (p-c-c_{i,j}) \times X_{i,j} \\
+\text{subject to:} \quad
+&amp;\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &amp;&amp;\forall i \in \mathcal{I} \\
+&amp;\sum_{i \in \mathcal{I}} X_{i,j} \leq b_j \quad &amp;&amp;\forall j \in \mathcal{J} \\
+&amp;X_{i,j} \geq 0 \quad &amp;&amp;\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="section-4" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Do you have</p>
+<p>any questions?</p>
+</div>
+</section></section>
+<section>
+<section id="installing-julia" class="title-slide slide level1 title center">
+<h1><span class="flow">Installing Julia</span></h1>
+
+</section>
+<section id="download-and-install-julia" class="slide level2">
+<h2>Download and Install Julia</h2>
+
+<img data-src="../images/julia-programming-language.png" class="r-stretch"><p>To prepare for the upcoming lectures, we start by installing the Julia Programming Language and an Integrated Development Environment (IDE) to work with Julia.</p>
+</section>
+<section id="installating-julia" class="slide level2">
+<h2>Installating Julia</h2>
+
+<img data-src="../images/julia2.png" data-max-width="400px" class="r-stretch"><ul>
+<li>Head to <a href="https://julialang.org">julialang.org</a> and follow the instructions.</li>
+</ul>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>If you are ever asked to add something to your “PATH”, do so!</p>
+</div>
+</div>
+</div>
+</section>
+<section id="vs-code" class="slide level2">
+<h2>VS Code</h2>
+
+<img data-src="../images/codium_cnl.png" data-max-width="400px" class="r-stretch"><ul>
+<li>Next, we are going to install VS Code</li>
+<li>Alternatively, you can install VS Codium</li>
+<li>It is essentially VS Code but without any tracking by MS</li>
+</ul>
+</section>
+<section id="installing-vs-code" class="slide level2">
+<h2>Installing VS Code</h2>
+<ul>
+<li>Head to the website <a href="https://code.visualstudio.com">code.visualstudio.com</a></li>
+<li>OR to the webside <a href="https://vscodium.com">vscodium.com</a></li>
+<li>Download and install the latest release</li>
+</ul>
+</section>
+<section id="verify-the-installation" class="slide level2">
+<h2>Verify the Installation</h2>
+<ul>
+<li>Start the IDE and take a look around</li>
+<li>Search for the field “Extensions” on the left sidebar</li>
+<li>Click it and search for “Julia”</li>
+<li>Download and install “Julia (Julia Language Support)”</li>
+</ul>
+</section>
+<section id="create-a-new-file" class="slide level2">
+<h2>Create a new file</h2>
+<ul>
+<li>Create a new file with a “.jl” ending</li>
+<li>Save it somewhere on your computer</li>
+<li>e.g., in a folder that you will use in the course</li>
+</ul>
+<div id="2" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a><span class="fu">print</span>(<span class="st">"Hello World!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>Hello World!</code></pre>
+</div>
+</div>
+<ul>
+<li>Run the file by clicking “run” in the upper right corner</li>
+<li>OR by pressing “Control+Enter” or “STRG+Enter”</li>
+</ul>
+</section>
+<section id="everything-working" class="slide level2">
+<h2>Everything working?</h2>
+<ul>
+<li>If the terminal opens with a <code>Hello World!</code> → perfect!</li>
+<li>If not, it is likely that the IDE <span class="highlight">cannot find the path</span> to Julia</li>
+<li>Try to determine the path and save it to VS Code</li>
+<li>After saving it, try to run the file again</li>
+</ul>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Don’t worry if it is not running right away. We will fix this together!</p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="starting-with-julia" class="title-slide slide level1 title center">
+<h1><span class="flow">Starting with Julia</span></h1>
+
+</section>
+<section id="how-to-get-started" class="slide level2">
+<h2>How to get started?</h2>
+<ul>
+<li>Learning a new programming language is a daunting task</li>
+<li>It is best to start with some small, interactive problems</li>
+<li>Then, slowly increase the scope of the tasks</li>
+<li>We will do this <span class="highlight">together in class</span>!</li>
+</ul>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>And that’s it for todays lecture!</strong><br>
+We now have covered a first introduction and are ready to start solving some problems in the upcoming lectures.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="section-5" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Questions?</p>
+</div>
+</section></section>
+<section>
+<section id="literature" class="title-slide slide level1 title center">
+<h1><span class="flow">Literature</span></h1>
+
+</section>
+<section id="literature-i" class="slide level2">
+<h2>Literature I</h2>
+<p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
+</section>
+<section id="literature-ii" class="slide level2 smaller scrollable">
+<h2>Literature II</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-haase2016improving" class="csl-entry" role="listitem">
+Haase, Knut, Habib Zain Al Abideen, Salim Al-Bosta, Mathias Kasper, Matthes Koch, Sven Müller, and Dirk Helbing. 2016. <span>“Improving Pilgrim Safety During the Hajj: An Analytical and Operational Research Approach.”</span> <em>Interfaces</em> 46 (1): 74–90.
+</div>
+<div id="ref-mickein2022decision" class="csl-entry" role="listitem">
+Mickein, Markus, Matthes Koch, and Knut Haase. 2022. <span>“A Decision Support System for Brewery Production Planning at Feldschl<span>ö</span>sschen.”</span> <em>INFORMS Journal on Applied Analytics</em> 52 (2): 158–72.
+</div>
+<div id="ref-vlcek_police_2024" class="csl-entry" role="listitem">
+Vlćek, Tobias, Knut Haase, Malte Fliedner, and Tobias Cors. 2024. <span>“Police Service District Planning.”</span> <em>OR Spectrum</em>, February. <a href="https://doi.org/10.1007/s00291-024-00745-3">https://doi.org/10.1007/s00291-024-00745-3</a>.
+</div>
+<div id="ref-vlcek_controlling_2024" class="csl-entry" role="listitem">
+Vlćek, Tobias, Knut Haase, Matthes Koch, Lena Dolz, Anneke Weygandt, and Jan Pape. 2024. <span>“Controlling <span>Passenger</span> <span>Flows</span> into <span>Metro</span> <span>Systems</span> to <span>Mitigate</span> <span>Overcrowding</span> During Large-Scale <span>Events</span>.”</span> <em>Submitted to Transportation Science</em>.
+</div>
+<div id="ref-vlcek_optimizing_2024" class="csl-entry" role="listitem">
+Vlćek, Tobias, and Guido Voigt. 2024. <span>“Optimizing <span>SKU</span>-<span>Warehouse</span> <span>Allocations</span> to Minimize <span>Split</span> <span>Parcels</span> in <span>E</span>-<span>Commerce</span> <span>Environments</span>.”</span> <em>Submitted to Decision Sciences</em>.
+</div>
+</div>
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Lecture I - Welcome and Introduction | Dr.&nbsp;Tobias Vlćek | <a href="../part-01/lecture-introduction.html">Home</a></p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'fast',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp("https:\/\/beyondsimulations\.github\.io\/Applied-Optimization");
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
