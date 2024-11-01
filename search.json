@@ -1765,6 +1765,160 @@
     ]
   },
   {
+    "objectID": "general/cheatsheet-jump.html",
+    "href": "general/cheatsheet-jump.html",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "",
+    "text": "using JuMP, HiGHS\n\n# Create a model\nmodel = Model(HiGHS.Optimizer)\n\n# Set optimizer attribute (optional)\nset_optimizer_attribute(model, \"time_limit\", 60.0)",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#declaration",
+    "href": "general/cheatsheet-jump.html#declaration",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Declaration",
+    "text": "Declaration\n\n# Continuous Variables\n@variable(model, x)                    # Unbounded continuous\n@variable(model, x &gt;= 0)              # Non-negative continuous\n@variable(model, 0 &lt;= x &lt;= 10)        # Bounded continuous\n\n# Integer Variables\n@variable(model, x, Int)              # Unbounded integer\n@variable(model, x &gt;= 0, Int)         # Non-negative integer\n@variable(model, 0 &lt;= x &lt;= 10, Int)   # Bounded integer\n\n# Binary Variables\n@variable(model, x, Bin)              # Binary (0 or 1)",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#containers",
+    "href": "general/cheatsheet-jump.html#containers",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Containers",
+    "text": "Containers\n\n# Arrays\n@variable(model, x[1:5])              # Array of 5 variables\n@variable(model, x[1:5] &gt;= 0)         # Non-negative array\n@variable(model, x[1:5], Bin)         # Binary array\n\n# Matrices\n@variable(model, x[1:3, 1:4])         # 3x4 matrix of variables\n@variable(model, x[1:3, 1:4], Int)    # Integer matrix\n\n# Custom Indexing\nindices = [\"A\", \"B\", \"C\"]\n@variable(model, x[i in indices])      # Custom indexed array",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#declaration-1",
+    "href": "general/cheatsheet-jump.html#declaration-1",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Declaration",
+    "text": "Declaration\n\n# Basic constraints\n@constraint(model, con1, 2x + y &lt;= 10)\n@constraint(model, con2, x + 2y &gt;= 5)",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#containers-1",
+    "href": "general/cheatsheet-jump.html#containers-1",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Containers",
+    "text": "Containers\n\n# Array of variables\n@variable(model, x[1:5] &gt;= 0)\n\n# Constraint for each variable\n@constraint(model, capacity[i=1:5], \n    x[i] &lt;= 100\n)\n\n# Sum constraint\n@constraint(model, total_sum,\n    sum(x[i] for i in 1:5) &lt;= 500\n)\n\n# Matrix constraints\n@variable(model, y[1:3, 1:4])\n@constraint(model, matrix_con[i=1:3, j=1:4],\n    y[i,j] &lt;= i + j\n)",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#conditional",
+    "href": "general/cheatsheet-jump.html#conditional",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Conditional",
+    "text": "Conditional\n\n# Basic conditional constraint\n@constraint(model, cond[i=1:5; i &gt; 2], \n    x[i] &lt;= 10\n)   # Only applies when i &gt; 2\n\n# Multiple conditions\n@constraint(model, cond2[i=1:10, j=1:10; i != j && i + j &lt;= 15],\n    x[i,j] + x[j,i] &lt;= 1\n)",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#key-points-for-constraints",
+    "href": "general/cheatsheet-jump.html#key-points-for-constraints",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Key Points for Constraints",
+    "text": "Key Points for Constraints\n\nUse semicolon (;) to separate indices from conditions\nConditions can use any valid Julia boolean expression\nMultiple conditions can be combined with && (and) or || (or)",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#declaration-2",
+    "href": "general/cheatsheet-jump.html#declaration-2",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Declaration",
+    "text": "Declaration\n\n# Maximize objective\n@objective(model, Max, 5x + 3y)\n\n# Minimize objective\n@objective(model, Min, 2x + 4y)",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#containers-2",
+    "href": "general/cheatsheet-jump.html#containers-2",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Containers",
+    "text": "Containers\n\n# Container objective\n@variable(model, z[1:10])\n@objective(model, Min, sum(z[i] for i in 1:10))\n\n# Weighted objective\nweights = [1, 2, 3, 4, 5]\n@objective(model, Max, \n    sum(weights[i] * z[i] for i in 1:5)\n)",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#key-points",
+    "href": "general/cheatsheet-jump.html#key-points",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Key Points",
+    "text": "Key Points\n\nObjective functions can be linear or nonlinear\nContainers are useful for weighted objectives\nCan reference external data (parameters)",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#checking-bounds",
+    "href": "general/cheatsheet-jump.html#checking-bounds",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Checking Bounds",
+    "text": "Checking Bounds\n\n# Checking bounds\nhas_lower_bound(x)                    # Check if lower bound exists\nhas_upper_bound(x)                    # Check if upper bound exists\nlower_bound(x)                        # Get lower bound value\nupper_bound(x)                        # Get upper bound value",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#checking-properties",
+    "href": "general/cheatsheet-jump.html#checking-properties",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Checking Properties",
+    "text": "Checking Properties\n\n# Check variable type\nis_binary(x)                          # Is variable binary?\nis_integer(x)                         # Is variable integer?\nis_continuous(x)                      # Is variable continuous?\n\n# Get variable info\nname(x)                              # Get variable name\nnum_variables(model)                 # Count variables in model\nall_variables(model)                 # Get all variables",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#solution-status-checks",
+    "href": "general/cheatsheet-jump.html#solution-status-checks",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Solution Status Checks",
+    "text": "Solution Status Checks\n\n# Check solution status\nstatus = termination_status(model)    # Get solution status\nis_optimal = status == MOI.OPTIMAL    # Check if optimal\n\n# Get detailed status\nprimal_status(model)                  # Primal solution status\ndual_status(model)                    # Dual solution status\nsolve_time(model)                     # Solution time\n\n# Common status checks\nif termination_status(model) == OPTIMAL \n    println(\"Solution is optimal\")\nelseif termination_status(model) == TIME_LIMIT && has_values(model)\n    println(\"Time limit reached with feasible solution\")\nelse\n    println(\"Problem could not be solved\")\nend",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#key-points-1",
+    "href": "general/cheatsheet-jump.html#key-points-1",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Key Points",
+    "text": "Key Points\n\nAlways check solution status before using results\nSet appropriate time limits for large problems\nUse gap tolerances to balance precision and speed\nMonitor solve time for performance optimization\nConsider presolve for complex problems",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Welcome to Applied Optimization with Julia!",
@@ -1772,6 +1926,490 @@
     "text": "Course Description\nIn this module we will focus on solving practical problems with the help of optimization. To this end, over the course of the semester you will become familiar with a number of optimization problems that have been worked on in the past at the Institute of Logistics, Transportation and Production in cooperation with practice partners. Problems include improving the sustainability of parcel delivery companies, Corona-compliant seat allocations of stadiums and theaters, optimizing districts and locations for police departments, and many more. The module consists of the following two parts: Lectures (2 SWS) and Exercises (1 SWS).\n\n\nLearning Outcomes\nYou can find our specific outcomes in the module handbook. Our broader goal is to introduce you to how diversified the solution of practical problems can be. We want to enable you to independently apply methods and concepts from optimization, and to get a feeling for abstracting and modeling problems. Is our module hard? That’s a subjective question. We would say it is exciting and doable. If you have a basic interest in logical relationships and mathematics, you are in the right place. If you also have basic knowledge of programming or want to get into the subject with help, our module is perfect for you.\nUpon completion of the course, you …\n\ncan implement solutions to complex optimization problems in Julia\nknow advanced concepts of optimization such as linear and nonlinear optimization\nknow basic concepts of programming and algorithms such as loops, functions\nwill be able to read and write code in Julia\nwill have experience working with Julia libraries such as JuMP and HiGHS\nwill know how to collaborate in a small team to find solutions for problems at hand\n\nPlease note that this course is specifically designed for business students. That is, it is not required to have any advanced knowledge or experience in programming to attend this course. The teaching format will make it possible to account for different levels of programming skills such that every student can take the most out of the course.\n\n\nCourse Blocks\nThe core content of the course is organized in three blocks:\n\nPart I: Introduction to Julia and Modelling\nPart II: Applied Optimization with Basic Models\nPart III: Applied Optimization with Advanced Models\n\nYou can find more information on the course blocks and the corresponding lectures in the syllabus.\n\n\nTutorials\nThe tutorials accompany the lectures. In the tutorials, you will apply the concepts from the lectures to realistic data sets. You will work in small groups of 3 participants, in which you can work out solutions together. We will help you during the weekly practice sessions by answering your questions or briefly explaining individual issues in case of difficulties. Afterwards, you have the opportunity to submit your jointly developed solution until the next exercise date in order to earn bonus points for the exam. You can earn up to half a bonus point per exercise, up to 6.0 bonus points in total. Important: the bonus points will only be credited to you if you pass the exam with at least a 4.0. Furthermore, we will not award bonus points for exercises in which you have simply copied the results of another group.\n\n\nHow to see the slides\n\nThis course is based on Quarto\nIt uses revealjs to render the slides\nYou find the slides for each lecture in the corresponding lecture\nTo see the slides, click on RevealJS in the top right side in the lecture\n\n\n\nQuestions\nIf you have any questions regarding the course, please contact me under tobias.vlcek@uni-hamburg.de.\n\n\nContributors\nThanks to Matthes Koch and Justus Bonz, who helped to prepare the lecture materials.",
     "crumbs": [
       "Welcome"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html",
+    "href": "general/cheatsheet-julia.html",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "",
+    "text": "# Basic variable declaration\nx = 1                  # Implicit typing\ny::Int64 = 5          # Explicit type annotation\n\n# Common types\nnum_int = 42          # Integer\nnum_float = 19.99     # Float\nis_student = true     # Boolean\nname = \"Julia\"        # String\n\n# Check type\ntypeof(num_int)       # Returns Int64\ntypeof(num_float)     # Returns Float64\n\n\n\n\n\nname = \"Julia\"\nage = 30\n# Basic interpolation\nmessage = \"I am $age years old\"\n# Complex interpolation\ngreeting = \"Hello, my name is $name and I am $age years old\"\n\n\n\n\n\n# Convert between types\nfloat_num = Float64(42)    # Int to Float\nint_num = Int64(3.14)      # Float to Int\nstr_num = string(42)       # Number to String",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#variable-declaration-and-types",
+    "href": "general/cheatsheet-julia.html#variable-declaration-and-types",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "",
+    "text": "# Basic variable declaration\nx = 1                  # Implicit typing\ny::Int64 = 5          # Explicit type annotation\n\n# Common types\nnum_int = 42          # Integer\nnum_float = 19.99     # Float\nis_student = true     # Boolean\nname = \"Julia\"        # String\n\n# Check type\ntypeof(num_int)       # Returns Int64\ntypeof(num_float)     # Returns Float64",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#string-interpolation",
+    "href": "general/cheatsheet-julia.html#string-interpolation",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "",
+    "text": "name = \"Julia\"\nage = 30\n# Basic interpolation\nmessage = \"I am $age years old\"\n# Complex interpolation\ngreeting = \"Hello, my name is $name and I am $age years old\"",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#type-conversion",
+    "href": "general/cheatsheet-julia.html#type-conversion",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "",
+    "text": "# Convert between types\nfloat_num = Float64(42)    # Int to Float\nint_num = Int64(3.14)      # Float to Int\nstr_num = string(42)       # Number to String",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#vectors",
+    "href": "general/cheatsheet-julia.html#vectors",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Vectors",
+    "text": "Vectors\n\n# Create vectors\ngrades = [95, 87, 91, 78, 88]    # Numeric vector\nnames = [\"Mike\", \"Yola\", \"Elio\"] # String vector\n\n# Vector operations\npush!(grades, 82)       # Add element to end\npop!(grades)           # Remove last element\npopfirst!(grades)      # Remove first element\n\n# Vector indexing\nfirst = grades[1]      # Access first element\nsubset = grades[1:3]   # Access first three elements",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#matrices",
+    "href": "general/cheatsheet-julia.html#matrices",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Matrices",
+    "text": "Matrices\n\n# Create matrices\nmatrix = [1 2 3; 4 5 6]    # 2x3 matrix\n# Matrix operations\nmatrix[2,3] = 17           # Change specific element\n\n# Matrix arithmetic\nmatrix1 = [2 2; 3 3]\nmatrix2 = [1 2; 3 4]\nsum_matrix = matrix1 + matrix2      # Matrix addition\nprod_matrix = matrix1 * matrix2     # Matrix multiplication\nelement_prod = matrix1 .* matrix2   # Element-wise multiplication\n\n# Broadcasting\nmatrix .+ 10                # Add 10 to each element",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#tuples",
+    "href": "general/cheatsheet-julia.html#tuples",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Tuples",
+    "text": "Tuples\n\n# Create tuples (immutable)\nperson = (\"Elio Smith\", 18, \"Hamburg\")\nrgb = (255, 0, 0)\n\n# Tuple operations\nname = person[1]           # Access first element\nage, city = person[2:3]    # Multiple assignment",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#key-differences",
+    "href": "general/cheatsheet-julia.html#key-differences",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Key Differences",
+    "text": "Key Differences\n\nVectors: Mutable, 1-dimensional, good for lists\nMatrices: Mutable, 2-dimensional, good for linear algebra\nTuples: Immutable, fixed-size, good for grouping related constants",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#basic-comparisons",
+    "href": "general/cheatsheet-julia.html#basic-comparisons",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Basic Comparisons",
+    "text": "Basic Comparisons\n\n# Comparison operators\nx == y    # Equal to\nx != y    # Not equal to\nx &lt; y     # Less than\nx &gt; y     # Greater than\nx &lt;= y    # Less than or equal to\nx &gt;= y    # Greater than or equal to\n\n# Examples\npassword_correct = (input == \"secret123\")\nis_adult = (age &gt;= 18)\ncan_afford = (price &lt;= budget)",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#logical-operators",
+    "href": "general/cheatsheet-julia.html#logical-operators",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Logical Operators",
+    "text": "Logical Operators\n\n# AND operator (&&)\ncan_buy = (age &gt;= 18) && (money &gt;= price)    # Both conditions must be true\n\n# OR operator (||)\nneed_coat = (temp &lt; 10) || is_raining        # At least one must be true\n\n# NOT operator (!)\nis_closed = !is_open                         # Inverts boolean value",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#chained-comparisons",
+    "href": "general/cheatsheet-julia.html#chained-comparisons",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Chained Comparisons",
+    "text": "Chained Comparisons\n\n# Instead of\nx &gt;= 0 && x &lt;= 10    # Check if x is between 0 and 10\n\n# You can write\n0 &lt;= x &lt;= 10         # More natural syntax\n\n# Real-world examples\nnormal_temp = 36.5 &lt;= body_temp &lt;= 37.5\nwork_hours = 9 &lt;= current_hour &lt; 17",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#key-points-1",
+    "href": "general/cheatsheet-julia.html#key-points-1",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Key Points",
+    "text": "Key Points\n\nComparisons return boolean values (true or false)\n&& requires all conditions to be true\n|| requires at least one condition to be true\n! inverts a boolean value\nChained comparisons make range checks more readable",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#for-loops",
+    "href": "general/cheatsheet-julia.html#for-loops",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "For Loops",
+    "text": "For Loops\n\n# Basic for loop with range\nfor i in 1:3\n    println(i)        # Prints 1, 2, 3\nend\n\n# Iterating over array\nfruits = [\"apple\", \"banana\", \"cherry\"]\nfor fruit in fruits\n    println(fruit)    # Prints each fruit\nend\n\n# For loop with break\nfor x in 1:10\n    if x == 4\n        break        # Exits loop when x is 4\n    end\nend\n\n# For loop with conditions\nfor x in 1:10\n    if x &lt;= 2\n        println(x)\n    elseif x == 3\n        println(\"Three!\")\n    else \n        break\n    end\nend",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#while-loops",
+    "href": "general/cheatsheet-julia.html#while-loops",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "While Loops",
+    "text": "While Loops\n\n# Basic while loop\nnumber = 10\nwhile number &gt;= 5\n    number -= 1      # Decrements until &lt; 5\nend\n\n# Infinite loop with break\ncurrent = 0\nwhile true\n    current += 1\n    if current == 5\n        break        # Exits when condition met\n    end\nend\n\n# While loop with condition\nlives = 3\nwhile lives &gt; 0\n    lives -= 1       # Continues until lives = 0\nend",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#nested-loops",
+    "href": "general/cheatsheet-julia.html#nested-loops",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Nested Loops",
+    "text": "Nested Loops\n\n# Nested loop example\nsizes = [\"S\", \"M\", \"L\"]\ncolors = [\"Red\", \"Blue\"]\nfor size in sizes\n    for color in colors\n        println(\"$color $size\")\n    end\nend\n\n# Matrix iteration\nfor i in 1:3\n    for j in 1:2\n        println(\"Position: $i,$j\")\n    end\nend",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#list-comprehensions",
+    "href": "general/cheatsheet-julia.html#list-comprehensions",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "List Comprehensions",
+    "text": "List Comprehensions\n\n# Basic list comprehension\nsquares = [n^2 for n in 1:5]    # [1,4,9,16,25]\n\n# With condition\nevens = [n for n in 1:10 if n % 2 == 0]    # [2,4,6,8,10]\n\n# Nested comprehension\nmatrix = [i*j for i in 1:3, j in 1:3]    # 3x3 multiplication table",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#key-points-2",
+    "href": "general/cheatsheet-julia.html#key-points-2",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Key Points",
+    "text": "Key Points\n\nfor loops are best when you know the number of iterations\nwhile loops are useful for unknown iteration counts\nUse break to exit loops early\nList comprehensions offer concise array creation\nNested loops are useful for multi-dimensional iteration",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#basic-dictionary-operations",
+    "href": "general/cheatsheet-julia.html#basic-dictionary-operations",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Basic Dictionary Operations",
+    "text": "Basic Dictionary Operations\n\n# Create a dictionary\nstudent_ids = Dict(\n    \"Elio\" =&gt; 1001,\n    \"Bob\" =&gt; 1002,\n    \"Yola\" =&gt; 1003\n)\n\n# Access values\nid = student_ids[\"Elio\"]        # Get value by key\nstudent_ids[\"David\"] = 1004     # Add new key-value pair\ndelete!(student_ids, \"Bob\")     # Remove entry\n\n# Check key existence\nif haskey(student_ids, \"Eve\")\n    println(student_ids[\"Eve\"])\nend",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#advanced-operations",
+    "href": "general/cheatsheet-julia.html#advanced-operations",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Advanced Operations",
+    "text": "Advanced Operations\n\n# Dictionary with array values\ngrades = Dict(\n    \"Elio\" =&gt; [85, 92, 78],\n    \"Bob\" =&gt; [76, 88, 94]\n)\n\n# Get all keys and values\nnames = keys(grades)          # Get all keys\nscores = values(grades)       # Get all values\n\n# Iterate over dictionary\nfor (student, grade_list) in grades\n    avg = sum(grade_list) / length(grade_list)\n    println(\"$student: $avg\")\nend",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#common-methods",
+    "href": "general/cheatsheet-julia.html#common-methods",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Common Methods",
+    "text": "Common Methods\n\n# Dictionary methods\nlength(dict)           # Number of entries\nempty!(dict)           # Remove all entries\nget(dict, key, default)# Get value or default if key missing\nmerge(dict1, dict2)    # Combine two dictionaries\ncopy(dict)             # Create shallow copy",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#key-points-3",
+    "href": "general/cheatsheet-julia.html#key-points-3",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Key Points",
+    "text": "Key Points\n\nKeys must be unique\nValues can be of any type (including arrays)\nUse haskey() to safely check for key existence\nDictionaries are mutable (can be changed)\nKeys are accessed with square brackets dict[\"key\"]",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#basic-function-definition",
+    "href": "general/cheatsheet-julia.html#basic-function-definition",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Basic Function Definition",
+    "text": "Basic Function Definition\n\n# Basic function with explicit return\nfunction say_hello(name)\n    return \"Hello, $(name)!\"\nend\n\n# Function with implicit return\nfunction multiply(a, b)\n    a * b    # Last expression is automatically returned\nend\n\n# Conditional return\nfunction do_something(a, b)\n    if a &gt; b\n        return a * b\n    else\n        return a + b\n    end\nend",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#function-scope",
+    "href": "general/cheatsheet-julia.html#function-scope",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Function Scope",
+    "text": "Function Scope\n\n# Local scope example\nfunction bake_cake()\n    secret_ingredient = \"vanilla\"    # Only exists inside function\n    return secret_ingredient        # Must return to access outside\nend\n\n# Variables outside function not accessible inside\nglobal_var = 10\nfunction scope_example()\n    # Can read global_var but can't modify it\n    return global_var + 5\nend",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#multiple-dispatch",
+    "href": "general/cheatsheet-julia.html#multiple-dispatch",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Multiple Dispatch",
+    "text": "Multiple Dispatch\n\n# Generic operation for all types\nfunction operation(a, b)\n    \"Generic operation for $(typeof(a)) and $(typeof(b))\"\nend\n\n# Type-specific implementations\noperation(a::Number, b::Number) = a + b        # For numbers\noperation(a::String, b::String) = string(a, b) # For strings\n\n# Usage examples\noperation(10, 20)          # Returns 30\noperation(\"Hello\", \"!\")    # Returns \"Hello!\"\noperation(\"Hi\", 42)        # Uses generic operation",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#key-points-4",
+    "href": "general/cheatsheet-julia.html#key-points-4",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Key Points",
+    "text": "Key Points\n\nFunctions can have explicit or implicit returns\nLast expression is automatically returned if no return statement\nVariables inside functions are local by default\nMultiple dispatch allows different behavior based on argument types\nUse return for early exits or conditional",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#basic-package-operations",
+    "href": "general/cheatsheet-julia.html#basic-package-operations",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Basic Package Operations",
+    "text": "Basic Package Operations\n\n# Import package manager\nimport Pkg              # Access as Pkg.function()\nusing Pkg              # Import all exported names\n\n# Add packages\nPkg.add(\"DataFrames\")  # Add single package\nPkg.add([\"Package1\", \"Package2\"])  # Add multiple packages\n\n# Update packages\nPkg.update()           # Update all packages\nPkg.update(\"DataFrames\")  # Update specific package\n\n# Remove packages\nPkg.rm(\"DataFrames\")   # Remove package",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#package-usage",
+    "href": "general/cheatsheet-julia.html#package-usage",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Package Usage",
+    "text": "Package Usage\n\n# Import packages\nimport DataFrames     # Access as DataFrames.function()\nusing DataFrames     # Import all exported names\n\n# Check installed packages\nPkg.status()         # List all installed packages",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#environment-management",
+    "href": "general/cheatsheet-julia.html#environment-management",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Environment Management",
+    "text": "Environment Management\n\n# Environment operations\nPkg.activate(\"new_environment\")    # Create/activate environment\nPkg.activate()                     # Activate default environment\n\n# Project files\n# Project.toml    - Lists direct dependencies\n# Manifest.toml   - Complete dependency graph",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#key-points-5",
+    "href": "general/cheatsheet-julia.html#key-points-5",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Key Points",
+    "text": "Key Points\n\nUse import for namespace control, using for direct access\nAlways update packages regularly with Pkg.update()\nCreate separate environments for different projects\nProject.toml and Manifest.toml track dependencies\nPackage manager commands typically run in REPL",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#creating-dataframes",
+    "href": "general/cheatsheet-julia.html#creating-dataframes",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Creating DataFrames",
+    "text": "Creating DataFrames\n\nusing DataFrames\n\n# Basic DataFrame creation\ndf = DataFrame(\n    Name = [\"John\", \"Mike\", \"Frank\"],\n    Age = [28, 23, 37],\n    Salary = [50000, 62000, 90000]\n)\n\n# Empty DataFrame with specified columns\ndf_empty = DataFrame(\n    Name = String[],\n    Age = Int[]\n)",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#accessing-and-modifying-data",
+    "href": "general/cheatsheet-julia.html#accessing-and-modifying-data",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Accessing and Modifying Data",
+    "text": "Accessing and Modifying Data\n\n# Access columns\nages = df.Age                # Get Age column\nfirst_name = df.Name[1]      # First name in Name column\n\n# Modify values\ndf.Salary[1] = 59000        # Update John's salary\ndf.NewColumn = zeros(3)     # Add new column\n\n# Access multiple columns\nsubset = df[:, [:Name, :Age]]  # Select specific columns\nrow = df[1, :]                 # Select first row",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#filtering-data",
+    "href": "general/cheatsheet-julia.html#filtering-data",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Filtering Data",
+    "text": "Filtering Data\n\n# Filter with boolean indexing\nhigh_earners = df[df.Salary .&gt; 60000, :]\n\n# Using filter function\nhigh_earners = filter(row -&gt; row.Salary &gt; 60000, df)\n\n# Multiple conditions\nsenior_high_earners = df[(df.Age .&gt; 30) .& (df.Salary .&gt; 60000), :]",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#data-manipulation",
+    "href": "general/cheatsheet-julia.html#data-manipulation",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Data Manipulation",
+    "text": "Data Manipulation\n\n# Sort DataFrame\nsorted_df = sort(df, :Age)               # Sort by Age\nsorted_df = sort(df, [:Age, :Salary])    # Sort by multiple columns\n\n# Add calculated column\ndf.Bonus = [row.Age &gt; 30 ? row.Salary * 0.1 : row.Salary * 0.05 for row in eachrow(df)]\n\n# Iterate over rows\nfor row in eachrow(df)\n    println(\"$(row.Name): $(row.Age) years old\")\nend",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#key-functions",
+    "href": "general/cheatsheet-julia.html#key-functions",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Key Functions",
+    "text": "Key Functions\n\nnrow(df)              # Number of rows\nncol(df)              # Number of columns\nnames(df)             # Column names\ndescribe(df)          # Summary statistics\npush!(df, row)        # Add new row\nselect(df, :Name)     # Select columns",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#key-points-6",
+    "href": "general/cheatsheet-julia.html#key-points-6",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Key Points",
+    "text": "Key Points\n\nColumn access with dot notation (df.column)\nUse eachrow() for row iteration\nBoolean indexing for filtering\npush! to add new rows\nBroadcasting with dot operators (.&gt;, .+, etc.)",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#delimitedfiles-operations",
+    "href": "general/cheatsheet-julia.html#delimitedfiles-operations",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "DelimitedFiles Operations",
+    "text": "DelimitedFiles Operations\n\nusing DelimitedFiles\n\n# Write matrix to CSV\ndata = [1 2 3; 4 5 6]\nwritedlm(\"data.csv\", data, ',')      # Write with comma delimiter\nwritedlm(\"data.txt\", data, '\\t')     # Write with tab delimiter\n\n# Read delimited files\nmatrix = readdlm(\"data.csv\", ',')    # Read CSV file\nmatrix = readdlm(\"data.txt\", '\\t')   # Read tab-delimited file",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#csv-and-dataframe-operations",
+    "href": "general/cheatsheet-julia.html#csv-and-dataframe-operations",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "CSV and DataFrame Operations",
+    "text": "CSV and DataFrame Operations\n\nusing CSV, DataFrames\n\n# Write DataFrame to CSV\ndf = DataFrame(\n    Name = [\"John\", \"Alice\"],\n    Age = [25, 30]\n)\nCSV.write(\"data.csv\", df)            # Basic write\nCSV.write(\"data.csv\", df,            # Write with options\n    delim = ';',                     # Custom delimiter\n    header = false                   # No header\n)\n\n# Read CSV to DataFrame\ndf = CSV.read(\"data.csv\", DataFrame)           # Basic read\ndf = CSV.read(\"data.csv\", DataFrame,           # Read with options\n    delim = ';',                               # Custom delimiter\n    header = [\"Col1\", \"Col2\"]                  # Custom headers\n)",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#file-path-management",
+    "href": "general/cheatsheet-julia.html#file-path-management",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "File Path Management",
+    "text": "File Path Management\n\n# Get current directory\n@__DIR__                             # Directory of current file\npwd()                                # Current working directory\n\n# Path operations\npath = joinpath(@__DIR__, \"data\")    # Join path components\nmkdir(path)                          # Create directory\nisfile(path)                         # Check if file exists",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#key-points-7",
+    "href": "general/cheatsheet-julia.html#key-points-7",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Key Points",
+    "text": "Key Points\n\nUse DelimitedFiles for simple matrix I/O\nCSV package for advanced DataFrame I/O\nAlways use @__DIR__ for relative paths\nCheck file existence before operations\nConsider using try-catch for file operations",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#basic-plots",
+    "href": "general/cheatsheet-julia.html#basic-plots",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Basic Plots",
+    "text": "Basic Plots\n\nusing Plots, StatsPlots\n\n# Line plot\nplot(x, y,\n    title=\"Line Plot\",\n    xlabel=\"X Label\",\n    ylabel=\"Y Label\",\n    legend=false\n)\n\n# Scatter plot\nscatter(x, y,\n    title=\"Scatter Plot\",\n    marker=(:circle, 8)\n)\n\n# Bar plot\nbar(categories, values,\n    title=\"Bar Plot\"\n)\n\n# Histogram\nhistogram(data,\n    bins=30,\n    title=\"Histogram\"\n)\n\n# Box plot\nboxplot(group, values,\n    title=\"Box Plot\"\n)",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#plot-customization",
+    "href": "general/cheatsheet-julia.html#plot-customization",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Plot Customization",
+    "text": "Plot Customization\n\n# Customize plot appearance\nplot(x, y,\n    title=\"Custom Plot\",\n    line=(:dash, 2),      # Line style and width\n    color=:red,           # Line color\n    marker=(:circle, 8),  # Marker style and size\n    label=\"Data Series\"   # Legend label\n)\n\n# Multiple series\nplot(x, y1, label=\"Series 1\")\nplot!(x, y2, label=\"Series 2\")  # Add to existing plot",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#saving-plots",
+    "href": "general/cheatsheet-julia.html#saving-plots",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Saving Plots",
+    "text": "Saving Plots\n\n# Save plot to file\nsavefig(plot_name, \"path/plot.png\")  # Save as PNG\nsavefig(plot_name, \"path/plot.pdf\")  # Save as PDF\nsavefig(plot_name, \"path/plot.svg\")  # Save as SVG",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#common-options",
+    "href": "general/cheatsheet-julia.html#common-options",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Common Options",
+    "text": "Common Options\n\n# Plot options\nplot(\n    legend=true/false,    # Show/hide legend\n    grid=true/false,      # Show/hide grid\n    size=(width,height),  # Plot dimensions\n    dpi=300              # Resolution\n)\n\n# Line styles\n:solid, :dash, :dot\n\n# Colors\n:red, :blue, :green\n\n# Markers\n:circle, :square, :diamond",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-julia.html#key-points-8",
+    "href": "general/cheatsheet-julia.html#key-points-8",
+    "title": "Julia Syntax Cheatsheet",
+    "section": "Key Points",
+    "text": "Key Points\n\nUse plot() for new plots, plot!() to add to existing\nCustomize with named arguments\nSave plots in various formats\nStatsPlots extends plotting capabilities\nMultiple series can share one plot",
+    "crumbs": [
+      "Cheatsheets",
+      "Julia"
     ]
   },
   {
