@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.30">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Tobias Vlćek">
+
+<title>Lecture V - Production Planning in Breweries</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="lecture-production_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lecture-production_files/libs/quarto-html/quarto.js"></script>
+<script src="lecture-production_files/libs/quarto-html/popper.min.js"></script>
+<script src="lecture-production_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lecture-production_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lecture-production_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lecture-production_files/libs/quarto-html/quarto-syntax-highlighting-3a01e2046221230fdceeea94b1ec5d67.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lecture-production_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lecture-production_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lecture-production_files/libs/bootstrap/bootstrap-443b672e4026f73fbd8eff8becb54870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lecture-presentation.html"><i class="bi bi-file-slides"></i>RevealJS</a></li><li><a href="../lecture-production.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lecture V - Production Planning in Breweries</h1>
+<p class="subtitle lead">Applied Optimization with Julia</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Dr.&nbsp;Tobias Vlćek </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Hamburg - Fall 2024
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level1 title">
+<h1 class="title"><span class="flow">Introduction</span></h1>
+<section id="case-study" class="level2">
+<h2 class="anchored" data-anchor-id="case-study">Case Study</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><a href="https://unsplash.com/"><img src="https://unsplash.com/photos/ro4B16S7zjA/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MjB8fGJyZXdlcnl8ZW58MHx8fHwxNzMwMzY4NjMzfDA&amp;force=true&amp;w=1920.png" class="img-fluid" style="width:90.0%"></a></p>
+</div><div class="column" style="width:60%;">
+<ul>
+<li><strong>Large brewery</strong></li>
+<li>Brews and sells beverages</li>
+<li>Production planning by hand</li>
+<li>Planner has a <span class="highlight">lot of experience</span></li>
+<li><strong>But</strong> will retire soon</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="challenges" class="level2">
+<h2 class="anchored" data-anchor-id="challenges">Challenges</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><a href="https://unsplash.com/"><img src="https://unsplash.com/photos/I2f5BbeXPVY/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTJ8fGJyZXdpbmd8ZW58MHx8fHwxNzMwNDcyMjkxfDA&amp;force=true&amp;w=1920.png" class="img-fluid" style="width:90.0%"></a></p>
+</div><div class="column" style="width:60%;">
+<ul>
+<li><strong>Strong</strong> competition</li>
+<li>Customer <strong>demand is changing</strong></li>
+<li>Craft beer <strong>gains popularity</strong></li>
+<li><strong>Variety</strong> of drinks is increasing</li>
+<li><span class="highlight">Batch sizes are getting smaller</span></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="different-costs" class="level2">
+<h2 class="anchored" data-anchor-id="different-costs">Different costs</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><a href="https://unsplash.com/photos/a-large-industrial-machine-v-ySKssePQM"><img src="https://unsplash.com/photos/v-ySKssePQM/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTZ8fGJyZXdlcnl8ZW58MHx8fHwxNzMwOTIzNTA1fDA&amp;force=true&amp;w=2400.png" class="img-fluid" style="width:90.0%"></a></p>
+</div><div class="column" style="width:60%;">
+<ul>
+<li>Plant can fill <strong>multiple types</strong></li>
+<li>Time depends on <strong>type and batch</strong></li>
+<li><strong>Changing type</strong> leads to set-up costs for preparation and cleaning</li>
+<li><strong>Unsold beer bottles</strong> can be <span class="highlight">stored in a warehouse</span></li>
+<li>This leads to <strong>inventory costs</strong></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="section" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section"></h2>
+<div class="r-fit-text">
+<p>Where is the</p>
+<p>challenge?</p>
+</div>
+</section>
+</section>
+<section id="problem-structure" class="level1 title">
+<h1 class="title"><span class="flow">Problem Structure</span></h1>
+<section id="section-1" class="level2">
+<h2 class="anchored" data-anchor-id="section-1"></h2>
+<p><img src="../images/ao_05_clsp.png" class="img-fluid" data-max-width="400px"></p>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">Objective</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img src="../images/ao_05_clsp.png" class="img-fluid" data-max-width="400px"></p>
+</div><div class="column" style="width:60%;">
+<p><span class="question">Question:</span> What could be the objective?</p>
+<p>. . .</p>
+<p>Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.</p>
+<p><span class="question">Question:</span> What is the trade-off?</p>
+<p>. . .</p>
+<p>Larger batches require less setup cost per bottle, but increase the storage cost.</p>
+</div>
+</div>
+</section>
+<section id="available-data" class="level2">
+<h2 class="anchored" data-anchor-id="available-data">Available Data</h2>
+<p><strong>Sets</strong></p>
+<ul>
+<li><span class="math inline">\(\mathcal{I}\)</span> - Set of beer types indexed by <span class="math inline">\(i \in \{1,2,...,|\mathcal{I}|\}\)</span></li>
+<li><span class="math inline">\(\mathcal{T}\)</span> - Set of time periods of the planning horizon indexed by <span class="math inline">\(t \in \{1,2,...,|\mathcal{T}|\}\)</span></li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><span class="math inline">\(a_t\)</span> - Available time on the bottling plant in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(b_i\)</span> - Time used for bottling one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(g_i\)</span> - Setup time for beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(f_i\)</span> - Setup cost of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(c_i\)</span> - Inventory holding cost for one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(d_{i,t}\)</span> - Demand of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+</ul>
+</section>
+<section id="decision-variables" class="level2">
+<h2 class="anchored" data-anchor-id="decision-variables">Decision Variables</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+We have the following sets:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Beer types indexed by <span class="math inline">\(i \in \{1,2,...,|\mathcal{I}|\}\)</span></li>
+<li>Time periods of the planning horizon indexed by <span class="math inline">\(t \in \{1,2,...,|\mathcal{T}|\}\)</span></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.</p>
+</div>
+</div>
+<p><span class="question">Question:</span> What could be our decision variable/s?</p>
+<p>. . .</p>
+<ul>
+<li><span class="math inline">\(W_{i,t}\)</span> - Inventory of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> at the end of period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(Y_{i,t}\)</span> - 1, if beer type <span class="math inline">\(i\in\mathcal{I}\)</span> is bottled in period <span class="math inline">\(t\in\mathcal{T}\)</span>, 0 otherwise</li>
+<li><span class="math inline">\(X_{i,t}\)</span> - Batch size of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+</ul>
+</section>
+</section>
+<section id="model-formulation" class="level1 title">
+<h1 class="title"><span class="flow">Model Formulation</span></h1>
+<section id="objective-function" class="level2">
+<h2 class="anchored" data-anchor-id="objective-function">Objective Function</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.</p>
+</div>
+</div>
+<p><span class="question">Question:</span> What could be our objective function?</p>
+<p>Variables used: - <span class="math inline">\(W_{i,t}\)</span> - Inventory of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> at the end of period <span class="math inline">\(t\in\mathcal{T}\)</span> - <span class="math inline">\(Y_{i,t}\)</span> - 1, if beer type <span class="math inline">\(i\in\mathcal{I}\)</span> is bottled in period <span class="math inline">\(t\in\mathcal{T}\)</span>, 0 otherwise</p>
+<p>. . .</p>
+<p><span class="math display">\[\text{Minimize} \quad \sum_{i=1}^{\mathcal{I}} \sum_{t=1}^{\mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
+</section>
+<section id="constraints" class="level2">
+<h2 class="anchored" data-anchor-id="constraints">Constraints</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img src="../images/ao_05_clsp.png" class="img-fluid" data-max-width="400px"></p>
+</div><div class="column" style="width:60%;">
+<p><span class="question">Question:</span> What kind of constraints do we need?</p>
+<p>. . .</p>
+<ul>
+<li>Transfer the unused inventory of the last period</li>
+<li>Fulfill the customer demand in each period</li>
+<li>Calculate the batch size per set-up beer</li>
+<li>Compute the remaining inventory per period</li>
+<li>Set up beer types where the batch size is <span class="math inline">\(\geq 0\)</span></li>
+<li>Limit the capacity of the bottling plant</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="demand-and-inventory-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="demand-and-inventory-constraints">Demand and Inventory Constraints</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Fulfill the customer demand in each period
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>While considering the current inventory and batch sizes and compute the remaining inventory:</p>
+<p>Variables used: - <span class="math inline">\(W_{i,t}\)</span> - Inventory of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> at the end of period <span class="math inline">\(t\in\mathcal{T}\)</span> - <span class="math inline">\(X_{i,t}\)</span> - Batch size of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span> - <span class="math inline">\(d_{i,t}\)</span> - Demand of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in period <span class="math inline">\(t\in\mathcal{T}\)</span></p>
+<p>. . .</p>
+<p><span class="math display">\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I},t\in\mathcal{T}|t&gt;1\]</span></p>
+</div>
+</div>
+</section>
+<section id="setup-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="setup-constraints">Setup Constraints</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Set up beer types where the batch size is <span class="math inline">\(\geq\)</span> 0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To explicitly enforce the addition of setup costs in the objective function:</p>
+<p>Variables used: - <span class="math inline">\(Y_{i,t}\)</span> - 1, if beer type <span class="math inline">\(i\in\mathcal{I}\)</span> is bottled in period <span class="math inline">\(t\in\mathcal{T}\)</span>, 0 otherwise - <span class="math inline">\(X_{i,t}\)</span> - Batch size of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span> - <span class="math inline">\(d_{i,t}\)</span> - Demand of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in period <span class="math inline">\(t\in\mathcal{T}\)</span></p>
+<p>. . .</p>
+<p><span class="math display">\[X_{i,t} \leq Y_{i,t} \times \sum_{\tau=1}^{\mathcal{T}} d_{i\tau} \quad \forall i\in\mathcal{I},\forall t\in\mathcal{T}\]</span></p>
+<p>This type of constraint is also called a “Big-M” constraint!</p>
+</div>
+</div>
+</section>
+<section id="capacity-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="capacity-constraints">Capacity Constraints</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Limit the capacity of the bottling plant
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Variables used: - <span class="math inline">\(Y_{i,t}\)</span> - 1, if beer type <span class="math inline">\(i\in\mathcal{I}\)</span> is bottled in period <span class="math inline">\(t\in\mathcal{T}\)</span>, 0 otherwise - <span class="math inline">\(X_{i,t}\)</span> - Batch size of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span> - <span class="math inline">\(a_t\)</span> - Available time on the bottling plant in period <span class="math inline">\(t\in\mathcal{T}\)</span> - <span class="math inline">\(b_i\)</span> - Time used for bottling one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> - <span class="math inline">\(g_i\)</span> - Setup time for beer type <span class="math inline">\(i\in\mathcal{I}\)</span></p>
+<p>. . .</p>
+<p><span class="math display">\[\sum_{i=1}^{\mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t\in\mathcal{T}\]</span></p>
+</div>
+</div>
+</section>
+<section id="capacitated-lot-sizing-problem" class="level2">
+<h2 class="anchored" data-anchor-id="capacitated-lot-sizing-problem">Capacitated Lot-Sizing Problem</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Complete Model <span class="citation" data-cites="Haase1998">(<a href="#ref-Haase1998" role="doc-biblioref"><strong>Haase1998?</strong></a>)</span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
+<p>subject to:</p>
+<p><span class="math display">\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I},t\in\mathcal{T}|t&gt;1\]</span></p>
+<p><span class="math display">\[X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i\in\mathcal{I},\forall t\in\mathcal{T}\]</span></p>
+<p><span class="math display">\[\sum_{i \in \mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t\in\mathcal{T}\]</span></p>
+<p><span class="math display">\[Y_{i,t}\in\{0,1\} \quad \forall i\in\mathcal{I},t\in\mathcal{T}\]</span></p>
+<p><span class="math display">\[W_{i,t}, X_{i,t}\geq 0 \quad \forall i\in\mathcal{I},t\in\mathcal{T}\]</span></p>
+</div>
+</div>
+</section>
+</section>
+<section id="model-characteristics" class="level1 title">
+<h1 class="title"><span class="flow">Model Characteristics</span></h1>
+<section id="some-basics-algebraic-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="some-basics-algebraic-modeling">Some Basics: Algebraic Modeling</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Main types of optimization problems
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Linear (LP)</li>
+<li>Mixed-integer (MIP)</li>
+<li>Non-linear (NLP)</li>
+<li>Mixed-integer non-linear (MINLP)</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="some-basics-solution-algorithms" class="level2">
+<h2 class="anchored" data-anchor-id="some-basics-solution-algorithms">Some Basics: Solution Algorithms</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Examples
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Simplex algorithm to solve linear Problems (LP)</li>
+<li>Graph theoretical methods (network flow, shortest path)</li>
+<li>Branch &amp; Bound to solve mixed-integer problems (MIP)</li>
+<li>Outer-Approximation for (convex) mixed-integer non-linear problems (MINLP)</li>
+<li>Math-Heuristics (e.g., Fix-and-Optimize, Tabu-Search, …)</li>
+<li>Decomposition methods (Lagrange relaxation, Benders, column generation, …)</li>
+<li>Heuristics (greedy, construction method, n-opt)</li>
+<li>Simulation-based optimization (stochastic problems)</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="capacitated-lot-sizing-problem-1" class="level2">
+<h2 class="anchored" data-anchor-id="capacitated-lot-sizing-problem-1">Capacitated Lot-Sizing Problem</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Model characteristics
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Is the model formulation linear/ non-linear?</li>
+<li>What kind of variable domains do we have?</li>
+<li>What kind of solver could we use to derive solutions to the problem?</li>
+<li>Can the Big-M constraint be tightened?</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Model assumptions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>What assumptions have we made?</li>
+<li>What is the problem with the planning horizon, and how can it be solved?</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="impact" class="level1 title">
+<h1 class="title"><span class="flow">Impact</span></h1>
+<section id="real-world-application" class="level2" data-background-color="#000000">
+<h2 data-background-color="#000000" class="anchored" data-anchor-id="real-world-application"><span class="invert-font">Real World Application</span></h2>
+<p><span class="question">Question:</span> Can this be applied in the real world?</p>
+</section>
+<section id="brewing-process-review" class="level2">
+<h2 class="anchored" data-anchor-id="brewing-process-review">Brewing Process Review</h2>
+<p><img src="../images/ao_05_brewing_all.png" class="img-fluid" data-max-width="400px"></p>
+</section>
+</section>
+<section id="case-study-scale" class="level1 title">
+<h1 class="title"><span class="flow">Case Study Scale</span></h1>
+<div class="columns">
+<div class="column" style="width:40%;">
+
+</div><div class="column" style="width:60%;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problem: All stages of the brewing process have to be considered
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>220 finished products</li>
+<li>100 semi-finished products</li>
+<li>13 production resources</li>
+<li>8 storage resources</li>
+<li>3 main production levels</li>
+<li>52 weeks planning horizon</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<section id="case-study-solution" class="level2">
+<h2 class="anchored" data-anchor-id="case-study-solution">Case Study Solution</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+
+</div><div class="column" style="width:60%;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution: Decision-Support System <span class="citation" data-cites="doi:10.1287/inte.2021.1101">(<a href="#ref-doi:10.1287/inte.2021.1101" role="doc-biblioref"><strong>doi:10.1287/inte.2021.1101?</strong></a>)</span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Multi-level Capacitated Lot-Sizing Problem</li>
+<li>Difficult to solve and requires heuristics</li>
+<li>Cloud-based tool for planners</li>
+<li>Reduction of operating costs by 5%</li>
+<li>Reduction of planning effort by 40%</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="tutorial" class="level1 title">
+<h1 class="title"><span class="flow">Tutorial</span></h1>
+<section id="a-modelling-the-clsp" class="level2">
+<h2 class="anchored" data-anchor-id="a-modelling-the-clsp">3.a Modelling the CLSP</h2>
+<p>First, implement the CLSP from the lecture in Julia.</p>
+<p>The weekly demand in bottles <span class="math inline">\(d_{i,t}\)</span>, the available time at the bottling plant in hours <span class="math inline">\(a_t\)</span>, the time required to bottle each beer in hours <span class="math inline">\(b_i\)</span>, and the setup time in hours <span class="math inline">\(g_i\)</span> are provided as CSV files.</p>
+<p>Consider in your implementation, that each hour of setup is associated with a cost of 1000 Euros, and the inventory holding cost for unsold bottles at the end of each period is 0.1 Euro per bottle.</p>
+<p>Please provide us with a functional model in a .jl file that incorporates the aforementioned parameters and constraints. Note, that you can also provide the revised model from task b to answer this task.</p>
+</section>
+<section id="b-initial-warehouse-stock" class="level2">
+<h2 class="anchored" data-anchor-id="b-initial-warehouse-stock">3.b Initial Warehouse Stock</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+
+</div><div class="column" style="width:60%;">
+<p>The model currently sets the initial warehouse stock levels without any restrictions.</p>
+<p>Modify your model to incorporate an initial stock for all types of beer of zero at the beginning of the initial planning period.</p>
+<p>Please provide a revised working model as .jl file.</p>
+</div>
+</div>
+</section>
+<section id="c-scheduled-repair" class="level2">
+<h2 class="anchored" data-anchor-id="c-scheduled-repair">3.c Scheduled repair</h2>
+<p>Unfortunately, the bottling plant has to undergo maintenance in periods “week_10” and “week_11”.</p>
+<p>Extend your model to prevent any production in those two periods. To hand-in this task, you can simply extend the previous model by these additional constraints.</p>
+</section>
+<section id="d-interpretation-of-the-solution" class="level2">
+<h2 class="anchored" data-anchor-id="d-interpretation-of-the-solution">3.d Interpretation of the solution</h2>
+<ol type="1">
+<li><p>Analyze the production schedule outlined in section 3.b. Is the workload distributed evenly across all time periods? Provide a rationale for your assessment and a plot of the aggregated production quantities over all beer sorts.</p></li>
+<li><p>Based on the production data from the final period in 3.b, calculate the ending inventory levels for each type of beer. Discuss any significant findings.</p></li>
+<li><p>Reflecting on a scenario where the company schedules its bottling operations biannually using the current method: identify and discuss potential pitfalls of this strategy. Offer at least one actionable suggestion for enhancing the efficiency or effectiveness of the production planning process. (Note: There’s no need to code something in Julia for this part.)</p></li>
+</ol>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

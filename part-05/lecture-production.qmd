@@ -7,6 +7,8 @@ title-slide-attributes:
     data-background-color: "#025259"
 
 format:
+    html:
+        theme: [litera, ../styles_html.scss]
     revealjs:
         theme: [default, ../styles.scss]
         transition: slide
@@ -18,8 +20,6 @@ format:
         preview-links: auto
         footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-production.qmd)"
         output-file: lecture-presentation.html
-    html:
-        theme: [litera, ../styles_html.scss]
     pdf: 
         documentclass: report
 
@@ -27,6 +27,9 @@ bibliography: ../AppliedBib.bib
 
 execute:
     echo: true
+
+engine: julia
+
 ---
 
 # [Introduction]{.flow} {.title}
@@ -39,7 +42,7 @@ execute:
 :::
 
 ::: {.column width="60%"}
-- Large brewery
+- **Large brewery**
 - Brews and sells beverages
 - Production planning by hand
 - Planner has a [lot of experience]{.highlight}
@@ -56,43 +59,52 @@ execute:
 
 ::: {.column width="60%"}
 - **Strong** competition
-- Customer demand is changing
-- Craft beer gains popularity
+- Customer **demand is changing**
+- Craft beer **gains popularity**
 - **Variety** of drinks is increasing 
 - [Batch sizes are getting smaller]{.highlight} 
 :::
 :::
 
 
-## [Cost Factors]{.invert-font} {background-color="#000000" background-image="images/crystal-kwok-h20daABLd08-unsplash.jpg" background-size="cover"}
+## Different costs
 
 ::: {.columns}
 ::: {.column width="40%"}
+[![](https://unsplash.com/photos/v-ySKssePQM/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTZ8fGJyZXdlcnl8ZW58MHx8fHwxNzMwOTIzNTA1fDA&force=true&w=2400){width="90%"}](https://unsplash.com/photos/a-large-industrial-machine-v-ySKssePQM)
 :::
 
 ::: {.column width="60%"}
-:::{.callout-note}
-## Different costs
 
-- The bottling plant can fill multiple types of beers into bottles
-- The bottling time depends on the beer type and batch size
-- Changing beer type leads to set-up costs due to preparation and cleaning
-- Unsold bottled beer can be stored in the warehouse, which leads to inventory costs
+- Plant can fill **multiple types**
+- Time depends on **type and batch**
+- **Changing type** leads to set-up costs for preparation and cleaning
+- **Unsold beer bottles** can be [stored in a warehouse]{.highlight}
+- This leads to **inventory costs**
+
 :::
 :::
+
+## {.loud-slide}
+::: {.r-fit-text}
+Where is the 
+
+challenge?
 :::
 
-## The Challenge
-
-[Question:]{.question} Where exactly is the challenge here?
 
 # [Problem Structure]{.flow} {.title}
+
+##
+
+![](../images/ao_05_clsp.png){max-width=400px}
+
 
 ## Objective
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](images/clsp_oneperiod.pdf)
+![](../images/ao_05_clsp.png){max-width=400px}
 :::
 
 ::: {.column width="60%"}
@@ -170,7 +182,7 @@ $$\text{Minimize} \quad \sum_{i=1}^{\mathcal{I}} \sum_{t=1}^{\mathcal{T}} (c_i \
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](images/clsp_oneperiod.pdf)
+![](../images/ao_05_clsp.png){max-width=400px}
 :::
 
 ::: {.column width="60%"}
@@ -308,9 +320,9 @@ $$W_{i,t}, X_{i,t}\geq 0 \quad \forall i\in\mathcal{I},t\in\mathcal{T}$$
 
 ## Brewing Process Review
 
-![](images/brewing_all.pdf)
+![](../images/ao_05_brewing_all.png){max-width=400px}
 
-## [Case Study Scale]{.invert-font} {background-color="#000000" background-image="images/ricardo-gomez-angel-41X6FwTwPh4-unsplash.png" background-size="cover"}
+# [Case Study Scale]{.flow} {.title}
 
 ::: {.columns}
 ::: {.column width="40%"}
@@ -333,7 +345,7 @@ $$W_{i,t}, X_{i,t}\geq 0 \quad \forall i\in\mathcal{I},t\in\mathcal{T}$$
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](images/images_large_inte.2021.1101f6.jpeg)
+
 :::
 
 ::: {.column width="60%"}
@@ -364,7 +376,7 @@ Please provide us with a functional model in a .jl file that incorporates the af
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](images/roberta-keiko-kitahara-santana-RfL3l-I1zhc-unsplash.jpg)
+
 :::
 
 ::: {.column width="60%"}
