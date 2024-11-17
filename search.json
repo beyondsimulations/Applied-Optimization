@@ -6,7 +6,7 @@
     "section": "",
     "text": "We are consulting for FitGear, a rapidly growing e-commerce company specializing in fitness equipment and athletic wear. FitGear is facing a challenge: customer complaints about split orders have increased by 40% in the last quarter. When a customer orders multiple items, they sometimes receive multiple packages from different warehouses, leading to higher shipping costs and frustrated customers.\nThis tutorial explores how to optimize SKU allocation across warehouses to minimize split orders using mathematical optimization.\n\n\nFirst, we need to understand which products are frequently purchased together. We’ll use a coappearance matrix. It shows how frequently items appear together in customer orders. For each pair of items (i,j), the matrix element Q[i,j] represents the number of orders containing both items i and j. Let’s start with a small sample of FitGear’s historical order data and determine the coappearance matrix of the transactional data set manually by hand.\n\n\n\n\\(t_{mi}\\)\nA\nB\nC\nD\n\n\n\n\n1\n1\n1\n1\n0\n\n\n2\n1\n1\n1\n0\n\n\n3\n1\n1\n0\n0\n\n\n4\n1\n0\n0\n1\n\n\n5\n1\n0\n0\n1\n\n\n6\n1\n0\n0\n1\n\n\n7\n1\n0\n0\n1\n\n\n8\n0\n0\n1\n1\n\n\n\nWhat is the resulting coappearance matrix from the transactional data set? Please provide it in the following cell as matrix by changing the 0s to the correct values.\n\nQ = [\n    0 0 0 0; \n    0 0 0 0; \n    0 0 0 0; \n    0 0 0 0;\n]\n\n\n\n\nFitGear currently operates two warehouses - one in Hamburg and one in Berlin. Each warehouse has limited storage capacity:\n\nHamburg can store 3 different product types (SKUs)\nBerlin can also store 3 different product types\n\nBased on the coappearance matrix you have determined in the previous assignment, use the model from the lecture to maximise the coappearances manually by hand. What is the resulting objective function value of the assignment? Please provide it in the following cell.\n\nobjective_value =\n\n\n\n\nBased on the output of the optimisation, we don’t know the number of split orders yet. Calculate the number of split orders manually from your previous solution.\n\nnumber_of_split_parcels =\n\n\n\n\n\n\n\nBonus Question\n\n\n\nIs the solution of the QMKP the optimal solution for the underlying split parcel minimisation problem? Try to come up with another solution that has less split or the same number of split parcels.\n\n\n\n\n\nAs FitGear continues to grow, the operations team needs a solution that can handle their full product catalog. They now have:\n\n12 popular fitness products\n40 recent customer orders\nTwo warehouses with different capacities:\n\nHamburg: 7 SKUs\nBerlin: 6 SKUs\n\n\nThus, we’ll now implement a scalable solution using Julia and JuMP that can handle larger datasets.\n\nskus = [\n    \"Running Shoes\",      \n    \"Athletic Socks\",     \n    \"Water Bottle\",       \n    \"Yoga Mat\",          \n    \"Resistance Bands\",  \n    \"Sports Bag\",        \n    \"Protein Powder\",     \n    \"Exercise Shorts\",    \n    \"Training Shirt\",     \n    \"Fitness Tracker\",    \n    \"Foam Roller\",       \n    \"Weight Gloves\"       \n]\n\nwarehouses = [\"Hamburg\", \"Berlin\"]\n\ncapacity = [7, 6]\n\nT = [\n    # First set of transactions (1-20)\n    1 1 0 0 0 0 0 0 0 0 0 0;  # shoes + socks\n    1 1 0 0 0 1 0 0 0 0 0 0;  # shoes + socks + sports bag\n    0 0 0 1 1 0 0 0 0 0 1 0;  # yoga mat + bands + foam roller\n    0 0 1 1 0 0 0 0 0 0 0 0;  # water bottle + yoga mat\n    0 0 0 0 0 0 1 0 0 0 0 0;  # just protein powder\n    0 0 0 0 0 0 1 0 0 0 0 1;  # protein powder + gloves\n    0 0 0 0 0 0 0 1 1 0 0 0;  # shorts + shirt combo\n    0 0 0 0 1 0 0 1 1 0 0 0;  # workout outfit + bands\n    0 0 0 0 0 0 0 0 0 1 0 0;  # just fitness tracker\n    1 1 1 0 0 1 0 1 1 0 0 0;  # full running gear set\n    0 0 0 1 1 0 0 0 0 0 1 1;  # home gym basics\n    0 0 0 0 0 0 1 1 1 0 0 1;  # gym starter pack\n    0 0 1 0 1 0 0 0 0 0 0 0;  # water bottle + bands\n    1 1 0 0 0 0 0 1 1 0 0 0;  # running outfit complete\n    0 0 0 1 1 0 0 0 0 0 1 0;  # yoga equipment set\n    0 0 0 0 0 0 1 0 0 0 0 1;  # protein powder + gloves\n    0 0 1 0 0 0 1 0 0 0 0 0;  # water bottle + protein\n    1 0 0 0 0 1 0 0 0 1 0 0;  # shoes + bag + tracker\n    0 0 0 0 1 0 0 1 1 0 0 0;  # workout outfit + bands\n    0 0 0 1 0 0 0 0 0 0 1 0;  # yoga mat + foam roller\n    1 1 0 0 0 0 0 1 1 0 0 0;  # shoes + socks + workout clothes\n    1 1 0 0 0 1 0 0 0 1 0 0;  # shoes + socks + bag + tracker\n    0 0 0 1 1 0 0 0 0 0 1 1;  # yoga mat + bands + foam roller + gloves\n    0 0 1 1 1 0 0 0 0 0 0 0;  # water bottle + yoga mat + bands\n    0 0 1 0 0 0 1 0 0 0 0 1;  # protein powder + water bottle + gloves\n    0 0 0 0 1 0 1 0 0 0 0 1;  # protein powder + bands + gloves\n    0 0 0 0 0 0 0 1 1 1 0 0;  # shorts + shirt + tracker\n    1 0 0 0 1 0 0 1 1 0 0 0;  # shoes + workout outfit + bands\n    0 0 1 0 0 0 0 0 0 1 0 0;  # water bottle + tracker\n    1 1 1 0 0 1 0 1 1 1 0 0;  # deluxe running gear set\n    0 0 0 1 1 0 1 0 0 0 1 1;  # advanced home gym set\n    0 0 1 0 0 0 1 1 1 0 0 1;  # gym starter pack with water bottle\n    0 0 1 0 1 0 0 0 0 1 0 0;  # water bottle + bands + tracker\n    1 1 0 0 0 1 0 1 1 0 0 0;  # running outfit with bag\n    0 0 0 1 1 0 0 0 0 0 1 1;  # yoga equipment set with gloves\n    0 0 1 0 0 0 1 0 0 0 1 1;  # protein set with foam roller\n    0 0 1 0 0 1 1 0 0 0 0 0;  # water bottle + protein + bag\n    1 0 0 0 0 1 0 0 0 1 1 0;  # shoes + bag + tracker + foam roller\n    0 0 0 0 1 0 0 1 1 1 0 0;  # workout outfit + bands + tracker\n    0 0 0 1 0 0 0 0 0 1 1 0   # yoga mat + tracker + foam roller\n]\n\nImplement the model in Julia and solve it for the given data set.\n\n\n\n\n\n\nEach SKU can only be allocated to one warehouse!\n\n\n\nThe retailer has another requirement: each SKU can only be allocated to one warehouse. Make sure to include this requirement in your model.\n\n\n\n\n\n\n\n\nUse the SCIP solver\n\n\n\nIf you don’t have SCIP or JuMP installed, add the solver via Pkg.add(“SCIP”) and Pkg.add(“JuMP”).\n\n\nFirst, we start by defining the model.\n\nusing JuMP, SCIP \nwarehouse_model = Model(SCIP.Optimizer)\n\nA JuMP Model\n├ solver: SCIP\n├ objective_sense: FEASIBILITY_SENSE\n├ num_variables: 0\n├ num_constraints: 0\n└ Names registered in the model: none\n\n\nNext, compute the coappearance matrix based on the transactional data provided in T.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the coappearance matrix is correct.\n@assert Q == Q' \"The coappearance matrix is not symmetric. Have you transposed the transactional data set?\"\n@assert Q[1,1] == 11 \"The coappearance matrix is not correct. Have you multiplied the transposed transactional data set with itself?\"\nprintln(\"Great! The coappearance matrix is correct.\")\n\n\nNow, define the decision variable for the SKU allocation. Please name the variable X.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the decision variable is correct.\n@assert typeof(X) &lt;: AbstractArray{VariableRef} \"The decision variable X should be an array of JuMP variables\"\n@assert all(is_binary.(X)) \"The decision variable X should be defined as binary\"\n@assert size(X) == (length(skus), length(warehouses)) \"The decision variable X should have dimensions [skus × warehouses]\"\nprintln(\"Great! The decision variable is correctly defined as a binary variable with proper dimensions.\")\n\n\nThen, define the objective function to maximize the coappearance.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the objective function is correct.\n@assert typeof(objective_function(warehouse_model)) &lt;: QuadExpr \"The objective function should be a quadratic expression of JuMP variables\"\nprintln(\"Great! The objective function is correctly defined.\")\n\n\nTo ensure that each SKU is allocated to one warehouse, add the first constraint.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the single allocation constraint is correct.\n@assert num_constraints(warehouse_model, AffExpr, MOI.EqualTo{Float64}) == length(skus) \"The single allocation constraint should have one constraint for each SKU\"\nprintln(\"Great! The single allocation constraint is correctly defined.\")\n\n\nTo ensure that the capacity of each warehouse is not exceeded, add the second constraint.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the capacity constraint is correct.\n@assert num_constraints(warehouse_model, AffExpr, MOI.LessThan{Float64}) == length(warehouses) \"The capacity constraint should have one constraint for each warehouse\"\nprintln(\"Great! The capacity constraint is correctly defined.\")\n\n\nFinally, solve the model with a solve statement.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the model is solved correctly.\n@assert termination_status(warehouse_model) == MOI.OPTIMAL \"The model should be solved with an optimal solution\"\n@assert objective_value(warehouse_model) == 141 \"The objective value should be 141. Have you correctly implemented the objective function?\"\nprintln(\"Great! The model is correctly solved.\")\n\n\nThe following code prints the objective value, the SKU allocation and the warehouse capacities based on your optimal solution.\n\nprintln(\"Objective value: \", objective_value(warehouse_model))\nprintln()\nprintln(\"SKU Allocation:\")\nfor i in skus\n    for k in warehouses\n        if value(X[i,k]) == 1\n            println(\"SKU: \", i, \" Allocation: \", k)\n        end\n    end\nend\nprintln()\nprintln(\"Warehouse Capacities:\")\nfor k in 1:length(warehouses)\n    println(\"Warehouse: \", warehouses[k], \" Capacity: \", capacity[k], \" Used: \", sum(value.(X[i,warehouses[k]]) for i in skus))\nend\n\nBased on the output of the optimisation, we still don’t know the number of split orders. The following code calculates the number of split orders from the SKU allocation for the optimal solution.\n\n# Binary matrix indicating whether a SKU is allocated to a warehouse.\nX_values = [value(X[i,j]) &gt; 0 ? true : false for i in skus, j in warehouses]\n\n# Function to count the number of split and regular parcels.\nfunction count_split_orders(X_input, transactional_data)\n    # Initialize the counters for split and regular parcels.\n    split_parcels = 0\n    regular_parcels = 0\n\n    # Iterate over each transaction in the transactional data set.\n    for t in 1:size(transactional_data,1)\n\n        # Check if the first warehouse can fulfill the transaction.\n        if all(X_input[:,1] .&gt;= transactional_data[t,:])\n            regular_parcels += 1\n\n        # Check if the second warehouse can fulfill the transaction.\n        elseif all(X_input[:,2] .&gt;= transactional_data[t,:])\n            regular_parcels += 1\n\n        # If neither warehouse can fulfill the transaction, it is a split.\n        else\n            split_parcels += 1\n            regular_parcels += 1\n        end\n    end\n    return split_parcels, regular_parcels\nend\n\n# Count the number of split and regular parcels for the optimal solution.\nsplit_parcels, regular_parcels = count_split_orders(X_values, T)\n\n# Count the number of split and regular parcels for 100 random solutions.\nsplit_parcels_random = []\nregular_parcels_random = []\nfor trial in 1:100\n    X_random = [rand(Bool) for i in 1:length(skus), j in 1:length(warehouses)]\n    split_parcels_random_trial, regular_parcels_random_trial = count_split_orders(X_random, T)\n    push!(split_parcels_random, split_parcels_random_trial)\n    push!(regular_parcels_random, regular_parcels_random_trial)\nend\nsplit_parcels_random = sum(split_parcels_random)/100\nregular_parcels_random = sum(regular_parcels_random)/100\n\n# Print the number of split and regular parcels.\nprintln(\"Number of split orders (optimal): \", split_parcels)\nprintln(\"Number of regular orders (optimal): \", regular_parcels)\nprintln()\n\n# Print the number of split and regular parcels for the random solution.\nprintln(\"Number of split orders (random): \", split_parcels_random)\nprintln(\"Number of regular orders (random): \", regular_parcels_random)\n\n\n\n\nFitGear’s operations team needs to understand the business implications of this optimization:\n\nWhich product categories tend to cluster together in the same warehouse? For example, do workout clothes tend to be stored together?\nHow many fewer split shipments would FitGear have compared to their current random allocation?\nHow might this new allocation affect warehouse operations and picking efficiency?\n\nYour answer goes here, thinking from the business perspective. A few sentences are fully sufficient!\n\n# YOUR ANSWER BELOW\n#=\n\n\n\n=#",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Tutorial"
     ]
   },
@@ -17,7 +17,7 @@
     "section": "",
     "text": "First, we need to understand which products are frequently purchased together. We’ll use a coappearance matrix. It shows how frequently items appear together in customer orders. For each pair of items (i,j), the matrix element Q[i,j] represents the number of orders containing both items i and j. Let’s start with a small sample of FitGear’s historical order data and determine the coappearance matrix of the transactional data set manually by hand.\n\n\n\n\\(t_{mi}\\)\nA\nB\nC\nD\n\n\n\n\n1\n1\n1\n1\n0\n\n\n2\n1\n1\n1\n0\n\n\n3\n1\n1\n0\n0\n\n\n4\n1\n0\n0\n1\n\n\n5\n1\n0\n0\n1\n\n\n6\n1\n0\n0\n1\n\n\n7\n1\n0\n0\n1\n\n\n8\n0\n0\n1\n1\n\n\n\nWhat is the resulting coappearance matrix from the transactional data set? Please provide it in the following cell as matrix by changing the 0s to the correct values.\n\nQ = [\n    0 0 0 0; \n    0 0 0 0; \n    0 0 0 0; \n    0 0 0 0;\n]",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Tutorial"
     ]
   },
@@ -28,7 +28,7 @@
     "section": "",
     "text": "FitGear currently operates two warehouses - one in Hamburg and one in Berlin. Each warehouse has limited storage capacity:\n\nHamburg can store 3 different product types (SKUs)\nBerlin can also store 3 different product types\n\nBased on the coappearance matrix you have determined in the previous assignment, use the model from the lecture to maximise the coappearances manually by hand. What is the resulting objective function value of the assignment? Please provide it in the following cell.\n\nobjective_value =",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Tutorial"
     ]
   },
@@ -39,7 +39,7 @@
     "section": "",
     "text": "Based on the output of the optimisation, we don’t know the number of split orders yet. Calculate the number of split orders manually from your previous solution.\n\nnumber_of_split_parcels =\n\n\n\n\n\n\n\nBonus Question\n\n\n\nIs the solution of the QMKP the optimal solution for the underlying split parcel minimisation problem? Try to come up with another solution that has less split or the same number of split parcels.",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Tutorial"
     ]
   },
@@ -50,7 +50,7 @@
     "section": "",
     "text": "As FitGear continues to grow, the operations team needs a solution that can handle their full product catalog. They now have:\n\n12 popular fitness products\n40 recent customer orders\nTwo warehouses with different capacities:\n\nHamburg: 7 SKUs\nBerlin: 6 SKUs\n\n\nThus, we’ll now implement a scalable solution using Julia and JuMP that can handle larger datasets.\n\nskus = [\n    \"Running Shoes\",      \n    \"Athletic Socks\",     \n    \"Water Bottle\",       \n    \"Yoga Mat\",          \n    \"Resistance Bands\",  \n    \"Sports Bag\",        \n    \"Protein Powder\",     \n    \"Exercise Shorts\",    \n    \"Training Shirt\",     \n    \"Fitness Tracker\",    \n    \"Foam Roller\",       \n    \"Weight Gloves\"       \n]\n\nwarehouses = [\"Hamburg\", \"Berlin\"]\n\ncapacity = [7, 6]\n\nT = [\n    # First set of transactions (1-20)\n    1 1 0 0 0 0 0 0 0 0 0 0;  # shoes + socks\n    1 1 0 0 0 1 0 0 0 0 0 0;  # shoes + socks + sports bag\n    0 0 0 1 1 0 0 0 0 0 1 0;  # yoga mat + bands + foam roller\n    0 0 1 1 0 0 0 0 0 0 0 0;  # water bottle + yoga mat\n    0 0 0 0 0 0 1 0 0 0 0 0;  # just protein powder\n    0 0 0 0 0 0 1 0 0 0 0 1;  # protein powder + gloves\n    0 0 0 0 0 0 0 1 1 0 0 0;  # shorts + shirt combo\n    0 0 0 0 1 0 0 1 1 0 0 0;  # workout outfit + bands\n    0 0 0 0 0 0 0 0 0 1 0 0;  # just fitness tracker\n    1 1 1 0 0 1 0 1 1 0 0 0;  # full running gear set\n    0 0 0 1 1 0 0 0 0 0 1 1;  # home gym basics\n    0 0 0 0 0 0 1 1 1 0 0 1;  # gym starter pack\n    0 0 1 0 1 0 0 0 0 0 0 0;  # water bottle + bands\n    1 1 0 0 0 0 0 1 1 0 0 0;  # running outfit complete\n    0 0 0 1 1 0 0 0 0 0 1 0;  # yoga equipment set\n    0 0 0 0 0 0 1 0 0 0 0 1;  # protein powder + gloves\n    0 0 1 0 0 0 1 0 0 0 0 0;  # water bottle + protein\n    1 0 0 0 0 1 0 0 0 1 0 0;  # shoes + bag + tracker\n    0 0 0 0 1 0 0 1 1 0 0 0;  # workout outfit + bands\n    0 0 0 1 0 0 0 0 0 0 1 0;  # yoga mat + foam roller\n    1 1 0 0 0 0 0 1 1 0 0 0;  # shoes + socks + workout clothes\n    1 1 0 0 0 1 0 0 0 1 0 0;  # shoes + socks + bag + tracker\n    0 0 0 1 1 0 0 0 0 0 1 1;  # yoga mat + bands + foam roller + gloves\n    0 0 1 1 1 0 0 0 0 0 0 0;  # water bottle + yoga mat + bands\n    0 0 1 0 0 0 1 0 0 0 0 1;  # protein powder + water bottle + gloves\n    0 0 0 0 1 0 1 0 0 0 0 1;  # protein powder + bands + gloves\n    0 0 0 0 0 0 0 1 1 1 0 0;  # shorts + shirt + tracker\n    1 0 0 0 1 0 0 1 1 0 0 0;  # shoes + workout outfit + bands\n    0 0 1 0 0 0 0 0 0 1 0 0;  # water bottle + tracker\n    1 1 1 0 0 1 0 1 1 1 0 0;  # deluxe running gear set\n    0 0 0 1 1 0 1 0 0 0 1 1;  # advanced home gym set\n    0 0 1 0 0 0 1 1 1 0 0 1;  # gym starter pack with water bottle\n    0 0 1 0 1 0 0 0 0 1 0 0;  # water bottle + bands + tracker\n    1 1 0 0 0 1 0 1 1 0 0 0;  # running outfit with bag\n    0 0 0 1 1 0 0 0 0 0 1 1;  # yoga equipment set with gloves\n    0 0 1 0 0 0 1 0 0 0 1 1;  # protein set with foam roller\n    0 0 1 0 0 1 1 0 0 0 0 0;  # water bottle + protein + bag\n    1 0 0 0 0 1 0 0 0 1 1 0;  # shoes + bag + tracker + foam roller\n    0 0 0 0 1 0 0 1 1 1 0 0;  # workout outfit + bands + tracker\n    0 0 0 1 0 0 0 0 0 1 1 0   # yoga mat + tracker + foam roller\n]\n\nImplement the model in Julia and solve it for the given data set.\n\n\n\n\n\n\nEach SKU can only be allocated to one warehouse!\n\n\n\nThe retailer has another requirement: each SKU can only be allocated to one warehouse. Make sure to include this requirement in your model.\n\n\n\n\n\n\n\n\nUse the SCIP solver\n\n\n\nIf you don’t have SCIP or JuMP installed, add the solver via Pkg.add(“SCIP”) and Pkg.add(“JuMP”).\n\n\nFirst, we start by defining the model.\n\nusing JuMP, SCIP \nwarehouse_model = Model(SCIP.Optimizer)\n\nA JuMP Model\n├ solver: SCIP\n├ objective_sense: FEASIBILITY_SENSE\n├ num_variables: 0\n├ num_constraints: 0\n└ Names registered in the model: none\n\n\nNext, compute the coappearance matrix based on the transactional data provided in T.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the coappearance matrix is correct.\n@assert Q == Q' \"The coappearance matrix is not symmetric. Have you transposed the transactional data set?\"\n@assert Q[1,1] == 11 \"The coappearance matrix is not correct. Have you multiplied the transposed transactional data set with itself?\"\nprintln(\"Great! The coappearance matrix is correct.\")\n\n\nNow, define the decision variable for the SKU allocation. Please name the variable X.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the decision variable is correct.\n@assert typeof(X) &lt;: AbstractArray{VariableRef} \"The decision variable X should be an array of JuMP variables\"\n@assert all(is_binary.(X)) \"The decision variable X should be defined as binary\"\n@assert size(X) == (length(skus), length(warehouses)) \"The decision variable X should have dimensions [skus × warehouses]\"\nprintln(\"Great! The decision variable is correctly defined as a binary variable with proper dimensions.\")\n\n\nThen, define the objective function to maximize the coappearance.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the objective function is correct.\n@assert typeof(objective_function(warehouse_model)) &lt;: QuadExpr \"The objective function should be a quadratic expression of JuMP variables\"\nprintln(\"Great! The objective function is correctly defined.\")\n\n\nTo ensure that each SKU is allocated to one warehouse, add the first constraint.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the single allocation constraint is correct.\n@assert num_constraints(warehouse_model, AffExpr, MOI.EqualTo{Float64}) == length(skus) \"The single allocation constraint should have one constraint for each SKU\"\nprintln(\"Great! The single allocation constraint is correctly defined.\")\n\n\nTo ensure that the capacity of each warehouse is not exceeded, add the second constraint.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the capacity constraint is correct.\n@assert num_constraints(warehouse_model, AffExpr, MOI.LessThan{Float64}) == length(warehouses) \"The capacity constraint should have one constraint for each warehouse\"\nprintln(\"Great! The capacity constraint is correctly defined.\")\n\n\nFinally, solve the model with a solve statement.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Assert whether the model is solved correctly.\n@assert termination_status(warehouse_model) == MOI.OPTIMAL \"The model should be solved with an optimal solution\"\n@assert objective_value(warehouse_model) == 141 \"The objective value should be 141. Have you correctly implemented the objective function?\"\nprintln(\"Great! The model is correctly solved.\")\n\n\nThe following code prints the objective value, the SKU allocation and the warehouse capacities based on your optimal solution.\n\nprintln(\"Objective value: \", objective_value(warehouse_model))\nprintln()\nprintln(\"SKU Allocation:\")\nfor i in skus\n    for k in warehouses\n        if value(X[i,k]) == 1\n            println(\"SKU: \", i, \" Allocation: \", k)\n        end\n    end\nend\nprintln()\nprintln(\"Warehouse Capacities:\")\nfor k in 1:length(warehouses)\n    println(\"Warehouse: \", warehouses[k], \" Capacity: \", capacity[k], \" Used: \", sum(value.(X[i,warehouses[k]]) for i in skus))\nend\n\nBased on the output of the optimisation, we still don’t know the number of split orders. The following code calculates the number of split orders from the SKU allocation for the optimal solution.\n\n# Binary matrix indicating whether a SKU is allocated to a warehouse.\nX_values = [value(X[i,j]) &gt; 0 ? true : false for i in skus, j in warehouses]\n\n# Function to count the number of split and regular parcels.\nfunction count_split_orders(X_input, transactional_data)\n    # Initialize the counters for split and regular parcels.\n    split_parcels = 0\n    regular_parcels = 0\n\n    # Iterate over each transaction in the transactional data set.\n    for t in 1:size(transactional_data,1)\n\n        # Check if the first warehouse can fulfill the transaction.\n        if all(X_input[:,1] .&gt;= transactional_data[t,:])\n            regular_parcels += 1\n\n        # Check if the second warehouse can fulfill the transaction.\n        elseif all(X_input[:,2] .&gt;= transactional_data[t,:])\n            regular_parcels += 1\n\n        # If neither warehouse can fulfill the transaction, it is a split.\n        else\n            split_parcels += 1\n            regular_parcels += 1\n        end\n    end\n    return split_parcels, regular_parcels\nend\n\n# Count the number of split and regular parcels for the optimal solution.\nsplit_parcels, regular_parcels = count_split_orders(X_values, T)\n\n# Count the number of split and regular parcels for 100 random solutions.\nsplit_parcels_random = []\nregular_parcels_random = []\nfor trial in 1:100\n    X_random = [rand(Bool) for i in 1:length(skus), j in 1:length(warehouses)]\n    split_parcels_random_trial, regular_parcels_random_trial = count_split_orders(X_random, T)\n    push!(split_parcels_random, split_parcels_random_trial)\n    push!(regular_parcels_random, regular_parcels_random_trial)\nend\nsplit_parcels_random = sum(split_parcels_random)/100\nregular_parcels_random = sum(regular_parcels_random)/100\n\n# Print the number of split and regular parcels.\nprintln(\"Number of split orders (optimal): \", split_parcels)\nprintln(\"Number of regular orders (optimal): \", regular_parcels)\nprintln()\n\n# Print the number of split and regular parcels for the random solution.\nprintln(\"Number of split orders (random): \", split_parcels_random)\nprintln(\"Number of regular orders (random): \", regular_parcels_random)",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Tutorial"
     ]
   },
@@ -61,7 +61,7 @@
     "section": "",
     "text": "FitGear’s operations team needs to understand the business implications of this optimization:\n\nWhich product categories tend to cluster together in the same warehouse? For example, do workout clothes tend to be stored together?\nHow many fewer split shipments would FitGear have compared to their current random allocation?\nHow might this new allocation affect warehouse operations and picking efficiency?\n\nYour answer goes here, thinking from the business perspective. A few sentences are fully sufficient!\n\n# YOUR ANSWER BELOW\n#=\n\n\n\n=#",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Tutorial"
     ]
   },
@@ -4313,7 +4313,7 @@
     "section": "",
     "text": "Question: What are current trends in e-commerce?\n\n\n\n\n\n\n\nE-Commerce sales are growing fast:\n\nProducts are no longer bound between borders\nProduct variety is rising\nConsumer shopping patterns are shifting \nBrick-and-mortar stores loose customers to the internet\nCovid-19 accelerated this trend even more\n\n\n\n\n\n\nThe number of parcels is rising:\n\n2014: 44 billion parcels (Pitney Bowes Inc. 2017)\n2019: 103 billion parcels (Pitney Bowes Inc. 2019)\n2026: 220 – 262 billion parcels 1 (Pitney Bowes Inc. 2020)\n\n\n\n\n\n\n\n\n\n\nConsumers nowadays expect free and fast deliveries and returns\nExisting warehouses have to store an increasing range of products\nBetter customer service requires faster deliveries\nIncurred fulfillment costs depend on the number of parcels\n\n\n\n\n\n\n\n\n\n\n\nEach parcel packaging consumes resources during production\nEvery dispatched parcel to the customer causes CO₂ emissions\nIn case of returns, more parcels cause more emissions",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4324,7 +4324,7 @@
     "section": "",
     "text": "Question: What are current trends in e-commerce?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4335,7 +4335,7 @@
     "section": "",
     "text": "E-Commerce sales are growing fast:\n\nProducts are no longer bound between borders\nProduct variety is rising\nConsumer shopping patterns are shifting \nBrick-and-mortar stores loose customers to the internet\nCovid-19 accelerated this trend even more",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4346,7 +4346,7 @@
     "section": "",
     "text": "The number of parcels is rising:\n\n2014: 44 billion parcels (Pitney Bowes Inc. 2017)\n2019: 103 billion parcels (Pitney Bowes Inc. 2019)\n2026: 220 – 262 billion parcels 1 (Pitney Bowes Inc. 2020)",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4357,7 +4357,7 @@
     "section": "",
     "text": "Consumers nowadays expect free and fast deliveries and returns\nExisting warehouses have to store an increasing range of products\nBetter customer service requires faster deliveries\nIncurred fulfillment costs depend on the number of parcels",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4368,7 +4368,7 @@
     "section": "",
     "text": "Each parcel packaging consumes resources during production\nEvery dispatched parcel to the customer causes CO₂ emissions\nIn case of returns, more parcels cause more emissions",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4379,7 +4379,7 @@
     "section": "Split Order",
     "text": "Split Order\nQuestion: What is a split order?\n. . .",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4390,7 +4390,7 @@
     "section": "No Split Order",
     "text": "No Split Order",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4401,7 +4401,7 @@
     "section": "Reason for Split Orders",
     "text": "Reason for Split Orders\nQuestion: Why might they occur?\n. . .\n\nStock availability: Some products are out of stock at a warehouse and need to be fulfilled from another warehouse\nCapacity constraints: Some products are stored at different warehouses and need to be shipped from elsewhere",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4412,7 +4412,7 @@
     "section": "Impact of Split Orders",
     "text": "Impact of Split Orders\nQuestion: What are the consequences?\n. . .\n\nHigher shipping costs\nIncreased packaging material\nMore CO₂ emissions\nHigher operational complexity\nLower customer satisfaction",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4423,7 +4423,7 @@
     "section": "Mitigations?",
     "text": "Mitigations?\nQuestion: What are possible mitigations?\n. . .\n\nConsolidation: Ship to a central warehouse before dispatch\nCross-docking: Ship directly from supplier to customer\nTransshipment: Ship between warehouses before delivery\nCo-allocation: Predict co-appearance of products and allocate them to the same warehouse",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4434,7 +4434,7 @@
     "section": "Case Study",
     "text": "Case Study\n\nKey information about the case:\n\na large European e-commerce retailer\nthe retailer has two warehouses\nproduct range cannot be stored in either warehouse\nproduct deliveries can be made to both warehouses\nproducts do not have to be stored exclusively",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4445,7 +4445,7 @@
     "section": "Optimizing Co-allocation",
     "text": "Optimizing Co-allocation\n\n\n\n\nQuestion: What could be our objective?\n\nWe aim to improve the SKU2-warehouse allocation to minimize the number of split parcels resulting from SKUs being stored in different warehouses.",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4456,7 +4456,7 @@
     "section": "Available Sets",
     "text": "Available Sets\nQuestion: What could be the sets here?\n. . .\n\n\n\\(\\mathcal{I}\\) - Set of products indexed by \\(i \\in \\{1,2,...,|\\mathcal{I}|\\}\\)\n\\(\\mathcal{K}\\) - Set of warehouses indexed by \\(k \\in \\{1,\\dots,|\\mathcal{K}|\\}\\)\n\\(\\mathcal{M}\\) - Set of customer orders \\(m \\in \\{1,2,...,|\\mathcal{M}|\\}\\)",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4467,7 +4467,7 @@
     "section": "Available Parameters",
     "text": "Available Parameters\nQuestion: What are possible parameters?\n. . .\n\n\n\\(c_k\\) - Storage space of warehouse \\(k \\in \\{1,\\dots,|\\mathcal{K}|\\}\\)\n\\(\\boldsymbol{T}= (t_{m,i})\\) - Past customer orders for SKUs\n\n\n. . .\nQuestion: What could the transactional data look like?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4478,7 +4478,7 @@
     "section": "Transactional Data",
     "text": "Transactional Data\n\nExample of \\(\\boldsymbol{T}\\)\n\n\n\\(t_{m,i}\\)\nA\nB\nC\nD\n\n\n\n\n1\n1\n1\n1\n0\n\n\n2\n1\n1\n1\n0\n\n\n3\n1\n1\n0\n0\n\n\n4\n1\n0\n0\n1\n\n\n5\n1\n0\n0\n1\n\n\n6\n1\n0\n0\n1\n\n\n7\n1\n0\n0\n1\n\n\n8\n0\n0\n1\n1",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4489,7 +4489,7 @@
     "section": "Past vs. Future",
     "text": "Past vs. Future\n\nThe transactional data \\(\\boldsymbol{T}\\) is based on past orders\nIt is a binary matrix of customer orders and SKUs\nWe use this data to assume future co-occurrence\n\nPast co-occurrence predicts future co-occurrence\n\n\n. . .\nQuestion: What is your opinion on the assumption?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4500,7 +4500,7 @@
     "section": "Split-Order Minimization",
     "text": "Split-Order Minimization\nQuestion: What could be our decision variable/s?\n. . .\n\n\n\n\n\n\nWe have the following sets:\n\n\n\n\n\\(\\mathcal{I}\\) - Set of products indexed by \\(i \\in \\{1,2,...,|\\mathcal{I}|\\}\\)\n\\(\\mathcal{K}\\) - Set of warehouses indexed by \\(k \\in \\{1,\\dots,|\\mathcal{K}|\\}\\)\n\\(\\mathcal{M}\\) - Set of customer orders \\(m \\in \\{1,2,...,|\\mathcal{M}|\\}\\)\n\n\n\n. . .\n\n\\(X_{i,k}\\) - 1, if \\(i\\in\\mathcal{I}\\) is stored in \\(k\\in\\mathcal{K}\\), 0 otherwise\n\\(Y_{m,i,k}\\) - 1, if SKU \\(i\\in\\mathcal{I}\\) is shipped from warehouse \\(k\\in\\mathcal{K}\\) for customer order \\(m\\in\\mathcal{M}\\), 0 otherwise",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4511,7 +4511,7 @@
     "section": "Integer Programming Model",
     "text": "Integer Programming Model\n\nCatalán and Fisher (2012) created an integer model\nNumber of SKUs of E-Commerce retailers can easily be between 10,000 - 100,000\nNumber of customer orders necessary for “stable” results have to be higher in the order of 100,000 - 10,000,000\n\n. . .\nQuestion: Anybody an idea what this could mean?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4522,7 +4522,7 @@
     "section": "Implementation Challenges",
     "text": "Implementation Challenges\n\nSmall instance with 10 SKUs and 1000 customer orders\nCPLEX 20.1.0 needs 3100 seconds to solve the problem\nComputation times scales exponentially\n\\(\\rightarrow\\) Not applicable in real world applications!",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4533,7 +4533,7 @@
     "section": "",
     "text": "Any idea what\ncould be done?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4544,7 +4544,7 @@
     "section": "Heuristic Approach",
     "text": "Heuristic Approach\n\nHeuristic: Fast, but not necessarily optimal\nApproximation: Not guaranteed to be optimal, but close\nComputational Effort: Reasonable even for large instances\n\n. . .\n\n\n\n\n\n\nDifferent view on the problem\n\n\n\nFocus on the warehouses and the co-appearance of SKUs! Discard the exact information about the customer orders.",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4555,7 +4555,7 @@
     "section": "Objective",
     "text": "Objective\n\n\n\n\nQuestion: What could be the objective?\nMaximize the coappearance of products that are often part of the same customer orders.",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4566,7 +4566,7 @@
     "section": "Transaction Matrix",
     "text": "Transaction Matrix\n\nT = [\n    1 1 1 0;\n    1 1 1 0;\n    1 1 0 0;\n    1 0 0 1;\n    1 0 0 1;\n    1 0 0 1;\n    1 0 0 1;\n    0 0 1 1\n]\n\n# Create the coappearance matrix\nQ = T' * T\nprintln(\"Coappearance matrix Q:\")\ndisplay(Q)\n\nCoappearance matrix Q:\n\n\n4×4 Matrix{Int64}:\n 7  3  2  4\n 3  3  2  0\n 2  2  3  1\n 4  0  1  5",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4577,7 +4577,7 @@
     "section": "Coappearance Matrix",
     "text": "Coappearance Matrix\n\n\\(\\boldsymbol{Q}\\) is a symmetric binary matrix\nProposed by Catalán and Fisher (2012)\n\\(\\boldsymbol{Q} = (\\boldsymbol{T}^T \\cdot \\boldsymbol{T})\\) where \\(\\boldsymbol{Q} = (q_{ij})_{i \\in \\{1,\\dots,\\mathcal{I}\\},j \\in \\{1,\\dots,\\mathcal{I}\\}}\\)\n\\(q_{ij}\\) shows how often \\(i\\) and \\(j\\) appear in the same order\n\n. . .\nQuestion: What do the principal diagonal values tell us?\n. . .\n\nHow often each SKU appeared over all orders (binary!)",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4588,7 +4588,7 @@
     "section": "How to approach the problem?",
     "text": "How to approach the problem?\n\n\nGreedy Heuristic3: Allocation based on matrix\nMathematical Model4: Maximizes coappearance\nGRASP5: Good on small instances\nNew: Max. coappearance with non-linear solver\nNew: Heuristic based on Chi-Square Tests",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4599,7 +4599,7 @@
     "section": "Basic Setting",
     "text": "Basic Setting",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4610,7 +4610,7 @@
     "section": "Available Data (Version 2)",
     "text": "Available Data (Version 2)\nQuestion: What could be the sets?\n. . .\n\n\\(\\mathcal{I}\\) - Set of products indexed by \\(i \\in \\{1,2,...,|\\mathcal{I}|\\}\\)\n\\(\\mathcal{K}\\) - Set of warehouses indexed by \\(k \\in \\{1,\\dots,|\\mathcal{K}|\\}\\)\n\n. . .\n\n\n\n\n\n\nNo customer order information is needed!\n\n\n\nWe can focus on the SKUs and the warehouses, making the problem much smaller!",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4621,7 +4621,7 @@
     "section": "Available Parameters",
     "text": "Available Parameters\nQuestion: What are possible parameters?\n\n\n\\(c_k\\) - Storage space of warehouse \\(k \\in \\{1,\\dots,|\\mathcal{K}|\\}\\)\n\\(\\boldsymbol{Q}= (q_{ij})_{i \\in \\{1,\\dots,\\mathcal{I}\\},j \\in \\{1,\\dots,\\mathcal{I}\\}}\\) - Coappearance matrix\n\n\n. . .\n\n\n\n\n\n\nTransactional Data replaced\n\n\n\nInstead of the transactional data, we just use the coappearance matrix in our model!",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4632,7 +4632,7 @@
     "section": "Decision Variables?",
     "text": "Decision Variables?\n\n\n\n\n\n\nWe have the following sets:\n\n\n\n\n\\(\\mathcal{I}\\) - Set of products indexed by \\(i \\in \\{1,2,...,|\\mathcal{I}|\\}\\)\n\\(\\mathcal{K}\\) - Set of warehouses indexed by \\(k \\in \\{1,\\dots,|\\mathcal{K}|\\}\\)\n\n\n\n. . .\n\n\n\n\n\n\nOur objective is to:\n\n\n\nMaximize the coappearance of products that are often part of the same customer orders. In more mathematical terms: Maximize the sum of all unique pair-wise values \\(q_{i,j}\\) of all SKUs stored in the same warehouse.\n\n\n. . .\nQuestion: What could be our decision variable/s?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4643,7 +4643,7 @@
     "section": "Decision Variables",
     "text": "Decision Variables\n\n\\(X_{i,k}\\) - 1, if SKU \\(i\\in\\mathcal{I}\\) is stored in \\(k\\in\\mathcal{K}\\), 0 otherwise\n\n. . .\n\n\n\n\n\n\nOnly one variable per SKU and warehouse!\n\n\n\nAs we don’t need the customer order information, we only need to make a decision for each SKU and warehouse pair!",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4654,7 +4654,7 @@
     "section": "Decision Variable in Julia",
     "text": "Decision Variable in Julia\nQuestion: How could we formulate the variable in Julia?\n\nusing JuMP, SCIP # SCIP is a non-commercial MIQCP solver\n\nwarehouses = [\"Hamburg\", \"Berlin\"] # Add warehouses as a vector\nskus = [\"Smartphone\", \"Socks\", \"Charger\"] # Add SKUs as a vector\n\nwarehouse_model = Model(SCIP.Optimizer)\n\n. . .\n\n@variable(warehouse_model, X[i in skus, k in warehouses], Bin)\n\n2-dimensional DenseAxisArray{JuMP.VariableRef,2,...} with index sets:\n    Dimension 1, [\"Smartphone\", \"Socks\", \"Charger\"]\n    Dimension 2, [\"Hamburg\", \"Berlin\"]\nAnd data, a 3×2 Matrix{JuMP.VariableRef}:\n X[Smartphone,Hamburg]  X[Smartphone,Berlin]\n X[Socks,Hamburg]       X[Socks,Berlin]\n X[Charger,Hamburg]     X[Charger,Berlin]",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4665,7 +4665,7 @@
     "section": "Objective Function",
     "text": "Objective Function\n\n\n\n\n\n\nWe need the following:\n\n\n\n\n\\(X_{i,k}\\) - 1, if SKU \\(i\\in\\mathcal{I}\\) is stored in \\(k\\in\\mathcal{K}\\), 0 otherwise\n\\(q_{ij}\\) - Coappearance of SKU \\(i\\in\\mathcal{I}\\) and \\(j\\in\\mathcal{I}\\)\n\n\n\n\n\n\n\n\n\nOur objective is to:\n\n\n\nMaximize the sum of all unique pair-wise values \\(q_{i,j}\\) of all SKUs stored in the same warehouse. Note, that this is a quadratic objective function!\n\n\n. . .\nQuestion: What could the objective function look like?\n. . .",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4676,7 +4676,7 @@
     "section": "Quadratic Objective Function",
     "text": "Quadratic Objective Function\n\\[\\text{maximize} \\quad \\sum_{i=2}^{\\mathcal{I}} \\sum_{j=1}^{i-1} \\sum_{k \\in \\mathcal{K}} X_{ik}\\times X_{jk} \\times q_{ij}\\]\n. . .\n\n\n\n\n\n\nThis is a quadratic objective function!\n\n\n\nThe quadratic terms are \\(X_{ik}\\times X_{jk}\\). This objective function is based on the Quadratic Multiple Knapsack Problem (QMKP), formulated by Hiley and Julstrom (2006).",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4687,7 +4687,7 @@
     "section": "Objective Function in Julia",
     "text": "Objective Function in Julia\nQuestion: How could we formulate this in Julia?\n. . .\n\nQ = [2 1 2; 1 2 1; 2 1 2]\n\n@objective(warehouse_model, \n    Max, \n    sum(\n        X[skus[i], warehouses[k]] * X[skus[j], warehouses[k]] * Q[i,j]\n        for i in 2:length(skus)\n        for j in 1:i-1\n        for k in 1:length(warehouses)\n    )\n)\n\nX[Socks,Hamburg]*X[Smartphone,Hamburg] + X[Socks,Berlin]*X[Smartphone,Berlin] + 2 X[Charger,Hamburg]*X[Smartphone,Hamburg] + 2 X[Charger,Berlin]*X[Smartphone,Berlin] + X[Charger,Hamburg]*X[Socks,Hamburg] + X[Charger,Berlin]*X[Socks,Berlin]",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4698,7 +4698,7 @@
     "section": "What constraints?",
     "text": "What constraints?\n\n\n\n\nQuestion: What constraints?\n\n\nAllocate each SKU at least once\nWarehouses have a finite capacity\nCapacity is not exceeded",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4709,7 +4709,7 @@
     "section": "Single Allocation Constraint?",
     "text": "Single Allocation Constraint?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that each SKU is allocated at least once.\n\n\n. . .\n\n\n\n\n\n\nWe need the following variable:\n\n\n\n\n\\(X_{i,k}\\) - 1, if SKU \\(i\\in\\mathcal{I}\\) is stored in \\(k\\in\\mathcal{K}\\), 0 otherwise\n\n\n\n. . .\nQuestion: What could the constraint look like?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4720,7 +4720,7 @@
     "section": "Single Allocation Constraint",
     "text": "Single Allocation Constraint\n\\[\\sum_{k \\in \\mathcal{K}} X_{ik} \\geq 1 \\quad \\forall i \\in \\mathcal{I}\\]\n. . .\n\n\n\n\n\n\nRemember, this is the variable:\n\n\n\n\n\\(X_{i,k}\\) - 1, if SKU \\(i\\in\\mathcal{I}\\) is stored in \\(k\\in\\mathcal{K}\\), 0 otherwise\n\n\n\n. . .\nQuestion: How could we change the constraint to ensure that each SKU is allocated only once?\n. . .\nQuestion: How could we add the constraint in Julia?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4731,7 +4731,7 @@
     "section": "Single Allocation in Julia",
     "text": "Single Allocation in Julia\n\n@constraint(warehouse_model, single_allocation[i in skus], \n    sum(X[i, k] for k in warehouses) &gt;= 1\n)\n\n1-dimensional DenseAxisArray{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.GreaterThan{Float64}}, JuMP.ScalarShape},1,...} with index sets:\n    Dimension 1, [\"Smartphone\", \"Socks\", \"Charger\"]\nAnd data, a 3-element Vector{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.GreaterThan{Float64}}, JuMP.ScalarShape}}:\n single_allocation[Smartphone] : X[Smartphone,Hamburg] + X[Smartphone,Berlin] ≥ 1\n single_allocation[Socks] : X[Socks,Hamburg] + X[Socks,Berlin] ≥ 1\n single_allocation[Charger] : X[Charger,Hamburg] + X[Charger,Berlin] ≥ 1",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4742,7 +4742,7 @@
     "section": "Capacity Constraints?",
     "text": "Capacity Constraints?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\n\nEnsure that the capacity of each warehouse is not exceeded.\n\n\n. . .\n\n\n\n\n\n\nWe need the following variables and parameters:\n\n\n\n\n\\(X_{i,k}\\) - 1, if SKU \\(i\\in\\mathcal{I}\\) is stored in \\(k\\in\\mathcal{K}\\), 0 otherwise\n\\(c_k\\) - Storage space of warehouse \\(k\\in\\mathcal{K}\\)\n\n\n\n. . .\nQuestion: What could the second constraint be?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4753,7 +4753,7 @@
     "section": "Capacity Constraints",
     "text": "Capacity Constraints\n\\[\\sum_{i \\in \\mathcal{I}} X_{ik} \\leq c_k \\quad \\forall k \\in \\mathcal{K}\\]\n. . .\nAnd that’s basically it!\n. . .\nQuestion: How could we add the second constraint in Julia?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4764,7 +4764,7 @@
     "section": "Capacity Constraints in Julia",
     "text": "Capacity Constraints in Julia\n\ncapacities = Dict(\"Hamburg\" =&gt; 2, \"Berlin\" =&gt; 1) # Add capacities\n\n@constraint(warehouse_model, capacity[k in warehouses], \n    sum(X[i, k] for i in skus) &lt;= capacities[k]\n)\n\n1-dimensional DenseAxisArray{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.LessThan{Float64}}, JuMP.ScalarShape},1,...} with index sets:\n    Dimension 1, [\"Hamburg\", \"Berlin\"]\nAnd data, a 2-element Vector{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.LessThan{Float64}}, JuMP.ScalarShape}}:\n capacity[Hamburg] : X[Smartphone,Hamburg] + X[Socks,Hamburg] + X[Charger,Hamburg] ≤ 2\n capacity[Berlin] : X[Smartphone,Berlin] + X[Socks,Berlin] + X[Charger,Berlin] ≤ 1",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4775,7 +4775,7 @@
     "section": "QMK Model",
     "text": "QMK Model\n\\[\\text{maximize} \\quad \\sum_{i=2}^{\\mathcal{I}} \\sum_{j=1}^{i-1} \\sum_{k \\in \\mathcal{K}} X_{ik}\\times X_{jk} \\times q_{ij}\\]\nsubject to:\n\\[\n\\begin{align*}\n                & \\sum_{k \\in \\mathcal{K}} X_{ik} \\geq 1 && \\forall i \\in \\mathcal{I}\\\\\n                & \\sum_{i \\in \\mathcal{I}} X_{ik} \\leq c_{k} && \\forall k \\in \\mathcal{K}\\\\\n                & X_{ik} \\in \\{0,1\\}  && \\forall i \\in \\mathcal{I}, \\forall k \\in \\mathcal{K}\n\\end{align*}\n\\]",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4786,7 +4786,7 @@
     "section": "QMK Model in Julia",
     "text": "QMK Model in Julia\n\nset_attribute(warehouse_model, \"display/verblevel\", 0) # Hide solver output\noptimize!(warehouse_model)\n\nprintln(\"The optimal objective value is: \", objective_value(warehouse_model))\nprintln(\"The optimal solution is: \", value.(X))\n\nThe optimal objective value is: 2.0\nThe optimal solution is: 2-dimensional DenseAxisArray{Float64,2,...} with index sets:\n    Dimension 1, [\"Smartphone\", \"Socks\", \"Charger\"]\n    Dimension 2, [\"Hamburg\", \"Berlin\"]\nAnd data, a 3×2 Matrix{Float64}:\n  1.0  0.0\n -0.0  1.0\n  1.0  0.0",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4797,7 +4797,7 @@
     "section": "Characteristics",
     "text": "Characteristics\n\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domain do we have?\nDo we know the split-orders based on the objective value?\nWhy couldn’t we use HiGHS as solver?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4808,7 +4808,7 @@
     "section": "Choosing a solver",
     "text": "Choosing a solver\n\nIdentify problem structure, e.g. LP, MIP, NLP, QCP, MIQCP, …\nWhat is the size of the problem?\nIs a commercial solver needed?\n\n. . .\n\n\n\n\n\n\nCommercial Solvers\n\n\n\nCommercial solvers are faster and more robust as open source solvers but also more expensive. During your studies, you can use most of them for free though! Nonetheless, we will only use open source solvers in this course.",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4819,7 +4819,7 @@
     "section": "Global vs Local Optimality",
     "text": "Global vs Local Optimality\n\n\n\nLocal vs Global Optimum by Christoph Roser",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4830,7 +4830,7 @@
     "section": "Model Assumptions",
     "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nProblem with allocating SKUs to multiple warehouses?\nWhat else might pose a problem in the real world?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4841,7 +4841,7 @@
     "section": "",
     "text": "Can this be\napplied?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4852,7 +4852,7 @@
     "section": "Problem Size is Crucial",
     "text": "Problem Size is Crucial\n\nUp to 10,000 SKUs → commercial solvers\nMore than 10,000 SKUs → heuristics\nFor example, the CHI heuristic\n\n. . .\n\n\n\n\n\n\nCHI-Heuristic\n\n\n\nDetect dependencies between products and allocate them accordingly, as products within orders can have dependencies and products are bought with different frequencies!",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4863,7 +4863,7 @@
     "section": "Potential Improvements",
     "text": "Potential Improvements",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4874,7 +4874,7 @@
     "section": "Case Study",
     "text": "Case Study\n\nMore than 100,000 SKUs and several millions of orders\nComparison of different heuristics6\n\nCHI: based on Chi-Square tests Vlćek and Voigt (2024)\nGP, GO, GS, BS: based on greedy algorithms (Catalán and Fisher 2012)\nRA: Random allocation of SKUs to warehouses",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4885,7 +4885,7 @@
     "section": "Real Data Set",
     "text": "Real Data Set",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4896,7 +4896,7 @@
     "section": "Conclusion",
     "text": "Conclusion\n\nSplits are of no benefit, except faster customer deliveries\nIncrease workload, packaging and shipping costs\nMathematical Optimisation of “full” problem not solvable\nCHI Heuristic close to mathematical optimisation\n\n\n\n\n\n\n\nAnd that’s it for todays lecture!\n\n\n\nWe now have covered the Quadratic Multiple Knapsack Problem and are ready to start solving some tasks in the upcoming tutorial.",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4907,7 +4907,7 @@
     "section": "",
     "text": "Questions?",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4918,7 +4918,7 @@
     "section": "Literature I",
     "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
@@ -4929,7 +4929,7 @@
     "section": "Footnotes",
     "text": "Footnotes\n\n\nForecast, not actual number↩︎\nSKU: Stock Keeping Unit↩︎\nSimple and very fast, Catalán and Fisher (2012)↩︎\nComputationally intensive with CPLEX, Zhu et al. (2021)↩︎\nGreedy Randomized Adaptive Search Procedure, Zhu et al. (2021)↩︎\nQMKP is not applicable for instance in case study↩︎",
     "crumbs": [
-      "06 Warehouse Optimization",
+      "06 Warehouse",
       "Lecture"
     ]
   },
