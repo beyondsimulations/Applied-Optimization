@@ -20,3 +20,36 @@ format:
         fontfamilyoptions: sfdefault
         colorlinks: true
 ---
+
+
+# Create sample transaction data
+T = [
+    # Order patterns
+    1 1 1;  # all items
+    1 1 1;  # all items
+    0 1 1;  # smartphone + charger
+    0 1 1;  # smartphone + charger
+    1 0 0;  # just socks
+    1 1 0;  # socks + smartphone
+    0 1 1;  # smartphone + charger
+    1 0 0;  # just socks
+    0 1 1;  # smartphone + charger
+    1 1 1;  # all items
+    0 1 1;  # smartphone + charger
+    1 0 0;  # just socks
+    0 1 1;  # smartphone + charger
+    1 1 0;  # socks + smartphone
+    0 1 1;  # smartphone + charger
+    1 0 0;  # just socks
+    0 1 1;  # smartphone + charger
+    1 1 0;  # socks + smartphone
+    0 1 1;  # smartphone + charger
+    1 1 1   # all items
+]
+
+# Calculate and display coappearance matrix
+Q = T' * T
+println("Transaction matrix T (20x3):")
+display(T)
+println("\nCoappearance matrix Q (3x3):")
+display(Q)
