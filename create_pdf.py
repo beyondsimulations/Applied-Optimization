@@ -16,4 +16,16 @@ with sync_playwright() as p:
   page.locator(".reveal.ready").wait_for()
   page.pdf(path=args.output, scale=1.5, prefer_css_page_size=True)
 
-# python3 create_pdf.py _site/part-05/lecture-presentation.html pdf-presentations/ao_lecture_05.pdf
+# python3 create_pdf.py _site/part-01/lecture-presentation.html pdf-slides/ao_lecture_01.pdf
+# python3 create_pdf.py _site/part-02/lecture-presentation.html pdf-slides/ao_lecture_02.pdf
+# python3 create_pdf.py _site/part-03/lecture-presentation.html pdf-slides/ao_lecture_03.pdf
+# python3 create_pdf.py _site/part-04/lecture-presentation.html pdf-slides/ao_lecture_04.pdf
+# python3 create_pdf.py _site/part-05/lecture-presentation.html pdf-slides/ao_lecture_05.pdf
+# python3 create_pdf.py _site/part-06/lecture-presentation.html pdf-slides/ao_lecture_06.pdf  
+
+# decktape reveal _site/part-01/lecture-presentation.html pdf-slides/ao_lecture_01.pdf
+# decktape reveal _site/part-02/lecture-presentation.html pdf-slides/ao_lecture_02.pdf
+# decktape reveal _site/part-03/lecture-presentation.html pdf-slides/ao_lecture_03.pdf
+# decktape reveal _site/part-04/lecture-presentation.html pdf-slides/ao_lecture_04.pdf
+# decktape reveal _site/part-05/lecture-presentation.html pdf-slides/ao_lecture_05.pdf
+# decktape reveal _site/part-06/lecture-presentation.html pdf-slides/ao_lecture_06.pdf
