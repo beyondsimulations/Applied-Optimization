@@ -535,7 +535,7 @@ window.Quarto = {
 </tbody>
 </table>
 <p>What is the resulting <strong>coappearance matrix</strong> from the transactional data set? Please provide it in the following cell as matrix by changing the <code>0</code>s to the correct values.</p>
-<div id="9965296a" class="cell" data-execution_count="1">
+<div id="4ebf2333" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> [</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span>; </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span>; </span>
@@ -552,14 +552,14 @@ window.Quarto = {
 <li>Berlin can also store 3 different product types</li>
 </ul>
 <p>Based on the coappearance matrix you have determined in the previous assignment, use the model from the lecture to maximise the coappearances <strong>manually by hand</strong>. What is the resulting objective function value of the assignment? Please provide it in the following cell.</p>
-<div id="34df7d47" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>objective_value <span class="op">=</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="44cb570c" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>objective_value_by_hand <span class="op">=</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="counting-split-parcels" class="level2">
 <h2 class="anchored" data-anchor-id="counting-split-parcels">3. Counting Split Parcels</h2>
 <p>Based on the output of the optimisation, we don’t know the number of split orders yet. Calculate the <strong>number of split orders manually</strong> from your previous solution.</p>
-<div id="0c5d9dd4" class="cell" data-execution_count="3">
+<div id="a4ee1690" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>number_of_split_parcels <span class="op">=</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -589,7 +589,7 @@ Bonus Question
 </ul></li>
 </ul>
 <p>Thus, we’ll now implement a scalable solution using Julia and JuMP that can handle larger datasets.</p>
-<div id="d871b2bc" class="cell" data-execution_count="4">
+<div id="50d34b08" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>skus <span class="op">=</span> [</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Running Shoes"</span>,      </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Athletic Socks"</span>,     </span>
@@ -681,7 +681,7 @@ Use the Juniper solver
 </div>
 </div>
 <p>First, we start by defining the model.</p>
-<div id="eac5ba95" class="cell" data-execution_count="6">
+<div id="42f9640e" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definition of the warehouse model</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">Ipopt</span>, <span class="bu">HiGHS</span>, <span class="bu">Juniper</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ipopt <span class="op">=</span> <span class="fu">optimizer_with_attributes</span>(Ipopt.Optimizer, <span class="st">"print_level"</span> <span class="op">=&gt;</span> <span class="fl">0</span>)</span>
@@ -703,10 +703,10 @@ Use the Juniper solver
 </div>
 </div>
 <p>Next, compute the coappearance matrix based on the transactional data provided in <code>T</code>.</p>
-<div id="90d506c3" class="cell" data-execution_count="7">
+<div id="09906df6" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="c7345446" class="cell" data-execution_count="8">
+<div id="e89664f6" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the coappearance matrix is correct.</span></span>
@@ -716,10 +716,10 @@ Use the Juniper solver
 </details>
 </div>
 <p>Now, define the decision variable for the SKU allocation. Please name the variable <code>X</code>.</p>
-<div id="48b9447d" class="cell" data-execution_count="9">
+<div id="cdad340c" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1c68f424" class="cell" data-execution_count="10">
+<div id="a8b93264" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the decision variable is correct.</span></span>
@@ -730,10 +730,10 @@ Use the Juniper solver
 </details>
 </div>
 <p>Then, define the objective function to maximize the coappearance.</p>
-<div id="e472af51" class="cell" data-execution_count="11">
+<div id="32515a69" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="3e42d129" class="cell" data-execution_count="12">
+<div id="918cfaba" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the objective function is correct.</span></span>
@@ -742,10 +742,10 @@ Use the Juniper solver
 </details>
 </div>
 <p>To ensure that each SKU is allocated to one warehouse, add the first constraint.</p>
-<div id="91047756" class="cell" data-execution_count="13">
+<div id="d2ccc312" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="0816c260" class="cell" data-execution_count="14">
+<div id="2e751ffd" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the single allocation constraint is correct.</span></span>
@@ -754,10 +754,10 @@ Use the Juniper solver
 </details>
 </div>
 <p>To ensure that the capacity of each warehouse is not exceeded, add the second constraint.</p>
-<div id="cfae9600" class="cell" data-execution_count="15">
+<div id="da94758c" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="5bc42612" class="cell" data-execution_count="16">
+<div id="538513cb" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the capacity constraint is correct.</span></span>
@@ -766,10 +766,10 @@ Use the Juniper solver
 </details>
 </div>
 <p>Finally, solve the model with a solve statement.</p>
-<div id="c245deb3" class="cell" data-execution_count="17">
+<div id="33e7574f" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2a48c964" class="cell" data-execution_count="18">
+<div id="61482536" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the model is solved correctly.</span></span>
@@ -779,13 +779,13 @@ Use the Juniper solver
 </details>
 </div>
 <p>The following code prints the objective value, the SKU allocation and the warehouse capacities based on your optimal solution.</p>
-<div id="2b72ee29" class="cell" data-execution_count="19">
+<div id="3c310eb0" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective value: "</span>, <span class="fu">objective_value</span>(warehouse_model))</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>()</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"SKU Allocation:"</span>)</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> skus</span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> warehouses</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="fu">value</span>(X[i,k]) <span class="op">==</span> <span class="fl">1</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="fu">value</span>(X[i,k]) <span class="op">&gt;</span> <span class="fl">0.1</span></span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">println</span>(<span class="st">"SKU: "</span>, i, <span class="st">" Allocation: "</span>, k)</span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
 <span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
@@ -797,7 +797,7 @@ Use the Juniper solver
 <span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Based on the output of the optimisation, we still don’t know the number of split orders. The following code calculates the number of split orders from the SKU allocation for the optimal solution.</p>
-<div id="c51ee6cd" class="cell" data-execution_count="20">
+<div id="8545e0e9" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Binary matrix indicating whether a SKU is allocated to a warehouse.</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>X_values <span class="op">=</span> [<span class="fu">value</span>(X[i,j]) <span class="op">&gt;</span> <span class="fl">0</span> ? <span class="cn">true</span> <span class="op">:</span> <span class="cn">false</span> for i <span class="kw">in</span> skus, j <span class="kw">in</span> warehouses]</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -861,7 +861,7 @@ Use the Juniper solver
 <li>How might this new allocation affect warehouse operations and picking efficiency?</li>
 </ul>
 <p>Your answer goes here, thinking from the business perspective. A few sentences are fully sufficient!</p>
-<div id="a14f7f03" class="cell" data-execution_count="21">
+<div id="aff1cb8d" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWER BELOW</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
