@@ -475,7 +475,7 @@ window.Quarto = {
   <li><a href="#visit-each-customer-once" id="toc-visit-each-customer-once" class="nav-link" data-scroll-target="#visit-each-customer-once">Visit Each Customer Once?</a></li>
   <li><a href="#visit-each-customer-once-1" id="toc-visit-each-customer-once-1" class="nav-link" data-scroll-target="#visit-each-customer-once-1">Visit Each Customer Once</a></li>
   <li><a href="#depot-entry-and-exit-constraints" id="toc-depot-entry-and-exit-constraints" class="nav-link" data-scroll-target="#depot-entry-and-exit-constraints">Depot Entry and Exit Constraints?</a></li>
-  <li><a href="#visit-each-customer-once-2" id="toc-visit-each-customer-once-2" class="nav-link" data-scroll-target="#visit-each-customer-once-2">Visit Each Customer Once</a></li>
+  <li><a href="#depot-entry-and-exit-constraints-1" id="toc-depot-entry-and-exit-constraints-1" class="nav-link" data-scroll-target="#depot-entry-and-exit-constraints-1">Depot Entry and Exit Constraints</a></li>
   </ul></li>
   <li><a href="#capacity-and-subtour-elimination" id="toc-capacity-and-subtour-elimination" class="nav-link" data-scroll-target="#capacity-and-subtour-elimination"><span class="flow">Capacity and Subtour Elimination</span></a>
   <ul class="collapse">
@@ -522,8 +522,9 @@ window.Quarto = {
   <li><a href="#section-8" id="toc-section-8" class="nav-link" data-scroll-target="#section-8"></a></li>
   <li><a href="#problem-is-np-hard" id="toc-problem-is-np-hard" class="nav-link" data-scroll-target="#problem-is-np-hard">Problem is NP-hard</a></li>
   <li><a href="#section-9" id="toc-section-9" class="nav-link" data-scroll-target="#section-9"></a></li>
-  <li><a href="#matheuristics" id="toc-matheuristics" class="nav-link" data-scroll-target="#matheuristics">Matheuristics</a></li>
+  <li><a href="#heuristics" id="toc-heuristics" class="nav-link" data-scroll-target="#heuristics">Heuristics</a></li>
   <li><a href="#optimal-tours" id="toc-optimal-tours" class="nav-link" data-scroll-target="#optimal-tours">Optimal Tours</a></li>
+  <li><a href="#applications-beyond-libraries" id="toc-applications-beyond-libraries" class="nav-link" data-scroll-target="#applications-beyond-libraries">Applications Beyond Libraries</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#section-10" id="toc-section-10" class="nav-link" data-scroll-target="#section-10"></a></li>
   </ul></li>
@@ -634,7 +635,7 @@ window.Quarto = {
 </section>
 <section id="visualization-of-several-tours" class="level2">
 <h2 class="anchored" data-anchor-id="visualization-of-several-tours">Visualization of Several Tours</h2>
-<iframe width="1000" height="600" src="https://libraries.byndsim.com/W1P1Optimization.html" title="Optimized Tours">
+<iframe width="95%" height="600" src="https://libraries.byndsim.com/W1P1Optimization.html" title="Optimized Tours">
 </iframe>
 </section>
 </section>
@@ -1014,10 +1015,10 @@ We need the following sets and variables:
 <p><span class="question">Question:</span> <strong>What could the constraint look like?</strong></p>
 <p>. . .</p>
 <p><span class="math display">\[
-\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}
+\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
 <p><span class="math display">\[
-\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}
+\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
 <p>. . .</p>
 <p><span class="question">Question:</span> <strong>Why for all nodes except the depot?</strong></p>
@@ -1060,8 +1061,8 @@ We need the following sets and variables:
 <p>. . .</p>
 <p><span class="question">Question:</span> <strong>What could the constraint look like?</strong></p>
 </section>
-<section id="visit-each-customer-once-2" class="level2">
-<h2 class="anchored" data-anchor-id="visit-each-customer-once-2">Visit Each Customer Once</h2>
+<section id="depot-entry-and-exit-constraints-1" class="level2">
+<h2 class="anchored" data-anchor-id="depot-entry-and-exit-constraints-1">Depot Entry and Exit Constraints</h2>
 <p><span class="math display">\[
 \sum_{i \in \mathcal{V}} X_{i,0} = |\mathcal{K}|
 \]</span></p>
@@ -1380,10 +1381,10 @@ The goal of the objective function is to:
 <section id="each-customer-is-visited-once" class="level2">
 <h2 class="anchored" data-anchor-id="each-customer-is-visited-once">Each customer is visited once</h2>
 <p><span class="math display">\[
-\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}
+\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
 <p><span class="math display">\[
-\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}
+\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1522,7 +1523,6 @@ The variable domains make sure that:
 <ul>
 <li>time windows (TW)</li>
 <li>soft time windows (STW)</li>
-<li>multiple time windows (MTW)</li>
 <li>multiple depots (MD)</li>
 <li>heterogeneous fleet (HF)</li>
 <li>backhauls (B)</li>
@@ -1549,7 +1549,7 @@ The variable domains make sure that:
 </section>
 <section id="current-routing-plan" class="level2">
 <h2 class="anchored" data-anchor-id="current-routing-plan">Current Routing Plan</h2>
-<iframe width="1000" height="600" src="https://libraries.byndsim.com/W1P1Benchmark.html" title="Optimized Tours">
+<iframe width="95%" height="600" src="https://libraries.byndsim.com/W1P1Benchmark.html" title="Optimized Tours">
 </iframe>
 </section>
 <section id="section-7" class="level2 loud-slide">
@@ -1608,19 +1608,56 @@ Note
 
 </div>
 </section>
-<section id="matheuristics" class="level2">
-<h2 class="anchored" data-anchor-id="matheuristics">Matheuristics</h2>
+<section id="heuristics" class="level2">
+<h2 class="anchored" data-anchor-id="heuristics">Heuristics</h2>
 <ul>
 <li>We can still solve the problem <strong>with a heuristic</strong></li>
 <li><span class="highlight">Likely not the optimal solution</span>, but a lot of research goes into efficient algorithms to solve these problems</li>
 <li>In our case study we applied <strong>Hybrid Genetic Search</strong> for the CVRP (HGS-CVRP) by <span class="citation" data-cites="Vidal_2022">Vidal (<a href="#ref-Vidal_2022" role="doc-biblioref">2022</a>)</span></li>
-<li>Results were much better than the best solutions found after one hour of optimization</li>
 </ul>
+<p>. . .</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For problems with 100+ locations, heuristics are often the only practical choice.</p>
+</div>
+</div>
 </section>
 <section id="optimal-tours" class="level2">
 <h2 class="anchored" data-anchor-id="optimal-tours">Optimal Tours</h2>
-<iframe width="1000" height="600" src="https://libraries.byndsim.com/W1P1Optimization.html" title="Optimized Tours">
+<iframe width="95%" height="600" src="https://libraries.byndsim.com/W1P1Optimization.html" title="Optimized Tours">
 </iframe>
+</section>
+<section id="applications-beyond-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="applications-beyond-libraries">Applications Beyond Libraries</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Logistics &amp; Delivery</strong></p>
+<ul>
+<li>Package delivery</li>
+<li>Food delivery services</li>
+<li>Grocery delivery</li>
+<li>Mail distribution</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Service Industries</strong></p>
+<ul>
+<li>Maintenance crews</li>
+<li>Home healthcare visits</li>
+<li>Waste collection</li>
+<li>School bus routing</li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<p><span class="question">Question:</span> <strong>Can you think of other applications?</strong></p>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>

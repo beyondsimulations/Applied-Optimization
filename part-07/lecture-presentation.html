@@ -429,7 +429,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="visualization-of-several-tours" class="slide level2">
 <h2>Visualization of Several Tours</h2>
-<iframe width="1000" height="600" src="https://libraries.byndsim.com/W1P1Optimization.html" title="Optimized Tours">
+<iframe width="95%" height="600" src="https://libraries.byndsim.com/W1P1Optimization.html" title="Optimized Tours">
 </iframe>
 </section></section>
 <section>
@@ -839,10 +839,10 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could the constraint look like?</strong></p>
 <div class="fragment">
 <p><span class="math display">\[
-\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}
+\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
 <p><span class="math display">\[
-\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}
+\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
 </div>
 <div class="fragment">
@@ -890,8 +890,8 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could the constraint look like?</strong></p>
 </div>
 </section>
-<section id="visit-each-customer-once-2" class="slide level2">
-<h2>Visit Each Customer Once</h2>
+<section id="depot-entry-and-exit-constraints-1" class="slide level2">
+<h2>Depot Entry and Exit Constraints</h2>
 <p><span class="math display">\[
 \sum_{i \in \mathcal{V}} X_{i,0} = |\mathcal{K}|
 \]</span></p>
@@ -1220,10 +1220,10 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 <section id="each-customer-is-visited-once" class="slide level2">
 <h2>Each customer is visited once</h2>
 <p><span class="math display">\[
-\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}
+\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
 <p><span class="math display">\[
-\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}
+\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
@@ -1364,7 +1364,6 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <ul>
 <li>time windows (TW)</li>
 <li>soft time windows (STW)</li>
-<li>multiple time windows (MTW)</li>
 <li>multiple depots (MD)</li>
 <li>heterogeneous fleet (HF)</li>
 <li>backhauls (B)</li>
@@ -1395,7 +1394,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 </section>
 <section id="current-routing-plan" class="slide level2">
 <h2>Current Routing Plan</h2>
-<iframe width="1000" height="600" src="https://libraries.byndsim.com/W1P1Benchmark.html" title="Optimized Tours">
+<iframe width="95%" height="600" src="https://libraries.byndsim.com/W1P1Benchmark.html" title="Optimized Tours">
 </iframe>
 </section>
 <section id="section-7" class="slide level2 loud-slide">
@@ -1455,19 +1454,57 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 
 </div>
 </section>
-<section id="matheuristics" class="slide level2">
-<h2>Matheuristics</h2>
+<section id="heuristics" class="slide level2">
+<h2>Heuristics</h2>
 <ul>
 <li>We can still solve the problem <strong>with a heuristic</strong></li>
 <li><span class="highlight">Likely not the optimal solution</span>, but a lot of research goes into efficient algorithms to solve these problems</li>
 <li>In our case study we applied <strong>Hybrid Genetic Search</strong> for the CVRP (HGS-CVRP) by <span class="citation" data-cites="Vidal_2022">Vidal (<a href="#/literature-ii" role="doc-biblioref" onclick="">2022</a>)</span></li>
-<li>Results were much better than the best solutions found after one hour of optimization</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>For problems with 100+ locations, heuristics are often the only practical choice.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="optimal-tours" class="slide level2">
 <h2>Optimal Tours</h2>
-<iframe width="1000" height="600" src="https://libraries.byndsim.com/W1P1Optimization.html" title="Optimized Tours">
+<iframe width="95%" height="600" src="https://libraries.byndsim.com/W1P1Optimization.html" title="Optimized Tours">
 </iframe>
+</section>
+<section id="applications-beyond-libraries" class="slide level2">
+<h2>Applications Beyond Libraries</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Logistics &amp; Delivery</strong></p>
+<ul>
+<li>Package delivery</li>
+<li>Food delivery services</li>
+<li>Grocery delivery</li>
+<li>Mail distribution</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Service Industries</strong></p>
+<ul>
+<li>Maintenance crews</li>
+<li>Home healthcare visits</li>
+<li>Waste collection</li>
+<li>School bus routing</li>
+</ul>
+</div></div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>Can you think of other applications?</strong></p>
+</div>
 </section>
 <section id="conclusion" class="slide level2">
 <h2>Conclusion</h2>

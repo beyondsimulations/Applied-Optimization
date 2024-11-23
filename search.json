@@ -207,7 +207,7 @@
     "href": "part-07/lecture-presentation.html#visit-each-customer-once-1",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Visit Each Customer Once",
-    "text": "Visit Each Customer Once\nQuestion: What could the constraint look like?\n\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\n\nQuestion: Why for all nodes except the depot?\n\n\nThe depot is the only node that is visited multiple times!"
+    "text": "Visit Each Customer Once\nQuestion: What could the constraint look like?\n\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\n\nQuestion: Why for all nodes except the depot?\n\n\nThe depot is the only node that is visited multiple times!"
   },
   {
     "objectID": "part-07/lecture-presentation.html#depot-entry-and-exit-constraints",
@@ -217,11 +217,11 @@
     "text": "Depot Entry and Exit Constraints?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\nEnsure that each vehicle enters and leaves the depot exactly \\(|\\mathcal{K}|\\) times, as we have \\(|\\mathcal{K}|\\) vehicles and each vehicle has to return to the depot.\n\n\n\n\n\n\n\n\n\n\nWe need the following sets and variables:\n\n\n\n\\(\\mathcal{V}\\) - Set of all nodes, index \\(i \\in \\{0,1,2,...,n\\}\\)\n\\(|\\mathcal{K}|\\) - Number of vehicles\n\\(X_{i,j}\\) - 1, if the arc between \\(i\\) and \\(j\\) is part of a tour, 0 otherwise\n\n\n\n\n\n\nQuestion: What could the constraint look like?"
   },
   {
-    "objectID": "part-07/lecture-presentation.html#visit-each-customer-once-2",
-    "href": "part-07/lecture-presentation.html#visit-each-customer-once-2",
+    "objectID": "part-07/lecture-presentation.html#depot-entry-and-exit-constraints-1",
+    "href": "part-07/lecture-presentation.html#depot-entry-and-exit-constraints-1",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Visit Each Customer Once",
-    "text": "Visit Each Customer Once\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\n\nAre all constraints necessary?\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”."
+    "section": "Depot Entry and Exit Constraints",
+    "text": "Depot Entry and Exit Constraints\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\n\nAre all constraints necessary?\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”."
   },
   {
     "objectID": "part-07/lecture-presentation.html#section-4",
@@ -347,7 +347,7 @@
     "href": "part-07/lecture-presentation.html#each-customer-is-visited-once",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Each customer is visited once",
-    "text": "Each customer is visited once\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\nEach customer is visited exactly once."
+    "text": "Each customer is visited once\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\nEach customer is visited exactly once."
   },
   {
     "objectID": "part-07/lecture-presentation.html#depot-entry-and-exit",
@@ -396,7 +396,7 @@
     "href": "part-07/lecture-presentation.html#extensions-of-the-cvrp",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Extensions of the CVRP",
-    "text": "Extensions of the CVRP\nQuestions: What extensions do you know?\n\n\ntime windows (TW)\nsoft time windows (STW)\nmultiple time windows (MTW)\nmultiple depots (MD)\nheterogeneous fleet (HF)\nbackhauls (B)\npickup and delivery (PD)"
+    "text": "Extensions of the CVRP\nQuestions: What extensions do you know?\n\n\ntime windows (TW)\nsoft time windows (STW)\nmultiple depots (MD)\nheterogeneous fleet (HF)\nbackhauls (B)\npickup and delivery (PD)"
   },
   {
     "objectID": "part-07/lecture-presentation.html#case-study-in-schleswig-holstein",
@@ -441,11 +441,11 @@
     "text": "Can we do\nanything to solve\nthe model?"
   },
   {
-    "objectID": "part-07/lecture-presentation.html#matheuristics",
-    "href": "part-07/lecture-presentation.html#matheuristics",
+    "objectID": "part-07/lecture-presentation.html#heuristics",
+    "href": "part-07/lecture-presentation.html#heuristics",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Matheuristics",
-    "text": "Matheuristics\n\nWe can still solve the problem with a heuristic\nLikely not the optimal solution, but a lot of research goes into efficient algorithms to solve these problems\nIn our case study we applied Hybrid Genetic Search for the CVRP (HGS-CVRP) by Vidal (2022)\nResults were much better than the best solutions found after one hour of optimization"
+    "section": "Heuristics",
+    "text": "Heuristics\n\nWe can still solve the problem with a heuristic\nLikely not the optimal solution, but a lot of research goes into efficient algorithms to solve these problems\nIn our case study we applied Hybrid Genetic Search for the CVRP (HGS-CVRP) by Vidal (2022)\n\n\n\n\n\n\n\n\nTip\n\n\nFor problems with 100+ locations, heuristics are often the only practical choice."
   },
   {
     "objectID": "part-07/lecture-presentation.html#optimal-tours",
@@ -453,6 +453,13 @@
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Optimal Tours",
     "text": "Optimal Tours"
+  },
+  {
+    "objectID": "part-07/lecture-presentation.html#applications-beyond-libraries",
+    "href": "part-07/lecture-presentation.html#applications-beyond-libraries",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Applications Beyond Libraries",
+    "text": "Applications Beyond Libraries\n\n\nLogistics & Delivery\n\nPackage delivery\nFood delivery services\nGrocery delivery\nMail distribution\n\n\nService Industries\n\nMaintenance crews\nHome healthcare visits\nWaste collection\nSchool bus routing\n\n\n\nQuestion: Can you think of other applications?"
   },
   {
     "objectID": "part-07/lecture-presentation.html#conclusion",
@@ -806,7 +813,7 @@
     "href": "part-07/lecture-routing.html#visit-each-customer-once-1",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Visit Each Customer Once",
-    "text": "Visit Each Customer Once\nQuestion: What could the constraint look like?\n. . .\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n. . .\nQuestion: Why for all nodes except the depot?\n. . .\nThe depot is the only node that is visited multiple times!",
+    "text": "Visit Each Customer Once\nQuestion: What could the constraint look like?\n. . .\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n. . .\nQuestion: Why for all nodes except the depot?\n. . .\nThe depot is the only node that is visited multiple times!",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -824,11 +831,11 @@
     ]
   },
   {
-    "objectID": "part-07/lecture-routing.html#visit-each-customer-once-2",
-    "href": "part-07/lecture-routing.html#visit-each-customer-once-2",
+    "objectID": "part-07/lecture-routing.html#depot-entry-and-exit-constraints-1",
+    "href": "part-07/lecture-routing.html#depot-entry-and-exit-constraints-1",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Visit Each Customer Once",
-    "text": "Visit Each Customer Once\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{0,j} = |\\mathcal{K}|\n\\]\n. . .\n\n\n\n\n\n\nAre all constraints necessary?\n\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”.",
+    "section": "Depot Entry and Exit Constraints",
+    "text": "Depot Entry and Exit Constraints\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{0,j} = |\\mathcal{K}|\n\\]\n. . .\n\n\n\n\n\n\nAre all constraints necessary?\n\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”.",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -1026,7 +1033,7 @@
     "href": "part-07/lecture-routing.html#each-customer-is-visited-once",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Each customer is visited once",
-    "text": "Each customer is visited once\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\n\nEach customer is visited exactly once.",
+    "text": "Each customer is visited once\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\n\nEach customer is visited exactly once.",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -1103,7 +1110,7 @@
     "href": "part-07/lecture-routing.html#extensions-of-the-cvrp",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Extensions of the CVRP",
-    "text": "Extensions of the CVRP\nQuestions: What extensions do you know?\n. . .\n\ntime windows (TW)\nsoft time windows (STW)\nmultiple time windows (MTW)\nmultiple depots (MD)\nheterogeneous fleet (HF)\nbackhauls (B)\npickup and delivery (PD)",
+    "text": "Extensions of the CVRP\nQuestions: What extensions do you know?\n. . .\n\ntime windows (TW)\nsoft time windows (STW)\nmultiple depots (MD)\nheterogeneous fleet (HF)\nbackhauls (B)\npickup and delivery (PD)",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -1176,11 +1183,11 @@
     ]
   },
   {
-    "objectID": "part-07/lecture-routing.html#matheuristics",
-    "href": "part-07/lecture-routing.html#matheuristics",
+    "objectID": "part-07/lecture-routing.html#heuristics",
+    "href": "part-07/lecture-routing.html#heuristics",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Matheuristics",
-    "text": "Matheuristics\n\nWe can still solve the problem with a heuristic\nLikely not the optimal solution, but a lot of research goes into efficient algorithms to solve these problems\nIn our case study we applied Hybrid Genetic Search for the CVRP (HGS-CVRP) by Vidal (2022)\nResults were much better than the best solutions found after one hour of optimization",
+    "section": "Heuristics",
+    "text": "Heuristics\n\nWe can still solve the problem with a heuristic\nLikely not the optimal solution, but a lot of research goes into efficient algorithms to solve these problems\nIn our case study we applied Hybrid Genetic Search for the CVRP (HGS-CVRP) by Vidal (2022)\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nFor problems with 100+ locations, heuristics are often the only practical choice.",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -1192,6 +1199,17 @@
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Optimal Tours",
     "text": "Optimal Tours",
+    "crumbs": [
+      "07 Routing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-07/lecture-routing.html#applications-beyond-libraries",
+    "href": "part-07/lecture-routing.html#applications-beyond-libraries",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Applications Beyond Libraries",
+    "text": "Applications Beyond Libraries\n\n\nLogistics & Delivery\n\nPackage delivery\nFood delivery services\nGrocery delivery\nMail distribution\n\n\nService Industries\n\nMaintenance crews\nHome healthcare visits\nWaste collection\nSchool bus routing\n\n\n\n. . .\nQuestion: Can you think of other applications?",
     "crumbs": [
       "07 Routing",
       "Lecture"
