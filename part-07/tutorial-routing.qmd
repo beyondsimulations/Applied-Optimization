@@ -12,11 +12,504 @@ format:
         toc: true
         toc-location: right
         code-overflow: wrap
-    pdf: 
-        documentclass: report
-        geometry:
-            - margin=1in
-        fontfamily: roboto
-        fontfamilyoptions: sfdefault
-        colorlinks: true
+    ipynb:
+        code-copy: true
+        code-overflow: wrap
 ---
+
+# Introduction
+
+Welcome to "FastDelivery" - a local logistics service in Hamburg! We're working with a central warehouse that operates a decentralized distribution network: they deliver packages directly to smaller distribution centers in the region, ensuring efficient last-mile delivery across the area.
+
+The central warehouse operates a fleet of delivery vehicles that transport packages between their main hub and 14 partner distribution centers scattered across the region. The challenge? Designing the most efficient routing system to keep packages flowing smoothly while keeping operational costs in check.
+
+In this case study, we'll help FastDelivery optimize their delivery routes using the Capacitated Vehicle Routing Problem (CVRP) approach. We'll consider several real-world constraints like vehicle capacity (measured in standard shipping containers), driving distances, and operational costs to find the best possible delivery strategy.
+
+# 1. Implementing the basic CVRP
+
+Implement the CVRP from the lecture without the constraints preventing subtours and restricting the driving time and capacities.
+
+The demand per distribution center and the coordinates of the locations are provided as CSV files. 
+
+The number of vehicles is 6 and each vehicle can transport up to 50 parcels to the distribution centers. Note that capacity of each vehicle is identical.
+
+## Loading the data
+
+First, we load the data from the CSV files.
+```{julia}
+#| echo: false
+#| output: false
+using Pkg
+Pkg.add("DelimitedFiles")
+Pkg.add("CSV")
+Pkg.add("DataFrames")
+Pkg.add("JuMP")
+Pkg.add("HiGHS")
+Pkg.add("Plots")
+```
+```{julia}
+using DelimitedFiles
+using CSV
+using DataFrames
+using JuMP
+using HiGHS
+using Plots
+
+## Prepare the model data
+file_directory = "$(@__DIR__)/data"
+demand = CSV.read("$(file_directory)/demand.csv", DataFrame)
+coord = CSV.read("$(file_directory)/coord_x_y.csv", DataFrame)
+```
+
+::: {.callout-tip}
+
+Make sure that you have downloaded the data in the `data` folder that is located in the same directory as this notebook. 
+
+:::
+
+## Define the parameters
+
+First, define the number of vehicles and the capacity as parameters. Name them `vehicles` and `capacity`.
+
+```{julia}
+# YOUR CODE BELOW
+vehicles = 6
+capacity = 50
+```
+```{julia}
+# Test your code
+@assert vehicles == 30/5 "Number of vehicles is incorrect"
+@assert capacity == 100/2 "Capacity is incorrect"
+println("Variables defined, great job!")
+```
+
+Now, we need to compute the distance matrix. You can do so by using the Euclidean distance between the coordinates of the locations. Compute the distance matrix for all locations and store it in a dictionary called `distance`. Access each location by the tuple `(i,j)` where `i` is the origin and `j` is the destination. **Hint: You need the distance from each location to all other locations!**
+
+```{julia}
+# YOUR CODE BELOW
+distance = Dict()
+for i in eachrow(coord)
+    for j in eachrow(coord)
+        distance[(i.location,j.location)] = sqrt((i.y - j.y)^2 + (i.x - j.x)^2)
+    end
+end
+
+# Print the first 10 entries of the distance dictionary
+println("First 10 entries of the distance dictionary:")
+for (k,v) in first(distance,10)
+    println(k, " -> ", v)
+end
+```
+```{julia}
+# Test your code
+@assert length(distance) == nrow(coord) * nrow(coord) "Distance dictionary should have n² entries where n is the number of locations"
+@assert all(v >= 0 for v in values(distance)) "All distances should be non-negative"
+@assert all(isapprox(distance[(i,j)], distance[(j,i)]) for i in coord.location for j in coord.location if i != j) "Distances should be symmetric"
+println("Distance dictionary test passed successfully, great job!")
+```
+
+## Define the model
+
+Next, we create the model instance. As this is a linear problem, we can use the `HiGHS` solver.
+
+```{julia}
+# Create the model instance
+cvrp_model = Model(HiGHS.Optimizer)
+set_attribute(cvrp_model, "presolve", "on")
+set_attribute(cvrp_model, "time_limit", 60.0)
+set_attribute(cvrp_model, "mip_rel_gap", 0.0)
+```
+
+## Define the variables
+
+Now you can start by defining the model variables. The variable we need first is the binary decision variable `X` which indicates whether an arc from node `i` to node `j` exists. To work with the decision variable, you will need to work with a vector of locations.
+
+```{julia}
+# Vector of locations
+println(demand.location)
+```
+
+::: {.callout-tip}
+
+You could use the `demand.location` vector to define the elements of the decision variable `X`.
+
+:::
+
+```{julia}
+# YOUR CODE BELOW
+@variable(cvrp_model, X[demand.location,demand.location], Bin)       # 1, if arc from node to node exists
+```
+```{julia}
+# Test your code
+@assert size(X) == (15,15) "Have you defined the decision variable X?"
+@assert all(is_binary(x) for x in X) "The decision variable X should be binary"
+println("Decision variable X test passed successfully, great job!")
+```
+
+## Define the objective function
+
+We want to minimize the total distance of the routes based on the distance dictionary `distance` that you computed earlier. Create the objective function.
+
+```{julia}
+# YOUR CODE BELOW
+@objective(cvrp_model, Min, 
+    sum(distance[i,j] * X[i,j] for i in demand.location, j in demand.location if i != j)
+    )
+```
+```{julia}
+# Test your code
+obj = objective_function(cvrp_model)
+@assert typeof(obj) <: GenericAffExpr "Objective should be a linear expression"
+@assert length(obj.terms) > 0 "Objective should not be empty"
+println("Objective function defined successfully, great job!")
+println("Note, that it is not tested whether the objective function is correct!")
+```
+
+## Define the constraints
+
+Create the constraints that ensure that each location is visited exactly once. **Note that the central location is indexed as `"central"`!** We don't need to consider the central location for the constraints and we have to ensure during summing that we don't include the pairs where `i == j`.
+
+```{julia}
+# YOUR CODE BELOW
+@constraint(cvrp_model, inflow[j in demand.location; j != "central"], 
+    sum(X[i,j] for i in demand.location if i != j) == 1
+    )
+@constraint(cvrp_model, outflow[i in demand.location; i != "central"], 
+    sum(X[i,j] for j in demand.location if i != j) == 1
+    )
+```
+```{julia}
+# Test your code
+const_refs = all_constraints(cvrp_model, include_variable_in_set_constraints=false)
+num_constraints_in_model = length(const_refs)
+expected_constraints = 2 * (nrow(demand) - 1)  # indegree + outdegree for all nodes except central
+@assert num_constraints_in_model == expected_constraints "Number of constraints is incorrect as it is $(num_constraints_in_model) instead of $(expected_constraints)."
+println("Constraints for the inflow and outflow defined, great job!")
+```
+
+Next, we need to restrict the ingoing and outgoing flows to the `central` location. Create the constraints that ensure that the number of vehicles arriving and leaving the central location is equal to the number of vehicles.
+
+```{julia}
+# YOUR CODE BELOW
+@constraint(cvrp_model, vehicles_in, 
+    sum(X[i,"central"] for i in demand.location if i != "central") == vehicles
+    )
+@constraint(cvrp_model, vehicles_out, 
+    sum(X["central",j] for j in demand.location if j != "central") == vehicles
+    )
+```
+```{julia}
+# Test your code
+const_refs = all_constraints(cvrp_model, include_variable_in_set_constraints=false)
+num_constraints_in_model = length(const_refs)
+expected_constraints = 2 * (nrow(demand) - 1) + 2  # indegree + outdegree for all nodes except central + 2 for inflow and outflow
+@assert num_constraints_in_model == expected_constraints "Number of constraints is incorrect as it is $(num_constraints_in_model) instead of $(expected_constraints)."
+println("Constraints for the inflow and outflow defined, great job!")
+```
+
+## Solve the model
+
+Now, we can solve the model. This should work very fast, as the model is very simple without any subtour elimination constraints. Solve the model as usual.
+
+```{julia}
+# YOUR CODE BELOW
+optimize!(cvrp_model)
+```
+```{julia}
+# This defines a function that prints the status of the model
+function print_model_status(model)
+    begin
+        if termination_status(model) == OPTIMAL
+            println("Great, the solution is optimal.")
+            println("The relative gap is $(relative_gap(model))")
+            println("The solve time (in seconds) is $(solve_time(model))")
+        elseif termination_status(model) == TIME_LIMIT && has_values(model)
+            println("Solution is suboptimal due to a time limit, but a primal solution is available") 
+        else
+            error("The model was not solved correctly.") 
+        end
+        println("The objective value is ", objective_value(model)) 
+    end
+end
+
+# Test your code
+@assert termination_status(cvrp_model) == OPTIMAL "The model should be optimal. Have you have any mistakes in the model formulation?"
+print_model_status(cvrp_model)
+println("Model solved successfully, great job!")
+
+```
+
+## Plot the results
+
+The following part extracts the results to plot the tours and requires no changes on your part. It defines some functions that are used to plot the results.
+
+```{julia}
+function plot_routes(X, coord)
+
+    Routes = [value(X[i,j]) >= 0.5 ? true : false for i in coord.location, j in coord.location]
+
+    fig = plot(
+        size=(800, 600),
+        background_color=:white,
+        framestyle=:box,
+        grid=false,
+        dpi=300
+    )
+
+    connections = findall(Routes -> !iszero(Routes), Routes .>= 0.5)
+
+    for conn in connections
+        xx = [coord[conn[1],:x]; coord[conn[2],:x]]
+        yy = [coord[conn[1],:y]; coord[conn[2],:y]]
+        plot!(
+            fig, xx, yy,
+            color=:crimson,
+            label="",
+            linewidth=2,
+            linestyle=:solid,
+            alpha=0.7
+        )
+    end
+
+    scatter!(
+        fig, coord[1:1,:x], coord[1:1,:y],
+        marker=:star5,
+        color=:black,
+        markersize=15,
+        label="Central Library",
+        markerstrokewidth=1
+    )
+    scatter!(
+        fig, coord[2:end,:x], coord[2:end,:y],
+        marker=:circle,
+        color=:steelblue,
+        markersize=8,
+        label="Libraries",
+        markerstrokewidth=1
+    )
+
+    plot!(
+        fig,
+        title="Delivery Routes Optimization",
+        xlabel="Distance (km)",
+        ylabel="Distance (km)",
+        legend=:bottomright,
+        legendfontsize=8,
+        foreground_color_legend=nothing,
+        background_color_legend=:transparent,
+        margin=5Plots.mm,
+        xlims=(minimum(coord.x) - 5, maximum(coord.x) + 5),
+        ylims=(minimum(coord.y) - 5, maximum(coord.y) + 5)
+    )
+
+    return fig
+end
+
+# Plot the routes
+display(plot_routes(X,coord))
+```
+
+## 2. Subtour elimination
+
+As you see in the plot, the solution contains subtours. Thus, we need to add some constraints from the Miller-Tucker-Zemlin (MTZ) formulation to prevent subtours. First, we need to define the variable `U` which is the current capacity usage at node `i`.
+
+::: {.callout-tip}
+
+It might be useful to convert the `demand` DataFrame into a dictionary, so we can access the demand for each location directly by the location name for the variable definition and the constraints.
+
+:::
+
+Create the variable `U` and ensure that the capacity usage at each location is between the demand and the capacity. 
+
+```{julia}
+# YOUR CODE BELOW
+demand_dict = Dict(demand.location .=> demand.demand)
+@variable(cvrp_model, demand_dict[i] .<= U[i = demand.location] .<= capacity)
+```
+```{julia}
+# Test your code
+demand_dict = Dict(demand.location .=> demand.demand)
+@assert all(has_lower_bound(U[i]) == true for i in demand.location) "The variable U should have a lower bound"
+@assert all(has_upper_bound(U[i]) == true for i in demand.location) "The variable U should have an upper bound"
+println("Variable U defined successfully, great job!")
+```
+
+Next, we need to add the constraints to prevent subtours.
+
+```{julia}
+# YOUR CODE BELOW
+@constraint(
+    cvrp_model, 
+    no_subtour[
+        i in demand.location, j in demand.location; 
+        j != "central" && i != "central" && 
+        i != j
+    ], 
+    U[i] - U[j] + capacity * X[i,j] <= capacity - demand_dict[j]
+    )
+```
+```{julia}
+# Test your code
+println("Constraints for the subtour elimination defined!")
+println("It is not tested whether the constraints are correct, so please check the resulting routes in the visualization.")
+```
+
+Now, solve the model again and plot the routes.
+
+```{julia}
+# YOUR CODE BELOW
+optimize!(cvrp_model)
+print_model_status(cvrp_model)
+display(plot_routes(X,coord))
+```
+
+The following code plots the capacity usage per vehicle.
+
+```{julia}
+# Plot the capacity usage
+function plot_capacity_usage(X, U, coord)
+    # Find which locations are visited by each vehicle from central
+    vehicle_routes = []
+    for i in coord.location
+        if value(X[i, "central"]) > 0.5
+            push!(vehicle_routes, (i, value(U[i])))
+        end
+    end
+
+    println(vehicle_routes)
+    
+    # Sort by capacity usage for better visualization
+    sort!(vehicle_routes, by = x -> x[2])
+    
+    # Create bar plot
+    fig = bar(
+        [u[2] for u in vehicle_routes],
+        title="Capacity Usage per Vehicle",
+        xlabel="Vehicle",
+        ylabel="Capacity Usage (parcels)",
+        label="",
+        color=:steelblue,
+        ylims=(0, capacity),
+        size=(800, 400),
+        dpi=300,
+        margin=5Plots.mm,
+    )
+    
+    # Add capacity limit line
+    hline!([capacity], color=:red, linestyle=:dash, label="Capacity Limit")
+    
+    return fig
+end
+
+# Create and display the plot
+display(plot_capacity_usage(X, U, coord))
+```
+
+## 3. Computing the costs
+
+Assume, that FastDelivery wants to know the costs of the optimal solution. Compute the costs of the optimal solution over the timeframe of four weeks with a short calculation based on the results and store the result in a variable called `monthly_costs`. Each driven kilometer is associated with costs of **0.6 EUR per kilometer** (fuel, repairs, and costs for the driver) and each location has to be visited daily from Monday to Friday. Note, that FastDelivery leases its vehicles and it has to pay **450 EUR every four weeks** for each vehicle in use.
+
+```{julia}
+# YOUR CODE BELOW
+monthly_costs = objective_value(cvrp_model) * 0.6 * 4 * 5 + 450 * vehicles
+println("The costs of the optimal solution over the timeframe of four weeks are $(monthly_costs) EUR.")
+```
+```{julia}
+# Test your code
+@assert isapprox(monthly_costs, 14168, atol=10) "The costs are not as expected. But don't worry, you can still get the bonus points!"
+println("Costs calculated successfully, great job!")
+```
+
+## 4. Optimal Solution?
+
+Although the costs can now be computed, the tour plan has not changed so far. FastDelivery asks you whether you have an idea of how to lower the costs associated with the parcel distribution. Take a look at your current plotted solution and try to come up with an idea. Discuss the potential shortcoming and assumptions of the current model in a few sentences. Propose at least one idea of how to lower the costs in the future.
+
+You can do this in a comment in the cell below.
+```{julia}
+#=
+We could use a more efficient vehicle that can transport more parcels per drive. Or we could try to reduce the distance between the distribution centers in case we build new ones. Other ideas could be to reduce the number of vehicles, if we don't fully utilize them.
+
+=#
+```
+
+## 5. Number of Vehicles
+
+Together, you realize one potential area of improvement involves the number of vehicles: it might potentially not be necessary to have 6 vehicles which deliver the parcels to the distribution centers. You are thus tasked to find the optimal number of vehicles and the best tour plan to minimize the costs **(not the distance!)**. 
+
+::: {.callout-tip}
+
+There are multiple ways to tackle this task, but I recommend to first think about how to model the fixed costs for the vehicles and how to add the costs for the driving distance. If you need to adjust the model, feel free to do so. The easiest way then would be the definition of a new model (e.g. `cvrp_model_flex`) and then to copy and adjust all relevant constraints and variables.
+
+:::
+
+Implement these changes in your model and compute the optimal number of vehicles and the best tour plan. In case the computation takes too long, no worries! If you define the model with a time limit of 60 seconds, it should not take too long.
+
+```{julia}
+# YOUR CODE BELOW
+cvrp_model_flex = Model(HiGHS.Optimizer)
+set_attribute(cvrp_model_flex, "presolve", "on")
+set_attribute(cvrp_model_flex, "time_limit", 60.0)
+set_attribute(cvrp_model_flex, "mip_rel_gap", 0.0)
+
+@variable(cvrp_model_flex, X[demand.location,demand.location], Bin)
+@variable(cvrp_model_flex, demand_dict[i] .<= U[i = demand.location] .<= capacity)
+
+@objective(cvrp_model_flex, Min, 
+    sum(12 * distance[i,j] * X[i,j] for i in demand.location, j in demand.location if i != j)
+    + sum(450 * X["central",i] for i in demand.location if i != "central")
+    )
+
+@constraint(cvrp_model_flex, inflow[j in demand.location; j != "central"], 
+    sum(X[i,j] for i in demand.location if i != j) == 1
+    )
+@constraint(cvrp_model_flex, outflow[i in demand.location; i != "central"], 
+    sum(X[i,j] for j in demand.location if i != j) == 1
+    )
+
+@constraint(cvrp_model_flex, vehicles_in, 
+    sum(X[i,"central"] for i in demand.location if i != "central") <= vehicles
+    )
+@constraint(cvrp_model_flex, vehicles_out, 
+    sum(X["central",j] for j in demand.location if j != "central") <= vehicles
+    )
+
+@constraint(
+    cvrp_model_flex, 
+    no_subtour[
+        i in demand.location, j in demand.location; 
+        j != "central" && i != "central" && 
+        i != j
+    ], 
+    U[i] - U[j] + capacity * X[i,j] <= capacity - demand_dict[j]
+    )
+
+optimize!(cvrp_model_flex)
+```
+
+The code below visualizes the results. Note, that you might need to replace the `X` and `U` with your new models variable names, if you have renamed them
+```{julia}
+# Visualize the results
+print_model_status(cvrp_model_flex)
+display(plot_routes(X,coord))
+```
+
+```{julia}
+# Test your code
+display(plot_capacity_usage(X, U, coord))
+```
+
+Based on your results, what are the expected costs savings when compared to task b, and how many vehicles does the central library need?
+
+Please answer this question in the cell below.
+```{julia}
+#=
+
+
+
+=#
+```
+
+--
+
+{{< include ../include/tutorial_end.qmd >}}
+

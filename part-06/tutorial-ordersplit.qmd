@@ -22,6 +22,8 @@ format:
     ipynb:
         code-copy: true
         code-overflow: wrap
+
+engine: julia
 ---
 
 # Introduction
@@ -69,7 +71,7 @@ Based on the coappearance matrix you have determined in the previous assignment,
 
 ```{julia}
 #| eval: false
-objective_value =
+objective_value_by_hand =
 ```
 
 ## 3. Counting Split Parcels
@@ -174,15 +176,32 @@ The retailer has another requirement: each SKU can only be allocated to one ware
 :::
 
 ::: {.callout-tip}
-## Use the SCIP solver
-If you don't have SCIP or JuMP installed, add the solver via Pkg.add("SCIP") and Pkg.add("JuMP").
+## Use the Juniper solver
+If you don't have Juniper, Ipopt and/or HiGHS installed, add the solver via Pkg.add("Juniper") and Pkg.add("Ipopt") and Pkg.add("HiGHS"). Juniper is a solver for nonlinear problems, that can be used in combination with Ipopt and HiGHS to solve mixed-integer quadratic problems. If you want to use SCIP, you can also do this by adding JuMP and SCIP and then change the solver in the model definition to `warehouse_model = Model(SCIP.Optimizer())`. Note, that this does not work automatically in Windows, as you will have to install the SCIP binaries manually. On Mac and Linux, it should work out of the box.
 :::
+
+```{julia}
+#| echo: false
+#| output: false
+import Pkg; Pkg.add("Ipopt")
+import Pkg; Pkg.add("HiGHS")
+import Pkg; Pkg.add("Juniper")
+```
 
 First, we start by defining the model.
 ```{julia}
 #| eval: true
-using JuMP, SCIP 
-warehouse_model = Model(SCIP.Optimizer)
+# Definition of the warehouse model
+using JuMP, Ipopt, HiGHS, Juniper
+ipopt = optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 0)
+highs = optimizer_with_attributes(HiGHS.Optimizer, "output_flag" => false)
+warehouse_model = Model(
+    optimizer_with_attributes(
+        Juniper.Optimizer,
+        "nl_solver" => ipopt,
+        "mip_solver" => highs,
+    ),
+)
 ```
 
 Next, compute the coappearance matrix based on the transactional data provided in `T`.
@@ -274,8 +293,8 @@ Finally, solve the model with a solve statement.
 #| eval: false
 #| code-fold: true
 # Assert whether the model is solved correctly.
-@assert termination_status(warehouse_model) == MOI.OPTIMAL "The model should be solved with an optimal solution"
-@assert objective_value(warehouse_model) == 141 "The objective value should be 141. Have you correctly implemented the objective function?"
+@assert termination_status(warehouse_model) == MOI.OPTIMAL || termination_status(warehouse_model) == MOI.LOCALLY_SOLVED "The model should either be solved with an optimal solution or with a locally optimal solution"
+@assert isapprox(objective_value(warehouse_model), 141) "The objective value should approximaly be 141. Have you correctly implemented the objective function?"
 println("Great! The model is correctly solved.")
 ```
 
@@ -288,7 +307,7 @@ println()
 println("SKU Allocation:")
 for i in skus
     for k in warehouses
-        if value(X[i,k]) == 1
+        if value(X[i,k]) > 0.1
             println("SKU: ", i, " Allocation: ", k)
         end
     end
