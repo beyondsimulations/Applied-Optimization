@@ -99,50 +99,6 @@
     ]
   },
   {
-    "objectID": "part-07/tutorial-routing.html#subtour-elimination",
-    "href": "part-07/tutorial-routing.html#subtour-elimination",
-    "title": "Tutorial VII - Periodic Library Routing",
-    "section": "2. Subtour elimination",
-    "text": "2. Subtour elimination\nAs you see in the plot, the solution contains subtours. Thus, we need to add some constraints from the Miller-Tucker-Zemlin (MTZ) formulation to prevent subtours. First, we need to define the variable U which is the current capacity usage at node i.\n\n\n\n\n\n\nTip\n\n\n\nIt might be useful to convert the demand DataFrame into a dictionary, so we can access the demand for each location directly by the location name for the variable definition and the constraints.\n\n\nCreate the variable U and ensure that the capacity usage at each location is between the demand and the capacity. Note, that a dictionary might be useful here.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your code\ndemand_dict = Dict(demand.location .=&gt; demand.demand)\n@assert all(has_lower_bound(U[i]) == true for i in demand.location) \"The variable U should have a lower bound\"\n@assert all(has_upper_bound(U[i]) == true for i in demand.location) \"The variable U should have an upper bound\"\nprintln(\"Variable U defined successfully, great job!\")\n\n\nNext, we need to add the set of constraints to prevent subtours.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your code\nprintln(\"Constraints for the subtour elimination defined!\")\nprintln(\"It is not tested whether the constraints are correct, so please check the resulting routes in the visualization.\")\n\n\nNow, solve the model again.\n\n# YOUR CODE BELOW\n\nThe following code prints the model status and visualizes the routes. If your implementation is correct, the routes should be free of subtours and the model should have reached optimality or found a feasible solution before hitting the time limit.\n\nprint_model_status(cvrp_model)\ndisplay(plot_routes(X,coord))\n\nThe following code plots the capacity usage per vehicle.\n\n\nCode\n# Plot the capacity usage\nfunction plot_capacity_usage(X, U, coord)\n    # Find which locations are visited by each vehicle from central\n    vehicle_routes = []\n    for i in coord.location\n        if value(X[i, \"central\"]) &gt; 0.5\n            push!(vehicle_routes, (i, value(U[i])))\n        end\n    end\n\n    println(vehicle_routes)\n    \n    # Sort by capacity usage for better visualization\n    sort!(vehicle_routes, by = x -&gt; x[2])\n    \n    # Create bar plot\n    fig = bar(\n        [u[2] for u in vehicle_routes],\n        title=\"Capacity Usage per Vehicle\",\n        xlabel=\"Vehicle\",\n        ylabel=\"Capacity Usage (parcels)\",\n        label=\"\",\n        color=:steelblue,\n        ylims=(0, capacity),\n        size=(800, 400),\n        dpi=300,\n        margin=5Plots.mm,\n    )\n    \n    # Add capacity limit line\n    hline!([capacity], color=:red, linestyle=:dash, label=\"Capacity Limit\")\n    \n    return fig\nend\n\n# Create and display the plot\ndisplay(plot_capacity_usage(X, U, coord))",
-    "crumbs": [
-      "07 Routing",
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "part-07/tutorial-routing.html#computing-the-costs",
-    "href": "part-07/tutorial-routing.html#computing-the-costs",
-    "title": "Tutorial VII - Periodic Library Routing",
-    "section": "3. Computing the costs",
-    "text": "3. Computing the costs\nFastDelivery wants to know the costs of the optimal solution. Let’s calculate the monthly operational costs based on the following parameters:\n\nCost per kilometer: 0.6 EUR (includes fuel, repairs, driver costs)\nService frequency: Monday to Friday (5 days per week)\nTime period: 4 weeks\nVehicle lease cost: 450 EUR per vehicle per 4 weeks\n\nCalculate the total monthly costs and store them in monthly_costs.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Test your code\n@assert isapprox(monthly_costs, 14168, atol=10) \"The costs are not as expected. But don't worry, you can still get the bonus points!\"\nprintln(\"Costs calculated as $(monthly_costs) EUR successfully, great job!\")",
-    "crumbs": [
-      "07 Routing",
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "part-07/tutorial-routing.html#optimal-solution",
-    "href": "part-07/tutorial-routing.html#optimal-solution",
-    "title": "Tutorial VII - Periodic Library Routing",
-    "section": "4. Optimal Solution?",
-    "text": "4. Optimal Solution?\nAlthough the costs can now be computed, the tour plan has not changed so far. FastDelivery asks you whether you have an idea of how to lower the costs associated with the parcel distribution. Take a look at your current plotted solution and try to come up with an idea. Discuss the potential shortcoming and assumptions of the current model in a few sentences. Propose at least one idea of how to lower the costs in the future.\nYou can do this in a comment in the cell below.\n\n#=\n\n\n\n\n=#",
-    "crumbs": [
-      "07 Routing",
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "part-07/tutorial-routing.html#number-of-vehicles",
-    "href": "part-07/tutorial-routing.html#number-of-vehicles",
-    "title": "Tutorial VII - Periodic Library Routing",
-    "section": "5. Number of Vehicles",
-    "text": "5. Number of Vehicles\nTogether, you realize one potential area of improvement involves the number of vehicles: it might potentially not be necessary to have 6 vehicles which deliver the parcels to the distribution centers. You are thus tasked to find the optimal number of vehicles and the best tour plan to minimize the costs (not the distance!).\n\n\n\n\n\n\nTip\n\n\n\nThere are multiple ways to tackle this task, but I recommend to first think about how to model the fixed costs for the vehicles and how to add the costs for the driving distance. If you need to adjust the model, feel free to do so. The easiest way then would be the definition of a new model (e.g. cvrp_model_flex) and then to copy and adjust all relevant constraints and variables.\n\n\nImplement these changes in your model and compute the optimal number of vehicles and the best tour plan. In case the computation takes too long, no worries! If you define the model with a time limit of 60 seconds, it should not take too long.\n\n# YOUR CODE BELOW\n\nThe code below again visualizes the results. Note, that you might need to replace the X and U with your new models variable names, if you have renamed them.\n\n# Visualize the results\nprint_model_status(cvrp_model_flex)\ndisplay(plot_routes(X,coord))\n\nBased on your results, what are the expected costs savings when compared to task b, and how many vehicles does the central library need?\nPlease answer this question in the cell below.\n\n#=\n\n\n\n=#\n\n–",
-    "crumbs": [
-      "07 Routing",
-      "Tutorial"
-    ]
-  },
-  {
     "objectID": "part-06/tutorial-ordersplit.html",
     "href": "part-06/tutorial-ordersplit.html",
     "title": "Tutorial VI - Minimizing Split Orders in E-Commerce",
