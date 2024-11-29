@@ -5,42 +5,628 @@ author: "Dr. Tobias Vlćek"
 institute: "University of Hamburg - Fall 2024"
 title-slide-attributes:
     data-background-color: "#025259"
+html-math-method:
+  method: mathjax
+  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 
 format:
     revealjs:
         theme: [default, ../styles.scss]
         transition: slide
         transition-speed: fast
-        highlight-style: breezedark
+        highlight-style: arrow
         slide-number: true
         code-copy: true
         code-link: true
         preview-links: auto
-        footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-introduction.qmd)"
+        footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-districting.qmd)"
         output-file: lecture-presentation.html
     html:
-        theme: litera
-        highlight-style: breezedark
-        linkcolor: "#a60000"
-        slide-number: true
-        code-copy: true
-        code-link: true
-        toc: true
-        toc-location: right
-    pdf: 
-        documentclass: report
-        geometry:
-            - margin=1in
-        fontfamily: roboto
-        fontfamilyoptions: sfdefault
-        colorlinks: true
+        theme: [litera, ../styles_html.scss]
 
 bibliography: ../AppliedBib.bib
 
-engine: julia
-
 execute:
     echo: true
+
+engine: julia
 ---
 
-# [Introduction to Variables and Types in Julia]{.flow} {.title}
+# [Introduction]{.flow} {.title}
+
+## Challenges
+
+[Question:]{.question} **What makes the work of emergency services complex?**
+
+::: {.incremental}
+- Dynamic urban development
+- Changing population patterns
+- Resource constraints
+- Need for rapid response
+- Multiple stakeholder interests
+:::
+
+## Emergency Services
+
+::: {.columns}
+::: {.column width="40%"}
+![](https://images.unsplash.com/photo-1532555705039-f04fd833eb21?q=80&w=3264&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width=85%}
+:::
+::: {.column width="55%"}
+Emergency services address the needs of [three interest groups]{.highlight}: 
+
+- Citizens
+- Service personnel
+- Administrators
+
+[Question:]{.question} **What could be the objectives of these groups?**
+
+:::
+:::
+
+## Stakeholder Objectives
+
+::: {.columns}
+
+::: {.column width="50%"}
+1. **Citizens**
+   - Fast response times
+   - Reliable service coverage
+
+2. **Service Personnel**
+   - Manageable workloads
+   - Safe working conditions
+:::
+
+::: {.column width="50%"}
+3. **Administrators**
+   - Cost efficiency
+   - Resource optimization
+:::
+
+:::
+
+## Emergency Service Districting
+
+::: {.columns}
+::: {.column width="40%"}
+![](https://images.unsplash.com/photo-1689783101576-627f2fbdb8d5?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width=85%}
+:::
+::: {.column width="55%"}
+[Question:]{.question} **Why might current district layouts be suboptimal?**
+
+::: {.incremental}
+- Many layouts [date back several decades]{.highlight}
+- Often designed along highways and regions [@Bruce2009]
+- Extensive data **not used** for data-driven improvement
+:::
+:::
+:::
+
+## {.loud-slide}
+::: {.r-fit-text}
+How can we improve
+
+this situation?
+:::
+
+::: footer
+:::
+
+## The Role of Data
+
+::: {.block}
+[Question:]{.question} **What data can help improve emergency services?**
+
+::: {.incremental}
+- Historical incident patterns
+- Response time analysis
+- Resource utilization metrics
+- Population densities and traffic patterns
+:::
+:::
+
+. . .
+
+::: {.callout-note}
+Extensive data collected, but often [lack tools]{.highlight} to leverage it.
+:::
+
+## Optimization
+
+- [Operations research (OR)]{.highlight} models can help!
+- Based on **incident records** and **geographical information**
+- Improve the **response of emergency services**
+- Help administrators in making **strategic decisions**
+- Locate [new departments]{.highlight} or [close departments]{.highlight} [@Liberatore2020]
+
+# [Case Studies]{.flow} {.title}
+
+## Background
+
+::: {.block}
+For an efficient and effective distribution of resources, police jurisdictions are divided into precincts or command districts with separate departments. These are further divided into patrol beats \cite{DAmico2002}.
+
+In our research, we aimed to improve the district layout of a police jurisdiction in Germany and a jurisdiction in Belgium. Our primary objective was the improvement of the response time.
+:::
+
+## Priorities
+
+::: {.block}
+A part of the police force patrols the streets, and another part is stationed at the departments to respond to calls for service (CFS) of different priorities.
+
+The highest priority is assigned to severe incidents, such as murders in progress or hostage situations. As these incidents are critical, more personnel has to be dispatched because staff shortages put citizens’ and officers’ lives at risk.
+
+The lowest priority is reserved for non-critical incidents, such as disturbances of the peace or minor traffic accidents.
+:::
+
+## Calls for service
+
+::: {.block}
+Dispatchers assign all CFS to vehicles from the corresponding districts and patrol areas, as the officers are familiar with the area and are thus better prepared to respond appropriately \cite{Bodily1978}. To cope with high demands, dispatchers can assign vehicles from nearby districts or beats.
+:::
+::: {.block}
+**What could be the potential problem?**
+
+This can lead to a domino effect, as transferring vehicles from other districts or beats reduces coverage in those locations, making them vulnerable when they need assistance themselves \cite{Mayer2009}.
+:::
+
+## The potential result
+
+::: {.block}
+An overloaded system with long dispatching delays due to staff shortages. In these systems, preventive patrol is hardly possible \cite{Miller1972} and dispatchers constantly draw on patrol resources when more help is needed.
+:::
+
+## Response Time
+
+::: {.block}
+- A central criterion to measure the effectiveness of emergency services is the response time \cite{Dunnett2019}.
+- It measures the time between a call for aid and the arrival at the incident location. It comprises the call length, the dispatch delay, and the driving time to the incident location \cite{Kern1989}.
+- A low response time has several benefits: it increases the likelihood of helping citizens, and it improves confidence in the service \cite{Bodily1978}.
+- Lowering the response time was the main objective of our case studies.
+:::
+
+# Territory Design Problem
+
+![Territory Design](images/hexagons_0510.pdf){width=60%}
+
+::: {.block}
+**Definition**
+
+The problem involves the aggregation of small geographic areas, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to pre-defined planning criteria \cite{Zoltners1983}.
+:::
+
+# Problem Structure
+
+## Objective
+
+::: {.columns}
+::: {.column width="40%"}
+![Objective](images/hex_2.pdf){width=90%}
+:::
+::: {.column width="55%"}
+::: {.block}
+**What could be the objective?**
+
+Minimizing the response time to help citizens faster while increasing the confidence in the service.
+:::
+::: {.block}
+**What could be further objectives?**
+
+- Reallocate only part of the police department's
+- Prevention of isolated departments
+- Compact territories to improve patrol
+- Contiguous territories
+:::
+:::
+:::
+
+## Basic Structure
+
+::: {.columns}
+::: {.column width="40%"}
+![Basic Structure](images/hex_to_centroid.pdf){width=50%}
+:::
+::: {.column width="55%"}
+[Question:]{.question} **How can we structure this problem?**
+
+::: {.incremental}
+- Model as a **digraph** with vertices and edges
+- Each BA centroid becomes a **vertex**
+- Use the following sets:
+  - $\mathcal{J}$ : set of BAs, indexed by $j$
+  - $\mathcal{I}$ : set of potential district centres $(\mathcal{I} \subseteq \mathcal{J})$, indexed by $i$
+:::
+:::
+:::
+
+## Why Hexagons? 
+
+::: {.columns}
+::: {.column width="40%"}
+![Hexagonal Grid](images/vertex_connected.pdf){width=35%}
+:::
+::: {.column width="55%"}
+[Question:]{.question} **What advantages do hexagons offer?**
+
+::: {.incremental}
+- [Equal distances]{.highlight} to all neighboring centroids
+- Reduces sampling bias from edge effects [@Wang2018a]
+- Special properties for enforcing **compactness**
+- Better representation of urban geography
+:::
+:::
+:::
+
+## Response Time Components
+
+::: {.columns}
+::: {.column width="40%"}
+![Response Time](images/responsetime.pdf){width=35%}
+:::
+::: {.column width="55%"}
+[Question:]{.question} **How can we model response time?**
+
+::: {.incremental}
+- Call length is [independent]{.highlight} of territory design
+- Dispatch time is addressed **indirectly**
+- Driving time can be **minimized directly**
+:::
+
+::: {.callout-note}
+We focus on minimizing expected driving times between departments and incident locations.
+:::
+:::
+:::
+
+# [Model Formulation]{.flow} {.title}
+
+**Sets**
+
+- $\mathcal{J}$: Set of BAs, indexed by $j$
+- $\mathcal{I}$: Set of potential district centres (departments) ($\mathcal{I} \subseteq \mathcal{J}$), indexed by $i$.
+
+**Parameters**
+
+- $p$: The number of district centres (departments)
+- $\bar{d}$: Maximum feasible driving time between a location $i$ and a BA $j$
+- $t_{i,j}$: Sum of the expected driving times between district centre $i$ and BA $j$.
+
+# Model Formulation
+
+## Decision variable/s
+
+::: {.block}
+[Question:]{.question} **What decision variables do we need?**
+
+::: {.incremental}
+Given:
+- BAs indexed by $j \in \mathcal{J}$
+- Potential department locations $i \in \mathcal{I}$
+
+- $X_{i,j}$: 1 if BA $j$ is assigned to department $i$, 0 otherwise
+:::
+:::
+
+## {.loud-slide}
+::: {.r-fit-text}
+Let's build our
+
+objective function!
+:::
+
+::: footer
+:::
+
+## Objective Function
+
+::: {.block}
+[Question:]{.question} **How do we minimize response time?**
+
+::: {.incremental}
+- We want to minimize **total driving time**
+- Consider frequency of incidents in each BA
+- Don't include fixed costs (handled by constraints)
+
+This leads to:
+
+$\text{minimize} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} t_{i,j} \times X_{i,j}$
+
+where $t_{i,j}$ represents expected driving times
+:::
+:::
+
+## Key Constraints
+
+::: {.columns}
+::: {.column width="40%"}
+![Constraints](images/hex_2.pdf){width=80%}
+:::
+::: {.column width="60%"}
+[Question:]{.question} **What constraints do we need?**
+
+::: {.incremental}
+1. Each BA must have [exactly one]{.highlight} department
+2. Limit total number of departments
+3. Only assign to **active** departments
+4. Ensure districts are **contiguous**
+5. Maintain district **compactness**
+:::
+
+:::
+
+:::
+
+## Constraints
+
+::: {.block}
+**Each BA has to be allocated to one department**
+
+\[
+\sum_{i \in \mathcal{I}} X_{i,j} = 1 \quad \forall j \in \mathcal{J}
+\]
+:::
+
+## Constraints
+
+::: {.block}
+**The number of departments has to be restricted**
+
+\[
+\sum_{i \in \mathcal{I}} X_{i,i} = p
+\]
+:::
+
+## Constraints
+
+::: {.block}
+**BAs can only be assigned to realized departments**
+
+\[
+X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
+\]
+:::
+
+# P-Median Problem
+
+\[
+\begin{align}
+\text{minimize} \quad & \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} t_{i,j} \times X_{i,j} \\
+\text{subject to:} \quad & \sum_{i \in \mathcal{I}} X_{i,j}= 1 && \forall j \in \mathcal{J} \\
+& \sum_{i \in \mathcal{I}} X_{i,i} = p &&  \\
+& X_{i,j} \leq X_{i,i} &&  \forall i \in \mathcal{I}, \forall j \in \mathcal{J}  \\
+& X_{i,j} \in \{0,1\}  && \forall i \in \mathcal{I}, \forall j \in \mathcal{J} 
+\end{align}
+\]
+
+# Contiguity and Compactness
+
+::: {.columns}
+::: {.column width="33%"}
+![Contiguity and Compactness](images/hex_1.pdf){width=100%}
+:::
+::: {.column width="34%"}
+![Contiguity and Compactness](images/hex_2.pdf){width=100%}
+:::
+::: {.column width="33%"}
+![Contiguity and Compactness](images/hex_3.pdf){width=100%}
+:::
+:::
+
+**Compactness has no univocal definition; a district is commonly declared compact if it is 'somehow round-shaped and undistorted'** \cite{Kalcsics2005}.
+
+## Contiguity and Compactness
+
+::: {.columns}
+::: {.column width="40%"}
+![Contiguity and Compactness](images/hex_2.pdf){width=100%}
+:::
+::: {.column width="55%"}
+::: {.block}
+**Are our resulting districts now contiguous and compact?**
+
+This depends on $t_{i,j}$. If it is the Euclidean distance between the BA $i$ and BA $j$ the resulting districts will be contiguous and likely of compact shape.
+:::
+::: {.block}
+**Is this likely for police service districting?**
+
+No, as we minimize the driving time within a city multiplied by the differing number of requested cars in each BA $j$, which can contribute to distorted district shapes.
+:::
+:::
+:::
+
+## Contiguity and Compactness
+
+![Streets](images/streets.pdf){width=70%}
+
+## Contiguity
+
+::: {.block}
+**Additional available data**
+
+- $\mathcal{A}_j$: Sets of BAs adjacent to BA $j$ ($\mathcal{A}_j \subseteq \mathcal{J}$)
+- $e_{i,j}$: Euclidean distance between the centroid of BA $i$ and the centroid of BA $j$
+
+\[
+\mathcal{N}_{i,j}=\{v \in \mathcal{A}_j | e_{i,v} < e_{i,j}\} \quad \forall i\in \mathcal{I}, \forall j\in \mathcal{J}
+\]
+:::
+
+## Contiguity
+
+::: {.block}
+**Example: $N_{2,11} = \{7,8\}$**
+
+![Example](images/example_nij.pdf){width=45%}
+:::
+
+## Contiguity
+
+::: {.block}
+**All districts have to be contiguous**
+
+\[
+X_{i,j} \leq \sum_{v \in \mathcal{N}_{i,j}} X_{i,v} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i: i \neq j
+\]
+:::
+
+## Contiguity
+
+::: {.block}
+**All districts have to be contiguous and compact**
+
+\[
+\begin{align*}
+X_{i,j} &\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} && \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i:|\mathcal{N}_{i,j}|= 1 \wedge i \neq j \\
+2X_{i,j} &\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} && \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i:|\mathcal{N}_{i,j}|> 1 \wedge i \neq j 
+\end{align*}
+\]
+:::
+
+# Model Characteristics
+
+## P-Median Problem with Contiguity and Compactness Constraints
+
+::: {.block}
+**Model characteristics**
+
+- Is the model formulation linear/ non-linear?
+- What kind of variable domains do we have?
+- Have we prevented isolated districts?
+- What are the differences compared to the model of the last lecture?
+:::
+::: {.block}
+**Model assumptions**
+
+- What assumptions have we made?
+- Can we use Euclidean distances to approximate the driving time?
+- Can we rely on incident data collected by the police?
+:::
+:::
+
+# Can this be applied in the real world?
+
+# Case Studies in Germany and in Belgium
+
+::: {.columns}
+::: {.column width="40%"}
+![Germany](images/g3c3_small.pdf){width=90%}
+:::
+::: {.column width="60%"}
+::: {.block}
+**Germany**
+
+- Redesign districts to improve response time
+- 1,800,000 incidents from 2015 to 2019
+- approximately 20 department locations
+- 1,596 BAs for optimization
+:::
+:::
+:::
+
+# Case Studies in Germany and in Belgium
+
+::: {.columns}
+::: {.column width="40%"}
+![Belgium](images/b2c3.pdf){width=90%}
+:::
+::: {.column width="60%"}
+::: {.block}
+**Belgium**
+
+- Redesign districts and open third location to improve response time
+- 50,000 incidents 2019 - 2020
+- 2 department locations
+- 1,233 BAs for optimization
+:::
+:::
+:::
+
+# Case Studies in Germany and in Belgium
+
+::: {.columns}
+::: {.column width="40%"}
+![Simulation](images/josh-hild-8Wz-gIYEnHY-unsplash.jpg){width=80%}
+:::
+::: {.column width="60%"}
+::: {.block}
+**Simulation**
+
+- Driving times were based on street networks and Google Maps traffic data
+- Results were evaluated with an emergency service simulation
+- It allowed to account for the variability of spatial and temporal incident patterns, shifts, priority handling, rush hours, exchanges between districts, variable driving times and follow-ups after incidents
+:::
+:::
+:::
+
+# Conclusion
+
+## Summary
+
+::: {.columns}
+::: {.column width="40%"}
+![Conclusion](images/mat-napo-ejWJ3a92FEs-unsplash.jpg){width=90%}
+:::
+::: {.column width="55%"}
+::: {.block}
+- Improved police districts could reduce the response time by up to 14.52% in our case studies based on our simulation
+- Emergency service administrators could benefit from the use of OR techniques in the planning of department locations and district layouts
+- Our approach can be applied for other emergency services as well
+:::
+:::
+:::
+
+# Tutorial
+
+## 6.a Modelling the P-Median Problem
+
+A `.jl` file is available that models the basic p-median problem. In addition, several additional files are provided, which contain the Euclidean distance between the BAs, the driving time between BAs, the number of incidents per BA, and the hexagonal shapes.
+
+Note that the code contains 6 mistakes. Correct the mistakes, and provide us with a working model in a `.jl` file to complete this task. If the model takes too long, you can set the relative gap to 10%.
+
+## 6.b Contiguity and Compactness
+
+::: {.columns}
+::: {.column width="40%"}
+![Contiguity and Compactness](images/hexagons_0510.pdf){width=80%}
+:::
+::: {.column width="60%"}
+Extend your `.jl` file to include the additional 2 constraints from the lecture that ensure contiguity and compactness.
+
+Based on your results, what is the gap between the two solutions? Please provide us with a working model in a `.jl` file and with a comment answering the question in the code.
+:::
+:::
+
+## 6.c Support of other Departments
+
+::: {.columns}
+::: {.column width="40%"}
+![Support of other Departments](images/hexagons_0510.pdf){width=80%}
+:::
+::: {.column width="60%"}
+If a department is overloaded, other departments have to provide backup units in case of incidents with high priorities.
+
+Propose a new restriction in your `.jl` file to ensure that each police department has another department within a radius of 18 minutes of the driving time $d_{i,j}$.
+
+What might be a potential problem with this extension? Please provide us with a short written comment in the file to answer the question.
+:::
+:::
+
+## 6.d Restricted Driving Time
+
+::: {.columns}
+::: {.column width="40%"}
+![Restricted Driving Time](images/hexagons_0510.pdf){width=80%}
+:::
+::: {.column width="60%"}
+For incidents of high priority, and to mitigate the issues from 5.c it is necessary that each police department can dispatch its cars within 18 minutes to all of its assigned BAs.
+
+Extend your `.jl` model by the additional parameter $\bar{d}$ to ensure that no allocation with a driving time $d_{i,j}$ higher than 18 minutes from $i$ to $j$ is possible.
+
+Please provide us with a working model in a `.jl` file to answer the question.
+:::
+:::
+
+# Literature
+
+
