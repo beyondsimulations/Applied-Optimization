@@ -372,18 +372,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
- <span class="menu-text">***</span>
-  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
- <span class="menu-text">Cheatsheets</span></a>
+ <span class="menu-text">08 Districting</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part-08/lecture-districting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part-08/tutorial-districting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">***</span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Cheatsheets</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../general/cheatsheet-julia.html" class="sidebar-item-text sidebar-link">
@@ -481,7 +504,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>demand.csv</code>: Contains demand per distribution center</li>
 <li><code>coord_x_y.csv</code>: Contains location coordinates</li>
 </ul>
-<div id="5bbcfd86" class="cell" data-execution_count="2">
+<div id="098e4a81" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DelimitedFiles</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
@@ -623,10 +646,10 @@ Tip
 <section id="define-the-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-parameters">Define the parameters</h2>
 <p>First, define the number of vehicles and the capacity as parameters. Name them <code>vehicles</code> and <code>capacity</code>.</p>
-<div id="bdc987a9" class="cell" data-execution_count="3">
+<div id="cc290412" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="7c2dae1f" class="cell" data-execution_count="4">
+<div id="5b281db1" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your code</span></span>
@@ -636,10 +659,10 @@ Tip
 </details>
 </div>
 <p>Now, we need to compute the distance matrix. You can do so by using the Euclidean distance between the coordinates of the locations. Compute the distance matrix for all locations and store it in a dictionary called <code>distance</code>. Access each location by the tuple <code>(i,j)</code> where <code>i</code> is the origin and <code>j</code> is the destination. <strong>Hint: You need the distance from each location to all other locations!</strong></p>
-<div id="14125c31" class="cell" data-execution_count="5">
+<div id="0f9506ec" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="0f43f0e7" class="cell" data-execution_count="6">
+<div id="432a8c0c" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your code</span></span>
@@ -653,7 +676,7 @@ Tip
 <section id="define-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-model">Define the model</h2>
 <p>Next, we create the model instance. As this is a linear problem, we can use the <code>HiGHS</code> solver.</p>
-<div id="d2940a1b" class="cell" data-execution_count="7">
+<div id="7d3b77d6" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the model instance</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cvrp_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set_attribute</span>(cvrp_model, <span class="st">"presolve"</span>, <span class="st">"on"</span>)</span>
@@ -664,7 +687,7 @@ Tip
 <section id="define-the-variables" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-variables">Define the variables</h2>
 <p>Now you can start by defining the model variables. The variable we need first is the binary decision variable <code>X</code> which indicates whether an arc from node <code>i</code> to node <code>j</code> exists. To work with the decision variable, you will need to work with a vector of locations.</p>
-<div id="8e2135fd" class="cell" data-execution_count="8">
+<div id="ed267d95" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector of locations</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(demand.location)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -684,10 +707,10 @@ Tip
 <p>You could use the <code>demand.location</code> vector to define the elements of the decision variable <code>X</code>.</p>
 </div>
 </div>
-<div id="c7164fc7" class="cell" data-execution_count="9">
+<div id="d8455fe2" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="b3e40bb6" class="cell" data-execution_count="10">
+<div id="7e53772e" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your code</span></span>
@@ -700,10 +723,10 @@ Tip
 <section id="define-the-objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-objective-function">Define the objective function</h2>
 <p>We want to minimize the total distance of the routes based on the distance dictionary <code>distance</code> that you computed earlier. Create the objective function.</p>
-<div id="d1413017" class="cell" data-execution_count="11">
+<div id="2e54849e" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="225013cb" class="cell" data-execution_count="12">
+<div id="cec220c2" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your code</span></span>
@@ -718,10 +741,10 @@ Tip
 <section id="define-the-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-constraints">Define the constraints</h2>
 <p>Create the two set of constraints that ensure that each location is visited exactly once. <strong>Note that the central location is indexed as <code>"central"</code>!</strong> We don’t need to consider the central location for the constraints and we have to ensure during summing that we don’t include the pairs where <code>i == j</code>.</p>
-<div id="85a9c25b" class="cell" data-execution_count="13">
+<div id="7ae1485e" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="4fb5d6f0" class="cell" data-execution_count="14">
+<div id="acf2b5b9" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your code</span></span>
@@ -733,10 +756,10 @@ Tip
 </details>
 </div>
 <p>Next, we need to restrict the ingoing and outgoing flows to the <code>central</code> location. Create the two constraints that ensure that the number of vehicles arriving and leaving the central location is equal to the number of vehicles.</p>
-<div id="e56eb4b3" class="cell" data-execution_count="15">
+<div id="a91fe496" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="a916a5ea" class="cell" data-execution_count="16">
+<div id="b59aafaf" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your code</span></span>
@@ -751,10 +774,10 @@ Tip
 <section id="solve-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="solve-the-model">Solve the model</h2>
 <p>Now, we can solve the model. This should work very fast, as the model is very simple without any subtour elimination constraints. Solve the model as usual.</p>
-<div id="71a351d3" class="cell" data-execution_count="17">
+<div id="812387cb" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="58b627c9" class="cell" data-execution_count="18">
+<div id="700b37ad" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This defines a function that prints the status of the model</span></span>
@@ -783,7 +806,7 @@ Tip
 <section id="plot-the-results" class="level2">
 <h2 class="anchored" data-anchor-id="plot-the-results">Plot the results</h2>
 <p>The following part extracts the results to plot the tours and requires no changes on your part. It defines some functions that are used to plot the results.</p>
-<div id="43be2798" class="cell" data-execution_count="19">
+<div id="21ab2540" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_routes</span>(X, coord)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    Routes <span class="op">=</span> [<span class="fu">value</span>(X[i,j]) <span class="op">&gt;=</span> <span class="fl">0.5</span> ? <span class="cn">true</span> <span class="op">:</span> <span class="cn">false</span> for i <span class="kw">in</span> coord.location, j <span class="kw">in</span> coord.location]</span>
@@ -867,10 +890,10 @@ Tip
 </div>
 </div>
 <p>Create the variable <code>U</code> and ensure that the capacity usage at each location is between the demand and the capacity. Note, that a dictionary might be useful here.</p>
-<div id="000cd871" class="cell" data-execution_count="20">
+<div id="daa04952" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1b0c11c4" class="cell" data-execution_count="21">
+<div id="3c7008dc" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your code</span></span>
@@ -881,10 +904,10 @@ Tip
 </details>
 </div>
 <p>Next, we need to add the set of constraints to prevent subtours.</p>
-<div id="bf04e66c" class="cell" data-execution_count="22">
+<div id="ce385d4e" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1112af18" class="cell" data-execution_count="23">
+<div id="8e4750de" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your code</span></span>
@@ -893,16 +916,16 @@ Tip
 </details>
 </div>
 <p>Now, solve the model again.</p>
-<div id="b3260f30" class="cell" data-execution_count="24">
+<div id="c7eb91f7" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The following code prints the model status and visualizes the routes. If your implementation is correct, the routes should be free of subtours and the model should have reached optimality or found a feasible solution before hitting the time limit.</p>
-<div id="845a49bb" class="cell" data-execution_count="25">
+<div id="ba26ac2e" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(cvrp_model)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">plot_routes</span>(X,coord))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The following code plots the capacity usage per vehicle.</p>
-<div id="cfca75fb" class="cell" data-execution_count="26">
+<div id="507deddf" class="cell" data-execution_count="26">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the capacity usage</span></span>
@@ -955,10 +978,10 @@ Tip
 <li>Vehicle lease cost: 450 EUR per vehicle per 4 weeks</li>
 </ul>
 <p>Calculate the total monthly costs and store them in <code>monthly_costs</code>.</p>
-<div id="1d59e274" class="cell" data-execution_count="27">
+<div id="c6a0e5a4" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2a1bc3c5" class="cell" data-execution_count="28">
+<div id="b24d5518" class="cell" data-execution_count="28">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your code</span></span>
@@ -971,7 +994,7 @@ Tip
 <h1>4. Optimal Solution?</h1>
 <p>Although the costs can now be computed, the tour plan has not changed so far. FastDelivery asks you whether you have an idea of how to lower the costs associated with the parcel distribution. Take a look at your current plotted solution and try to come up with an idea. Discuss the potential shortcoming and assumptions of the current model in a few sentences. Propose at least one idea of how to lower the costs in the future.</p>
 <p>You can do this in a comment in the cell below.</p>
-<div id="f3895fdd" class="cell" data-execution_count="29">
+<div id="0e6c5c9a" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -997,18 +1020,18 @@ Tip
 </div>
 </div>
 <p>Implement these changes in your model and compute the optimal number of vehicles and the best tour plan. In case the computation takes too long, no worries! If you define the model with a time limit of 60 seconds, it should not take too long.</p>
-<div id="5e685b83" class="cell" data-execution_count="30">
+<div id="fff28dd1" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The code below again visualizes the results. Note, that you might need to replace the <code>X</code> and <code>U</code> with your new models variable names, if you have renamed them.</p>
-<div id="d9072825" class="cell" data-execution_count="31">
+<div id="593732a4" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the results</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(cvrp_model_flex)</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">plot_routes</span>(X,coord))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Based on your results, what are the expected costs savings when compared to task b, and how many vehicles does the central library need?</p>
 <p>Please answer this question in the cell below.</p>
-<div id="7b3f95bc" class="cell" data-execution_count="32">
+<div id="089210a2" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>

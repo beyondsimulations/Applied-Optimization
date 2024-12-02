@@ -1,5 +1,71 @@
 [
   {
+    "objectID": "part-08/tutorial-districting.html",
+    "href": "part-08/tutorial-districting.html",
+    "title": "Tutorial VIII - Police Districting",
+    "section": "",
+    "text": "Imagine you’re the lead consultant for Hamburg’s police force modernization project. The city is facing increasing response times in certain districts, and the Chief of Police has hired you to optimize their district boundaries. Your mission: redesign Hamburg’s police districts to ensure rapid response times while meeting several critical operational requirements.\nKey Objectives: - Minimize average response time to incidents - Ensure every area has adequate police coverage - Enable efficient backup support between districts - Account for real-world constraints like traffic patterns\nThroughout this tutorial, you’ll build this solution step-by-step, starting with a basic model and gradually adding real-world constraints that police departments face daily.",
+    "crumbs": [
+      "08 Districting",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-08/tutorial-districting.html#loading-data-and-packages",
+    "href": "part-08/tutorial-districting.html#loading-data-and-packages",
+    "title": "Tutorial VIII - Police Districting",
+    "section": "Loading Data and Packages",
+    "text": "Loading Data and Packages\nWe start by loading the new Shapefile package. No mistakes here!\n\nimport Pkg\nPkg.add(\"Shapefile\")\n\nWe then load the required packages. If you have not installed them yet, you can do so by modifying the code chunk above to include the missing packages. Still no mistakes!\n\nusing JuMP, HiGHS\nusing DelimitedFiles\nusing Shapefile\nusing DataFrames\nusing Plots\n\nWe then define the number of departments, load the data into scope and define the number of departments and the weighted driving times. Make sure to use the correct path to the data files - it should be relative to the location notebook file in a folder called data. Again, no mistakes!\n\n# Load the data into scope\nfile_directory = \"$(@__DIR__)/data\"\neuclidianDistances = readdlm(\"$file_directory/euclidianDistances0510.csv\",'\\t')\ndrivingTimes = readdlm(\"$file_directory/drivingTimes0510.csv\",'\\t')\nincidentWeights = vec(readdlm(\"$file_directory/incidentWeights0510.csv\",'\\t'))\n\n# Load the Shapefile for plotting\nhexshape = DataFrame(Shapefile.Table(\"$file_directory/grid0510.shp\"))\nsort!(hexshape, :id)\n\n# Define the number of departments\np = 10\n\n# Define the weighted driving times\nweightedDriving = drivingTimes .* transpose(incidentWeights)",
+    "crumbs": [
+      "08 Districting",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-08/tutorial-districting.html#fixing-the-mistakes",
+    "href": "part-08/tutorial-districting.html#fixing-the-mistakes",
+    "title": "Tutorial VIII - Police Districting",
+    "section": "Fixing the Mistakes",
+    "text": "Fixing the Mistakes\nFrom here on, the code contains 6 mistakes you need to correct in order to solve the model. Mistakes can be anything so be careful!\n\n# MISTAKES BELOW\n\n# Prepare the model instance\npMedianModel = Model(HiGHS.Optimizer)\nset_attribute(pMedianModel, \"presolve\", \"on\")\nset_attribute(model, \"time_limit\", 120.0)\nset_attribute(pMedianModel, \"mip_rel_gap\", 0.0)\n\n# Define the range of the problem instance\nrangeBAs = 1:2\nrangeDepartments = unique(rand(1:size(incidentWeights,1), 100))  # Ensure unique departments\n\n# Define variable\n@variable(pMedianModel, X[i = rangeDepartments,j = rangeDepartments], Bin)\n\n# Define objective function\n@objective(pMedianModel, Max, \n    sum(weightedDriving[i,j]* X[i,j] for i in rangeDepartments, j in rangeBAs)\n    )\n\n# Define the constraints\n@constraint(pMedianModel, \n    eachAllocated[j=rangeBAs], \n    sum(X[i,j] for i in rangeDepartments) == 0\n    )\n\n@constraint(pMedianModel,\n    pLocations, \n    sum(X[i,i] for i in rangeDepartments) == p\n    )\n\n@constraint(pMedianModel, \n    departmentNecessary[i=rangeDepartments,j=rangeBAs],\n    2 * X[i,j] &lt;= X[i,i]\n    )\n\n# Start optimization\noptimize!(pMedianModel)\n\n# MISTAKES ABOVE\n\nWe then check the solution. No mistakes here, as all mistakes are in the code in the cell above!\n\n\nCode\n# Function to print the model status\nfunction print_model_status(model)\n    begin\n        println()\n    if termination_status(pMedianModel) == OPTIMAL\n        println(\"Great, the solution is optimal.\")\n        println(\"The relative gap is $(relative_gap(pMedianModel))\")\n        println(\"The solve time (in seconds) is $(solve_time(pMedianModel))\")\n    elseif termination_status(pMedianModel) == TIME_LIMIT && has_values(pMedianModel)\n        println(\"Solution is suboptimal due to a time limit, but a primal solution is available\") \n    else\n        error(\"The model was not solved correctly.\") \n    end\n        println(\"The objective value is \", objective_value(pMedianModel)) \n    end\nend\n\n\nprint_model_status (generic function with 1 method)\n\n\n\n\nCode\nprint_model_status(pMedianModel)\n@assert termination_status(pMedianModel) == OPTIMAL || (termination_status(pMedianModel) == TIME_LIMIT && has_values(pMedianModel)) \"Unfortunate, the model was not solved correctly. Have you corrected all mistakes?\"\nprintln(\"Great, the model was solved correctly.\")\n\n\nThe following code then builds and uses a function to plot the results.\n\nfunction visualize_departments(hexshape, X, p)\n    # Convert solution matrix to regular Matrix\n    allAssignments = Matrix(value.(X))\n    \n    # Find assignments where value &gt; 0.5 (accounting for potential floating-point imprecision)\n    assignments = findall(allAssignments .&gt; 0.5)\n    \n    # Create copy of hexshape to avoid modifying original\n    plot_data = copy(hexshape)\n    \n    # Assign departments and initialize colors\n    plot_data.department = rangeDepartments[map(x-&gt;x[1], assignments)]\n    plot_data.color = fill(RGB(0/255, 0/255, 0/255), nrow(plot_data))\n    \n    # Get unique department locations and create color mapping\n    department_locations = unique(rangeDepartments[map(x-&gt;x[1], assignments)])\n    color_palette = cgrad(:Pastel1_9, p, categorical=true)\n    color_dict = Dict(department_locations[i] =&gt; color_palette[i] for i in 1:p)\n    \n    # Color non-department locations\n    for hex in eachrow(plot_data)\n        if hex.id in department_locations\n            hex.color = RGB(0/255, 0/255, 0/255)\n        else\n            hex.color = color_dict[hex.department]\n        end\n    end\n    \n    # Create and return plot\n    return plot(\n        plot_data.geometry,\n        color=plot_data.color',\n        legend=false,\n        axis=false,\n        ticks=false,\n        size=(800,450)\n    )\nend\n\n# Plot the results\nplot_area = visualize_departments(hexshape, X, p)",
+    "crumbs": [
+      "08 Districting",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-08/tutorial-districting.html#conditional-constraints",
+    "href": "part-08/tutorial-districting.html#conditional-constraints",
+    "title": "Tutorial VIII - Police Districting",
+    "section": "Conditional Constraints",
+    "text": "Conditional Constraints\nBefore we start, we will quickly repeat some basic concepts on constraints and conditions in JuMP. You can add conditions to constraints by using the ; operator. This is useful if you want to add a constraint only under certain conditions. In the example below, the constraint is only active if the Euclidean distance between two BAs is less than 1.5.\n\n@constraint(model, \n    conditionalConstraint[\n        i=rangeDepartments,\n        j=rangeBAs; \n        euclidianDistances[i,j] &lt; 1.5\n        ],\n    X[i,j] == 1\n    )\n\nFurthermore,we can use conditions within constraints by using the for keyword. For example, in the constraint below, the sum is only taken over the BAs that are within 1.5 units of BA \\(i\\).\n\n@constraint(model, \n    conditionalConstraint2[i=rangeDepartments],\n    sum(X[i,j] for j in rangeBAs if euclidianDistances[i,j] &lt; 1.5) &gt;= 1\n    )",
+    "crumbs": [
+      "08 Districting",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-08/tutorial-districting.html#extending-the-model",
+    "href": "part-08/tutorial-districting.html#extending-the-model",
+    "title": "Tutorial VIII - Police Districting",
+    "section": "Extending the Model",
+    "text": "Extending the Model\nNow, we can start to extend the model. Add the contiguity constraint from the lecture to the model.\n\n\n\n\n\n\nImportant\n\n\n\nTake a careful look at the Euclidean distances, as you can use them to determine if two BAs are adjacent to each other. If the distance between two BAs is less than 1.5, then the BAs are adjacent to each other. You can use this information to define the new constraint.\n\n\n\n# YOUR CODE BELOW\n\nSolve the model again, this time with the contiguity constraint.\n\n# YOUR CODE BELOW\n\nThe following code prints the model status and visualizes the districts. If your implementation is correct, the districts should be contiguous and the model should have reached optimality or found a feasible solution before hitting the time limit.\n\nprint_model_status(pMedianModel)\ndisplay(visualize_departments(hexshape, X, p))",
+    "crumbs": [
+      "08 Districting",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-08/tutorial-districting.html#compute-the-gap",
+    "href": "part-08/tutorial-districting.html#compute-the-gap",
+    "title": "Tutorial VIII - Police Districting",
+    "section": "Compute the Gap",
+    "text": "Compute the Gap\nBased on your results, what is the gap between the solution in the previous task and this task? Write a comment answering the question in cell below. You can also use the cell, to compute the gap based on the objective values.\n\n#=\n\n\n\n=#\n\n\n\n\n\n\n\nTip\n\n\n\nIf you computer cannot determine the optimal solution, you can just use the best solutions you found after both runs to compute the gap.",
+    "crumbs": [
+      "08 Districting",
+      "Tutorial"
+    ]
+  },
+  {
     "objectID": "part-07/tutorial-routing.html",
     "href": "part-07/tutorial-routing.html",
     "title": "Tutorial VII - Periodic Library Routing",
@@ -2629,6 +2695,16 @@
     ]
   },
   {
+    "objectID": "general/faq.html#how-does-the-calculation-of-the-bonus-points-work",
+    "href": "general/faq.html#how-does-the-calculation-of-the-bonus-points-work",
+    "title": "Frequently Asked Questions",
+    "section": "How does the calculation of the bonus points work?",
+    "text": "How does the calculation of the bonus points work?\nTo reach the full 6 points, all exercises must be submitted. A maximum of 0.5 points can be earned per exercise. In the overview, ‘1’ stands for successfully submitted, and ‘0.5’ for submitted (but without attempting to solve everything). In the end, I calculate this as half or quarter points towards the total score.",
+    "crumbs": [
+      "FAQs"
+    ]
+  },
+  {
     "objectID": "general/syllabus.html",
     "href": "general/syllabus.html",
     "title": "Syllabus",
@@ -2693,7 +2769,7 @@
     "href": "general/syllabus.html#lectures-2",
     "title": "Syllabus",
     "section": "Lectures",
-    "text": "Lectures\nSafety Planning for the Islamic Pilgrimage in Mecca (IX)\nA case study on safety planning for the hajj pilgrimage based on time-dependent network flows\nPassenger Flow Control in Urban Rail (X)\nA case study on passenger flow control in urban rail based on time-dependent network flows\nArena Seat Planning under Distancing Rules (XI)\nA case study on arena seat planning under distancing rules based on the 2-dimensional knapsack problem\nSales Force Deployment for Teams (XII)\nA case study on sales force deployment for teams based on a linear programming model\nRecap and Discussion (XIII)\nWe repeat the concepts from the course and discuss all your remaining questions",
+    "text": "Lectures\nSafety Planning for the Islamic Pilgrimage in Mecca (IX)\nA case study on safety planning for the hajj pilgrimage based on time-dependent network flows\nIntermission: Exam Preparation (X)\nWe will prepare for the exam by solving a set of exercises together in the lecture.\nPassenger Flow Control in Urban Rail (XI)\nA case study on passenger flow control in urban rail based on time-dependent network flows\nArena Seat Planning under Distancing Rules (XII)\nA case study on arena seat planning under distancing rules based on the 2-dimensional knapsack problem\nRecap and Discussion (XIII)\nWe repeat the concepts from the course and discuss all your remaining questions",
     "crumbs": [
       "Syllabus"
     ]
@@ -5026,7 +5102,7 @@
     "href": "part-06/lecture-ordersplit.html#footnotes",
     "title": "Lecture VI - Minimizing Split Orders in E-Commerce",
     "section": "Footnotes",
-    "text": "Footnotes\n\n\nForecast, not actual number↩︎\nSKU: Stock Keeping Unit↩︎\nSimple and very fast, Catalán and Fisher (2012)↩︎\nComputationally intensive with CPLEX, Zhu et al. (2021)↩︎\nGreedy Randomized Adaptive Search Procedure, Zhu et al. (2021)↩︎\nQMKP is not applicable for instance in case study↩︎",
+    "text": "Footnotes\n\n\nForecast, not actual number↩︎\nSKU: Stock Keeping Unit↩︎\nSimple and very fast, Catalán and Fisher (2012)↩︎\nComputationally intensive with CPLEX, Zhu, Wang, and Xie (2021)↩︎\nGreedy Randomized Adaptive Search Procedure, Zhu, Wang, and Xie (2021)↩︎\nQMKP is not applicable for instance in case study↩︎",
     "crumbs": [
       "06 Warehouse",
       "Lecture"
@@ -5205,7 +5281,7 @@
     "href": "part-06/lecture-presentation.html#how-to-approach-the-problem",
     "title": "Lecture VI - Minimizing Split Orders in E-Commerce",
     "section": "How to approach the problem?",
-    "text": "How to approach the problem?\n\n\nGreedy Heuristic1: Allocation based on matrix\nMathematical Model2: Maximizes coappearance\nGRASP3: Good on small instances\nNew: Max. coappearance with non-linear solver\nNew: Heuristic based on Chi-Square Tests\n\n\nSimple and very fast, Catalán and Fisher (2012)Computationally intensive with CPLEX, Zhu et al. (2021)Greedy Randomized Adaptive Search Procedure, Zhu et al. (2021)"
+    "text": "How to approach the problem?\n\n\nGreedy Heuristic1: Allocation based on matrix\nMathematical Model2: Maximizes coappearance\nGRASP3: Good on small instances\nNew: Max. coappearance with non-linear solver\nNew: Heuristic based on Chi-Square Tests\n\n\nSimple and very fast, Catalán and Fisher (2012)Computationally intensive with CPLEX, Zhu, Wang, and Xie (2021)Greedy Randomized Adaptive Search Procedure, Zhu, Wang, and Xie (2021)"
   },
   {
     "objectID": "part-06/lecture-presentation.html#basic-setting",
@@ -5415,7 +5491,7 @@
     "href": "part-06/lecture-presentation.html#literature-i",
     "title": "Lecture VI - Minimizing Split Orders in E-Commerce",
     "section": "Literature I",
-    "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.\n\n\n\n\nCatalán, Andrés, and Marshall Fisher. 2012. “Assortment Allocation to Distribution Centers to Minimize Split Customer Orders.” SSRN Electronic Journal. https://doi.org/10.2139/ssrn.2166687.\n\n\nHiley, Amanda, and Bryant A. Julstrom. 2006. “The Quadratic Multiple Knapsack Problem and Three Heuristic Approaches to It.” In Proceedings of the 8th Annual Conference on Genetic and Evolutionary Computation, edited by M. Keijzer, 547–52. New York, NY: Association for Computing Machinery. https://doi.org/10.1145/1143997.1144096.\n\n\nPitney Bowes Inc. 2017. “Pitney Bowes Parcel Shipping Index Reveals 48 Percent Growth in Parcel Volume since 2014.” 2017. https://www.businesswire.com/news/home/20170830005628/en/Pitney-Bowes-Parcel-Shipping-Index-Reveals-48.\n\n\n———. 2019. “Pitney Bowes Parcel Shipping Index Reports Continued Growth Bolstered by China and Emerging Markets.” 2019. https://www.businesswire.com/news/home/20191010005148/en/.\n\n\n———. 2020. “Pitney Bowes Parcel Shipping Index Reports Continued Growth as Global Parcel Volume Exceeds 100 billion for First Time Ever.” 2020. https://www.businesswire.com/news/home/20201012005150/en/.\n\n\nVlćek, Tobias, and Guido Voigt. 2024. “Optimizing SKU-Warehouse Allocations to Minimize Split Parcels in E-Commerce Environments.” Submitted to Decision Sciences.\n\n\nZhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. “Optimization of Product Category Allocation in Multiple Warehouses to Minimize Splitting of Online Supermarket Customer Orders.” European Journal of Operational Research 290 (2): 556–71. https://doi.org/10.1016/j.ejor.2020.08.024."
+    "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.\n\n\n\n\nCatalán, Andrés, and Marshall Fisher. 2012. “Assortment Allocation to Distribution Centers to Minimize Split Customer Orders.” SSRN Electronic Journal. https://doi.org/10.2139/ssrn.2166687.\n\n\nHiley, Amanda, and Bryant A. Julstrom. 2006. “The Quadratic Multiple Knapsack Problem and Three Heuristic Approaches to It.” In Proceedings of the 8th Annual Conference on Genetic and Evolutionary Computation, edited by M. Keijzer, 547–52. New York, NY: Association for Computing Machinery. https://doi.org/10.1145/1143997.1144096.\n\n\nPitney Bowes Inc. 2017. “Pitney Bowes Parcel Shipping Index Reveals 48 Percent Growth in Parcel Volume since 2014.” 2017. https://www.businesswire.com/news/home/20170830005628/en/Pitney-Bowes-Parcel-Shipping-Index-Reveals-48.\n\n\n———. 2019. “Pitney Bowes Parcel Shipping Index Reports Continued Growth Bolstered by China and Emerging Markets.” 2019. https://www.businesswire.com/news/home/20191010005148/en/.\n\n\n———. 2020. “Pitney Bowes Parcel Shipping Index Reports Continued Growth as Global Parcel Volume Exceeds 100 billion for First Time Ever.” 2020. https://www.businesswire.com/news/home/20201012005150/en/.\n\n\nVlćek, Tobias, and Guido Voigt. 2024. “Optimizing SKU-Warehouse Allocations to Minimize Split Parcels in E-Commerce Environments.” Submitted to Decision Sciences.\n\n\nZhu, Shixiang, He Wang, and Yao Xie. 2021. “Data-Driven Optimization for Atlanta Police Zone Design.” arXiv. https://doi.org/10.48550/ARXIV.2104.00535."
   },
   {
     "objectID": "part-07/lecture-routing.html",
@@ -5763,7 +5839,7 @@
     "href": "part-07/lecture-routing.html#depot-entry-and-exit-constraints-1",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Depot Entry and Exit Constraints",
-    "text": "Depot Entry and Exit Constraints\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{0,j} = |\\mathcal{K}|\n\\]\n. . .\n\n\n\n\n\n\nAre all constraints necessary?\n\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”.",
+    "text": "Depot Entry and Exit Constraints\n\\[\n\\sum_{i \\in \\mathcal{V} \\setminus \\{0\\}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V} \\setminus \\{0\\}} X_{0,j} = |\\mathcal{K}|\n\\]\n. . .\n\n\n\n\n\n\nAre all constraints necessary?\n\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”.",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -5972,7 +6048,7 @@
     "href": "part-07/lecture-routing.html#depot-entry-and-exit",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Depot entry and exit",
-    "text": "Depot entry and exit\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\n\nThe depot is visited by exactly \\(|\\mathcal{K}|\\) vehicles. Note, that we could remove one of the constraints and the solution would still be optimal.",
+    "text": "Depot entry and exit\n\\[\n\\sum_{i \\in \\mathcal{V} \\setminus \\{0\\}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V} \\setminus \\{0\\}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\n\nThe depot is visited by exactly \\(|\\mathcal{K}|\\) vehicles. Note, that we could remove one of the constraints and the solution would still be optimal.",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -6409,7 +6485,7 @@
     "href": "part-07/lecture-presentation.html#depot-entry-and-exit-constraints-1",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Depot Entry and Exit Constraints",
-    "text": "Depot Entry and Exit Constraints\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\n\nAre all constraints necessary?\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”."
+    "text": "Depot Entry and Exit Constraints\n\\[\n\\sum_{i \\in \\mathcal{V} \\setminus \\{0\\}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V} \\setminus \\{0\\}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\n\nAre all constraints necessary?\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”."
   },
   {
     "objectID": "part-07/lecture-presentation.html#section-4",
@@ -6542,7 +6618,7 @@
     "href": "part-07/lecture-presentation.html#depot-entry-and-exit",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Depot entry and exit",
-    "text": "Depot entry and exit\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\nThe depot is visited by exactly \\(|\\mathcal{K}|\\) vehicles. Note, that we could remove one of the constraints and the solution would still be optimal."
+    "text": "Depot entry and exit\n\\[\n\\sum_{i \\in \\mathcal{V} \\setminus \\{0\\}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V} \\setminus \\{0\\}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\nThe depot is visited by exactly \\(|\\mathcal{K}|\\) vehicles. Note, that we could remove one of the constraints and the solution would still be optimal."
   },
   {
     "objectID": "part-07/lecture-presentation.html#capacity-and-subtour-elimination-1",
@@ -6676,5 +6752,1186 @@
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Literature II",
     "text": "Literature II\n\n\n\n\nKara, Imdat, Gilbert Laporte, and Tolga Bektas. 2004. “A Note on the Lifted Miller–Tucker–Zemlin Subtour Elimination Constraints for the Capacitated Vehicle Routing Problem.” European Journal of Operational Research 158 (3): 793–95. https://doi.org/https://doi.org/10.1016/S0377-2217(03)00377-1.\n\n\nVidal, Thibaut. 2022. “Hybrid Genetic Search for the CVRP: Open-Source Implementation and SWAP* Neighborhood.” Computers & Operations Research 140 (April): 105643. https://doi.org/10.1016/j.cor.2021.105643."
+  },
+  {
+    "objectID": "part-08/lecture-districting.html",
+    "href": "part-08/lecture-districting.html",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Vlćek et al. (2024)\n\n\n\n\nQuestion: What makes the work of emergency services complex?\n\n\nDynamic urban development\nChanging population patterns\nResource constraints\nNeed for rapid response\nMultiple stakeholder interests\n\n\n\n\n\n\n\n\n\nEmergency services address the needs of three interest groups:\n\nCitizens\nService personnel\nAdministrators\n\nQuestion: What could be the objectives of these groups?\n\n\n\n\n\n\n\n\nCitizens\n\nFast response times\nReliable service coverage\n\nService Personnel\n\nManageable workloads\nSafe working conditions\n\n\n\n\nAdministrators\n\nCost efficiency\nResource optimization\n\n\n\n\n\n\n\n\nNote\n\n\n\nAligning the objectives of the three interest groups is challenging.\n\n\n\n\n\n\n\n\n\n\n\nQuestion: Why might current district layouts be suboptimal?\n\n\nMany layouts date back several decades\nOften designed along highways and regions (Bruce 2009)\nExtensive data not used for data-driven improvement\n\n\n\n\n\n\n\n\nHow can we improve\nthis situation?\n\n\n\n\n\n\n\n\nQuestion: What data can help improve emergency services?\n\n\nHistorical incident patterns\nResponse time analysis\nResource utilization metrics\nPopulation densities and traffic patterns\n\n\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nExtensive data collected, but often lack of tools or knowledge to leverage it.\n\n\n\n\n\n\nOperations research (OR) models can help!\nBased on incident records and geographical information\nImprove the response of emergency services\nHelp administrators in making strategic decisions\nLocate new departments or close departments (Liberatore, Camacho-Collados, and Vitoriano 2020)",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#police-service-district-planning",
+    "href": "part-08/lecture-districting.html#police-service-district-planning",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Vlćek et al. (2024)",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#challenges",
+    "href": "part-08/lecture-districting.html#challenges",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Question: What makes the work of emergency services complex?\n\n\nDynamic urban development\nChanging population patterns\nResource constraints\nNeed for rapid response\nMultiple stakeholder interests",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#emergency-services",
+    "href": "part-08/lecture-districting.html#emergency-services",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Emergency services address the needs of three interest groups:\n\nCitizens\nService personnel\nAdministrators\n\nQuestion: What could be the objectives of these groups?",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#stakeholder-objectives",
+    "href": "part-08/lecture-districting.html#stakeholder-objectives",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Citizens\n\nFast response times\nReliable service coverage\n\nService Personnel\n\nManageable workloads\nSafe working conditions\n\n\n\n\nAdministrators\n\nCost efficiency\nResource optimization\n\n\n\n\n\n\n\n\nNote\n\n\n\nAligning the objectives of the three interest groups is challenging.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#emergency-service-districting",
+    "href": "part-08/lecture-districting.html#emergency-service-districting",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Question: Why might current district layouts be suboptimal?\n\n\nMany layouts date back several decades\nOften designed along highways and regions (Bruce 2009)\nExtensive data not used for data-driven improvement",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#section",
+    "href": "part-08/lecture-districting.html#section",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "How can we improve\nthis situation?",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#the-role-of-data",
+    "href": "part-08/lecture-districting.html#the-role-of-data",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Question: What data can help improve emergency services?\n\n\nHistorical incident patterns\nResponse time analysis\nResource utilization metrics\nPopulation densities and traffic patterns\n\n\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nExtensive data collected, but often lack of tools or knowledge to leverage it.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#optimization",
+    "href": "part-08/lecture-districting.html#optimization",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Operations research (OR) models can help!\nBased on incident records and geographical information\nImprove the response of emergency services\nHelp administrators in making strategic decisions\nLocate new departments or close departments (Liberatore, Camacho-Collados, and Vitoriano 2020)",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#police-districting",
+    "href": "part-08/lecture-districting.html#police-districting",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Police Districting",
+    "text": "Police Districting\n\nFor an efficient and effective distribution of resources, police jurisdictions are divided into precincts or command districts with separate departments. These are further divided into patrol beats (D’Amico et al. 2002).",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#service-priority-extremes",
+    "href": "part-08/lecture-districting.html#service-priority-extremes",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Service Priority Extremes",
+    "text": "Service Priority Extremes\n\nHigh Priority\n\nLife-threatening situations\nActive crimes in progress\nMultiple unit response needed\n\nLow Priority\n\nMinor incidents\nAdministrative tasks",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#case-studies-1",
+    "href": "part-08/lecture-districting.html#case-studies-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Case Studies",
+    "text": "Case Studies\n\nDifferent urban contexts\nStudy of jurisdictions in\n\nGermany: Large metropolitan area\nBelgium: Large rural area\n\nFocus on response time optimization\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nPart of the force patrols the streets, another part is stationed at the departments.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#dispatching",
+    "href": "part-08/lecture-districting.html#dispatching",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Dispatching",
+    "text": "Dispatching\n\nDispatchers assign all CFS to vehicles from the corresponding districts and patrol areas\nOfficers are familiar with the area and are thus better prepared to respond appropriately (Bodily 1978)\nTo cope with high demands, dispatchers can assign vehicles from nearby districts or beats",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#potential-problem",
+    "href": "part-08/lecture-districting.html#potential-problem",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Potential Problem",
+    "text": "Potential Problem\nQuestion: What could be the potential problem?\n. . .\n\nThis can lead to a domino effect\nTransferring vehicles from other districts or beats reduces coverage in those locations (Mayer 2009)\nThis makes them vulnerable to missing resources when they need assistance themselves",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#overloaded-systems",
+    "href": "part-08/lecture-districting.html#overloaded-systems",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Overloaded Systems",
+    "text": "Overloaded Systems\n\nThis can lead to overloaded systems!\nLong dispatching delays due to staff shortages\nPreventive patrol hardly possible (Miller and Knoppers 1972)\nDispatchers constantly draw on patrol resources\nReduces the response time of emergency services\n\n. . .\n\n\n\n\n\n\nWarning\n\n\n\nThis is a common problem in many emergency services.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#response-time",
+    "href": "part-08/lecture-districting.html#response-time",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Response Time",
+    "text": "Response Time\n\n\n\n\n\nCentral criterion to measure the effectiveness of emergency services is the response time\nTime between a call for aid and the arrival at the incident location\nLow response time increases the likelihood of helping and improves confidence (Bodily 1978)",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#response-time-influencers",
+    "href": "part-08/lecture-districting.html#response-time-influencers",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Response Time Influencers",
+    "text": "Response Time Influencers\nQuestion: What affects response time?\n\n\nInitial contact\nInformation gathering\nUnit assignment\nResource coordination\nRoute to location\nTraffic conditions",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#territory-design-problem-1",
+    "href": "part-08/lecture-districting.html#territory-design-problem-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Territory Design Problem",
+    "text": "Territory Design Problem\n\n\n\n\n\nAggregation of small geographic areas, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to pre-defined planning criteria1.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#objective",
+    "href": "part-08/lecture-districting.html#objective",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Objective",
+    "text": "Objective\nQuestion: What could be the objective?\n. . .\n\nMinimize the response time to help citizens faster while increasing the confidence in the service\n\n. . .\nQuestion: What could be further objectives?\n. . .\n\nReallocate only part of the police department’s\nCompact and contiguous territories to improve patrol\nPrevention of isolated departments",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#basic-structure",
+    "href": "part-08/lecture-districting.html#basic-structure",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Basic Structure",
+    "text": "Basic Structure\n\n\n\n\nQuestion: How can we structure this?\n\n\nModel as a digraph with vertices and edges\nEach BA centroid becomes a vertex\n\\(\\mathcal{J}\\) : set of BAs, indexed by \\(j\\)\n\\(\\mathcal{I}\\) : set of potential district centres \\((\\mathcal{I} \\subseteq \\mathcal{J})\\)",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#why-hexagons",
+    "href": "part-08/lecture-districting.html#why-hexagons",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Why Hexagons?",
+    "text": "Why Hexagons?\n\n\n\n\nQuestion: Advantages of hexagons?\n\n\nEqual distances to all neighboring centroids\nReduces sampling bias from edge effects (Wang and Kwan 2018)\nSpecial properties that help with the enforcement of compactness\nBetter representation of urban geography",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#response-time-components",
+    "href": "part-08/lecture-districting.html#response-time-components",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Response Time Components",
+    "text": "Response Time Components\n\n\n\n\nQuestion: How can we model response time?\n\n\nCall length is independent of territory\nDispatch time is difficult to model\nDriving time can be minimized directly\n\n\n\n\n\n\n\n\nConclusion\n\n\n\nWe focus on minimizing expected driving times between departments and incident locations.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#section-1",
+    "href": "part-08/lecture-districting.html#section-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Let’s build our model\nstep by step!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#key-model-components",
+    "href": "part-08/lecture-districting.html#key-model-components",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Key Model Components",
+    "text": "Key Model Components\nQuestion: What could be our key model components?\n. . .\n\nBasic areas (BAs) and potential department locations\nDriving times between basic areas\nForecasted incident data\nAssignment decisions\n\n. . .\nQuestion: Which are sets, parameters, and variables?",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#sets-and-indices",
+    "href": "part-08/lecture-districting.html#sets-and-indices",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Sets and Indices",
+    "text": "Sets and Indices\n\n\n\\(\\mathcal{J}\\) - Set of BAs, indexed by \\(j\\)\n\\(\\mathcal{I}\\) - Set of potential district centres (\\(\\mathcal{I} \\subseteq \\mathcal{J}\\)), indexed by \\(i\\)\n\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nThe depot locations are a subset of the basic areas!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#parameters",
+    "href": "part-08/lecture-districting.html#parameters",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Parameters",
+    "text": "Parameters\nQuestion: What parameters do we need?\n\n\n\\(p\\) - Number of district centres (departments)\n\\(t_{i,j}\\) - Expected driving times between \\(i\\) and \\(j\\)\n\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nParameters should be carefully calibrated with real-world data!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#decision-variables",
+    "href": "part-08/lecture-districting.html#decision-variables",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Decision Variable(s)?",
+    "text": "Decision Variable(s)?\n\n\n\n\n\n\nWe have the following sets:\n\n\n\n\nBAs, indexed by \\(j \\in \\mathcal{J}\\)\nPotential department locations, indexed by \\(i \\in \\mathcal{I}\\)\n\n\n\n. . .\n\n\n\n\n\n\nOur objective is to:\n\n\n\nMinimize the expected response time of the emergency services by optimizing the assignment of BAs to departments.\n\n\n. . .\nQuestion: What decisions do we need to model?",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#decision-variables-1",
+    "href": "part-08/lecture-districting.html#decision-variables-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Decision variable/s",
+    "text": "Decision variable/s\n\n\\(X_{i,j}\\): 1 if BA \\(j\\) assigned to department \\(i\\), 0 otherwise\n\n. . .\nQuestion: What is the domain of our decision variable?\n. . .\n\n\\(X_{i,j} \\in \\{0,1\\} \\quad \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}\\)",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#section-2",
+    "href": "part-08/lecture-districting.html#section-2",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Let’s build our\nobjective function!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#objective-function",
+    "href": "part-08/lecture-districting.html#objective-function",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Objective Function?",
+    "text": "Objective Function?\n\n\n\n\n\n\nOur objective is to:\n\n\n\nMinimize the expected response time of the emergency services by optimizing the assignment of BAs to departments.\n\n\n. . .\nQuestion: How do we minimize response time?\n\n\nWe want to minimize total driving time\nConsider frequency of incidents in each BA\nDon’t include fixed costs (handled by constraints)",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#objective-function-1",
+    "href": "part-08/lecture-districting.html#objective-function-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Objective Function",
+    "text": "Objective Function\nQuestion: What could be our objective function?\n. . .\n\\[\n\\text{minimize} \\quad \\sum_{i \\in \\mathcal{I}}\\sum_{j \\in \\mathcal{J}} t_{i,j} \\times X_{i,j}\n\\]\n. . .\n\n\n\n\n\n\nExpected Driving Time\n\n\n\n\nTotal driving time across all assignments\nWeighted by incident frequency\nConsiders all possible BA-department pairs",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#key-constraints",
+    "href": "part-08/lecture-districting.html#key-constraints",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Key Constraints",
+    "text": "Key Constraints\n\n\n\n\nQuestion: Constraints needed?\n\n\nBA must have one department\nLimit number of departments\nOnly assign active departments\nEnsure contiguous districts\nMaintain district compactness",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#single-assignment-constraint",
+    "href": "part-08/lecture-districting.html#single-assignment-constraint",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Single Assignment Constraint?",
+    "text": "Single Assignment Constraint?\nQuestion: Why do we need this constraint?\n. . .\n\nEach BA must be assigned to exactly one department\nPrevents overlapping jurisdictions\nEnsures complete coverage\n\n. . .\n\n\n\n\n\n\nWe need the following variables:\n\n\n\n\n\\(X_{i,j}\\) - 1 if BA \\(j\\) assigned to department \\(i\\), 0 otherwise",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#single-assignment-constraint-1",
+    "href": "part-08/lecture-districting.html#single-assignment-constraint-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Single Assignment Constraint?",
+    "text": "Single Assignment Constraint?\nQuestion: What could the constraint look like?\n. . .\n\\[\n\\sum_{i \\in \\mathcal{I}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{J}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nEach BA must be assigned to exactly one department.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#department-count-constraint",
+    "href": "part-08/lecture-districting.html#department-count-constraint",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Department Count Constraint?",
+    "text": "Department Count Constraint?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\n\nEnsure that exactly \\(p\\) departments are opened.\n\n\n. . .\n\n\n\n\n\n\nWe need the following sets and variables:\n\n\n\n\n\\(\\mathcal{I}\\) - Set of potential department locations, indexed by \\(i\\)\n\\(\\mathcal{J}\\) - Set of BAs, indexed by \\(j\\)\n\\(X_{i,j}\\) - 1, if BA \\(j\\) assigned to department \\(i\\), 0 otherwise\n\\(p\\) - Number of departments",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#department-count-constraint-1",
+    "href": "part-08/lecture-districting.html#department-count-constraint-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Department Count Constraint",
+    "text": "Department Count Constraint\nQuestion: What could the constraint look like?\n. . .\n\\[\n\\sum_{i \\in \\mathcal{I}} X_{i,i} = p\n\\]\n. . .\nQuestion: What happens if we have more departments than potential locations?\n. . .\n\nWe can’t open more departments than there are locations\nThe model will be infeasible",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#active-department-constraint",
+    "href": "part-08/lecture-districting.html#active-department-constraint",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Active Department Constraint?",
+    "text": "Active Department Constraint?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\n\nEnsure that each BA is assigned to an active department, e.g. a department that is opened and that could dispatch vehicles.\n\n\n. . .\n\n\n\n\n\n\nWe need the following sets and variables:\n\n\n\n\n\\(X_{i,j}\\) - 1, if BA \\(j\\) assigned to department \\(i\\), 0 otherwise\n\n\n\nQuestion: How do we ensure assignments only to active departments?",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#active-department-constraint-1",
+    "href": "part-08/lecture-districting.html#active-department-constraint-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Active Department Constraint",
+    "text": "Active Department Constraint\n\\[\nX_{i,j} \\leq X_{i,i} \\quad \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nThis constraint creates a logical connection between department locations and BA assignments where BAs can only be assigned to opened departments.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#p-median-problem",
+    "href": "part-08/lecture-districting.html#p-median-problem",
+    "title": "Lecture VIII - Police Districting",
+    "section": "p-Median Problem",
+    "text": "p-Median Problem\n\\[\\begin{align}\n\\text{minimize} \\quad & \\sum_{i \\in \\mathcal{I}}\\sum_{j \\in \\mathcal{J}} t_{i,j} \\times X_{i,j} \\\\\n\\text{subject to:} \\quad & \\sum_{i \\in \\mathcal{I}} X_{i,j}= 1 && \\forall j \\in \\mathcal{J} \\\\\n& \\sum_{i \\in \\mathcal{I}} X_{i,i} = p &&  \\\\\n& X_{i,j} \\leq X_{i,i} &&  \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}  \\\\\n& X_{i,j} \\in \\{0,1\\}  && \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}\n\\end{align}\\]",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#contiguity-introduction",
+    "href": "part-08/lecture-districting.html#contiguity-introduction",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Contiguity Introduction",
+    "text": "Contiguity Introduction\n\n\n\n\nQuestion: Why is contiguity important?\n\n\nPrevents isolated areas\nEnsures contiguous patrol routes\nMaintains operational coherence",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#what-is-compactness",
+    "href": "part-08/lecture-districting.html#what-is-compactness",
+    "title": "Lecture VIII - Police Districting",
+    "section": "What is compactness?",
+    "text": "What is compactness?\n\n\n\n\n\n\n\n\n\n. . .\n\n\n\n\n\n\nCompactness\n\n\n\nCompactness has no univocal definition; a district is commonly declared compact if it is ‘somehow round-shaped and undistorted’ (Kalcsics, Nickel, and Schröder 2005).",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#contiguity-and-compactness-1",
+    "href": "part-08/lecture-districting.html#contiguity-and-compactness-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Contiguity and Compactness",
+    "text": "Contiguity and Compactness\n\n\n\n\nQuestion: Are our resulting districts based on the model contiguous and compact?\n\n\nThis depends on \\(t_{i,j}\\)\nIf Euclidean distance\n\nDistricts will be contiguous\nLikely of compact shape",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#compactness-p-median",
+    "href": "part-08/lecture-districting.html#compactness-p-median",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Compactness p-Median",
+    "text": "Compactness p-Median\nQuestion: Is this likely for police service districting?\n\n\nNo, as we minimize the driving time within a city\nHighways, Tunnels, etc.\nMultiplied by the differing number of requested cars\nThis can contribute to distorted district shapes",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#contiguity-sets",
+    "href": "part-08/lecture-districting.html#contiguity-sets",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Contiguity Sets",
+    "text": "Contiguity Sets\nAdditional Set and Parameter\n\n\\(e_{i,j}\\) - Euclidean distance between centroids\n\\(\\mathcal{A}_j\\) - Sets of BAs adjacent to BA \\(j\\)\n\n. . .\n\\[\n\\mathcal{N}_{i,j}=\\{v \\in \\mathcal{A}_j | e_{i,v} &lt; e_{i,j}\\} \\quad \\forall i\\in \\mathcal{I}, \\forall j\\in \\mathcal{J}\n\\]\n. . .\n\n\n\n\n\n\nThe idea\n\n\n\nBAs closer to department \\(i\\) than BA \\(j\\) on euclidian distance and adjacent to \\(j\\)!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#example-a",
+    "href": "part-08/lecture-districting.html#example-a",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Example A",
+    "text": "Example A",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#example-a-1",
+    "href": "part-08/lecture-districting.html#example-a-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Example A",
+    "text": "Example A",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#example-b",
+    "href": "part-08/lecture-districting.html#example-b",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Example B",
+    "text": "Example B",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#example-b-1",
+    "href": "part-08/lecture-districting.html#example-b-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Example B",
+    "text": "Example B",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#enforcing-contiguity",
+    "href": "part-08/lecture-districting.html#enforcing-contiguity",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Enforcing Contiguity",
+    "text": "Enforcing Contiguity\nAll districts have to be contiguous\n\\[\nX_{i,j} \\leq \\sum_{v \\in \\mathcal{N}_{i,j}} X_{i,v} \\quad \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J} \\setminus \\mathcal{A}_i: i \\neq j\n\\]\n. . .\n\n\n\n\n\n\nThe idea\n\n\n\nAt least one department has to be assigned to a BA that is adjacent to BA \\(j\\) and closer to department \\(i\\)!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#contiguity-and-compactness-2",
+    "href": "part-08/lecture-districting.html#contiguity-and-compactness-2",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Contiguity and Compactness",
+    "text": "Contiguity and Compactness\nAll districts have to be contiguous and compact\n\\[\\begin{align*}\nX_{i,j} &\\leq \\sum_{v \\in \\mathcal{N}_{i,j}}X_{i,v} && \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J} \\setminus \\mathcal{A}_i:|\\mathcal{N}_{i,j}|= 1 \\wedge i \\neq j \\\\\n2X_{i,j} &\\leq \\sum_{v \\in \\mathcal{N}_{i,j}}X_{i,v} && \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J} \\setminus \\mathcal{A}_i:|\\mathcal{N}_{i,j}|&gt; 1 \\wedge i \\neq j\n\\end{align*}\\]\n. . .\n\n\n\n\n\n\nThe idea\n\n\n\nAt least two departments have to be assigned to a BA that is adjacent to BA \\(j\\) and closer to department \\(i\\)!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#comparison",
+    "href": "part-08/lecture-districting.html#comparison",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Comparison",
+    "text": "Comparison\n\n\n\n\n\nOne department\n\n\n\n\n\n\nTwo departments\n\n\n\n\n\n\nUp to three departments\n\n\n\n\n. . .\n\n\n\n\n\n\nWhy does this work?\n\n\n\nDue to the constraints, there is always a path back to the department if a BA is assigned to a department!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#characteristics",
+    "href": "part-08/lecture-districting.html#characteristics",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Characteristics",
+    "text": "Characteristics\nQuestions: On model characteristics\n\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domains do we have?\nWhat do you think, can the model be solved quickly?\nHave we prevented isolated districts?",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#model-assumptions",
+    "href": "part-08/lecture-districting.html#model-assumptions",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Model Assumptions",
+    "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nUse Euclidean distances to approximate driving time?\nCan we rely on incident data collected by the police?",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#overview-of-studies",
+    "href": "part-08/lecture-districting.html#overview-of-studies",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Overview of Studies",
+    "text": "Overview of Studies\n\nQuestion: Where did we apply our model?\n\n\nTwo distinct environments:\n\nLarge metropolitan area (Germany)\nRural region (Belgium)\n\nDifferent challenges and requirements\nFocus on response time optimization",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#german-metropolitan-case",
+    "href": "part-08/lecture-districting.html#german-metropolitan-case",
+    "title": "Lecture VIII - Police Districting",
+    "section": "German Metropolitan Case",
+    "text": "German Metropolitan Case\n. . .\n\n\n1.8 mio incidents (2015-2019)\n~20 department locations\n1,596 basic areas\nDense urban environment\n\n\n. . .\n\nGoal: Redesign districts to improve response time.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#german-metropolitan-results",
+    "href": "part-08/lecture-districting.html#german-metropolitan-results",
+    "title": "Lecture VIII - Police Districting",
+    "section": "German Metropolitan Results",
+    "text": "German Metropolitan Results",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#belgian-rural-case",
+    "href": "part-08/lecture-districting.html#belgian-rural-case",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Belgian Rural Case",
+    "text": "Belgian Rural Case\n. . .\n\n\n50,000 incidents (2019-2020)\n2 existing + 1 planned location\n1,233 basic areas\nDispersed rural setting\n\n\n. . .\n\nGoal: Optimize coverage with limited resources.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#belgian-rural-results",
+    "href": "part-08/lecture-districting.html#belgian-rural-results",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Belgian Rural Results",
+    "text": "Belgian Rural Results",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#simulation-framework",
+    "href": "part-08/lecture-districting.html#simulation-framework",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Simulation Framework",
+    "text": "Simulation Framework\nQuestion: How did we validate the results?\n. . .\n\n\nSpatial and temporal patterns\nShift schedules\nPriority handling\nRush hours\nInter-district support\nVariable driving times",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#results",
+    "href": "part-08/lecture-districting.html#results",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Results",
+    "text": "Results\n\nResponse time reduction up to 14.52%\nBetter workload distribution\nImproved coverage equity\nMore efficient resource utilization\n\n. . .\n\n\n\n\n\n\nImportant\n\n\n\nAll improvements are without additional staff!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#conclusions",
+    "href": "part-08/lecture-districting.html#conclusions",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Conclusions",
+    "text": "Conclusions\n\nModel adaptability crucial\nLocal context matters\nStakeholder buy-in essential\nData quality critical\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nSuccess requires balancing theoretical optimization with practical constraints!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#future-applications",
+    "href": "part-08/lecture-districting.html#future-applications",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Future Applications",
+    "text": "Future Applications\nQuestion: Where else could this approach be useful?\n\n\nOther emergency services\nDifferent urban contexts\nResource allocation problems\nService territory design\n\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nThe methodology is adaptable to various public service optimization scenarios.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#wrap-up",
+    "href": "part-08/lecture-districting.html#wrap-up",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Wrap Up",
+    "text": "Wrap Up\n\n\n\n\n\n\nAnd that’s it for todays lecture!\n\n\n\nWe now have covered districting problems and are ready to start solving some tasks in the upcoming tutorial.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#section-3",
+    "href": "part-08/lecture-districting.html#section-3",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Questions?",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#literature-i",
+    "href": "part-08/lecture-districting.html#literature-i",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Literature I",
+    "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-districting.html#footnotes",
+    "href": "part-08/lecture-districting.html#footnotes",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nZoltners and Sinha (1983)↩︎",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#police-service-district-planning",
+    "href": "part-08/lecture-presentation.html#police-service-district-planning",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Police Service District Planning",
+    "text": "Police Service District Planning\n\nVlćek et al. (2024)"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#challenges",
+    "href": "part-08/lecture-presentation.html#challenges",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Challenges",
+    "text": "Challenges\nQuestion: What makes the work of emergency services complex?\n\n\nDynamic urban development\nChanging population patterns\nResource constraints\nNeed for rapid response\nMultiple stakeholder interests"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#emergency-services",
+    "href": "part-08/lecture-presentation.html#emergency-services",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Emergency Services",
+    "text": "Emergency Services\n\n\n\n\nEmergency services address the needs of three interest groups:\n\nCitizens\nService personnel\nAdministrators\n\nQuestion: What could be the objectives of these groups?"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#stakeholder-objectives",
+    "href": "part-08/lecture-presentation.html#stakeholder-objectives",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Stakeholder Objectives",
+    "text": "Stakeholder Objectives\n\n\n\nCitizens\n\nFast response times\nReliable service coverage\n\nService Personnel\n\nManageable workloads\nSafe working conditions\n\n\n\n\nAdministrators\n\nCost efficiency\nResource optimization\n\n\n\n\n\n\n\n\n\nNote\n\n\nAligning the objectives of the three interest groups is challenging."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#emergency-service-districting",
+    "href": "part-08/lecture-presentation.html#emergency-service-districting",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Emergency Service Districting",
+    "text": "Emergency Service Districting\n\n\n\n\nQuestion: Why might current district layouts be suboptimal?\n\n\nMany layouts date back several decades\nOften designed along highways and regions (Bruce 2009)\nExtensive data not used for data-driven improvement"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#section",
+    "href": "part-08/lecture-presentation.html#section",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "How can we improve\nthis situation?"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#the-role-of-data",
+    "href": "part-08/lecture-presentation.html#the-role-of-data",
+    "title": "Lecture VIII - Police Districting",
+    "section": "The Role of Data",
+    "text": "The Role of Data\n\nQuestion: What data can help improve emergency services?\n\n\nHistorical incident patterns\nResponse time analysis\nResource utilization metrics\nPopulation densities and traffic patterns\n\n\n\n\n\n\n\n\n\n\nNote\n\n\nExtensive data collected, but often lack of tools or knowledge to leverage it."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#optimization",
+    "href": "part-08/lecture-presentation.html#optimization",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Optimization",
+    "text": "Optimization\n\nOperations research (OR) models can help!\nBased on incident records and geographical information\nImprove the response of emergency services\nHelp administrators in making strategic decisions\nLocate new departments or close departments (Liberatore, Camacho-Collados, and Vitoriano 2020)"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#police-districting",
+    "href": "part-08/lecture-presentation.html#police-districting",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Police Districting",
+    "text": "Police Districting\n\nFor an efficient and effective distribution of resources, police jurisdictions are divided into precincts or command districts with separate departments. These are further divided into patrol beats (D’Amico et al. 2002)."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#service-priority-extremes",
+    "href": "part-08/lecture-presentation.html#service-priority-extremes",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Service Priority Extremes",
+    "text": "Service Priority Extremes\n\nHigh Priority\n\nLife-threatening situations\nActive crimes in progress\nMultiple unit response needed\n\nLow Priority\n\nMinor incidents\nAdministrative tasks"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#case-studies-1",
+    "href": "part-08/lecture-presentation.html#case-studies-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Case Studies",
+    "text": "Case Studies\n\nDifferent urban contexts\nStudy of jurisdictions in\n\nGermany: Large metropolitan area\nBelgium: Large rural area\n\nFocus on response time optimization\n\n\n\n\n\n\n\n\nNote\n\n\nPart of the force patrols the streets, another part is stationed at the departments."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#dispatching",
+    "href": "part-08/lecture-presentation.html#dispatching",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Dispatching",
+    "text": "Dispatching\n\nDispatchers assign all CFS to vehicles from the corresponding districts and patrol areas\nOfficers are familiar with the area and are thus better prepared to respond appropriately (Bodily 1978)\nTo cope with high demands, dispatchers can assign vehicles from nearby districts or beats"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#potential-problem",
+    "href": "part-08/lecture-presentation.html#potential-problem",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Potential Problem",
+    "text": "Potential Problem\nQuestion: What could be the potential problem?\n\n\nThis can lead to a domino effect\nTransferring vehicles from other districts or beats reduces coverage in those locations (Mayer 2009)\nThis makes them vulnerable to missing resources when they need assistance themselves"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#overloaded-systems",
+    "href": "part-08/lecture-presentation.html#overloaded-systems",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Overloaded Systems",
+    "text": "Overloaded Systems\n\nThis can lead to overloaded systems!\nLong dispatching delays due to staff shortages\nPreventive patrol hardly possible (Miller and Knoppers 1972)\nDispatchers constantly draw on patrol resources\nReduces the response time of emergency services\n\n\n\n\n\n\n\n\nWarning\n\n\nThis is a common problem in many emergency services."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#response-time",
+    "href": "part-08/lecture-presentation.html#response-time",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Response Time",
+    "text": "Response Time\n\n\n\n\n\nCentral criterion to measure the effectiveness of emergency services is the response time\nTime between a call for aid and the arrival at the incident location\nLow response time increases the likelihood of helping and improves confidence (Bodily 1978)"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#response-time-influencers",
+    "href": "part-08/lecture-presentation.html#response-time-influencers",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Response Time Influencers",
+    "text": "Response Time Influencers\nQuestion: What affects response time?\n\n\nInitial contact\nInformation gathering\nUnit assignment\nResource coordination\nRoute to location\nTraffic conditions"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#territory-design-problem-1",
+    "href": "part-08/lecture-presentation.html#territory-design-problem-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Territory Design Problem",
+    "text": "Territory Design Problem\n\n\n\n\n\nAggregation of small geographic areas, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to pre-defined planning criteria1.\n\n\nZoltners and Sinha (1983)"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#objective",
+    "href": "part-08/lecture-presentation.html#objective",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Objective",
+    "text": "Objective\nQuestion: What could be the objective?\n\n\nMinimize the response time to help citizens faster while increasing the confidence in the service\n\n\n\nQuestion: What could be further objectives?\n\n\n\nReallocate only part of the police department’s\nCompact and contiguous territories to improve patrol\nPrevention of isolated departments"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#basic-structure",
+    "href": "part-08/lecture-presentation.html#basic-structure",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Basic Structure",
+    "text": "Basic Structure\n\n\n\n\nQuestion: How can we structure this?\n\n\nModel as a digraph with vertices and edges\nEach BA centroid becomes a vertex\n\\(\\mathcal{J}\\) : set of BAs, indexed by \\(j\\)\n\\(\\mathcal{I}\\) : set of potential district centres \\((\\mathcal{I} \\subseteq \\mathcal{J})\\)"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#why-hexagons",
+    "href": "part-08/lecture-presentation.html#why-hexagons",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Why Hexagons?",
+    "text": "Why Hexagons?\n\n\n\n\nQuestion: Advantages of hexagons?\n\n\nEqual distances to all neighboring centroids\nReduces sampling bias from edge effects (Wang and Kwan 2018)\nSpecial properties that help with the enforcement of compactness\nBetter representation of urban geography"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#response-time-components",
+    "href": "part-08/lecture-presentation.html#response-time-components",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Response Time Components",
+    "text": "Response Time Components\n\n\n\n\nQuestion: How can we model response time?\n\n\nCall length is independent of territory\nDispatch time is difficult to model\nDriving time can be minimized directly\n\n\n\n\n\n\n\n\n\nConclusion\n\n\nWe focus on minimizing expected driving times between departments and incident locations."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#section-1",
+    "href": "part-08/lecture-presentation.html#section-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Let’s build our model\nstep by step!"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#key-model-components",
+    "href": "part-08/lecture-presentation.html#key-model-components",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Key Model Components",
+    "text": "Key Model Components\nQuestion: What could be our key model components?\n\n\nBasic areas (BAs) and potential department locations\nDriving times between basic areas\nForecasted incident data\nAssignment decisions\n\n\n\nQuestion: Which are sets, parameters, and variables?"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#sets-and-indices",
+    "href": "part-08/lecture-presentation.html#sets-and-indices",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Sets and Indices",
+    "text": "Sets and Indices\n\n\n\\(\\mathcal{J}\\) - Set of BAs, indexed by \\(j\\)\n\\(\\mathcal{I}\\) - Set of potential district centres (\\(\\mathcal{I} \\subseteq \\mathcal{J}\\)), indexed by \\(i\\)\n\n\n\n\n\n\n\n\n\nNote\n\n\nThe depot locations are a subset of the basic areas!"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#parameters",
+    "href": "part-08/lecture-presentation.html#parameters",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Parameters",
+    "text": "Parameters\nQuestion: What parameters do we need?\n\n\n\\(p\\) - Number of district centres (departments)\n\\(t_{i,j}\\) - Expected driving times between \\(i\\) and \\(j\\)\n\n\n\n\n\n\n\n\n\nTip\n\n\nParameters should be carefully calibrated with real-world data!"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#decision-variables",
+    "href": "part-08/lecture-presentation.html#decision-variables",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Decision Variable(s)?",
+    "text": "Decision Variable(s)?\n\n\n\n\n\n\nWe have the following sets:\n\n\n\nBAs, indexed by \\(j \\in \\mathcal{J}\\)\nPotential department locations, indexed by \\(i \\in \\mathcal{I}\\)\n\n\n\n\n\n\n\n\n\n\n\nOur objective is to:\n\n\nMinimize the expected response time of the emergency services by optimizing the assignment of BAs to departments.\n\n\n\n\n\nQuestion: What decisions do we need to model?"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#decision-variables-1",
+    "href": "part-08/lecture-presentation.html#decision-variables-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Decision variable/s",
+    "text": "Decision variable/s\n\n\\(X_{i,j}\\): 1 if BA \\(j\\) assigned to department \\(i\\), 0 otherwise\n\n\nQuestion: What is the domain of our decision variable?\n\n\n\n\\(X_{i,j} \\in \\{0,1\\} \\quad \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}\\)"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#section-2",
+    "href": "part-08/lecture-presentation.html#section-2",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Let’s build our\nobjective function!"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#objective-function",
+    "href": "part-08/lecture-presentation.html#objective-function",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Objective Function?",
+    "text": "Objective Function?\n\n\n\n\n\n\nOur objective is to:\n\n\nMinimize the expected response time of the emergency services by optimizing the assignment of BAs to departments.\n\n\n\n\nQuestion: How do we minimize response time?\n\n\nWe want to minimize total driving time\nConsider frequency of incidents in each BA\nDon’t include fixed costs (handled by constraints)"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#objective-function-1",
+    "href": "part-08/lecture-presentation.html#objective-function-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Objective Function",
+    "text": "Objective Function\nQuestion: What could be our objective function?\n\n\\[\n\\text{minimize} \\quad \\sum_{i \\in \\mathcal{I}}\\sum_{j \\in \\mathcal{J}} t_{i,j} \\times X_{i,j}\n\\]\n\n\n\n\n\n\n\n\nExpected Driving Time\n\n\n\nTotal driving time across all assignments\nWeighted by incident frequency\nConsiders all possible BA-department pairs"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#key-constraints",
+    "href": "part-08/lecture-presentation.html#key-constraints",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Key Constraints",
+    "text": "Key Constraints\n\n\n\n\nQuestion: Constraints needed?\n\n\nBA must have one department\nLimit number of departments\nOnly assign active departments\nEnsure contiguous districts\nMaintain district compactness"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#single-assignment-constraint",
+    "href": "part-08/lecture-presentation.html#single-assignment-constraint",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Single Assignment Constraint?",
+    "text": "Single Assignment Constraint?\nQuestion: Why do we need this constraint?\n\n\nEach BA must be assigned to exactly one department\nPrevents overlapping jurisdictions\nEnsures complete coverage\n\n\n\n\n\n\n\n\n\nWe need the following variables:\n\n\n\n\\(X_{i,j}\\) - 1 if BA \\(j\\) assigned to department \\(i\\), 0 otherwise"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#single-assignment-constraint-1",
+    "href": "part-08/lecture-presentation.html#single-assignment-constraint-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Single Assignment Constraint?",
+    "text": "Single Assignment Constraint?\nQuestion: What could the constraint look like?\n\n\\[\n\\sum_{i \\in \\mathcal{I}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{J}\n\\]\n\n\n\n\n\n\n\n\nNote\n\n\nEach BA must be assigned to exactly one department."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#department-count-constraint",
+    "href": "part-08/lecture-presentation.html#department-count-constraint",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Department Count Constraint?",
+    "text": "Department Count Constraint?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\nEnsure that exactly \\(p\\) departments are opened.\n\n\n\n\n\n\n\n\n\n\nWe need the following sets and variables:\n\n\n\n\\(\\mathcal{I}\\) - Set of potential department locations, indexed by \\(i\\)\n\\(\\mathcal{J}\\) - Set of BAs, indexed by \\(j\\)\n\\(X_{i,j}\\) - 1, if BA \\(j\\) assigned to department \\(i\\), 0 otherwise\n\\(p\\) - Number of departments"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#department-count-constraint-1",
+    "href": "part-08/lecture-presentation.html#department-count-constraint-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Department Count Constraint",
+    "text": "Department Count Constraint\nQuestion: What could the constraint look like?\n\n\\[\n\\sum_{i \\in \\mathcal{I}} X_{i,i} = p\n\\]\n\n\nQuestion: What happens if we have more departments than potential locations?\n\n\n\nWe can’t open more departments than there are locations\nThe model will be infeasible"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#active-department-constraint",
+    "href": "part-08/lecture-presentation.html#active-department-constraint",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Active Department Constraint?",
+    "text": "Active Department Constraint?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\nEnsure that each BA is assigned to an active department, e.g. a department that is opened and that could dispatch vehicles.\n\n\n\n\n\n\n\n\n\n\nWe need the following sets and variables:\n\n\n\n\\(X_{i,j}\\) - 1, if BA \\(j\\) assigned to department \\(i\\), 0 otherwise\n\n\n\n\nQuestion: How do we ensure assignments only to active departments?"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#active-department-constraint-1",
+    "href": "part-08/lecture-presentation.html#active-department-constraint-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Active Department Constraint",
+    "text": "Active Department Constraint\n\\[\nX_{i,j} \\leq X_{i,i} \\quad \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}\n\\]\n\n\n\n\n\n\n\nNote\n\n\nThis constraint creates a logical connection between department locations and BA assignments where BAs can only be assigned to opened departments."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#p-median-problem",
+    "href": "part-08/lecture-presentation.html#p-median-problem",
+    "title": "Lecture VIII - Police Districting",
+    "section": "p-Median Problem",
+    "text": "p-Median Problem\n\\[\\begin{align}\n\\text{minimize} \\quad & \\sum_{i \\in \\mathcal{I}}\\sum_{j \\in \\mathcal{J}} t_{i,j} \\times X_{i,j} \\\\\n\\text{subject to:} \\quad & \\sum_{i \\in \\mathcal{I}} X_{i,j}= 1 && \\forall j \\in \\mathcal{J} \\\\\n& \\sum_{i \\in \\mathcal{I}} X_{i,i} = p &&  \\\\\n& X_{i,j} \\leq X_{i,i} &&  \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}  \\\\\n& X_{i,j} \\in \\{0,1\\}  && \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}\n\\end{align}\\]"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#contiguity-introduction",
+    "href": "part-08/lecture-presentation.html#contiguity-introduction",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Contiguity Introduction",
+    "text": "Contiguity Introduction\n\n\n\n\nQuestion: Why is contiguity important?\n\n\nPrevents isolated areas\nEnsures contiguous patrol routes\nMaintains operational coherence"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#what-is-compactness",
+    "href": "part-08/lecture-presentation.html#what-is-compactness",
+    "title": "Lecture VIII - Police Districting",
+    "section": "What is compactness?",
+    "text": "What is compactness?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCompactness\n\n\nCompactness has no univocal definition; a district is commonly declared compact if it is ‘somehow round-shaped and undistorted’ (Kalcsics, Nickel, and Schröder 2005)."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#contiguity-and-compactness-1",
+    "href": "part-08/lecture-presentation.html#contiguity-and-compactness-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Contiguity and Compactness",
+    "text": "Contiguity and Compactness\n\n\n\n\nQuestion: Are our resulting districts based on the model contiguous and compact?\n\n\nThis depends on \\(t_{i,j}\\)\nIf Euclidean distance\n\nDistricts will be contiguous\nLikely of compact shape"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#compactness-p-median",
+    "href": "part-08/lecture-presentation.html#compactness-p-median",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Compactness p-Median",
+    "text": "Compactness p-Median\nQuestion: Is this likely for police service districting?\n\n\nNo, as we minimize the driving time within a city\nHighways, Tunnels, etc.\nMultiplied by the differing number of requested cars\nThis can contribute to distorted district shapes"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#contiguity-sets",
+    "href": "part-08/lecture-presentation.html#contiguity-sets",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Contiguity Sets",
+    "text": "Contiguity Sets\nAdditional Set and Parameter\n\n\\(e_{i,j}\\) - Euclidean distance between centroids\n\\(\\mathcal{A}_j\\) - Sets of BAs adjacent to BA \\(j\\)\n\n\n\\[\n\\mathcal{N}_{i,j}=\\{v \\in \\mathcal{A}_j | e_{i,v} &lt; e_{i,j}\\} \\quad \\forall i\\in \\mathcal{I}, \\forall j\\in \\mathcal{J}\n\\]\n\n\n\n\n\n\n\n\nThe idea\n\n\nBAs closer to department \\(i\\) than BA \\(j\\) on euclidian distance and adjacent to \\(j\\)!"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#example-a",
+    "href": "part-08/lecture-presentation.html#example-a",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Example A",
+    "text": "Example A"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#example-a-1",
+    "href": "part-08/lecture-presentation.html#example-a-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Example A",
+    "text": "Example A"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#example-b",
+    "href": "part-08/lecture-presentation.html#example-b",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Example B",
+    "text": "Example B"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#example-b-1",
+    "href": "part-08/lecture-presentation.html#example-b-1",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Example B",
+    "text": "Example B"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#enforcing-contiguity",
+    "href": "part-08/lecture-presentation.html#enforcing-contiguity",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Enforcing Contiguity",
+    "text": "Enforcing Contiguity\nAll districts have to be contiguous\n\\[\nX_{i,j} \\leq \\sum_{v \\in \\mathcal{N}_{i,j}} X_{i,v} \\quad \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J} \\setminus \\mathcal{A}_i: i \\neq j\n\\]\n\n\n\n\n\n\n\nThe idea\n\n\nAt least one department has to be assigned to a BA that is adjacent to BA \\(j\\) and closer to department \\(i\\)!"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#contiguity-and-compactness-2",
+    "href": "part-08/lecture-presentation.html#contiguity-and-compactness-2",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Contiguity and Compactness",
+    "text": "Contiguity and Compactness\nAll districts have to be contiguous and compact\n\\[\\begin{align*}\nX_{i,j} &\\leq \\sum_{v \\in \\mathcal{N}_{i,j}}X_{i,v} && \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J} \\setminus \\mathcal{A}_i:|\\mathcal{N}_{i,j}|= 1 \\wedge i \\neq j \\\\\n2X_{i,j} &\\leq \\sum_{v \\in \\mathcal{N}_{i,j}}X_{i,v} && \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J} \\setminus \\mathcal{A}_i:|\\mathcal{N}_{i,j}|&gt; 1 \\wedge i \\neq j\n\\end{align*}\\]\n\n\n\n\n\n\n\nThe idea\n\n\nAt least two departments have to be assigned to a BA that is adjacent to BA \\(j\\) and closer to department \\(i\\)!"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#comparison",
+    "href": "part-08/lecture-presentation.html#comparison",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Comparison",
+    "text": "Comparison\n\n\n\n\n\nOne department\n\n\n\n\n\n\nTwo departments\n\n\n\n\n\n\nUp to three departments\n\n\n\n\n\n\n\n\n\n\nWhy does this work?\n\n\nDue to the constraints, there is always a path back to the department if a BA is assigned to a department!"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#characteristics",
+    "href": "part-08/lecture-presentation.html#characteristics",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Characteristics",
+    "text": "Characteristics\nQuestions: On model characteristics\n\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domains do we have?\nWhat do you think, can the model be solved quickly?\nHave we prevented isolated districts?"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#model-assumptions",
+    "href": "part-08/lecture-presentation.html#model-assumptions",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Model Assumptions",
+    "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nUse Euclidean distances to approximate driving time?\nCan we rely on incident data collected by the police?"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#overview-of-studies",
+    "href": "part-08/lecture-presentation.html#overview-of-studies",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Overview of Studies",
+    "text": "Overview of Studies\n\nQuestion: Where did we apply our model?\n\n\nTwo distinct environments:\n\nLarge metropolitan area (Germany)\nRural region (Belgium)\n\nDifferent challenges and requirements\nFocus on response time optimization"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#german-metropolitan-case",
+    "href": "part-08/lecture-presentation.html#german-metropolitan-case",
+    "title": "Lecture VIII - Police Districting",
+    "section": "German Metropolitan Case",
+    "text": "German Metropolitan Case\n\n\n\n1.8 mio incidents (2015-2019)\n~20 department locations\n1,596 basic areas\nDense urban environment\n\n\n\n\n\nGoal: Redesign districts to improve response time."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#german-metropolitan-results",
+    "href": "part-08/lecture-presentation.html#german-metropolitan-results",
+    "title": "Lecture VIII - Police Districting",
+    "section": "German Metropolitan Results",
+    "text": "German Metropolitan Results"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#belgian-rural-case",
+    "href": "part-08/lecture-presentation.html#belgian-rural-case",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Belgian Rural Case",
+    "text": "Belgian Rural Case\n\n\n\n50,000 incidents (2019-2020)\n2 existing + 1 planned location\n1,233 basic areas\nDispersed rural setting\n\n\n\n\n\nGoal: Optimize coverage with limited resources."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#belgian-rural-results",
+    "href": "part-08/lecture-presentation.html#belgian-rural-results",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Belgian Rural Results",
+    "text": "Belgian Rural Results"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#simulation-framework",
+    "href": "part-08/lecture-presentation.html#simulation-framework",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Simulation Framework",
+    "text": "Simulation Framework\nQuestion: How did we validate the results?\n\n\n\nSpatial and temporal patterns\nShift schedules\nPriority handling\nRush hours\nInter-district support\nVariable driving times"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#results",
+    "href": "part-08/lecture-presentation.html#results",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Results",
+    "text": "Results\n\nResponse time reduction up to 14.52%\nBetter workload distribution\nImproved coverage equity\nMore efficient resource utilization\n\n\n\n\n\n\n\n\nImportant\n\n\nAll improvements are without additional staff!"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#conclusions",
+    "href": "part-08/lecture-presentation.html#conclusions",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Conclusions",
+    "text": "Conclusions\n\nModel adaptability crucial\nLocal context matters\nStakeholder buy-in essential\nData quality critical\n\n\n\n\n\n\n\n\nTip\n\n\nSuccess requires balancing theoretical optimization with practical constraints!"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#future-applications",
+    "href": "part-08/lecture-presentation.html#future-applications",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Future Applications",
+    "text": "Future Applications\nQuestion: Where else could this approach be useful?\n\n\nOther emergency services\nDifferent urban contexts\nResource allocation problems\nService territory design\n\n\n\n\n\n\n\n\n\nNote\n\n\nThe methodology is adaptable to various public service optimization scenarios."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#wrap-up",
+    "href": "part-08/lecture-presentation.html#wrap-up",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Wrap Up",
+    "text": "Wrap Up\n\n\n\n\n\n\nAnd that’s it for todays lecture!\n\n\nWe now have covered districting problems and are ready to start solving some tasks in the upcoming tutorial."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#section-3",
+    "href": "part-08/lecture-presentation.html#section-3",
+    "title": "Lecture VIII - Police Districting",
+    "section": "",
+    "text": "Questions?"
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#literature-i",
+    "href": "part-08/lecture-presentation.html#literature-i",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Literature I",
+    "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course."
+  },
+  {
+    "objectID": "part-08/lecture-presentation.html#literature-ii",
+    "href": "part-08/lecture-presentation.html#literature-ii",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Literature II",
+    "text": "Literature II\n\n\n\n\nBodily, Samuel E. 1978. “Police Sector Design Incorporating Preferences of Interest Groups for Equality and Efficiency.” Management Science 24 (12): 1301–13. https://doi.org/10.1287/mnsc.24.12.1301.\n\n\nBruce, Christopher. 2009. “Districting and Resource Allocation: A Question of Balance.” A Quarterly Bulletin of Applied Geography for the Study of Crime & Public Safety 1 (4): 1–3.\n\n\nD’Amico, Steven J., Shoou-Jiun Wang, Rajan Batta, and Christopher M. Rump. 2002. “A Simulated Annealing Approach to Police District Design.” Computers & Operations Research 29 (6): 667–84. https://doi.org/10.1016/s0305-0548(01)00056-9.\n\n\nKalcsics, Jörg, Stefan Nickel, and Michael Schröder. 2005. “Towards a Unified Territorial Design Approach — Applications, Algorithms and GIS Integration.” Top 13 (1): 1–56. https://doi.org/10.1007/BF02578982.\n\n\nLiberatore, Federico, Miguel Camacho-Collados, and Begoña Vitoriano. 2020. “Police Districting Problem: Literature Review and Annotated Bibliography.” In International Series in Operations Research & Management Science: Optimal Districting and Territory Design, edited by Roger Z. Ríos-Mercado, 9–29. Cham: Springer International Publishing. https://doi.org/10.1007/978-3-030-34312-5_2.\n\n\nMayer, Allison. 2009. “Geospatial Technology Helps East Orange Crack down on Crime.” A Quarterly Bulletin of Applied Geography for the Study of Crime & Public Safety 1 (4): 8–10.\n\n\nMiller, Herbert F., and Bastiaan A. Knoppers. 1972. “Computer Simulation of Police Dispatching and Patrol Functions.” In International Symposium on Criminal Justice Information and Statistics Systems Proceedings, edited by Gary Cooper, 167–79. National Institute of Justice.\n\n\nVlćek, Tobias, Knut Haase, Malte Fliedner, and Tobias Cors. 2024. “Police Service District Planning.” OR Spectrum, February. https://doi.org/10.1007/s00291-024-00745-3.\n\n\nWang, Jue, and Mei-Po Kwan. 2018. “Hexagon-Based Adaptive Crystal Growth Voronoi Diagrams Based on Weighted Planes for Service Area Delimitation.” ISPRS International Journal of Geo-Information 7: 257. https://doi.org/10.3390/ijgi7070257.\n\n\nZoltners, Andris A., and Prabhakant Sinha. 1983. “Sales Territory Alignment: A Review and Model.” Management Science 29 (11): 1237–56. https://doi.org/10.1287/mnsc.29.11.1237."
   }
 ]
