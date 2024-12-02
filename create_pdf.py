@@ -32,4 +32,5 @@ decktape reveal _site/part-04/lecture-presentation.html pdf-slides/ao_lecture_04
 decktape reveal _site/part-05/lecture-presentation.html pdf-slides/ao_lecture_05.pdf
 decktape reveal _site/part-06/lecture-presentation.html pdf-slides/ao_lecture_06.pdf
 decktape reveal _site/part-07/lecture-presentation.html pdf-slides/ao_lecture_07.pdf
+decktape reveal _site/part-08/lecture-presentation.html pdf-slides/ao_lecture_08.pdf
 '''
