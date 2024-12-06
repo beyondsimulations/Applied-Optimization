@@ -122,6 +122,20 @@ indices = ["A", "B", "C"]
 - Conditions can use any valid Julia boolean expression
 - Multiple conditions can be combined with && (and) or || (or)
 
+## Conditions while Summing
+
+```{julia}
+@constraint(model, total_sum,
+    sum(x[i] for i in 1:5 if i > 2) <= 500
+)
+# Only sums over i > 2
+
+@constraint(model, total_sum2,
+    sum(x[i,j] for i in 1:5, j in 1:5 if i != j && i + j <= 7) <= 1
+)
+# Only sums over i != j and i + j <= 7
+```
+
 # Objective Function
 
 ## Declaration
