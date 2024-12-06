@@ -4,7 +4,7 @@
     "href": "part-08/tutorial-districting.html",
     "title": "Tutorial VIII - Police Districting",
     "section": "",
-    "text": "Imagine you’re the lead consultant for Hamburg’s police force modernization project. The city is facing increasing response times in certain districts, and the Chief of Police has hired you to optimize their district boundaries. Your mission: redesign Hamburg’s police districts to ensure rapid response times while meeting several critical operational requirements.\nKey Objectives: - Minimize average response time to incidents - Ensure every area has adequate police coverage - Enable efficient backup support between districts - Account for real-world constraints like traffic patterns\nThroughout this tutorial, you’ll build this solution step-by-step, starting with a basic model and gradually adding real-world constraints that police departments face daily.",
+    "text": "Imagine you’re the lead consultant for Hamburg’s police force modernization project. The city is facing increasing response times in certain districts, and the Chief of Police has hired you to optimize their district boundaries. Your mission: redesign Hamburg’s police districts to ensure rapid response times while meeting several critical operational requirements.\nKey Objectives:\n\nMinimize average response time to incidents\nEnsure every area has adequate police coverage\nEnable efficient backup support between districts\nAccount for real-world constraints like traffic patterns\n\nThroughout this tutorial, you’ll build this solution step-by-step, starting with a basic model and gradually adding real-world constraints that police departments face daily.",
     "crumbs": [
       "08 Districting",
       "Tutorial"
@@ -2078,6 +2078,17 @@
     "title": "JuMP Syntax Cheatsheet",
     "section": "Key Points for Constraints",
     "text": "Key Points for Constraints\n\nUse semicolon (;) to separate indices from conditions\nConditions can use any valid Julia boolean expression\nMultiple conditions can be combined with && (and) or || (or)",
+    "crumbs": [
+      "Cheatsheets",
+      "JuMP"
+    ]
+  },
+  {
+    "objectID": "general/cheatsheet-jump.html#conditions-while-summing",
+    "href": "general/cheatsheet-jump.html#conditions-while-summing",
+    "title": "JuMP Syntax Cheatsheet",
+    "section": "Conditions while Summing",
+    "text": "Conditions while Summing\n\n@constraint(model, total_sum,\n    sum(x[i] for i in 1:5 if i &gt; 2) &lt;= 500\n)\n# Only sums over i &gt; 2\n\n@constraint(model, total_sum2,\n    sum(x[i,j] for i in 1:5, j in 1:5 if i != j && i + j &lt;= 7) &lt;= 1\n)\n# Only sums over i != j and i + j &lt;= 7",
     "crumbs": [
       "Cheatsheets",
       "JuMP"
