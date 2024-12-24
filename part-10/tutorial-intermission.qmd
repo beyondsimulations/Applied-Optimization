@@ -67,12 +67,10 @@ Note that the problem does not have to be modeled yet!
 - $f$ : fixed setup costs of all sorts (Parameter)
 - $c_i$ : storage costs per period of sort $i$ (Parameter)
 - $d_{i,t}$ : ice cream demand per period (Parameter)
-- $q$ : shift length (Parameter)
-- $s$ : fixed costs per shift (Parameter)
 - $W_{i,t}$ : quantity stored at end of period (Variable)
 - $X_{i,t}$ : production quantity per sort and period (Variable)
 - $Y_{i,t}$ : 1, if product is set up in period (Variable)
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -113,7 +111,7 @@ If you need additional sets, parameters or variables that are not yet defined, p
 $$
 \text{min} \quad \sum_{i \in \mathcal{I}}\sum_{t \in \mathcal{T}} (f \times Y_{i,t} + c_i \times W_{i,t})
 $$
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -156,6 +154,10 @@ X_{i,t} + W_{i,t-1} -W_{i,t} = d_{i,t} \quad \forall i \in \mathcal{I},t \in \ma
 $$
 
 $$
+X_{i,t} -W_{i,t} = d_{i,t} \quad \forall i \in \mathcal{I},t \in \mathcal{T}: t = 1
+$$
+
+$$
 X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i \in \mathcal{I},t \in \mathcal{T}
 $$
 
@@ -178,7 +180,7 @@ $$
 $$
 Y_{i,t} \in \{0,1\} \quad \forall i \in \mathcal{I},t \in \mathcal{T}
 $$
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -215,7 +217,7 @@ Please explain your answer briefly.
 **Solution**
 
 No, the solution is not a nonlinear problem with continuous variables. The objective function is linear and the constraints are linear as well. Furthermore, we also have binary variables.
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -267,19 +269,19 @@ Note, that you only need to write down new and modified elements!
 **New objective function**
 
 $$
-\text{min} \quad \sum_{i \in \mathcal{I}}\sum_{t \in \mathcal{T}} (f \times Y_{i,t} + c_i \times W_{i,t}) + \sum_{t \in \mathcal{T}} (s \times q + 1.5 \times s \times Z_t)
+\text{min} \quad \sum_{i \in \mathcal{I}}\sum_{t \in \mathcal{T}} (f \times Y_{i,t} + c_i \times W_{i,t}) + \sum_{t \in \mathcal{T}} (s \times q + 1.5 \times s \times q \times Z_t)
 $$
 
 **New constraints**
 
 $$
-\sum_{i \in \mathcal{I}} p_i \times X_{i,t} \leq q + Z_t \quad \forall i \in \mathcal{I},t \in \mathcal{T}
+\sum_{i \in \mathcal{I}} p_i \times X_{i,t} \leq q + q \times Z_t \quad \forall i \in \mathcal{I},t \in \mathcal{T}
 $$
 
 $$
-0 \leq Z_t \leq 1.5 \times q \quad \forall t \in \mathcal{T}
+0 \leq Z_t \leq 0.5 \times q \quad \forall t \in \mathcal{T}
 $$
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -319,6 +321,7 @@ Please describe at least two assumptions with a 1-3 sentences and explain briefl
 - The production time is known and fixed for each period. In reality, the production time can vary due to different production rates or machine breakdowns.
 - The workers are available and can work overtime. In reality, workers might be unavailable or have other constraints.
 
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -344,14 +347,14 @@ Please describe at least two assumptions with a 1-3 sentences and explain briefl
 \newpage
 :::
 
-# [Part II]{.flow} {.title}
+# Part II
 
 ## 2.a (6 Points)
 
 Throughout the course, we covered several different optimization problems. For one of the following two problems, briefly:
 
-- Describe the main objective of the problem (1 point each model)
-- Describe two key assumptions of the model (2 points each model)
+- Describe the main objective of the problem (2 points)
+- Describe two key assumptions of the model (2 points per assumption)
 
 Choose from:
 
@@ -372,6 +375,7 @@ Choose from:
 - Main objective: Minimize the number of split orders to minimize shipping costs.
 - Key assumptions: Each product has the same shipping cost per unit, the future demand is known.
 
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -410,14 +414,17 @@ Please describe one approach to adress the problem and describe the advantages a
 One approach would be to use a heuristic to solve the problem.
 
 Advantages of a heuristic:
+
 - Breaks down the large problem into manageable problems that can be solved
 - Significantly reduces computational complexity
 - Can still produce good quality solutions
 
-Disadvantages of a heuristic: 
+Disadvantages of a heuristic:
+
 - May miss better solutions as the solution is not guaranteed to be optimal
 - The quality of the final solution depends heavily on the heuristic used
 
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -466,7 +473,7 @@ This objective is good because:
 3. It can help reduce fatigue-related errors which is especially important in a hospital setting
 
 Alternative objectives could include minimizing the number of undesirable shifts (like night shifts) per worker or maximizing the number of preferred shift requests that can be granted.
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -507,7 +514,7 @@ A solver is a software that finds solutions to mathematical optimization problem
 It takes a mathematical model (with objective function, constraints, and variables) as input and attempts to find the (optimal) solution that satisfies all constraints while maximizing or minimizing the objective function. 
 
 The solver handles the computational complexity of searching through the solution space efficiently, which would be impractical to do manually.
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -538,7 +545,7 @@ The solver handles the computational complexity of searching through the solutio
 
 ## 3.a (3 Points)
 
-Create a JuMP variable with the following properties: A continuous variable `Production[t,p]` for time periods $t \in 1:\mathcal{T}$ and products $p \in 1:\mathcal{P}$ which must be non-negative and has an upper bound stored in parameter `capacity[t,p]`.
+Create a JuMP variable with the following properties: A continuous variable `Production[t,p]` for time periods $t \in 1:T$ and products $p \in 1:P$ which must be non-negative and has an upper bound stored in parameter `capacity[t,p]`. All parameters (`T`, `P`, `capacity`) are already defined, the model is not created yet.
 
 Specify the definition of the variable in correct Julia syntax.
 
@@ -547,20 +554,20 @@ Specify the definition of the variable in correct Julia syntax.
 **Solution**
 ```{julia}
 #| eval: true
-#| output: hide
+#| output: false
 #| echo: false
 
 using JuMP
-model = Model()
-T = 1:2
-P = 1:2
+T = 2
+P = 2
 capacity = [10 10; 10 10]
 ```
 
 ```{julia}
-@variable(model, 0 <= Production[t in T, p in P] <= capacity[t, p])
+model = Model()
+@variable(model, 0 <= Production[t in 1:T, p in 1:P] <= capacity[t, p])
 ```
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -592,7 +599,7 @@ Write JuMP code to implement the following constraint:
 
 $$\sum_{f \in F} Y_{f,z} \leq 1 \quad \forall z \in Z$$
 
-Assume variables `Y` is already defined as binary variables and the sets `F` and `Z` are already defined as well.
+Assume variables `Y` is already defined as binary variables and the sets `F` and `Z` are already defined as well. The model is also already created.
 
 Specify the definition of the constraint in correct Julia syntax.
 
@@ -601,7 +608,7 @@ Specify the definition of the constraint in correct Julia syntax.
 **Solution**
 ```{julia}
 #| eval: true
-#| output: hide
+#| output: false
 #| echo: false
 
 Z = 1:2
@@ -612,7 +619,7 @@ F = 1:3
 ```{julia}
 @constraint(model, my_constraint[z in Z], sum(Y[f, z] for f in F) <= 1)
 ```
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -654,7 +661,7 @@ Please explain why the constraint is not correctly implemented and how it can be
 
 ```{julia}
 #| eval: true
-#| output: hide
+#| output: false
 #| echo: false
 
 @variable(model, X[i in 1:10, j in 1:5], Bin)
@@ -663,6 +670,7 @@ Please explain why the constraint is not correctly implemented and how it can be
 The constraint is missing the model parameter in the `@constraint` macro. The correct syntax should be:
 
 ```{julia}
+#| output: false
 @constraint(model, sum(X[i,j] for i in 1:10, j in 1:5) == 10)
 ```
 
@@ -671,9 +679,10 @@ Additionally, when using `@constraint`, it's generally good practice to give the
 A fully improved version would be:
 
 ```{julia}
+#| output: false
 @constraint(model, sum_constraint, sum(X[i,j] for i in 1:10, j in 1:5) == 10)
 ```
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -712,7 +721,7 @@ Please describe the difference in a 1-3 sentences.
 A tuple in Julia is an immutable fixed-size container (once created, its elements cannot be modified), while an array is mutable and can be resized. 
 
 Tuples are defined using parentheses like `(1,2,3)` and are often used for small collections where the values won't change, while arrays use square brackets like `[1,2,3]` and are better suited for larger collections that need to be modified.
-
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}
@@ -764,9 +773,12 @@ end
 Please write down the output of the code.
 
 ::: {.content-visible when-profile="solutions"}
-\vspace{0.1in}
+
+**Solution**
+
 ```{julia}
 #| eval: true
+#| echo: false
 
 mySet = 1:8
 vectorA = ["Hello", "World"]
