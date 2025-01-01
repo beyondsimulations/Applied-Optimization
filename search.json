@@ -1,5 +1,71 @@
 [
   {
+    "objectID": "part-12/tutorial-rail.html",
+    "href": "part-12/tutorial-rail.html",
+    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Metro Network with 4 stations (A, B, C, D) connected in a loop\n\n\nConsider the depicted ‘Golden Line’ on the left with 4 different stations A, B, C, D. For an upcoming timeframe of 20 minutes divided into 10 periods, the transportation demand is going to exceed the available capacity of the network and each origin-destination pair will be requested by at least 1 passenger. To handle the inflow, queues will be put in place at each metro station.",
+    "crumbs": [
+      "12 Metro",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-12/tutorial-rail.html#flow-analysis",
+    "href": "part-12/tutorial-rail.html#flow-analysis",
+    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
+    "section": "1. Flow Analysis",
+    "text": "1. Flow Analysis\nSuppose we are in minute 7 at the arc of (D,A). Which inflows from which stations are going to impact the flow into the arc in this minute?\nWrite out the set \\(\\mathcal{R}_{(D,A),7}\\) and shortly explain your answer. You can write out the set in a comment, for example like this:\n#=\n{(A,B,1), (B,C,1), (C,D,1)}\n=#\n\n\n\n\n\n\nTip\n\n\n\nTo solve this task, it might be helpful to work with paper and pen to sketch the problem.\n\n\n\n#=\n\n\n\n=#",
+    "crumbs": [
+      "12 Metro",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-12/tutorial-rail.html#simplified-model",
+    "href": "part-12/tutorial-rail.html#simplified-model",
+    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
+    "section": "2. Simplified Model",
+    "text": "2. Simplified Model\nCan you come up with a simpler model formulation based on the model of the lecture that restricts the inflow? First, define all sets, parameters, variables, and constraints necessary to model this simpler version.\nAnswer by defining the sets, parameters, variables, and constraints in the cell below as a JuMP model. Please make sure to write out the value of each parameter you know, and explain your adjustments in a short text. If you are missing data (and you are), use a placeholder.\n\n\n\n\n\n\nTip\n\n\n\nAs you don’t have an OD-matrix, the model does not need to be solved! This task is about defining the model and understanding how simplifications can be made. Note, that the simplification of set \\(\\mathcal{R}_{e,t}\\) is especially important here.\n\n\n\nusing JuMP\nmetro_model = Model()",
+    "crumbs": [
+      "12 Metro",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-12/tutorial-rail.html#inflow-control",
+    "href": "part-12/tutorial-rail.html#inflow-control",
+    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
+    "section": "3. Inflow Control",
+    "text": "3. Inflow Control\n\n\n\n\n\nExample: Fluctuations\n\n\n\n\n\n\nExample: Smoothed\n\n\n\n\nAs there is a rather large fluctuation of allowed inflow between periods, you are asked to adjust your model. In the first period, the inflow at each station is supposed to be unrestricted. Thereafter, it is maximally allowed to change by 20 persons in both directions per period at each station.\nCan you extend your model to include the additional constraints?",
+    "crumbs": [
+      "12 Metro",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-12/tutorial-rail.html#bidirectional-flow",
+    "href": "part-12/tutorial-rail.html#bidirectional-flow",
+    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
+    "section": "4. Bidirectional Flow",
+    "text": "4. Bidirectional Flow\n\n\n\n\nBidirectional Metro Network\n\nThe metro was improved and there is now the possibility to travel in both directions. How would this change the set \\(\\mathcal{R}_{(MD,MA),7}\\) from 1.?Write out the new set \\(\\mathcal{R}_{(D,A),7}\\) manually and shortly explain your answer.\n#=\n\n\n\n=#\n\n5. Capacity Analysis\nAlthough the system is two-directional now, the overall number of trains of the metro provider has not changed. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?\nPlease explain your answer in a few sentences.\n\n#=\n\n\n\n=#\n\n\n\nSolutions\nYou will likely find solutions to most exercises online. However, I strongly encourage you to work on these exercises independently without searching explicitly for the exact answers to the exercises. Understanding someone else’s solution is very different from developing your own. Use the lecture notes and try to solve the exercises on your own. This approach will significantly enhance your learning and problem-solving skills.\nRemember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities. If you encounter difficulties, review the lecture materials, experiment with different approaches, and don’t hesitate to ask for clarification during class discussions.\nLater, you will find the solutions to these exercises online in the associated GitHub repository, but we will also quickly go over them in next week’s tutorial. To access the solutions, click on the Github button on the lower right and search for the folder with today’s lecture and tutorial. Alternatively, you can ask ChatGPT or Claude to explain them to you. But please remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities.",
+    "crumbs": [
+      "12 Metro",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-12/tutorial-rail.html#capacity-analysis",
+    "href": "part-12/tutorial-rail.html#capacity-analysis",
+    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
+    "section": "5. Capacity Analysis",
+    "text": "5. Capacity Analysis\nAlthough the system is two-directional now, the overall number of trains of the metro provider has not changed. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?\nPlease explain your answer in a few sentences.\n\n#=\n\n\n\n=#",
+    "crumbs": [
+      "12 Metro",
+      "Tutorial"
+    ]
+  },
+  {
     "objectID": "part-10/tutorial-intermission.html",
     "href": "part-10/tutorial-intermission.html",
     "title": "Tutorial X - Intermission: Exam Preparation",
@@ -9862,6 +9928,963 @@
     "objectID": "part-10/lecture-presentation.html#literature-i",
     "href": "part-10/lecture-presentation.html#literature-i",
     "title": "Lecture X - Intermission: Exam Preparation",
+    "section": "Literature I",
+    "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course."
+  },
+  {
+    "objectID": "part-12/lecture-rail.html",
+    "href": "part-12/lecture-rail.html",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "FIFA Worldcup 2022 took place in a small region\nThe capacity of the metro system was finite\nMore than 1 million tourists where expected\nMetro usage was free for all ticket holders\nTransport methods were expected to be overloaded\n\n. . .\nQuestion: What could become an issue?\n\n\n\n\n\n\n\n\n\nQuestion: Where could crowd disasters happen?\n. . .\n\nAt event venues and in waiting areas\nAt intersections of multiple pedestrian flows\nIn narrow passages and entrances\nOn crowded metro platforms and transfer stations\nAt ticket/turnstile bottlenecks and emergency exits\n\n\n\n\n\n\n\n\n\n\n\n\nQuestion: What could be a potential bottleneck?\n. . .\n\nRed Line has twice the capacity of the Green and Gold Line\nPeople use the metro to get to the event venues\n\n. . .\nQuestion: What could be the issue?\n\nImagine a match at a stadium along the Gold line\nPeople from Red and Green line will try to get there\nThis will cause a massive crowd at transfer stations\n\n\n\n\n\n\n\n\n\n\n10 people want to start per minute at each station\nEverybody wants to get to station D\n\n\n\n\n\n\n\n\n\n\n\n\n\nCapacities inside the stations are limited as well\nThese include the escalators, stairs, and elevators\nBut also the platforms and the ticket gates\n\n. . .\n\n\n\n\n\n\nWarning\n\n\n\nThis can lead to overcrowding and potential crowd disasters!\n\n\n\n\n\nQuestion: What could also be an issue?\n. . .\n\nOften unknown how many people exactly will participate\nGathering data is extremely importand and difficult\nCrowd behavior can be unpredictable and dynamic\nWeather conditions may affect transportation preferences\nCultural factors influence crowd movement patterns\nEmergency situations require flexible contingency plans\n\n\n\n\n\nLet’s take a\ncloser look at the\nproblem structure!",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#public-transport",
+    "href": "part-12/lecture-rail.html#public-transport",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "FIFA Worldcup 2022 took place in a small region\nThe capacity of the metro system was finite\nMore than 1 million tourists where expected\nMetro usage was free for all ticket holders\nTransport methods were expected to be overloaded\n\n. . .\nQuestion: What could become an issue?",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#potential-locations",
+    "href": "part-12/lecture-rail.html#potential-locations",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Question: Where could crowd disasters happen?\n. . .\n\nAt event venues and in waiting areas\nAt intersections of multiple pedestrian flows\nIn narrow passages and entrances\nOn crowded metro platforms and transfer stations\nAt ticket/turnstile bottlenecks and emergency exits",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#main-bottleneck",
+    "href": "part-12/lecture-rail.html#main-bottleneck",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Question: What could be a potential bottleneck?\n. . .\n\nRed Line has twice the capacity of the Green and Gold Line\nPeople use the metro to get to the event venues\n\n. . .\nQuestion: What could be the issue?\n\nImagine a match at a stadium along the Gold line\nPeople from Red and Green line will try to get there\nThis will cause a massive crowd at transfer stations",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#visualization",
+    "href": "part-12/lecture-rail.html#visualization",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "10 people want to start per minute at each station\nEverybody wants to get to station D",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#capacities-inside-the-stations",
+    "href": "part-12/lecture-rail.html#capacities-inside-the-stations",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Capacities inside the stations are limited as well\nThese include the escalators, stairs, and elevators\nBut also the platforms and the ticket gates\n\n. . .\n\n\n\n\n\n\nWarning\n\n\n\nThis can lead to overcrowding and potential crowd disasters!",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#general-issues",
+    "href": "part-12/lecture-rail.html#general-issues",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Question: What could also be an issue?\n. . .\n\nOften unknown how many people exactly will participate\nGathering data is extremely importand and difficult\nCrowd behavior can be unpredictable and dynamic\nWeather conditions may affect transportation preferences\nCultural factors influence crowd movement patterns\nEmergency situations require flexible contingency plans",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#section",
+    "href": "part-12/lecture-rail.html#section",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Let’s take a\ncloser look at the\nproblem structure!",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#objective",
+    "href": "part-12/lecture-rail.html#objective",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Objective",
+    "text": "Objective\nQuestion: What could be the objectives of the authorities?\n. . .\n\nA safe and successful event as host country\nGood publicity and a positive recognition worldwide\n\nSatisfied visitors that enjoyed their time\n\n. . .\n\n\n\n\n\n\nNote: We can model none of the above directly!\n\n\n\nBut we can assist in the estimation of transport demands and the design of operational plans to ensure public safety and a smooth transportation through the city.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#underlying-problem",
+    "href": "part-12/lecture-rail.html#underlying-problem",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Underlying Problem",
+    "text": "Underlying Problem\nQuestion: Can we just start modeling?\n. . .\n\nFirst, we need to understand the movement patterns\nEvent is unprecedented, movement patterns are unknown\nMultiple concurrent events affect flow patterns\n\n. . .\n\n\n\n\n\n\nTip: We need to estimate the data first!\n\n\n\nThis is a huge challenge, but we can use simulation to estimate the data.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#simulation",
+    "href": "part-12/lecture-rail.html#simulation",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Simulation",
+    "text": "Simulation\n\nBased on publicly available data from the area\nSimulates all individuals participating at the event\nIncludes all transportation infrastructure\nIndividual mode choice based on a choice model\n\n. . .\n\n\n\n\n\n\nTip: Julia is a great tool for this!\n\n\n\nSimulations was build in Julia. With 1,000,000 individuals walking,using cars, busses, and the metro, a day took less than 5 minutes.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#results-of-the-simulation",
+    "href": "part-12/lecture-rail.html#results-of-the-simulation",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Results of the Simulation",
+    "text": "Results of the Simulation\n\n\n\n\n\nDetailed movement patterns throughout the region\nPotential sections at risk in the transport infrastructure\nPotential capacity overloads at event locations",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#section-1",
+    "href": "part-12/lecture-rail.html#section-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "But it is still\nbased on a lot\nof assumptions!",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#main-risk-metro",
+    "href": "part-12/lecture-rail.html#main-risk-metro",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Main risk: Metro",
+    "text": "Main risk: Metro",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#idea",
+    "href": "part-12/lecture-rail.html#idea",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Idea",
+    "text": "Idea\nQuestion: What can we do to prevent crowd disasters?\n. . .\n\nRegulate the inflow at each individual station\nEnsure utilized capacity is always within bounds\n\n. . .\nQuestion: What could we try to model?\n. . .\n\nMinimize the queues outside of the metro stations\nBased on the allowed inflow and origin-destination data\nAdhering to the capacity constraints",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#difficulty",
+    "href": "part-12/lecture-rail.html#difficulty",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Difficulty",
+    "text": "Difficulty\n\n\n\n\n\n. . .\n\nMovement patterns have different origin-destination pairs\nRegulating the inflow does not affect the destination",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#graph-sets",
+    "href": "part-12/lecture-rail.html#graph-sets",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Graph Sets?",
+    "text": "Graph Sets?\nQuestion: What could be the sets for the graph?",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#graph-sets-1",
+    "href": "part-12/lecture-rail.html#graph-sets-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Graph Sets?",
+    "text": "Graph Sets?\n\n\\(\\mathcal{G}\\) - Connected digraph of the metro network \\(\\mathcal{G}=(\\mathcal{O},\\mathcal{E})\\)\n\\(\\mathcal{O}\\) - Set of metro stations, indexed by \\(o\\)\n\\(\\mathcal{E}\\) - Set of directed arcs between connected stations\n\n. . .\n\n\n\n\n\n\nNote: These are the easier sets.\n\n\n\nThese simply help us to represent the entire metro system as a graph with different nodes \\(\\mathcal{O}\\) and arcs \\(\\mathcal{E}\\) between connected stations.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#time-sets",
+    "href": "part-12/lecture-rail.html#time-sets",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Time Sets?",
+    "text": "Time Sets?\nQuestion: What could be the time sets?\n\n\n\\(\\mathcal{T}\\) - Set of minutes in the time horizon, indexed by \\(t\\)\n\\(\\mathcal{P}\\) - Set of periods in the observed time horizon, where \\(p \\in \\{p_1, p_2, \\dots,p_n\\}\\)\n\n\n. . .\n\n\n\n\n\n\nNote: Number of periods\n\n\n\nWe further define \\(n\\) as the number of periods in observed time horizon.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#periods",
+    "href": "part-12/lecture-rail.html#periods",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Periods",
+    "text": "Periods\nQuestion: Why do we add periods here?\n. . .\n\nStaff needs clear, consistent instructions\nFrequent changes in flow increase risk of errors\nEasier to manage and communicate for planners\n\n. . .\n\n\n\n\n\n\nNote: Period Length\n\n\n\nWe define the period length as the length of the period in minutes measured as \\(m\\) minutes, which is the same for all periods.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#mapping-minutes-to-periods",
+    "href": "part-12/lecture-rail.html#mapping-minutes-to-periods",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Mapping Minutes to Periods",
+    "text": "Mapping Minutes to Periods\n\nWe can define an additional set with their relation\nIt specifies the relation of periods \\(p\\) to minutes \\(t\\).\n\n\\[\n    I_p =\\{t \\in \\mathcal{T}|(p-1) \\times m + 1 \\leq t \\leq p \\times m\\} \\quad \\forall p \\in \\mathcal{P}\n\\]\n. . .\nQuestion: Can anybody explain it?\n. . .\n\n\\(I_p\\) is the set of minutes \\(t\\) that belong to period \\(p\\)\nMinutes are not overlapping, but they are continuous",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#parameters",
+    "href": "part-12/lecture-rail.html#parameters",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Parameters?",
+    "text": "Parameters?\nQuestion: What could be possible parameters?\n. . .\n\n\\(q_{o,d,p}\\) - Demand from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in \\(p\\)\n\\(d_{e}\\) - Travel time (min) of the arcs \\(e \\in \\mathcal{E}\\)\n\\(c_e\\) - Max. allowed arc entry rate \\(e\\) per minute with \\(e \\in \\mathcal{E}\\)\n\\(c_{o}^{min}\\) - Min. station entry rate \\(o\\) per minute with \\(o \\in \\mathcal{O}\\)\n\\(c_{o}^{max}\\) - Max. station entry rate \\(o\\) per minute with \\(o \\in \\mathcal{O}\\)\n\\(\\alpha\\) - Maximal allowed arc utilization (\\(0 &lt; \\alpha &lt; 1\\))",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#metro-movement",
+    "href": "part-12/lecture-rail.html#metro-movement",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Metro Movement",
+    "text": "Metro Movement\nQuestion: How do people move inside the metro?\n. . .\n\nSimple network: assume people use the shortest path\nUse Djikstra’s algorithm to compute it\nFrom each station to all other stations\n\n. . .\n\n\n\n\n\n\nTip: We can save the results in a new set \\(\\mathcal{C}_{o,d}\\)\n\n\n\nThis will help us to model the movement inside the metro.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#shortest-paths-sp",
+    "href": "part-12/lecture-rail.html#shortest-paths-sp",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Shortest Paths (SP)",
+    "text": "Shortest Paths (SP)\n\n\\(\\mathcal{C}_{o,d}\\) - Set of arcs \\(e \\in \\mathcal{E}\\) on the SP from \\(o,d \\in \\mathcal{O}\\)\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nNow we compute the travel time on the shortest paths. One parameter for the SP from station to station and one for the SP from station to arc.\n\n\n. . .\n\n\\(d_{o,d}\\) - travel time (min) on SP from \\(o \\in \\mathcal{O}\\) to \\(d \\in \\mathcal{O}\\)\n\\(d_{o,e}\\) - travel time (min) on SP from \\(o \\in \\mathcal{O}\\) to \\(e \\in \\mathcal{E}\\)",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#people-spreading",
+    "href": "part-12/lecture-rail.html#people-spreading",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "People Spreading",
+    "text": "People Spreading\nQuestion: How do people spread?",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#ratio-of-origin-destination",
+    "href": "part-12/lecture-rail.html#ratio-of-origin-destination",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Ratio of Origin-Destination",
+    "text": "Ratio of Origin-Destination\n\nWe cannot control the destination of the passengers\nThus we assume that people spread based on destination\n\n. . .\n\\[\\frac{q_{o,d,p}}{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}} \\quad \\forall o,d \\in \\mathcal{O}, p\\in \\mathcal{P}\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nBased on the ratio of the different destinations \\(d\\) to the total queue for each station \\(o \\in \\mathcal{O}\\) in each period \\(p \\in \\mathcal{P}\\).",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#decision-variable",
+    "href": "part-12/lecture-rail.html#decision-variable",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Decision Variable?",
+    "text": "Decision Variable?\n\n\n\n\n\n\nOur goal is to:\n\n\n\nRegulate the inflow at each individual station to minimize the queues outside the metro stations based on the allowed inflow while adhering to the capacity constraints.\n\n\n\n\n\n\n\n\nTip\n\n\n\nThere is one queue for all passenger flow directions, as managing multiple queues would be too complex for the planners!",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#decision-variable-1",
+    "href": "part-12/lecture-rail.html#decision-variable-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Decision Variable",
+    "text": "Decision Variable\n\n\n\n\n\n\nWe need the following sets:\n\n\n\n\nAll the metro stations, \\(o \\in \\mathcal{O}\\)\nAll periods under observation, \\(p \\in \\mathcal{P}\\)\n\n\n\nQuestion: What could be our decision variable?\n. . .\n\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#objective-function",
+    "href": "part-12/lecture-rail.html#objective-function",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Objective Function?",
+    "text": "Objective Function?\n\n\n\n\n\n\nOur main objective is to:\n\n\n\nRegulate the inflow at each individual station to minimize the queues outside the metro stations based on the allowed inflow while adhering to the capacity constraints.\n\n\n. . .\nQuestion: How again are queues minimized?\n. . .\n\nBy the allowed inflow \\(X_{o,p}\\) subtracted from the queue",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#objective-function-1",
+    "href": "part-12/lecture-rail.html#objective-function-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Objective Function",
+    "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters and variables:\n\n\n\n\n\\(q_{o,d,p}\\) - People queued to travel from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in period \\(p\\)\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)\n\n\n\n. . .\nQuestion: What could be our objective function?\n. . .\n\\[\n\\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\]",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#necessary-constraints",
+    "href": "part-12/lecture-rail.html#necessary-constraints",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Necessary Constraints",
+    "text": "Necessary Constraints\nQuestion: What constraints do we need?\n\n\n\n\n\n. . .\n\nThe capacity of each arc is not exceeded\nDo not dispatch more people than are queued\nDo not dispatch less than the minimum allowed inflow",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#section-2",
+    "href": "part-12/lecture-rail.html#section-2",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Things are going to\nget a little\ncomplicated now!",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#central-question",
+    "href": "part-12/lecture-rail.html#central-question",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Central Question",
+    "text": "Central Question\nQuestion: When do people flowing into the metro system change the arcs?\n. . .\n\nPeople enter metro station at \\(o\\) with destination \\(d\\)\nThey will lead to a usage of an arc \\(e\\) on their SP\nThis usage depends on their path and the travel times\n\n. . .\n\n\n\n\n\n\nTip: You’ll likely know what we need now!\n\n\n\nWe can add a new set \\(\\mathcal{R}_{e,t}\\) to help us with this.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#set-of-time-delays",
+    "href": "part-12/lecture-rail.html#set-of-time-delays",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Set of Time-Delays",
+    "text": "Set of Time-Delays\n\\[\n\\mathcal{R}_{e,t} = \\{(o,d,p) \\mid\n    \\begin{array}{l}\n    (o,d) | o,d \\in \\mathcal{O}, \\\\\n    q_{o,d,p} &gt; 0, \\\\\n    e \\in \\mathcal{C}_{o,d}, \\\\\n    t-d_{o,e} \\in I_p, \\\\\n    p \\in \\mathcal{P}\\}\n    \\end{array}\n    \\quad \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T}\n\\]\n. . .\nQuestion: Who can explain this set?\n. . .\nThe set \\(\\mathcal{R}_{e,t}\\) contains all combinations \\((o,d,p)\\) which trigger a capacity utilization of arc \\(e\\) in period \\(t\\).",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#small-example",
+    "href": "part-12/lecture-rail.html#small-example",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Small Example",
+    "text": "Small Example\n\n\n\n\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nThe set contains all possible o-d pairs and periods, that result in passengers starting at arc \\((C,D)\\) at minute \\(22\\). For m=2, it would be:\n\\(\\{((A,D),3),((B,D),5),((C,D),11),((E,D),9)\\}\\).",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#section-3",
+    "href": "part-12/lecture-rail.html#section-3",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Essentially, we can use this\nset to compute the utilization\nof an arc at each minute based\non the inflow level at the\ndifferent stations and periods.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#ensure-capacity-utilization",
+    "href": "part-12/lecture-rail.html#ensure-capacity-utilization",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Ensure Capacity Utilization?",
+    "text": "Ensure Capacity Utilization?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that the capacity of each arc is not exceeded at any minute.\n\n\n. . .\n\n\n\n\n\n\nWe need the following variable, parameter and set:\n\n\n\n\n\\(q_{o,d,p}\\) - people waiting to travel from station \\(o \\in \\mathcal{O}\\) to station \\(d \\in \\mathcal{O}\\) in \\(p\\)\n\\(c_e\\) - people max. allowed to enter arc \\(e\\) per minute with \\(e \\in \\mathcal{E}\\)\n\\(\\mathcal{R}_{e,t}\\) - mapping of station entries to arc \\(e\\) in time \\(t\\) with \\(e \\in \\mathcal{E}\\) and \\(t \\in \\mathcal{T}\\)\n\\(\\alpha\\) - maximal allowed arc utilization (\\(0 &lt; \\alpha &lt; 1\\))\n\\(X_{o,p}\\) - the allowed inflow per minute at metro station \\(o\\) in the period \\(p\\)",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#ensure-capacity-utilization-1",
+    "href": "part-12/lecture-rail.html#ensure-capacity-utilization-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Ensure Capacity Utilization",
+    "text": "Ensure Capacity Utilization\nQuestion: What could be the constraint?\n. . .\n\\[\n\\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} \\quad \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nHere, we combine the inflow at each station based on the o-d proportion and let the people spread through the network, checking that no arc is over-utilized at any minute.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#dispatch-only-available-people",
+    "href": "part-12/lecture-rail.html#dispatch-only-available-people",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Dispatch Only Available People?",
+    "text": "Dispatch Only Available People?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that we do not dispatch more people than are queued and less than the minimum allowed inflow, preventing over- and under-dispatching.\n\n\n. . .\n\n\n\n\n\n\nWe need the following variables and parameters:\n\n\n\n\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)\n\\(q_{o,d,p}\\) - People queued to travel from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in \\(p\\)\n\\(m\\) - period length in minutes",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#dispatch-only-available-people-1",
+    "href": "part-12/lecture-rail.html#dispatch-only-available-people-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Dispatch Only Available People",
+    "text": "Dispatch Only Available People\nQuestion: What could be the constraint?\n. . .\n\n\n\\[\n\\min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\min}\\} \\leq X_{o,p} \\leq \\max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\max}\\} \\quad \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\]\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nWe need this constraint for two reasons:\n\nWe could also dispatch more people than there are as this would minimize the objective value. \nWe also need to ensure that we can dispatch at least the minimum allowed inflow or less if the queue is smaller than the minimum allowed inflow.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#metro-inflow-model",
+    "href": "part-12/lecture-rail.html#metro-inflow-model",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Metro Inflow Model",
+    "text": "Metro Inflow Model\n\n\n\\[\\begin{align*}\n    \\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\end{align*}\\] subject to: \\[\\begin{align*}\n    &  \\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} && \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T} \\\\\n    & min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\\} \\leq X_{o,p} \\leq max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\\} && \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\end{align*}\\]",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#characteristics",
+    "href": "part-12/lecture-rail.html#characteristics",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Characteristics",
+    "text": "Characteristics\nQuestions: On model characteristics\n\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domains do we have?",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#model-assumptions",
+    "href": "part-12/lecture-rail.html#model-assumptions",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Model Assumptions",
+    "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nWhat are likely issues that can arise if applied?\nHave we thought in detail about queues?\nAre shortest paths a feasible assumption?",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#metro-inflow-optimization",
+    "href": "part-12/lecture-rail.html#metro-inflow-optimization",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Metro Inflow Optimization",
+    "text": "Metro Inflow Optimization\n. . .\nQuestion: Can this be applied?",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#metro-inflow-problem",
+    "href": "part-12/lecture-rail.html#metro-inflow-problem",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Metro Inflow Problem",
+    "text": "Metro Inflow Problem\n\nSolved very fast within seconds for realistic problem sizes\nBut we cannot plan or control the metro inflow\nQueues are too simplified with passengers disappearing\n\n. . .\nQuestion: Any ideas, how the current model could be improved or how it could be embedded into a heuristic?",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#heuristic-step-wise-optimization",
+    "href": "part-12/lecture-rail.html#heuristic-step-wise-optimization",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Heuristic: Step-Wise Optimization",
+    "text": "Heuristic: Step-Wise Optimization\n\nSolve the model for the time-horizon of a few periods\nFix the inflow in the current first period\nDecrease capacity in the network based on the inflow\nTransfer remaining queues into the subsequent period\nSolve the model again\nRepeat, until the inflow is computed for all periods",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#transport-demand",
+    "href": "part-12/lecture-rail.html#transport-demand",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Transport Demand",
+    "text": "Transport Demand",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#utilization-analysis",
+    "href": "part-12/lecture-rail.html#utilization-analysis",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Utilization Analysis",
+    "text": "Utilization Analysis",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#implementation",
+    "href": "part-12/lecture-rail.html#implementation",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Implementation",
+    "text": "Implementation\n\nAssumption of known destinations based is strong\nMovements seemed to follow our forecasts\nWe did achieve our goal of metro inflow control\nSimulation was used to estimate the inflows\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nFew dangerous situations, especially at the FIFA Fan Fest, were handled well by the authorities.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#wrap-up",
+    "href": "part-12/lecture-rail.html#wrap-up",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Wrap Up",
+    "text": "Wrap Up\n\nModel can help to achieve a good balance\nCan be adapted easily to any metro system worldwide \nEspecially interesting for larger Asian cities\n\n. . .\n\n\n\n\n\n\nAnd that’s it for todays lecture!\n\n\n\nWe now have covered a metro inflow control problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#section-4",
+    "href": "part-12/lecture-rail.html#section-4",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Questions?",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-rail.html#literature-i",
+    "href": "part-12/lecture-rail.html#literature-i",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Literature I",
+    "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.",
+    "crumbs": [
+      "12 Metro",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#fifa-world-cup-2022-in-qatar",
+    "href": "part-12/lecture-presentation.html#fifa-world-cup-2022-in-qatar",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "FIFA World Cup 2022 in Qatar",
+    "text": "FIFA World Cup 2022 in Qatar"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#public-transport",
+    "href": "part-12/lecture-presentation.html#public-transport",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Public transport",
+    "text": "Public transport\n\nFIFA Worldcup 2022 took place in a small region\nThe capacity of the metro system was finite\nMore than 1 million tourists where expected\nMetro usage was free for all ticket holders\nTransport methods were expected to be overloaded\n\n\nQuestion: What could become an issue?"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#crowd-disasters",
+    "href": "part-12/lecture-presentation.html#crowd-disasters",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Crowd Disasters",
+    "text": "Crowd Disasters"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#potential-locations",
+    "href": "part-12/lecture-presentation.html#potential-locations",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Potential locations",
+    "text": "Potential locations\nQuestion: Where could crowd disasters happen?\n\n\nAt event venues and in waiting areas\nAt intersections of multiple pedestrian flows\nIn narrow passages and entrances\nOn crowded metro platforms and transfer stations\nAt ticket/turnstile bottlenecks and emergency exits"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#metrosystem-of-doha",
+    "href": "part-12/lecture-presentation.html#metrosystem-of-doha",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Metrosystem of Doha",
+    "text": "Metrosystem of Doha"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#main-bottleneck",
+    "href": "part-12/lecture-presentation.html#main-bottleneck",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Main Bottleneck",
+    "text": "Main Bottleneck\nQuestion: What could be a potential bottleneck?\n\n\nRed Line has twice the capacity of the Green and Gold Line\nPeople use the metro to get to the event venues\n\n\n\nQuestion: What could be the issue?\n\nImagine a match at a stadium along the Gold line\nPeople from Red and Green line will try to get there\nThis will cause a massive crowd at transfer stations"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#visualization",
+    "href": "part-12/lecture-presentation.html#visualization",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Visualization",
+    "text": "Visualization\n\n\n10 people want to start per minute at each station\nEverybody wants to get to station D"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#closer-look-at-the-metro-system",
+    "href": "part-12/lecture-presentation.html#closer-look-at-the-metro-system",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Closer look at the Metro System",
+    "text": "Closer look at the Metro System"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#capacities-inside-the-stations",
+    "href": "part-12/lecture-presentation.html#capacities-inside-the-stations",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Capacities inside the stations",
+    "text": "Capacities inside the stations\n\nCapacities inside the stations are limited as well\nThese include the escalators, stairs, and elevators\nBut also the platforms and the ticket gates\n\n\n\n\n\n\n\n\nWarning\n\n\nThis can lead to overcrowding and potential crowd disasters!"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#general-issues",
+    "href": "part-12/lecture-presentation.html#general-issues",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "General Issues",
+    "text": "General Issues\nQuestion: What could also be an issue?\n\n\nOften unknown how many people exactly will participate\nGathering data is extremely importand and difficult\nCrowd behavior can be unpredictable and dynamic\nWeather conditions may affect transportation preferences\nCultural factors influence crowd movement patterns\nEmergency situations require flexible contingency plans"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#section",
+    "href": "part-12/lecture-presentation.html#section",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Let’s take a\ncloser look at the\nproblem structure!"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#objective",
+    "href": "part-12/lecture-presentation.html#objective",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Objective",
+    "text": "Objective\nQuestion: What could be the objectives of the authorities?\n\n\nA safe and successful event as host country\nGood publicity and a positive recognition worldwide\n\nSatisfied visitors that enjoyed their time\n\n\n\n\n\n\n\n\n\nNote: We can model none of the above directly!\n\n\nBut we can assist in the estimation of transport demands and the design of operational plans to ensure public safety and a smooth transportation through the city."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#underlying-problem",
+    "href": "part-12/lecture-presentation.html#underlying-problem",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Underlying Problem",
+    "text": "Underlying Problem\nQuestion: Can we just start modeling?\n\n\nFirst, we need to understand the movement patterns\nEvent is unprecedented, movement patterns are unknown\nMultiple concurrent events affect flow patterns\n\n\n\n\n\n\n\n\n\nTip: We need to estimate the data first!\n\n\nThis is a huge challenge, but we can use simulation to estimate the data."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#simulation",
+    "href": "part-12/lecture-presentation.html#simulation",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Simulation",
+    "text": "Simulation\n\nBased on publicly available data from the area\nSimulates all individuals participating at the event\nIncludes all transportation infrastructure\nIndividual mode choice based on a choice model\n\n\n\n\n\n\n\n\nTip: Julia is a great tool for this!\n\n\nSimulations was build in Julia. With 1,000,000 individuals walking,using cars, busses, and the metro, a day took less than 5 minutes."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#results-of-the-simulation",
+    "href": "part-12/lecture-presentation.html#results-of-the-simulation",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Results of the Simulation",
+    "text": "Results of the Simulation\n\n\n\n\nDetailed movement patterns throughout the region\nPotential sections at risk in the transport infrastructure\nPotential capacity overloads at event locations"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#section-1",
+    "href": "part-12/lecture-presentation.html#section-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "But it is still\nbased on a lot\nof assumptions!"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#main-risk-metro",
+    "href": "part-12/lecture-presentation.html#main-risk-metro",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Main risk: Metro",
+    "text": "Main risk: Metro"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#idea",
+    "href": "part-12/lecture-presentation.html#idea",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Idea",
+    "text": "Idea\nQuestion: What can we do to prevent crowd disasters?\n\n\nRegulate the inflow at each individual station\nEnsure utilized capacity is always within bounds\n\n\n\nQuestion: What could we try to model?\n\n\n\nMinimize the queues outside of the metro stations\nBased on the allowed inflow and origin-destination data\nAdhering to the capacity constraints"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#difficulty",
+    "href": "part-12/lecture-presentation.html#difficulty",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Difficulty",
+    "text": "Difficulty\n\n\n\nMovement patterns have different origin-destination pairs\nRegulating the inflow does not affect the destination"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#graph-sets",
+    "href": "part-12/lecture-presentation.html#graph-sets",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Graph Sets?",
+    "text": "Graph Sets?\nQuestion: What could be the sets for the graph?"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#graph-sets-1",
+    "href": "part-12/lecture-presentation.html#graph-sets-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Graph Sets?",
+    "text": "Graph Sets?\n\n\\(\\mathcal{G}\\) - Connected digraph of the metro network \\(\\mathcal{G}=(\\mathcal{O},\\mathcal{E})\\)\n\\(\\mathcal{O}\\) - Set of metro stations, indexed by \\(o\\)\n\\(\\mathcal{E}\\) - Set of directed arcs between connected stations\n\n\n\n\n\n\n\n\nNote: These are the easier sets.\n\n\nThese simply help us to represent the entire metro system as a graph with different nodes \\(\\mathcal{O}\\) and arcs \\(\\mathcal{E}\\) between connected stations."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#time-sets",
+    "href": "part-12/lecture-presentation.html#time-sets",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Time Sets?",
+    "text": "Time Sets?\nQuestion: What could be the time sets?\n\n\n\\(\\mathcal{T}\\) - Set of minutes in the time horizon, indexed by \\(t\\)\n\\(\\mathcal{P}\\) - Set of periods in the observed time horizon, where \\(p \\in \\{p_1, p_2, \\dots,p_n\\}\\)\n\n\n\n\n\n\n\n\n\nNote: Number of periods\n\n\nWe further define \\(n\\) as the number of periods in observed time horizon."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#periods",
+    "href": "part-12/lecture-presentation.html#periods",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Periods",
+    "text": "Periods\nQuestion: Why do we add periods here?\n\n\nStaff needs clear, consistent instructions\nFrequent changes in flow increase risk of errors\nEasier to manage and communicate for planners\n\n\n\n\n\n\n\n\n\nNote: Period Length\n\n\nWe define the period length as the length of the period in minutes measured as \\(m\\) minutes, which is the same for all periods."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#mapping-minutes-to-periods",
+    "href": "part-12/lecture-presentation.html#mapping-minutes-to-periods",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Mapping Minutes to Periods",
+    "text": "Mapping Minutes to Periods\n\nWe can define an additional set with their relation\nIt specifies the relation of periods \\(p\\) to minutes \\(t\\).\n\n\\[\n    I_p =\\{t \\in \\mathcal{T}|(p-1) \\times m + 1 \\leq t \\leq p \\times m\\} \\quad \\forall p \\in \\mathcal{P}\n\\]\n\nQuestion: Can anybody explain it?\n\n\n\n\\(I_p\\) is the set of minutes \\(t\\) that belong to period \\(p\\)\nMinutes are not overlapping, but they are continuous"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#parameters",
+    "href": "part-12/lecture-presentation.html#parameters",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Parameters?",
+    "text": "Parameters?\nQuestion: What could be possible parameters?\n\n\n\\(q_{o,d,p}\\) - Demand from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in \\(p\\)\n\\(d_{e}\\) - Travel time (min) of the arcs \\(e \\in \\mathcal{E}\\)\n\\(c_e\\) - Max. allowed arc entry rate \\(e\\) per minute with \\(e \\in \\mathcal{E}\\)\n\\(c_{o}^{min}\\) - Min. station entry rate \\(o\\) per minute with \\(o \\in \\mathcal{O}\\)\n\\(c_{o}^{max}\\) - Max. station entry rate \\(o\\) per minute with \\(o \\in \\mathcal{O}\\)\n\\(\\alpha\\) - Maximal allowed arc utilization (\\(0 &lt; \\alpha &lt; 1\\))"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#metro-movement",
+    "href": "part-12/lecture-presentation.html#metro-movement",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Metro Movement",
+    "text": "Metro Movement\nQuestion: How do people move inside the metro?\n\n\nSimple network: assume people use the shortest path\nUse Djikstra’s algorithm to compute it\nFrom each station to all other stations\n\n\n\n\n\n\n\n\n\nTip: We can save the results in a new set \\(\\mathcal{C}_{o,d}\\)\n\n\nThis will help us to model the movement inside the metro."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#shortest-paths-sp",
+    "href": "part-12/lecture-presentation.html#shortest-paths-sp",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Shortest Paths (SP)",
+    "text": "Shortest Paths (SP)\n\n\\(\\mathcal{C}_{o,d}\\) - Set of arcs \\(e \\in \\mathcal{E}\\) on the SP from \\(o,d \\in \\mathcal{O}\\)\n\n\n\n\n\n\n\n\nNote\n\n\nNow we compute the travel time on the shortest paths. One parameter for the SP from station to station and one for the SP from station to arc.\n\n\n\n\n\n\n\\(d_{o,d}\\) - travel time (min) on SP from \\(o \\in \\mathcal{O}\\) to \\(d \\in \\mathcal{O}\\)\n\\(d_{o,e}\\) - travel time (min) on SP from \\(o \\in \\mathcal{O}\\) to \\(e \\in \\mathcal{E}\\)"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#people-spreading",
+    "href": "part-12/lecture-presentation.html#people-spreading",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "People Spreading",
+    "text": "People Spreading\nQuestion: How do people spread?"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#ratio-of-origin-destination",
+    "href": "part-12/lecture-presentation.html#ratio-of-origin-destination",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Ratio of Origin-Destination",
+    "text": "Ratio of Origin-Destination\n\nWe cannot control the destination of the passengers\nThus we assume that people spread based on destination\n\n\n\\[\\frac{q_{o,d,p}}{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}} \\quad \\forall o,d \\in \\mathcal{O}, p\\in \\mathcal{P}\\]\n\n\n\n\n\n\n\n\nNote\n\n\nBased on the ratio of the different destinations \\(d\\) to the total queue for each station \\(o \\in \\mathcal{O}\\) in each period \\(p \\in \\mathcal{P}\\)."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#decision-variable",
+    "href": "part-12/lecture-presentation.html#decision-variable",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Decision Variable?",
+    "text": "Decision Variable?\n\n\n\n\n\n\nOur goal is to:\n\n\nRegulate the inflow at each individual station to minimize the queues outside the metro stations based on the allowed inflow while adhering to the capacity constraints.\n\n\n\n\n\n\n\n\n\nTip\n\n\nThere is one queue for all passenger flow directions, as managing multiple queues would be too complex for the planners!"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#decision-variable-1",
+    "href": "part-12/lecture-presentation.html#decision-variable-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Decision Variable",
+    "text": "Decision Variable\n\n\n\n\n\n\nWe need the following sets:\n\n\n\nAll the metro stations, \\(o \\in \\mathcal{O}\\)\nAll periods under observation, \\(p \\in \\mathcal{P}\\)\n\n\n\n\nQuestion: What could be our decision variable?\n\n\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#objective-function",
+    "href": "part-12/lecture-presentation.html#objective-function",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Objective Function?",
+    "text": "Objective Function?\n\n\n\n\n\n\nOur main objective is to:\n\n\nRegulate the inflow at each individual station to minimize the queues outside the metro stations based on the allowed inflow while adhering to the capacity constraints.\n\n\n\n\nQuestion: How again are queues minimized?\n\n\n\nBy the allowed inflow \\(X_{o,p}\\) subtracted from the queue"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#objective-function-1",
+    "href": "part-12/lecture-presentation.html#objective-function-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Objective Function",
+    "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters and variables:\n\n\n\n\\(q_{o,d,p}\\) - People queued to travel from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in period \\(p\\)\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)\n\n\n\n\n\nQuestion: What could be our objective function?\n\n\n\\[\n\\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\]"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#necessary-constraints",
+    "href": "part-12/lecture-presentation.html#necessary-constraints",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Necessary Constraints",
+    "text": "Necessary Constraints\nQuestion: What constraints do we need?\n\n\n\nThe capacity of each arc is not exceeded\nDo not dispatch more people than are queued\nDo not dispatch less than the minimum allowed inflow"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#section-2",
+    "href": "part-12/lecture-presentation.html#section-2",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Things are going to\nget a little\ncomplicated now!"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#central-question",
+    "href": "part-12/lecture-presentation.html#central-question",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Central Question",
+    "text": "Central Question\nQuestion: When do people flowing into the metro system change the arcs?\n\n\nPeople enter metro station at \\(o\\) with destination \\(d\\)\nThey will lead to a usage of an arc \\(e\\) on their SP\nThis usage depends on their path and the travel times\n\n\n\n\n\n\n\n\n\nTip: You’ll likely know what we need now!\n\n\nWe can add a new set \\(\\mathcal{R}_{e,t}\\) to help us with this."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#set-of-time-delays",
+    "href": "part-12/lecture-presentation.html#set-of-time-delays",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Set of Time-Delays",
+    "text": "Set of Time-Delays\n\\[\n\\mathcal{R}_{e,t} = \\{(o,d,p) \\mid\n    \\begin{array}{l}\n    (o,d) | o,d \\in \\mathcal{O}, \\\\\n    q_{o,d,p} &gt; 0, \\\\\n    e \\in \\mathcal{C}_{o,d}, \\\\\n    t-d_{o,e} \\in I_p, \\\\\n    p \\in \\mathcal{P}\\}\n    \\end{array}\n    \\quad \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T}\n\\]\n\nQuestion: Who can explain this set?\n\n\nThe set \\(\\mathcal{R}_{e,t}\\) contains all combinations \\((o,d,p)\\) which trigger a capacity utilization of arc \\(e\\) in period \\(t\\)."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#small-example",
+    "href": "part-12/lecture-presentation.html#small-example",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Small Example",
+    "text": "Small Example\n\n\n\n\n\n\n\n\nTip\n\n\nThe set contains all possible o-d pairs and periods, that result in passengers starting at arc \\((C,D)\\) at minute \\(22\\). For m=2, it would be:\n\\(\\{((A,D),3),((B,D),5),((C,D),11),((E,D),9)\\}\\)."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#section-3",
+    "href": "part-12/lecture-presentation.html#section-3",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Essentially, we can use this\nset to compute the utilization\nof an arc at each minute based\non the inflow level at the\ndifferent stations and periods."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#ensure-capacity-utilization",
+    "href": "part-12/lecture-presentation.html#ensure-capacity-utilization",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Ensure Capacity Utilization?",
+    "text": "Ensure Capacity Utilization?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\nEnsure that the capacity of each arc is not exceeded at any minute.\n\n\n\n\n\n\n\n\n\n\nWe need the following variable, parameter and set:\n\n\n\n\\(q_{o,d,p}\\) - people waiting to travel from station \\(o \\in \\mathcal{O}\\) to station \\(d \\in \\mathcal{O}\\) in \\(p\\)\n\\(c_e\\) - people max. allowed to enter arc \\(e\\) per minute with \\(e \\in \\mathcal{E}\\)\n\\(\\mathcal{R}_{e,t}\\) - mapping of station entries to arc \\(e\\) in time \\(t\\) with \\(e \\in \\mathcal{E}\\) and \\(t \\in \\mathcal{T}\\)\n\\(\\alpha\\) - maximal allowed arc utilization (\\(0 &lt; \\alpha &lt; 1\\))\n\\(X_{o,p}\\) - the allowed inflow per minute at metro station \\(o\\) in the period \\(p\\)"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#ensure-capacity-utilization-1",
+    "href": "part-12/lecture-presentation.html#ensure-capacity-utilization-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Ensure Capacity Utilization",
+    "text": "Ensure Capacity Utilization\nQuestion: What could be the constraint?\n\n\\[\n\\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} \\quad \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T}\n\\]\n\n\n\n\n\n\n\n\nNote\n\n\nHere, we combine the inflow at each station based on the o-d proportion and let the people spread through the network, checking that no arc is over-utilized at any minute."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#dispatch-only-available-people",
+    "href": "part-12/lecture-presentation.html#dispatch-only-available-people",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Dispatch Only Available People?",
+    "text": "Dispatch Only Available People?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\nEnsure that we do not dispatch more people than are queued and less than the minimum allowed inflow, preventing over- and under-dispatching.\n\n\n\n\n\n\n\n\n\n\nWe need the following variables and parameters:\n\n\n\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)\n\\(q_{o,d,p}\\) - People queued to travel from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in \\(p\\)\n\\(m\\) - period length in minutes"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#dispatch-only-available-people-1",
+    "href": "part-12/lecture-presentation.html#dispatch-only-available-people-1",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Dispatch Only Available People",
+    "text": "Dispatch Only Available People\nQuestion: What could be the constraint?\n\n\n\n\\[\n\\min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\min}\\} \\leq X_{o,p} \\leq \\max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\max}\\} \\quad \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\]\n\n\n\n\n\n\n\n\n\nNote\n\n\nWe need this constraint for two reasons:\n\nWe could also dispatch more people than there are as this would minimize the objective value. \nWe also need to ensure that we can dispatch at least the minimum allowed inflow or less if the queue is smaller than the minimum allowed inflow."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#metro-inflow-model",
+    "href": "part-12/lecture-presentation.html#metro-inflow-model",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Metro Inflow Model",
+    "text": "Metro Inflow Model\n\n\n\\[\\begin{align*}\n    \\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\end{align*}\\] subject to: \\[\\begin{align*}\n    &  \\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} && \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T} \\\\\n    & min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\\} \\leq X_{o,p} \\leq max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\\} && \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#characteristics",
+    "href": "part-12/lecture-presentation.html#characteristics",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Characteristics",
+    "text": "Characteristics\nQuestions: On model characteristics\n\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domains do we have?"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#model-assumptions",
+    "href": "part-12/lecture-presentation.html#model-assumptions",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Model Assumptions",
+    "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nWhat are likely issues that can arise if applied?\nHave we thought in detail about queues?\nAre shortest paths a feasible assumption?"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#metro-inflow-optimization",
+    "href": "part-12/lecture-presentation.html#metro-inflow-optimization",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Metro Inflow Optimization",
+    "text": "Metro Inflow Optimization\n\nQuestion: Can this be applied?"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#metro-inflow-problem",
+    "href": "part-12/lecture-presentation.html#metro-inflow-problem",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Metro Inflow Problem",
+    "text": "Metro Inflow Problem\n\nSolved very fast within seconds for realistic problem sizes\nBut we cannot plan or control the metro inflow\nQueues are too simplified with passengers disappearing\n\n\nQuestion: Any ideas, how the current model could be improved or how it could be embedded into a heuristic?"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#heuristic-step-wise-optimization",
+    "href": "part-12/lecture-presentation.html#heuristic-step-wise-optimization",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Heuristic: Step-Wise Optimization",
+    "text": "Heuristic: Step-Wise Optimization\n\nSolve the model for the time-horizon of a few periods\nFix the inflow in the current first period\nDecrease capacity in the network based on the inflow\nTransfer remaining queues into the subsequent period\nSolve the model again\nRepeat, until the inflow is computed for all periods"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#transport-demand",
+    "href": "part-12/lecture-presentation.html#transport-demand",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Transport Demand",
+    "text": "Transport Demand"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#utilization-analysis",
+    "href": "part-12/lecture-presentation.html#utilization-analysis",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Utilization Analysis",
+    "text": "Utilization Analysis"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#implementation",
+    "href": "part-12/lecture-presentation.html#implementation",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Implementation",
+    "text": "Implementation\n\nAssumption of known destinations based is strong\nMovements seemed to follow our forecasts\nWe did achieve our goal of metro inflow control\nSimulation was used to estimate the inflows\n\n\n\n\n\n\n\n\nNote\n\n\nFew dangerous situations, especially at the FIFA Fan Fest, were handled well by the authorities."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#wrap-up",
+    "href": "part-12/lecture-presentation.html#wrap-up",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "Wrap Up",
+    "text": "Wrap Up\n\nModel can help to achieve a good balance\nCan be adapted easily to any metro system worldwide \nEspecially interesting for larger Asian cities\n\n\n\n\n\n\n\n\nAnd that’s it for todays lecture!\n\n\nWe now have covered a metro inflow control problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial."
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#section-4",
+    "href": "part-12/lecture-presentation.html#section-4",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "section": "",
+    "text": "Questions?"
+  },
+  {
+    "objectID": "part-12/lecture-presentation.html#literature-i",
+    "href": "part-12/lecture-presentation.html#literature-i",
+    "title": "Lecture X - Passenger Flow Control in Urban Rail",
     "section": "Literature I",
     "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course."
   }

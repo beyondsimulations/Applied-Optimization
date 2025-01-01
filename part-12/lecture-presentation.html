@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.6.30">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
-  <title>Applied Optimization with Julia – Lecture IX - Safety Planning for the Islamic Pilgrimage</title>
+  <title>Applied Optimization with Julia – Lecture X - Passenger Flow Control in Urban Rail</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -28,28 +28,8 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-      margin-bottom: 0em;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-0cda94793cac10ca8f8efdfc5aafb3ce.css">
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-950b0969b2f777f9755c57daf24d05e9.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -345,7 +325,7 @@
     <div class="slides">
 
 <section id="title-slide" data-background-color="#025259" class="quarto-title-block center">
-  <h1 class="title">Lecture IX - Safety Planning for the Islamic Pilgrimage</h1>
+  <h1 class="title">Lecture X - Passenger Flow Control in Urban Rail</h1>
   <p class="subtitle">Applied Optimization with Julia</p>
 
 <div class="quarto-title-authors">
@@ -360,209 +340,129 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 
 </section>
-<section id="section" class="slide level2">
-<h2></h2>
-
-<img data-src="../general/QRCode_P5X3Q.png" class="quarto-figure quarto-figure-center r-stretch"><p>Please take a moment at the start of the lecture to fill out the <span class="highlight">lecture evaluation survey</span>. Thanks!</p>
-</section>
 <section>
 <section id="introduction" class="title-slide slide level1 title center">
 <h1><span class="flow">Introduction</span></h1>
 
 </section>
-<section id="islamic-pilgrimage" class="slide level2" data-background-image="https://images.unsplash.com/photo-1677835238946-20fc43ab0533?q=80&amp;w=3024&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
-<h2><span class="invert-font">Islamic Pilgrimage</span></h2>
-<div class="fragment invert-font">
-<p><span class="question">Question:</span> <strong>Have you ever heard of the Hajj?</strong></p>
-</div>
+<section id="fifa-world-cup-2022-in-qatar" class="slide level2" data-background-image="https://images.unsplash.com/photo-1658490505550-60191ee61ec6?q=80&amp;w=4334&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">FIFA World Cup 2022 in Qatar</span></h2>
 <div class="footer">
 
 </div>
 </section>
-<section id="the-hajj" class="slide level2">
-<h2>The Hajj</h2>
+<section id="public-transport" class="slide level2">
+<h2>Public transport</h2>
 <ul>
-<li><strong>The great Islamic pilgrimage towards Mecca</strong></li>
-<li>The holy city is the <strong>religious center</strong> of the Islamic religion</li>
-<li>Located in the <strong>Kingdom of Saudi Arabia</strong></li>
-<li>Each physically able Muslim should <strong>perform Hajj once</strong></li>
-<li><span class="highlight">Confined spaces</span> around the holy sites</li>
-<li>Only <strong>few million</strong> people are annually allowed</li>
-</ul>
-</section>
-<section id="mina-tent-city" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Mina Tent City</h2>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-mecca01.png" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="mina-tent-city-1" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Mina Tent City</h2>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-mecca03.png" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="the-scope-of-the-hajj" class="slide level2">
-<h2>The scope of the Hajj</h2>
-<ul>
-<li>Pilgrimage is actually a <span class="highlight">multi-day journey</span></li>
-<li>Involves a number of <strong>different rituals at several ritual sites</strong></li>
-<li>Our efforts focused on the <strong>Rhamy-Al-Jamarat ritual</strong></li>
+<li>FIFA Worldcup 2022 took place in a <span class="highlight">small region</span></li>
+<li>The capacity of the metro system was <strong>finite</strong></li>
+<li>More than <span class="highlight">1 million tourists</span> where expected</li>
+<li>Metro usage was <strong>free for all ticket holders</strong></li>
+<li>Transport methods were expected to be <strong>overloaded</strong></li>
 </ul>
 <div class="fragment">
-<div class="callout callout-caution callout-titled callout-style-default">
+<p><span class="question">Question:</span> <strong>What could become an issue?</strong></p>
+</div>
+</section>
+<section id="crowd-disasters" class="slide level2" data-background-image="https://images.beyondsimulations.com/ao/ao_metro-crowd.png" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Crowd Disasters</span></h2>
+<div class="footer">
+
+</div>
+</section>
+<section id="potential-locations" class="slide level2">
+<h2>Potential locations</h2>
+<p><span class="question">Question:</span> <strong>Where could crowd disasters happen?</strong></p>
+<div class="fragment">
+<ul>
+<li>At event venues and in waiting areas</li>
+<li>At intersections of multiple pedestrian flows</li>
+<li>In narrow passages and entrances</li>
+<li>On crowded metro platforms and transfer stations</li>
+<li>At ticket/turnstile bottlenecks and emergency exits</li>
+</ul>
+</div>
+</section>
+<section id="metrosystem-of-doha" class="slide level2">
+<h2>Metrosystem of Doha</h2>
+
+<img data-src="https://images.byndsim.com/ao/ao_metro-metro.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="main-bottleneck" class="slide level2">
+<h2>Main Bottleneck</h2>
+<p><span class="question">Question:</span> <strong>What could be a potential bottleneck?</strong></p>
+<div class="fragment">
+<ul>
+<li>Red Line has twice the capacity of the Green and Gold Line</li>
+<li>People use the metro to get to the event venues</li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What could be the issue?</strong></p>
+<ul>
+<li>Imagine a match at a stadium along the Gold line</li>
+<li>People from Red and Green line will try to get there</li>
+<li>This will cause a <span class="highlight">massive crowd at transfer stations</span></li>
+</ul>
+</div>
+</section>
+<section id="visualization" class="slide level2">
+<h2>Visualization</h2>
+
+<img data-src="https://images.byndsim.com/ao/ao_metro-metro_overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch"><ul>
+<li>10 people want to start per minute at <strong>each station</strong></li>
+<li>Everybody wants to get to <strong>station D</strong></li>
+</ul>
+</section>
+<section id="closer-look-at-the-metro-system" class="slide level2">
+<h2>Closer look at the Metro System</h2>
+
+<img data-src="https://images.byndsim.com/ao/ao_metro-metro_zoom.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="capacities-inside-the-stations" class="slide level2">
+<h2>Capacities inside the stations</h2>
+<ul>
+<li>Capacities <strong>inside the stations</strong> are limited as well</li>
+<li>These include the escalators, stairs, and elevators</li>
+<li>But also the platforms and the ticket gates</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Rhamy-Al-Jamarat ritual</strong></p>
+<p><strong>Warning</strong></p>
 </div>
 <div class="callout-content">
-<p>Pilgrims throw pebbles against three pillars, which symbolize the temptations of the devil. They repeat this ritual with small variations on four consecutive days.</p>
+<p>This can lead to <span class="highlight">overcrowding and potential crowd disasters!</span></p>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="mina-tent-city-2" class="slide level2" data-background-image="https://images.beyondsimulations.com/ao/ao_pilgrim-tents.jpg" data-background-size="cover" data-background-position="center">
-<h2><span class="invert-font">Mina Tent City</span></h2>
-<div class="fragment invert-font">
-<ul>
-<li>1.5–2 million people reside in the tent city</li>
-<li>Pilgrims repeatedly access the holy site</li>
-<li>Perform the Rhamy-Al-Jamarat ritual</li>
-<li>Walk through a network of streets and pathways</li>
-<li>Later proceed to the Kaaba or return to the camp</li>
-</ul>
-</div>
-<div class="footer">
-
-</div>
-</section>
-<section id="time-preferences" class="slide level2">
-<h2>Time Preferences</h2>
-<ul>
-<li><span class="highlight">When to perform the ritual on each of the four days?</span></li>
-<li>Pilgrims have different <strong>time preferences</strong>
-<ul>
-<li>Constrained by <strong>arrival and departure</strong> shuttle times</li>
-<li>Extremely <strong>hot at midday</strong> quickly leading to exhaustion</li>
-<li>Traditions play an <strong>important role</strong> in time preferences</li>
-</ul></li>
-</ul>
+<section id="general-issues" class="slide level2">
+<h2>General Issues</h2>
+<p><span class="question">Question:</span> <strong>What could also be an issue?</strong></p>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>What could become a problem?</strong></p>
-</div>
-</section>
-<section id="risk-overcrowding-at-mina" class="slide level2">
-<h2>Risk: Overcrowding at Mina</h2>
 <ul>
-<li>In aggregation, the time preferences are <strong>clustered</strong></li>
-<li><strong>Popular peak times</strong> dating back to the Prophet Mohammad</li>
-<li>Equates to a <span class="highlight">city-scale crowd of millions of people</span></li>
-<li>Accessing <strong>one central place</strong> within only a few hours</li>
+<li>Often unknown <strong>how many people</strong> exactly will participate</li>
+<li>Gathering data is <span class="highlight">extremely importand and difficult</span></li>
+<li>Crowd behavior can be <span class="highlight">unpredictable and dynamic</span></li>
+<li>Weather conditions may affect <strong>transportation preferences</strong></li>
+<li>Cultural factors influence <strong>crowd movement patterns</strong></li>
+<li>Emergency situations require <strong>flexible contingency plans</strong></li>
 </ul>
-<div class="fragment">
-<div class="callout callout-caution callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Caution</strong></p>
-</div>
-<div class="callout-content">
-<p><strong>Uncoordinated</strong> access within confined area can <strong>escalate into crowd disasters</strong>!</p>
-</div>
-</div>
-</div>
 </div>
 </section>
-<section id="crowd-accidents" class="slide level2">
-<h2>Crowd Accidents</h2>
-<ul>
-<li><strong>Historical incidents</strong> of crowd disasters</li>
-<li>Resulted in <strong>casualties and injuries</strong></li>
-<li><strong>High-density bottlenecks</strong> on the way to the rituals</li>
-<li>Several <span class="highlight">critical points of congestion</span></li>
-<li>Waiting times can lead to <strong>hazardous conditions</strong></li>
-</ul>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>What could we do to prevent this?</strong></p>
-</div>
-</section></section>
-<section>
-<section id="pedestrian-traffic" class="title-slide slide level1 title center">
-<h1><span class="flow">Pedestrian Traffic</span></h1>
-
-</section>
-<section id="section-1" class="slide level2 loud-slide">
+<section id="section" class="slide level2 loud-slide">
 <h2></h2>
 <div class="r-fit-text">
-<p>How is Hajj pedestrian</p>
-<p>traffic different from the</p>
-<p>regular urban pedestrian</p>
-<p>traffic in cities?</p>
+<p>Let’s take a</p>
+<p>closer look at the</p>
+<p>problem structure!</p>
 </div>
 <div class="footer">
 
-</div>
-</section>
-<section id="pedestrian-traffic-1" class="slide level2">
-<h2>Pedestrian Traffic</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-pedtraf-1.png" style="width:100.0%"></p>
-<ul>
-<li>Individuals and groups</li>
-<li>Multitude of destinations</li>
-<li>Mixing and formation</li>
-<li>Distractions</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-pedtraf-2.jpg" style="width:100.0%"></p>
-<ul>
-<li>Homogeneous groups</li>
-<li>Shared destination</li>
-<li>Higher densities</li>
-<li>Predictable</li>
-</ul>
-</div></div>
-</section>
-<section id="types-of-pedestrian-flow" class="slide level2">
-<h2>Types of Pedestrian Flow</h2>
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-unidirectional_flow.png" style="width:30.0%" alt="1."> <img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-bidirectional_crossing_flow.png" style="width:30.0%" alt="2."> <img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-multidirectional_crossing_flow.png" style="width:30.0%" alt="3."></p>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>What is the most dangerous type here?</strong></p>
-</div>
-<div class="fragment">
-<div class="callout callout-caution callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Caution</strong></p>
-</div>
-<div class="callout-content">
-<p><strong>Multi-directional and intersecting flows</strong> are the most dangerous type!</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="pilgrim-flows" class="slide level2">
-<h2>Pilgrim Flows</h2>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-jamarat_flow.png" class="quarto-figure quarto-figure-center r-stretch"><div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>General idea</strong></p>
-</div>
-<div class="callout-content">
-<p>Adhere to <strong>one-way flow systems</strong> and define path options for each camp under consideration of a unidirectional flow system.</p>
-</div>
-</div>
 </div>
 </section></section>
 <section>
@@ -571,94 +471,16 @@ Dr.&nbsp;Tobias Vlćek
 
 </section>
 <section id="objective" class="slide level2">
-<h2>Objective?</h2>
-<p><span class="question">Question:</span> <strong>What could be the objective?</strong></p>
-<div>
-<ul>
-<li class="fragment">Minimize <span class="highlight">risk of overcrowding and accidents</span></li>
-<li class="fragment"><strong>Enable ritual participation</strong> of all pilgrims</li>
-<li class="fragment"><strong>Satisfy time preferences</strong> of pilgrims</li>
-<li class="fragment"><strong>Easy plans to execute</strong> under pressure</li>
-</ul>
-</div>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>How can we try to model this?</strong></p>
-</div>
-</section>
-<section id="objective-1" class="slide level2">
 <h2>Objective</h2>
-<ul>
-<li>Satisfy <span class="highlight">time preferences as much as possible</span></li>
-<li>Consideration of <strong>infrastructure bottleneck flow capacities</strong></li>
-<li><strong>Maximize safety</strong> for all pilgrims</li>
-<li><strong>Simple plans</strong> to make the execution as simple as possible</li>
-<li>This can <strong>prevent critical errors</strong> later on!</li>
-</ul>
+<p><span class="question">Question:</span> <strong>What could be the objectives of the authorities?</strong></p>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>Where is the goal conflict?</strong></p>
-</div>
-</section>
-<section id="goal-conflict" class="slide level2">
-<h2>Goal Conflict</h2>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-goalconflict.png" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="basic-structure" class="slide level2">
-<h2>Basic Structure</h2>
 <ul>
-<li>We follow the structure of a <strong>simple scheduling problem</strong></li>
-<li>The aim is to “assign” something to <strong>different time periods</strong></li>
-<li>We assign <span class="highlight">time slots to groups using different paths</span></li>
-<li>Plans are kept simpler by assigning <strong>paths to camps</strong></li>
-<li>Assignments are <strong>fixed over the entire time horizon</strong></li>
+<li>A <span class="highlight">safe and successful event</span> as host country</li>
+<li>Good <span class="highlight">publicity and a positive recognition</span> worldwide<br>
+</li>
+<li><span class="highlight">Satisfied visitors</span> that enjoyed their time</li>
 </ul>
-</section>
-<section id="pilgrim-routes" class="slide level2 smaller" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Pilgrim Routes</h2>
-<p>Each camp has a set of feasible one-way paths that include the stoning ritual.</p>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_a.svg" class="r-stretch"></section>
-<section id="pilgrim-routes-1" class="slide level2 smaller" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Pilgrim Routes</h2>
-<p>Path may contain one or more bottlenecks, regarded as resources subject to a capacity.</p>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_b.svg" class="r-stretch"></section>
-<section id="pilgrim-routes-2" class="slide level2 smaller" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Pilgrim Routes</h2>
-<p>Pilgrims departure from a camp at a time <span class="math inline">\(x\)</span> and pass through the bottleneck later.</p>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_c.svg" class="r-stretch"></section>
-<section id="pilgrim-routes-3" class="slide level2 smaller" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Pilgrim Routes</h2>
-<p>Our model should assign one of the feasible paths to a camp on all four ritual days.</p>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_d.svg" class="r-stretch"></section>
-<section id="pilgrim-routes-4" class="slide level2 smaller" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Pilgrim Routes</h2>
-<p>These bottlenecks should not be overcrowded at any time during the Hajj.</p>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg" class="r-stretch"></section>
-<section id="section-2" class="slide level2 loud-slide">
-<h2></h2>
-<div class="r-fit-text">
-<p>How can we model</p>
-<p>time preferences?</p>
 </div>
-<div class="footer">
-
-</div>
-</section>
-<section id="time-preferences-1" class="slide level2">
-<h2>Time Preferences</h2>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-1.png" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="time-preference-satisfaction" class="slide level2">
-<h2>Time preference satisfaction</h2>
-<ul>
-<li>Assign <strong>one departure time slot</strong></li>
-<li>Assigned per ritual day to each pilgrim group</li>
-<li><span class="highlight">Minimize difference between assigned and preferred time</span></li>
-<li>Different <strong>penalty functions</strong> are possible</li>
-</ul>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
@@ -666,99 +488,23 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Group time preferences</strong></p>
+<p><strong>Note: We can model none of the above directly!</strong></p>
 </div>
 <div class="callout-content">
-<p>May be computed, i.e., down-sampled given a distribution of pilgrims over time.</p>
+<p>But we can assist in the estimation of transport demands and the design of operational plans to ensure public <strong>safety</strong> and a <strong>smooth transportation</strong> through the city.</p>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="penalty-functions" class="slide level2">
-<h2>Penalty Functions</h2>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-satisfaction.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="fluctuations" class="slide level2">
-<h2>Fluctuations</h2>
-<p><span class="question">Question:</span> <strong>What could become a problem?</strong></p>
+<section id="underlying-problem" class="slide level2">
+<h2>Underlying Problem</h2>
+<p><span class="question">Question:</span> <strong>Can we just start modeling?</strong></p>
 <div class="fragment">
 <ul>
-<li>If allowed demand between periods <strong>varies strongly</strong>, accidents are <strong>more likely to happen!</strong></li>
-<li>We need keep the <span class="highlight">changes between periods within bounds</span></li>
-</ul>
-</div>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>Any idea how we can do that later?</strong></p>
-</div>
-<div class="fragment">
-<ul>
-<li>Restrict the change of the utilization <strong>between periods</strong></li>
-</ul>
-</div>
-</section>
-<section id="goals-summarized" class="slide level2">
-<h2>Goals Summarized</h2>
-<div>
-<ol type="1">
-<li class="fragment">Satisfy <strong>time preferences of the pilgrims</strong> as much as possible under the consideration of <strong>infrastructure bottleneck flow capacities</strong> by assigning “something” to a time slot.</li>
-<li class="fragment">For the sake of <strong>simplicity and safety</strong>, pilgrims coming from one camp will always have to be assigned <strong>the same path</strong>.</li>
-<li class="fragment">We need to keep track of the <strong>relative utilization</strong> of each resource <strong>to restrict the fluctuations</strong> between periods to ensure a safer event.</li>
-</ol>
-</div>
-</section></section>
-<section>
-<section id="model-formulation" class="title-slide slide level1 title center">
-<h1><span class="flow">Model Formulation</span></h1>
-
-</section>
-<section id="sets" class="slide level2">
-<h2>Sets?</h2>
-<p><span class="question">Question:</span> <strong>What could be the sets here?</strong></p>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg" class="r-stretch"></section>
-<section id="sets-1" class="slide level2">
-<h2>Sets</h2>
-<ul>
-<li><span class="math inline">\(\mathcal{T}\)</span> - Stoning periods in ascending order, indexed by <span class="math inline">\(t\)</span></li>
-<li><span class="math inline">\(\mathcal{R}\)</span> - Infrastructure resources, indexed by <span class="math inline">\(r\)</span></li>
-<li><span class="math inline">\(\mathcal{C}\)</span> - Pilgrim camps, indexed by <span class="math inline">\(c\)</span></li>
-<li><span class="math inline">\(\mathcal{P}\)</span> - Paths that include the stoning, indexed by <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(\mathcal{S}\)</span> - Scheduling groups, indexed by <span class="math inline">\(s\)</span></li>
-</ul>
-<div class="fragment">
-<p><span class="task">But we further need subsets!</span></p>
-</div>
-</section>
-<section id="subsets" class="slide level2">
-<h2>Subsets</h2>
-<ul>
-<li><span class="math inline">\(\mathcal{S}_c\)</span> - Scheduling groups in camp <span class="math inline">\(c\)</span></li>
-<li><span class="math inline">\(\mathcal{S}_p\)</span> - Scheduling groups that can use path <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(\mathcal{P}_c\)</span> - Feasible paths for camp <span class="math inline">\(c\)</span></li>
-<li><span class="math inline">\(\mathcal{P}_s\)</span> - Feasible paths for group <span class="math inline">\(s\)</span></li>
-<li><span class="math inline">\(\mathcal{P}_r\)</span> - Paths that contain the resource <span class="math inline">\(r\)</span></li>
-<li><span class="math inline">\(\mathcal{T}_s\)</span> - Available stoning periods for scheduling group <span class="math inline">\(s\)</span></li>
-</ul>
-</section>
-<section id="section-3" class="slide level2 loud-slide">
-<h2></h2>
-<div class="r-fit-text">
-<p>That looks</p>
-<p>complicated…</p>
-</div>
-<div class="footer">
-
-</div>
-</section>
-<section id="on-subsets" class="slide level2">
-<h2>On Subsets</h2>
-<p><span class="question">Question:</span> <strong>Why use subsets?</strong></p>
-<div class="fragment">
-<ul>
-<li>It may seem <strong>like a lot</strong></li>
-<li>But it also <span class="highlight">really helps a lot!</span></li>
-<li>We <strong>reduce the problem size</strong></li>
+<li>First, we need to understand the <strong>movement patterns</strong></li>
+<li>Event is <strong>unprecedented</strong>, movement patterns are unknown</li>
+<li>Multiple <span class="highlight">concurrent events</span> affect flow patterns</li>
 </ul>
 </div>
 <div class="fragment">
@@ -768,13 +514,199 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Tip</strong></p>
+<p><strong>Tip: We need to estimate the data first!</strong></p>
 </div>
 <div class="callout-content">
-<p>A smaller problem size <strong>reduces the solution space</strong> and <strong>helps the solver</strong> in finding the optimal solution faster!</p>
+<p>This is a <strong>huge challenge</strong>, but we can use <strong>simulation</strong> to estimate the data.</p>
 </div>
 </div>
 </div>
+</div>
+</section>
+<section id="simulation" class="slide level2">
+<h2>Simulation</h2>
+<ul>
+<li>Based on <span class="highlight">publicly available data</span> from the area</li>
+<li>Simulates <strong>all individuals</strong> participating at the event</li>
+<li>Includes <strong>all transportation infrastructure</strong></li>
+<li><span class="highlight">Individual mode choice</span> based on a choice model</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip: Julia is a great tool for this!</strong></p>
+</div>
+<div class="callout-content">
+<p>Simulations was build in Julia. With 1,000,000 individuals walking,using cars, busses, and the metro, a day took <strong>less than 5 minutes</strong>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="results-of-the-simulation" class="slide level2">
+<h2>Results of the Simulation</h2>
+<div class="column" style="width:50%;">
+<p><img data-src="https://images.byndsim.com/ao/ao_metro-train_section.png" style="width:85.0%"></p>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>Detailed movement patterns throughout the region</li>
+<li>Potential sections at risk in the transport infrastructure</li>
+<li>Potential capacity overloads at event locations<br>
+</li>
+</ul>
+</div></section>
+<section id="section-1" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>But it is still</p>
+<p>based on a lot</p>
+<p>of assumptions!</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="main-risk-metro" class="slide level2" data-background-image="https://images.byndsim.com/ao/ao_metro-risk_crowd.png" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Main risk: Metro</span></h2>
+<div class="footer">
+
+</div>
+</section>
+<section id="idea" class="slide level2">
+<h2>Idea</h2>
+<p><span class="question">Question:</span> <strong>What can we do to prevent crowd disasters?</strong></p>
+<div class="fragment">
+<ul>
+<li>Regulate the <strong>inflow</strong> at each individual station</li>
+<li>Ensure utilized capacity is <span class="highlight">always within bounds</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What could we try to model?</strong></p>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="highlight">Minimize the queues</span> outside of the metro stations</li>
+<li>Based on the <strong>allowed inflow</strong> and origin-destination data</li>
+<li>Adhering to the <strong>capacity constraints</strong></li>
+</ul>
+</div>
+</section>
+<section id="difficulty" class="slide level2">
+<h2>Difficulty</h2>
+
+<img data-src="https://images.byndsim.com/ao/ao_metro-metro_inflow_impact.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="fragment">
+<ul>
+<li>Movement patterns have different origin-destination pairs</li>
+<li>Regulating the inflow does not affect the destination</li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="model-formulation" class="title-slide slide level1 title center">
+<h1><span class="flow">Model Formulation</span></h1>
+
+</section>
+<section id="graph-sets" class="slide level2">
+<h2>Graph Sets?</h2>
+<p><span class="question">Question:</span> <strong>What could be the sets for the graph?</strong></p>
+
+<img data-src="https://images.byndsim.com/ao/ao_metro-metro_overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="graph-sets-1" class="slide level2">
+<h2>Graph Sets?</h2>
+<ul>
+<li><span class="math inline">\(\mathcal{G}\)</span> - Connected digraph of the metro network <span class="math inline">\(\mathcal{G}=(\mathcal{O},\mathcal{E})\)</span></li>
+<li><span class="math inline">\(\mathcal{O}\)</span> - Set of metro stations, indexed by <span class="math inline">\(o\)</span></li>
+<li><span class="math inline">\(\mathcal{E}\)</span> - Set of directed arcs between connected stations</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note: These are the easier sets.</strong></p>
+</div>
+<div class="callout-content">
+<p>These simply help us to represent the entire metro system as a graph with different nodes <span class="math inline">\(\mathcal{O}\)</span> and arcs <span class="math inline">\(\mathcal{E}\)</span> between connected stations.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="time-sets" class="slide level2">
+<h2>Time Sets?</h2>
+<p><span class="question">Question:</span> <strong>What could be the time sets?</strong></p>
+<div>
+<ul>
+<li class="fragment"><span class="math inline">\(\mathcal{T}\)</span> - Set of minutes in the time horizon, indexed by <span class="math inline">\(t\)</span></li>
+<li class="fragment"><span class="math inline">\(\mathcal{P}\)</span> - Set of periods in the observed time horizon, where <span class="math inline">\(p \in \{p_1, p_2, \dots,p_n\}\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note: Number of periods</strong></p>
+</div>
+<div class="callout-content">
+<p>We further define <span class="math inline">\(n\)</span> as the <strong>number of periods in observed time horizon.</strong></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="periods" class="slide level2">
+<h2>Periods</h2>
+<p><span class="question">Question:</span> <strong>Why do we add periods here?</strong></p>
+<div class="fragment">
+<ul>
+<li>Staff needs <strong>clear</strong>, consistent instructions</li>
+<li>Frequent changes in flow <span class="highlight">increase risk of errors</span></li>
+<li><strong>Easier</strong> to manage and communicate for planners</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note: Period Length</strong></p>
+</div>
+<div class="callout-content">
+<p>We define the period length as the length of the period in minutes measured as <span class="math inline">\(m\)</span> minutes, which is the <strong>same for all periods</strong>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="mapping-minutes-to-periods" class="slide level2">
+<h2>Mapping Minutes to Periods</h2>
+<ul>
+<li>We can define an <strong>additional set</strong> with their relation</li>
+<li>It specifies the relation of <span class="highlight">periods <span class="math inline">\(p\)</span> to minutes <span class="math inline">\(t\)</span>.</span></li>
+</ul>
+<p><span class="math display">\[
+    I_p =\{t \in \mathcal{T}|(p-1) \times m + 1 \leq t \leq p \times m\} \quad \forall p \in \mathcal{P}
+\]</span></p>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>Can anybody explain it?</strong></p>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(I_p\)</span> is the set of minutes <span class="math inline">\(t\)</span> that belong to period <span class="math inline">\(p\)</span></li>
+<li>Minutes are <strong>not overlapping</strong>, but they are <strong>continuous</strong></li>
+</ul>
 </div>
 </section>
 <section id="parameters" class="slide level2">
@@ -782,30 +714,134 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could be possible parameters?</strong></p>
 <div class="fragment">
 <ul>
-<li><span class="math inline">\(n_s\)</span> - Number of pilgrims in scheduling group <span class="math inline">\(s\)</span></li>
-<li><span class="math inline">\(f_{s,t}\)</span> - Penalty value of assigning period <span class="math inline">\(t\)</span> to group <span class="math inline">\(s\)</span></li>
-<li><span class="math inline">\(a_{p,r}\)</span> - Offset between stoning and utilization period of <span class="math inline">\(r\)</span> on <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(b_{r,t}\)</span> - Capacity of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span></li>
-<li><span class="math inline">\(\sigma_r\)</span> - max. relative utilization deviation between <span class="math inline">\(t\)</span> for <span class="math inline">\(r\)</span></li>
+<li><span class="math inline">\(q_{o,d,p}\)</span> - Demand from station <span class="math inline">\(o\)</span> to <span class="math inline">\(d\)</span> with <span class="math inline">\(o,d \in \mathcal{O}\)</span> in <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(d_{e}\)</span> - Travel time (min) of the arcs <span class="math inline">\(e \in \mathcal{E}\)</span></li>
+<li><span class="math inline">\(c_e\)</span> - Max. allowed arc entry rate <span class="math inline">\(e\)</span> per minute with <span class="math inline">\(e \in \mathcal{E}\)</span></li>
+<li><span class="math inline">\(c_{o}^{min}\)</span> - Min. station entry rate <span class="math inline">\(o\)</span> per minute with <span class="math inline">\(o \in \mathcal{O}\)</span></li>
+<li><span class="math inline">\(c_{o}^{max}\)</span> - Max. station entry rate <span class="math inline">\(o\)</span> per minute with <span class="math inline">\(o \in \mathcal{O}\)</span></li>
+<li><span class="math inline">\(\alpha\)</span> - Maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
 </ul>
 </div>
 </section>
-<section id="first-decision-variable" class="slide level2">
-<h2>First Decision Variable?</h2>
+<section id="metro-movement" class="slide level2">
+<h2>Metro Movement</h2>
+<p><span class="question">Question:</span> <strong>How do people move inside the metro?</strong></p>
+<div class="fragment">
+<ul>
+<li>Simple network: assume people use the <strong>shortest path</strong></li>
+<li>Use <span class="highlight">Djikstra’s algorithm</span> to compute it</li>
+<li>From each station to all other stations</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip: We can save the results in a new set <span class="math inline">\(\mathcal{C}_{o,d}\)</span></strong></p>
+</div>
+<div class="callout-content">
+<p>This will help us to model the movement inside the metro.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="shortest-paths-sp" class="slide level2">
+<h2>Shortest Paths (SP)</h2>
+<ul>
+<li><span class="math inline">\(\mathcal{C}_{o,d}\)</span> - Set of arcs <span class="math inline">\(e \in \mathcal{E}\)</span> on the SP from <span class="math inline">\(o,d \in \mathcal{O}\)</span></li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Now we compute the <strong>travel time on the shortest paths.</strong> One parameter for the SP from <strong>station to station</strong> and one for the SP from <strong>station to arc</strong>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(d_{o,d}\)</span> - travel time (min) on SP from <span class="math inline">\(o \in \mathcal{O}\)</span> to <span class="math inline">\(d \in \mathcal{O}\)</span></li>
+<li><span class="math inline">\(d_{o,e}\)</span> - travel time (min) on SP from <span class="math inline">\(o \in \mathcal{O}\)</span> to <span class="math inline">\(e \in \mathcal{E}\)</span></li>
+</ul>
+</div>
+</section>
+<section id="people-spreading" class="slide level2">
+<h2>People Spreading</h2>
+<p><span class="question">Question:</span> <strong>How do people spread?</strong></p>
+
+<img data-src="https://images.byndsim.com/ao/ao_metro-metro_inflow_impact.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="ratio-of-origin-destination" class="slide level2">
+<h2>Ratio of Origin-Destination</h2>
+<ul>
+<li>We <strong>cannot control</strong> the destination of the passengers</li>
+<li>Thus we assume that people spread <span class="highlight">based on destination</span></li>
+</ul>
+<div class="fragment">
+<p><span class="math display">\[\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \mathcal{O}, p\in \mathcal{P}\]</span></p>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Based on the ratio of the different destinations <span class="math inline">\(d\)</span> to the total queue for each station <span class="math inline">\(o \in \mathcal{O}\)</span> in each period <span class="math inline">\(p \in \mathcal{P}\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="variables-and-objective" class="title-slide slide level1 title center">
+<h1><span class="flow">Variables and Objective</span></h1>
+
+</section>
+<section id="decision-variable" class="slide level2">
+<h2>Decision Variable?</h2>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Our first goal is to:</strong></p>
+<p><strong>Our goal is to:</strong></p>
 </div>
 <div class="callout-content">
-<p>Satisfy time preferences of the pilgrims as much as possible under the consideration of infrastructure bottleneck flow capacities by assigning “something” to a time slot.</p>
+<p>Regulate the <strong>inflow</strong> at <strong>each individual station</strong> to <strong>minimize the queues</strong> outside the metro stations based on the allowed inflow while <strong>adhering to the capacity constraints.</strong></p>
 </div>
 </div>
 </div>
-<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>There is <strong>one queue for all passenger flow directions</strong>, as managing multiple queues would be too complex for the planners!</p>
+</div>
+</div>
+</div>
+</section>
+<section id="decision-variable-1" class="slide level2">
+<h2>Decision Variable</h2>
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -816,136 +852,17 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="callout-content">
 <ul>
-<li>Scheduling groups, <span class="math inline">\(s \in \mathcal{S}\)</span></li>
-<li>Stoning periods in ascending order, <span class="math inline">\(t \in \mathcal{T}\)</span></li>
-<li>Paths that include the stoning of the devil, <span class="math inline">\(p \in \mathcal{P}\)</span></li>
+<li>All the metro stations, <span class="math inline">\(o \in \mathcal{O}\)</span></li>
+<li>All periods under observation, <span class="math inline">\(p \in \mathcal{P}\)</span></li>
 </ul>
 </div>
 </div>
 </div>
-</div>
-</section>
-<section id="first-decision-variable-1" class="slide level2">
-<h2>First Decision Variable</h2>
 <p><span class="question">Question:</span> <strong>What could be our decision variable?</strong></p>
 <div class="fragment">
 <ul>
-<li><span class="math inline">\(X_{s,t,p}\)</span> - 1, if scheduling group <span class="math inline">\(s\)</span> is scheduled to perform stoning in period <span class="math inline">\(t\)</span> and to use path <span class="math inline">\(p\)</span>, 0 otherwise.</li>
+<li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
 </ul>
-</div>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>Do you get the idea here?</strong></p>
-</div>
-<div class="fragment">
-<p>It’s a <strong>binary assignment</strong> of a group to a time slot and a path.</p>
-</div>
-</section>
-<section id="second-decision-variable" class="slide level2">
-<h2>Second Decision Variable?</h2>
-<div class="callout callout-important callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Our second goal (more a constraint):</strong></p>
-</div>
-<div class="callout-content">
-<p>For the sake of <strong>simplicity and safety</strong>, pilgrims coming from one camp will always have to be assigned the same path.</p>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>We need the following sets:</strong></p>
-</div>
-<div class="callout-content">
-<ul>
-<li>Pilgrim camps from which groups can depart, <span class="math inline">\(c \in \mathcal{C}\)</span></li>
-<li>Paths that include the stoning of the devil, <span class="math inline">\(p \in \mathcal{P}\)</span></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>What could be our second variable?</strong></p>
-</div>
-</section>
-<section id="second-decision-variable-1" class="slide level2">
-<h2>Second Decision Variable</h2>
-<ul>
-<li><span class="math inline">\(Y_{c,p}\)</span> - 1, if camp <span class="math inline">\(c\)</span> is assigned to use path <span class="math inline">\(p\)</span>, 0 otherwise</li>
-</ul>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>Does anyone remember the third part?</strong></p>
-</div>
-</section>
-<section id="third-decision-variable" class="slide level2">
-<h2>Third Decision Variable?</h2>
-<div class="callout callout-important callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Our third goal (again, more a constraint):</strong></p>
-</div>
-<div class="callout-content">
-<p>We need to keep track of the relative utilization of each resource to restrict the fluctuations between periods to ensure a safer event.</p>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>We need the following sets:</strong></p>
-</div>
-<div class="callout-content">
-<ul>
-<li>Infrastructure resources, <span class="math inline">\(r \in \mathcal{R}\)</span></li>
-<li>Stoning periods in ascending order, <span class="math inline">\(t \in \mathcal{T}\)</span></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>What could be our third variable?</strong></p>
-</div>
-</section>
-<section id="third-decision-variable-1" class="slide level2">
-<h2>Third Decision Variable</h2>
-<ul>
-<li><span class="math inline">\(U_{r,t}\)</span> - Relative utilization of <span class="math inline">\(r\)</span> in <span class="math inline">\(t\)</span> with <span class="math inline">\(0 \leq U_{rt} \leq 1\)</span></li>
-</ul>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>What does relative utilization mean?</strong></p>
-</div>
-<div class="fragment">
-<ul>
-<li>It’s a <strong>percentage</strong> of the capacity usage of the resource</li>
-<li><strong>Normalizes</strong> the capacities between different resources</li>
-</ul>
-</div>
-</section>
-<section id="section-4" class="slide level2 loud-slide">
-<h2></h2>
-<div class="r-fit-text">
-<p>Let’s start with our</p>
-<p>objective function!</p>
-</div>
-<div class="footer">
-
 </div>
 </section>
 <section id="objective-function" class="slide level2">
@@ -959,18 +876,17 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>Our main objective is to:</strong></p>
 </div>
 <div class="callout-content">
-<p>Satisfy time preferences of the pilgrims as much as possible under the consideration of infrastructure bottleneck flow capacities by assigning “something” to a time slot. <strong>Hint:</strong> We thus could aim to minimize the total dissatisfaction with the timetable.</p>
+<p>Regulate the <strong>inflow</strong> at <strong>each individual station</strong> to <strong>minimize the queues</strong> outside the metro stations based on the allowed inflow while <strong>adhering to the capacity constraints.</strong></p>
 </div>
 </div>
 </div>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>How could we minimize the total dissatisfaction?</strong></p>
-<div>
-<ul>
-<li class="fragment"><strong>Penalize</strong> difference between assigned and preferred time</li>
-<li class="fragment">Different penalty functions, e.g., linear, quadratic, etc.</li>
-</ul>
+<p><span class="question">Question:</span> <strong>How again are queues minimized?</strong></p>
 </div>
+<div class="fragment">
+<ul>
+<li>By the allowed inflow <span class="math inline">\(X_{o,p}\)</span> subtracted from the queue</li>
+</ul>
 </div>
 </section>
 <section id="objective-function-1" class="slide level2">
@@ -985,8 +901,8 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="callout-content">
 <ul>
-<li><span class="math inline">\(f_{s,t}\)</span> - Penalty value of assigning period <span class="math inline">\(t\)</span> to group <span class="math inline">\(s\)</span></li>
-<li><span class="math inline">\(X_{s,t,p}\)</span> - 1 if group <span class="math inline">\(s\)</span> is scheduled to perform stoning in <span class="math inline">\(t\)</span> and to use <span class="math inline">\(p\)</span>, 0 otherwise</li>
+<li><span class="math inline">\(q_{o,d,p}\)</span> - People queued to travel from station <span class="math inline">\(o\)</span> to <span class="math inline">\(d\)</span> with <span class="math inline">\(o,d \in \mathcal{O}\)</span> in period <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
 </ul>
 </div>
 </div>
@@ -996,27 +912,8 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="fragment">
 <p><span class="math display">\[
-\text{minimize} \quad \sum_{s \in \mathcal{S}}\sum_{t \in \mathcal{T}}\sum_{p \in \mathcal{P}} f_{s,t} \times X_{s,t,p}
+\text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 \]</span></p>
-</div>
-</section>
-<section id="objective-function-characteristics" class="slide level2">
-<h2>Objective Function Characteristics</h2>
-<p><span class="question">Question:</span> <strong>Is our objective function linear?</strong></p>
-<div class="fragment">
-<ul>
-<li>We can use <strong>non-linear penalty functions</strong></li>
-<li>But still, it will always be <strong>linear</strong></li>
-</ul>
-</div>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>Anybody an idea why?</strong></p>
-</div>
-<div class="fragment">
-<ul>
-<li>We can compute the <strong>penalties in advance</strong></li>
-<li>Do <strong>not</strong> depend on the decision variables</li>
-</ul>
 </div>
 </section></section>
 <section>
@@ -1024,217 +921,110 @@ Dr.&nbsp;Tobias Vlćek
 <h1><span class="flow">Constraints</span></h1>
 
 </section>
-<section id="constraints-needed" class="slide level2">
-<h2>Constraints needed?</h2>
+<section id="necessary-constraints" class="slide level2">
+<h2>Necessary Constraints</h2>
+<p><span class="question">Question:</span> <strong>What constraints do we need?</strong></p>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="key-constraints" class="slide level2">
-<h2>Key Constraints</h2>
-<p><span class="question">Question:</span> <strong>Which constraints do we need?</strong></p>
-<div>
-<ol type="1">
-<li class="fragment">Each group must have <span class="highlight">one path assigned</span></li>
-<li class="fragment">Each camp must have <span class="highlight">one path assigned</span></li>
-<li class="fragment">Each group must have <span class="highlight">one time slot assigned</span></li>
-<li class="fragment">Each resource must have <span class="highlight">a capacity limit</span></li>
-<li class="fragment">Constraint the <span class="highlight">relative utilization between periods</span></li>
-</ol>
-</div>
-</section>
-<section id="assign-paths-to-camps" class="slide level2">
-<h2>Assign Paths to Camps</h2>
-<div class="callout callout-important callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>The goal of this constraint is to:</strong></p>
-</div>
-<div class="callout-content">
-<p>Assign <strong>one path to each camp</strong> over the entire time horizon.</p>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>We need the following variables:</strong></p>
-</div>
-<div class="callout-content">
+<img data-src="https://images.byndsim.com/ao/ao_metro-metro_overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"><div class="fragment">
 <ul>
-<li><span class="math inline">\(Y_{c,p}\)</span> - 1 if camp <span class="math inline">\(c\)</span> is assigned to use path <span class="math inline">\(p\)</span>, 0 otherwise</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
-<p><span class="math display">\[
-\sum_{p \in \mathcal{P}_c} Y_{c,p} = 1 \quad \forall c \in \mathcal{C}
-\]</span></p>
-</div>
-</section>
-<section id="assign-time-slots-to-groups" class="slide level2">
-<h2>Assign Time Slots to Groups?</h2>
-<div class="callout callout-important callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>The goal of this constraint is to:</strong></p>
-</div>
-<div class="callout-content">
-<p>Assign <strong>one time slot to each group</strong> over the entire time horizon <strong>using the same path</strong> we have assigned to the camp in the previous constraint.</p>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>We need the following variables:</strong></p>
-</div>
-<div class="callout-content">
-<ul>
-<li><span class="math inline">\(X_{s,t,p}\)</span> - 1 if group <span class="math inline">\(s\)</span> is scheduled to perform stoning in <span class="math inline">\(t\)</span> and to use <span class="math inline">\(p\)</span>, 0 otherwise</li>
-<li><span class="math inline">\(Y_{c,p}\)</span> - 1 if camp <span class="math inline">\(c\)</span> is assigned to use path <span class="math inline">\(p\)</span>, 0 otherwise</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
-</div>
-</section>
-<section id="assign-time-slots-to-groups-1" class="slide level2">
-<h2>Assign Time Slots to Groups</h2>
-<p><span class="math display">\[
-\sum_{t \in \mathcal{T}_s} X_{s,t,p}  = Y_{c,p} \quad  \forall c \in \mathcal{C}, p \in \mathcal{P}_c, s \in \mathcal{S}_c
-\]</span></p>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>We use the following sets:</strong></p>
-</div>
-<div class="callout-content">
-<ul>
-<li><span class="math inline">\(\mathcal{C}\)</span> - Pilgrim camps</li>
-<li><span class="math inline">\(\mathcal{S}_c\)</span> - Scheduling groups in camp <span class="math inline">\(c\)</span></li>
-<li><span class="math inline">\(\mathcal{T}_s\)</span> - Available stoning periods for scheduling group <span class="math inline">\(s\)</span></li>
-<li><span class="math inline">\(\mathcal{P}_c\)</span> - Feasible paths for camp <span class="math inline">\(c\)</span></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="relative-utilization-and-capacities" class="slide level2">
-<h2>Relative Utilization and Capacities</h2>
-<div class="callout callout-important callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>The goal of this constraint is to:</strong></p>
-</div>
-<div class="callout-content">
-<p>Compute the relative utilization of each resource while also ensuring that the utilization does not exceed the capacity limit. <span class="highlight">This one is very tricky!</span></p>
-</div>
-</div>
-</div>
-<div class="fragment">
-<p><span class="highlight">Difficulties:</span></p>
-<ul>
-<li>Includes the time-shift between stoning and utilization</li>
-<li>Used as parameter to shift periods in variable <span class="math inline">\(X_{s,t,p}\)</span></li>
+<li>The capacity of each arc is <strong>not exceeded</strong></li>
+<li>Do not dispatch more people than are queued</li>
+<li>Do not dispatch less than the minimum allowed inflow</li>
 </ul>
 </div>
 </section>
-<section id="compute-relative-utilization" class="slide level2">
-<h2>Compute Relative Utilization?</h2>
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>We need the following:</strong></p>
-</div>
-<div class="callout-content">
-<ul>
-<li><span class="math inline">\(n_s\)</span> - Number of pilgrims in scheduling group <span class="math inline">\(s\)</span></li>
-<li><span class="math inline">\(a_{p,r}\)</span> - Period offset between stoning period and utilization period of <span class="math inline">\(r\)</span> on <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(b_{r,t}\)</span> - Capacity of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span> in number of pilgrims</li>
-<li><span class="math inline">\(X_{s,t,p}\)</span> - 1, if <span class="math inline">\(s\)</span> is scheduled to perform stoning in <span class="math inline">\(t\)</span> and to use <span class="math inline">\(p\)</span>, 0 else</li>
-<li><span class="math inline">\(U_{r,t}\)</span> - Relative utilization of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span> with <span class="math inline">\(0 \leq U_{r,t} \leq 1\)</span></li>
-</ul>
-</div>
-</div>
-</div>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
-</div>
-</section>
-<section id="compute-relative-utilization-1" class="slide level2">
-<h2>Compute Relative Utilization</h2>
-<p><span class="math display">\[
-\sum_{p \in \mathcal{P}_r}\sum_{s \in S_p} n_s \times X_{s,t-a_{p,r},p}  = b_{r,t}\times U_{r,t} \quad \forall r \in \mathcal{R}, t \in \mathcal{T}
-\]</span></p>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>We use the following:</strong></p>
-</div>
-<div class="callout-content">
-<ul>
-<li><span class="math inline">\(n_s\)</span> - Number of pilgrims in scheduling group <span class="math inline">\(s\)</span></li>
-<li><span class="math inline">\(a_{p,r}\)</span> - Period offset between stoning period and utilization period of <span class="math inline">\(r\)</span> on <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(b_{r,t}\)</span> - Capacity of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span> in number of pilgrims</li>
-<li><span class="math inline">\(X_{s,t,p}\)</span> - 1, if <span class="math inline">\(s\)</span> is scheduled to perform stoning in <span class="math inline">\(t\)</span> and to use <span class="math inline">\(p\)</span>, 0 else</li>
-<li><span class="math inline">\(U_{r,t}\)</span> - Relative utilization of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span> with <span class="math inline">\(0 \leq U_{r,t} \leq 1\)</span></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="section-5" class="slide level2 loud-slide">
+<section id="section-2" class="slide level2 loud-slide">
 <h2></h2>
 <div class="r-fit-text">
-<p>Let’s pause!</p>
-<p>Have you understood</p>
-<p>this part?</p>
+<p>Things are going to</p>
+<p>get a little</p>
+<p>complicated now!</p>
 </div>
 <div class="footer">
 
 </div>
 </section>
-<section id="how-does-the-shift-work" class="slide level2">
-<h2>How does the shift work?</h2>
+<section id="central-question" class="slide level2">
+<h2>Central Question</h2>
+<p><span class="question">Question:</span> <strong>When do people flowing into the metro system change the arcs?</strong></p>
+<div class="fragment">
+<ul>
+<li>People enter metro station at <span class="math inline">\(o\)</span> with destination <span class="math inline">\(d\)</span></li>
+<li>They will lead to a usage of an arc <span class="math inline">\(e\)</span> on their SP</li>
+<li>This usage depends on their path and the travel times</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip: You’ll likely know what we need now!</strong></p>
+</div>
+<div class="callout-content">
+<p>We can add a new set <span class="math inline">\(\mathcal{R}_{e,t}\)</span> to help us with this.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="set-of-time-delays" class="slide level2">
+<h2>Set of Time-Delays</h2>
+<p><span class="math display">\[
+\mathcal{R}_{e,t} = \{(o,d,p) \mid
+    \begin{array}{l}
+    (o,d) | o,d \in \mathcal{O}, \\
+    q_{o,d,p} &gt; 0, \\
+    e \in \mathcal{C}_{o,d}, \\
+    t-d_{o,e} \in I_p, \\
+    p \in \mathcal{P}\}
+    \end{array}
+    \quad \forall e \in \mathcal{E}, t \in \mathcal{T}
+\]</span></p>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>Who can explain this set?</strong></p>
+</div>
+<div class="fragment">
+<p>The set <span class="math inline">\(\mathcal{R}_{e,t}\)</span> contains <strong>all combinations</strong> <span class="math inline">\((o,d,p)\)</span> which trigger a <strong>capacity utilization</strong> of arc <span class="math inline">\(e\)</span> in period <span class="math inline">\(t\)</span>.</p>
+</div>
+</section>
+<section id="small-example" class="slide level2">
+<h2>Small Example</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="keep-fluctuations-within-bounds" class="slide level2">
-<h2>Keep Fluctuations within Bounds?</h2>
+<img data-src="https://images.byndsim.com/ao/ao_metro-metro_set_r.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>The set contains all possible o-d pairs and periods, that result in passengers starting at arc <span class="math inline">\((C,D)\)</span> at minute <span class="math inline">\(22\)</span>. For m=2, it would be:</p>
+<p><span class="math inline">\(\{((A,D),3),((B,D),5),((C,D),11),((E,D),9)\}\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="section-3" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Essentially, we can use this</p>
+<p>set to compute the utilization</p>
+<p>of an arc at each minute based</p>
+<p>on the inflow level at the</p>
+<p>different stations and periods.</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="ensure-capacity-utilization" class="slide level2">
+<h2>Ensure Capacity Utilization?</h2>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1244,7 +1034,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>The goal of this constraint is to:</strong></p>
 </div>
 <div class="callout-content">
-<p>Keep the relative utilization of each resource within bounds to ensure a safer event.</p>
+<p>Ensure that the capacity of each arc is not exceeded at any minute.</p>
 </div>
 </div>
 </div>
@@ -1255,56 +1045,96 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>We need the following:</strong></p>
+<p><strong>We need the following variable, parameter and set:</strong></p>
 </div>
 <div class="callout-content">
 <ul>
-<li><span class="math inline">\(\sigma_r\)</span> - max. relative utilization deviation between <span class="math inline">\(t\)</span> for <span class="math inline">\(r\)</span></li>
-<li><span class="math inline">\(U_{r,t}\)</span> - Relative utilization of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span> with <span class="math inline">\(0 \leq U_{rt} \leq 1\)</span></li>
+<li><span class="math inline">\(q_{o,d,p}\)</span> - people waiting to travel from station <span class="math inline">\(o \in \mathcal{O}\)</span> to station <span class="math inline">\(d \in \mathcal{O}\)</span> in <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(c_e\)</span> - people max. allowed to enter arc <span class="math inline">\(e\)</span> per minute with <span class="math inline">\(e \in \mathcal{E}\)</span></li>
+<li><span class="math inline">\(\mathcal{R}_{e,t}\)</span> - mapping of station entries to arc <span class="math inline">\(e\)</span> in time <span class="math inline">\(t\)</span> with <span class="math inline">\(e \in \mathcal{E}\)</span> and <span class="math inline">\(t \in \mathcal{T}\)</span></li>
+<li><span class="math inline">\(\alpha\)</span> - maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
+<li><span class="math inline">\(X_{o,p}\)</span> - the allowed inflow per minute at metro station <span class="math inline">\(o\)</span> in the period <span class="math inline">\(p\)</span></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div class="fragment">
+</section>
+<section id="ensure-capacity-utilization-1" class="slide level2">
+<h2>Ensure Capacity Utilization</h2>
 <p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
+<div class="fragment">
+<p><span class="math display">\[
+\sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} \quad \forall e \in \mathcal{E}, t \in \mathcal{T}
+\]</span></p>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Here, we combine the inflow at each station based on the o-d proportion and let the people spread through the network, checking that no arc is over-utilized at any minute.</p>
+</div>
+</div>
+</div>
 </div>
 </section>
-<section id="keep-fluctuations-within-bounds-1" class="slide level2">
-<h2>Keep Fluctuations within Bounds</h2>
-<p><span class="math display">\[
-U_{r,t} - U_{r,t-1} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\times \mathcal{T}\right|
-\]</span></p>
-<p><span class="math display">\[
-U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\times \mathcal{T}\right|
-\]</span></p>
+<section id="dispatch-only-available-people" class="slide level2">
+<h2>Dispatch Only Available People?</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The goal of this constraint is to:</strong></p>
+</div>
+<div class="callout-content">
+<p>Ensure that we do not dispatch more people than are queued and less than the minimum allowed inflow, preventing over- and under-dispatching.</p>
+</div>
+</div>
+</div>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>Can somebody explain why this works?</strong></p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We need the following variables and parameters:</strong></p>
+</div>
+<div class="callout-content">
 <ul>
-<li>Each constraint limits the <strong>change</strong></li>
-<li>The first one limits the <strong>increase</strong></li>
-<li>The second one limits the <strong>decrease</strong></li>
+<li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(q_{o,d,p}\)</span> - People queued to travel from station <span class="math inline">\(o\)</span> to <span class="math inline">\(d\)</span> with <span class="math inline">\(o,d \in \mathcal{O}\)</span> in <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(m\)</span> - period length in minutes</li>
 </ul>
 </div>
+</div>
+</div>
+</div>
 </section>
-<section id="scheduling-problem-i" class="slide level2">
-<h2>Scheduling Problem I</h2>
-<p><span class="math display">\[\begin{align*}
-\text{min} \quad \sum_{s\in \mathcal{S}}\sum_{t \in \mathcal{T}_s}\sum_{p \in P_s} f_{s,t} \times X_{s,t,p}
-\end{align*}\]</span></p>
-<p>subject to:</p>
-<p><span class="math display">\[\begin{align*}
-&amp; \sum_{p \in \mathcal{P}_c} Y_{c,p} = 1 &amp;&amp; \forall c \in \mathcal{C} \\
-&amp; \sum_{t \in \mathcal{T}_s} X_{s,t,p}  = Y_{c,p} &amp;&amp;  \forall c \in \mathcal{C}, p \in \mathcal{P}_c, s \in \mathcal{S}_c
-\end{align*}\]</span></p>
-</section>
-<section id="scheduling-problem-ii" class="slide level2">
-<h2>Scheduling Problem II</h2>
-<p><span class="math display">\[\begin{align*}
-&amp; \sum_{p \in \mathcal{P}_r}\sum_{s \in S_p} n_s \cdot X_{s,t-a_{p,r},p}  = b_{r,t}\cdot U_{r,t} &amp;&amp; \forall r \in \mathcal{R}, t \in \mathcal{T} \\
-&amp; U_{r,t} - U_{r,t-1} \leq \sigma_r &amp;&amp; \forall (r,t) \in \left| \mathcal{R}\times \mathcal{T}\right| \\
-&amp; U_{r,t-1} - U_{r,t} \leq \sigma_r &amp;&amp; \forall (r,t) \in \left| \mathcal{R}\times \mathcal{T}\right|
-\end{align*}\]</span></p>
+<section id="dispatch-only-available-people-1" class="slide level2">
+<h2>Dispatch Only Available People</h2>
+<p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
+<div class="fragment">
+<div class="temp-math-size">
+<style>
+.temp-math-size .math.display .MathJax  {
+  font-size: 85% !important;
+}
+</style>
+<p><span class="math display">\[
+\min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{\min}\} \leq X_{o,p} \leq \max\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{\max}\} \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
+\]</span></p>
+</div>
+</div>
+<div class="fragment">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1314,30 +1144,30 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p>Restricting the <strong>relative utilization</strong> of each resource to a certain bound.</p>
+<p>We need this constraint for <strong>two reasons</strong>:</p>
+<ol type="1">
+<li>We could also dispatch more people than there are as this would <strong>minimize the objective value. </strong></li>
+<li>We also need to ensure that we can dispatch at <strong>least the minimum allowed inflow</strong> or less if the queue is smaller than the minimum allowed inflow.</li>
+</ol>
+</div>
 </div>
 </div>
 </div>
 </section>
-<section id="scheduling-problem-iii" class="slide level2">
-<h2>Scheduling Problem III</h2>
+<section id="metro-inflow-model" class="slide level2">
+<h2>Metro Inflow Model</h2>
+<div class="temp-math-size">
+<style>
+.temp-math-size .math.display .MathJax  {
+  font-size: 85% !important;
+}
+</style>
 <p><span class="math display">\[\begin{align*}
-&amp; X_{s,t,p} \in \{0,1\}  &amp;&amp; \forall s \in \mathcal{S}, \forall t \in \mathcal{T}_s, \forall p \in \mathcal{P}_s \\
-&amp; Y_{c,p} \in \{0,1\} &amp;&amp; \forall c \in \mathcal{C}, p \in \mathcal{P}_c \\
-&amp; U_{r,t} \in [0,1] &amp;&amp; \forall r \in \mathcal{R}, t \in \mathcal{T}
+    \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
+\end{align*}\]</span> subject to: <span class="math display">\[\begin{align*}
+    &amp;  \sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} &amp;&amp; \forall e \in \mathcal{E}, t \in \mathcal{T} \\
+    &amp; min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\} \leq X_{o,p} \leq max\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\} &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P}
 \end{align*}\]</span></p>
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Note</strong></p>
-</div>
-<div class="callout-content">
-<p>All variables, except for <span class="math inline">\(U_{r,t}\)</span>, are binary.</p>
-</div>
-</div>
 </div>
 </section></section>
 <section>
@@ -1352,7 +1182,6 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <ul>
 <li class="fragment">Is the model formulation linear/ non-linear?</li>
 <li class="fragment">What kind of variable domains do we have?</li>
-<li class="fragment">Have we specified the length of a period?</li>
 </ul>
 </div>
 </section>
@@ -1363,44 +1192,62 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <ul>
 <li class="fragment">What assumptions have we made?</li>
 <li class="fragment">What are likely issues that can arise if applied?</li>
-<li class="fragment">How can we measure flow capacities?</li>
-<li class="fragment">Are all pilgrims equally fast?</li>
+<li class="fragment">Have we thought in detail about queues?</li>
+<li class="fragment">Are shortest paths a feasible assumption?</li>
 </ul>
 </div>
-</section>
-<section id="capacity-buffers" class="slide level2">
-<h2>Capacity Buffers</h2>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-capacitybuffers.png" class="quarto-figure quarto-figure-center r-stretch"></section></section>
+</section></section>
 <section>
 <section id="implementation-and-impact" class="title-slide slide level1 title center">
 <h1><span class="flow">Implementation and Impact</span></h1>
 
 </section>
-<section id="section-6" class="slide level2 loud-slide">
-<h2></h2>
-<div class="r-fit-text">
-<p>Can this be</p>
-<p>applied?</p>
-</div>
+<section id="metro-inflow-optimization" class="slide level2" data-background-image="https://images.unsplash.com/photo-1658490505550-60191ee61ec6?q=80&amp;w=4334&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Metro Inflow Optimization</span></h2>
+<div class="fragment">
+<p><span class="invert-font"><span class="question">Question:</span> <strong>Can this be applied?</strong></span></p>
 <div class="footer">
 
 </div>
+</div>
 </section>
-<section id="section-7" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title"></h2>
+<section id="metro-inflow-problem" class="slide level2">
+<h2>Metro Inflow Problem</h2>
+<ul>
+<li>Solved very fast <span class="highlight">within seconds</span> for realistic problem sizes</li>
+<li><strong>But</strong> we cannot plan or control the metro inflow</li>
+<li>Queues are <strong>too simplified</strong> with passengers disappearing</li>
+</ul>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>Any ideas, how the current model could be improved or how it could be embedded into a heuristic?</strong></p>
+</div>
+</section>
+<section id="heuristic-step-wise-optimization" class="slide level2">
+<h2>Heuristic: Step-Wise Optimization</h2>
+<ul>
+<li>Solve the model for the time-horizon of a <strong>few periods</strong></li>
+<li>Fix the inflow in the <strong>current first period</strong></li>
+<li>Decrease capacity in the network <strong>based on the inflow</strong></li>
+<li>Transfer <strong>remaining queues</strong> into the subsequent period</li>
+<li><span class="highlight">Solve the model again</span></li>
+<li><strong>Repeat</strong>, until the inflow is computed for all periods</li>
+</ul>
+</section>
+<section id="transport-demand" class="slide level2">
+<h2>Transport Demand</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-1.png" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="section-8" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title"></h2>
+<img data-src="https://images.byndsim.com/ao/ao_metro-transportdemand.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="utilization-analysis" class="slide level2">
+<h2>Utilization Analysis</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-5.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<img data-src="https://images.byndsim.com/ao/ao_metro-arcutil.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="implementation" class="slide level2">
 <h2>Implementation</h2>
 <ul>
-<li>Optimization <strong>part of a bigger picture</strong></li>
-<li>Many projects with several disciplines involved</li>
-<li>E.g. Simulations, infrastructure projects, real-time monitoring, contingency plans, awareness campaigns, …</li>
+<li><strong>Assumption of known destinations</strong> based is strong</li>
+<li>Movements <strong>seemed to follow our forecasts</strong></li>
+<li>We did achieve our goal of <strong>metro inflow control</strong></li>
+<li>Simulation was used to <strong>estimate the inflows</strong></li>
 </ul>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-default">
@@ -1412,18 +1259,20 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p>Optimization was part of a project by Knut Haase and his team <span class="citation" data-cites="haase2016improving">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Haase et al. 2016</a>)</span>.</p>
+<p>Few dangerous situations, especially at the FIFA Fan Fest, were <strong>handled well</strong> by the authorities.</p>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="section-9" class="slide level2">
-<h2></h2>
-
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-media_coverage.png" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="wrap-up" class="slide level2">
 <h2>Wrap Up</h2>
+<ul>
+<li>Model can help to achieve a <span class="highlight">good balance</span></li>
+<li>Can be adapted easily to <strong>any metro system worldwide </strong></li>
+<li>Especially interesting for <strong>larger Asian cities</strong></li>
+</ul>
+<div class="fragment">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1433,12 +1282,13 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <p><strong>And that’s it for todays lecture!</strong></p>
 </div>
 <div class="callout-content">
-<p>We now have covered a scheduling problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial.</p>
+<p>We now have covered a metro inflow control problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial.</p>
+</div>
 </div>
 </div>
 </div>
 </section>
-<section id="section-10" class="slide level2 loud-slide">
+<section id="section-4" class="slide level2 loud-slide">
 <h2></h2>
 <div class="r-fit-text">
 <p>Questions?</p>
@@ -1455,21 +1305,13 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <section id="literature-i" class="slide level2">
 <h2>Literature I</h2>
 <p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
-</section>
-<section id="literature-ii" class="slide level2 smaller scrollable">
-<h2>Literature II</h2>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-haase2016improving" class="csl-entry" role="listitem">
-Haase, Knut, Habib Zain Al Abideen, Salim Al-Bosta, Mathias Kasper, Matthes Koch, Sven Müller, and Dirk Helbing. 2016. <span>“Improving Pilgrim Safety During the Hajj: An Analytical and Operational Research Approach.”</span> <em>Interfaces</em> 46 (1): 74–90.
-</div>
-</div>
 </section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>Lecture IX - Safety Planning for the Islamic Pilgrimage | Dr.&nbsp;Tobias Vlćek | <a href="../part-09/lecture-safety.html">Home</a></p>
+<p>Lecture X - Passenger Flow Control in Urban Rail | Dr.&nbsp;Tobias Vlćek | <a href="../part-12/lecture-rail.html">Home</a></p>
 </div>
 </div></div>
 
