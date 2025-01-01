@@ -1,5 +1,5 @@
 ---
-title: "Tutorial X - Passenger Flow Control in Urban Rail"
+title: "Tutorial XII - Passenger Flow Control in Urban Rail"
 subtitle: "Applied Optimization with Julia"
 
 format:
@@ -12,11 +12,120 @@ format:
         toc: true
         toc-location: right
         code-overflow: wrap
-    pdf: 
-        documentclass: report
-        geometry:
-            - margin=1in
-        fontfamily: roboto
-        fontfamilyoptions: sfdefault
-        colorlinks: true
+    ipynb:
+        code-copy: true
+        code-overflow: wrap
+
 ---
+
+# Introduction
+
+
+![Metro Network with 4 stations (A, B, C, D) connected in a loop](https://images.beyondsimulations.com/ao/ao_metro-metro_tutorial.svg)
+
+Consider the depicted 'Golden Line' on the left with 4 different stations A, B, C, D. For an upcoming timeframe of **20 minutes divided into 10 periods**, the transportation demand is going to exceed the available capacity of the network and each origin-destination pair will be requested by at least 1 passenger. **To handle the inflow, queues will be put in place at each metro station.**
+
+# The Challenge
+
+Your task is to **minimize the queues** without exceeding the available transport capacity of **max. 100 passengers per minute of each arc**. A safety buffer per arc is not needed. Each station layout is excellent, with sufficient stairs and escalators. Thus, the station itself is fully capable of handling any inflow that may result from the optimized restricted inflow. Nonetheless, queues are still necessary as the arcs cannot handle each input.
+
+## 1. Flow Analysis
+
+Suppose we are in minute 7 at the arc of (D,A). Which inflows from which stations are going to impact the flow into the arc in this minute?
+
+Write out the set $\mathcal{R}_{(D,A),7}$ and **shortly explain** your answer. You can write out the set in a comment, for example like this:
+
+```julia
+#=
+{(A,B,1), (B,C,1), (C,D,1)}
+=#
+```
+
+::: {.callout-tip}
+To solve this task, it might be helpful to work with paper and pen to sketch the problem.
+:::
+
+```{julia}
+#=
+
+
+
+=#
+```
+
+
+## 2. Simplified Model
+
+Can you come up with a simpler model formulation based on the model of the lecture that restricts the inflow? First, define all sets, parameters, variables, and constraints necessary to model this simpler version.
+
+Answer by defining the sets, parameters, variables, and constraints in the cell below **as a JuMP model**. Please make sure to write out the value of each parameter you know, and explain your adjustments in a short text. If you are missing data (and you are), use a placeholder.
+
+::: {.callout-tip}
+As you don't have an OD-matrix, the model **does not need to be solved**! This task is about defining the model and understanding how simplifications can be made. Note, that the simplification of set $\mathcal{R}_{e,t}$ is especially important here.
+:::
+
+```{julia}
+#| output: false
+using JuMP
+metro_model = Model()
+```
+
+## 3. Inflow Control
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![Example: Fluctuations](https://images.beyondsimulations.com/ao/ao_metro-inflow_var.png)
+:::
+
+::: {.column width="50%"}
+![Example: Smoothed](https://images.beyondsimulations.com/ao/ao_metro-inflow_smooth.png)
+:::
+
+::::
+
+As there is a rather large fluctuation of allowed inflow between periods, you are asked to adjust your model. In the first period, the inflow at each station is supposed to be unrestricted. Thereafter, it is maximally allowed to change by 20 persons in both directions per period at each station.
+
+Can you extend your model to include the additional constraints?
+
+```{julia}
+
+
+
+```
+
+## 4. Bidirectional Flow
+
+:::: {.columns}
+
+![Bidirectional Metro Network](https://images.beyondsimulations.com/ao/ao_metro-metro_tutorial_bidirect.svg)
+
+The metro was improved and there is now the possibility to travel in both directions. How would this change the set $\mathcal{R}_{(MD,MA),7}$ from 1.?
+
+Write out the new set $\mathcal{R}_{(D,A),7}$ manually and shortly explain your answer.
+
+```{julia}
+#=
+
+
+
+=#
+```
+
+## 5. Capacity Analysis
+
+Although the system is two-directional now, the **overall number of trains of the metro provider has not changed**. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?
+
+Please explain your answer in a few sentences.
+
+```{julia}
+#=
+
+
+
+=#
+```
+
+---
+
+{{< include ../include/tutorial_end.qmd >}}
