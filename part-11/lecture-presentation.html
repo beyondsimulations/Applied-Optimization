@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.6.30">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
-  <title>Applied Optimization with Julia – Lecture XII - Passenger Flow Control in Urban Rail</title>
+  <title>Applied Optimization with Julia – Lecture XI - Arena Seat Planning under Distancing Rules</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -325,7 +325,7 @@
     <div class="slides">
 
 <section id="title-slide" data-background-color="#025259" class="quarto-title-block center">
-  <h1 class="title">Lecture XII - Passenger Flow Control in Urban Rail</h1>
+  <h1 class="title">Lecture XI - Arena Seat Planning under Distancing Rules</h1>
   <p class="subtitle">Applied Optimization with Julia</p>
 
 <div class="quarto-title-authors">
@@ -345,124 +345,62 @@ Dr.&nbsp;Tobias Vlćek
 <h1><span class="flow">Introduction</span></h1>
 
 </section>
-<section id="fifa-world-cup-2022-in-qatar" class="slide level2" data-background-image="https://images.unsplash.com/photo-1658490505550-60191ee61ec6?q=80&amp;w=4334&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
-<h2><span class="invert-font">FIFA World Cup 2022 in Qatar</span></h2>
+<section id="covid-19-pandemic" class="slide level2" data-background-image="https://images.unsplash.com/photo-1583423230902-b653abc541eb?q=80&amp;w=3732&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Covid-19 Pandemic</span></h2>
 <div class="footer">
 
 </div>
 </section>
-<section id="public-transport" class="slide level2">
-<h2>Public transport</h2>
+<section id="challenges-for-live-events" class="slide level2">
+<h2>Challenges for Live Events</h2>
 <ul>
-<li>FIFA Worldcup 2022 took place in a <span class="highlight">small region</span></li>
-<li>The capacity of the metro system was <strong>finite</strong></li>
-<li>More than <span class="highlight">1 million tourists</span> where expected</li>
-<li>Metro usage was <strong>free for all ticket holders</strong></li>
-<li>Transport methods were expected to be <strong>overloaded</strong></li>
+<li>Overall number of participants at events <strong>was restricted</strong></li>
+<li>Certain <strong>spacing between participants</strong> had to be ensured<br>
+</li>
+<li>Larger events required <strong>vaccination certificates</strong> for all</li>
 </ul>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>What could become an issue?</strong></p>
+<p><span class="question">Question:</span> <strong>What are the main issues for the organizers?</strong></p>
 </div>
 </section>
-<section id="crowd-disasters" class="slide level2" data-background-image="https://images.beyondsimulations.com/ao/ao_metro-crowd.png" data-background-size="cover" data-background-position="center">
-<h2><span class="invert-font">Crowd Disasters</span></h2>
+<section id="main-difficulties" class="slide level2">
+<h2>Main Difficulties</h2>
+<ul>
+<li>Organization of larger events <strong>is costly</strong></li>
+<li>Even without a pandemic a <strong>financial risk</strong></li>
+<li><strong>Administrative Burden</strong> for vaccination certificates</li>
+<li>Reduced capacity is a <strong>loss of revenue</strong></li>
+<li>Implementing and enforcing <strong>distancing rules</strong></li>
+<li>Managing <strong>different priorities</strong> of groups</li>
+</ul>
+</section>
+<section id="idea-optimizing-seating-plans" class="slide level2" data-background-image="https://images.unsplash.com/photo-1602453870769-970391ee6fc1?q=80&amp;w=3925&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Idea: Optimizing Seating Plans</span></h2>
 <div class="footer">
 
 </div>
 </section>
-<section id="potential-locations" class="slide level2">
-<h2>Potential locations</h2>
-<p><span class="question">Question:</span> <strong>Where could crowd disasters happen?</strong></p>
-<div class="fragment">
+<section id="background" class="slide level2">
+<h2>Background</h2>
 <ul>
-<li>At event venues and in waiting areas</li>
-<li>At intersections of multiple pedestrian flows</li>
-<li>In narrow passages and entrances</li>
-<li>On crowded metro platforms and transfer stations</li>
-<li>At ticket/turnstile bottlenecks and emergency exits</li>
-</ul>
-</div>
-</section>
-<section id="metrosystem-of-doha" class="slide level2">
-<h2>Metrosystem of Doha</h2>
-
-<img data-src="https://images.byndsim.com/ao/ao_metro-metro.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="main-bottleneck" class="slide level2">
-<h2>Main Bottleneck</h2>
-<p><span class="question">Question:</span> <strong>What could be a potential bottleneck?</strong></p>
-<div class="fragment">
-<ul>
-<li>Red Line has twice the capacity of the Green and Gold Line</li>
-<li>People use the metro to get to the event venues</li>
-</ul>
-</div>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>What could be the issue?</strong></p>
-<ul>
-<li>Imagine a match at a stadium along the Gold line</li>
-<li>People from Red and Green line will try to get there</li>
-<li>This will cause a <span class="highlight">massive crowd at transfer stations</span></li>
-</ul>
-</div>
-</section>
-<section id="visualization" class="slide level2">
-<h2>Visualization</h2>
-
-<img data-src="https://images.byndsim.com/ao/ao_metro-metro_overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch"><ul>
-<li>10 people want to start per minute at <strong>each station</strong></li>
-<li>Everybody wants to get to <strong>station D</strong></li>
-</ul>
-</section>
-<section id="closer-look-at-the-metro-system" class="slide level2">
-<h2>Closer look at the Metro System</h2>
-
-<img data-src="https://images.byndsim.com/ao/ao_metro-metro_zoom.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="capacities-inside-the-stations" class="slide level2">
-<h2>Capacities inside the stations</h2>
-<ul>
-<li>Capacities <strong>inside the stations</strong> are limited as well</li>
-<li>These include the escalators, stairs, and elevators</li>
-<li>But also the platforms and the ticket gates</li>
+<li><strong>Applications:</strong> sport arenas, concert halls, movie theaters, lecture halls, etc.</li>
+<li>People from the same group are <strong>seated together</strong></li>
+<li>Venues have <strong>specific seating</strong>, season tickets, VIPs, etc.</li>
 </ul>
 <div class="fragment">
-<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Warning</strong></p>
+<p><strong>Important</strong></p>
 </div>
 <div class="callout-content">
-<p>This can lead to <span class="highlight">overcrowding and potential crowd disasters!</span></p>
+<p>Optimizing seating plans can help to <strong>maximize revenue</strong> while ensuring distancing rules and other constraints are met.</p>
 </div>
 </div>
 </div>
-</div>
-</section>
-<section id="general-issues" class="slide level2">
-<h2>General Issues</h2>
-<p><span class="question">Question:</span> <strong>What could also be an issue?</strong></p>
-<div class="fragment">
-<ul>
-<li>Often unknown <strong>how many people</strong> exactly will participate</li>
-<li>Gathering data is <span class="highlight">extremely importand and difficult</span></li>
-<li>Crowd behavior can be <span class="highlight">unpredictable and dynamic</span></li>
-<li>Weather conditions may affect <strong>transportation preferences</strong></li>
-<li>Cultural factors influence <strong>crowd movement patterns</strong></li>
-<li>Emergency situations require <strong>flexible contingency plans</strong></li>
-</ul>
-</div>
-</section>
-<section id="section" class="slide level2 loud-slide">
-<h2></h2>
-<div class="r-fit-text">
-<p>Let’s take a</p>
-<p>closer look at the</p>
-<p>problem structure!</p>
-</div>
-<div class="footer">
-
 </div>
 </section></section>
 <section>
@@ -470,17 +408,125 @@ Dr.&nbsp;Tobias Vlćek
 <h1><span class="flow">Problem Structure</span></h1>
 
 </section>
-<section id="objective" class="slide level2">
-<h2>Objective</h2>
-<p><span class="question">Question:</span> <strong>What could be the objectives of the authorities?</strong></p>
+<section id="example-two-different-plans" class="slide level2">
+<h2>Example: Two different plans</h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="https://images.byndsim.com/ao/ao_arena-layout_starr.png"></p>
+<figcaption>Fixed double-seat layout</figcaption>
+</figure>
+</div>
+</div><div class="column" style="width:10%;">
+
+</div><div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="https://images.byndsim.com/ao/ao_arena-layout_flex.png"></p>
+<figcaption>Flexible group-value layout</figcaption>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="different-approaches-possible" class="slide level2">
+<h2>Different Approaches Possible</h2>
+<ol type="1">
+<li>Operational</li>
+<li>Tactical</li>
+<li>Strategic</li>
+</ol>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What are these approaches in general and how do they relate to arena seating?</strong></p>
+</div>
+</section>
+<section id="operational" class="slide level2">
+<h2>Operational</h2>
+<ul>
+<li><strong>Short-term</strong>, day-to-day decisions</li>
+<li>Focused on <span class="highlight">immediate execution</span></li>
+</ul>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What is an example for this approach?</strong></p>
+</div>
 <div class="fragment">
 <ul>
-<li>A <span class="highlight">safe and successful event</span> as host country</li>
-<li>Good <span class="highlight">publicity and a positive recognition</span> worldwide<br>
-</li>
-<li><span class="highlight">Satisfied visitors</span> that enjoyed their time</li>
+<li>Given <strong>tomorrow’s demand</strong> of differently sized groups</li>
+<li>Score groups (importance, sponsors, VIP, season ticket,…)</li>
+<li>Assigning specific seats for <strong>tomorrow’s event</strong></li>
 </ul>
 </div>
+</section>
+<section id="tactical" class="slide level2">
+<h2>Tactical</h2>
+<ul>
+<li><strong>Medium-term</strong> planning (weeks to months)</li>
+<li>Bridges operational and strategic levels</li>
+</ul>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What is an example for this approach?</strong></p>
+</div>
+<div class="fragment">
+<ul>
+<li>Given distribution of <strong>expected demand</strong> for groups</li>
+<li>Score groups (importance, sponsors, VIP, season ticket,…)</li>
+<li>Plan seating arrangements for an <strong>upcoming season</strong></li>
+</ul>
+</div>
+</section>
+<section id="strategic" class="slide level2">
+<h2>Strategic</h2>
+<ul>
+<li>Long-term planning (months to years)</li>
+<li>Focus on overall goals and policies</li>
+</ul>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What is an example for this approach?</strong></p>
+</div>
+<div class="fragment">
+<ul>
+<li>Designing flexible seating layouts that work for scenarios</li>
+<li>Maximize the overall <strong>space utilization</strong></li>
+<li>Sell the resulting maximized seating pattern on <strong>market</strong></li>
+</ul>
+</div>
+</section>
+<section id="main-question" class="slide level2" data-background-image="https://images.unsplash.com/photo-1604975701397-6365ccbd028a?q=80&amp;w=2670&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Main Question</span></h2>
+<p><span class="invert-font"><span class="task">Task:</span> <strong>Fill the seating area given distancing regulations and venue-specific constraints.</strong></span></p>
+<p><span class="fragment invert-font"><span class="question">Question:</span> <strong>Any ideas on how to approach this?</strong></span></p>
+<div class="footer">
+
+</div>
+</section></section>
+<section>
+<section id="knapsack" class="title-slide slide level1 title center">
+<h1><span class="flow">Knapsack</span></h1>
+
+</section>
+<section id="knapsack-problem" class="slide level2">
+<h2>Knapsack Problem</h2>
+
+<img data-src="https://images.byndsim.com/ao/ao_arena-knapsack.svg" class="r-stretch"><ul>
+<li><span class="highlight">Standard model in Operations Research</span></li>
+<li><strong>Select items</strong> from a pool under <strong>capacity constraints</strong></li>
+</ul>
+</section>
+<section id="knapsack-problem-in-2d" class="slide level2">
+<h2>Knapsack Problem in 2D</h2>
+
+<img data-src="https://images.byndsim.com/ao/ao_arena-knapsack_2d.svg" class="r-stretch"><ul>
+<li>Now, Items block space in 2D, as illustrated here</li>
+</ul>
+</section>
+<section id="adaption-to-seating" class="slide level2">
+<h2>Adaption to Seating</h2>
+<ul>
+<li>Horizontal dimension to place groups of participants</li>
+<li>Vertical dimension to ensure enough spacing between rows</li>
+<li>Maximize the “value” of the allocated groups</li>
+<li>Value can be the number of seats or a score</li>
+</ul>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
@@ -488,122 +534,113 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Note: We can model none of the above directly!</strong></p>
+<p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p>But we can assist in the estimation of transport demands and the design of operational plans to ensure public <strong>safety</strong> and a <strong>smooth transportation</strong> through the city.</p>
+<p>Idea behind the model was developed by <a href="https://www.desior.net/">Dr.&nbsp;Matthes Koch</a>.</p>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="underlying-problem" class="slide level2">
-<h2>Underlying Problem</h2>
-<p><span class="question">Question:</span> <strong>Can we just start modeling?</strong></p>
-<div class="fragment">
-<ul>
-<li>First, we need to understand the <strong>movement patterns</strong></li>
-<li>Event is <strong>unprecedented</strong>, movement patterns are unknown</li>
-<li>Multiple <span class="highlight">concurrent events</span> affect flow patterns</li>
-</ul>
-</div>
-<div class="fragment">
-<div class="callout callout-tip callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Tip: We need to estimate the data first!</strong></p>
-</div>
-<div class="callout-content">
-<p>This is a <strong>huge challenge</strong>, but we can use <strong>simulation</strong> to estimate the data.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="simulation" class="slide level2">
-<h2>Simulation</h2>
-<ul>
-<li>Based on <span class="highlight">publicly available data</span> from the area</li>
-<li>Simulates <strong>all individuals</strong> participating at the event</li>
-<li>Includes <strong>all transportation infrastructure</strong></li>
-<li><span class="highlight">Individual mode choice</span> based on a choice model</li>
-</ul>
-<div class="fragment">
-<div class="callout callout-tip callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Tip: Julia is a great tool for this!</strong></p>
-</div>
-<div class="callout-content">
-<p>Simulations was build in Julia. With 1,000,000 individuals walking,using cars, busses, and the metro, a day took <strong>less than 5 minutes</strong>.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="results-of-the-simulation" class="slide level2">
-<h2>Results of the Simulation</h2>
-<div class="column" style="width:50%;">
-<p><img data-src="https://images.byndsim.com/ao/ao_metro-train_section.png" style="width:85.0%"></p>
-</div><div class="column" style="width:50%;">
-<ul>
-<li>Detailed movement patterns throughout the region</li>
-<li>Potential sections at risk in the transport infrastructure</li>
-<li>Potential capacity overloads at event locations<br>
-</li>
-</ul>
-</div></section>
-<section id="section-1" class="slide level2 loud-slide">
-<h2></h2>
-<div class="r-fit-text">
-<p>But it is still</p>
-<p>based on a lot</p>
-<p>of assumptions!</p>
-</div>
-<div class="footer">
+<section id="hands-on-exercise" class="slide level2">
+<h2>Hands-on Exercise</h2>
+<p><span class="task">Task:</span> <strong>Allocate as many high-value groups as possible.</strong></p>
 
-</div>
+<img data-src="https://images.byndsim.com/ao/ao_arena-empty_exercise.svg" class="r-stretch"></section>
+<section id="available-groups" class="slide level2 smaller">
+<h2>Available Groups</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Grouptype</th>
+<th>Req. Seats</th>
+<th>Score</th>
+<th>Available</th>
+<th>Allocated</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>a</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>b</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>c</td>
+<td>2</td>
+<td>4</td>
+<td>3</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>d</td>
+<td>4</td>
+<td>4</td>
+<td>5</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>e</td>
+<td>4</td>
+<td>5</td>
+<td>2</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>f</td>
+<td>6</td>
+<td>6</td>
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>g</td>
+<td>6</td>
+<td>12</td>
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="main-risk-metro" class="slide level2" data-background-image="https://images.byndsim.com/ao/ao_metro-risk_crowd.png" data-background-size="cover" data-background-position="center">
-<h2><span class="invert-font">Main risk: Metro</span></h2>
-<div class="footer">
-
-</div>
-</section>
-<section id="idea" class="slide level2">
-<h2>Idea</h2>
-<p><span class="question">Question:</span> <strong>What can we do to prevent crowd disasters?</strong></p>
-<div class="fragment">
+<section id="seating-constraints" class="slide level2">
+<h2>Seating Constraints</h2>
 <ul>
-<li>Regulate the <strong>inflow</strong> at each individual station</li>
-<li>Ensure utilized capacity is <span class="highlight">always within bounds</span></li>
+<li>1 empty seat <strong>between</strong> groups</li>
+<li>1 empty seat <strong>front-to-back</strong></li>
+<li>1 empty seat <strong>diagonally</strong></li>
+<li>Only <strong>2 groups per row</strong> are allowed</li>
+<li>Grey seats represent <strong>obstacles</strong></li>
 </ul>
-</div>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>What could we try to model?</strong></p>
-</div>
-<div class="fragment">
-<ul>
-<li><span class="highlight">Minimize the queues</span> outside of the metro stations</li>
-<li>Based on the <strong>allowed inflow</strong> and origin-destination data</li>
-<li>Adhering to the <strong>capacity constraints</strong></li>
-</ul>
-</div>
-</section>
-<section id="difficulty" class="slide level2">
-<h2>Difficulty</h2>
-
-<img data-src="https://images.byndsim.com/ao/ao_metro-metro_inflow_impact.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="fragment">
-<ul>
-<li>Movement patterns have different origin-destination pairs</li>
-<li>Regulating the inflow does not affect the destination</li>
-</ul>
+<p>You have 5 minutes to find a solution.</p>
+<p><span class="question">Question:</span> <strong>What is your total score?</strong></p>
 </div>
 </section></section>
 <section>
@@ -611,41 +648,15 @@ Dr.&nbsp;Tobias Vlćek
 <h1><span class="flow">Model Formulation</span></h1>
 
 </section>
-<section id="graph-sets" class="slide level2">
-<h2>Graph Sets?</h2>
-<p><span class="question">Question:</span> <strong>What could be the sets for the graph?</strong></p>
-
-<img data-src="https://images.byndsim.com/ao/ao_metro-metro_overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="graph-sets-1" class="slide level2">
-<h2>Graph Sets?</h2>
-<ul>
-<li><span class="math inline">\(\mathcal{G}\)</span> - Connected digraph of the metro network <span class="math inline">\(\mathcal{G}=(\mathcal{O},\mathcal{E})\)</span></li>
-<li><span class="math inline">\(\mathcal{O}\)</span> - Set of metro stations, indexed by <span class="math inline">\(o\)</span></li>
-<li><span class="math inline">\(\mathcal{E}\)</span> - Set of directed arcs between connected stations</li>
-</ul>
+<section id="sets" class="slide level2">
+<h2>Sets?</h2>
+<p><span class="question">Question:</span> <strong>What could be the sets?</strong></p>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Note: These are the easier sets.</strong></p>
-</div>
-<div class="callout-content">
-<p>These simply help us to represent the entire metro system as a graph with different nodes <span class="math inline">\(\mathcal{O}\)</span> and arcs <span class="math inline">\(\mathcal{E}\)</span> between connected stations.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="time-sets" class="slide level2">
-<h2>Time Sets?</h2>
-<p><span class="question">Question:</span> <strong>What could be the time sets?</strong></p>
-<div>
 <ul>
-<li class="fragment"><span class="math inline">\(\mathcal{T}\)</span> - Set of minutes in the time horizon, indexed by <span class="math inline">\(t\)</span></li>
-<li class="fragment"><span class="math inline">\(\mathcal{P}\)</span> - Set of periods in the observed time horizon, where <span class="math inline">\(p \in \{p_1, p_2, \dots,p_n\}\)</span></li>
+<li><span class="math inline">\(\mathcal{G}\)</span> - Set of groups, indexed by <span class="math inline">\(g\)</span></li>
+<li><span class="math inline">\(\mathcal{R}\)</span> - Set of rows, indexed by <span class="math inline">\(r\)</span></li>
+<li><span class="math inline">\(\mathcal{C}\)</span> - Set of columns, indexed by <span class="math inline">\(c\)</span></li>
+<li><span class="math inline">\(\mathcal{C}_r\)</span> - Available seats of row <span class="math inline">\(r\)</span>, indexed by <span class="math inline">\(c\)</span></li>
 </ul>
 </div>
 <div class="fragment">
@@ -655,58 +666,13 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Note: Number of periods</strong></p>
+<p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p>We further define <span class="math inline">\(n\)</span> as the <strong>number of periods in observed time horizon.</strong></p>
+<p><span class="math inline">\(\mathcal{C}_r\)</span> ensures that we only consider unblocked seats in each row.</p>
 </div>
 </div>
 </div>
-</div>
-</section>
-<section id="periods" class="slide level2">
-<h2>Periods</h2>
-<p><span class="question">Question:</span> <strong>Why do we add periods here?</strong></p>
-<div class="fragment">
-<ul>
-<li>Staff needs <strong>clear</strong>, consistent instructions</li>
-<li>Frequent changes in flow <span class="highlight">increase risk of errors</span></li>
-<li><strong>Easier</strong> to manage and communicate for planners</li>
-</ul>
-</div>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Note: Period Length</strong></p>
-</div>
-<div class="callout-content">
-<p>We define the period length as the length of the period in minutes measured as <span class="math inline">\(m\)</span> minutes, which is the <strong>same for all periods</strong>.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="mapping-minutes-to-periods" class="slide level2">
-<h2>Mapping Minutes to Periods</h2>
-<ul>
-<li>We can define an <strong>additional set</strong> with their relation</li>
-<li>It specifies the relation of <span class="highlight">periods <span class="math inline">\(p\)</span> to minutes <span class="math inline">\(t\)</span>.</span></li>
-</ul>
-<p><span class="math display">\[
-    I_p =\{t \in \mathcal{T}|(p-1) \times m + 1 \leq t \leq p \times m\} \quad \forall p \in \mathcal{P}
-\]</span></p>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>Can anybody explain it?</strong></p>
-</div>
-<div class="fragment">
-<ul>
-<li><span class="math inline">\(I_p\)</span> is the set of minutes <span class="math inline">\(t\)</span> that belong to period <span class="math inline">\(p\)</span></li>
-<li>Minutes are <strong>not overlapping</strong>, but they are <strong>continuous</strong></li>
-</ul>
 </div>
 </section>
 <section id="parameters" class="slide level2">
@@ -714,96 +680,12 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could be possible parameters?</strong></p>
 <div class="fragment">
 <ul>
-<li><span class="math inline">\(q_{o,d,p}\)</span> - Demand from station <span class="math inline">\(o\)</span> to <span class="math inline">\(d\)</span> with <span class="math inline">\(o,d \in \mathcal{O}\)</span> in <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(d_{e}\)</span> - Travel time (min) of the arcs <span class="math inline">\(e \in \mathcal{E}\)</span></li>
-<li><span class="math inline">\(c_e\)</span> - Max. allowed arc entry rate <span class="math inline">\(e\)</span> per minute with <span class="math inline">\(e \in \mathcal{E}\)</span></li>
-<li><span class="math inline">\(c_{o}^{min}\)</span> - Min. station entry rate <span class="math inline">\(o\)</span> per minute with <span class="math inline">\(o \in \mathcal{O}\)</span></li>
-<li><span class="math inline">\(c_{o}^{max}\)</span> - Max. station entry rate <span class="math inline">\(o\)</span> per minute with <span class="math inline">\(o \in \mathcal{O}\)</span></li>
-<li><span class="math inline">\(\alpha\)</span> - Maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
+<li><span class="math inline">\(p_r\)</span> - Maximal number of groups allowed in one row <span class="math inline">\(r\)</span></li>
+<li><span class="math inline">\(d_g\)</span> - Required seats of a group <span class="math inline">\(g\)</span> in a row</li>
+<li><span class="math inline">\(h\)</span> - Safety distance between groups sitting next to each other</li>
+<li><span class="math inline">\(b\)</span> - Vertical safety distance between groups</li>
+<li><span class="math inline">\(v_g\)</span> - Value of an allocation of the group <span class="math inline">\(g\)</span></li>
 </ul>
-</div>
-</section>
-<section id="metro-movement" class="slide level2">
-<h2>Metro Movement</h2>
-<p><span class="question">Question:</span> <strong>How do people move inside the metro?</strong></p>
-<div class="fragment">
-<ul>
-<li>Simple network: assume people use the <strong>shortest path</strong></li>
-<li>Use <span class="highlight">Djikstra’s algorithm</span> to compute it</li>
-<li>From each station to all other stations</li>
-</ul>
-</div>
-<div class="fragment">
-<div class="callout callout-tip callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Tip: We can save the results in a new set <span class="math inline">\(\mathcal{C}_{o,d}\)</span></strong></p>
-</div>
-<div class="callout-content">
-<p>This will help us to model the movement inside the metro.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="shortest-paths-sp" class="slide level2">
-<h2>Shortest Paths (SP)</h2>
-<ul>
-<li><span class="math inline">\(\mathcal{C}_{o,d}\)</span> - Set of arcs <span class="math inline">\(e \in \mathcal{E}\)</span> on the SP from <span class="math inline">\(o,d \in \mathcal{O}\)</span></li>
-</ul>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Note</strong></p>
-</div>
-<div class="callout-content">
-<p>Now we compute the <strong>travel time on the shortest paths.</strong> One parameter for the SP from <strong>station to station</strong> and one for the SP from <strong>station to arc</strong>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="fragment">
-<ul>
-<li><span class="math inline">\(d_{o,d}\)</span> - travel time (min) on SP from <span class="math inline">\(o \in \mathcal{O}\)</span> to <span class="math inline">\(d \in \mathcal{O}\)</span></li>
-<li><span class="math inline">\(d_{o,e}\)</span> - travel time (min) on SP from <span class="math inline">\(o \in \mathcal{O}\)</span> to <span class="math inline">\(e \in \mathcal{E}\)</span></li>
-</ul>
-</div>
-</section>
-<section id="people-spreading" class="slide level2">
-<h2>People Spreading</h2>
-<p><span class="question">Question:</span> <strong>How do people spread?</strong></p>
-
-<img data-src="https://images.byndsim.com/ao/ao_metro-metro_inflow_impact.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="ratio-of-origin-destination" class="slide level2">
-<h2>Ratio of Origin-Destination</h2>
-<ul>
-<li>We <strong>cannot control</strong> the destination of the passengers</li>
-<li>Thus we assume that people spread <span class="highlight">based on destination</span></li>
-</ul>
-<div class="fragment">
-<p><span class="math display">\[\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \mathcal{O}, p\in \mathcal{P}\]</span></p>
-</div>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Note</strong></p>
-</div>
-<div class="callout-content">
-<p>Based on the ratio of the different destinations <span class="math inline">\(d\)</span> to the total queue for each station <span class="math inline">\(o \in \mathcal{O}\)</span> in each period <span class="math inline">\(p \in \mathcal{P}\)</span>.</p>
-</div>
-</div>
-</div>
 </div>
 </section></section>
 <section>
@@ -822,7 +704,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>Our goal is to:</strong></p>
 </div>
 <div class="callout-content">
-<p>Regulate the <strong>inflow</strong> at <strong>each individual station</strong> to <strong>minimize the queues</strong> outside the metro stations based on the allowed inflow while <strong>adhering to the capacity constraints.</strong></p>
+<p>Maximize the group values by filling the seating area given distancing regulations between groups and venue-specific constraints.</p>
 </div>
 </div>
 </div>
@@ -835,7 +717,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
-<p>There is <strong>one queue for all passenger flow directions</strong>, as managing multiple queues would be too complex for the planners!</p>
+<p>Each group is represented by <strong>one binary variable</strong>. We don’t need to block each seat explicitly with a binary variable!</p>
 </div>
 </div>
 </div>
@@ -852,8 +734,9 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="callout-content">
 <ul>
-<li>All the metro stations, <span class="math inline">\(o \in \mathcal{O}\)</span></li>
-<li>All periods under observation, <span class="math inline">\(p \in \mathcal{P}\)</span></li>
+<li>All the groups, <span class="math inline">\(g \in \mathcal{G}\)</span></li>
+<li>All the rows, <span class="math inline">\(r \in \mathcal{R}\)</span></li>
+<li>All the columns, <span class="math inline">\(c \in \mathcal{C}\)</span></li>
 </ul>
 </div>
 </div>
@@ -861,7 +744,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could be our decision variable?</strong></p>
 <div class="fragment">
 <ul>
-<li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(X_{g,r,c}\)</span> - 1, if <strong>first left seat</strong> of <span class="math inline">\(g\)</span> is assigned to <span class="math inline">\(r\)</span> in <span class="math inline">\(c\)</span>, else 0</li>
 </ul>
 </div>
 </section>
@@ -876,16 +759,16 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>Our main objective is to:</strong></p>
 </div>
 <div class="callout-content">
-<p>Regulate the <strong>inflow</strong> at <strong>each individual station</strong> to <strong>minimize the queues</strong> outside the metro stations based on the allowed inflow while <strong>adhering to the capacity constraints.</strong></p>
+<p>Maximize the group values by filling the seating area given distancing regulations between groups and venue-specific constraints.</p>
 </div>
 </div>
 </div>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>How again are queues minimized?</strong></p>
+<p><span class="question">Question:</span> <strong>How again are groups allocated?</strong></p>
 </div>
 <div class="fragment">
 <ul>
-<li>By the allowed inflow <span class="math inline">\(X_{o,p}\)</span> subtracted from the queue</li>
+<li>By the allocation of the <strong>first left seat</strong> of a group to a row and column in the seating area</li>
 </ul>
 </div>
 </section>
@@ -901,8 +784,8 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="callout-content">
 <ul>
-<li><span class="math inline">\(q_{o,d,p}\)</span> - People queued to travel from station <span class="math inline">\(o\)</span> to <span class="math inline">\(d\)</span> with <span class="math inline">\(o,d \in \mathcal{O}\)</span> in period <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(v_g\)</span> - Value of an allocation of the group <span class="math inline">\(g\)</span></li>
+<li><span class="math inline">\(X_{g,r,c}\)</span> - 1, if <strong>first left seat</strong> of <span class="math inline">\(g\)</span> is assigned to <span class="math inline">\(r\)</span> in <span class="math inline">\(c\)</span>, else 0</li>
 </ul>
 </div>
 </div>
@@ -912,7 +795,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="fragment">
 <p><span class="math display">\[
-\text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
+\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_r} v_g \times X_{grc}
 \]</span></p>
 </div>
 </section></section>
@@ -924,76 +807,153 @@ Dr.&nbsp;Tobias Vlćek
 <section id="necessary-constraints" class="slide level2">
 <h2>Necessary Constraints</h2>
 <p><span class="question">Question:</span> <strong>What constraints do we need?</strong></p>
-
-<img data-src="https://images.byndsim.com/ao/ao_metro-metro_overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"><div class="fragment">
+<div class="fragment">
 <ul>
-<li>The capacity of each arc is <strong>not exceeded</strong></li>
-<li>Do not dispatch more people than are queued</li>
-<li>Do not dispatch less than the minimum allowed inflow</li>
+<li>Assign <strong>each group only once</strong></li>
+<li>Restrict the <strong>number of groups in each row</strong></li>
+<li>Ensure the <strong>horizontal social distance</strong></li>
+<li>Keep the <strong>vertical social distance</strong></li>
 </ul>
 </div>
 </section>
-<section id="section-2" class="slide level2 loud-slide">
-<h2></h2>
-<div class="r-fit-text">
-<p>Things are going to</p>
-<p>get a little</p>
-<p>complicated now!</p>
-</div>
-<div class="footer">
-
-</div>
-</section>
-<section id="central-question" class="slide level2">
-<h2>Central Question</h2>
-<p><span class="question">Question:</span> <strong>When do people flowing into the metro system change the arcs?</strong></p>
-<div class="fragment">
-<ul>
-<li>People enter metro station at <span class="math inline">\(o\)</span> with destination <span class="math inline">\(d\)</span></li>
-<li>They will lead to a usage of an arc <span class="math inline">\(e\)</span> on their SP</li>
-<li>This usage depends on their path and the travel times</li>
-</ul>
-</div>
-<div class="fragment">
-<div class="callout callout-tip callout-titled callout-style-default">
+<section id="assign-each-group-only-once" class="slide level2">
+<h2>Assign Each Group Only Once?</h2>
+<div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Tip: You’ll likely know what we need now!</strong></p>
+<p><strong>The goal of this constraint is to:</strong></p>
 </div>
 <div class="callout-content">
-<p>We can add a new set <span class="math inline">\(\mathcal{R}_{e,t}\)</span> to help us with this.</p>
+<p>Ensure that each group is allocated only once in the entire seating area.</p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We need the following:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(X_{g,r,c}\)</span> - 1, if first left seat of <span class="math inline">\(g\)</span> is assigned to <span class="math inline">\(r\)</span> in <span class="math inline">\(c\)</span>, else 0</li>
+<li><span class="math inline">\(\mathcal{G}\)</span> - Set of groups, indexed by <span class="math inline">\(g\)</span></li>
+<li><span class="math inline">\(\mathcal{R}\)</span> - Set of rows, indexed by <span class="math inline">\(r\)</span></li>
+<li><span class="math inline">\(\mathcal{C}_r\)</span> - Set of columns of row <span class="math inline">\(r\)</span>, indexed by <span class="math inline">\(c\)</span></li>
+</ul>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="set-of-time-delays" class="slide level2">
-<h2>Set of Time-Delays</h2>
+<section id="assign-each-group-only-once-1" class="slide level2">
+<h2>Assign Each Group Only Once</h2>
+<p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
+<div class="fragment">
 <p><span class="math display">\[
-\mathcal{R}_{e,t} = \{(o,d,p) \mid
-    \begin{array}{l}
-    (o,d) | o,d \in \mathcal{O}, \\
-    q_{o,d,p} &gt; 0, \\
-    e \in \mathcal{C}_{o,d}, \\
-    t-d_{o,e} \in I_p, \\
-    p \in \mathcal{P}\}
-    \end{array}
-    \quad \forall e \in \mathcal{E}, t \in \mathcal{T}
+\sum_{r \in \mathcal{R}} \sum_{c \in \mathcal{C}_r} X_{g,r,c} \leq 1 \quad \forall g \in \mathcal{G}
 \]</span></p>
-<div class="fragment">
-<p><span class="question">Question:</span> <strong>Who can explain this set?</strong></p>
 </div>
 <div class="fragment">
-<p>The set <span class="math inline">\(\mathcal{R}_{e,t}\)</span> contains <strong>all combinations</strong> <span class="math inline">\((o,d,p)\)</span> which trigger a <strong>capacity utilization</strong> of arc <span class="math inline">\(e\)</span> in period <span class="math inline">\(t\)</span>.</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>This “set packing” constraint ensures that a group is only <strong>assigned once</strong>.</p>
+</div>
+</div>
+</div>
 </div>
 </section>
-<section id="small-example" class="slide level2">
-<h2>Small Example</h2>
+<section id="restrict-groups-per-row" class="slide level2">
+<h2>Restrict Groups Per Row?</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The goal of this constraint is to:</strong></p>
+</div>
+<div class="callout-content">
+<p>Ensure that the number of groups in each row does not exceed the maximum allowed number of groups.</p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We need the following:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(p_r\)</span> - Maximal number of groups allowed in one row <span class="math inline">\(r\)</span></li>
+<li><span class="math inline">\(X_{g,r,c}\)</span> - 1, if first left seat of <span class="math inline">\(g\)</span> is assigned to <span class="math inline">\(r\)</span> in <span class="math inline">\(c\)</span>, else 0</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="assign-each-group-only-once-2" class="slide level2">
+<h2>Assign Each Group Only Once</h2>
+<p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
+<div class="fragment">
+<p><span class="math display">\[
+\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}} X_{g,r,c} \leq p_{r} \quad r \in \mathcal{R}
+\]</span></p>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>We want to place as <strong>many highly scoring groups as possible</strong>, but people need to move to buy drinks or use restroom. Depending on the venue, they should <strong>not cross other groups</strong> in the <strong>same row</strong>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="section" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>The last two</p>
+<p>constraints are</p>
+<p>somewhat tricky!</p>
+</div>
+<div class="footer">
 
-<img data-src="https://images.byndsim.com/ao/ao_metro-metro_set_r.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="fragment">
+</div>
+</section></section>
+<section>
+<section id="social-distance-implementation" class="title-slide slide level1 title center">
+<h1><span class="flow">Social Distance Implementation</span></h1>
+
+</section>
+<section id="central-idea" class="slide level2">
+<h2>Central Idea</h2>
+
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups.png" class="r-stretch"><div class="fragment">
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1003,28 +963,133 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
-<p>The set contains all possible o-d pairs and periods, that result in passengers starting at arc <span class="math inline">\((C,D)\)</span> at minute <span class="math inline">\(22\)</span>. For m=2, it would be:</p>
-<p><span class="math inline">\(\{((A,D),3),((B,D),5),((C,D),11),((E,D),9)\}\)</span>.</p>
+<p>Assume <strong>one seat between groups must be kept empty</strong>. If one group takes seat 8, it uses seats 8 and 9. We thus <strong>cannot allocate</strong> another group of size 2 to seats 6, 7 or 8.</p>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="section-3" class="slide level2 loud-slide">
+<section id="horizontal-social-distance" class="slide level2">
+<h2>Horizontal Social Distance?</h2>
+<p><span class="question">Question:</span> <strong>Any ideas how to implement this?</strong></p>
+<div class="fragment">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The goal of this constraint is to:</strong></p>
+</div>
+<div class="callout-content">
+<p>Ensure that the horizontal social distance is maintained between groups.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We need the following:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(X_{g,r,c}\)</span> - 1, if first left seat of <span class="math inline">\(g\)</span> is assigned to <span class="math inline">\(r\)</span> in <span class="math inline">\(c\)</span>, else 0</li>
+<li><span class="math inline">\(d_g\)</span> - Required seats of group <span class="math inline">\(g\)</span> in a row</li>
+<li><span class="math inline">\(h\)</span> - Safety distance between groups sitting next to each other</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="horizontal-social-distance-1" class="slide level2">
+<h2>Horizontal Social Distance</h2>
+<p>As the constraint is based on a rather complex set, you don’t have to find it by yourself.</p>
+<div class="fragment">
+<p><span class="math display">\[\sum_{g \in \mathcal{G}} \sum_{\tilde{c} \in \mathcal{C}_{c,g}} X_{g,r,\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}\]</span></p>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>At first glance, this constraint <span class="highlight">looks rather easy</span>, but it is not - it is based on the set <span class="math inline">\(\mathcal{C}_{c,g}\)</span> not defined yet in the lecture.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-social-distancing-set" class="slide level2">
+<h2>The Social Distancing Set</h2>
+<p><span class="math display">\[\mathcal{C}_{c,g} = \{\tilde{c}\in \mathcal{C}| c - d_g + 1 - h \leq \tilde{c} \leq c \}\]</span></p>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Remember:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(d_g\)</span> - Required seats of group <span class="math inline">\(g\)</span> in a row</li>
+<li><span class="math inline">\(h\)</span> - Safety distance between groups sitting next to each other</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>Can anybody explain the set?</strong></p>
+</div>
+</section>
+<section id="example-two-groups" class="slide level2 smaller">
+<h2>Example: Two Groups</h2>
+
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups.png" class="r-stretch"><p><span class="math display">\[\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} \leq 1 \quad (r=2,c=8)\]</span></p>
+</section>
+<section id="example-different-group-sizes" class="slide level2 smaller">
+<h2>Example: Different Group Sizes</h2>
+
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups_b.png" class="r-stretch"><p><span class="math display">\[\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{5}}+X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} \leq 1 \quad (r=2,c=8)\]</span></p>
+</section>
+<section id="example-three-groups" class="slide level2 smaller">
+<h2>Example: Three Groups</h2>
+
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-three_groups.png" class="r-stretch"><div class="temp-math-size">
+<style>
+.temp-math-size .math.display .MathJax  {
+  font-size: 85% !important;
+}
+</style>
+<p><span class="math display">\[
+\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} + \underbrace{X_{3,2,\textbf{5}}+X_{3,2,\textbf{6}}+X_{3,2,\textbf{7}}+X_{3,2,\textbf{8}}}_{g=3} \leq 1 \quad (r=2,c=8)
+\]</span></p>
+</div>
+</section>
+<section id="section-1" class="slide level2 loud-slide">
 <h2></h2>
 <div class="r-fit-text">
-<p>Essentially, we can use this</p>
-<p>set to compute the utilization</p>
-<p>of an arc at each minute based</p>
-<p>on the inflow level at the</p>
-<p>different stations and periods.</p>
+<p>Do you see</p>
+<p>the pattern?</p>
 </div>
 <div class="footer">
 
 </div>
 </section>
-<section id="ensure-capacity-utilization" class="slide level2">
-<h2>Ensure Capacity Utilization?</h2>
+<section id="vertical-social-distance" class="slide level2">
+<h2>Vertical Social Distance?</h2>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1034,7 +1099,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>The goal of this constraint is to:</strong></p>
 </div>
 <div class="callout-content">
-<p>Ensure that the capacity of each arc is not exceeded at any minute.</p>
+<p>Ensure that the vertical social distance is maintained between groups.</p>
 </div>
 </div>
 </div>
@@ -1045,27 +1110,48 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>We need the following variable, parameter and set:</strong></p>
+<p><strong>We need the following:</strong></p>
 </div>
 <div class="callout-content">
 <ul>
-<li><span class="math inline">\(q_{o,d,p}\)</span> - people waiting to travel from station <span class="math inline">\(o \in \mathcal{O}\)</span> to station <span class="math inline">\(d \in \mathcal{O}\)</span> in <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(c_e\)</span> - people max. allowed to enter arc <span class="math inline">\(e\)</span> per minute with <span class="math inline">\(e \in \mathcal{E}\)</span></li>
-<li><span class="math inline">\(\mathcal{R}_{e,t}\)</span> - mapping of station entries to arc <span class="math inline">\(e\)</span> in time <span class="math inline">\(t\)</span> with <span class="math inline">\(e \in \mathcal{E}\)</span> and <span class="math inline">\(t \in \mathcal{T}\)</span></li>
-<li><span class="math inline">\(\alpha\)</span> - maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
-<li><span class="math inline">\(X_{o,p}\)</span> - the allowed inflow per minute at metro station <span class="math inline">\(o\)</span> in the period <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(b\)</span> - Vertical safety distance between groups</li>
+<li><span class="math inline">\(X_{g,r,c}\)</span> - 1, if first left seat of <span class="math inline">\(g\)</span> is assigned to <span class="math inline">\(r\)</span> in <span class="math inline">\(c\)</span>, else 0</li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="ensure-capacity-utilization-1" class="slide level2">
-<h2>Ensure Capacity Utilization</h2>
+<section id="vertical-social-distance-1" class="slide level2">
+<h2>Vertical Social Distance</h2>
 <p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
 <div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>It is an extension of the horizontal social distance constraint we used before, but now we <strong>block a rectangular area</strong> instead of a single row.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
 <p><span class="math display">\[
-\sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} \quad \forall e \in \mathcal{E}, t \in \mathcal{T}
+\sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \mathcal{R}_r} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{cg}} X_{g\tilde{r}\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}
+\]</span></p>
+</div>
+</section>
+<section id="vertical-distance-set" class="slide level2">
+<h2>Vertical Distance Set</h2>
+<p><span class="question">Question:</span> <strong>What could be the set?</strong></p>
+<div class="fragment">
+<p><span class="math display">\[
+\mathcal{R}_{r} = \{\tilde{r}\in \mathcal{R}| r-b \leq \tilde{r} \leq r \}
 \]</span></p>
 </div>
 <div class="fragment">
@@ -1078,51 +1164,29 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p>Here, we combine the inflow at each station based on the o-d proportion and let the people spread through the network, checking that no arc is over-utilized at any minute.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="dispatch-only-available-people" class="slide level2">
-<h2>Dispatch Only Available People?</h2>
-<div class="callout callout-important callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>The goal of this constraint is to:</strong></p>
-</div>
-<div class="callout-content">
-<p>Ensure that we do not dispatch more people than are queued and less than the minimum allowed inflow, preventing over- and under-dispatching.</p>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>We need the following variables and parameters:</strong></p>
-</div>
-<div class="callout-content">
+<p>Remember:</p>
 <ul>
-<li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(q_{o,d,p}\)</span> - People queued to travel from station <span class="math inline">\(o\)</span> to <span class="math inline">\(d\)</span> with <span class="math inline">\(o,d \in \mathcal{O}\)</span> in <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(m\)</span> - period length in minutes</li>
+<li><span class="math inline">\(b\)</span> - Vertical safety distance between groups</li>
+<li><span class="math inline">\(X_{g,r,c}\)</span> - 1, if first left seat of <span class="math inline">\(g\)</span> is assigned to <span class="math inline">\(r\)</span> in <span class="math inline">\(c\)</span>, else 0</li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-</section>
-<section id="dispatch-only-available-people-1" class="slide level2">
-<h2>Dispatch Only Available People</h2>
-<p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
 <div class="fragment">
+<p>Let’s look at an <span class="highlight">example</span>.</p>
+</div>
+</section>
+<section id="example-two-groups-1" class="slide level2">
+<h2>Example: Two Groups</h2>
+
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups_vertical_b.png" class="r-stretch"><ul>
+<li>Yellow seats are <strong>blocked by the group</strong> in row 3 and column 8</li>
+<li>Blue allocations are possible (if second group has <strong>size 2</strong>)</li>
+</ul>
+</section>
+<section id="arena-seating-problem" class="slide level2">
+<h2>Arena Seating Problem</h2>
 <div class="temp-math-size">
 <style>
 .temp-math-size .math.display .MathJax  {
@@ -1130,44 +1194,15 @@ Dr.&nbsp;Tobias Vlćek
 }
 </style>
 <p><span class="math display">\[
-\min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{\min}\} \leq X_{o,p} \leq \max\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{\max}\} \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
+\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_r} v_g \times X_{g,r,c}
+\]</span> subject to: <span class="math display">\[
+\begin{align*}
+&amp; \sum_{r \in \mathcal{R}}\sum_{c \in \mathcal{C}_r} X_{g,r,c} \leq 1 &amp;&amp; \forall g \in \mathcal{G} \\
+&amp; \sum_{g \in \mathcal{G}}\sum_{c\in \mathcal{C}_r} X_{g,r,c} \leq p_r &amp;&amp; \forall r \in \mathcal{R} \\
+&amp; \sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \mathcal{R}_r} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{c,g}} X_{g,\tilde{r},\tilde{c}} \leq 1 &amp;&amp; \forall r\in \mathcal{R}, c\in \mathcal{C} \\
+&amp; X_{g,r,c} \in \{0,1\} &amp;&amp; \forall g \in \mathcal{G}, \forall r\in \mathcal{R}, c\in \mathcal{C}_r
+\end{align*}
 \]</span></p>
-</div>
-</div>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Note</strong></p>
-</div>
-<div class="callout-content">
-<p>We need this constraint for <strong>two reasons</strong>:</p>
-<ol type="1">
-<li>We could also dispatch more people than there are as this would <strong>minimize the objective value. </strong></li>
-<li>We also need to ensure that we can dispatch at <strong>least the minimum allowed inflow</strong> or less if the queue is smaller than the minimum allowed inflow.</li>
-</ol>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="metro-inflow-model" class="slide level2">
-<h2>Metro Inflow Model</h2>
-<div class="temp-math-size">
-<style>
-.temp-math-size .math.display .MathJax  {
-  font-size: 85% !important;
-}
-</style>
-<p><span class="math display">\[\begin{align*}
-    \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
-\end{align*}\]</span> subject to: <span class="math display">\[\begin{align*}
-    &amp;  \sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} &amp;&amp; \forall e \in \mathcal{E}, t \in \mathcal{T} \\
-    &amp; min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\} \leq X_{o,p} \leq max\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\} &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P}
-\end{align*}\]</span></p>
 </div>
 </section></section>
 <section>
@@ -1191,9 +1226,10 @@ Dr.&nbsp;Tobias Vlćek
 <div>
 <ul>
 <li class="fragment">What assumptions have we made?</li>
-<li class="fragment">What are likely issues that can arise if applied?</li>
-<li class="fragment">Have we thought in detail about queues?</li>
-<li class="fragment">Are shortest paths a feasible assumption?</li>
+<li class="fragment">Is our approach strategic or tactical/operational?</li>
+<li class="fragment">Have we considered all social distancing constraints?</li>
+<li class="fragment">What about aisle seats?</li>
+<li class="fragment">Can you think of any other real-world constraints?</li>
 </ul>
 </div>
 </section></section>
@@ -1202,75 +1238,76 @@ Dr.&nbsp;Tobias Vlćek
 <h1><span class="flow">Implementation and Impact</span></h1>
 
 </section>
-<section id="metro-inflow-optimization" class="slide level2" data-background-image="https://images.unsplash.com/photo-1658490505550-60191ee61ec6?q=80&amp;w=4334&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
-<h2><span class="invert-font">Metro Inflow Optimization</span></h2>
-<div class="fragment">
-<p><span class="invert-font"><span class="question">Question:</span> <strong>Can this be applied?</strong></span></p>
+<section id="arena-seating-optimization" class="slide level2" data-background-image="https://images.beyondsimulations.com/ao/ao_arena-vfl_matthes_justus.jpg" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Arena Seating Optimization</span></h2>
 <div class="footer">
 
 </div>
-</div>
 </section>
-<section id="metro-inflow-problem" class="slide level2">
-<h2>Metro Inflow Problem</h2>
+<section id="case-study-vfl-osnabrück" class="slide level2">
+<h2>Case study VfL Osnabrück</h2>
 <ul>
-<li>Solved very fast <span class="highlight">within seconds</span> for realistic problem sizes</li>
-<li><strong>But</strong> we cannot plan or control the metro inflow</li>
-<li>Queues are <strong>too simplified</strong> with passengers disappearing</li>
+<li>Relegation Return Match in 2021</li>
+<li>241 additional seats allocated (+12 percent)</li>
+<li>Compliance with all distancing requirements</li>
+<li>Approval from authorities</li>
 </ul>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>Any ideas, how the current model could be improved or how it could be embedded into a heuristic?</strong></p>
-</div>
-</section>
-<section id="heuristic-step-wise-optimization" class="slide level2">
-<h2>Heuristic: Step-Wise Optimization</h2>
-<ul>
-<li>Solve the model for the time-horizon of a <strong>few periods</strong></li>
-<li>Fix the inflow in the <strong>current first period</strong></li>
-<li>Decrease capacity in the network <strong>based on the inflow</strong></li>
-<li>Transfer <strong>remaining queues</strong> into the subsequent period</li>
-<li><span class="highlight">Solve the model again</span></li>
-<li><strong>Repeat</strong>, until the inflow is computed for all periods</li>
-</ul>
-</section>
-<section id="transport-demand" class="slide level2">
-<h2>Transport Demand</h2>
-
-<img data-src="https://images.byndsim.com/ao/ao_metro-transportdemand.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="utilization-analysis" class="slide level2">
-<h2>Utilization Analysis</h2>
-
-<img data-src="https://images.byndsim.com/ao/ao_metro-arcutil.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="implementation" class="slide level2">
-<h2>Implementation</h2>
-<ul>
-<li><strong>Assumption of known destinations</strong> based is strong</li>
-<li>Movements <strong>seemed to follow our forecasts</strong></li>
-<li>We did achieve our goal of <strong>metro inflow control</strong></li>
-<li>Simulation was used to <strong>estimate the inflows</strong></li>
-</ul>
-<div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Note</strong></p>
+<p><strong>Important</strong></p>
 </div>
 <div class="callout-content">
-<p>Few dangerous situations, especially at the FIFA Fan Fest, were <strong>handled well</strong> by the authorities.</p>
+<p>Estimated additional revenue of <strong>8,435 EUR</strong> for one match.</p>
 </div>
 </div>
 </div>
 </div>
 </section>
+<section id="seating-plan" class="slide level2">
+<h2>Seating Plan</h2>
+
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-vfl_rechnung.png" class="r-stretch"></section>
+<section id="related-work" class="slide level2">
+<h2>Related Work</h2>
+<p><span class="highlight">Similar studies</span> have been conducted globally:</p>
+<ul>
+<li>US College-level venues, e.g.&nbsp;Football, Basketball, Hockey</li>
+<li>Music Hall Eindhoven</li>
+<li>Safe Seating Solutions platform</li>
+<li>General 2D-Knapsack applications</li>
+</ul>
+</section></section>
+<section>
+<section id="conclusion" class="title-slide slide level1 title center">
+<h1><span class="flow">Conclusion</span></h1>
+
+</section>
+<section id="optimization-benefits" class="slide level2">
+<h2>Optimization Benefits</h2>
+<ul>
+<li>Optimization enables <strong>rapid generation and evaluation</strong></li>
+<li>We can easily adapt to <strong>various distancing requirements</strong>:
+<ul>
+<li>Horizontal and vertical spacing between groups</li>
+<li>Groups per row limits</li>
+<li>Aisle seat restrictions</li>
+<li>Group size constraints</li>
+<li>Multi-row group allocation</li>
+</ul></li>
+</ul>
+</section>
 <section id="wrap-up" class="slide level2">
 <h2>Wrap Up</h2>
 <ul>
-<li>Model can help to achieve a <span class="highlight">good balance</span></li>
-<li>Can be adapted easily to <strong>any metro system worldwide </strong></li>
-<li>Especially interesting for <strong>larger Asian cities</strong></li>
+<li><span class="highlight">Revenue optimization</span> through applied optimization</li>
+<li><strong>Increased participant capacity</strong> vs basic approaches</li>
+<li>Flexible adaptation to <strong>various distancing requirements</strong></li>
+<li>Can be adapted easily to <strong>any seating requirements</strong></li>
 </ul>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-default">
@@ -1282,13 +1319,13 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>And that’s it for todays lecture!</strong></p>
 </div>
 <div class="callout-content">
-<p>We now have covered a metro inflow control problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial.</p>
+<p>We now have covered the arena seating problem based on a real-world application and are ready to start solving the corresponding tasks in the upcoming tutorial.</p>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="section-4" class="slide level2 loud-slide">
+<section id="section-2" class="slide level2 loud-slide">
 <h2></h2>
 <div class="r-fit-text">
 <p>Questions?</p>
@@ -1311,7 +1348,7 @@ Dr.&nbsp;Tobias Vlćek
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>Lecture XII - Passenger Flow Control in Urban Rail | Dr.&nbsp;Tobias Vlćek | <a href="../part-12/lecture-rail.html">Home</a></p>
+<p>Lecture XI - Arena Seat Planning under Distancing Rules | Dr.&nbsp;Tobias Vlćek | <a href="../part-11/lecture-distancing.html">Home</a></p>
 </div>
 </div></div>
 

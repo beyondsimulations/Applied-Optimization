@@ -1,67 +1,111 @@
 [
   {
+    "objectID": "part-13/tutorial-recap.html",
+    "href": "part-13/tutorial-recap.html",
+    "title": "Tutorial XIII - Recap and Discussion",
+    "section": "",
+    "text": "This will (hopefully) be the easiest tutorial of the entire course. Essentially, we will just use today’s tutorial as a last chance for you to ask questions and discuss the content of the course.",
+    "crumbs": [
+      "13 Recap",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-13/tutorial-recap.html#julia-programming-experience",
+    "href": "part-13/tutorial-recap.html#julia-programming-experience",
+    "title": "Tutorial XIII - Recap and Discussion",
+    "section": "Julia Programming Experience",
+    "text": "Julia Programming Experience\nAs this course introduced many of you to Julia programming, I’m particularly interested in your experience learning and working with this language. Your feedback will help determine if Julia remains the right choice for future iterations of this course and what additional programming support might be needed.\n\nHow did you find the learning experience of Julia in this course?\nWhat were the greatest challenges you faced while learning Julia?\nShould I have used a different programming language for this course?\nShould we have covered programming with AI in this course?",
+    "crumbs": [
+      "13 Recap",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-13/tutorial-recap.html#course-content-and-structure",
+    "href": "part-13/tutorial-recap.html#course-content-and-structure",
+    "title": "Tutorial XIII - Recap and Discussion",
+    "section": "Course Content and Structure",
+    "text": "Course Content and Structure\nThe course covered a wide range of optimization topics, from basic concepts to advanced applications. I’d like to understand which parts resonated with you and which areas might need adjustment in terms of depth and clarity.\n\nWhich topics would you have preferred to explore in more depth?\nWas there any topic you felt was covered too much?\nWhich of the topics would you recommend removing in exchange for a new topic in the future?\nHow could the tutorial instructions be improved for clarity?",
+    "crumbs": [
+      "13 Recap",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-13/tutorial-recap.html#learning-experience",
+    "href": "part-13/tutorial-recap.html#learning-experience",
+    "title": "Tutorial XIII - Recap and Discussion",
+    "section": "Learning Experience",
+    "text": "Learning Experience\nThe course utilized a web-based format with interactive elements and a bonus point system. Your feedback on these teaching methods and course mechanics will be valuable for improving the learning experience.\n\nHow did you find the website format for learning the material?\nWhat additional elements would enhance your learning?\nHow could the teaching of the course be improved?\nHow could the bonus point system be improved?",
+    "crumbs": [
+      "13 Recap",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-13/tutorial-recap.html#future-improvements",
+    "href": "part-13/tutorial-recap.html#future-improvements",
+    "title": "Tutorial XIII - Recap and Discussion",
+    "section": "Future Improvements",
+    "text": "Future Improvements\nLooking ahead, I want to ensure this course continues to evolve and meet students’ needs. Your suggestions for future developments and overall reflections will help shape the course’s direction.\n\nWhat type of exam would best demonstrate your understanding?\nPlease summarize your overall experience with the course?\nIs there any course at the university you would like to see in the future?\nHave I missed anything important? Here is your chance!",
+    "crumbs": [
+      "13 Recap",
+      "Tutorial"
+    ]
+  },
+  {
     "objectID": "part-12/tutorial-rail.html",
     "href": "part-12/tutorial-rail.html",
     "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
     "section": "",
-    "text": "Metro Network with 4 stations (A, B, C, D) connected in a loop\n\n\nConsider the depicted ‘Golden Line’ on the left with 4 different stations A, B, C, D. For an upcoming timeframe of 20 minutes divided into 10 periods, the transportation demand is going to exceed the available capacity of the network and each origin-destination pair will be requested by at least 1 passenger. To handle the inflow, queues will be put in place at each metro station.",
+    "text": "Introduction\n\nConsider the depicted ‘Golden Line’ on the left with 4 different stations A, B, C, D. For an upcoming timeframe of 20 minutes divided into 10 periods, the transportation demand is going to exceed the available capacity of the network and each origin-destination pair will be requested by at least 1 passenger. To handle the inflow, queues will be put in place at each metro station.\n\n\nThe Challenge\nYour task is to minimize the queues without exceeding the available transport capacity of max. 100 passengers per minute of each arc. A safety buffer per arc is not needed. Each station layout is excellent, with sufficient stairs and escalators. Thus, the station itself is fully capable of handling any inflow that may result from the optimized restricted inflow. Nonetheless, queues are still necessary as the arcs cannot handle each input.\n\n\n1. Flow Analysis\nSuppose we are in minute 7 at the arc of (D,A). Which inflows from which stations are going to impact the flow into the arc in this minute?\nWrite out the set \\(\\mathcal{R}_{(D,A),7}\\) and shortly explain your answer. You can write out the set in a comment, for example like this:\n#=\n{(A,B,1), (B,C,1), (C,D,1)}\n=#\n\n\n\n\n\n\nTip\n\n\n\nTo solve this task, it might be helpful to work with paper and pen to sketch the problem.\n\n\n\n#=\n\n\n\n=#\n\n\n\n2. Simplified Model\nCan you come up with a simpler model formulation based on the model of the lecture that restricts the inflow? First, define all sets, parameters, variables, and constraints necessary to model this simpler version.\nAnswer by defining the sets, parameters, variables, and constraints in the cell below as a JuMP model. Please make sure to write out the value of each parameter you know, and explain your adjustments in a short text. If you are missing data (and you are), use a placeholder.\n\n\n\n\n\n\nTip\n\n\n\nAs you don’t have an OD-matrix, the model does not need to be solved! This task is about defining the model and understanding how simplifications can be made. Note, that the simplification of set \\(\\mathcal{R}_{e,t}\\) is especially important here.\n\n\n\nusing JuMP\nmetro_model = Model()\n\n\n\n3. Inflow Control\n\n\n\n\n\nExample: Fluctuations\n\n\n\n\n\n\nExample: Smoothed\n\n\n\n\nAs there is a rather large fluctuation of allowed inflow between periods, you are asked to adjust your model. In the first period, the inflow at each station is supposed to be unrestricted. Thereafter, it is maximally allowed to change by 20 persons in both directions per period at each station.\nCan you extend your model to include the additional constraints?\n\n\n4. Bidirectional Flow\n\n\n\n\nBidirectional Metro Network\n\nThe metro was improved and there is now the possibility to travel in both directions. How would this change the set \\(\\mathcal{R}_{(MD,MA),7}\\) from 1.?Write out the new set \\(\\mathcal{R}_{(D,A),7}\\) manually and shortly explain your answer.\n#=\n\n\n\n=#\n\n5. Capacity Analysis\nAlthough the system is two-directional now, the overall number of trains of the metro provider has not changed. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?\nPlease explain your answer in a few sentences.\n\n#=\n\n\n\n=#\n\n\n\nSolutions\nYou will likely find solutions to most exercises online. However, I strongly encourage you to work on these exercises independently without searching explicitly for the exact answers to the exercises. Understanding someone else’s solution is very different from developing your own. Use the lecture notes and try to solve the exercises on your own. This approach will significantly enhance your learning and problem-solving skills.\nRemember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities. If you encounter difficulties, review the lecture materials, experiment with different approaches, and don’t hesitate to ask for clarification during class discussions.\nLater, you will find the solutions to these exercises online in the associated GitHub repository, but we will also quickly go over them in next week’s tutorial. To access the solutions, click on the Github button on the lower right and search for the folder with today’s lecture and tutorial. Alternatively, you can ask ChatGPT or Claude to explain them to you. But please remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities.",
     "crumbs": [
       "12 Metro",
       "Tutorial"
     ]
   },
   {
-    "objectID": "part-12/tutorial-rail.html#flow-analysis",
-    "href": "part-12/tutorial-rail.html#flow-analysis",
-    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
-    "section": "1. Flow Analysis",
-    "text": "1. Flow Analysis\nSuppose we are in minute 7 at the arc of (D,A). Which inflows from which stations are going to impact the flow into the arc in this minute?\nWrite out the set \\(\\mathcal{R}_{(D,A),7}\\) and shortly explain your answer. You can write out the set in a comment, for example like this:\n#=\n{(A,B,1), (B,C,1), (C,D,1)}\n=#\n\n\n\n\n\n\nTip\n\n\n\nTo solve this task, it might be helpful to work with paper and pen to sketch the problem.\n\n\n\n#=\n\n\n\n=#",
+    "objectID": "part-11/tutorial-distancing.html",
+    "href": "part-11/tutorial-distancing.html",
+    "title": "Tutorial XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "Remember the Example by hand from the lecture? In this tutorial, we will solve the arena seating problem by computer. As we approach the end of the course, we’ll remove some previous “guardrails” to give you more freedom in solving the problem.\n\n\n\n\n\n\nTip\n\n\n\nDon’t worry, if you cannot solve everything by yourself. Try your best and ask for help if you need it!",
     "crumbs": [
-      "12 Metro",
+      "11 Distancing",
       "Tutorial"
     ]
   },
   {
-    "objectID": "part-12/tutorial-rail.html#simplified-model",
-    "href": "part-12/tutorial-rail.html#simplified-model",
-    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
-    "section": "2. Simplified Model",
-    "text": "2. Simplified Model\nCan you come up with a simpler model formulation based on the model of the lecture that restricts the inflow? First, define all sets, parameters, variables, and constraints necessary to model this simpler version.\nAnswer by defining the sets, parameters, variables, and constraints in the cell below as a JuMP model. Please make sure to write out the value of each parameter you know, and explain your adjustments in a short text. If you are missing data (and you are), use a placeholder.\n\n\n\n\n\n\nTip\n\n\n\nAs you don’t have an OD-matrix, the model does not need to be solved! This task is about defining the model and understanding how simplifications can be made. Note, that the simplification of set \\(\\mathcal{R}_{e,t}\\) is especially important here.\n\n\n\nusing JuMP\nmetro_model = Model()",
+    "objectID": "part-11/tutorial-distancing.html#group-types-data",
+    "href": "part-11/tutorial-distancing.html#group-types-data",
+    "title": "Tutorial XI - Arena Seat Planning under Distancing Rules",
+    "section": "Group Types Data",
+    "text": "Group Types Data\nThe values of the groups are given in a table and as CSV file.\n\n\n\nGrouptype\nReq. Seats\nScore\nAvailable\n\n\n\n\na\n1\n1\n3\n\n\nb\n2\n2\n2\n\n\nc\n2\n4\n3\n\n\nd\n4\n4\n5\n\n\ne\n4\n5\n2\n\n\nf\n6\n6\n1\n\n\ng\n6\n12\n1\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe groups are given differently than in the lecture! Either adjust the data or the model, depending on what you think is easier.",
     "crumbs": [
-      "12 Metro",
+      "11 Distancing",
       "Tutorial"
     ]
   },
   {
-    "objectID": "part-12/tutorial-rail.html#inflow-control",
-    "href": "part-12/tutorial-rail.html#inflow-control",
-    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
-    "section": "3. Inflow Control",
-    "text": "3. Inflow Control\n\n\n\n\n\nExample: Fluctuations\n\n\n\n\n\n\nExample: Smoothed\n\n\n\n\nAs there is a rather large fluctuation of allowed inflow between periods, you are asked to adjust your model. In the first period, the inflow at each station is supposed to be unrestricted. Thereafter, it is maximally allowed to change by 20 persons in both directions per period at each station.\nCan you extend your model to include the additional constraints?",
+    "objectID": "part-11/tutorial-distancing.html#distance-requirements",
+    "href": "part-11/tutorial-distancing.html#distance-requirements",
+    "title": "Tutorial XI - Arena Seat Planning under Distancing Rules",
+    "section": "Distance Requirements",
+    "text": "Distance Requirements\nThe following distancing rules must be maintained:\n\nMinimum one empty seat between groups\nOne empty seat between rows\nOne empty seat diagonally\nMaximum two groups per row\nGrey seats are obstacles and cannot be used\n\n\nusing JuMP\nusing HiGHS\n\n# Suggested structure:\n# 1. Define sets (rows, seats, group types)\n# 2. Create parameters (scores, required seats, availability)\n# 3. Define variables\n# 4. Set objective function\n# 5. Add constraints\n# 6. Solve the model",
     "crumbs": [
-      "12 Metro",
+      "11 Distancing",
       "Tutorial"
     ]
   },
   {
-    "objectID": "part-12/tutorial-rail.html#bidirectional-flow",
-    "href": "part-12/tutorial-rail.html#bidirectional-flow",
-    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
-    "section": "4. Bidirectional Flow",
-    "text": "4. Bidirectional Flow\n\n\n\n\nBidirectional Metro Network\n\nThe metro was improved and there is now the possibility to travel in both directions. How would this change the set \\(\\mathcal{R}_{(MD,MA),7}\\) from 1.?Write out the new set \\(\\mathcal{R}_{(D,A),7}\\) manually and shortly explain your answer.\n#=\n\n\n\n=#\n\n5. Capacity Analysis\nAlthough the system is two-directional now, the overall number of trains of the metro provider has not changed. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?\nPlease explain your answer in a few sentences.\n\n#=\n\n\n\n=#\n\n\n\nSolutions\nYou will likely find solutions to most exercises online. However, I strongly encourage you to work on these exercises independently without searching explicitly for the exact answers to the exercises. Understanding someone else’s solution is very different from developing your own. Use the lecture notes and try to solve the exercises on your own. This approach will significantly enhance your learning and problem-solving skills.\nRemember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities. If you encounter difficulties, review the lecture materials, experiment with different approaches, and don’t hesitate to ask for clarification during class discussions.\nLater, you will find the solutions to these exercises online in the associated GitHub repository, but we will also quickly go over them in next week’s tutorial. To access the solutions, click on the Github button on the lower right and search for the folder with today’s lecture and tutorial. Alternatively, you can ask ChatGPT or Claude to explain them to you. But please remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities.",
+    "objectID": "part-11/tutorial-distancing.html#visualization",
+    "href": "part-11/tutorial-distancing.html#visualization",
+    "title": "Tutorial XI - Arena Seat Planning under Distancing Rules",
+    "section": "2. Visualization",
+    "text": "2. Visualization\nVisualize your answer with a plot in Julia. At first, this might seem difficult, but it is actually very easy.\nThe visualization will be a great tool to check if your solution is correct. We figure it is likely, that you won’t have an applicable solution after the first round, even if your model is working correctly.\nIf everything works from the start, great!\n\nusing Plots\n\n# Suggested visualization steps:\n# 1. Create a grid representation\n# 2. Map solution values to colors\n# 3. Use heatmap or scatter plot\n\nIf you encounter any difficulties, please document them here:\n\n#=\n\n\n\n=#",
     "crumbs": [
-      "12 Metro",
-      "Tutorial"
-    ]
-  },
-  {
-    "objectID": "part-12/tutorial-rail.html#capacity-analysis",
-    "href": "part-12/tutorial-rail.html#capacity-analysis",
-    "title": "Tutorial XII - Passenger Flow Control in Urban Rail",
-    "section": "5. Capacity Analysis",
-    "text": "5. Capacity Analysis\nAlthough the system is two-directional now, the overall number of trains of the metro provider has not changed. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?\nPlease explain your answer in a few sentences.\n\n#=\n\n\n\n=#",
-    "crumbs": [
-      "12 Metro",
+      "11 Distancing",
       "Tutorial"
     ]
   },
@@ -9932,9 +9976,934 @@
     "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course."
   },
   {
+    "objectID": "part-11/lecture-distancing.html",
+    "href": "part-11/lecture-distancing.html",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "Overall number of participants at events was restricted\nCertain spacing between participants had to be ensured\n\nLarger events required vaccination certificates for all\n\n. . .\nQuestion: What are the main issues for the organizers?\n\n\n\n\nOrganization of larger events is costly\nEven without a pandemic a financial risk\nAdministrative Burden for vaccination certificates\nReduced capacity is a loss of revenue\nImplementing and enforcing distancing rules\nManaging different priorities of groups\n\n\n\n\n\n\n\n\n\n\n\nApplications: sport arenas, concert halls, movie theaters, lecture halls, etc.\nPeople from the same group are seated together\nVenues have specific seating, season tickets, VIPs, etc.\n\n. . .\n\n\n\n\n\n\nImportant\n\n\n\nOptimizing seating plans can help to maximize revenue while ensuring distancing rules and other constraints are met.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#challenges-for-live-events",
+    "href": "part-11/lecture-distancing.html#challenges-for-live-events",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "Overall number of participants at events was restricted\nCertain spacing between participants had to be ensured\n\nLarger events required vaccination certificates for all\n\n. . .\nQuestion: What are the main issues for the organizers?",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#main-difficulties",
+    "href": "part-11/lecture-distancing.html#main-difficulties",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "Organization of larger events is costly\nEven without a pandemic a financial risk\nAdministrative Burden for vaccination certificates\nReduced capacity is a loss of revenue\nImplementing and enforcing distancing rules\nManaging different priorities of groups",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#background",
+    "href": "part-11/lecture-distancing.html#background",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "Applications: sport arenas, concert halls, movie theaters, lecture halls, etc.\nPeople from the same group are seated together\nVenues have specific seating, season tickets, VIPs, etc.\n\n. . .\n\n\n\n\n\n\nImportant\n\n\n\nOptimizing seating plans can help to maximize revenue while ensuring distancing rules and other constraints are met.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#example-two-different-plans",
+    "href": "part-11/lecture-distancing.html#example-two-different-plans",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Example: Two different plans",
+    "text": "Example: Two different plans\n\n\n\n\n\nFixed double-seat layout\n\n\n\n\n\n\n\n\nFlexible group-value layout",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#different-approaches-possible",
+    "href": "part-11/lecture-distancing.html#different-approaches-possible",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Different Approaches Possible",
+    "text": "Different Approaches Possible\n\nOperational\nTactical\nStrategic\n\n. . .\nQuestion: What are these approaches in general and how do they relate to arena seating?",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#operational",
+    "href": "part-11/lecture-distancing.html#operational",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Operational",
+    "text": "Operational\n\nShort-term, day-to-day decisions\nFocused on immediate execution\n\n. . .\nQuestion: What is an example for this approach?\n. . .\n\nGiven tomorrow’s demand of differently sized groups\nScore groups (importance, sponsors, VIP, season ticket,…)\nAssigning specific seats for tomorrow’s event",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#tactical",
+    "href": "part-11/lecture-distancing.html#tactical",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Tactical",
+    "text": "Tactical\n\nMedium-term planning (weeks to months)\nBridges operational and strategic levels\n\n. . .\nQuestion: What is an example for this approach?\n. . .\n\nGiven distribution of expected demand for groups\nScore groups (importance, sponsors, VIP, season ticket,…)\nPlan seating arrangements for an upcoming season",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#strategic",
+    "href": "part-11/lecture-distancing.html#strategic",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Strategic",
+    "text": "Strategic\n\nLong-term planning (months to years)\nFocus on overall goals and policies\n\n. . .\nQuestion: What is an example for this approach?\n. . .\n\nDesigning flexible seating layouts that work for scenarios\nMaximize the overall space utilization\nSell the resulting maximized seating pattern on market",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#main-question",
+    "href": "part-11/lecture-distancing.html#main-question",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Main Question",
+    "text": "Main Question\nTask: Fill the seating area given distancing regulations and venue-specific constraints.\nQuestion: Any ideas on how to approach this?",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#knapsack-problem",
+    "href": "part-11/lecture-distancing.html#knapsack-problem",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Knapsack Problem",
+    "text": "Knapsack Problem\n\n\nStandard model in Operations Research\nSelect items from a pool under capacity constraints",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#knapsack-problem-in-2d",
+    "href": "part-11/lecture-distancing.html#knapsack-problem-in-2d",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Knapsack Problem in 2D",
+    "text": "Knapsack Problem in 2D\n\n\nNow, Items block space in 2D, as illustrated here",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#adaption-to-seating",
+    "href": "part-11/lecture-distancing.html#adaption-to-seating",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Adaption to Seating",
+    "text": "Adaption to Seating\n\nHorizontal dimension to place groups of participants\nVertical dimension to ensure enough spacing between rows\nMaximize the “value” of the allocated groups\nValue can be the number of seats or a score\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nIdea behind the model was developed by Dr. Matthes Koch.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#hands-on-exercise",
+    "href": "part-11/lecture-distancing.html#hands-on-exercise",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Hands-on Exercise",
+    "text": "Hands-on Exercise\nTask: Allocate as many high-value groups as possible.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#available-groups",
+    "href": "part-11/lecture-distancing.html#available-groups",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Available Groups",
+    "text": "Available Groups\n\n\n\nGrouptype\nReq. Seats\nScore\nAvailable\nAllocated\nValue\n\n\n\n\na\n1\n1\n3\n\n\n\n\nb\n2\n2\n2\n\n\n\n\nc\n2\n4\n3\n\n\n\n\nd\n4\n4\n5\n\n\n\n\ne\n4\n5\n2\n\n\n\n\nf\n6\n6\n1\n\n\n\n\ng\n6\n12\n1\n\n\n\n\nTotal",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#seating-constraints",
+    "href": "part-11/lecture-distancing.html#seating-constraints",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Seating Constraints",
+    "text": "Seating Constraints\n\n1 empty seat between groups\n1 empty seat front-to-back\n1 empty seat diagonally\nOnly 2 groups per row are allowed\nGrey seats represent obstacles\n\n. . .\nYou have 5 minutes to find a solution.\nQuestion: What is your total score?",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#sets",
+    "href": "part-11/lecture-distancing.html#sets",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Sets?",
+    "text": "Sets?\nQuestion: What could be the sets?\n. . .\n\n\\(\\mathcal{G}\\) - Set of groups, indexed by \\(g\\)\n\\(\\mathcal{R}\\) - Set of rows, indexed by \\(r\\)\n\\(\\mathcal{C}\\) - Set of columns, indexed by \\(c\\)\n\\(\\mathcal{C}_r\\) - Available seats of row \\(r\\), indexed by \\(c\\)\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\n\\(\\mathcal{C}_r\\) ensures that we only consider unblocked seats in each row.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#parameters",
+    "href": "part-11/lecture-distancing.html#parameters",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Parameters?",
+    "text": "Parameters?\nQuestion: What could be possible parameters?\n. . .\n\n\\(p_r\\) - Maximal number of groups allowed in one row \\(r\\)\n\\(d_g\\) - Required seats of a group \\(g\\) in a row\n\\(h\\) - Safety distance between groups sitting next to each other\n\\(b\\) - Vertical safety distance between groups\n\\(v_g\\) - Value of an allocation of the group \\(g\\)",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#decision-variable",
+    "href": "part-11/lecture-distancing.html#decision-variable",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Decision Variable?",
+    "text": "Decision Variable?\n\n\n\n\n\n\nOur goal is to:\n\n\n\nMaximize the group values by filling the seating area given distancing regulations between groups and venue-specific constraints.\n\n\n\n\n\n\n\n\nTip\n\n\n\nEach group is represented by one binary variable. We don’t need to block each seat explicitly with a binary variable!",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#decision-variable-1",
+    "href": "part-11/lecture-distancing.html#decision-variable-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Decision Variable",
+    "text": "Decision Variable\n\n\n\n\n\n\nWe need the following sets:\n\n\n\n\nAll the groups, \\(g \\in \\mathcal{G}\\)\nAll the rows, \\(r \\in \\mathcal{R}\\)\nAll the columns, \\(c \\in \\mathcal{C}\\)\n\n\n\nQuestion: What could be our decision variable?\n. . .\n\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#objective-function",
+    "href": "part-11/lecture-distancing.html#objective-function",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Objective Function?",
+    "text": "Objective Function?\n\n\n\n\n\n\nOur main objective is to:\n\n\n\nMaximize the group values by filling the seating area given distancing regulations between groups and venue-specific constraints.\n\n\n. . .\nQuestion: How again are groups allocated?\n. . .\n\nBy the allocation of the first left seat of a group to a row and column in the seating area",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#objective-function-1",
+    "href": "part-11/lecture-distancing.html#objective-function-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Objective Function",
+    "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters and variables:\n\n\n\n\n\\(v_g\\) - Value of an allocation of the group \\(g\\)\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\n\n\n. . .\nQuestion: What could be our objective function?\n. . .\n\\[\n\\text{maximize} \\quad \\sum_{g \\in \\mathcal{G}} \\sum_{r \\in \\mathcal{R}} \\sum_{c\\in \\mathcal{C}_r} v_g \\times X_{grc}\n\\]",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#necessary-constraints",
+    "href": "part-11/lecture-distancing.html#necessary-constraints",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Necessary Constraints",
+    "text": "Necessary Constraints\nQuestion: What constraints do we need?\n. . .\n\nAssign each group only once\nRestrict the number of groups in each row\nEnsure the horizontal social distance\nKeep the vertical social distance",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#assign-each-group-only-once",
+    "href": "part-11/lecture-distancing.html#assign-each-group-only-once",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Assign Each Group Only Once?",
+    "text": "Assign Each Group Only Once?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that each group is allocated only once in the entire seating area.\n\n\n. . .\n\n\n\n\n\n\nWe need the following:\n\n\n\n\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\\(\\mathcal{G}\\) - Set of groups, indexed by \\(g\\)\n\\(\\mathcal{R}\\) - Set of rows, indexed by \\(r\\)\n\\(\\mathcal{C}_r\\) - Set of columns of row \\(r\\), indexed by \\(c\\)",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#assign-each-group-only-once-1",
+    "href": "part-11/lecture-distancing.html#assign-each-group-only-once-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Assign Each Group Only Once",
+    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n. . .\n\\[\n\\sum_{r \\in \\mathcal{R}} \\sum_{c \\in \\mathcal{C}_r} X_{g,r,c} \\leq 1 \\quad \\forall g \\in \\mathcal{G}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nThis “set packing” constraint ensures that a group is only assigned once.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#restrict-groups-per-row",
+    "href": "part-11/lecture-distancing.html#restrict-groups-per-row",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Restrict Groups Per Row?",
+    "text": "Restrict Groups Per Row?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that the number of groups in each row does not exceed the maximum allowed number of groups.\n\n\n. . .\n\n\n\n\n\n\nWe need the following:\n\n\n\n\n\\(p_r\\) - Maximal number of groups allowed in one row \\(r\\)\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#assign-each-group-only-once-2",
+    "href": "part-11/lecture-distancing.html#assign-each-group-only-once-2",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Assign Each Group Only Once",
+    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n. . .\n\\[\n\\sum_{g\\in \\mathcal{G}}\\sum_{c\\in \\mathcal{C}} X_{g,r,c} \\leq p_{r} \\quad r \\in \\mathcal{R}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nWe want to place as many highly scoring groups as possible, but people need to move to buy drinks or use restroom. Depending on the venue, they should not cross other groups in the same row.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#section",
+    "href": "part-11/lecture-distancing.html#section",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "The last two\nconstraints are\nsomewhat tricky!",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#central-idea",
+    "href": "part-11/lecture-distancing.html#central-idea",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Central Idea",
+    "text": "Central Idea\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nAssume one seat between groups must be kept empty. If one group takes seat 8, it uses seats 8 and 9. We thus cannot allocate another group of size 2 to seats 6, 7 or 8.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#horizontal-social-distance",
+    "href": "part-11/lecture-distancing.html#horizontal-social-distance",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Horizontal Social Distance?",
+    "text": "Horizontal Social Distance?\nQuestion: Any ideas how to implement this?\n. . .\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that the horizontal social distance is maintained between groups.\n\n\n. . .\n\n\n\n\n\n\nWe need the following:\n\n\n\n\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\\(d_g\\) - Required seats of group \\(g\\) in a row\n\\(h\\) - Safety distance between groups sitting next to each other",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#horizontal-social-distance-1",
+    "href": "part-11/lecture-distancing.html#horizontal-social-distance-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Horizontal Social Distance",
+    "text": "Horizontal Social Distance\nAs the constraint is based on a rather complex set, you don’t have to find it by yourself.\n. . .\n\\[\\sum_{g \\in \\mathcal{G}} \\sum_{\\tilde{c} \\in \\mathcal{C}_{c,g}} X_{g,r,\\tilde{c}} \\leq 1 \\quad \\forall r\\in \\mathcal{R}, c\\in \\mathcal{C}\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nAt first glance, this constraint looks rather easy, but it is not - it is based on the set \\(\\mathcal{C}_{c,g}\\) not defined yet in the lecture.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#the-social-distancing-set",
+    "href": "part-11/lecture-distancing.html#the-social-distancing-set",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "The Social Distancing Set",
+    "text": "The Social Distancing Set\n\\[\\mathcal{C}_{c,g} = \\{\\tilde{c}\\in \\mathcal{C}| c - d_g + 1 - h \\leq \\tilde{c} \\leq c \\}\\]\n. . .\n\n\n\n\n\n\nRemember:\n\n\n\n\n\\(d_g\\) - Required seats of group \\(g\\) in a row\n\\(h\\) - Safety distance between groups sitting next to each other\n\n\n\n. . .\nQuestion: Can anybody explain the set?",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#example-two-groups",
+    "href": "part-11/lecture-distancing.html#example-two-groups",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Example: Two Groups",
+    "text": "Example: Two Groups\n\n\\[\\underbrace{X_{1,2,\\textbf{6}}+X_{1,2,\\textbf{7}}+X_{1,2,\\textbf{8}}}_{g=1} + \\underbrace{X_{2,2,\\textbf{6}}+X_{2,2,\\textbf{7}}+X_{2,2,\\textbf{8}}}_{g=2} \\leq 1 \\quad (r=2,c=8)\\]",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#example-different-group-sizes",
+    "href": "part-11/lecture-distancing.html#example-different-group-sizes",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Example: Different Group Sizes",
+    "text": "Example: Different Group Sizes\n\n\\[\\underbrace{X_{1,2,\\textbf{6}}+X_{1,2,\\textbf{7}}+X_{1,2,\\textbf{8}}}_{g=1} + \\underbrace{X_{2,2,\\textbf{5}}+X_{2,2,\\textbf{6}}+X_{2,2,\\textbf{7}}+X_{2,2,\\textbf{8}}}_{g=2} \\leq 1 \\quad (r=2,c=8)\\]",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#example-three-groups",
+    "href": "part-11/lecture-distancing.html#example-three-groups",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Example: Three Groups",
+    "text": "Example: Three Groups\n\n\n\n\\[\n\\underbrace{X_{1,2,\\textbf{6}}+X_{1,2,\\textbf{7}}+X_{1,2,\\textbf{8}}}_{g=1} + \\underbrace{X_{2,2,\\textbf{6}}+X_{2,2,\\textbf{7}}+X_{2,2,\\textbf{8}}}_{g=2} + \\underbrace{X_{3,2,\\textbf{5}}+X_{3,2,\\textbf{6}}+X_{3,2,\\textbf{7}}+X_{3,2,\\textbf{8}}}_{g=3} \\leq 1 \\quad (r=2,c=8)\n\\]",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#section-1",
+    "href": "part-11/lecture-distancing.html#section-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "Do you see\nthe pattern?",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#vertical-social-distance",
+    "href": "part-11/lecture-distancing.html#vertical-social-distance",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Vertical Social Distance?",
+    "text": "Vertical Social Distance?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that the vertical social distance is maintained between groups.\n\n\n. . .\n\n\n\n\n\n\nWe need the following:\n\n\n\n\n\\(b\\) - Vertical safety distance between groups\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#vertical-social-distance-1",
+    "href": "part-11/lecture-distancing.html#vertical-social-distance-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Vertical Social Distance",
+    "text": "Vertical Social Distance\nQuestion: What could be the constraint?\n. . .\n\n\n\n\n\n\nTip\n\n\n\nIt is an extension of the horizontal social distance constraint we used before, but now we block a rectangular area instead of a single row.\n\n\n. . .\n\\[\n\\sum_{g \\in \\mathcal{G}} \\sum_{\\tilde{r} \\in \\mathcal{R}_r} \\sum_{\\tilde{c} \\in \\tilde{\\mathcal{C}}_{cg}} X_{g\\tilde{r}\\tilde{c}} \\leq 1 \\quad \\forall r\\in \\mathcal{R}, c\\in \\mathcal{C}\n\\]",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#vertical-distance-set",
+    "href": "part-11/lecture-distancing.html#vertical-distance-set",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Vertical Distance Set",
+    "text": "Vertical Distance Set\nQuestion: What could be the set?\n. . .\n\\[\n\\mathcal{R}_{r} = \\{\\tilde{r}\\in \\mathcal{R}| r-b \\leq \\tilde{r} \\leq r \\}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nRemember:\n\n\\(b\\) - Vertical safety distance between groups\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\n\n\n. . .\nLet’s look at an example.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#example-two-groups-1",
+    "href": "part-11/lecture-distancing.html#example-two-groups-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Example: Two Groups",
+    "text": "Example: Two Groups\n\n\nYellow seats are blocked by the group in row 3 and column 8\nBlue allocations are possible (if second group has size 2)",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#arena-seating-problem",
+    "href": "part-11/lecture-distancing.html#arena-seating-problem",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Arena Seating Problem",
+    "text": "Arena Seating Problem\n\n\n\\[\n\\text{maximize} \\quad \\sum_{g \\in \\mathcal{G}} \\sum_{r \\in \\mathcal{R}} \\sum_{c\\in \\mathcal{C}_r} v_g \\times X_{g,r,c}\n\\] subject to: \\[\n\\begin{align*}\n& \\sum_{r \\in \\mathcal{R}}\\sum_{c \\in \\mathcal{C}_r} X_{g,r,c} \\leq 1 && \\forall g \\in \\mathcal{G} \\\\\n& \\sum_{g \\in \\mathcal{G}}\\sum_{c\\in \\mathcal{C}_r} X_{g,r,c} \\leq p_r && \\forall r \\in \\mathcal{R} \\\\\n& \\sum_{g \\in \\mathcal{G}} \\sum_{\\tilde{r} \\in \\mathcal{R}_r} \\sum_{\\tilde{c} \\in \\tilde{\\mathcal{C}}_{c,g}} X_{g,\\tilde{r},\\tilde{c}} \\leq 1 && \\forall r\\in \\mathcal{R}, c\\in \\mathcal{C} \\\\\n& X_{g,r,c} \\in \\{0,1\\} && \\forall g \\in \\mathcal{G}, \\forall r\\in \\mathcal{R}, c\\in \\mathcal{C}_r\n\\end{align*}\n\\]",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#characteristics",
+    "href": "part-11/lecture-distancing.html#characteristics",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Characteristics",
+    "text": "Characteristics\nQuestions: On model characteristics\n\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domains do we have?",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#model-assumptions",
+    "href": "part-11/lecture-distancing.html#model-assumptions",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Model Assumptions",
+    "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nIs our approach strategic or tactical/operational?\nHave we considered all social distancing constraints?\nWhat about aisle seats?\nCan you think of any other real-world constraints?",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#arena-seating-optimization",
+    "href": "part-11/lecture-distancing.html#arena-seating-optimization",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Arena Seating Optimization",
+    "text": "Arena Seating Optimization",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#case-study-vfl-osnabrück",
+    "href": "part-11/lecture-distancing.html#case-study-vfl-osnabrück",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Case study VfL Osnabrück",
+    "text": "Case study VfL Osnabrück\n\nRelegation Return Match in 2021\n241 additional seats allocated (+12 percent)\nCompliance with all distancing requirements\nApproval from authorities\n\n. . .\n\n\n\n\n\n\nImportant\n\n\n\nEstimated additional revenue of 8,435 EUR for one match.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#seating-plan",
+    "href": "part-11/lecture-distancing.html#seating-plan",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Seating Plan",
+    "text": "Seating Plan",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#related-work",
+    "href": "part-11/lecture-distancing.html#related-work",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Related Work",
+    "text": "Related Work\nSimilar studies have been conducted globally:\n\nUS College-level venues, e.g. Football, Basketball, Hockey\nMusic Hall Eindhoven\nSafe Seating Solutions platform\nGeneral 2D-Knapsack applications",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#optimization-benefits",
+    "href": "part-11/lecture-distancing.html#optimization-benefits",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Optimization Benefits",
+    "text": "Optimization Benefits\n\nOptimization enables rapid generation and evaluation\nWe can easily adapt to various distancing requirements:\n\nHorizontal and vertical spacing between groups\nGroups per row limits\nAisle seat restrictions\nGroup size constraints\nMulti-row group allocation",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#wrap-up",
+    "href": "part-11/lecture-distancing.html#wrap-up",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Wrap Up",
+    "text": "Wrap Up\n\nRevenue optimization through applied optimization\nIncreased participant capacity vs basic approaches\nFlexible adaptation to various distancing requirements\nCan be adapted easily to any seating requirements\n\n. . .\n\n\n\n\n\n\nAnd that’s it for todays lecture!\n\n\n\nWe now have covered the arena seating problem based on a real-world application and are ready to start solving the corresponding tasks in the upcoming tutorial.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#section-2",
+    "href": "part-11/lecture-distancing.html#section-2",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "Questions?",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-distancing.html#literature-i",
+    "href": "part-11/lecture-distancing.html#literature-i",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Literature I",
+    "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.",
+    "crumbs": [
+      "11 Distancing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#covid-19-pandemic",
+    "href": "part-11/lecture-presentation.html#covid-19-pandemic",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Covid-19 Pandemic",
+    "text": "Covid-19 Pandemic"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#challenges-for-live-events",
+    "href": "part-11/lecture-presentation.html#challenges-for-live-events",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Challenges for Live Events",
+    "text": "Challenges for Live Events\n\nOverall number of participants at events was restricted\nCertain spacing between participants had to be ensured\n\nLarger events required vaccination certificates for all\n\n\nQuestion: What are the main issues for the organizers?"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#main-difficulties",
+    "href": "part-11/lecture-presentation.html#main-difficulties",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Main Difficulties",
+    "text": "Main Difficulties\n\nOrganization of larger events is costly\nEven without a pandemic a financial risk\nAdministrative Burden for vaccination certificates\nReduced capacity is a loss of revenue\nImplementing and enforcing distancing rules\nManaging different priorities of groups"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#idea-optimizing-seating-plans",
+    "href": "part-11/lecture-presentation.html#idea-optimizing-seating-plans",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Idea: Optimizing Seating Plans",
+    "text": "Idea: Optimizing Seating Plans"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#background",
+    "href": "part-11/lecture-presentation.html#background",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Background",
+    "text": "Background\n\nApplications: sport arenas, concert halls, movie theaters, lecture halls, etc.\nPeople from the same group are seated together\nVenues have specific seating, season tickets, VIPs, etc.\n\n\n\n\n\n\n\n\nImportant\n\n\nOptimizing seating plans can help to maximize revenue while ensuring distancing rules and other constraints are met."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#example-two-different-plans",
+    "href": "part-11/lecture-presentation.html#example-two-different-plans",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Example: Two different plans",
+    "text": "Example: Two different plans\n\n\n\n\n\nFixed double-seat layout\n\n\n\n\n\n\n\n\nFlexible group-value layout"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#different-approaches-possible",
+    "href": "part-11/lecture-presentation.html#different-approaches-possible",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Different Approaches Possible",
+    "text": "Different Approaches Possible\n\nOperational\nTactical\nStrategic\n\n\nQuestion: What are these approaches in general and how do they relate to arena seating?"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#operational",
+    "href": "part-11/lecture-presentation.html#operational",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Operational",
+    "text": "Operational\n\nShort-term, day-to-day decisions\nFocused on immediate execution\n\n\nQuestion: What is an example for this approach?\n\n\n\nGiven tomorrow’s demand of differently sized groups\nScore groups (importance, sponsors, VIP, season ticket,…)\nAssigning specific seats for tomorrow’s event"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#tactical",
+    "href": "part-11/lecture-presentation.html#tactical",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Tactical",
+    "text": "Tactical\n\nMedium-term planning (weeks to months)\nBridges operational and strategic levels\n\n\nQuestion: What is an example for this approach?\n\n\n\nGiven distribution of expected demand for groups\nScore groups (importance, sponsors, VIP, season ticket,…)\nPlan seating arrangements for an upcoming season"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#strategic",
+    "href": "part-11/lecture-presentation.html#strategic",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Strategic",
+    "text": "Strategic\n\nLong-term planning (months to years)\nFocus on overall goals and policies\n\n\nQuestion: What is an example for this approach?\n\n\n\nDesigning flexible seating layouts that work for scenarios\nMaximize the overall space utilization\nSell the resulting maximized seating pattern on market"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#main-question",
+    "href": "part-11/lecture-presentation.html#main-question",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Main Question",
+    "text": "Main Question\nTask: Fill the seating area given distancing regulations and venue-specific constraints.\nQuestion: Any ideas on how to approach this?"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#knapsack-problem",
+    "href": "part-11/lecture-presentation.html#knapsack-problem",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Knapsack Problem",
+    "text": "Knapsack Problem\n\n\nStandard model in Operations Research\nSelect items from a pool under capacity constraints"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#knapsack-problem-in-2d",
+    "href": "part-11/lecture-presentation.html#knapsack-problem-in-2d",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Knapsack Problem in 2D",
+    "text": "Knapsack Problem in 2D\n\n\nNow, Items block space in 2D, as illustrated here"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#adaption-to-seating",
+    "href": "part-11/lecture-presentation.html#adaption-to-seating",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Adaption to Seating",
+    "text": "Adaption to Seating\n\nHorizontal dimension to place groups of participants\nVertical dimension to ensure enough spacing between rows\nMaximize the “value” of the allocated groups\nValue can be the number of seats or a score\n\n\n\n\n\n\n\n\nNote\n\n\nIdea behind the model was developed by Dr. Matthes Koch."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#hands-on-exercise",
+    "href": "part-11/lecture-presentation.html#hands-on-exercise",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Hands-on Exercise",
+    "text": "Hands-on Exercise\nTask: Allocate as many high-value groups as possible."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#available-groups",
+    "href": "part-11/lecture-presentation.html#available-groups",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Available Groups",
+    "text": "Available Groups\n\n\n\nGrouptype\nReq. Seats\nScore\nAvailable\nAllocated\nValue\n\n\n\n\na\n1\n1\n3\n\n\n\n\nb\n2\n2\n2\n\n\n\n\nc\n2\n4\n3\n\n\n\n\nd\n4\n4\n5\n\n\n\n\ne\n4\n5\n2\n\n\n\n\nf\n6\n6\n1\n\n\n\n\ng\n6\n12\n1\n\n\n\n\nTotal"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#seating-constraints",
+    "href": "part-11/lecture-presentation.html#seating-constraints",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Seating Constraints",
+    "text": "Seating Constraints\n\n1 empty seat between groups\n1 empty seat front-to-back\n1 empty seat diagonally\nOnly 2 groups per row are allowed\nGrey seats represent obstacles\n\n\nYou have 5 minutes to find a solution.\nQuestion: What is your total score?"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#sets",
+    "href": "part-11/lecture-presentation.html#sets",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Sets?",
+    "text": "Sets?\nQuestion: What could be the sets?\n\n\n\\(\\mathcal{G}\\) - Set of groups, indexed by \\(g\\)\n\\(\\mathcal{R}\\) - Set of rows, indexed by \\(r\\)\n\\(\\mathcal{C}\\) - Set of columns, indexed by \\(c\\)\n\\(\\mathcal{C}_r\\) - Available seats of row \\(r\\), indexed by \\(c\\)\n\n\n\n\n\n\n\n\n\nNote\n\n\n\\(\\mathcal{C}_r\\) ensures that we only consider unblocked seats in each row."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#parameters",
+    "href": "part-11/lecture-presentation.html#parameters",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Parameters?",
+    "text": "Parameters?\nQuestion: What could be possible parameters?\n\n\n\\(p_r\\) - Maximal number of groups allowed in one row \\(r\\)\n\\(d_g\\) - Required seats of a group \\(g\\) in a row\n\\(h\\) - Safety distance between groups sitting next to each other\n\\(b\\) - Vertical safety distance between groups\n\\(v_g\\) - Value of an allocation of the group \\(g\\)"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#decision-variable",
+    "href": "part-11/lecture-presentation.html#decision-variable",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Decision Variable?",
+    "text": "Decision Variable?\n\n\n\n\n\n\nOur goal is to:\n\n\nMaximize the group values by filling the seating area given distancing regulations between groups and venue-specific constraints.\n\n\n\n\n\n\n\n\n\nTip\n\n\nEach group is represented by one binary variable. We don’t need to block each seat explicitly with a binary variable!"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#decision-variable-1",
+    "href": "part-11/lecture-presentation.html#decision-variable-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Decision Variable",
+    "text": "Decision Variable\n\n\n\n\n\n\nWe need the following sets:\n\n\n\nAll the groups, \\(g \\in \\mathcal{G}\\)\nAll the rows, \\(r \\in \\mathcal{R}\\)\nAll the columns, \\(c \\in \\mathcal{C}\\)\n\n\n\n\nQuestion: What could be our decision variable?\n\n\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#objective-function",
+    "href": "part-11/lecture-presentation.html#objective-function",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Objective Function?",
+    "text": "Objective Function?\n\n\n\n\n\n\nOur main objective is to:\n\n\nMaximize the group values by filling the seating area given distancing regulations between groups and venue-specific constraints.\n\n\n\n\nQuestion: How again are groups allocated?\n\n\n\nBy the allocation of the first left seat of a group to a row and column in the seating area"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#objective-function-1",
+    "href": "part-11/lecture-presentation.html#objective-function-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Objective Function",
+    "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters and variables:\n\n\n\n\\(v_g\\) - Value of an allocation of the group \\(g\\)\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\n\n\n\n\nQuestion: What could be our objective function?\n\n\n\\[\n\\text{maximize} \\quad \\sum_{g \\in \\mathcal{G}} \\sum_{r \\in \\mathcal{R}} \\sum_{c\\in \\mathcal{C}_r} v_g \\times X_{grc}\n\\]"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#necessary-constraints",
+    "href": "part-11/lecture-presentation.html#necessary-constraints",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Necessary Constraints",
+    "text": "Necessary Constraints\nQuestion: What constraints do we need?\n\n\nAssign each group only once\nRestrict the number of groups in each row\nEnsure the horizontal social distance\nKeep the vertical social distance"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#assign-each-group-only-once",
+    "href": "part-11/lecture-presentation.html#assign-each-group-only-once",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Assign Each Group Only Once?",
+    "text": "Assign Each Group Only Once?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\nEnsure that each group is allocated only once in the entire seating area.\n\n\n\n\n\n\n\n\n\n\nWe need the following:\n\n\n\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\\(\\mathcal{G}\\) - Set of groups, indexed by \\(g\\)\n\\(\\mathcal{R}\\) - Set of rows, indexed by \\(r\\)\n\\(\\mathcal{C}_r\\) - Set of columns of row \\(r\\), indexed by \\(c\\)"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#assign-each-group-only-once-1",
+    "href": "part-11/lecture-presentation.html#assign-each-group-only-once-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Assign Each Group Only Once",
+    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n\n\\[\n\\sum_{r \\in \\mathcal{R}} \\sum_{c \\in \\mathcal{C}_r} X_{g,r,c} \\leq 1 \\quad \\forall g \\in \\mathcal{G}\n\\]\n\n\n\n\n\n\n\n\nNote\n\n\nThis “set packing” constraint ensures that a group is only assigned once."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#restrict-groups-per-row",
+    "href": "part-11/lecture-presentation.html#restrict-groups-per-row",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Restrict Groups Per Row?",
+    "text": "Restrict Groups Per Row?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\nEnsure that the number of groups in each row does not exceed the maximum allowed number of groups.\n\n\n\n\n\n\n\n\n\n\nWe need the following:\n\n\n\n\\(p_r\\) - Maximal number of groups allowed in one row \\(r\\)\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#assign-each-group-only-once-2",
+    "href": "part-11/lecture-presentation.html#assign-each-group-only-once-2",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Assign Each Group Only Once",
+    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n\n\\[\n\\sum_{g\\in \\mathcal{G}}\\sum_{c\\in \\mathcal{C}} X_{g,r,c} \\leq p_{r} \\quad r \\in \\mathcal{R}\n\\]\n\n\n\n\n\n\n\n\nNote\n\n\nWe want to place as many highly scoring groups as possible, but people need to move to buy drinks or use restroom. Depending on the venue, they should not cross other groups in the same row."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#section",
+    "href": "part-11/lecture-presentation.html#section",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "The last two\nconstraints are\nsomewhat tricky!"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#central-idea",
+    "href": "part-11/lecture-presentation.html#central-idea",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Central Idea",
+    "text": "Central Idea\n\n\n\n\n\n\n\n\nTip\n\n\nAssume one seat between groups must be kept empty. If one group takes seat 8, it uses seats 8 and 9. We thus cannot allocate another group of size 2 to seats 6, 7 or 8."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#horizontal-social-distance",
+    "href": "part-11/lecture-presentation.html#horizontal-social-distance",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Horizontal Social Distance?",
+    "text": "Horizontal Social Distance?\nQuestion: Any ideas how to implement this?\n\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\nEnsure that the horizontal social distance is maintained between groups.\n\n\n\n\n\n\n\n\n\n\n\nWe need the following:\n\n\n\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\\(d_g\\) - Required seats of group \\(g\\) in a row\n\\(h\\) - Safety distance between groups sitting next to each other"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#horizontal-social-distance-1",
+    "href": "part-11/lecture-presentation.html#horizontal-social-distance-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Horizontal Social Distance",
+    "text": "Horizontal Social Distance\nAs the constraint is based on a rather complex set, you don’t have to find it by yourself.\n\n\\[\\sum_{g \\in \\mathcal{G}} \\sum_{\\tilde{c} \\in \\mathcal{C}_{c,g}} X_{g,r,\\tilde{c}} \\leq 1 \\quad \\forall r\\in \\mathcal{R}, c\\in \\mathcal{C}\\]\n\n\n\n\n\n\n\n\nNote\n\n\nAt first glance, this constraint looks rather easy, but it is not - it is based on the set \\(\\mathcal{C}_{c,g}\\) not defined yet in the lecture."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#the-social-distancing-set",
+    "href": "part-11/lecture-presentation.html#the-social-distancing-set",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "The Social Distancing Set",
+    "text": "The Social Distancing Set\n\\[\\mathcal{C}_{c,g} = \\{\\tilde{c}\\in \\mathcal{C}| c - d_g + 1 - h \\leq \\tilde{c} \\leq c \\}\\]\n\n\n\n\n\n\n\nRemember:\n\n\n\n\\(d_g\\) - Required seats of group \\(g\\) in a row\n\\(h\\) - Safety distance between groups sitting next to each other\n\n\n\n\n\n\nQuestion: Can anybody explain the set?"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#example-two-groups",
+    "href": "part-11/lecture-presentation.html#example-two-groups",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Example: Two Groups",
+    "text": "Example: Two Groups\n\n\\[\\underbrace{X_{1,2,\\textbf{6}}+X_{1,2,\\textbf{7}}+X_{1,2,\\textbf{8}}}_{g=1} + \\underbrace{X_{2,2,\\textbf{6}}+X_{2,2,\\textbf{7}}+X_{2,2,\\textbf{8}}}_{g=2} \\leq 1 \\quad (r=2,c=8)\\]"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#example-different-group-sizes",
+    "href": "part-11/lecture-presentation.html#example-different-group-sizes",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Example: Different Group Sizes",
+    "text": "Example: Different Group Sizes\n\n\\[\\underbrace{X_{1,2,\\textbf{6}}+X_{1,2,\\textbf{7}}+X_{1,2,\\textbf{8}}}_{g=1} + \\underbrace{X_{2,2,\\textbf{5}}+X_{2,2,\\textbf{6}}+X_{2,2,\\textbf{7}}+X_{2,2,\\textbf{8}}}_{g=2} \\leq 1 \\quad (r=2,c=8)\\]"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#example-three-groups",
+    "href": "part-11/lecture-presentation.html#example-three-groups",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Example: Three Groups",
+    "text": "Example: Three Groups\n\n\n\n\\[\n\\underbrace{X_{1,2,\\textbf{6}}+X_{1,2,\\textbf{7}}+X_{1,2,\\textbf{8}}}_{g=1} + \\underbrace{X_{2,2,\\textbf{6}}+X_{2,2,\\textbf{7}}+X_{2,2,\\textbf{8}}}_{g=2} + \\underbrace{X_{3,2,\\textbf{5}}+X_{3,2,\\textbf{6}}+X_{3,2,\\textbf{7}}+X_{3,2,\\textbf{8}}}_{g=3} \\leq 1 \\quad (r=2,c=8)\n\\]"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#section-1",
+    "href": "part-11/lecture-presentation.html#section-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "Do you see\nthe pattern?"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#vertical-social-distance",
+    "href": "part-11/lecture-presentation.html#vertical-social-distance",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Vertical Social Distance?",
+    "text": "Vertical Social Distance?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\nEnsure that the vertical social distance is maintained between groups.\n\n\n\n\n\n\n\n\n\n\nWe need the following:\n\n\n\n\\(b\\) - Vertical safety distance between groups\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#vertical-social-distance-1",
+    "href": "part-11/lecture-presentation.html#vertical-social-distance-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Vertical Social Distance",
+    "text": "Vertical Social Distance\nQuestion: What could be the constraint?\n\n\n\n\n\n\n\nTip\n\n\nIt is an extension of the horizontal social distance constraint we used before, but now we block a rectangular area instead of a single row.\n\n\n\n\n\n\\[\n\\sum_{g \\in \\mathcal{G}} \\sum_{\\tilde{r} \\in \\mathcal{R}_r} \\sum_{\\tilde{c} \\in \\tilde{\\mathcal{C}}_{cg}} X_{g\\tilde{r}\\tilde{c}} \\leq 1 \\quad \\forall r\\in \\mathcal{R}, c\\in \\mathcal{C}\n\\]"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#vertical-distance-set",
+    "href": "part-11/lecture-presentation.html#vertical-distance-set",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Vertical Distance Set",
+    "text": "Vertical Distance Set\nQuestion: What could be the set?\n\n\\[\n\\mathcal{R}_{r} = \\{\\tilde{r}\\in \\mathcal{R}| r-b \\leq \\tilde{r} \\leq r \\}\n\\]\n\n\n\n\n\n\n\n\nNote\n\n\nRemember:\n\n\\(b\\) - Vertical safety distance between groups\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\n\n\n\n\n\nLet’s look at an example."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#example-two-groups-1",
+    "href": "part-11/lecture-presentation.html#example-two-groups-1",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Example: Two Groups",
+    "text": "Example: Two Groups\n\n\nYellow seats are blocked by the group in row 3 and column 8\nBlue allocations are possible (if second group has size 2)"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#arena-seating-problem",
+    "href": "part-11/lecture-presentation.html#arena-seating-problem",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Arena Seating Problem",
+    "text": "Arena Seating Problem\n\n\n\\[\n\\text{maximize} \\quad \\sum_{g \\in \\mathcal{G}} \\sum_{r \\in \\mathcal{R}} \\sum_{c\\in \\mathcal{C}_r} v_g \\times X_{g,r,c}\n\\] subject to: \\[\n\\begin{align*}\n& \\sum_{r \\in \\mathcal{R}}\\sum_{c \\in \\mathcal{C}_r} X_{g,r,c} \\leq 1 && \\forall g \\in \\mathcal{G} \\\\\n& \\sum_{g \\in \\mathcal{G}}\\sum_{c\\in \\mathcal{C}_r} X_{g,r,c} \\leq p_r && \\forall r \\in \\mathcal{R} \\\\\n& \\sum_{g \\in \\mathcal{G}} \\sum_{\\tilde{r} \\in \\mathcal{R}_r} \\sum_{\\tilde{c} \\in \\tilde{\\mathcal{C}}_{c,g}} X_{g,\\tilde{r},\\tilde{c}} \\leq 1 && \\forall r\\in \\mathcal{R}, c\\in \\mathcal{C} \\\\\n& X_{g,r,c} \\in \\{0,1\\} && \\forall g \\in \\mathcal{G}, \\forall r\\in \\mathcal{R}, c\\in \\mathcal{C}_r\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#characteristics",
+    "href": "part-11/lecture-presentation.html#characteristics",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Characteristics",
+    "text": "Characteristics\nQuestions: On model characteristics\n\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domains do we have?"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#model-assumptions",
+    "href": "part-11/lecture-presentation.html#model-assumptions",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Model Assumptions",
+    "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nIs our approach strategic or tactical/operational?\nHave we considered all social distancing constraints?\nWhat about aisle seats?\nCan you think of any other real-world constraints?"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#arena-seating-optimization",
+    "href": "part-11/lecture-presentation.html#arena-seating-optimization",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Arena Seating Optimization",
+    "text": "Arena Seating Optimization"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#case-study-vfl-osnabrück",
+    "href": "part-11/lecture-presentation.html#case-study-vfl-osnabrück",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Case study VfL Osnabrück",
+    "text": "Case study VfL Osnabrück\n\nRelegation Return Match in 2021\n241 additional seats allocated (+12 percent)\nCompliance with all distancing requirements\nApproval from authorities\n\n\n\n\n\n\n\n\nImportant\n\n\nEstimated additional revenue of 8,435 EUR for one match."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#seating-plan",
+    "href": "part-11/lecture-presentation.html#seating-plan",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Seating Plan",
+    "text": "Seating Plan"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#related-work",
+    "href": "part-11/lecture-presentation.html#related-work",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Related Work",
+    "text": "Related Work\nSimilar studies have been conducted globally:\n\nUS College-level venues, e.g. Football, Basketball, Hockey\nMusic Hall Eindhoven\nSafe Seating Solutions platform\nGeneral 2D-Knapsack applications"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#optimization-benefits",
+    "href": "part-11/lecture-presentation.html#optimization-benefits",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Optimization Benefits",
+    "text": "Optimization Benefits\n\nOptimization enables rapid generation and evaluation\nWe can easily adapt to various distancing requirements:\n\nHorizontal and vertical spacing between groups\nGroups per row limits\nAisle seat restrictions\nGroup size constraints\nMulti-row group allocation"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#wrap-up",
+    "href": "part-11/lecture-presentation.html#wrap-up",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Wrap Up",
+    "text": "Wrap Up\n\nRevenue optimization through applied optimization\nIncreased participant capacity vs basic approaches\nFlexible adaptation to various distancing requirements\nCan be adapted easily to any seating requirements\n\n\n\n\n\n\n\n\nAnd that’s it for todays lecture!\n\n\nWe now have covered the arena seating problem based on a real-world application and are ready to start solving the corresponding tasks in the upcoming tutorial."
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#section-2",
+    "href": "part-11/lecture-presentation.html#section-2",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "Questions?"
+  },
+  {
+    "objectID": "part-11/lecture-presentation.html#literature-i",
+    "href": "part-11/lecture-presentation.html#literature-i",
+    "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
+    "section": "Literature I",
+    "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course."
+  },
+  {
     "objectID": "part-12/lecture-rail.html",
     "href": "part-12/lecture-rail.html",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "FIFA Worldcup 2022 took place in a small region\nThe capacity of the metro system was finite\nMore than 1 million tourists where expected\nMetro usage was free for all ticket holders\nTransport methods were expected to be overloaded\n\n. . .\nQuestion: What could become an issue?\n\n\n\n\n\n\n\n\n\nQuestion: Where could crowd disasters happen?\n. . .\n\nAt event venues and in waiting areas\nAt intersections of multiple pedestrian flows\nIn narrow passages and entrances\nOn crowded metro platforms and transfer stations\nAt ticket/turnstile bottlenecks and emergency exits\n\n\n\n\n\n\n\n\n\n\n\n\nQuestion: What could be a potential bottleneck?\n. . .\n\nRed Line has twice the capacity of the Green and Gold Line\nPeople use the metro to get to the event venues\n\n. . .\nQuestion: What could be the issue?\n\nImagine a match at a stadium along the Gold line\nPeople from Red and Green line will try to get there\nThis will cause a massive crowd at transfer stations\n\n\n\n\n\n\n\n\n\n\n10 people want to start per minute at each station\nEverybody wants to get to station D\n\n\n\n\n\n\n\n\n\n\n\n\n\nCapacities inside the stations are limited as well\nThese include the escalators, stairs, and elevators\nBut also the platforms and the ticket gates\n\n. . .\n\n\n\n\n\n\nWarning\n\n\n\nThis can lead to overcrowding and potential crowd disasters!\n\n\n\n\n\nQuestion: What could also be an issue?\n. . .\n\nOften unknown how many people exactly will participate\nGathering data is extremely importand and difficult\nCrowd behavior can be unpredictable and dynamic\nWeather conditions may affect transportation preferences\nCultural factors influence crowd movement patterns\nEmergency situations require flexible contingency plans\n\n\n\n\n\nLet’s take a\ncloser look at the\nproblem structure!",
     "crumbs": [
@@ -9945,7 +10914,7 @@
   {
     "objectID": "part-12/lecture-rail.html#public-transport",
     "href": "part-12/lecture-rail.html#public-transport",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "FIFA Worldcup 2022 took place in a small region\nThe capacity of the metro system was finite\nMore than 1 million tourists where expected\nMetro usage was free for all ticket holders\nTransport methods were expected to be overloaded\n\n. . .\nQuestion: What could become an issue?",
     "crumbs": [
@@ -9956,7 +10925,7 @@
   {
     "objectID": "part-12/lecture-rail.html#potential-locations",
     "href": "part-12/lecture-rail.html#potential-locations",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Question: Where could crowd disasters happen?\n. . .\n\nAt event venues and in waiting areas\nAt intersections of multiple pedestrian flows\nIn narrow passages and entrances\nOn crowded metro platforms and transfer stations\nAt ticket/turnstile bottlenecks and emergency exits",
     "crumbs": [
@@ -9967,7 +10936,7 @@
   {
     "objectID": "part-12/lecture-rail.html#main-bottleneck",
     "href": "part-12/lecture-rail.html#main-bottleneck",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Question: What could be a potential bottleneck?\n. . .\n\nRed Line has twice the capacity of the Green and Gold Line\nPeople use the metro to get to the event venues\n\n. . .\nQuestion: What could be the issue?\n\nImagine a match at a stadium along the Gold line\nPeople from Red and Green line will try to get there\nThis will cause a massive crowd at transfer stations",
     "crumbs": [
@@ -9978,7 +10947,7 @@
   {
     "objectID": "part-12/lecture-rail.html#visualization",
     "href": "part-12/lecture-rail.html#visualization",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "10 people want to start per minute at each station\nEverybody wants to get to station D",
     "crumbs": [
@@ -9989,7 +10958,7 @@
   {
     "objectID": "part-12/lecture-rail.html#capacities-inside-the-stations",
     "href": "part-12/lecture-rail.html#capacities-inside-the-stations",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Capacities inside the stations are limited as well\nThese include the escalators, stairs, and elevators\nBut also the platforms and the ticket gates\n\n. . .\n\n\n\n\n\n\nWarning\n\n\n\nThis can lead to overcrowding and potential crowd disasters!",
     "crumbs": [
@@ -10000,7 +10969,7 @@
   {
     "objectID": "part-12/lecture-rail.html#general-issues",
     "href": "part-12/lecture-rail.html#general-issues",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Question: What could also be an issue?\n. . .\n\nOften unknown how many people exactly will participate\nGathering data is extremely importand and difficult\nCrowd behavior can be unpredictable and dynamic\nWeather conditions may affect transportation preferences\nCultural factors influence crowd movement patterns\nEmergency situations require flexible contingency plans",
     "crumbs": [
@@ -10011,7 +10980,7 @@
   {
     "objectID": "part-12/lecture-rail.html#section",
     "href": "part-12/lecture-rail.html#section",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Let’s take a\ncloser look at the\nproblem structure!",
     "crumbs": [
@@ -10022,7 +10991,7 @@
   {
     "objectID": "part-12/lecture-rail.html#objective",
     "href": "part-12/lecture-rail.html#objective",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Objective",
     "text": "Objective\nQuestion: What could be the objectives of the authorities?\n. . .\n\nA safe and successful event as host country\nGood publicity and a positive recognition worldwide\n\nSatisfied visitors that enjoyed their time\n\n. . .\n\n\n\n\n\n\nNote: We can model none of the above directly!\n\n\n\nBut we can assist in the estimation of transport demands and the design of operational plans to ensure public safety and a smooth transportation through the city.",
     "crumbs": [
@@ -10033,7 +11002,7 @@
   {
     "objectID": "part-12/lecture-rail.html#underlying-problem",
     "href": "part-12/lecture-rail.html#underlying-problem",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Underlying Problem",
     "text": "Underlying Problem\nQuestion: Can we just start modeling?\n. . .\n\nFirst, we need to understand the movement patterns\nEvent is unprecedented, movement patterns are unknown\nMultiple concurrent events affect flow patterns\n\n. . .\n\n\n\n\n\n\nTip: We need to estimate the data first!\n\n\n\nThis is a huge challenge, but we can use simulation to estimate the data.",
     "crumbs": [
@@ -10044,7 +11013,7 @@
   {
     "objectID": "part-12/lecture-rail.html#simulation",
     "href": "part-12/lecture-rail.html#simulation",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Simulation",
     "text": "Simulation\n\nBased on publicly available data from the area\nSimulates all individuals participating at the event\nIncludes all transportation infrastructure\nIndividual mode choice based on a choice model\n\n. . .\n\n\n\n\n\n\nTip: Julia is a great tool for this!\n\n\n\nSimulations was build in Julia. With 1,000,000 individuals walking,using cars, busses, and the metro, a day took less than 5 minutes.",
     "crumbs": [
@@ -10055,7 +11024,7 @@
   {
     "objectID": "part-12/lecture-rail.html#results-of-the-simulation",
     "href": "part-12/lecture-rail.html#results-of-the-simulation",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Results of the Simulation",
     "text": "Results of the Simulation\n\n\n\n\n\nDetailed movement patterns throughout the region\nPotential sections at risk in the transport infrastructure\nPotential capacity overloads at event locations",
     "crumbs": [
@@ -10066,7 +11035,7 @@
   {
     "objectID": "part-12/lecture-rail.html#section-1",
     "href": "part-12/lecture-rail.html#section-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "But it is still\nbased on a lot\nof assumptions!",
     "crumbs": [
@@ -10077,7 +11046,7 @@
   {
     "objectID": "part-12/lecture-rail.html#main-risk-metro",
     "href": "part-12/lecture-rail.html#main-risk-metro",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Main risk: Metro",
     "text": "Main risk: Metro",
     "crumbs": [
@@ -10088,7 +11057,7 @@
   {
     "objectID": "part-12/lecture-rail.html#idea",
     "href": "part-12/lecture-rail.html#idea",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Idea",
     "text": "Idea\nQuestion: What can we do to prevent crowd disasters?\n. . .\n\nRegulate the inflow at each individual station\nEnsure utilized capacity is always within bounds\n\n. . .\nQuestion: What could we try to model?\n. . .\n\nMinimize the queues outside of the metro stations\nBased on the allowed inflow and origin-destination data\nAdhering to the capacity constraints",
     "crumbs": [
@@ -10099,7 +11068,7 @@
   {
     "objectID": "part-12/lecture-rail.html#difficulty",
     "href": "part-12/lecture-rail.html#difficulty",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Difficulty",
     "text": "Difficulty\n\n\n\n\n\n. . .\n\nMovement patterns have different origin-destination pairs\nRegulating the inflow does not affect the destination",
     "crumbs": [
@@ -10110,7 +11079,7 @@
   {
     "objectID": "part-12/lecture-rail.html#graph-sets",
     "href": "part-12/lecture-rail.html#graph-sets",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Graph Sets?",
     "text": "Graph Sets?\nQuestion: What could be the sets for the graph?",
     "crumbs": [
@@ -10121,7 +11090,7 @@
   {
     "objectID": "part-12/lecture-rail.html#graph-sets-1",
     "href": "part-12/lecture-rail.html#graph-sets-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Graph Sets?",
     "text": "Graph Sets?\n\n\\(\\mathcal{G}\\) - Connected digraph of the metro network \\(\\mathcal{G}=(\\mathcal{O},\\mathcal{E})\\)\n\\(\\mathcal{O}\\) - Set of metro stations, indexed by \\(o\\)\n\\(\\mathcal{E}\\) - Set of directed arcs between connected stations\n\n. . .\n\n\n\n\n\n\nNote: These are the easier sets.\n\n\n\nThese simply help us to represent the entire metro system as a graph with different nodes \\(\\mathcal{O}\\) and arcs \\(\\mathcal{E}\\) between connected stations.",
     "crumbs": [
@@ -10132,7 +11101,7 @@
   {
     "objectID": "part-12/lecture-rail.html#time-sets",
     "href": "part-12/lecture-rail.html#time-sets",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Time Sets?",
     "text": "Time Sets?\nQuestion: What could be the time sets?\n\n\n\\(\\mathcal{T}\\) - Set of minutes in the time horizon, indexed by \\(t\\)\n\\(\\mathcal{P}\\) - Set of periods in the observed time horizon, where \\(p \\in \\{p_1, p_2, \\dots,p_n\\}\\)\n\n\n. . .\n\n\n\n\n\n\nNote: Number of periods\n\n\n\nWe further define \\(n\\) as the number of periods in observed time horizon.",
     "crumbs": [
@@ -10143,7 +11112,7 @@
   {
     "objectID": "part-12/lecture-rail.html#periods",
     "href": "part-12/lecture-rail.html#periods",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Periods",
     "text": "Periods\nQuestion: Why do we add periods here?\n. . .\n\nStaff needs clear, consistent instructions\nFrequent changes in flow increase risk of errors\nEasier to manage and communicate for planners\n\n. . .\n\n\n\n\n\n\nNote: Period Length\n\n\n\nWe define the period length as the length of the period in minutes measured as \\(m\\) minutes, which is the same for all periods.",
     "crumbs": [
@@ -10154,7 +11123,7 @@
   {
     "objectID": "part-12/lecture-rail.html#mapping-minutes-to-periods",
     "href": "part-12/lecture-rail.html#mapping-minutes-to-periods",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Mapping Minutes to Periods",
     "text": "Mapping Minutes to Periods\n\nWe can define an additional set with their relation\nIt specifies the relation of periods \\(p\\) to minutes \\(t\\).\n\n\\[\n    I_p =\\{t \\in \\mathcal{T}|(p-1) \\times m + 1 \\leq t \\leq p \\times m\\} \\quad \\forall p \\in \\mathcal{P}\n\\]\n. . .\nQuestion: Can anybody explain it?\n. . .\n\n\\(I_p\\) is the set of minutes \\(t\\) that belong to period \\(p\\)\nMinutes are not overlapping, but they are continuous",
     "crumbs": [
@@ -10165,7 +11134,7 @@
   {
     "objectID": "part-12/lecture-rail.html#parameters",
     "href": "part-12/lecture-rail.html#parameters",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Parameters?",
     "text": "Parameters?\nQuestion: What could be possible parameters?\n. . .\n\n\\(q_{o,d,p}\\) - Demand from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in \\(p\\)\n\\(d_{e}\\) - Travel time (min) of the arcs \\(e \\in \\mathcal{E}\\)\n\\(c_e\\) - Max. allowed arc entry rate \\(e\\) per minute with \\(e \\in \\mathcal{E}\\)\n\\(c_{o}^{min}\\) - Min. station entry rate \\(o\\) per minute with \\(o \\in \\mathcal{O}\\)\n\\(c_{o}^{max}\\) - Max. station entry rate \\(o\\) per minute with \\(o \\in \\mathcal{O}\\)\n\\(\\alpha\\) - Maximal allowed arc utilization (\\(0 &lt; \\alpha &lt; 1\\))",
     "crumbs": [
@@ -10176,7 +11145,7 @@
   {
     "objectID": "part-12/lecture-rail.html#metro-movement",
     "href": "part-12/lecture-rail.html#metro-movement",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metro Movement",
     "text": "Metro Movement\nQuestion: How do people move inside the metro?\n. . .\n\nSimple network: assume people use the shortest path\nUse Djikstra’s algorithm to compute it\nFrom each station to all other stations\n\n. . .\n\n\n\n\n\n\nTip: We can save the results in a new set \\(\\mathcal{C}_{o,d}\\)\n\n\n\nThis will help us to model the movement inside the metro.",
     "crumbs": [
@@ -10187,7 +11156,7 @@
   {
     "objectID": "part-12/lecture-rail.html#shortest-paths-sp",
     "href": "part-12/lecture-rail.html#shortest-paths-sp",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Shortest Paths (SP)",
     "text": "Shortest Paths (SP)\n\n\\(\\mathcal{C}_{o,d}\\) - Set of arcs \\(e \\in \\mathcal{E}\\) on the SP from \\(o,d \\in \\mathcal{O}\\)\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nNow we compute the travel time on the shortest paths. One parameter for the SP from station to station and one for the SP from station to arc.\n\n\n. . .\n\n\\(d_{o,d}\\) - travel time (min) on SP from \\(o \\in \\mathcal{O}\\) to \\(d \\in \\mathcal{O}\\)\n\\(d_{o,e}\\) - travel time (min) on SP from \\(o \\in \\mathcal{O}\\) to \\(e \\in \\mathcal{E}\\)",
     "crumbs": [
@@ -10198,7 +11167,7 @@
   {
     "objectID": "part-12/lecture-rail.html#people-spreading",
     "href": "part-12/lecture-rail.html#people-spreading",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "People Spreading",
     "text": "People Spreading\nQuestion: How do people spread?",
     "crumbs": [
@@ -10209,7 +11178,7 @@
   {
     "objectID": "part-12/lecture-rail.html#ratio-of-origin-destination",
     "href": "part-12/lecture-rail.html#ratio-of-origin-destination",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Ratio of Origin-Destination",
     "text": "Ratio of Origin-Destination\n\nWe cannot control the destination of the passengers\nThus we assume that people spread based on destination\n\n. . .\n\\[\\frac{q_{o,d,p}}{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}} \\quad \\forall o,d \\in \\mathcal{O}, p\\in \\mathcal{P}\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nBased on the ratio of the different destinations \\(d\\) to the total queue for each station \\(o \\in \\mathcal{O}\\) in each period \\(p \\in \\mathcal{P}\\).",
     "crumbs": [
@@ -10220,7 +11189,7 @@
   {
     "objectID": "part-12/lecture-rail.html#decision-variable",
     "href": "part-12/lecture-rail.html#decision-variable",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Decision Variable?",
     "text": "Decision Variable?\n\n\n\n\n\n\nOur goal is to:\n\n\n\nRegulate the inflow at each individual station to minimize the queues outside the metro stations based on the allowed inflow while adhering to the capacity constraints.\n\n\n\n\n\n\n\n\nTip\n\n\n\nThere is one queue for all passenger flow directions, as managing multiple queues would be too complex for the planners!",
     "crumbs": [
@@ -10231,7 +11200,7 @@
   {
     "objectID": "part-12/lecture-rail.html#decision-variable-1",
     "href": "part-12/lecture-rail.html#decision-variable-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Decision Variable",
     "text": "Decision Variable\n\n\n\n\n\n\nWe need the following sets:\n\n\n\n\nAll the metro stations, \\(o \\in \\mathcal{O}\\)\nAll periods under observation, \\(p \\in \\mathcal{P}\\)\n\n\n\nQuestion: What could be our decision variable?\n. . .\n\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)",
     "crumbs": [
@@ -10242,7 +11211,7 @@
   {
     "objectID": "part-12/lecture-rail.html#objective-function",
     "href": "part-12/lecture-rail.html#objective-function",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Objective Function?",
     "text": "Objective Function?\n\n\n\n\n\n\nOur main objective is to:\n\n\n\nRegulate the inflow at each individual station to minimize the queues outside the metro stations based on the allowed inflow while adhering to the capacity constraints.\n\n\n. . .\nQuestion: How again are queues minimized?\n. . .\n\nBy the allowed inflow \\(X_{o,p}\\) subtracted from the queue",
     "crumbs": [
@@ -10253,7 +11222,7 @@
   {
     "objectID": "part-12/lecture-rail.html#objective-function-1",
     "href": "part-12/lecture-rail.html#objective-function-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Objective Function",
     "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters and variables:\n\n\n\n\n\\(q_{o,d,p}\\) - People queued to travel from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in period \\(p\\)\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)\n\n\n\n. . .\nQuestion: What could be our objective function?\n. . .\n\\[\n\\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\]",
     "crumbs": [
@@ -10264,7 +11233,7 @@
   {
     "objectID": "part-12/lecture-rail.html#necessary-constraints",
     "href": "part-12/lecture-rail.html#necessary-constraints",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Necessary Constraints",
     "text": "Necessary Constraints\nQuestion: What constraints do we need?\n\n\n\n\n\n. . .\n\nThe capacity of each arc is not exceeded\nDo not dispatch more people than are queued\nDo not dispatch less than the minimum allowed inflow",
     "crumbs": [
@@ -10275,7 +11244,7 @@
   {
     "objectID": "part-12/lecture-rail.html#section-2",
     "href": "part-12/lecture-rail.html#section-2",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Things are going to\nget a little\ncomplicated now!",
     "crumbs": [
@@ -10286,7 +11255,7 @@
   {
     "objectID": "part-12/lecture-rail.html#central-question",
     "href": "part-12/lecture-rail.html#central-question",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Central Question",
     "text": "Central Question\nQuestion: When do people flowing into the metro system change the arcs?\n. . .\n\nPeople enter metro station at \\(o\\) with destination \\(d\\)\nThey will lead to a usage of an arc \\(e\\) on their SP\nThis usage depends on their path and the travel times\n\n. . .\n\n\n\n\n\n\nTip: You’ll likely know what we need now!\n\n\n\nWe can add a new set \\(\\mathcal{R}_{e,t}\\) to help us with this.",
     "crumbs": [
@@ -10297,7 +11266,7 @@
   {
     "objectID": "part-12/lecture-rail.html#set-of-time-delays",
     "href": "part-12/lecture-rail.html#set-of-time-delays",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Set of Time-Delays",
     "text": "Set of Time-Delays\n\\[\n\\mathcal{R}_{e,t} = \\{(o,d,p) \\mid\n    \\begin{array}{l}\n    (o,d) | o,d \\in \\mathcal{O}, \\\\\n    q_{o,d,p} &gt; 0, \\\\\n    e \\in \\mathcal{C}_{o,d}, \\\\\n    t-d_{o,e} \\in I_p, \\\\\n    p \\in \\mathcal{P}\\}\n    \\end{array}\n    \\quad \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T}\n\\]\n. . .\nQuestion: Who can explain this set?\n. . .\nThe set \\(\\mathcal{R}_{e,t}\\) contains all combinations \\((o,d,p)\\) which trigger a capacity utilization of arc \\(e\\) in period \\(t\\).",
     "crumbs": [
@@ -10308,7 +11277,7 @@
   {
     "objectID": "part-12/lecture-rail.html#small-example",
     "href": "part-12/lecture-rail.html#small-example",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Small Example",
     "text": "Small Example\n\n\n\n\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nThe set contains all possible o-d pairs and periods, that result in passengers starting at arc \\((C,D)\\) at minute \\(22\\). For m=2, it would be:\n\\(\\{((A,D),3),((B,D),5),((C,D),11),((E,D),9)\\}\\).",
     "crumbs": [
@@ -10319,7 +11288,7 @@
   {
     "objectID": "part-12/lecture-rail.html#section-3",
     "href": "part-12/lecture-rail.html#section-3",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Essentially, we can use this\nset to compute the utilization\nof an arc at each minute based\non the inflow level at the\ndifferent stations and periods.",
     "crumbs": [
@@ -10330,7 +11299,7 @@
   {
     "objectID": "part-12/lecture-rail.html#ensure-capacity-utilization",
     "href": "part-12/lecture-rail.html#ensure-capacity-utilization",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Ensure Capacity Utilization?",
     "text": "Ensure Capacity Utilization?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that the capacity of each arc is not exceeded at any minute.\n\n\n. . .\n\n\n\n\n\n\nWe need the following variable, parameter and set:\n\n\n\n\n\\(q_{o,d,p}\\) - people waiting to travel from station \\(o \\in \\mathcal{O}\\) to station \\(d \\in \\mathcal{O}\\) in \\(p\\)\n\\(c_e\\) - people max. allowed to enter arc \\(e\\) per minute with \\(e \\in \\mathcal{E}\\)\n\\(\\mathcal{R}_{e,t}\\) - mapping of station entries to arc \\(e\\) in time \\(t\\) with \\(e \\in \\mathcal{E}\\) and \\(t \\in \\mathcal{T}\\)\n\\(\\alpha\\) - maximal allowed arc utilization (\\(0 &lt; \\alpha &lt; 1\\))\n\\(X_{o,p}\\) - the allowed inflow per minute at metro station \\(o\\) in the period \\(p\\)",
     "crumbs": [
@@ -10341,7 +11310,7 @@
   {
     "objectID": "part-12/lecture-rail.html#ensure-capacity-utilization-1",
     "href": "part-12/lecture-rail.html#ensure-capacity-utilization-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Ensure Capacity Utilization",
     "text": "Ensure Capacity Utilization\nQuestion: What could be the constraint?\n. . .\n\\[\n\\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} \\quad \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nHere, we combine the inflow at each station based on the o-d proportion and let the people spread through the network, checking that no arc is over-utilized at any minute.",
     "crumbs": [
@@ -10352,7 +11321,7 @@
   {
     "objectID": "part-12/lecture-rail.html#dispatch-only-available-people",
     "href": "part-12/lecture-rail.html#dispatch-only-available-people",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Dispatch Only Available People?",
     "text": "Dispatch Only Available People?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that we do not dispatch more people than are queued and less than the minimum allowed inflow, preventing over- and under-dispatching.\n\n\n. . .\n\n\n\n\n\n\nWe need the following variables and parameters:\n\n\n\n\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)\n\\(q_{o,d,p}\\) - People queued to travel from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in \\(p\\)\n\\(m\\) - period length in minutes",
     "crumbs": [
@@ -10363,7 +11332,7 @@
   {
     "objectID": "part-12/lecture-rail.html#dispatch-only-available-people-1",
     "href": "part-12/lecture-rail.html#dispatch-only-available-people-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Dispatch Only Available People",
     "text": "Dispatch Only Available People\nQuestion: What could be the constraint?\n. . .\n\n\n\\[\n\\min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\min}\\} \\leq X_{o,p} \\leq \\max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\max}\\} \\quad \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\]\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nWe need this constraint for two reasons:\n\nWe could also dispatch more people than there are as this would minimize the objective value. \nWe also need to ensure that we can dispatch at least the minimum allowed inflow or less if the queue is smaller than the minimum allowed inflow.",
     "crumbs": [
@@ -10374,7 +11343,7 @@
   {
     "objectID": "part-12/lecture-rail.html#metro-inflow-model",
     "href": "part-12/lecture-rail.html#metro-inflow-model",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metro Inflow Model",
     "text": "Metro Inflow Model\n\n\n\\[\\begin{align*}\n    \\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\end{align*}\\] subject to: \\[\\begin{align*}\n    &  \\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} && \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T} \\\\\n    & min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\\} \\leq X_{o,p} \\leq max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\\} && \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\end{align*}\\]",
     "crumbs": [
@@ -10385,7 +11354,7 @@
   {
     "objectID": "part-12/lecture-rail.html#characteristics",
     "href": "part-12/lecture-rail.html#characteristics",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Characteristics",
     "text": "Characteristics\nQuestions: On model characteristics\n\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domains do we have?",
     "crumbs": [
@@ -10396,7 +11365,7 @@
   {
     "objectID": "part-12/lecture-rail.html#model-assumptions",
     "href": "part-12/lecture-rail.html#model-assumptions",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Model Assumptions",
     "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nWhat are likely issues that can arise if applied?\nHave we thought in detail about queues?\nAre shortest paths a feasible assumption?",
     "crumbs": [
@@ -10407,7 +11376,7 @@
   {
     "objectID": "part-12/lecture-rail.html#metro-inflow-optimization",
     "href": "part-12/lecture-rail.html#metro-inflow-optimization",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metro Inflow Optimization",
     "text": "Metro Inflow Optimization\n. . .\nQuestion: Can this be applied?",
     "crumbs": [
@@ -10418,7 +11387,7 @@
   {
     "objectID": "part-12/lecture-rail.html#metro-inflow-problem",
     "href": "part-12/lecture-rail.html#metro-inflow-problem",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metro Inflow Problem",
     "text": "Metro Inflow Problem\n\nSolved very fast within seconds for realistic problem sizes\nBut we cannot plan or control the metro inflow\nQueues are too simplified with passengers disappearing\n\n. . .\nQuestion: Any ideas, how the current model could be improved or how it could be embedded into a heuristic?",
     "crumbs": [
@@ -10429,7 +11398,7 @@
   {
     "objectID": "part-12/lecture-rail.html#heuristic-step-wise-optimization",
     "href": "part-12/lecture-rail.html#heuristic-step-wise-optimization",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Heuristic: Step-Wise Optimization",
     "text": "Heuristic: Step-Wise Optimization\n\nSolve the model for the time-horizon of a few periods\nFix the inflow in the current first period\nDecrease capacity in the network based on the inflow\nTransfer remaining queues into the subsequent period\nSolve the model again\nRepeat, until the inflow is computed for all periods",
     "crumbs": [
@@ -10440,7 +11409,7 @@
   {
     "objectID": "part-12/lecture-rail.html#transport-demand",
     "href": "part-12/lecture-rail.html#transport-demand",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Transport Demand",
     "text": "Transport Demand",
     "crumbs": [
@@ -10451,7 +11420,7 @@
   {
     "objectID": "part-12/lecture-rail.html#utilization-analysis",
     "href": "part-12/lecture-rail.html#utilization-analysis",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Utilization Analysis",
     "text": "Utilization Analysis",
     "crumbs": [
@@ -10462,7 +11431,7 @@
   {
     "objectID": "part-12/lecture-rail.html#implementation",
     "href": "part-12/lecture-rail.html#implementation",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Implementation",
     "text": "Implementation\n\nAssumption of known destinations based is strong\nMovements seemed to follow our forecasts\nWe did achieve our goal of metro inflow control\nSimulation was used to estimate the inflows\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nFew dangerous situations, especially at the FIFA Fan Fest, were handled well by the authorities.",
     "crumbs": [
@@ -10473,7 +11442,7 @@
   {
     "objectID": "part-12/lecture-rail.html#wrap-up",
     "href": "part-12/lecture-rail.html#wrap-up",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Wrap Up",
     "text": "Wrap Up\n\nModel can help to achieve a good balance\nCan be adapted easily to any metro system worldwide \nEspecially interesting for larger Asian cities\n\n. . .\n\n\n\n\n\n\nAnd that’s it for todays lecture!\n\n\n\nWe now have covered a metro inflow control problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial.",
     "crumbs": [
@@ -10484,7 +11453,7 @@
   {
     "objectID": "part-12/lecture-rail.html#section-4",
     "href": "part-12/lecture-rail.html#section-4",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Questions?",
     "crumbs": [
@@ -10495,7 +11464,7 @@
   {
     "objectID": "part-12/lecture-rail.html#literature-i",
     "href": "part-12/lecture-rail.html#literature-i",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Literature I",
     "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.",
     "crumbs": [
@@ -10506,386 +11475,570 @@
   {
     "objectID": "part-12/lecture-presentation.html#fifa-world-cup-2022-in-qatar",
     "href": "part-12/lecture-presentation.html#fifa-world-cup-2022-in-qatar",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "FIFA World Cup 2022 in Qatar",
     "text": "FIFA World Cup 2022 in Qatar"
   },
   {
     "objectID": "part-12/lecture-presentation.html#public-transport",
     "href": "part-12/lecture-presentation.html#public-transport",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Public transport",
     "text": "Public transport\n\nFIFA Worldcup 2022 took place in a small region\nThe capacity of the metro system was finite\nMore than 1 million tourists where expected\nMetro usage was free for all ticket holders\nTransport methods were expected to be overloaded\n\n\nQuestion: What could become an issue?"
   },
   {
     "objectID": "part-12/lecture-presentation.html#crowd-disasters",
     "href": "part-12/lecture-presentation.html#crowd-disasters",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Crowd Disasters",
     "text": "Crowd Disasters"
   },
   {
     "objectID": "part-12/lecture-presentation.html#potential-locations",
     "href": "part-12/lecture-presentation.html#potential-locations",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Potential locations",
     "text": "Potential locations\nQuestion: Where could crowd disasters happen?\n\n\nAt event venues and in waiting areas\nAt intersections of multiple pedestrian flows\nIn narrow passages and entrances\nOn crowded metro platforms and transfer stations\nAt ticket/turnstile bottlenecks and emergency exits"
   },
   {
     "objectID": "part-12/lecture-presentation.html#metrosystem-of-doha",
     "href": "part-12/lecture-presentation.html#metrosystem-of-doha",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metrosystem of Doha",
     "text": "Metrosystem of Doha"
   },
   {
     "objectID": "part-12/lecture-presentation.html#main-bottleneck",
     "href": "part-12/lecture-presentation.html#main-bottleneck",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Main Bottleneck",
     "text": "Main Bottleneck\nQuestion: What could be a potential bottleneck?\n\n\nRed Line has twice the capacity of the Green and Gold Line\nPeople use the metro to get to the event venues\n\n\n\nQuestion: What could be the issue?\n\nImagine a match at a stadium along the Gold line\nPeople from Red and Green line will try to get there\nThis will cause a massive crowd at transfer stations"
   },
   {
     "objectID": "part-12/lecture-presentation.html#visualization",
     "href": "part-12/lecture-presentation.html#visualization",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Visualization",
     "text": "Visualization\n\n\n10 people want to start per minute at each station\nEverybody wants to get to station D"
   },
   {
     "objectID": "part-12/lecture-presentation.html#closer-look-at-the-metro-system",
     "href": "part-12/lecture-presentation.html#closer-look-at-the-metro-system",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Closer look at the Metro System",
     "text": "Closer look at the Metro System"
   },
   {
     "objectID": "part-12/lecture-presentation.html#capacities-inside-the-stations",
     "href": "part-12/lecture-presentation.html#capacities-inside-the-stations",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Capacities inside the stations",
     "text": "Capacities inside the stations\n\nCapacities inside the stations are limited as well\nThese include the escalators, stairs, and elevators\nBut also the platforms and the ticket gates\n\n\n\n\n\n\n\n\nWarning\n\n\nThis can lead to overcrowding and potential crowd disasters!"
   },
   {
     "objectID": "part-12/lecture-presentation.html#general-issues",
     "href": "part-12/lecture-presentation.html#general-issues",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "General Issues",
     "text": "General Issues\nQuestion: What could also be an issue?\n\n\nOften unknown how many people exactly will participate\nGathering data is extremely importand and difficult\nCrowd behavior can be unpredictable and dynamic\nWeather conditions may affect transportation preferences\nCultural factors influence crowd movement patterns\nEmergency situations require flexible contingency plans"
   },
   {
     "objectID": "part-12/lecture-presentation.html#section",
     "href": "part-12/lecture-presentation.html#section",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Let’s take a\ncloser look at the\nproblem structure!"
   },
   {
     "objectID": "part-12/lecture-presentation.html#objective",
     "href": "part-12/lecture-presentation.html#objective",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Objective",
     "text": "Objective\nQuestion: What could be the objectives of the authorities?\n\n\nA safe and successful event as host country\nGood publicity and a positive recognition worldwide\n\nSatisfied visitors that enjoyed their time\n\n\n\n\n\n\n\n\n\nNote: We can model none of the above directly!\n\n\nBut we can assist in the estimation of transport demands and the design of operational plans to ensure public safety and a smooth transportation through the city."
   },
   {
     "objectID": "part-12/lecture-presentation.html#underlying-problem",
     "href": "part-12/lecture-presentation.html#underlying-problem",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Underlying Problem",
     "text": "Underlying Problem\nQuestion: Can we just start modeling?\n\n\nFirst, we need to understand the movement patterns\nEvent is unprecedented, movement patterns are unknown\nMultiple concurrent events affect flow patterns\n\n\n\n\n\n\n\n\n\nTip: We need to estimate the data first!\n\n\nThis is a huge challenge, but we can use simulation to estimate the data."
   },
   {
     "objectID": "part-12/lecture-presentation.html#simulation",
     "href": "part-12/lecture-presentation.html#simulation",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Simulation",
     "text": "Simulation\n\nBased on publicly available data from the area\nSimulates all individuals participating at the event\nIncludes all transportation infrastructure\nIndividual mode choice based on a choice model\n\n\n\n\n\n\n\n\nTip: Julia is a great tool for this!\n\n\nSimulations was build in Julia. With 1,000,000 individuals walking,using cars, busses, and the metro, a day took less than 5 minutes."
   },
   {
     "objectID": "part-12/lecture-presentation.html#results-of-the-simulation",
     "href": "part-12/lecture-presentation.html#results-of-the-simulation",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Results of the Simulation",
     "text": "Results of the Simulation\n\n\n\n\nDetailed movement patterns throughout the region\nPotential sections at risk in the transport infrastructure\nPotential capacity overloads at event locations"
   },
   {
     "objectID": "part-12/lecture-presentation.html#section-1",
     "href": "part-12/lecture-presentation.html#section-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "But it is still\nbased on a lot\nof assumptions!"
   },
   {
     "objectID": "part-12/lecture-presentation.html#main-risk-metro",
     "href": "part-12/lecture-presentation.html#main-risk-metro",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Main risk: Metro",
     "text": "Main risk: Metro"
   },
   {
     "objectID": "part-12/lecture-presentation.html#idea",
     "href": "part-12/lecture-presentation.html#idea",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Idea",
     "text": "Idea\nQuestion: What can we do to prevent crowd disasters?\n\n\nRegulate the inflow at each individual station\nEnsure utilized capacity is always within bounds\n\n\n\nQuestion: What could we try to model?\n\n\n\nMinimize the queues outside of the metro stations\nBased on the allowed inflow and origin-destination data\nAdhering to the capacity constraints"
   },
   {
     "objectID": "part-12/lecture-presentation.html#difficulty",
     "href": "part-12/lecture-presentation.html#difficulty",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Difficulty",
     "text": "Difficulty\n\n\n\nMovement patterns have different origin-destination pairs\nRegulating the inflow does not affect the destination"
   },
   {
     "objectID": "part-12/lecture-presentation.html#graph-sets",
     "href": "part-12/lecture-presentation.html#graph-sets",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Graph Sets?",
     "text": "Graph Sets?\nQuestion: What could be the sets for the graph?"
   },
   {
     "objectID": "part-12/lecture-presentation.html#graph-sets-1",
     "href": "part-12/lecture-presentation.html#graph-sets-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Graph Sets?",
     "text": "Graph Sets?\n\n\\(\\mathcal{G}\\) - Connected digraph of the metro network \\(\\mathcal{G}=(\\mathcal{O},\\mathcal{E})\\)\n\\(\\mathcal{O}\\) - Set of metro stations, indexed by \\(o\\)\n\\(\\mathcal{E}\\) - Set of directed arcs between connected stations\n\n\n\n\n\n\n\n\nNote: These are the easier sets.\n\n\nThese simply help us to represent the entire metro system as a graph with different nodes \\(\\mathcal{O}\\) and arcs \\(\\mathcal{E}\\) between connected stations."
   },
   {
     "objectID": "part-12/lecture-presentation.html#time-sets",
     "href": "part-12/lecture-presentation.html#time-sets",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Time Sets?",
     "text": "Time Sets?\nQuestion: What could be the time sets?\n\n\n\\(\\mathcal{T}\\) - Set of minutes in the time horizon, indexed by \\(t\\)\n\\(\\mathcal{P}\\) - Set of periods in the observed time horizon, where \\(p \\in \\{p_1, p_2, \\dots,p_n\\}\\)\n\n\n\n\n\n\n\n\n\nNote: Number of periods\n\n\nWe further define \\(n\\) as the number of periods in observed time horizon."
   },
   {
     "objectID": "part-12/lecture-presentation.html#periods",
     "href": "part-12/lecture-presentation.html#periods",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Periods",
     "text": "Periods\nQuestion: Why do we add periods here?\n\n\nStaff needs clear, consistent instructions\nFrequent changes in flow increase risk of errors\nEasier to manage and communicate for planners\n\n\n\n\n\n\n\n\n\nNote: Period Length\n\n\nWe define the period length as the length of the period in minutes measured as \\(m\\) minutes, which is the same for all periods."
   },
   {
     "objectID": "part-12/lecture-presentation.html#mapping-minutes-to-periods",
     "href": "part-12/lecture-presentation.html#mapping-minutes-to-periods",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Mapping Minutes to Periods",
     "text": "Mapping Minutes to Periods\n\nWe can define an additional set with their relation\nIt specifies the relation of periods \\(p\\) to minutes \\(t\\).\n\n\\[\n    I_p =\\{t \\in \\mathcal{T}|(p-1) \\times m + 1 \\leq t \\leq p \\times m\\} \\quad \\forall p \\in \\mathcal{P}\n\\]\n\nQuestion: Can anybody explain it?\n\n\n\n\\(I_p\\) is the set of minutes \\(t\\) that belong to period \\(p\\)\nMinutes are not overlapping, but they are continuous"
   },
   {
     "objectID": "part-12/lecture-presentation.html#parameters",
     "href": "part-12/lecture-presentation.html#parameters",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Parameters?",
     "text": "Parameters?\nQuestion: What could be possible parameters?\n\n\n\\(q_{o,d,p}\\) - Demand from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in \\(p\\)\n\\(d_{e}\\) - Travel time (min) of the arcs \\(e \\in \\mathcal{E}\\)\n\\(c_e\\) - Max. allowed arc entry rate \\(e\\) per minute with \\(e \\in \\mathcal{E}\\)\n\\(c_{o}^{min}\\) - Min. station entry rate \\(o\\) per minute with \\(o \\in \\mathcal{O}\\)\n\\(c_{o}^{max}\\) - Max. station entry rate \\(o\\) per minute with \\(o \\in \\mathcal{O}\\)\n\\(\\alpha\\) - Maximal allowed arc utilization (\\(0 &lt; \\alpha &lt; 1\\))"
   },
   {
     "objectID": "part-12/lecture-presentation.html#metro-movement",
     "href": "part-12/lecture-presentation.html#metro-movement",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metro Movement",
     "text": "Metro Movement\nQuestion: How do people move inside the metro?\n\n\nSimple network: assume people use the shortest path\nUse Djikstra’s algorithm to compute it\nFrom each station to all other stations\n\n\n\n\n\n\n\n\n\nTip: We can save the results in a new set \\(\\mathcal{C}_{o,d}\\)\n\n\nThis will help us to model the movement inside the metro."
   },
   {
     "objectID": "part-12/lecture-presentation.html#shortest-paths-sp",
     "href": "part-12/lecture-presentation.html#shortest-paths-sp",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Shortest Paths (SP)",
     "text": "Shortest Paths (SP)\n\n\\(\\mathcal{C}_{o,d}\\) - Set of arcs \\(e \\in \\mathcal{E}\\) on the SP from \\(o,d \\in \\mathcal{O}\\)\n\n\n\n\n\n\n\n\nNote\n\n\nNow we compute the travel time on the shortest paths. One parameter for the SP from station to station and one for the SP from station to arc.\n\n\n\n\n\n\n\\(d_{o,d}\\) - travel time (min) on SP from \\(o \\in \\mathcal{O}\\) to \\(d \\in \\mathcal{O}\\)\n\\(d_{o,e}\\) - travel time (min) on SP from \\(o \\in \\mathcal{O}\\) to \\(e \\in \\mathcal{E}\\)"
   },
   {
     "objectID": "part-12/lecture-presentation.html#people-spreading",
     "href": "part-12/lecture-presentation.html#people-spreading",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "People Spreading",
     "text": "People Spreading\nQuestion: How do people spread?"
   },
   {
     "objectID": "part-12/lecture-presentation.html#ratio-of-origin-destination",
     "href": "part-12/lecture-presentation.html#ratio-of-origin-destination",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Ratio of Origin-Destination",
     "text": "Ratio of Origin-Destination\n\nWe cannot control the destination of the passengers\nThus we assume that people spread based on destination\n\n\n\\[\\frac{q_{o,d,p}}{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}} \\quad \\forall o,d \\in \\mathcal{O}, p\\in \\mathcal{P}\\]\n\n\n\n\n\n\n\n\nNote\n\n\nBased on the ratio of the different destinations \\(d\\) to the total queue for each station \\(o \\in \\mathcal{O}\\) in each period \\(p \\in \\mathcal{P}\\)."
   },
   {
     "objectID": "part-12/lecture-presentation.html#decision-variable",
     "href": "part-12/lecture-presentation.html#decision-variable",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Decision Variable?",
     "text": "Decision Variable?\n\n\n\n\n\n\nOur goal is to:\n\n\nRegulate the inflow at each individual station to minimize the queues outside the metro stations based on the allowed inflow while adhering to the capacity constraints.\n\n\n\n\n\n\n\n\n\nTip\n\n\nThere is one queue for all passenger flow directions, as managing multiple queues would be too complex for the planners!"
   },
   {
     "objectID": "part-12/lecture-presentation.html#decision-variable-1",
     "href": "part-12/lecture-presentation.html#decision-variable-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Decision Variable",
     "text": "Decision Variable\n\n\n\n\n\n\nWe need the following sets:\n\n\n\nAll the metro stations, \\(o \\in \\mathcal{O}\\)\nAll periods under observation, \\(p \\in \\mathcal{P}\\)\n\n\n\n\nQuestion: What could be our decision variable?\n\n\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)"
   },
   {
     "objectID": "part-12/lecture-presentation.html#objective-function",
     "href": "part-12/lecture-presentation.html#objective-function",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Objective Function?",
     "text": "Objective Function?\n\n\n\n\n\n\nOur main objective is to:\n\n\nRegulate the inflow at each individual station to minimize the queues outside the metro stations based on the allowed inflow while adhering to the capacity constraints.\n\n\n\n\nQuestion: How again are queues minimized?\n\n\n\nBy the allowed inflow \\(X_{o,p}\\) subtracted from the queue"
   },
   {
     "objectID": "part-12/lecture-presentation.html#objective-function-1",
     "href": "part-12/lecture-presentation.html#objective-function-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Objective Function",
     "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters and variables:\n\n\n\n\\(q_{o,d,p}\\) - People queued to travel from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in period \\(p\\)\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)\n\n\n\n\n\nQuestion: What could be our objective function?\n\n\n\\[\n\\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\]"
   },
   {
     "objectID": "part-12/lecture-presentation.html#necessary-constraints",
     "href": "part-12/lecture-presentation.html#necessary-constraints",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Necessary Constraints",
     "text": "Necessary Constraints\nQuestion: What constraints do we need?\n\n\n\nThe capacity of each arc is not exceeded\nDo not dispatch more people than are queued\nDo not dispatch less than the minimum allowed inflow"
   },
   {
     "objectID": "part-12/lecture-presentation.html#section-2",
     "href": "part-12/lecture-presentation.html#section-2",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Things are going to\nget a little\ncomplicated now!"
   },
   {
     "objectID": "part-12/lecture-presentation.html#central-question",
     "href": "part-12/lecture-presentation.html#central-question",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Central Question",
     "text": "Central Question\nQuestion: When do people flowing into the metro system change the arcs?\n\n\nPeople enter metro station at \\(o\\) with destination \\(d\\)\nThey will lead to a usage of an arc \\(e\\) on their SP\nThis usage depends on their path and the travel times\n\n\n\n\n\n\n\n\n\nTip: You’ll likely know what we need now!\n\n\nWe can add a new set \\(\\mathcal{R}_{e,t}\\) to help us with this."
   },
   {
     "objectID": "part-12/lecture-presentation.html#set-of-time-delays",
     "href": "part-12/lecture-presentation.html#set-of-time-delays",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Set of Time-Delays",
     "text": "Set of Time-Delays\n\\[\n\\mathcal{R}_{e,t} = \\{(o,d,p) \\mid\n    \\begin{array}{l}\n    (o,d) | o,d \\in \\mathcal{O}, \\\\\n    q_{o,d,p} &gt; 0, \\\\\n    e \\in \\mathcal{C}_{o,d}, \\\\\n    t-d_{o,e} \\in I_p, \\\\\n    p \\in \\mathcal{P}\\}\n    \\end{array}\n    \\quad \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T}\n\\]\n\nQuestion: Who can explain this set?\n\n\nThe set \\(\\mathcal{R}_{e,t}\\) contains all combinations \\((o,d,p)\\) which trigger a capacity utilization of arc \\(e\\) in period \\(t\\)."
   },
   {
     "objectID": "part-12/lecture-presentation.html#small-example",
     "href": "part-12/lecture-presentation.html#small-example",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Small Example",
     "text": "Small Example\n\n\n\n\n\n\n\n\nTip\n\n\nThe set contains all possible o-d pairs and periods, that result in passengers starting at arc \\((C,D)\\) at minute \\(22\\). For m=2, it would be:\n\\(\\{((A,D),3),((B,D),5),((C,D),11),((E,D),9)\\}\\)."
   },
   {
     "objectID": "part-12/lecture-presentation.html#section-3",
     "href": "part-12/lecture-presentation.html#section-3",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Essentially, we can use this\nset to compute the utilization\nof an arc at each minute based\non the inflow level at the\ndifferent stations and periods."
   },
   {
     "objectID": "part-12/lecture-presentation.html#ensure-capacity-utilization",
     "href": "part-12/lecture-presentation.html#ensure-capacity-utilization",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Ensure Capacity Utilization?",
     "text": "Ensure Capacity Utilization?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\nEnsure that the capacity of each arc is not exceeded at any minute.\n\n\n\n\n\n\n\n\n\n\nWe need the following variable, parameter and set:\n\n\n\n\\(q_{o,d,p}\\) - people waiting to travel from station \\(o \\in \\mathcal{O}\\) to station \\(d \\in \\mathcal{O}\\) in \\(p\\)\n\\(c_e\\) - people max. allowed to enter arc \\(e\\) per minute with \\(e \\in \\mathcal{E}\\)\n\\(\\mathcal{R}_{e,t}\\) - mapping of station entries to arc \\(e\\) in time \\(t\\) with \\(e \\in \\mathcal{E}\\) and \\(t \\in \\mathcal{T}\\)\n\\(\\alpha\\) - maximal allowed arc utilization (\\(0 &lt; \\alpha &lt; 1\\))\n\\(X_{o,p}\\) - the allowed inflow per minute at metro station \\(o\\) in the period \\(p\\)"
   },
   {
     "objectID": "part-12/lecture-presentation.html#ensure-capacity-utilization-1",
     "href": "part-12/lecture-presentation.html#ensure-capacity-utilization-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Ensure Capacity Utilization",
     "text": "Ensure Capacity Utilization\nQuestion: What could be the constraint?\n\n\\[\n\\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} \\quad \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T}\n\\]\n\n\n\n\n\n\n\n\nNote\n\n\nHere, we combine the inflow at each station based on the o-d proportion and let the people spread through the network, checking that no arc is over-utilized at any minute."
   },
   {
     "objectID": "part-12/lecture-presentation.html#dispatch-only-available-people",
     "href": "part-12/lecture-presentation.html#dispatch-only-available-people",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Dispatch Only Available People?",
     "text": "Dispatch Only Available People?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\nEnsure that we do not dispatch more people than are queued and less than the minimum allowed inflow, preventing over- and under-dispatching.\n\n\n\n\n\n\n\n\n\n\nWe need the following variables and parameters:\n\n\n\n\\(X_{o,p}\\) - Allowed inflow (per minute) at station \\(o\\) in period \\(p\\)\n\\(q_{o,d,p}\\) - People queued to travel from station \\(o\\) to \\(d\\) with \\(o,d \\in \\mathcal{O}\\) in \\(p\\)\n\\(m\\) - period length in minutes"
   },
   {
     "objectID": "part-12/lecture-presentation.html#dispatch-only-available-people-1",
     "href": "part-12/lecture-presentation.html#dispatch-only-available-people-1",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Dispatch Only Available People",
     "text": "Dispatch Only Available People\nQuestion: What could be the constraint?\n\n\n\n\\[\n\\min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\min}\\} \\leq X_{o,p} \\leq \\max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\max}\\} \\quad \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\]\n\n\n\n\n\n\n\n\n\nNote\n\n\nWe need this constraint for two reasons:\n\nWe could also dispatch more people than there are as this would minimize the objective value. \nWe also need to ensure that we can dispatch at least the minimum allowed inflow or less if the queue is smaller than the minimum allowed inflow."
   },
   {
     "objectID": "part-12/lecture-presentation.html#metro-inflow-model",
     "href": "part-12/lecture-presentation.html#metro-inflow-model",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metro Inflow Model",
     "text": "Metro Inflow Model\n\n\n\\[\\begin{align*}\n    \\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\end{align*}\\] subject to: \\[\\begin{align*}\n    &  \\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} && \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T} \\\\\n    & min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\\} \\leq X_{o,p} \\leq max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\\} && \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\end{align*}\\]"
   },
   {
     "objectID": "part-12/lecture-presentation.html#characteristics",
     "href": "part-12/lecture-presentation.html#characteristics",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Characteristics",
     "text": "Characteristics\nQuestions: On model characteristics\n\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domains do we have?"
   },
   {
     "objectID": "part-12/lecture-presentation.html#model-assumptions",
     "href": "part-12/lecture-presentation.html#model-assumptions",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Model Assumptions",
     "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nWhat are likely issues that can arise if applied?\nHave we thought in detail about queues?\nAre shortest paths a feasible assumption?"
   },
   {
     "objectID": "part-12/lecture-presentation.html#metro-inflow-optimization",
     "href": "part-12/lecture-presentation.html#metro-inflow-optimization",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metro Inflow Optimization",
     "text": "Metro Inflow Optimization\n\nQuestion: Can this be applied?"
   },
   {
     "objectID": "part-12/lecture-presentation.html#metro-inflow-problem",
     "href": "part-12/lecture-presentation.html#metro-inflow-problem",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metro Inflow Problem",
     "text": "Metro Inflow Problem\n\nSolved very fast within seconds for realistic problem sizes\nBut we cannot plan or control the metro inflow\nQueues are too simplified with passengers disappearing\n\n\nQuestion: Any ideas, how the current model could be improved or how it could be embedded into a heuristic?"
   },
   {
     "objectID": "part-12/lecture-presentation.html#heuristic-step-wise-optimization",
     "href": "part-12/lecture-presentation.html#heuristic-step-wise-optimization",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Heuristic: Step-Wise Optimization",
     "text": "Heuristic: Step-Wise Optimization\n\nSolve the model for the time-horizon of a few periods\nFix the inflow in the current first period\nDecrease capacity in the network based on the inflow\nTransfer remaining queues into the subsequent period\nSolve the model again\nRepeat, until the inflow is computed for all periods"
   },
   {
     "objectID": "part-12/lecture-presentation.html#transport-demand",
     "href": "part-12/lecture-presentation.html#transport-demand",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Transport Demand",
     "text": "Transport Demand"
   },
   {
     "objectID": "part-12/lecture-presentation.html#utilization-analysis",
     "href": "part-12/lecture-presentation.html#utilization-analysis",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Utilization Analysis",
     "text": "Utilization Analysis"
   },
   {
     "objectID": "part-12/lecture-presentation.html#implementation",
     "href": "part-12/lecture-presentation.html#implementation",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Implementation",
     "text": "Implementation\n\nAssumption of known destinations based is strong\nMovements seemed to follow our forecasts\nWe did achieve our goal of metro inflow control\nSimulation was used to estimate the inflows\n\n\n\n\n\n\n\n\nNote\n\n\nFew dangerous situations, especially at the FIFA Fan Fest, were handled well by the authorities."
   },
   {
     "objectID": "part-12/lecture-presentation.html#wrap-up",
     "href": "part-12/lecture-presentation.html#wrap-up",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Wrap Up",
     "text": "Wrap Up\n\nModel can help to achieve a good balance\nCan be adapted easily to any metro system worldwide \nEspecially interesting for larger Asian cities\n\n\n\n\n\n\n\n\nAnd that’s it for todays lecture!\n\n\nWe now have covered a metro inflow control problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial."
   },
   {
     "objectID": "part-12/lecture-presentation.html#section-4",
     "href": "part-12/lecture-presentation.html#section-4",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "",
     "text": "Questions?"
   },
   {
     "objectID": "part-12/lecture-presentation.html#literature-i",
     "href": "part-12/lecture-presentation.html#literature-i",
-    "title": "Lecture X - Passenger Flow Control in Urban Rail",
+    "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Literature I",
     "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course."
+  },
+  {
+    "objectID": "part-13/lecture-recap.html",
+    "href": "part-13/lecture-recap.html",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "",
+    "text": "You’ve finished the course and learned how mathematical models can be used to solve real-world problems! 🎉\n. . .\n\n\n\n\n\n\n\n\n\n\nTopic\nOriginal Problem1\n\n\n\n\nSolar Panel Transport\nClassic Transport Problem\n\n\nBeer Production\nCapacitated Lot Sizing Problem\n\n\nSplit Delivery Minimization\nMultiple-Quadratic-Knapsack Problem\n\n\nLibrary Routing\nCapacitated Vehicle Routing Problem\n\n\nPolice Service Districting\nP-Median Problem\n\n\nSafety Planning Hajj Pilgrimage\nScheduling Problem\n\n\nArena Seating\n2-D Knapsack Problem\n\n\nPassenger Flow Control\nNetwork Flow Problem\n\n\n\n\n\n\n\nAny questions\nregarding the\npast lectures?\n\n\n\n\n\n\n\n\nHow to identify and abstract real-world problems\nHow to start programming in Julia\nHow to model and solve optimization problems\nHow to question model assumptions\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nThat’s a lot and a great foundation for a seminar or a master thesis!",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-recap.html#congratulations",
+    "href": "part-13/lecture-recap.html#congratulations",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "",
+    "text": "You’ve finished the course and learned how mathematical models can be used to solve real-world problems! 🎉\n. . .",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-recap.html#topics-covered",
+    "href": "part-13/lecture-recap.html#topics-covered",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "",
+    "text": "Topic\nOriginal Problem1\n\n\n\n\nSolar Panel Transport\nClassic Transport Problem\n\n\nBeer Production\nCapacitated Lot Sizing Problem\n\n\nSplit Delivery Minimization\nMultiple-Quadratic-Knapsack Problem\n\n\nLibrary Routing\nCapacitated Vehicle Routing Problem\n\n\nPolice Service Districting\nP-Median Problem\n\n\nSafety Planning Hajj Pilgrimage\nScheduling Problem\n\n\nArena Seating\n2-D Knapsack Problem\n\n\nPassenger Flow Control\nNetwork Flow Problem",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-recap.html#section",
+    "href": "part-13/lecture-recap.html#section",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "",
+    "text": "Any questions\nregarding the\npast lectures?",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-recap.html#what-have-we-learned",
+    "href": "part-13/lecture-recap.html#what-have-we-learned",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "",
+    "text": "How to identify and abstract real-world problems\nHow to start programming in Julia\nHow to model and solve optimization problems\nHow to question model assumptions\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nThat’s a lot and a great foundation for a seminar or a master thesis!",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-recap.html#how-to-continue-after-the-lecture",
+    "href": "part-13/lecture-recap.html#how-to-continue-after-the-lecture",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "How to continue after the lecture?",
+    "text": "How to continue after the lecture?\n\nThe best way is to keep programming and modeling\nWe are offering seminars and master thesis\nTry to find a way to apply programming in your work\nThere are many interesting topics to explore!\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nGetting your supervisors on board is the hardest part! But note, that it is often worth it and the tools we have used are all free and open-source.",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-recap.html#concrete-next-steps",
+    "href": "part-13/lecture-recap.html#concrete-next-steps",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "Concrete Next Steps",
+    "text": "Concrete Next Steps\n\nJoin online communities on Julia and Optimization\nContribute to open-source projects if you can\nFollow key researchers and practitioners\nStart a small personal project using the tools learned\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nIf you want to start a small personal project, try to find a problem that you are interested in and that you can solve using the tools we have learned.",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-recap.html#start-pair-programming-with-ai",
+    "href": "part-13/lecture-recap.html#start-pair-programming-with-ai",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "Start Pair Programming with AI",
+    "text": "Start Pair Programming with AI\n\nFirst, try to be confident with the basics of a language\nAlways try to understand the code you use\nIf you want to try AI pair programming, use Cursor as IDE\n\n. . .\n\n\n\n\n\n\nTip\n\n\n\nCursor is a great IDE for AI pair programming, although it is not completely free. It has Claude and ChatGPT integrated and makes work much easier when compared to copying and pasting code.",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-recap.html#thats-it-for-the-lecture-series",
+    "href": "part-13/lecture-recap.html#thats-it-for-the-lecture-series",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "That’s it for the Lecture Series!",
+    "text": "That’s it for the Lecture Series!\n\nI hope you enjoyed the lecture and found it helpful\nOn Friday, we will have a discussion session\nYou can earn the last half-bonus point for the exam\nI wish you all the best for your studies and your career!\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nIf you have any questions on optimization in the future, feel free to contact me!",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-recap.html#section-1",
+    "href": "part-13/lecture-recap.html#section-1",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "",
+    "text": "Questions?",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-recap.html#footnotes",
+    "href": "part-13/lecture-recap.html#footnotes",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nOriginal problem structure we used/extended/exploited to address the topic.↩︎",
+    "crumbs": [
+      "13 Recap",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "part-13/lecture-presentation.html#congratulations",
+    "href": "part-13/lecture-presentation.html#congratulations",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "Congratulations!",
+    "text": "Congratulations!\nYou’ve finished the course and learned how mathematical models can be used to solve real-world problems! 🎉"
+  },
+  {
+    "objectID": "part-13/lecture-presentation.html#topics-covered",
+    "href": "part-13/lecture-presentation.html#topics-covered",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "Topics Covered",
+    "text": "Topics Covered\n\n\n\nTopic\nOriginal Problem1\n\n\n\n\nSolar Panel Transport\nClassic Transport Problem\n\n\nBeer Production\nCapacitated Lot Sizing Problem\n\n\nSplit Delivery Minimization\nMultiple-Quadratic-Knapsack Problem\n\n\nLibrary Routing\nCapacitated Vehicle Routing Problem\n\n\nPolice Service Districting\nP-Median Problem\n\n\nSafety Planning Hajj Pilgrimage\nScheduling Problem\n\n\nArena Seating\n2-D Knapsack Problem\n\n\nPassenger Flow Control\nNetwork Flow Problem\n\n\n\nOriginal problem structure we used/extended/exploited to address the topic."
+  },
+  {
+    "objectID": "part-13/lecture-presentation.html#section",
+    "href": "part-13/lecture-presentation.html#section",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "",
+    "text": "Any questions\nregarding the\npast lectures?"
+  },
+  {
+    "objectID": "part-13/lecture-presentation.html#what-have-we-learned",
+    "href": "part-13/lecture-presentation.html#what-have-we-learned",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "What have we learned?",
+    "text": "What have we learned?\n\nHow to identify and abstract real-world problems\nHow to start programming in Julia\nHow to model and solve optimization problems\nHow to question model assumptions\n\n\n\n\n\n\n\n\nTip\n\n\nThat’s a lot and a great foundation for a seminar or a master thesis!"
+  },
+  {
+    "objectID": "part-13/lecture-presentation.html#how-to-continue-after-the-lecture",
+    "href": "part-13/lecture-presentation.html#how-to-continue-after-the-lecture",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "How to continue after the lecture?",
+    "text": "How to continue after the lecture?\n\nThe best way is to keep programming and modeling\nWe are offering seminars and master thesis\nTry to find a way to apply programming in your work\nThere are many interesting topics to explore!\n\n\n\n\n\n\n\n\nTip\n\n\nGetting your supervisors on board is the hardest part! But note, that it is often worth it and the tools we have used are all free and open-source."
+  },
+  {
+    "objectID": "part-13/lecture-presentation.html#concrete-next-steps",
+    "href": "part-13/lecture-presentation.html#concrete-next-steps",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "Concrete Next Steps",
+    "text": "Concrete Next Steps\n\nJoin online communities on Julia and Optimization\nContribute to open-source projects if you can\nFollow key researchers and practitioners\nStart a small personal project using the tools learned\n\n\n\n\n\n\n\n\nTip\n\n\nIf you want to start a small personal project, try to find a problem that you are interested in and that you can solve using the tools we have learned."
+  },
+  {
+    "objectID": "part-13/lecture-presentation.html#start-pair-programming-with-ai",
+    "href": "part-13/lecture-presentation.html#start-pair-programming-with-ai",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "Start Pair Programming with AI",
+    "text": "Start Pair Programming with AI\n\nFirst, try to be confident with the basics of a language\nAlways try to understand the code you use\nIf you want to try AI pair programming, use Cursor as IDE\n\n\n\n\n\n\n\n\nTip\n\n\nCursor is a great IDE for AI pair programming, although it is not completely free. It has Claude and ChatGPT integrated and makes work much easier when compared to copying and pasting code."
+  },
+  {
+    "objectID": "part-13/lecture-presentation.html#thats-it-for-the-lecture-series",
+    "href": "part-13/lecture-presentation.html#thats-it-for-the-lecture-series",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "That’s it for the Lecture Series!",
+    "text": "That’s it for the Lecture Series!\n\nI hope you enjoyed the lecture and found it helpful\nOn Friday, we will have a discussion session\nYou can earn the last half-bonus point for the exam\nI wish you all the best for your studies and your career!\n\n\n\n\n\n\n\n\nNote\n\n\nIf you have any questions on optimization in the future, feel free to contact me!"
+  },
+  {
+    "objectID": "part-13/lecture-presentation.html#section-1",
+    "href": "part-13/lecture-presentation.html#section-1",
+    "title": "Lecture XIII - Recap and Discussion",
+    "section": "",
+    "text": "Questions?"
   }
 ]
