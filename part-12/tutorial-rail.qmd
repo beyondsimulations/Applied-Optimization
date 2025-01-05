@@ -4,7 +4,7 @@ subtitle: "Applied Optimization with Julia"
 
 format:
     html:
-        theme: litera
+        theme: [litera, ../styles.scss]
         highlight-style: arrow
         linkcolor: "#a60000"
         code-copy: true
@@ -20,8 +20,7 @@ format:
 
 # Introduction
 
-
-![Metro Network with 4 stations (A, B, C, D) connected in a loop](https://images.beyondsimulations.com/ao/ao_metro-metro_tutorial.svg)
+![](https://images.beyondsimulations.com/ao/ao_metro-metro_tutorial.svg)
 
 Consider the depicted 'Golden Line' on the left with 4 different stations A, B, C, D. For an upcoming timeframe of **20 minutes divided into 10 periods**, the transportation demand is going to exceed the available capacity of the network and each origin-destination pair will be requested by at least 1 passenger. **To handle the inflow, queues will be put in place at each metro station.**
 
@@ -29,7 +28,7 @@ Consider the depicted 'Golden Line' on the left with 4 different stations A, B, 
 
 Your task is to **minimize the queues** without exceeding the available transport capacity of **max. 100 passengers per minute of each arc**. A safety buffer per arc is not needed. Each station layout is excellent, with sufficient stairs and escalators. Thus, the station itself is fully capable of handling any inflow that may result from the optimized restricted inflow. Nonetheless, queues are still necessary as the arcs cannot handle each input.
 
-## 1. Flow Analysis
+# 1. Flow Analysis
 
 Suppose we are in minute 7 at the arc of (D,A). Which inflows from which stations are going to impact the flow into the arc in this minute?
 
@@ -54,7 +53,7 @@ To solve this task, it might be helpful to work with paper and pen to sketch the
 ```
 
 
-## 2. Simplified Model
+# 2. Simplified Model
 
 Can you come up with a simpler model formulation based on the model of the lecture that restricts the inflow? First, define all sets, parameters, variables, and constraints necessary to model this simpler version.
 
@@ -70,7 +69,7 @@ using JuMP
 metro_model = Model()
 ```
 
-## 3. Inflow Control
+# 3. Inflow Control
 
 :::: {.columns}
 
@@ -94,7 +93,7 @@ Can you extend your model to include the additional constraints?
 
 ```
 
-## 4. Bidirectional Flow
+# 4. Bidirectional Flow
 
 :::: {.columns}
 
@@ -112,7 +111,7 @@ Write out the new set $\mathcal{R}_{(D,A),7}$ manually and shortly explain your 
 =#
 ```
 
-## 5. Capacity Analysis
+# 5. Capacity Analysis
 
 Although the system is two-directional now, the **overall number of trains of the metro provider has not changed**. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?
 

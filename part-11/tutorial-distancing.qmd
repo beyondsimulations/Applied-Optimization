@@ -4,7 +4,7 @@ subtitle: "Applied Optimization with Julia"
 
 format:
     html:
-        theme: litera
+        theme: [litera, ../styles.scss]
         highlight-style: arrow
         linkcolor: "#a60000"
         code-copy: true
@@ -12,11 +12,98 @@ format:
         toc: true
         toc-location: right
         code-overflow: wrap
-    pdf: 
-        documentclass: report
-        geometry:
-            - margin=1in
-        fontfamily: roboto
-        fontfamilyoptions: sfdefault
-        colorlinks: true
+    ipynb:
+        code-copy: true
+        code-overflow: wrap
 ---
+
+# Introduction
+
+Remember the `Example by hand` from the lecture? In this tutorial, we will solve the arena seating problem **by computer**. As we approach the end of the course, we'll remove some previous "guardrails" to give you more freedom in solving the problem.
+
+:::{.callout-tip}
+
+Don't worry, if you cannot solve everything by yourself. Try your best and ask for help if you need it!
+
+:::
+
+# 1. Implement the Model
+
+First, define all necessary sets, parameters, and variables to model the problem in Julia. The seating area layout is shown below:
+
+![Arena seating layout](https://images.byndsim.com/ao/ao_arena-empty_exercise.svg)
+
+## Group Types Data
+
+The values of the groups are given in a table and as CSV file.
+
+| Grouptype | Req. Seats | Score | Available |
+|-----------|------------|-------|-----------|
+| a         | 1         | 1     | 3         |
+| b         | 2         | 2     | 2         |
+| c         | 2         | 4     | 3         |
+| d         | 4         | 4     | 5         |
+| e         | 4         | 5     | 2         |
+| f         | 6         | 6     | 1         |
+| g         | 6         | 12    | 1         |
+
+::: {.callout-note}
+
+The groups are given **differently than in the lecture**! Either adjust the data or the model, depending on what you think is easier.
+
+:::
+
+## Distance Requirements
+
+The following distancing rules must be maintained:
+
+- Minimum one empty seat between groups
+- One empty seat between rows
+- One empty seat diagonally
+- Maximum two groups per row
+- Grey seats are obstacles and cannot be used
+
+```{julia}
+using JuMP
+using HiGHS
+
+# Suggested structure:
+# 1. Define sets (rows, seats, group types)
+# 2. Create parameters (scores, required seats, availability)
+# 3. Define variables
+# 4. Set objective function
+# 5. Add constraints
+# 6. Solve the model
+
+```
+
+## 2. Visualization
+
+Visualize your answer with a plot in Julia. At first, this might seem difficult, but it is actually very easy.
+
+The visualization will be a great tool to [check if your solution is correct]{.highlight}. We figure it is likely, that you **won't have an applicable solution** after the first round, even if your model is working correctly. 
+
+[If everything works from the start, great!]{.highlight}
+
+```{julia}
+using Plots
+
+# Suggested visualization steps:
+# 1. Create a grid representation
+# 2. Map solution values to colors
+# 3. Use heatmap or scatter plot
+```
+
+If you encounter any difficulties, please document them here:
+
+```{julia}
+#=
+
+
+
+=#
+```
+
+---
+
+{{< include ../include/tutorial_end.qmd >}}

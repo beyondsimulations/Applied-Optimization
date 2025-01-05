@@ -9,12 +9,12 @@ def convert_all_pdfs_to_svgs(input_folder, output_folder):
     for filename in os.listdir(input_folder):
         if filename.endswith('.pdf'):
             input_pdf_path = os.path.join(input_folder, filename)
-            output_svg_path = os.path.join(output_folder, f"ao_metro-{os.path.splitext(filename)[0]}.svg")
+            output_svg_path = os.path.join(output_folder, f"ao_arena-{os.path.splitext(filename)[0]}.svg")
 
             # Call pdf2svg for each PDF file with the -p option to preserve page size
             subprocess.run(['pdf2svg', input_pdf_path, output_svg_path, '1'])
 
 # Example usage
-input_folder = '/Users/tvlcek/Desktop/images/v2'
-output_folder = '/Users/tvlcek/Desktop/images/v2'
+input_folder = '/Users/tvlcek/Desktop/img'
+output_folder = '/Users/tvlcek/Desktop/img'
 convert_all_pdfs_to_svgs(input_folder, output_folder)
