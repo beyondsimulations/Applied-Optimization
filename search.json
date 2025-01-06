@@ -10222,7 +10222,7 @@
     "href": "part-11/lecture-distancing.html#objective-function-1",
     "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
     "section": "Objective Function",
-    "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters and variables:\n\n\n\n\n\\(v_g\\) - Value of an allocation of the group \\(g\\)\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\n\n\n. . .\nQuestion: What could be our objective function?\n. . .\n\\[\n\\text{maximize} \\quad \\sum_{g \\in \\mathcal{G}} \\sum_{r \\in \\mathcal{R}} \\sum_{c\\in \\mathcal{C}_r} v_g \\times X_{grc}\n\\]",
+    "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters and variables:\n\n\n\n\n\\(v_g\\) - Value of an allocation of the group \\(g\\)\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\n\n\n. . .\nQuestion: What could be our objective function?\n. . .\n\\[\n\\text{maximize} \\quad \\sum_{g \\in \\mathcal{G}} \\sum_{r \\in \\mathcal{R}} \\sum_{c\\in \\mathcal{C}_{g,r}} v_g \\times X_{g,r,c}\n\\]",
     "crumbs": [
       "11 Distancing",
       "Lecture"
@@ -10244,7 +10244,7 @@
     "href": "part-11/lecture-distancing.html#assign-each-group-only-once",
     "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
     "section": "Assign Each Group Only Once?",
-    "text": "Assign Each Group Only Once?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that each group is allocated only once in the entire seating area.\n\n\n. . .\n\n\n\n\n\n\nWe need the following:\n\n\n\n\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\\(\\mathcal{G}\\) - Set of groups, indexed by \\(g\\)\n\\(\\mathcal{R}\\) - Set of rows, indexed by \\(r\\)\n\\(\\mathcal{C}_r\\) - Set of columns of row \\(r\\), indexed by \\(c\\)",
+    "text": "Assign Each Group Only Once?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\n\nEnsure that each group is allocated only once in the entire seating area.\n\n\n. . .\n\n\n\n\n\n\nWe need the following:\n\n\n\n\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\\(\\mathcal{G}\\) - Set of groups, indexed by \\(g\\)\n\\(\\mathcal{R}\\) - Set of rows, indexed by \\(r\\)\n\\(\\mathcal{C}_{g,r}\\) - Set of columns of row \\(r\\) for group \\(g\\), indexed by \\(c\\)",
     "crumbs": [
       "11 Distancing",
       "Lecture"
@@ -10255,7 +10255,7 @@
     "href": "part-11/lecture-distancing.html#assign-each-group-only-once-1",
     "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
     "section": "Assign Each Group Only Once",
-    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n. . .\n\\[\n\\sum_{r \\in \\mathcal{R}} \\sum_{c \\in \\mathcal{C}_r} X_{g,r,c} \\leq 1 \\quad \\forall g \\in \\mathcal{G}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nThis “set packing” constraint ensures that a group is only assigned once.",
+    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n. . .\n\\[\n\\sum_{r \\in \\mathcal{R}} \\sum_{c \\in \\mathcal{C}_{g,r}} X_{g,r,c} \\leq 1 \\quad \\forall g \\in \\mathcal{G}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nThis “set packing” constraint ensures that a group is only assigned once.",
     "crumbs": [
       "11 Distancing",
       "Lecture"
@@ -10277,7 +10277,7 @@
     "href": "part-11/lecture-distancing.html#assign-each-group-only-once-2",
     "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
     "section": "Assign Each Group Only Once",
-    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n. . .\n\\[\n\\sum_{g\\in \\mathcal{G}}\\sum_{c\\in \\mathcal{C}} X_{g,r,c} \\leq p_{r} \\quad r \\in \\mathcal{R}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nWe want to place as many highly scoring groups as possible, but people need to move to buy drinks or use restroom. Depending on the venue, they should not cross other groups in the same row.",
+    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n. . .\n\\[\n\\sum_{g\\in \\mathcal{G}}\\sum_{c\\in \\mathcal{C}_{g,r}} X_{g,r,c} \\leq p_{r} \\quad r \\in \\mathcal{R}\n\\]\n. . .\n\n\n\n\n\n\nNote\n\n\n\nWe want to place as many highly scoring groups as possible, but people need to move to buy drinks or use restroom. Depending on the venue, they should not cross other groups in the same row.",
     "crumbs": [
       "11 Distancing",
       "Lecture"
@@ -10706,7 +10706,7 @@
     "href": "part-11/lecture-presentation.html#objective-function-1",
     "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
     "section": "Objective Function",
-    "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters and variables:\n\n\n\n\\(v_g\\) - Value of an allocation of the group \\(g\\)\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\n\n\n\n\nQuestion: What could be our objective function?\n\n\n\\[\n\\text{maximize} \\quad \\sum_{g \\in \\mathcal{G}} \\sum_{r \\in \\mathcal{R}} \\sum_{c\\in \\mathcal{C}_r} v_g \\times X_{grc}\n\\]"
+    "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters and variables:\n\n\n\n\\(v_g\\) - Value of an allocation of the group \\(g\\)\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\n\n\n\n\nQuestion: What could be our objective function?\n\n\n\\[\n\\text{maximize} \\quad \\sum_{g \\in \\mathcal{G}} \\sum_{r \\in \\mathcal{R}} \\sum_{c\\in \\mathcal{C}_{g,r}} v_g \\times X_{g,r,c}\n\\]"
   },
   {
     "objectID": "part-11/lecture-presentation.html#necessary-constraints",
@@ -10720,14 +10720,14 @@
     "href": "part-11/lecture-presentation.html#assign-each-group-only-once",
     "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
     "section": "Assign Each Group Only Once?",
-    "text": "Assign Each Group Only Once?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\nEnsure that each group is allocated only once in the entire seating area.\n\n\n\n\n\n\n\n\n\n\nWe need the following:\n\n\n\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\\(\\mathcal{G}\\) - Set of groups, indexed by \\(g\\)\n\\(\\mathcal{R}\\) - Set of rows, indexed by \\(r\\)\n\\(\\mathcal{C}_r\\) - Set of columns of row \\(r\\), indexed by \\(c\\)"
+    "text": "Assign Each Group Only Once?\n\n\n\n\n\n\nThe goal of this constraint is to:\n\n\nEnsure that each group is allocated only once in the entire seating area.\n\n\n\n\n\n\n\n\n\n\nWe need the following:\n\n\n\n\\(X_{g,r,c}\\) - 1, if first left seat of \\(g\\) is assigned to \\(r\\) in \\(c\\), else 0\n\\(\\mathcal{G}\\) - Set of groups, indexed by \\(g\\)\n\\(\\mathcal{R}\\) - Set of rows, indexed by \\(r\\)\n\\(\\mathcal{C}_{g,r}\\) - Set of columns of row \\(r\\) for group \\(g\\), indexed by \\(c\\)"
   },
   {
     "objectID": "part-11/lecture-presentation.html#assign-each-group-only-once-1",
     "href": "part-11/lecture-presentation.html#assign-each-group-only-once-1",
     "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
     "section": "Assign Each Group Only Once",
-    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n\n\\[\n\\sum_{r \\in \\mathcal{R}} \\sum_{c \\in \\mathcal{C}_r} X_{g,r,c} \\leq 1 \\quad \\forall g \\in \\mathcal{G}\n\\]\n\n\n\n\n\n\n\n\nNote\n\n\nThis “set packing” constraint ensures that a group is only assigned once."
+    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n\n\\[\n\\sum_{r \\in \\mathcal{R}} \\sum_{c \\in \\mathcal{C}_{g,r}} X_{g,r,c} \\leq 1 \\quad \\forall g \\in \\mathcal{G}\n\\]\n\n\n\n\n\n\n\n\nNote\n\n\nThis “set packing” constraint ensures that a group is only assigned once."
   },
   {
     "objectID": "part-11/lecture-presentation.html#restrict-groups-per-row",
@@ -10741,7 +10741,7 @@
     "href": "part-11/lecture-presentation.html#assign-each-group-only-once-2",
     "title": "Lecture XI - Arena Seat Planning under Distancing Rules",
     "section": "Assign Each Group Only Once",
-    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n\n\\[\n\\sum_{g\\in \\mathcal{G}}\\sum_{c\\in \\mathcal{C}} X_{g,r,c} \\leq p_{r} \\quad r \\in \\mathcal{R}\n\\]\n\n\n\n\n\n\n\n\nNote\n\n\nWe want to place as many highly scoring groups as possible, but people need to move to buy drinks or use restroom. Depending on the venue, they should not cross other groups in the same row."
+    "text": "Assign Each Group Only Once\nQuestion: What could be the constraint?\n\n\\[\n\\sum_{g\\in \\mathcal{G}}\\sum_{c\\in \\mathcal{C}_{g,r}} X_{g,r,c} \\leq p_{r} \\quad r \\in \\mathcal{R}\n\\]\n\n\n\n\n\n\n\n\nNote\n\n\nWe want to place as many highly scoring groups as possible, but people need to move to buy drinks or use restroom. Depending on the venue, they should not cross other groups in the same row."
   },
   {
     "objectID": "part-11/lecture-presentation.html#section",

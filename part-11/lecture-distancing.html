@@ -1104,7 +1104,7 @@ We need the following parameters and variables:
 <p><span class="question">Question:</span> <strong>What could be our objective function?</strong></p>
 <p>. . .</p>
 <p><span class="math display">\[
-\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_r} v_g \times X_{grc}
+\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}
 \]</span></p>
 </section>
 </section>
@@ -1151,7 +1151,7 @@ We need the following:
 <li><span class="math inline">\(X_{g,r,c}\)</span> - 1, if first left seat of <span class="math inline">\(g\)</span> is assigned to <span class="math inline">\(r\)</span> in <span class="math inline">\(c\)</span>, else 0</li>
 <li><span class="math inline">\(\mathcal{G}\)</span> - Set of groups, indexed by <span class="math inline">\(g\)</span></li>
 <li><span class="math inline">\(\mathcal{R}\)</span> - Set of rows, indexed by <span class="math inline">\(r\)</span></li>
-<li><span class="math inline">\(\mathcal{C}_r\)</span> - Set of columns of row <span class="math inline">\(r\)</span>, indexed by <span class="math inline">\(c\)</span></li>
+<li><span class="math inline">\(\mathcal{C}_{g,r}\)</span> - Set of columns of row <span class="math inline">\(r\)</span> for group <span class="math inline">\(g\)</span>, indexed by <span class="math inline">\(c\)</span></li>
 </ul>
 </div>
 </div>
@@ -1161,7 +1161,7 @@ We need the following:
 <p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
 <p>. . .</p>
 <p><span class="math display">\[
-\sum_{r \in \mathcal{R}} \sum_{c \in \mathcal{C}_r} X_{g,r,c} \leq 1 \quad \forall g \in \mathcal{G}
+\sum_{r \in \mathcal{R}} \sum_{c \in \mathcal{C}_{g,r}} X_{g,r,c} \leq 1 \quad \forall g \in \mathcal{G}
 \]</span></p>
 <p>. . .</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1216,7 +1216,7 @@ We need the following:
 <p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
 <p>. . .</p>
 <p><span class="math display">\[
-\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}} X_{g,r,c} \leq p_{r} \quad r \in \mathcal{R}
+\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_{r} \quad r \in \mathcal{R}
 \]</span></p>
 <p>. . .</p>
 <div class="callout callout-style-default callout-note callout-titled">
