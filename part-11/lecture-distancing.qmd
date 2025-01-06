@@ -227,7 +227,7 @@ You have 5 minutes to find a solution.
 - $\mathcal{G}$ - Set of groups, indexed by $g$
 - $\mathcal{R}$ - Set of rows, indexed by $r$
 - $\mathcal{C}$ - Set of columns, indexed by $c$
-- $\mathcal{C}_r$ - Available seats of row $r$, indexed by $c$
+- $\mathcal{C}_{g,r}$ - Available seats of row $r$ for group $g$, indexed by $c$
 
 . . .
 
@@ -310,7 +310,7 @@ Maximize the group values by filling the seating area given distancing regulatio
 . . .
 
 $$
-\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_r} v_g \times X_{grc}
+\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}
 $$
 
 # [Constraints]{.flow} {.title}
@@ -341,7 +341,7 @@ Ensure that each group is allocated only once in the entire seating area.
 - $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
 - $\mathcal{G}$ - Set of groups, indexed by $g$
 - $\mathcal{R}$ - Set of rows, indexed by $r$
-- $\mathcal{C}_r$ - Set of columns of row $r$, indexed by $c$
+- $\mathcal{C}_{g,r}$ - Set of columns of row $r$ for group $g$, indexed by $c$
 :::
 
 ## Assign Each Group Only Once
@@ -351,7 +351,7 @@ Ensure that each group is allocated only once in the entire seating area.
 . . .
 
 $$
-\sum_{r \in \mathcal{R}} \sum_{c \in \mathcal{C}_r} X_{g,r,c} \leq 1 \quad \forall g \in \mathcal{G}
+\sum_{r \in \mathcal{R}} \sum_{c \in \mathcal{C}_{g,r}} X_{g,r,c} \leq 1 \quad \forall g \in \mathcal{G}
 $$
 
 . . .
@@ -384,7 +384,7 @@ Ensure that the number of groups in each row does not exceed the maximum allowed
 . . .
 
 $$
-\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}} X_{g,r,c} \leq p_{r} \quad r \in \mathcal{R}
+\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_{r} \quad r \in \mathcal{R}
 $$
 
 . . .
