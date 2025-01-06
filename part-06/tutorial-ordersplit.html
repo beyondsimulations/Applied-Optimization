@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.30">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,10 +69,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3a01e2046221230fdceeea94b1ec5d67.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-7ae41f41990d91bf85e06fc60d8f7396.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-535f1e98bdee6bd367c8658371e9dbec.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -856,6 +856,21 @@ Use the Juniper solver
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"mip_solver"</span> <span class="op">=&gt;</span> highs,</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    ),</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Precompiling JuMP...
+  38695.4 ms  ✓ MathOptInterface
+  10320.1 ms  ✓ JuMP
+  2 dependencies successfully precompiled in 49 seconds. 61 already precompiled.
+Precompiling Ipopt...
+   5583.3 ms  ✓ Ipopt
+  1 dependency successfully precompiled in 6 seconds. 69 already precompiled.
+Precompiling HiGHS...
+   8419.9 ms  ✓ HiGHS
+  1 dependency successfully precompiled in 9 seconds. 63 already precompiled.
+Precompiling Juniper...
+   1758.1 ms  ✓ Juniper
+  1 dependency successfully precompiled in 2 seconds. 63 already precompiled.</code></pre>
+</div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>A JuMP Model
 ├ solver: Juniper
@@ -867,152 +882,152 @@ Use the Juniper solver
 </div>
 <p>Next, compute the coappearance matrix based on the transactional data provided in <code>T</code>.</p>
 <div id="14" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="16" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the coappearance matrix is correct.</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> Q <span class="op">==</span> Q<span class="op">'</span> <span class="st">"The coappearance matrix is not symmetric. Have you transposed the transactional data set?"</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> Q[<span class="fl">1</span>,<span class="fl">1</span>] <span class="op">==</span> <span class="fl">11</span> <span class="st">"The coappearance matrix is not correct. Have you multiplied the transposed transactional data set with itself?"</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The coappearance matrix is correct."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the coappearance matrix is correct.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> Q <span class="op">==</span> Q<span class="op">'</span> <span class="st">"The coappearance matrix is not symmetric. Have you transposed the transactional data set?"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> Q[<span class="fl">1</span>,<span class="fl">1</span>] <span class="op">==</span> <span class="fl">11</span> <span class="st">"The coappearance matrix is not correct. Have you multiplied the transposed transactional data set with itself?"</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The coappearance matrix is correct."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Now, define the decision variable for the SKU allocation. Please name the variable <code>X</code>.</p>
 <div id="18" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="20" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the decision variable is correct.</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(X) <span class="op">&lt;:</span><span class="dt"> AbstractArray{VariableRef} </span><span class="st">"The decision variable X should be an array of JuMP variables"</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">is_binary</span>.(X)) <span class="st">"The decision variable X should be defined as binary"</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">size</span>(X) <span class="op">==</span> (<span class="fu">length</span>(skus), <span class="fu">length</span>(warehouses)) <span class="st">"The decision variable X should have dimensions [skus × warehouses]"</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The decision variable is correctly defined as a binary variable with proper dimensions."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the decision variable is correct.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(X) <span class="op">&lt;:</span><span class="dt"> AbstractArray{VariableRef} </span><span class="st">"The decision variable X should be an array of JuMP variables"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">is_binary</span>.(X)) <span class="st">"The decision variable X should be defined as binary"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">size</span>(X) <span class="op">==</span> (<span class="fu">length</span>(skus), <span class="fu">length</span>(warehouses)) <span class="st">"The decision variable X should have dimensions [skus × warehouses]"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The decision variable is correctly defined as a binary variable with proper dimensions."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Then, define the objective function to maximize the coappearance.</p>
 <div id="22" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="24" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the objective function is correct.</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(<span class="fu">objective_function</span>(warehouse_model)) <span class="op">&lt;:</span><span class="dt"> QuadExpr </span><span class="st">"The objective function should be a quadratic expression of JuMP variables"</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The objective function is correctly defined."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the objective function is correct.</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(<span class="fu">objective_function</span>(warehouse_model)) <span class="op">&lt;:</span><span class="dt"> QuadExpr </span><span class="st">"The objective function should be a quadratic expression of JuMP variables"</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The objective function is correctly defined."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>To ensure that each SKU is allocated to one warehouse, add the first constraint.</p>
 <div id="26" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="28" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the single allocation constraint is correct.</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">num_constraints</span>(warehouse_model, AffExpr, MOI.EqualTo{<span class="dt">Float64</span>}) <span class="op">==</span> <span class="fu">length</span>(skus) <span class="st">"The single allocation constraint should have one constraint for each SKU"</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The single allocation constraint is correctly defined."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the single allocation constraint is correct.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">num_constraints</span>(warehouse_model, AffExpr, MOI.EqualTo{<span class="dt">Float64</span>}) <span class="op">==</span> <span class="fu">length</span>(skus) <span class="st">"The single allocation constraint should have one constraint for each SKU"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The single allocation constraint is correctly defined."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>To ensure that the capacity of each warehouse is not exceeded, add the second constraint.</p>
 <div id="30" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="32" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the capacity constraint is correct.</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">num_constraints</span>(warehouse_model, AffExpr, MOI.LessThan{<span class="dt">Float64</span>}) <span class="op">==</span> <span class="fu">length</span>(warehouses) <span class="st">"The capacity constraint should have one constraint for each warehouse"</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The capacity constraint is correctly defined."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the capacity constraint is correct.</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">num_constraints</span>(warehouse_model, AffExpr, MOI.LessThan{<span class="dt">Float64</span>}) <span class="op">==</span> <span class="fu">length</span>(warehouses) <span class="st">"The capacity constraint should have one constraint for each warehouse"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The capacity constraint is correctly defined."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Finally, solve the model with a solve statement.</p>
 <div id="34" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="36" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the model is solved correctly.</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(warehouse_model) <span class="op">==</span> MOI.OPTIMAL <span class="op">||</span> <span class="fu">termination_status</span>(warehouse_model) <span class="op">==</span> MOI.LOCALLY_SOLVED <span class="st">"The model should either be solved with an optimal solution or with a locally optimal solution"</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">isapprox</span>(<span class="fu">objective_value</span>(warehouse_model), <span class="fl">141</span>) <span class="st">"The objective value should approximaly be 141. Have you correctly implemented the objective function?"</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The model is correctly solved."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the model is solved correctly.</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(warehouse_model) <span class="op">==</span> MOI.OPTIMAL <span class="op">||</span> <span class="fu">termination_status</span>(warehouse_model) <span class="op">==</span> MOI.LOCALLY_SOLVED <span class="st">"The model should either be solved with an optimal solution or with a locally optimal solution"</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">isapprox</span>(<span class="fu">objective_value</span>(warehouse_model), <span class="fl">141</span>) <span class="st">"The objective value should approximaly be 141. Have you correctly implemented the objective function?"</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The model is correctly solved."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>The following code prints the objective value, the SKU allocation and the warehouse capacities based on your optimal solution.</p>
 <div id="38" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective value: "</span>, <span class="fu">objective_value</span>(warehouse_model))</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>()</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"SKU Allocation:"</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> skus</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> warehouses</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="fu">value</span>(X[i,k]) <span class="op">&gt;</span> <span class="fl">0.1</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">println</span>(<span class="st">"SKU: "</span>, i, <span class="st">" Allocation: "</span>, k)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>()</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Warehouse Capacities:"</span>)</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(warehouses)</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Warehouse: "</span>, warehouses[k], <span class="st">" Capacity: "</span>, capacity[k], <span class="st">" Used: "</span>, <span class="fu">sum</span>(<span class="fu">value</span>.(X[i,warehouses[k]]) <span class="cf">for</span> i <span class="kw">in</span> skus))</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective value: "</span>, <span class="fu">objective_value</span>(warehouse_model))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"SKU Allocation:"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> skus</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> warehouses</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="fu">value</span>(X[i,k]) <span class="op">&gt;</span> <span class="fl">0.1</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">println</span>(<span class="st">"SKU: "</span>, i, <span class="st">" Allocation: "</span>, k)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>()</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Warehouse Capacities:"</span>)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(warehouses)</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Warehouse: "</span>, warehouses[k], <span class="st">" Capacity: "</span>, capacity[k], <span class="st">" Used: "</span>, <span class="fu">sum</span>(<span class="fu">value</span>.(X[i,warehouses[k]]) <span class="cf">for</span> i <span class="kw">in</span> skus))</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Based on the output of the optimisation, we still don’t know the number of split orders. The following code calculates the number of split orders from the SKU allocation for the optimal solution.</p>
 <div id="40" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Binary matrix indicating whether a SKU is allocated to a warehouse.</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>X_values <span class="op">=</span> [<span class="fu">value</span>(X[i,j]) <span class="op">&gt;</span> <span class="fl">0</span> ? <span class="cn">true</span> <span class="op">:</span> <span class="cn">false</span> for i <span class="kw">in</span> skus, j <span class="kw">in</span> warehouses]</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to count the number of split and regular parcels.</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">count_split_orders</span>(X_input, transactional_data)</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize the counters for split and regular parcels.</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    split_parcels <span class="op">=</span> <span class="fl">0</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    regular_parcels <span class="op">=</span> <span class="fl">0</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterate over each transaction in the transactional data set.</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">size</span>(transactional_data,<span class="fl">1</span>)</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Check if the first warehouse can fulfill the transaction.</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="fu">all</span>(X_input[<span class="op">:</span>,<span class="fl">1</span>] <span class="op">.&gt;=</span> transactional_data[t,<span class="op">:</span>])</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>            regular_parcels <span class="op">+=</span> <span class="fl">1</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Check if the second warehouse can fulfill the transaction.</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elseif</span> <span class="fu">all</span>(X_input[<span class="op">:</span>,<span class="fl">2</span>] <span class="op">.&gt;=</span> transactional_data[t,<span class="op">:</span>])</span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>            regular_parcels <span class="op">+=</span> <span class="fl">1</span></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If neither warehouse can fulfill the transaction, it is a split.</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span></span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>            split_parcels <span class="op">+=</span> <span class="fl">1</span></span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>            regular_parcels <span class="op">+=</span> <span class="fl">1</span></span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> split_parcels, regular_parcels</span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the number of split and regular parcels for the optimal solution.</span></span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>split_parcels, regular_parcels <span class="op">=</span> <span class="fu">count_split_orders</span>(X_values, T)</span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the number of split and regular parcels for 100 random solutions.</span></span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>split_parcels_random <span class="op">=</span> []</span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>regular_parcels_random <span class="op">=</span> []</span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> trial <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span></span>
-<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>    X_random <span class="op">=</span> [<span class="fu">rand</span>(<span class="dt">Bool</span>) for i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(skus), j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(warehouses)]</span>
-<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>    split_parcels_random_trial, regular_parcels_random_trial <span class="op">=</span> <span class="fu">count_split_orders</span>(X_random, T)</span>
-<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(split_parcels_random, split_parcels_random_trial)</span>
-<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(regular_parcels_random, regular_parcels_random_trial)</span>
-<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>split_parcels_random <span class="op">=</span> <span class="fu">sum</span>(split_parcels_random)<span class="op">/</span><span class="fl">100</span></span>
-<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>regular_parcels_random <span class="op">=</span> <span class="fu">sum</span>(regular_parcels_random)<span class="op">/</span><span class="fl">100</span></span>
-<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the number of split and regular parcels.</span></span>
-<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of split orders (optimal): "</span>, split_parcels)</span>
-<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of regular orders (optimal): "</span>, regular_parcels)</span>
-<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>()</span>
-<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the number of split and regular parcels for the random solution.</span></span>
-<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of split orders (random): "</span>, split_parcels_random)</span>
-<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of regular orders (random): "</span>, regular_parcels_random)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Binary matrix indicating whether a SKU is allocated to a warehouse.</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>X_values <span class="op">=</span> [<span class="fu">value</span>(X[i,j]) <span class="op">&gt;</span> <span class="fl">0</span> ? <span class="cn">true</span> <span class="op">:</span> <span class="cn">false</span> for i <span class="kw">in</span> skus, j <span class="kw">in</span> warehouses]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to count the number of split and regular parcels.</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">count_split_orders</span>(X_input, transactional_data)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize the counters for split and regular parcels.</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    split_parcels <span class="op">=</span> <span class="fl">0</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    regular_parcels <span class="op">=</span> <span class="fl">0</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterate over each transaction in the transactional data set.</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">size</span>(transactional_data,<span class="fl">1</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Check if the first warehouse can fulfill the transaction.</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="fu">all</span>(X_input[<span class="op">:</span>,<span class="fl">1</span>] <span class="op">.&gt;=</span> transactional_data[t,<span class="op">:</span>])</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>            regular_parcels <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Check if the second warehouse can fulfill the transaction.</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elseif</span> <span class="fu">all</span>(X_input[<span class="op">:</span>,<span class="fl">2</span>] <span class="op">.&gt;=</span> transactional_data[t,<span class="op">:</span>])</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>            regular_parcels <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If neither warehouse can fulfill the transaction, it is a split.</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>            split_parcels <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>            regular_parcels <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> split_parcels, regular_parcels</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the number of split and regular parcels for the optimal solution.</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>split_parcels, regular_parcels <span class="op">=</span> <span class="fu">count_split_orders</span>(X_values, T)</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the number of split and regular parcels for 100 random solutions.</span></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>split_parcels_random <span class="op">=</span> []</span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>regular_parcels_random <span class="op">=</span> []</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> trial <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span></span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>    X_random <span class="op">=</span> [<span class="fu">rand</span>(<span class="dt">Bool</span>) for i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(skus), j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(warehouses)]</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>    split_parcels_random_trial, regular_parcels_random_trial <span class="op">=</span> <span class="fu">count_split_orders</span>(X_random, T)</span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(split_parcels_random, split_parcels_random_trial)</span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(regular_parcels_random, regular_parcels_random_trial)</span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>split_parcels_random <span class="op">=</span> <span class="fu">sum</span>(split_parcels_random)<span class="op">/</span><span class="fl">100</span></span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>regular_parcels_random <span class="op">=</span> <span class="fu">sum</span>(regular_parcels_random)<span class="op">/</span><span class="fl">100</span></span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the number of split and regular parcels.</span></span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of split orders (optimal): "</span>, split_parcels)</span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of regular orders (optimal): "</span>, regular_parcels)</span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>()</span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the number of split and regular parcels for the random solution.</span></span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of split orders (random): "</span>, split_parcels_random)</span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of regular orders (random): "</span>, regular_parcels_random)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="analyzing-the-results" class="level2">
@@ -1025,12 +1040,12 @@ Use the Juniper solver
 </ul>
 <p>Your answer goes here, thinking from the business perspective. A few sentences are fully sufficient!</p>
 <div id="42" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWER BELOW</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWER BELOW</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
 </section>
@@ -1127,8 +1142,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1239,7 +1252,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

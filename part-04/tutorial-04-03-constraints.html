@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.30">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,10 +69,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3a01e2046221230fdceeea94b1ec5d67.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-7ae41f41990d91bf85e06fc60d8f7396.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-535f1e98bdee6bd367c8658371e9dbec.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -603,33 +603,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Let’s start by loading the necessary packages:</p>
 <div id="4" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Precompiling JuMP...
+  37779.5 ms  ✓ MathOptInterface
+   9971.6 ms  ✓ JuMP
+  2 dependencies successfully precompiled in 48 seconds. 61 already precompiled.
+Precompiling HiGHS...
+   7951.0 ms  ✓ HiGHS
+  1 dependency successfully precompiled in 8 seconds. 63 already precompiled.</code></pre>
+</div>
 </div>
 <p>Now, let’s create a model that we’ll use throughout this tutorial:</p>
 <div id="6" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>another_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! We've created a new optimization model."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>another_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! We've created a new optimization model."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-1---objective-functions-with-container-variables" class="level1">
 <h1>Section 1 - Objective Functions with Container Variables</h1>
 <p>Defining objective functions with variables in containers allows for scalable and dynamic model formulations. First, we need a container with variables for the objective function. For example:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(modelName, variableName[<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(modelName, variableName[<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now, we can define an objective function with the container. For example:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(modelName, Max, <span class="fu">sum</span>(variableName[i] <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(modelName, Max, <span class="fu">sum</span>(variableName[i] <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="exercise-1.1---define-arrays" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---define-arrays">Exercise 1.1 - Define arrays</h2>
 <p>Scenario: Imagine you’re optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.</p>
 <p>Define an array of variables and an objective function for <code>another_model</code>. The variables should be called <code>profits</code> and have a range from <code>1:8</code>. It has a lower bound of <code>0</code>. The objective should be a Maximization of the sum of all <code>profits</code>.</p>
 <div id="8" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="10" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(profits) <span class="op">==</span> <span class="fl">8</span> <span class="op">&amp;&amp;</span> <span class="fu">all</span>(<span class="fu">lower_bound</span>(profits[i]) <span class="op">==</span> <span class="fl">0</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(<span class="fu">objective_function</span>(another_model)) <span class="op">==</span> AffExpr</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective function with container variables defined successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(profits) <span class="op">==</span> <span class="fl">8</span> <span class="op">&amp;&amp;</span> <span class="fu">all</span>(<span class="fu">lower_bound</span>(profits[i]) <span class="op">==</span> <span class="fl">0</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">typeof</span>(<span class="fu">objective_function</span>(another_model)) <span class="op">==</span> AffExpr</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective function with container variables defined successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -637,10 +646,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="section-2---constraints-within-containers" class="level1">
 <h1>Section 2 - Constraints within Containers</h1>
 <p>Defining constraints within containers allows for structured and easily manageable models. This is especially important when models become larger! To define a constraint within a container, we can do, for example, the following:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(modelName, </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    constraintName[i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>], </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    variableName[i] <span class="op">&lt;=</span> <span class="fl">100</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(modelName, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    constraintName[i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>], </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    variableName[i] <span class="op">&lt;=</span> <span class="fl">100</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This would create a constraint called <code>constraintName</code> for each <code>i</code> - thus <code>1</code>,<code>2</code>, and <code>3</code> - where <code>variableName[1]</code>, <code>variableName[2]</code>, and <code>variableName[3]</code> are restricted to be maximally <code>100</code>.</p>
 </section>
 <section id="exercise-2.1---define-constraints" class="level1">
@@ -648,45 +657,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Continuing our factory scenario: Each product has a maximum daily production capacity due to machine limitations.</p>
 <p>Define constraints called <code>maxProfit</code> using an array of variables. The logic: Each profit defined in the previous task should be less than or equal to <code>12</code>.</p>
 <div id="12" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="14" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">is_valid</span>(another_model, maxProfit[i]) <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Constraints within containers defined successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">is_valid</span>(another_model, maxProfit[i]) <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Constraints within containers defined successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
 <section id="section-3---implementing-conditional-constraints" class="level1">
 <h1>Section 3 - Implementing Conditional Constraints</h1>
 <p>Conditional constraints are added to the model based on certain conditions, allowing for dynamic and flexible model formulations. To define a constraint within a container under conditions, we can do the following:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(modelName, </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    constraintName[i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>; i <span class="op">&lt;=</span> <span class="fl">2</span>], </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    variableName[i] <span class="op">&lt;=</span> <span class="fl">50</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(modelName, </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    constraintName[i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>; i <span class="op">&lt;=</span> <span class="fl">2</span>], </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    variableName[i] <span class="op">&lt;=</span> <span class="fl">50</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This would create a constraint called <code>constraintName</code> for each <code>i</code> - thus <code>1</code>,<code>2</code>, and <code>3</code> - where <code>variableName[1]</code>, <code>variableName[2]</code> are restricted to be maximally <code>50</code> and <code>variableName[3]</code> was not restricted.</p>
 <section id="exercise-3.1---add-a-conditional-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-3.1---add-a-conditional-constraints">Exercise 3.1 - Add a conditional constraints</h2>
 <p>Scenario extension: The first 4 products are new and have limited market demand.</p>
 <p>Add a conditional constraint <code>smallProfit</code> to the previous model. Condition: Only the first 4 variables profit have to be lower or equalthan 5.</p>
 <div id="16" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="18" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">is_valid</span>(another_model, smallProfit[i]) <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Conditional constraint implemented successfully!"</span>)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Checking successful implementation."</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize!</span>(another_model)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>status <span class="op">=</span> <span class="fu">termination_status</span>(another_model)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> status <span class="op">==</span> MOI.OPTIMAL <span class="st">"Sorry, something didn't work out as the model status is </span><span class="sc">$</span>status<span class="st">"</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">objective_value</span>(another_model) <span class="op">≈</span> <span class="fl">68</span> atol<span class="op">=</span><span class="fl">1e-4</span> <span class="st">"Although you have an optimal solution, </span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    the should be <span class="fl">68</span> not <span class="op">$</span>(<span class="fu">objective_value</span>(another_model)). Is the model correct?<span class="st">"</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Model components validated successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">is_valid</span>(another_model, smallProfit[i]) <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Conditional constraint implemented successfully!"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Checking successful implementation."</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize!</span>(another_model)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>status <span class="op">=</span> <span class="fu">termination_status</span>(another_model)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> status <span class="op">==</span> MOI.OPTIMAL <span class="st">"Sorry, something didn't work out as the model status is </span><span class="sc">$</span>status<span class="st">"</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">objective_value</span>(another_model) <span class="op">≈</span> <span class="fl">68</span> atol<span class="op">=</span><span class="fl">1e-4</span> <span class="st">"Although you have an optimal solution, </span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    the should be <span class="fl">68</span> not <span class="op">$</span>(<span class="fu">objective_value</span>(another_model)). Is the model correct?<span class="st">"</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Model components validated successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -695,15 +704,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Visualization of Results</h1>
 <p>Let’s visualize our optimal solution:</p>
 <div id="20" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming the model has been solved!!!</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>optimal_profits <span class="op">=</span> <span class="fu">value</span>.(profits)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">bar</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">8</span>, optimal_profits, </span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Optimal Production Levels"</span>, </span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">"Product"</span>, </span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">"Profit"</span>, </span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="cn">false</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming the model has been solved!!!</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>optimal_profits <span class="op">=</span> <span class="fu">value</span>.(profits)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">bar</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">8</span>, optimal_profits, </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Optimal Production Levels"</span>, </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">"Product"</span>, </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">"Profit"</span>, </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="cn">false</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="conclusion" class="level1">
@@ -796,8 +805,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -908,7 +915,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

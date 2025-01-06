@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.30">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,10 +69,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3a01e2046221230fdceeea94b1ec5d67.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-7ae41f41990d91bf85e06fc60d8f7396.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-535f1e98bdee6bd367c8658371e9dbec.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -562,7 +562,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#group-types-data" id="toc-group-types-data" class="nav-link" data-scroll-target="#group-types-data">Group Types Data</a></li>
   <li><a href="#distance-requirements" id="toc-distance-requirements" class="nav-link" data-scroll-target="#distance-requirements">Distance Requirements</a></li>
-  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">2. Visualization</a></li>
+  <li><a href="#define-the-model" id="toc-define-the-model" class="nav-link" data-scroll-target="#define-the-model">Define the Model</a></li>
+  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">Visualization</a></li>
   </ul></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
@@ -611,69 +612,10 @@ Tip
 <section id="implement-the-model" class="level1">
 <h1>1. Implement the Model</h1>
 <p>First, define all necessary sets, parameters, and variables to model the problem in Julia. The seating area layout is shown below:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://images.byndsim.com/ao/ao_arena-empty_exercise.svg" class="img-fluid figure-img"></p>
-<figcaption>Arena seating layout</figcaption>
-</figure>
-</div>
+<p><img src="https://images.byndsim.com/ao/ao_arena-empty_exercise.svg" class="img-fluid"></p>
 <section id="group-types-data" class="level2">
 <h2 class="anchored" data-anchor-id="group-types-data">Group Types Data</h2>
-<p>The values of the groups are given in a table and as CSV file.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Grouptype</th>
-<th>Req. Seats</th>
-<th>Score</th>
-<th>Available</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>a</td>
-<td>1</td>
-<td>1</td>
-<td>3</td>
-</tr>
-<tr class="even">
-<td>b</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td>c</td>
-<td>2</td>
-<td>4</td>
-<td>3</td>
-</tr>
-<tr class="even">
-<td>d</td>
-<td>4</td>
-<td>4</td>
-<td>5</td>
-</tr>
-<tr class="odd">
-<td>e</td>
-<td>4</td>
-<td>5</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td>f</td>
-<td>6</td>
-<td>6</td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td>g</td>
-<td>6</td>
-<td>12</td>
-<td>1</td>
-</tr>
-</tbody>
-</table>
+<p>The values of the groups are given in the julia code below.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -698,34 +640,127 @@ Note
 <li>Maximum two groups per row</li>
 <li>Grey seats are obstacles and cannot be used</li>
 </ul>
-<div id="fedd691a" class="cell" data-execution_count="1">
+</section>
+<section id="define-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="define-the-model">Define the Model</h2>
+<div id="55ce9d31" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">HiGHS</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Suggested structure:</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Define sets (rows, seats, group types)</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Create parameters (scores, required seats, availability)</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Define variables</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Set objective function</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Add constraints</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Solve the model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Model</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>arena_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Sets</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>row_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>col_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Group data</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> [<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>, <span class="st">"e"</span>, <span class="st">"f"</span>, <span class="st">"g"</span>]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>req_seats <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"a"</span> <span class="op">=&gt;</span> <span class="fl">1</span>, <span class="st">"b"</span> <span class="op">=&gt;</span> <span class="fl">2</span>, <span class="st">"c"</span> <span class="op">=&gt;</span> <span class="fl">2</span>, <span class="st">"d"</span> <span class="op">=&gt;</span> <span class="fl">4</span>, <span class="st">"e"</span> <span class="op">=&gt;</span> <span class="fl">4</span>, <span class="st">"f"</span> <span class="op">=&gt;</span> <span class="fl">6</span>, <span class="st">"g"</span> <span class="op">=&gt;</span> <span class="fl">6</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"a"</span> <span class="op">=&gt;</span> <span class="fl">1</span>, <span class="st">"b"</span> <span class="op">=&gt;</span> <span class="fl">2</span>, <span class="st">"c"</span> <span class="op">=&gt;</span> <span class="fl">4</span>, <span class="st">"d"</span> <span class="op">=&gt;</span> <span class="fl">4</span>, <span class="st">"e"</span> <span class="op">=&gt;</span> <span class="fl">5</span>, <span class="st">"f"</span> <span class="op">=&gt;</span> <span class="fl">6</span>, <span class="st">"g"</span> <span class="op">=&gt;</span> <span class="fl">12</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>availability <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"a"</span> <span class="op">=&gt;</span> <span class="fl">3</span>, <span class="st">"b"</span> <span class="op">=&gt;</span> <span class="fl">2</span>, <span class="st">"c"</span> <span class="op">=&gt;</span> <span class="fl">3</span>, <span class="st">"d"</span> <span class="op">=&gt;</span> <span class="fl">5</span>, <span class="st">"e"</span> <span class="op">=&gt;</span> <span class="fl">2</span>, <span class="st">"f"</span> <span class="op">=&gt;</span> <span class="fl">1</span>, <span class="st">"g"</span> <span class="op">=&gt;</span> <span class="fl">1</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Variables</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(arena_model, x[groups, row_set, col_set], Bin)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Suggested structure:</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Create parameters</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Set objective function</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Add constraints</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Solve the model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="visualization" class="level2">
-<h2 class="anchored" data-anchor-id="visualization">2. Visualization</h2>
-<p>Visualize your answer with a plot in Julia. At first, this might seem difficult, but it is actually very easy.</p>
-<p>The visualization will be a great tool to <span class="highlight">check if your solution is correct</span>. We figure it is likely, that you <strong>won’t have an applicable solution</strong> after the first round, even if your model is working correctly.</p>
-<p><span class="highlight">If everything works from the start, great!</span></p>
-<div id="eb15932a" class="cell" data-execution_count="2">
+<h2 class="anchored" data-anchor-id="visualization">Visualization</h2>
+<p>To test your solution, visualize it with a plot in Julia. The visualization is a great tool to <span class="highlight">check if your solution is correct</span>.</p>
+<p>We figure it is likely, that you <strong>won’t have an applicable solution</strong> after the first round, even if your model is working correctly. <span class="highlight">If everything works from the start, great!</span></p>
+<div id="7911b941" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Suggested visualization steps:</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Create a grid representation</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Map solution values to colors</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Use heatmap or scatter plot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create visualization of the solution</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">visualize_seating</span>(model)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get solution values</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    solution_matrix <span class="op">=</span> <span class="fu">fill</span>(<span class="st">""</span>, <span class="fl">10</span>, <span class="fl">10</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fill matrix with group assignments</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> r <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, c <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> g <span class="kw">in</span> groups</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="fu">value</span>(model[<span class="op">:</span>x][g,r,c]) <span class="op">&gt;</span> <span class="fl">0.5</span>  <span class="co"># Using 0.5 to handle floating point</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                solution_matrix[r,c] <span class="op">=</span> g</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">end</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create color mapping for groups</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    color_map <span class="op">=</span> <span class="fu">Dict</span>(</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">""</span> <span class="op">=&gt;</span> <span class="op">:</span>white,  <span class="co"># Empty seats</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"a"</span> <span class="op">=&gt;</span> <span class="op">:</span>blue,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"b"</span> <span class="op">=&gt;</span> <span class="op">:</span>green,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"c"</span> <span class="op">=&gt;</span> <span class="op">:</span>red,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"d"</span> <span class="op">=&gt;</span> <span class="op">:</span>purple,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">"e"</span> <span class="op">=&gt;</span> <span class="op">:</span>orange,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"f"</span> <span class="op">=&gt;</span> <span class="op">:</span>yellow,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"g"</span> <span class="op">=&gt;</span> <span class="op">:</span>pink</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Mark blocked seats</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (r,c) <span class="kw">in</span> blocked_seats</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        solution_matrix[r,c] <span class="op">=</span> <span class="st">""</span>  <span class="co"># Empty string for blocked seats</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plot</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fu">plot</span>(</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        aspect_ratio<span class="op">=:</span>equal,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        xlims<span class="op">=</span>(<span class="fl">0.5</span>,<span class="fl">10.5</span>),</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        ylims<span class="op">=</span>(<span class="fl">0.5</span>,<span class="fl">10.5</span>),</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        yflip<span class="op">=</span><span class="cn">true</span>,  <span class="co"># Flip y-axis to match traditional seating layout</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=:</span>outerright</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot seats</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> r <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, c <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        group <span class="op">=</span> solution_matrix[r,c]</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> group <span class="op">!=</span> <span class="st">""</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>            group_length <span class="op">=</span> req_seats[group]</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>group_length</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> c<span class="op">+</span>i<span class="op">-</span><span class="fl">1</span> <span class="op">&lt;=</span> <span class="fl">10</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">println</span>(<span class="st">"Group </span><span class="sc">$</span>group<span class="st"> in </span><span class="sc">$</span>r<span class="st">,</span><span class="sc">$</span>(c<span class="op">+</span>i<span class="op">-</span><span class="fl">1</span>)<span class="st">"</span>)</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">scatter!</span>([c<span class="op">+</span>i<span class="op">-</span><span class="fl">1</span>], [r], </span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>                            color<span class="op">=</span>color_map[group],</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>                            label<span class="op">=</span><span class="cn">nothing</span>,</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>                            markersize<span class="op">=</span><span class="fl">10</span>,</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>                            markershape<span class="op">=:</span>square)</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>                <span class="cf">end</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>            <span class="cf">end</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Plot empty or blocked seats</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>            is_blocked <span class="op">=</span> (r,c) <span class="kw">in</span> blocked_seats</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> is_blocked</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>                <span class="fu">println</span>(<span class="st">"Blocked seat in </span><span class="sc">$</span>r<span class="st">,</span><span class="sc">$</span>c<span class="st">"</span>)</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>                <span class="fu">scatter!</span>([c], [r], </span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>                        color<span class="op">=</span>is_blocked ? <span class="op">:</span>gray <span class="op">:</span> <span class="op">:</span>white,</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>                        markersize<span class="op">=</span><span class="fl">10</span>,</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>                        markershape<span class="op">=:</span>square,</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>                        label<span class="op">=</span> <span class="cn">nothing</span>)</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>            <span class="cf">end</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">title!</span>(<span class="st">"Arena Seating Layout"</span>)</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlabel!</span>(<span class="st">"Column"</span>)</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylabel!</span>(<span class="st">"Row"</span>)</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the visualization</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">visualize_seating</span>(arena_model)</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>If you encounter any difficulties, please document them here:</p>
-<div id="b8c148fc" class="cell" data-execution_count="3">
+<p>If you encounter any difficulties ad cannot solve the problem, please document your issues here:</p>
+<div id="b7109f6f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -827,8 +862,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -939,7 +972,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

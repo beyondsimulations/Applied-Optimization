@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.30">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,10 +69,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3a01e2046221230fdceeea94b1ec5d67.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-7ae41f41990d91bf85e06fc60d8f7396.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-535f1e98bdee6bd367c8658371e9dbec.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -589,9 +589,11 @@ window.Quarto = {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#the-challenge" id="toc-the-challenge" class="nav-link" data-scroll-target="#the-challenge">The Challenge</a></li>
   <li><a href="#flow-analysis" id="toc-flow-analysis" class="nav-link" data-scroll-target="#flow-analysis">1. Flow Analysis</a></li>
-  <li><a href="#simplified-model" id="toc-simplified-model" class="nav-link" data-scroll-target="#simplified-model">2. Simplified Model</a></li>
-  <li><a href="#inflow-control" id="toc-inflow-control" class="nav-link" data-scroll-target="#inflow-control">3. Inflow Control</a></li>
-  <li><a href="#bidirectional-flow" id="toc-bidirectional-flow" class="nav-link" data-scroll-target="#bidirectional-flow">4. Bidirectional Flow</a></li>
+  <li><a href="#inflow-control" id="toc-inflow-control" class="nav-link" data-scroll-target="#inflow-control">2. Inflow Control</a></li>
+  <li><a href="#bidirectional-flow" id="toc-bidirectional-flow" class="nav-link" data-scroll-target="#bidirectional-flow">3. Bidirectional Flow</a></li>
+  <li><a href="#capacity-analysis" id="toc-capacity-analysis" class="nav-link" data-scroll-target="#capacity-analysis">4. Capacity Analysis</a></li>
+  <li><a href="#computing-the-set-mathcalr_et" id="toc-computing-the-set-mathcalr_et" class="nav-link" data-scroll-target="#computing-the-set-mathcalr_et">5. Computing the Set <span class="math inline">\(\mathcal{R}_{e,t}\)</span></a></li>
+  <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-12/tutorial-rail.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-12/tutorial-rail.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-rail.ipynb" download="tutorial-rail.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
     </div>
@@ -621,7 +623,7 @@ window.Quarto = {
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p><img src="https://images.beyondsimulations.com/ao/ao_metro-metro_tutorial.svg" class="img-fluid"></p>
-<p>Consider the depicted ‘Golden Line’ on the left with 4 different stations A, B, C, D. For an upcoming timeframe of <strong>20 minutes divided into 10 periods</strong>, the transportation demand is going to exceed the available capacity of the network and each origin-destination pair will be requested by at least 1 passenger. <strong>To handle the inflow, queues will be put in place at each metro station.</strong></p>
+<p>Consider the depicted ‘Golden Line’ on the left with 4 different stations A, B, C, D. For an upcoming timeframe of <strong>10 minutes divided into 10 periods</strong>, the transportation demand is going to exceed the available capacity of the network and each origin-destination pair will be requested by at least 1 passenger. <strong>To handle the inflow, queues will be put in place at each metro station.</strong></p>
 </section>
 <section id="the-challenge" class="level1">
 <h1>The Challenge</h1>
@@ -647,38 +649,16 @@ Tip
 <p>To solve this task, it might be helpful to work with paper and pen to sketch the problem.</p>
 </div>
 </div>
-<div id="1339e7ff" class="cell" data-execution_count="1">
+<div id="30246182" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">YOUR ANSWER BELOW</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="simplified-model" class="level1">
-<h1>2. Simplified Model</h1>
-<p>Can you come up with a simpler model formulation based on the model of the lecture that restricts the inflow? First, define all sets, parameters, variables, and constraints necessary to model this simpler version.</p>
-<p>Answer by defining the sets, parameters, variables, and constraints in the cell below <strong>as a JuMP model</strong>. Please make sure to write out the value of each parameter you know, and explain your adjustments in a short text. If you are missing data (and you are), use a placeholder.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>As you don’t have an OD-matrix, the model <strong>does not need to be solved</strong>! This task is about defining the model and understanding how simplifications can be made. Note, that the simplification of set <span class="math inline">\(\mathcal{R}_{e,t}\)</span> is especially important here.</p>
-</div>
-</div>
-<div id="161c44d4" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>metro_model <span class="op">=</span> <span class="fu">Model</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
 <section id="inflow-control" class="level1">
-<h1>3. Inflow Control</h1>
+<h1>2. Inflow Control</h1>
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="quarto-figure quarto-figure-center">
@@ -696,44 +676,92 @@ Tip
 </div>
 </div>
 </div>
-<p>As there is a rather large fluctuation of allowed inflow between periods, you are asked to adjust your model. In the first period, the inflow at each station is supposed to be unrestricted. Thereafter, it is maximally allowed to change by 20 persons in both directions per period at each station.</p>
-<p>Can you extend your model to include the additional constraints?</p>
+<p>As there is a rather large fluctuation of allowed inflow between periods, you are asked to introduce new constraints for the model. In the first period, the inflow at each station is supposed to be unrestricted. Thereafter, it is maximally allowed to change by 20 persons in both directions per period at each station.</p>
+<p>Can you write out the decision variables and the additional constraints for the model as JuMP constraints?</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You don’t need to solve the model or define the objective function. You just need to constraint the fluctuations and add the appropriate variables.</p>
+</div>
+</div>
+<div id="358f3646" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>metro_model <span class="op">=</span> <span class="fu">Model</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="bidirectional-flow" class="level1">
-<h1>4. Bidirectional Flow</h1>
-<div class="columns">
+<h1>3. Bidirectional Flow</h1>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://images.beyondsimulations.com/ao/ao_metro-metro_tutorial_bidirect.svg" class="img-fluid figure-img"></p>
 <figcaption>Bidirectional Metro Network</figcaption>
 </figure>
-</div><p>The metro was improved and there is now the possibility to travel in both directions. How would this change the set <span class="math inline">\(\mathcal{R}_{(MD,MA),7}\)</span> from 1.?</p><p>Write out the new set <span class="math inline">\(\mathcal{R}_{(D,A),7}\)</span> manually and shortly explain your answer.</p><div id="2c7e86d5" class="cell" data-execution_count="3">
+</div>
+<p>The metro was improved and there is now the possibility to travel in both directions. How would this change the set <span class="math inline">\(\mathcal{R}_{(MD,MA),7}\)</span> from 1.?</p>
+<p>Write out the new set <span class="math inline">\(\mathcal{R}_{(D,A),7}\)</span> manually and shortly explain your answer.</p>
+<div id="0e339830" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWER BELOW</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div><section id="capacity-analysis" class="level1">
-<h1>5. Capacity Analysis</h1>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="capacity-analysis" class="level1">
+<h1>4. Capacity Analysis</h1>
 <p>Although the system is two-directional now, the <strong>overall number of trains of the metro provider has not changed</strong>. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?</p>
 <p>Please explain your answer in a few sentences.</p>
-<div id="5c4bc530" class="cell" data-execution_count="4">
+<div id="1938e99b" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWER BELOW</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="computing-the-set-mathcalr_et" class="level1">
+<h1>5. Computing the Set <span class="math inline">\(\mathcal{R}_{e,t}\)</span></h1>
+<p>Can you compute the set <span class="math inline">\(\mathcal{R}_{e,t}\)</span> for the one-directional flow? Generate a dictionary <span class="math inline">\(R\)</span> that contains <span class="math inline">\(e \times t\)</span> entries. Each entry <span class="math inline">\(r_{e,t}\)</span> should contain a vector with all origin-destination pairs and the corresponding time period saved as a tuple. Use the results to check your answer from the first task.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This task can be a bit tricky, as it is a bit of a challenge. But as it is the last tutorial, I figured a small challenge is fine.</p>
+</div>
+</div>
+<div id="f1c7d2f2" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you encounter any difficulties ad cannot solve the problem, please document your issues here:</p>
+<div id="1ddc48a3" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
-</section><section id="solutions" class="level1">
+</section>
+<section id="solutions" class="level1">
 <h1>Solutions</h1>
 <p>You will likely find solutions to most exercises online. However, I strongly encourage you to work on these exercises independently without searching explicitly for the exact answers to the exercises. Understanding someone else’s solution is very different from developing your own. Use the lecture notes and try to solve the exercises on your own. This approach will significantly enhance your learning and problem-solving skills.</p>
 <p>Remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities. If you encounter difficulties, review the lecture materials, experiment with different approaches, and don’t hesitate to ask for clarification during class discussions.</p>
 <p>Later, you will find the solutions to these exercises online in the associated GitHub repository, but we will also quickly go over them in next week’s tutorial. To access the solutions, click on the Github button on the lower right and search for the folder with today’s lecture and tutorial. Alternatively, you can ask ChatGPT or Claude to explain them to you. But please remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities.</p>
 
 
-</section>
-</div>
 </section>
 
 </main> <!-- /main -->
@@ -819,8 +847,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -931,7 +957,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
