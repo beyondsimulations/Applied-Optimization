@@ -62,14 +62,6 @@ First, define all necessary sets, parameters, and variables to model the problem
 
 ![](https://images.byndsim.com/ao/ao_arena-empty_exercise.svg)
 
-## Group Types Data
-
-The values of the groups are given in the julia code below.
-
-::: {.callout-note}
-The groups are given **differently than in the lecture**! Either adjust the data or the model, depending on what you think is easier.
-:::
-
 ## Distance Requirements
 
 The following distancing rules must be maintained:
@@ -87,6 +79,10 @@ Watch out for the edge cases when implementing distancing constraints - especial
 
 ## Define the Model
 
+::: {.callout-note}
+The groups are given **differently than in the lecture**! Either adjust the data or the model, depending on what you think is easier.
+:::
+
 ::: {.content-visible when-profile="solutions"}
 ```{julia}
 using JuMP
@@ -100,10 +96,38 @@ row_set = 1:10
 col_set = 1:10
 
 # Group data
-groups = ["a", "b", "c", "d", "e", "f", "g"]
-req_seats = Dict("a" => 1, "b" => 2, "c" => 2, "d" => 4, "e" => 4, "f" => 6, "g" => 6)
-scores = Dict("a" => 1, "b" => 2, "c" => 4, "d" => 4, "e" => 5, "f" => 6, "g" => 12)
-availability = Dict("a" => 3, "b" => 2, "c" => 3, "d" => 5, "e" => 2, "f" => 1, "g" => 1)
+groups = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g"]
+req_seats = Dict(
+    "a" => 1,
+    "b" => 2,
+    "c" => 2,
+    "d" => 4,
+    "e" => 4,
+    "f" => 6,
+    "g" => 6)
+scores = Dict(
+    "a" => 1,
+    "b" => 2,
+    "c" => 4,
+    "d" => 4,
+    "e" => 5,
+    "f" => 6,
+    "g" => 12)
+availability = Dict(
+    "a" => 3,
+    "b" => 2,
+    "c" => 3,
+    "d" => 5,
+    "e" => 2,
+    "f" => 1,
+    "g" => 1)
 
 # Blocked seats (coordinates [row, column])
 blocked_seats = [
@@ -164,10 +188,38 @@ row_set = 1:10
 col_set = 1:10
 
 # Group data
-groups = ["a", "b", "c", "d", "e", "f", "g"]
-req_seats = Dict("a" => 1, "b" => 2, "c" => 2, "d" => 4, "e" => 4, "f" => 6, "g" => 6)
-scores = Dict("a" => 1, "b" => 2, "c" => 4, "d" => 4, "e" => 5, "f" => 6, "g" => 12)
-availability = Dict("a" => 3, "b" => 2, "c" => 3, "d" => 5, "e" => 2, "f" => 1, "g" => 1)
+groups = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g"]
+req_seats = Dict(
+    "a" => 1,
+    "b" => 2,
+    "c" => 2,
+    "d" => 4,
+    "e" => 4,
+    "f" => 6,
+    "g" => 6)
+scores = Dict(
+    "a" => 1,
+    "b" => 2,
+    "c" => 4,
+    "d" => 4,
+    "e" => 5,
+    "f" => 6,
+    "g" => 12)
+availability = Dict(
+    "a" => 3,
+    "b" => 2,
+    "c" => 3,
+    "d" => 5,
+    "e" => 2,
+    "f" => 1,
+    "g" => 1)
 
 # Blocked seats (coordinates [row, column])
 blocked_seats = [
