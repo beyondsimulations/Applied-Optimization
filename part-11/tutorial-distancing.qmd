@@ -19,7 +19,36 @@ format:
 
 # Introduction
 
-Remember the `Example by hand` from the lecture? In this tutorial, we will solve the arena seating problem **by computer**. As we approach the end of the course, we'll remove some previous "guardrails" to give you more freedom in solving the problem.
+Imagine you're tasked with optimizing seating arrangements for a major event venue during a pandemic. You need to balance safety with efficiency, ensuring groups can enjoy the event while maintaining proper distancing.
+
+Your challenge is to:
+
+1. Place different-sized groups strategically
+2. Maintain safe distances between all attendees
+3. Maximize either revenue or total attendance
+4. Work around venue constraints and blocked seats
+
+## The Venue Layout
+Here's our event venue's seating arrangement, as we have used in the lecture:
+
+![Each white square represents an available seat, while grey squares are blocked](https://images.byndsim.com/ao/ao_arena-empty_exercise.svg)
+
+## Group Types and Their Characteristics
+
+We have different types of groups wanting to attend the event:
+
+- Singles (Type 'a'): Solo attendees
+- Couples (Types 'b' and 'c'): Two people travelling together
+- Small families (Types 'd' and 'e'): Groups of four
+- Large families (Types 'f' and 'g'): Groups of six
+
+Each group type has:
+
+- A different ticket value (score)
+- Limited availability (how many such groups want tickets)
+- Space requirements (how many consecutive seats they need)
+
+As we approach the end of the course, we'll remove some previous "guardrails" to give you more freedom in solving the problem.
 
 :::{.callout-tip}
 
@@ -51,6 +80,11 @@ The following distancing rules must be maintained:
 - Maximum two groups per row
 - Grey seats are obstacles and cannot be used
 
+:::{.callout-important}
+## Common Pitfalls
+Watch out for the edge cases when implementing distancing constraints - especially around blocked seats!
+:::
+
 ## Define the Model
 
 ::: {.content-visible when-profile="solutions"}
@@ -71,6 +105,14 @@ req_seats = Dict("a" => 1, "b" => 2, "c" => 2, "d" => 4, "e" => 4, "f" => 6, "g"
 scores = Dict("a" => 1, "b" => 2, "c" => 4, "d" => 4, "e" => 5, "f" => 6, "g" => 12)
 availability = Dict("a" => 3, "b" => 2, "c" => 3, "d" => 5, "e" => 2, "f" => 1, "g" => 1)
 
+# Blocked seats (coordinates [row, column])
+blocked_seats = [
+    (1, 1),(1, 2),(1,9),(1,10),
+    (2, 1),(2, 10),
+    (6, 5),(6,6),
+    (7, 5),(7,6),
+]
+
 # Variables
 @variable(arena_model, x[groups, row_set, col_set], Bin)
 
@@ -84,7 +126,7 @@ p = 2  # max groups per row
 
 # Constraints
 # Each group can only be assigned once
-@constraint(arena_model, [g in groups], 
+@constraint(arena_model, [g in groups],
     sum(x[g,r,c] for r in row_set, c in col_set) <= availability[g])
 
 # Maximum groups per row
@@ -93,20 +135,13 @@ p = 2  # max groups per row
 
 # Horizontal and vertical social distancing
 @constraint(arena_model, [r in row_set, c in col_set],
-    sum(x[g,rr,cc] for g in groups, 
-        rr in max(1,r-b):r, 
+    sum(x[g,rr,cc] for g in groups,
+        rr in max(1,r-b):r,
         cc in max(1,c-req_seats[g]+1-h):c) <= 1)
 
-# Define blocked seats (coordinates [row, column])
-blocked_seats = [
-    (1, 1),(1, 2),(1,9),(1,10), 
-    (6, 5),(6,6), 
-    (7, 5),(7,6), 
-]
-
 # Constraints to prevent assignments to blocked seats
-@constraint(arena_model, [g in groups, (r,c) in blocked_seats], 
-    x[g,r,c] == 0)
+@constraint(arena_model, [g in groups, (r,c) in blocked_seats],
+    sum(x[g,r,cc] for cc in max(1,c-req_seats[g]+1):c) == 0)
 
 # Solve the model
 optimize!(arena_model)
@@ -134,6 +169,14 @@ req_seats = Dict("a" => 1, "b" => 2, "c" => 2, "d" => 4, "e" => 4, "f" => 6, "g"
 scores = Dict("a" => 1, "b" => 2, "c" => 4, "d" => 4, "e" => 5, "f" => 6, "g" => 12)
 availability = Dict("a" => 3, "b" => 2, "c" => 3, "d" => 5, "e" => 2, "f" => 1, "g" => 1)
 
+# Blocked seats (coordinates [row, column])
+blocked_seats = [
+    (1, 1),(1, 2),(1,9),(1,10),
+    (2, 1),(2, 10),
+    (6, 5),(6,6),
+    (7, 5),(7,6),
+]
+
 # Variables
 @variable(arena_model, x[groups, row_set, col_set], Bin)
 
@@ -150,9 +193,7 @@ availability = Dict("a" => 3, "b" => 2, "c" => 3, "d" => 5, "e" => 2, "f" => 1, 
 
 ## Visualization
 
-To test your solution, visualize it with a plot in Julia. The visualization is a great tool to [check if your solution is correct]{.highlight}. 
-
-We figure it is likely, that you **won't have an applicable solution** after the first round, even if your model is working correctly. [If everything works from the start, great!]{.highlight}
+To test your solution, visualize it with a plot in Julia. The visualization is a great tool to [check if your solution is correct]{.highlight}. We figure it is likely, that you **won't have an applicable solution** after the first round, even if your model is working correctly. [If everything works from the start, great!]{.highlight}
 
 ```{julia}
 #| eval: false
@@ -162,7 +203,7 @@ using Plots
 function visualize_seating(model)
     # Get solution values
     solution_matrix = fill("", 10, 10)
-    
+
     # Fill matrix with group assignments
     for r in 1:10, c in 1:10
         for g in groups
@@ -171,7 +212,7 @@ function visualize_seating(model)
             end
         end
     end
-    
+
     # Create color mapping for groups
     color_map = Dict(
         "" => :white,  # Empty seats
@@ -183,12 +224,12 @@ function visualize_seating(model)
         "f" => :yellow,
         "g" => :pink
     )
-    
+
     # Mark blocked seats
     for (r,c) in blocked_seats
         solution_matrix[r,c] = ""  # Empty string for blocked seats
     end
-    
+
     # Create plot
     p = plot(
         aspect_ratio=:equal,
@@ -197,7 +238,7 @@ function visualize_seating(model)
         yflip=true,  # Flip y-axis to match traditional seating layout
         legend=:outerright
     )
-    
+
     # Plot seats
     for r in 1:10, c in 1:10
         group = solution_matrix[r,c]
@@ -206,7 +247,7 @@ function visualize_seating(model)
             for i in 1:group_length
                 if c+i-1 <= 10
                     println("Group $group in $r,$(c+i-1)")
-                    scatter!([c+i-1], [r], 
+                    scatter!([c+i-1], [r],
                             color=color_map[group],
                             label=nothing,
                             markersize=10,
@@ -218,7 +259,7 @@ function visualize_seating(model)
             is_blocked = (r,c) in blocked_seats
             if is_blocked
                 println("Blocked seat in $r,$c")
-                scatter!([c], [r], 
+                scatter!([c], [r],
                         color=is_blocked ? :gray : :white,
                         markersize=10,
                         markershape=:square,
@@ -226,11 +267,11 @@ function visualize_seating(model)
             end
         end
     end
-    
+
     title!("Arena Seating Layout")
     xlabel!("Column")
     ylabel!("Row")
-    
+
     return p
 end
 
@@ -248,6 +289,39 @@ If you encounter any difficulties ad cannot solve the problem, please document y
 
 =#
 ```
+
+# 2. Maximize the number of seats in use
+
+Now let's explore a different optimization objective! Instead of focusing on revenue, imagine you're trying to accommodate as many people as possible at your venue - perhaps for a community event where maximizing attendance is more important than maximizing profit.
+
+:::{.callout-tip}
+Think about how this changes your objective function. What matters now is not the score per group, but how many seats each group occupies!
+:::
+
+Try implementing this new objective while keeping all the safety constraints in place.
+
+```{julia}
+#| eval: false
+# YOUR CODE BELOW
+
+```
+
+Check if your solution is correct by visualizing it with the `visualize_seating` function below.
+
+```{julia}
+#| eval: false
+#| # YOUR CODE BELOW
+#|
+```
+
+How many seats more are in use when compared to the previous solution? Write a short code that calculates and prints the difference.
+
+```{julia}
+#| eval: false
+# YOUR CODE BELOW
+
+```
+
 
 ---
 
