@@ -70,18 +70,29 @@
     "href": "part-11/tutorial-distancing.html",
     "title": "Tutorial XI - Arena Seat Planning under Distancing Rules",
     "section": "",
-    "text": "Remember the Example by hand from the lecture? In this tutorial, we will solve the arena seating problem by computer. As we approach the end of the course, we’ll remove some previous “guardrails” to give you more freedom in solving the problem.\n\n\n\n\n\n\nTip\n\n\n\nDon’t worry, if you cannot solve everything by yourself. Try your best and ask for help if you need it!",
+    "text": "Imagine you’re tasked with optimizing seating arrangements for a major event venue during a pandemic. You need to balance safety with efficiency, ensuring groups can enjoy the event while maintaining proper distancing.\nYour challenge is to:\n\nPlace different-sized groups strategically\nMaintain safe distances between all attendees\nMaximize either revenue or total attendance\nWork around venue constraints and blocked seats\n\n\n\nHere’s our event venue’s seating arrangement, as we have used in the lecture:\n\n\n\nEach white square represents an available seat, while grey squares are blocked\n\n\n\n\n\nWe have different types of groups wanting to attend the event:\n\nSingles (Type ‘a’): Solo attendees\nCouples (Types ‘b’ and ‘c’): Two people travelling together\nSmall families (Types ‘d’ and ‘e’): Groups of four\nLarge families (Types ‘f’ and ‘g’): Groups of six\n\nEach group type has:\n\nA different ticket value (score)\nLimited availability (how many such groups want tickets)\nSpace requirements (how many consecutive seats they need)\n\nAs we approach the end of the course, we’ll remove some previous “guardrails” to give you more freedom in solving the problem.\n\n\n\n\n\n\nTip\n\n\n\nDon’t worry, if you cannot solve everything by yourself. Try your best and ask for help if you need it!",
     "crumbs": [
       "11 Distancing",
       "Tutorial"
     ]
   },
   {
-    "objectID": "part-11/tutorial-distancing.html#group-types-data",
-    "href": "part-11/tutorial-distancing.html#group-types-data",
+    "objectID": "part-11/tutorial-distancing.html#the-venue-layout",
+    "href": "part-11/tutorial-distancing.html#the-venue-layout",
     "title": "Tutorial XI - Arena Seat Planning under Distancing Rules",
-    "section": "Group Types Data",
-    "text": "Group Types Data\nThe values of the groups are given in the julia code below.\n\n\n\n\n\n\nNote\n\n\n\nThe groups are given differently than in the lecture! Either adjust the data or the model, depending on what you think is easier.",
+    "section": "",
+    "text": "Here’s our event venue’s seating arrangement, as we have used in the lecture:\n\n\n\nEach white square represents an available seat, while grey squares are blocked",
+    "crumbs": [
+      "11 Distancing",
+      "Tutorial"
+    ]
+  },
+  {
+    "objectID": "part-11/tutorial-distancing.html#group-types-and-their-characteristics",
+    "href": "part-11/tutorial-distancing.html#group-types-and-their-characteristics",
+    "title": "Tutorial XI - Arena Seat Planning under Distancing Rules",
+    "section": "",
+    "text": "We have different types of groups wanting to attend the event:\n\nSingles (Type ‘a’): Solo attendees\nCouples (Types ‘b’ and ‘c’): Two people travelling together\nSmall families (Types ‘d’ and ‘e’): Groups of four\nLarge families (Types ‘f’ and ‘g’): Groups of six\n\nEach group type has:\n\nA different ticket value (score)\nLimited availability (how many such groups want tickets)\nSpace requirements (how many consecutive seats they need)\n\nAs we approach the end of the course, we’ll remove some previous “guardrails” to give you more freedom in solving the problem.\n\n\n\n\n\n\nTip\n\n\n\nDon’t worry, if you cannot solve everything by yourself. Try your best and ask for help if you need it!",
     "crumbs": [
       "11 Distancing",
       "Tutorial"
@@ -92,7 +103,7 @@
     "href": "part-11/tutorial-distancing.html#distance-requirements",
     "title": "Tutorial XI - Arena Seat Planning under Distancing Rules",
     "section": "Distance Requirements",
-    "text": "Distance Requirements\nThe following distancing rules must be maintained:\n\nMinimum one empty seat between groups\nOne empty seat between rows\nOne empty seat diagonally\nMaximum two groups per row\nGrey seats are obstacles and cannot be used",
+    "text": "Distance Requirements\nThe following distancing rules must be maintained:\n\nMinimum one empty seat between groups\nOne empty seat between rows\nOne empty seat diagonally\nMaximum two groups per row\nGrey seats are obstacles and cannot be used\n\n\n\n\n\n\n\nCommon Pitfalls\n\n\n\nWatch out for the edge cases when implementing distancing constraints - especially around blocked seats!",
     "crumbs": [
       "11 Distancing",
       "Tutorial"
@@ -103,7 +114,7 @@
     "href": "part-11/tutorial-distancing.html#define-the-model",
     "title": "Tutorial XI - Arena Seat Planning under Distancing Rules",
     "section": "Define the Model",
-    "text": "Define the Model\n\nusing JuMP\nusing HiGHS\n\n# Model\narena_model = Model(HiGHS.Optimizer)\n\n# Sets\nrow_set = 1:10\ncol_set = 1:10\n\n# Group data\ngroups = [\"a\", \"b\", \"c\", \"d\", \"e\", \"f\", \"g\"]\nreq_seats = Dict(\"a\" =&gt; 1, \"b\" =&gt; 2, \"c\" =&gt; 2, \"d\" =&gt; 4, \"e\" =&gt; 4, \"f\" =&gt; 6, \"g\" =&gt; 6)\nscores = Dict(\"a\" =&gt; 1, \"b\" =&gt; 2, \"c\" =&gt; 4, \"d\" =&gt; 4, \"e\" =&gt; 5, \"f\" =&gt; 6, \"g\" =&gt; 12)\navailability = Dict(\"a\" =&gt; 3, \"b\" =&gt; 2, \"c\" =&gt; 3, \"d\" =&gt; 5, \"e\" =&gt; 2, \"f\" =&gt; 1, \"g\" =&gt; 1)\n\n# Variables\n@variable(arena_model, x[groups, row_set, col_set], Bin)\n\n# YOUR CODE BELOW\n\n# Suggested structure:\n# 1. Create parameters\n# 2. Set objective function\n# 3. Add constraints\n# 4. Solve the model",
+    "text": "Define the Model\n\n\n\n\n\n\nNote\n\n\n\nThe groups are given differently than in the lecture! Either adjust the data or the model, depending on what you think is easier.\n\n\n\nusing JuMP\nusing HiGHS\n\n# Model\narena_model = Model(HiGHS.Optimizer)\n\n# Sets\nrow_set = 1:10\ncol_set = 1:10\n\n# Group data\ngroups = [\n    \"a\",\n    \"b\",\n    \"c\",\n    \"d\",\n    \"e\",\n    \"f\",\n    \"g\"]\nreq_seats = Dict(\n    \"a\" =&gt; 1,\n    \"b\" =&gt; 2,\n    \"c\" =&gt; 2,\n    \"d\" =&gt; 4,\n    \"e\" =&gt; 4,\n    \"f\" =&gt; 6,\n    \"g\" =&gt; 6)\nscores = Dict(\n    \"a\" =&gt; 1,\n    \"b\" =&gt; 2,\n    \"c\" =&gt; 4,\n    \"d\" =&gt; 4,\n    \"e\" =&gt; 5,\n    \"f\" =&gt; 6,\n    \"g\" =&gt; 12)\navailability = Dict(\n    \"a\" =&gt; 3,\n    \"b\" =&gt; 2,\n    \"c\" =&gt; 3,\n    \"d\" =&gt; 5,\n    \"e\" =&gt; 2,\n    \"f\" =&gt; 1,\n    \"g\" =&gt; 1)\n\n# Blocked seats (coordinates [row, column])\nblocked_seats = [\n    (1, 1),(1, 2),(1,9),(1,10),\n    (2, 1),(2, 10),\n    (6, 5),(6,6),\n    (7, 5),(7,6),\n]\n\n# Variables\n@variable(arena_model, x[groups, row_set, col_set], Bin)\n\n# YOUR CODE BELOW\n\n# Suggested structure:\n# 1. Create parameters\n# 2. Set objective function\n# 3. Add constraints\n# 4. Solve the model",
     "crumbs": [
       "11 Distancing",
       "Tutorial"
@@ -114,7 +125,7 @@
     "href": "part-11/tutorial-distancing.html#visualization",
     "title": "Tutorial XI - Arena Seat Planning under Distancing Rules",
     "section": "Visualization",
-    "text": "Visualization\nTo test your solution, visualize it with a plot in Julia. The visualization is a great tool to check if your solution is correct.\nWe figure it is likely, that you won’t have an applicable solution after the first round, even if your model is working correctly. If everything works from the start, great!\n\nusing Plots\n\n# Create visualization of the solution\nfunction visualize_seating(model)\n    # Get solution values\n    solution_matrix = fill(\"\", 10, 10)\n    \n    # Fill matrix with group assignments\n    for r in 1:10, c in 1:10\n        for g in groups\n            if value(model[:x][g,r,c]) &gt; 0.5  # Using 0.5 to handle floating point\n                solution_matrix[r,c] = g\n            end\n        end\n    end\n    \n    # Create color mapping for groups\n    color_map = Dict(\n        \"\" =&gt; :white,  # Empty seats\n        \"a\" =&gt; :blue,\n        \"b\" =&gt; :green,\n        \"c\" =&gt; :red,\n        \"d\" =&gt; :purple,\n        \"e\" =&gt; :orange,\n        \"f\" =&gt; :yellow,\n        \"g\" =&gt; :pink\n    )\n    \n    # Mark blocked seats\n    for (r,c) in blocked_seats\n        solution_matrix[r,c] = \"\"  # Empty string for blocked seats\n    end\n    \n    # Create plot\n    p = plot(\n        aspect_ratio=:equal,\n        xlims=(0.5,10.5),\n        ylims=(0.5,10.5),\n        yflip=true,  # Flip y-axis to match traditional seating layout\n        legend=:outerright\n    )\n    \n    # Plot seats\n    for r in 1:10, c in 1:10\n        group = solution_matrix[r,c]\n        if group != \"\"\n            group_length = req_seats[group]\n            for i in 1:group_length\n                if c+i-1 &lt;= 10\n                    println(\"Group $group in $r,$(c+i-1)\")\n                    scatter!([c+i-1], [r], \n                            color=color_map[group],\n                            label=nothing,\n                            markersize=10,\n                            markershape=:square)\n                end\n            end\n        else\n            # Plot empty or blocked seats\n            is_blocked = (r,c) in blocked_seats\n            if is_blocked\n                println(\"Blocked seat in $r,$c\")\n                scatter!([c], [r], \n                        color=is_blocked ? :gray : :white,\n                        markersize=10,\n                        markershape=:square,\n                        label= nothing)\n            end\n        end\n    end\n    \n    title!(\"Arena Seating Layout\")\n    xlabel!(\"Column\")\n    ylabel!(\"Row\")\n    \n    return p\nend\n\n# Display the visualization\np = visualize_seating(arena_model)\ndisplay(p)\n\nIf you encounter any difficulties ad cannot solve the problem, please document your issues here:\n\n#=\n\n\n\n=#",
+    "text": "Visualization\nTo test your solution, visualize it with a plot in Julia. The visualization is a great tool to check if your solution is correct. We figure it is likely, that you won’t have an applicable solution after the first round, even if your model is working correctly. If everything works from the start, great!\n\nusing Plots\n\n# Create visualization of the solution\nfunction visualize_seating(model)\n    # Get solution values\n    solution_matrix = fill(\"\", 10, 10)\n\n    # Fill matrix with group assignments\n    for r in 1:10, c in 1:10\n        for g in groups\n            if value(model[:x][g,r,c]) &gt; 0.5  # Using 0.5 to handle floating point\n                solution_matrix[r,c] = g\n            end\n        end\n    end\n\n    # Create color mapping for groups\n    color_map = Dict(\n        \"\" =&gt; :white,  # Empty seats\n        \"a\" =&gt; :blue,\n        \"b\" =&gt; :green,\n        \"c\" =&gt; :red,\n        \"d\" =&gt; :purple,\n        \"e\" =&gt; :orange,\n        \"f\" =&gt; :yellow,\n        \"g\" =&gt; :pink\n    )\n\n    # Mark blocked seats\n    for (r,c) in blocked_seats\n        solution_matrix[r,c] = \"\"  # Empty string for blocked seats\n    end\n\n    # Create plot\n    p = plot(\n        aspect_ratio=:equal,\n        xlims=(0.5,10.5),\n        ylims=(0.5,10.5),\n        yflip=true,  # Flip y-axis to match traditional seating layout\n        legend=:outerright\n    )\n\n    # Plot seats\n    for r in 1:10, c in 1:10\n        group = solution_matrix[r,c]\n        if group != \"\"\n            group_length = req_seats[group]\n            for i in 1:group_length\n                if c+i-1 &lt;= 10\n                    println(\"Group $group in $r,$(c+i-1)\")\n                    scatter!([c+i-1], [r],\n                            color=color_map[group],\n                            label=nothing,\n                            markersize=10,\n                            markershape=:square)\n                end\n            end\n        else\n            # Plot empty or blocked seats\n            is_blocked = (r,c) in blocked_seats\n            if is_blocked\n                println(\"Blocked seat in $r,$c\")\n                scatter!([c], [r],\n                        color=is_blocked ? :gray : :white,\n                        markersize=10,\n                        markershape=:square,\n                        label= nothing)\n            end\n        end\n    end\n\n    title!(\"Arena Seating Layout\")\n    xlabel!(\"Column\")\n    ylabel!(\"Row\")\n\n    return p\nend\n\n# Display the visualization\np = visualize_seating(arena_model)\ndisplay(p)\n\nIf you encounter any difficulties ad cannot solve the problem, please document your issues here:\n\n#=\n\n\n\n=#",
     "crumbs": [
       "11 Distancing",
       "Tutorial"
@@ -11121,7 +11132,7 @@
     "href": "part-12/lecture-rail.html#time-sets",
     "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Time Sets?",
-    "text": "Time Sets?\nQuestion: What could be the time sets?\n\n\n\\(\\mathcal{T}\\) - Set of minutes in the time horizon, indexed by \\(t\\)\n\\(\\mathcal{P}\\) - Set of periods in the observed time horizon, where \\(p \\in \\{p_1, p_2, \\dots,p_n\\}\\)\n\n\n. . .\n\n\n\n\n\n\nNote: Number of periods\n\n\n\nWe further define \\(n\\) as the number of periods in observed time horizon.",
+    "text": "Time Sets?\nQuestion: What could be the time sets?\n\n\n\\(\\mathcal{T}\\) - Set of minutes in the time horizon, indexed by \\(t\\)\n\\(\\mathcal{P}\\) - Set of periods in the observed time horizon, where \\(p \\in \\{1, 2, \\dots,n\\}\\)\n\n\n. . .\n\n\n\n\n\n\nNote: Number of periods\n\n\n\nWe further define \\(n\\) as the number of periods in observed time horizon.",
     "crumbs": [
       "12 Metro",
       "Lecture"
@@ -11352,7 +11363,7 @@
     "href": "part-12/lecture-rail.html#dispatch-only-available-people-1",
     "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Dispatch Only Available People",
-    "text": "Dispatch Only Available People\nQuestion: What could be the constraint?\n. . .\n\n\n\\[\n\\min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\min}\\} \\leq X_{o,p} \\leq \\max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\max}\\} \\quad \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\]\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nWe need this constraint for two reasons:\n\nWe could also dispatch more people than there are as this would minimize the objective value. \nWe also need to ensure that we can dispatch at least the minimum allowed inflow or less if the queue is smaller than the minimum allowed inflow.",
+    "text": "Dispatch Only Available People\nQuestion: What could be the constraint?\n. . .\n\n\n\\[\n\\min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\min}\\} \\leq X_{o,p} \\leq \\min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\max}\\} \\quad \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\]\n\n. . .\n\n\n\n\n\n\nNote\n\n\n\nWe need this constraint for two reasons:\n\nWe could also dispatch more people than there are as this would minimize the objective value. \nWe also need to ensure that we can dispatch at least the minimum allowed inflow or less if the queue is smaller than the minimum allowed inflow.",
     "crumbs": [
       "12 Metro",
       "Lecture"
@@ -11363,7 +11374,7 @@
     "href": "part-12/lecture-rail.html#metro-inflow-model",
     "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metro Inflow Model",
-    "text": "Metro Inflow Model\n\n\n\\[\\begin{align*}\n    \\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\end{align*}\\] subject to: \\[\\begin{align*}\n    &  \\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} && \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T} \\\\\n    & min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\\} \\leq X_{o,p} \\leq max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\\} && \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\end{align*}\\]",
+    "text": "Metro Inflow Model\n\n\n\\[\\begin{align*}\n    \\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\end{align*}\\] subject to: \\[\\begin{align*}\n    &  \\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} && \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T} \\\\\n    & min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\\} \\leq X_{o,p} \\leq min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\\} && \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\end{align*}\\]",
     "crumbs": [
       "12 Metro",
       "Lecture"
@@ -11642,7 +11653,7 @@
     "href": "part-12/lecture-presentation.html#time-sets",
     "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Time Sets?",
-    "text": "Time Sets?\nQuestion: What could be the time sets?\n\n\n\\(\\mathcal{T}\\) - Set of minutes in the time horizon, indexed by \\(t\\)\n\\(\\mathcal{P}\\) - Set of periods in the observed time horizon, where \\(p \\in \\{p_1, p_2, \\dots,p_n\\}\\)\n\n\n\n\n\n\n\n\n\nNote: Number of periods\n\n\nWe further define \\(n\\) as the number of periods in observed time horizon."
+    "text": "Time Sets?\nQuestion: What could be the time sets?\n\n\n\\(\\mathcal{T}\\) - Set of minutes in the time horizon, indexed by \\(t\\)\n\\(\\mathcal{P}\\) - Set of periods in the observed time horizon, where \\(p \\in \\{1, 2, \\dots,n\\}\\)\n\n\n\n\n\n\n\n\n\nNote: Number of periods\n\n\nWe further define \\(n\\) as the number of periods in observed time horizon."
   },
   {
     "objectID": "part-12/lecture-presentation.html#periods",
@@ -11789,14 +11800,14 @@
     "href": "part-12/lecture-presentation.html#dispatch-only-available-people-1",
     "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Dispatch Only Available People",
-    "text": "Dispatch Only Available People\nQuestion: What could be the constraint?\n\n\n\n\\[\n\\min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\min}\\} \\leq X_{o,p} \\leq \\max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\max}\\} \\quad \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\]\n\n\n\n\n\n\n\n\n\nNote\n\n\nWe need this constraint for two reasons:\n\nWe could also dispatch more people than there are as this would minimize the objective value. \nWe also need to ensure that we can dispatch at least the minimum allowed inflow or less if the queue is smaller than the minimum allowed inflow."
+    "text": "Dispatch Only Available People\nQuestion: What could be the constraint?\n\n\n\n\\[\n\\min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\min}\\} \\leq X_{o,p} \\leq \\min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{\\max}\\} \\quad \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\]\n\n\n\n\n\n\n\n\n\nNote\n\n\nWe need this constraint for two reasons:\n\nWe could also dispatch more people than there are as this would minimize the objective value. \nWe also need to ensure that we can dispatch at least the minimum allowed inflow or less if the queue is smaller than the minimum allowed inflow."
   },
   {
     "objectID": "part-12/lecture-presentation.html#metro-inflow-model",
     "href": "part-12/lecture-presentation.html#metro-inflow-model",
     "title": "Lecture XII - Passenger Flow Control in Urban Rail",
     "section": "Metro Inflow Model",
-    "text": "Metro Inflow Model\n\n\n\\[\\begin{align*}\n    \\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\end{align*}\\] subject to: \\[\\begin{align*}\n    &  \\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} && \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T} \\\\\n    & min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\\} \\leq X_{o,p} \\leq max\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\\} && \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\end{align*}\\]"
+    "text": "Metro Inflow Model\n\n\n\\[\\begin{align*}\n    \\text{minimize} \\quad \\sum_{o \\in \\mathcal{O}} \\sum_{p \\in \\mathcal{P}} (\\sum_{d \\in \\mathcal{O}} q_{o,d,p} - m \\times X_{o,p})\n\\end{align*}\\] subject to: \\[\\begin{align*}\n    &  \\sum_{(o,d,p) \\in \\mathcal{R}_{e,t}} X_{o,p} \\times \\frac{q_{o,d,p}}{\\sum_{f \\in \\mathcal{O}} q_{o,f,p}} \\leq \\alpha \\times c_{e} && \\forall e \\in \\mathcal{E}, t \\in \\mathcal{T} \\\\\n    & min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\\} \\leq X_{o,p} \\leq min\\{\\frac{\\sum_{d \\in \\mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\\} && \\forall o \\in \\mathcal{O}, p \\in \\mathcal{P}\n\\end{align*}\\]"
   },
   {
     "objectID": "part-12/lecture-presentation.html#characteristics",
