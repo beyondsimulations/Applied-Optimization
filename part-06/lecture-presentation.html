@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.6.40">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.23">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture VI - Minimizing Split Orders in E-Commerce</title>
@@ -29,8 +29,9 @@
       vertical-align: middle;
     }
     /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -41,7 +42,7 @@
     }
     @media print {
     pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
@@ -114,7 +115,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-1409d6bf4a03a84ed30b56d24cff69f5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-6584a2c6b91809c775f4d5ae0799c90c.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -220,10 +221,7 @@
 <div class="quarto-title-author-name">
 Dr.&nbsp;Tobias Vlćek 
 </div>
-        <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2024
-          </p>
-    </div>
+</div>
 </div>
 
 </section>
@@ -378,25 +376,21 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Available Sets</h2>
 <p><span class="question">Question:</span> <strong>What could be the sets here?</strong></p>
 <div class="fragment">
-<div>
 <ul>
 <li class="fragment"><span class="math inline">\(\mathcal{I}\)</span> - Set of products indexed by <span class="math inline">\(i \in \{1,2,...,|\mathcal{I}|\}\)</span></li>
 <li class="fragment"><span class="math inline">\(\mathcal{K}\)</span> - Set of warehouses indexed by <span class="math inline">\(k \in \{1,\dots,|\mathcal{K}|\}\)</span></li>
 <li class="fragment"><span class="math inline">\(\mathcal{M}\)</span> - Set of customer orders <span class="math inline">\(m \in \{1,2,...,|\mathcal{M}|\}\)</span></li>
 </ul>
 </div>
-</div>
 </section>
 <section id="available-parameters" class="slide level2">
 <h2>Available Parameters</h2>
 <p><span class="question">Question:</span> <strong>What are possible parameters?</strong></p>
 <div class="fragment">
-<div>
 <ul>
 <li class="fragment"><span class="math inline">\(c_k\)</span> - Storage space of warehouse <span class="math inline">\(k \in \{1,\dots,|\mathcal{K}|\}\)</span></li>
 <li class="fragment"><span class="math inline">\(\boldsymbol{T}= (t_{m,i})\)</span> - Past customer orders for SKUs</li>
 </ul>
-</div>
 </div>
 <div class="fragment">
 <p><span class="question"><strong>Question:</strong></span> <strong>What could the transactional data look like?</strong></p>
@@ -588,7 +582,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="transaction-matrix" class="slide level2">
 <h2>Transaction Matrix</h2>
-<div id="2" class="cell columns column-output-location" data-execution_count="1">
+<div id="4" class="cell columns column-output-location" data-execution_count="1">
 <div class="column">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a>T <span class="op">=</span> [</span>
 <span id="cb1-2"><a></a>    <span class="fl">1</span> <span class="fl">1</span> <span class="fl">1</span> <span class="fl">0</span>;</span>
@@ -637,7 +631,6 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="how-to-approach-the-problem" class="slide level2">
 <h2>How to approach the problem?</h2>
-<div>
 <ul>
 <li class="fragment"><strong>Greedy Heuristic</strong><sup>1</sup>: Allocation based on matrix</li>
 <li class="fragment"><strong>Mathematical Model</strong><sup>2</sup>: Maximizes coappearance</li>
@@ -645,7 +638,6 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment"><span class="highlight">New</span>: Max. coappearance with non-linear solver</li>
 <li class="fragment"><span class="highlight">New</span>: Heuristic based on Chi-Square Tests</li>
 </ul>
-</div>
 <aside><ol class="aside-footnotes"><li id="fn3"><p>Simple and very fast, <span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#/literature-i" role="doc-biblioref" onclick="">2012</a>)</span></p></li><li id="fn4"><p>Computationally intensive with CPLEX, <span class="citation" data-cites="Zhu2021">Zhu, Wang, and Xie (<a href="#/literature-i" role="doc-biblioref" onclick="">2021</a>)</span></p></li><li id="fn5"><p>Greedy Randomized Adaptive Search Procedure, <span class="citation" data-cites="Zhu2021">Zhu, Wang, and Xie (<a href="#/literature-i" role="doc-biblioref" onclick="">2021</a>)</span></p></li></ol></aside></section>
 <section id="basic-setting" class="slide level2">
 <h2>Basic Setting</h2>
@@ -679,12 +671,10 @@ Dr.&nbsp;Tobias Vlćek
 <section id="available-parameters-1" class="slide level2">
 <h2>Available Parameters</h2>
 <p><span class="question">Question:</span> <strong>What are possible parameters?</strong></p>
-<div>
 <ul>
 <li class="fragment"><span class="math inline">\(c_k\)</span> - Storage space of warehouse <span class="math inline">\(k \in \{1,\dots,|\mathcal{K}|\}\)</span></li>
 <li class="fragment"><span class="math inline">\(\boldsymbol{Q}= (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}\)</span> - Coappearance matrix</li>
 </ul>
-</div>
 <div class="fragment">
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
@@ -767,7 +757,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="decision-variable-in-julia" class="slide level2">
 <h2>Decision Variable in Julia</h2>
 <p><span class="question">Question:</span> <strong>How could we formulate the variable in Julia?</strong></p>
-<div id="4" class="cell" data-execution_count="1">
+<div id="6" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a></a><span class="im">import</span> <span class="bu">Pkg;</span> Pkg.add("SCIP")</span>
 <span id="cb4-2"><a></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">SCIP</span> <span class="co"># SCIP is a non-commercial MIQCP solver</span></span>
 <span id="cb4-3"><a></a></span>
@@ -777,7 +767,7 @@ Dr.&nbsp;Tobias Vlćek
 <span id="cb4-7"><a></a>warehouse_model <span class="op">=</span> <span class="fu">Model</span>(SCIP.Optimizer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="fragment">
-<div id="6" class="cell" data-execution_count="1">
+<div id="8" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a></a><span class="pp">@variable</span>(warehouse_model, X[i <span class="kw">in</span> skus, k <span class="kw">in</span> warehouses], Bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell fragment" data-execution_count="1">
@@ -851,7 +841,7 @@ And data, a 3×2 Matrix{JuMP.VariableRef}:
 <h2>Objective Function in Julia</h2>
 <p><span class="question">Question:</span> <strong>How could we formulate this in Julia?</strong></p>
 <div class="fragment">
-<div id="8" class="cell" data-execution_count="1">
+<div id="10" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a></a>Q <span class="op">=</span> [<span class="fl">2</span> <span class="fl">1</span> <span class="fl">2</span>; <span class="fl">1</span> <span class="fl">2</span> <span class="fl">1</span>; <span class="fl">2</span> <span class="fl">1</span> <span class="fl">2</span>]</span>
 <span id="cb7-2"><a></a></span>
 <span id="cb7-3"><a></a><span class="pp">@objective</span>(warehouse_model, </span>
@@ -957,7 +947,7 @@ And data, a 3×2 Matrix{JuMP.VariableRef}:
 </section>
 <section id="single-allocation-in-julia" class="slide level2">
 <h2>Single Allocation in Julia</h2>
-<div id="10" class="cell" data-execution_count="1">
+<div id="12" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a></a><span class="pp">@constraint</span>(warehouse_model, single_allocation[i <span class="kw">in</span> skus], </span>
 <span id="cb9-2"><a></a>    <span class="fu">sum</span>(X[i, k] <span class="cf">for</span> k <span class="kw">in</span> warehouses) <span class="op">&gt;=</span> <span class="fl">1</span></span>
 <span id="cb9-3"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1022,7 +1012,7 @@ And data, a 3-element Vector{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.Con
 </section>
 <section id="capacity-constraints-in-julia" class="slide level2">
 <h2>Capacity Constraints in Julia</h2>
-<div id="12" class="cell" data-execution_count="1">
+<div id="14" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a></a>capacities <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"Hamburg"</span> <span class="op">=&gt;</span> <span class="fl">2</span>, <span class="st">"Berlin"</span> <span class="op">=&gt;</span> <span class="fl">1</span>) <span class="co"># Add capacities</span></span>
 <span id="cb11-2"><a></a></span>
 <span id="cb11-3"><a></a><span class="pp">@constraint</span>(warehouse_model, capacity[k <span class="kw">in</span> warehouses], </span>
@@ -1053,7 +1043,7 @@ And data, a 2-element Vector{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.Con
 </section>
 <section id="qmk-model-in-julia" class="slide level2">
 <h2>QMK Model in Julia</h2>
-<div id="14" class="cell" data-execution_count="1">
+<div id="16" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a></a><span class="fu">set_attribute</span>(warehouse_model, <span class="st">"display/verblevel"</span>, <span class="fl">0</span>) <span class="co"># Hide solver output</span></span>
 <span id="cb13-2"><a></a><span class="fu">optimize!</span>(warehouse_model)</span>
 <span id="cb13-3"><a></a></span>
@@ -1080,14 +1070,12 @@ And data, a 3×2 Matrix{Float64}:
 </section>
 <section id="characteristics" class="slide level2">
 <h2>Characteristics</h2>
-<div>
 <ul>
 <li class="fragment">Is the model formulation <strong>linear/ non-linear?</strong></li>
 <li class="fragment">What kind of <strong>variable domain</strong> do we have?</li>
 <li class="fragment">Do we know the <strong>split-orders</strong> based on the <strong>objective value?</strong></li>
 <li class="fragment">Why <strong>couldn’t we use HiGHS</strong> as solver?</li>
 </ul>
-</div>
 </section>
 <section id="choosing-a-solver" class="slide level2">
 <h2>Choosing a solver</h2>
@@ -1116,7 +1104,7 @@ And data, a 3×2 Matrix{Float64}:
 <h2>Global vs Local Optimality</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/"><img data-src="https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&amp;ssl=1" style="width:80.0%" alt="Local vs Global Optimum by Christoph Roser"></a></p>
+<p><a href="https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/"><img data-src="https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&amp;ssl=1" style="width:80.0%"></a></p>
 <figcaption>Local vs Global Optimum by Christoph Roser</figcaption>
 </figure>
 </div>
@@ -1124,13 +1112,11 @@ And data, a 3×2 Matrix{Float64}:
 <section id="model-assumptions" class="slide level2">
 <h2>Model Assumptions</h2>
 <p><span class="question">Questions:</span> <strong>On model assumptions</strong></p>
-<div>
 <ul>
 <li class="fragment">What assumptions have we made?</li>
 <li class="fragment">Problem with allocating SKUs to multiple warehouses?</li>
 <li class="fragment">What else might pose a problem in the real world?</li>
 </ul>
-</div>
 </section></section>
 <section>
 <section id="impact" class="title-slide slide level1 title center">
@@ -1259,7 +1245,7 @@ Zhu, Shixiang, He Wang, and Yao Xie. 2021. <span>“Data-Driven Optimization for
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>Lecture VI - Minimizing Split Orders in E-Commerce | Dr.&nbsp;Tobias Vlćek | <a href="../part-06/lecture-ordersplit.html">Home</a></p>
+<p>Lecture VI - Minimizing Split Orders in E-Commerce | Dr.&nbsp;Tobias Vlćek | <a href="lecture-ordersplit.qmd">Home</a></p>
 </div>
 </div></div>
 
@@ -1472,190 +1458,172 @@ Zhu, Shixiang, He Wang, and Yao Xie. 2021. <span>“Data-Driven Optimization for
       });
     </script>
     <script id="quarto-html-after-body" type="application/javascript">
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-      const toggleBodyColorMode = (bsSheetEl) => {
-        const mode = bsSheetEl.getAttribute("data-mode");
-        const bodyEl = window.document.querySelector("body");
-        if (mode === "dark") {
-          bodyEl.classList.add("quarto-dark");
-          bodyEl.classList.remove("quarto-light");
-        } else {
-          bodyEl.classList.add("quarto-light");
-          bodyEl.classList.remove("quarto-dark");
-        }
-      }
-      const toggleBodyColorPrimary = () => {
-        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-        if (bsSheetEl) {
-          toggleBodyColorMode(bsSheetEl);
-        }
-      }
-      toggleBodyColorPrimary();  
-      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
-      tabsets.forEach(function(tabset) {
-        const tabby = new Tabby('#' + tabset.id);
-      });
-      const isCodeAnnotation = (el) => {
-        for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {                     
-            return true;
-          }
-        }
-        return false;
-      }
-      const onCopySuccess = function(e) {
-        // button target
-        const button = e.trigger;
-        // don't keep focus
-        button.blur();
-        // flash "checked"
-        button.classList.add('code-copy-button-checked');
-        var currentTitle = button.getAttribute("title");
-        button.setAttribute("title", "Copied!");
-        let tooltip;
-        if (window.bootstrap) {
-          button.setAttribute("data-bs-toggle", "tooltip");
-          button.setAttribute("data-bs-placement", "left");
-          button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button, 
-            { trigger: "manual", 
-              customClass: "code-copy-button-tooltip",
-              offset: [0, -8]});
-          tooltip.show();    
-        }
-        setTimeout(function() {
-          if (tooltip) {
-            tooltip.hide();
-            button.removeAttribute("data-bs-title");
-            button.removeAttribute("data-bs-toggle");
-            button.removeAttribute("data-bs-placement");
-          }
-          button.setAttribute("title", currentTitle);
-          button.classList.remove('code-copy-button-checked');
-        }, 1000);
-        // clear code selection
-        e.clearSelection();
-      }
-      const getTextToCopy = function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
             }
           }
-          return codeEl.innerText;
-      }
-      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-        text: getTextToCopy
-      });
-      clipboard.on('success', onCopySuccess);
-      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-          text: getTextToCopy,
-          container: window.document.getElementById('quarto-embedded-source-code-modal')
-        });
-        clipboardModal.on('success', onCopySuccess);
-      }
-        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-        var mailtoRegex = new RegExp(/^mailto:/);
-          var filterRegex = new RegExp("https:\/\/beyondsimulations\.github\.io\/Applied-Optimization");
-        var isInternal = (href) => {
-            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          return false;
         }
-        // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-        for (var i=0; i<links.length; i++) {
-          const link = links[i];
-          if (!isInternal(link.href)) {
-            // undo the damage that might have been done by quarto-nav.js in the case of
-            // links that we want to consider external
-            if (link.dataset.originalHref !== undefined) {
-              link.href = link.dataset.originalHref;
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
             }
-          }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
         }
-      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-        const config = {
-          allowHTML: true,
-          maxWidth: 500,
-          delay: 100,
-          arrow: false,
-          appendTo: function(el) {
-              return el.closest('section.slide') || el.parentElement;
-          },
-          interactive: true,
-          interactiveBorder: 10,
-          theme: 'light-border',
-          placement: 'bottom-start',
-        };
-        if (contentFn) {
-          config.content = contentFn;
-        }
-        if (onTriggerFn) {
-          config.onTrigger = onTriggerFn;
-        }
-        if (onUntriggerFn) {
-          config.onUntrigger = onUntriggerFn;
-        }
-          config['offset'] = [0,0];
-          config['maxWidth'] = 700;
-        window.tippy(el, config); 
-      }
-      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-      for (var i=0; i<noterefs.length; i++) {
-        const ref = noterefs[i];
-        tippyHover(ref, function() {
-          // use id or data attribute instead here
-          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-          try { href = new URL(href).hash; } catch {}
-          const id = href.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note) {
-            return note.innerHTML;
-          } else {
-            return "";
-          }
-        });
-      }
-      const findCites = (el) => {
-        const parentEl = el.parentElement;
-        if (parentEl) {
-          const cites = parentEl.dataset.cites;
-          if (cites) {
-            return {
-              el,
-              cites: cites.split(' ')
-            };
-          } else {
-            return findCites(el.parentElement)
-          }
-        } else {
-          return undefined;
-        }
-      };
-      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-      for (var i=0; i<bibliorefs.length; i++) {
-        const ref = bibliorefs[i];
-        const citeInfo = findCites(ref);
-        if (citeInfo) {
-          tippyHover(citeInfo.el, function() {
-            var popup = window.document.createElement('div');
-            citeInfo.cites.forEach(function(cite) {
-              var citeDiv = window.document.createElement('div');
-              citeDiv.classList.add('hanging-indent');
-              citeDiv.classList.add('csl-entry');
-              var biblioDiv = window.document.getElementById('ref-' + cite);
-              if (biblioDiv) {
-                citeDiv.innerHTML = biblioDiv.innerHTML;
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
               }
-              popup.appendChild(citeDiv);
-            });
-            return popup.innerHTML;
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/beyondsimulations\.github\.io\/Applied-Optimization");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
           });
         }
-      }
-    });
-    </script>
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
     
 
 </body></html>

@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.6.40">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.23">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture VIII - Police Districting</title>
@@ -49,7 +49,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-1409d6bf4a03a84ed30b56d24cff69f5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-6584a2c6b91809c775f4d5ae0799c90c.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -155,10 +155,7 @@
 <div class="quarto-title-author-name">
 Dr.&nbsp;Tobias Vlćek 
 </div>
-        <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2024
-          </p>
-    </div>
+</div>
 </div>
 
 </section>
@@ -176,7 +173,6 @@ Dr.&nbsp;Tobias Vlćek
 <section id="challenges" class="slide level2">
 <h2>Challenges</h2>
 <p><span class="question">Question:</span> <strong>What makes the work of emergency services complex?</strong></p>
-<div>
 <ul>
 <li class="fragment">Dynamic urban development</li>
 <li class="fragment">Changing population patterns</li>
@@ -184,7 +180,6 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment">Need for rapid response</li>
 <li class="fragment">Multiple stakeholder interests</li>
 </ul>
-</div>
 </section>
 <section id="emergency-services" class="slide level2">
 <h2>Emergency Services</h2>
@@ -249,13 +244,11 @@ Dr.&nbsp;Tobias Vlćek
 <p><img data-src="https://images.unsplash.com/photo-1689783101576-627f2fbdb8d5?q=80&amp;w=3687&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:85.0%"></p>
 </div><div class="column" style="width:55%;">
 <p><span class="question">Question:</span> <strong>Why might current district layouts be suboptimal?</strong></p>
-<div>
 <ul>
 <li class="fragment">Many layouts <span class="highlight">date back several decades</span></li>
 <li class="fragment">Often designed along highways and regions <span class="citation" data-cites="Bruce2009">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Bruce 2009</a>)</span></li>
 <li class="fragment">Extensive data <strong>not used</strong> for data-driven improvement</li>
 </ul>
-</div>
 </div></div>
 </section>
 <section id="section" class="slide level2 loud-slide">
@@ -272,14 +265,12 @@ Dr.&nbsp;Tobias Vlćek
 <h2>The Role of Data</h2>
 <div class="block">
 <p><span class="question">Question:</span> <strong>What data can help improve emergency services?</strong></p>
-<div>
 <ul>
 <li class="fragment">Historical incident patterns</li>
 <li class="fragment">Response time analysis</li>
 <li class="fragment">Resource utilization metrics</li>
 <li class="fragment">Population densities and traffic patterns</li>
 </ul>
-</div>
 </div>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-default">
@@ -421,7 +412,6 @@ Dr.&nbsp;Tobias Vlćek
 <section id="response-time-influencers" class="slide level2">
 <h2>Response Time Influencers</h2>
 <p><span class="question">Question:</span> <strong>What affects response time?</strong></p>
-<div>
 <ul>
 <li class="fragment">Initial contact</li>
 <li class="fragment">Information gathering</li>
@@ -430,7 +420,6 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment">Route to location</li>
 <li class="fragment">Traffic conditions</li>
 </ul>
-</div>
 </section></section>
 <section>
 <section id="territory-design-problem" class="title-slide slide level1 title center">
@@ -474,14 +463,12 @@ Dr.&nbsp;Tobias Vlćek
 <p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg" style="width:85.0%"></p>
 </div><div class="column" style="width:75%;">
 <p><span class="question">Question:</span> <strong>How can we structure this?</strong></p>
-<div>
 <ul>
 <li class="fragment">Model as a <strong>digraph</strong> with vertices and edges</li>
 <li class="fragment">Each BA centroid becomes a <strong>vertex</strong></li>
 <li class="fragment"><span class="math inline">\(\mathcal{J}\)</span> : set of BAs, indexed by <span class="math inline">\(j\)</span></li>
 <li class="fragment"><span class="math inline">\(\mathcal{I}\)</span> : set of potential district centres <span class="math inline">\((\mathcal{I} \subseteq \mathcal{J})\)</span></li>
 </ul>
-</div>
 </div></div>
 </section>
 <section id="why-hexagons" class="slide level2">
@@ -491,14 +478,12 @@ Dr.&nbsp;Tobias Vlćek
 <p><img data-src="https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg" style="width:70.0%"></p>
 </div><div class="column" style="width:75%;">
 <p><span class="question">Question:</span> <strong>Advantages of hexagons?</strong></p>
-<div>
 <ul>
 <li class="fragment"><span class="highlight">Equal distances</span> to all neighboring centroids</li>
 <li class="fragment">Reduces sampling bias from edge effects <span class="citation" data-cites="Wang2018a">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Wang and Kwan 2018</a>)</span></li>
 <li class="fragment">Special properties that help with the enforcement of <strong>compactness</strong></li>
 <li class="fragment">Better representation of urban geography</li>
 </ul>
-</div>
 </div></div>
 </section>
 <section id="response-time-components" class="slide level2">
@@ -508,13 +493,11 @@ Dr.&nbsp;Tobias Vlćek
 <p><img data-src="https://images.beyondsimulations.com/ao/ao_police-responsetime.svg" style="width:80.0%"></p>
 </div><div class="column" style="width:75%;">
 <p><span class="question">Question:</span> <strong>How can we model response time?</strong></p>
-<div>
 <ul>
 <li class="fragment">Call length is <span class="highlight">independent</span> of territory</li>
 <li class="fragment">Dispatch time is <strong>difficult to model</strong></li>
 <li class="fragment">Driving time can be <strong>minimized directly</strong></li>
 </ul>
-</div>
 <div class="fragment">
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
@@ -564,12 +547,10 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="sets-and-indices" class="slide level2">
 <h2>Sets and Indices</h2>
-<div>
 <ul>
 <li class="fragment"><span class="math inline">\(\mathcal{J}\)</span> - Set of BAs, indexed by <span class="math inline">\(j\)</span></li>
 <li class="fragment"><span class="math inline">\(\mathcal{I}\)</span> - Set of potential district centres (<span class="math inline">\(\mathcal{I} \subseteq \mathcal{J}\)</span>), indexed by <span class="math inline">\(i\)</span></li>
 </ul>
-</div>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
@@ -589,12 +570,10 @@ Dr.&nbsp;Tobias Vlćek
 <section id="parameters" class="slide level2">
 <h2>Parameters</h2>
 <p><span class="question">Question:</span> <strong>What parameters do we need?</strong></p>
-<div>
 <ul>
 <li class="fragment"><span class="math inline">\(p\)</span> - Number of district centres (departments)</li>
 <li class="fragment"><span class="math inline">\(t_{i,j}\)</span> - Expected driving times between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span></li>
 </ul>
-</div>
 <div class="fragment">
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
@@ -689,13 +668,11 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="fragment">
 <p><span class="question">Question:</span> <strong>How do we minimize response time?</strong></p>
-<div>
 <ul>
 <li class="fragment">We want to minimize <strong>total driving time</strong></li>
 <li class="fragment">Consider frequency of incidents in each BA</li>
 <li class="fragment">Don’t include fixed costs (handled by constraints)</li>
 </ul>
-</div>
 </div>
 </section>
 <section id="objective-function-1" class="slide level2">
@@ -738,7 +715,6 @@ Dr.&nbsp;Tobias Vlćek
 <p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_2.svg" style="width:90.0%"></p>
 </div><div class="column" style="width:55%;">
 <p><span class="question">Question:</span> <strong>Constraints needed?</strong></p>
-<div>
 <ol type="1">
 <li class="fragment">BA must have <span class="highlight">one</span> department</li>
 <li class="fragment">Limit <strong>number of departments</strong></li>
@@ -746,7 +722,6 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment">Ensure <strong>contiguous</strong> districts</li>
 <li class="fragment">Maintain district <strong>compactness</strong></li>
 </ol>
-</div>
 </div></div>
 </section>
 <section id="single-assignment-constraint" class="slide level2">
@@ -932,13 +907,11 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:85.0%"></p>
 </div><div class="column" style="width:55%;">
 <p><span class="question">Question:</span> <strong>Why is contiguity important?</strong></p>
-<div>
 <ul>
 <li class="fragment">Prevents <strong>isolated areas</strong></li>
 <li class="fragment">Ensures <strong>contiguous patrol routes</strong></li>
 <li class="fragment">Maintains <strong>operational coherence</strong></li>
 </ul>
-</div>
 </div></div>
 </section>
 <section id="what-is-compactness" class="slide level2">
@@ -974,7 +947,6 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_2.svg" style="width:100.0%"></p>
 </div><div class="column" style="width:60%;">
 <p><span class="question">Question:</span> <strong>Are our resulting districts based on the model contiguous and compact?</strong></p>
-<div>
 <ul>
 <li class="fragment">This depends on <span class="math inline">\(t_{i,j}\)</span></li>
 <li class="fragment"><strong>If Euclidean distance</strong>
@@ -983,7 +955,6 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <li class="fragment">Likely of compact shape</li>
 </ul></li>
 </ul>
-</div>
 </div></div>
 </section>
 <section id="compactness-p-median" class="slide level2" data-background-color="#000000" data-background-image="https://images.beyondsimulations.com/ao/ao_police-streets.svg">
@@ -1139,25 +1110,21 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <section id="characteristics" class="slide level2">
 <h2>Characteristics</h2>
 <p><span class="question">Questions:</span> <strong>On model characteristics</strong></p>
-<div>
 <ul>
 <li class="fragment">Is the model formulation linear/ non-linear?</li>
 <li class="fragment">What kind of variable domains do we have?</li>
 <li class="fragment">What do you think, can the model be solved quickly?</li>
 <li class="fragment">Have we prevented isolated districts?</li>
 </ul>
-</div>
 </section>
 <section id="model-assumptions" class="slide level2">
 <h2>Model Assumptions</h2>
 <p><span class="question">Questions:</span> <strong>On model assumptions</strong></p>
-<div>
 <ul>
 <li class="fragment">What assumptions have we made?</li>
 <li class="fragment">Use Euclidean distances to approximate driving time?</li>
 <li class="fragment">Can we rely on incident data collected by the police?</li>
 </ul>
-</div>
 </section></section>
 <section>
 <section id="implementation-and-impact" class="title-slide slide level1 title center">
@@ -1168,7 +1135,6 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <h2>Overview of Studies</h2>
 <div class="block">
 <p><span class="question">Question:</span> <strong>Where did we apply our model?</strong></p>
-<div>
 <ul>
 <li class="fragment">Two distinct environments:
 <ol type="1">
@@ -1178,7 +1144,6 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <li class="fragment">Different challenges and requirements</li>
 <li class="fragment">Focus on <span class="highlight">response time optimization</span></li>
 </ul>
-</div>
 </div>
 </section>
 <section id="german-metropolitan-case" class="slide level2" data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1527478950489-e544549ca1d4?q=80&amp;w=2782&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
@@ -1298,14 +1263,12 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <section id="future-applications" class="slide level2">
 <h2>Future Applications</h2>
 <p><span class="question">Question:</span> <strong>Where else could this approach be useful?</strong></p>
-<div>
 <ul>
 <li class="fragment">Other emergency services</li>
 <li class="fragment">Different urban contexts</li>
 <li class="fragment">Resource allocation problems</li>
 <li class="fragment">Service territory design</li>
 </ul>
-</div>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
@@ -1610,190 +1573,172 @@ Zoltners, Andris A., and Prabhakant Sinha. 1983. <span>“Sales Territory Alignm
       });
     </script>
     <script id="quarto-html-after-body" type="application/javascript">
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-      const toggleBodyColorMode = (bsSheetEl) => {
-        const mode = bsSheetEl.getAttribute("data-mode");
-        const bodyEl = window.document.querySelector("body");
-        if (mode === "dark") {
-          bodyEl.classList.add("quarto-dark");
-          bodyEl.classList.remove("quarto-light");
-        } else {
-          bodyEl.classList.add("quarto-light");
-          bodyEl.classList.remove("quarto-dark");
-        }
-      }
-      const toggleBodyColorPrimary = () => {
-        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-        if (bsSheetEl) {
-          toggleBodyColorMode(bsSheetEl);
-        }
-      }
-      toggleBodyColorPrimary();  
-      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
-      tabsets.forEach(function(tabset) {
-        const tabby = new Tabby('#' + tabset.id);
-      });
-      const isCodeAnnotation = (el) => {
-        for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {                     
-            return true;
-          }
-        }
-        return false;
-      }
-      const onCopySuccess = function(e) {
-        // button target
-        const button = e.trigger;
-        // don't keep focus
-        button.blur();
-        // flash "checked"
-        button.classList.add('code-copy-button-checked');
-        var currentTitle = button.getAttribute("title");
-        button.setAttribute("title", "Copied!");
-        let tooltip;
-        if (window.bootstrap) {
-          button.setAttribute("data-bs-toggle", "tooltip");
-          button.setAttribute("data-bs-placement", "left");
-          button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button, 
-            { trigger: "manual", 
-              customClass: "code-copy-button-tooltip",
-              offset: [0, -8]});
-          tooltip.show();    
-        }
-        setTimeout(function() {
-          if (tooltip) {
-            tooltip.hide();
-            button.removeAttribute("data-bs-title");
-            button.removeAttribute("data-bs-toggle");
-            button.removeAttribute("data-bs-placement");
-          }
-          button.setAttribute("title", currentTitle);
-          button.classList.remove('code-copy-button-checked');
-        }, 1000);
-        // clear code selection
-        e.clearSelection();
-      }
-      const getTextToCopy = function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
             }
           }
-          return codeEl.innerText;
-      }
-      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-        text: getTextToCopy
-      });
-      clipboard.on('success', onCopySuccess);
-      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-          text: getTextToCopy,
-          container: window.document.getElementById('quarto-embedded-source-code-modal')
-        });
-        clipboardModal.on('success', onCopySuccess);
-      }
-        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-        var mailtoRegex = new RegExp(/^mailto:/);
-          var filterRegex = new RegExp("https:\/\/beyondsimulations\.github\.io\/Applied-Optimization");
-        var isInternal = (href) => {
-            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          return false;
         }
-        // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-        for (var i=0; i<links.length; i++) {
-          const link = links[i];
-          if (!isInternal(link.href)) {
-            // undo the damage that might have been done by quarto-nav.js in the case of
-            // links that we want to consider external
-            if (link.dataset.originalHref !== undefined) {
-              link.href = link.dataset.originalHref;
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
             }
-          }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
         }
-      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-        const config = {
-          allowHTML: true,
-          maxWidth: 500,
-          delay: 100,
-          arrow: false,
-          appendTo: function(el) {
-              return el.closest('section.slide') || el.parentElement;
-          },
-          interactive: true,
-          interactiveBorder: 10,
-          theme: 'light-border',
-          placement: 'bottom-start',
-        };
-        if (contentFn) {
-          config.content = contentFn;
-        }
-        if (onTriggerFn) {
-          config.onTrigger = onTriggerFn;
-        }
-        if (onUntriggerFn) {
-          config.onUntrigger = onUntriggerFn;
-        }
-          config['offset'] = [0,0];
-          config['maxWidth'] = 700;
-        window.tippy(el, config); 
-      }
-      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-      for (var i=0; i<noterefs.length; i++) {
-        const ref = noterefs[i];
-        tippyHover(ref, function() {
-          // use id or data attribute instead here
-          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-          try { href = new URL(href).hash; } catch {}
-          const id = href.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note) {
-            return note.innerHTML;
-          } else {
-            return "";
-          }
-        });
-      }
-      const findCites = (el) => {
-        const parentEl = el.parentElement;
-        if (parentEl) {
-          const cites = parentEl.dataset.cites;
-          if (cites) {
-            return {
-              el,
-              cites: cites.split(' ')
-            };
-          } else {
-            return findCites(el.parentElement)
-          }
-        } else {
-          return undefined;
-        }
-      };
-      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-      for (var i=0; i<bibliorefs.length; i++) {
-        const ref = bibliorefs[i];
-        const citeInfo = findCites(ref);
-        if (citeInfo) {
-          tippyHover(citeInfo.el, function() {
-            var popup = window.document.createElement('div');
-            citeInfo.cites.forEach(function(cite) {
-              var citeDiv = window.document.createElement('div');
-              citeDiv.classList.add('hanging-indent');
-              citeDiv.classList.add('csl-entry');
-              var biblioDiv = window.document.getElementById('ref-' + cite);
-              if (biblioDiv) {
-                citeDiv.innerHTML = biblioDiv.innerHTML;
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
               }
-              popup.appendChild(citeDiv);
-            });
-            return popup.innerHTML;
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/beyondsimulations\.github\.io\/Applied-Optimization");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
           });
         }
-      }
-    });
-    </script>
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
     
 
 </body></html>
