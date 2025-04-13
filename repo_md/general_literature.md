@@ -1,0 +1,75 @@
+# Literature and Resources
+
+
+This section provides a curated list of books and resources to enhance
+your understanding of mathematical Modelling, Julia programming and
+related topics. Each recommendation includes a brief description to help
+you choose the most suitable resources for you.
+
+# Julia
+
+## Books
+
+- Lauwens, B., & Downey, A. B. (2019). Think Julia: How to think like a
+  computer scientist (First edition). O’Reilly®. [Link to the free book
+  website](https://benlauwens.github.io/ThinkJulia.jl/latest/book.html).
+  - This book is great for beginners and covers Julia programming in a
+    comprehensive manner.
+- Kwon, C. (2019). Julia programming for operations research (Second
+  edition). Changhyun Kwon. [Link to the free book
+  website](https://www.chkwon.net/julia/).
+  - This book is a fantastic ressource for students interested in Julia
+    and Operations Research and covers a variety of topics.
+
+## Resources
+
+- [Julia Documentation](https://docs.julialang.org/)
+  - The official Julia documentation is an good starting point to
+    understand the language’s features and syntax.
+- [JuMP Documentation](https://jump.dev/JuMP.jl/stable/)
+  - The official documentation of JuMP is a great resource for
+    understanding optimization modeling in Julia, covering everything
+    from simple linear models to advanced nonlinear and mixed-integer
+    problems.
+
+# General
+
+## Books
+
+- Wilke, C. (2019). Fundamentals of data visualization: A primer on
+  making informative and compelling figures (First edition). O’Reilly
+  Media.
+  - A book that is highly recommended to understand the principles of
+    data visualization and how to create effective visualizations.
+  - [Link to the free book website](https://clauswilke.com/dataviz/)
+- Thomas, D., & Hunt, A. (2019). The pragmatic programmer, 20th
+  anniversary edition: Journey to mastery (Second edition).
+  Addison-Wesley.
+  - A fantasticbook to understand the principles of software development
+    and how to create effective software.
+
+## Resources
+
+- [Quarto](https://quarto.org)
+  - A static website generator that is very powerful and flexible. Used
+    to create the slides and the website for the course.
+- [Cursor](https://cursor.sh)
+  - A code editor based on VS Code that is very powerful and flexible.
+    It uses AI to help you write code.
+- [Jupyter](https://jupyter.org)
+  - A web application that allows you to create and share documents that
+    contain code, equations, visualizations and text. It is very popular
+    in the field of data science and academia and also part of Quarto.
+- [Advent of Code](https://adventofcode.com/)
+  - A wonderful website with daily challenges during the christmas time.
+    Highly recommended to playfully improve your skills.
+- [Github](https://github.com)
+  - The largest provider for git repositories owned by Microsoft. A lot
+    of open source projects are hosted here and you can read the code.
+- [Codewars](https://codewars.com)
+  - A platform to improve your coding skills by solving challenges. You
+    can compete with others, see how other people solved the challenges
+    and read and learn from the code.
+- [Daily Dose of Data Science](https://www.dailydoseofds.com)
+  - A website and a newsletter with lots of easy-to-digest resources to
+    improve your skills in Data Science.
