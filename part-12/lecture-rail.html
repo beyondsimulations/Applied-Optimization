@@ -710,6 +710,7 @@ window.Quarto = {
 <li>On crowded metro platforms and transfer stations</li>
 <li>At ticket/turnstile bottlenecks and emergency exits</li>
 </ul>
+<hr>
 </section>
 <section id="metrosystem-of-doha" class="level2">
 <h2 class="anchored" data-anchor-id="metrosystem-of-doha">Metrosystem of Doha</h2>
@@ -776,6 +777,7 @@ Warning
 <p>This can lead to <span class="highlight">overcrowding and potential crowd disasters!</span></p>
 </div>
 </div>
+<hr>
 </section>
 <section id="general-issues" class="level2">
 <h2 class="anchored" data-anchor-id="general-issues">General Issues</h2>
@@ -800,6 +802,7 @@ Warning
 <div class="footer">
 
 </div>
+<hr>
 </section>
 </section>
 <section id="problem-structure" class="level1 title">
@@ -852,6 +855,7 @@ Tip: We need to estimate the data first!
 <p>This is a <strong>huge challenge</strong>, but we can use <strong>simulation</strong> to estimate the data.</p>
 </div>
 </div>
+<hr>
 </section>
 <section id="simulation" class="level2">
 <h2 class="anchored" data-anchor-id="simulation">Simulation</h2>
@@ -900,6 +904,7 @@ Tip: Julia is a great tool for this!
 <div class="footer">
 
 </div>
+<hr>
 </section>
 <section id="main-risk-metro" class="level2" data-background-image="https://images.byndsim.com/ao/ao_metro-risk_crowd.png" data-background-size="cover" data-background-position="center">
 <h2 data-background-image="https://images.byndsim.com/ao/ao_metro-risk_crowd.png" data-background-size="cover" data-background-position="center" class="anchored" data-anchor-id="main-risk-metro"><span class="invert-font">Main risk: Metro</span></h2>
@@ -936,6 +941,7 @@ Tip: Julia is a great tool for this!
 <li>Movement patterns have different origin-destination pairs</li>
 <li>Regulating the inflow does not affect the destination</li>
 </ul>
+<hr>
 </section>
 </section>
 <section id="model-formulation" class="level1 title">
@@ -1035,6 +1041,7 @@ Note: Period Length
 <li><span class="math inline">\(I_p\)</span> is the set of minutes <span class="math inline">\(t\)</span> that belong to period <span class="math inline">\(p\)</span></li>
 <li>Minutes are <strong>not overlapping</strong>, but they are <strong>continuous</strong></li>
 </ul>
+<hr>
 </section>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters?</h2>
@@ -1048,6 +1055,7 @@ Note: Period Length
 <li><span class="math inline">\(c_{o}^{max}\)</span> - Max. station entry rate <span class="math inline">\(o\)</span> per minute with <span class="math inline">\(o \in \mathcal{O}\)</span></li>
 <li><span class="math inline">\(\alpha\)</span> - Maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
 </ul>
+<hr>
 </section>
 <section id="metro-movement" class="level2">
 <h2 class="anchored" data-anchor-id="metro-movement">Metro Movement</h2>
@@ -1129,6 +1137,7 @@ Note
 <p>Based on the ratio of the different destinations <span class="math inline">\(d\)</span> to the total queue for each station <span class="math inline">\(o \in \mathcal{O}\)</span> in each period <span class="math inline">\(p \in \mathcal{P}\)</span>.</p>
 </div>
 </div>
+<hr>
 </section>
 </section>
 <section id="variables-and-objective" class="level1 title">
@@ -1185,6 +1194,7 @@ We need the following sets:
 <ul>
 <li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
 </ul>
+<hr>
 </section>
 <section id="objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="objective-function">Objective Function?</h2>
@@ -1232,6 +1242,7 @@ We need the following parameters and variables:
 <p><span class="math display">\[
 \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 \]</span></p>
+<hr>
 </section>
 </section>
 <section id="constraints" class="level1 title">
@@ -1261,6 +1272,7 @@ We need the following parameters and variables:
 <div class="footer">
 
 </div>
+<hr>
 </section>
 <section id="central-question" class="level2">
 <h2 class="anchored" data-anchor-id="central-question">Central Question</h2>
@@ -1339,6 +1351,7 @@ Tip
 <div class="footer">
 
 </div>
+<hr>
 </section>
 <section id="ensure-capacity-utilization" class="level2">
 <h2 class="anchored" data-anchor-id="ensure-capacity-utilization">Ensure Capacity Utilization?</h2>
@@ -1397,6 +1410,7 @@ Note
 <p>Here, we combine the inflow at each station based on the o-d proportion and let the people spread through the network, checking that no arc is over-utilized at any minute.</p>
 </div>
 </div>
+<hr>
 </section>
 <section id="dispatch-only-available-people" class="level2">
 <h2 class="anchored" data-anchor-id="dispatch-only-available-people">Dispatch Only Available People?</h2>
@@ -1464,6 +1478,7 @@ Note
 </ol>
 </div>
 </div>
+<hr>
 </section>
 <section id="metro-inflow-model" class="level2">
 <h2 class="anchored" data-anchor-id="metro-inflow-model">Metro Inflow Model</h2>
@@ -1480,6 +1495,7 @@ Note
     &amp; min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\} \leq X_{o,p} \leq min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\} &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P}
 \end{align*}\]</span></p>
 </div>
+<hr>
 </section>
 </section>
 <section id="model-characteristics" class="level1 title">
@@ -1505,6 +1521,7 @@ Note
 <li>Are shortest paths a feasible assumption?</li>
 </ul>
 </div>
+<hr>
 </section>
 </section>
 <section id="implementation-and-impact" class="level1 title">
@@ -1607,6 +1624,7 @@ And that’s it for todays lecture!
 <div class="footer">
 
 </div>
+<hr>
 </section>
 </section>
 <section id="literature" class="level1 title">
@@ -2041,6 +2059,11 @@ And that’s it for todays lecture!
       <i class="bi bi-linkedin" role="img">
 </i> 
     </a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../general/privacy.html">
+<p>Privacy Policy</p>
+</a>
   </li>  
 </ul>
     </div>

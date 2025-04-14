@@ -592,6 +592,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#loading-data-and-packages" id="toc-loading-data-and-packages" class="nav-link" data-scroll-target="#loading-data-and-packages">Loading Data and Packages</a></li>
   <li><a href="#fixing-the-mistakes" id="toc-fixing-the-mistakes" class="nav-link" data-scroll-target="#fixing-the-mistakes">Fixing the Mistakes</a></li>
+  <li><a href="#visualizing-the-results" id="toc-visualizing-the-results" class="nav-link" data-scroll-target="#visualizing-the-results">Visualizing the Results</a></li>
   </ul></li>
   <li><a href="#ensuring-district-connectivity" id="toc-ensuring-district-connectivity" class="nav-link" data-scroll-target="#ensuring-district-connectivity">2. Ensuring District Connectivity</a>
   <ul class="collapse">
@@ -650,6 +651,7 @@ window.Quarto = {
 </ol>
 <p>In this task it is <strong>not yet necessary</strong> to include contiguity and compactness constraints! If the model takes too long on your machine, you can set the <strong>relative gap to 10% or decrease the time limit</strong>.</p>
 <p>To execute the code, several files are provided, which contain the Euclidean distance between the BAs, the driving time between BAs, the number of incidents per BA, and the hexagonal shapes (a <code>.shp</code> file and a <code>.dbf</code> file - you need both!).</p>
+<hr>
 <section id="loading-data-and-packages" class="level2">
 <h2 class="anchored" data-anchor-id="loading-data-and-packages">Loading Data and Packages</h2>
 <p>We start by loading the new <code>Shapefile</code> package. <strong>No mistakes here!</strong></p>
@@ -683,6 +685,7 @@ window.Quarto = {
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the weighted driving times</span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>weightedDriving <span class="op">=</span> drivingTimes <span class="op">.*</span> <span class="fu">transpose</span>(incidentWeights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<hr>
 </section>
 <section id="fixing-the-mistakes" class="level2">
 <h2 class="anchored" data-anchor-id="fixing-the-mistakes">Fixing the Mistakes</h2>
@@ -762,6 +765,10 @@ window.Quarto = {
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great, the model was solved correctly."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<hr>
+</section>
+<section id="visualizing-the-results" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-results">Visualizing the Results</h2>
 <p>The following code then builds and uses a function to plot the results.</p>
 <div id="16" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">visualize_departments</span>(hexshape, X, p)</span>
@@ -806,6 +813,7 @@ window.Quarto = {
 <span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the results</span></span>
 <span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>plot_area <span class="op">=</span> <span class="fu">visualize_departments</span>(hexshape, X, p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<hr>
 </section>
 </section>
 <section id="ensuring-district-connectivity" class="level1">
@@ -837,6 +845,7 @@ window.Quarto = {
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> j <span class="kw">in</span> rangeBAs <span class="cf">if</span> euclidianDistances[i,j] <span class="op">&lt;</span> <span class="fl">1.5</span>) <span class="op">&gt;=</span> <span class="fl">1</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<hr>
 </section>
 <section id="extending-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="extending-the-model">Extending the Model</h2>
@@ -866,6 +875,7 @@ Important
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, p))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<hr>
 </section>
 <section id="compute-the-gap" class="level2">
 <h2 class="anchored" data-anchor-id="compute-the-gap">Compute the Gap</h2>
@@ -890,6 +900,7 @@ Tip
 <p>If you computer cannot determine the optimal solution, you can just use the best solutions you found after both runs to compute the gap.</p>
 </div>
 </div>
+<hr>
 </section>
 </section>
 <section id="emergency-response-time-guarantees" class="level1">
@@ -921,6 +932,7 @@ Tip
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, p))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<hr>
 </section>
 <section id="planning-for-peak-demand" class="level1">
 <h1>4. Planning for Peak Demand</h1>
@@ -1383,6 +1395,11 @@ Tip
       <i class="bi bi-linkedin" role="img">
 </i> 
     </a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../general/privacy.html">
+<p>Privacy Policy</p>
+</a>
   </li>  
 </ul>
     </div>

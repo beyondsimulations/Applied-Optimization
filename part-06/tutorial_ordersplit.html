@@ -593,6 +593,14 @@ window.Quarto = {
   <li><a href="#maximizing-coappearances" id="toc-maximizing-coappearances" class="nav-link" data-scroll-target="#maximizing-coappearances">2. Maximizing Coappearances</a></li>
   <li><a href="#counting-split-parcels" id="toc-counting-split-parcels" class="nav-link" data-scroll-target="#counting-split-parcels">3. Counting Split Parcels</a></li>
   <li><a href="#implementing-the-model" id="toc-implementing-the-model" class="nav-link" data-scroll-target="#implementing-the-model">4. Implementing the model</a></li>
+  <li><a href="#use-the-juniper-solver" id="toc-use-the-juniper-solver" class="nav-link" data-scroll-target="#use-the-juniper-solver">Use the Juniper solver</a></li>
+  <li><a href="#compute-the-coappearance-matrix" id="toc-compute-the-coappearance-matrix" class="nav-link" data-scroll-target="#compute-the-coappearance-matrix">Compute the coappearance matrix</a></li>
+  <li><a href="#define-the-decision-variable" id="toc-define-the-decision-variable" class="nav-link" data-scroll-target="#define-the-decision-variable">Define the decision variable</a></li>
+  <li><a href="#define-the-objective-function" id="toc-define-the-objective-function" class="nav-link" data-scroll-target="#define-the-objective-function">Define the objective function</a></li>
+  <li><a href="#define-the-constraints" id="toc-define-the-constraints" class="nav-link" data-scroll-target="#define-the-constraints">Define the constraints</a></li>
+  <li><a href="#solve-the-model" id="toc-solve-the-model" class="nav-link" data-scroll-target="#solve-the-model">Solve the model</a></li>
+  <li><a href="#print-the-results" id="toc-print-the-results" class="nav-link" data-scroll-target="#print-the-results">Print the results</a></li>
+  <li><a href="#count-the-number-of-split-orders" id="toc-count-the-number-of-split-orders" class="nav-link" data-scroll-target="#count-the-number-of-split-orders">Count the number of split orders</a></li>
   <li><a href="#analyzing-the-results" id="toc-analyzing-the-results" class="nav-link" data-scroll-target="#analyzing-the-results">5. Analyzing the Results</a></li>
   </ul></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
@@ -626,6 +634,7 @@ window.Quarto = {
 <h1>Introduction</h1>
 <p>We are consulting for FitGear, a rapidly growing e-commerce company specializing in fitness equipment and athletic wear. FitGear is facing a challenge: customer complaints about split orders have increased by 40% in the last quarter. When a customer orders multiple items, they sometimes receive multiple packages from different warehouses, leading to higher shipping costs and frustrated customers.</p>
 <p>This tutorial explores how to optimize SKU allocation across warehouses to minimize split orders using mathematical optimization.</p>
+<hr>
 <section id="coappearance-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="coappearance-matrix">1. Coappearance Matrix</h2>
 <p>First, we need to understand which products are frequently purchased together. We’ll use a coappearance matrix. It shows how frequently items appear together in customer orders. For each pair of items (i,j), the matrix element Q[i,j] represents the number of orders containing both items i and j. Let’s start with a small sample of FitGear’s historical order data and determine the coappearance matrix of the transactional data set <strong>manually by hand</strong>.</p>
@@ -707,6 +716,7 @@ window.Quarto = {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span>;</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<hr>
 </section>
 <section id="maximizing-coappearances" class="level2">
 <h2 class="anchored" data-anchor-id="maximizing-coappearances">2. Maximizing Coappearances</h2>
@@ -719,6 +729,7 @@ window.Quarto = {
 <div id="6" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>objective_value_by_hand <span class="op">=</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<hr>
 </section>
 <section id="counting-split-parcels" class="level2">
 <h2 class="anchored" data-anchor-id="counting-split-parcels">3. Counting Split Parcels</h2>
@@ -739,6 +750,7 @@ Bonus Question
 <p>Is the solution of the QMKP the optimal solution for the underlying split parcel minimisation problem? Try to come up with another solution that has less split or the same number of split parcels.</p>
 </div>
 </div>
+<hr>
 </section>
 <section id="implementing-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="implementing-the-model">4. Implementing the model</h2>
@@ -831,19 +843,11 @@ Each SKU can only be allocated to one warehouse!
 <p>The retailer has another requirement: each SKU can only be allocated to one warehouse. Make sure to include this requirement in your model.</p>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Use the Juniper solver
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If you don’t have Juniper, Ipopt and/or HiGHS installed, add the solver via Pkg.add(“Juniper”) and Pkg.add(“Ipopt”) and Pkg.add(“HiGHS”). Juniper is a solver for nonlinear problems, that can be used in combination with Ipopt and HiGHS to solve mixed-integer quadratic problems. If you want to use SCIP, you can also do this by adding JuMP and SCIP and then change the solver in the model definition to <code>warehouse_model = Model(SCIP.Optimizer())</code>. Note, that this does not work automatically in Windows, as you will have to install the SCIP binaries manually. On Mac and Linux, it should work out of the box.</p>
-</div>
-</div>
+<hr>
+</section>
+<section id="use-the-juniper-solver" class="level2">
+<h2 class="anchored" data-anchor-id="use-the-juniper-solver">Use the Juniper solver</h2>
+<p>If you don’t have Juniper, Ipopt and/or HiGHS installed, add the solver via Pkg.add(“Juniper”) and Pkg.add(“Ipopt”) and Pkg.add(“HiGHS”). Juniper is a solver for nonlinear problems, that can be used in combination with Ipopt and HiGHS to solve mixed-integer quadratic problems. If you want to use SCIP, you can also do this by adding JuMP and SCIP and then change the solver in the model definition to <code>warehouse_model = Model(SCIP.Optimizer())</code>. Note, that this does not work automatically in Windows, as you will have to install the SCIP binaries manually. On Mac and Linux, it should work out of the box. :::</p>
 <p>First, we start by defining the model.</p>
 <div id="14" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definition of the warehouse model</span></span>
@@ -866,6 +870,10 @@ Use the Juniper solver
 └ Names registered in the model: none</code></pre>
 </div>
 </div>
+<hr>
+</section>
+<section id="compute-the-coappearance-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="compute-the-coappearance-matrix">Compute the coappearance matrix</h2>
 <p>Next, compute the coappearance matrix based on the transactional data provided in <code>T</code>.</p>
 <div id="16" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -879,6 +887,10 @@ Use the Juniper solver
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The coappearance matrix is correct."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<hr>
+</section>
+<section id="define-the-decision-variable" class="level2">
+<h2 class="anchored" data-anchor-id="define-the-decision-variable">Define the decision variable</h2>
 <p>Now, define the decision variable for the SKU allocation. Please name the variable <code>X</code>.</p>
 <div id="20" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -893,6 +905,10 @@ Use the Juniper solver
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The decision variable is correctly defined as a binary variable with proper dimensions."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<hr>
+</section>
+<section id="define-the-objective-function" class="level2">
+<h2 class="anchored" data-anchor-id="define-the-objective-function">Define the objective function</h2>
 <p>Then, define the objective function to maximize the coappearance.</p>
 <div id="24" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -905,6 +921,10 @@ Use the Juniper solver
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The objective function is correctly defined."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<hr>
+</section>
+<section id="define-the-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="define-the-constraints">Define the constraints</h2>
 <p>To ensure that each SKU is allocated to one warehouse, add the first constraint.</p>
 <div id="28" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -929,6 +949,10 @@ Use the Juniper solver
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The capacity constraint is correctly defined."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<hr>
+</section>
+<section id="solve-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="solve-the-model">Solve the model</h2>
 <p>Finally, solve the model with a solve statement.</p>
 <div id="36" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -942,6 +966,10 @@ Use the Juniper solver
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! The model is correctly solved."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<hr>
+</section>
+<section id="print-the-results" class="level2">
+<h2 class="anchored" data-anchor-id="print-the-results">Print the results</h2>
 <p>The following code prints the objective value, the SKU allocation and the warehouse capacities based on your optimal solution.</p>
 <div id="40" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective value: "</span>, <span class="fu">objective_value</span>(warehouse_model))</span>
@@ -960,6 +988,10 @@ Use the Juniper solver
 <span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Warehouse: "</span>, warehouses[k], <span class="st">" Capacity: "</span>, capacity[k], <span class="st">" Used: "</span>, <span class="fu">sum</span>(<span class="fu">value</span>.(X[i,warehouses[k]]) <span class="cf">for</span> i <span class="kw">in</span> skus))</span>
 <span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<hr>
+</section>
+<section id="count-the-number-of-split-orders" class="level2">
+<h2 class="anchored" data-anchor-id="count-the-number-of-split-orders">Count the number of split orders</h2>
 <p>Based on the output of the optimisation, we still don’t know the number of split orders. The following code calculates the number of split orders from the SKU allocation for the optimal solution.</p>
 <div id="42" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Binary matrix indicating whether a SKU is allocated to a warehouse.</span></span>
@@ -1015,6 +1047,7 @@ Use the Juniper solver
 <span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of split orders (random): "</span>, split_parcels_random)</span>
 <span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of regular orders (random): "</span>, regular_parcels_random)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<hr>
 </section>
 <section id="analyzing-the-results" class="level2">
 <h2 class="anchored" data-anchor-id="analyzing-the-results">5. Analyzing the Results</h2>
@@ -1467,6 +1500,11 @@ Use the Juniper solver
       <i class="bi bi-linkedin" role="img">
 </i> 
     </a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../general/privacy.html">
+<p>Privacy Policy</p>
+</a>
   </li>  
 </ul>
     </div>
