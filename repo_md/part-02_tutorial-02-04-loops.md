@@ -11,6 +11,8 @@ who can repeat tasks for you.
 Follow the instructions, input your code in the designated areas, and
 verify your implementations with @assert statements.
 
+------------------------------------------------------------------------
+
 # Section 1 - For Loops
 
 A `for` loop is like giving instructions to that assistant: “For each
@@ -161,6 +163,8 @@ current_fruit = "None"
 println("The current fruit is: ", current_fruit)
 ```
 
+------------------------------------------------------------------------
+
 # Section 2 - While Loops for Conditional Execution
 
 A `while` loop is like giving instructions to your assistant: “Keep
@@ -271,6 +275,8 @@ println("First multiple of 7 greater than 50: ", first_multiple_of_7)
 > ‘while true … end’ constructs an infinite loop. You can exit the loop
 > using a ‘break’ statement if a condition is met.
 
+------------------------------------------------------------------------
+
 # Section 3 - Nested Loops
 
 Nested loops are loops inside other loops. Think of it like organizing
@@ -320,6 +326,8 @@ println("Products of each pair from two arrays: ", products)
 >
 > Remember, you can use push!() to append elements to an array.
 
+------------------------------------------------------------------------
+
 # Section 4 - List Comprehensions
 
 List comprehensions provide a concise way to create lists based on
@@ -358,6 +366,8 @@ Create a list of even numbers from 1 to 10 using a list comprehension.
 @assert even_numbers == [2, 4, 6, 8, 10]
 println("Even numbers from 1 to 10: ", even_numbers)
 ```
+
+------------------------------------------------------------------------
 
 # Conclusion
 

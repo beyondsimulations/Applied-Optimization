@@ -35,6 +35,8 @@ Dr. Tobias Vlćek
 > - [ ] Practice Julia syntax
 > - [ ] Prepare your DIN A4 cheat sheet
 
+------------------------------------------------------------------------
+
 # <span class="flow">Part I</span>
 
 ## 1.a (6 Points)
@@ -83,6 +85,8 @@ and variables.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 1.b (2 Points)
 
 Please define the objective function to model the described problem
@@ -110,6 +114,8 @@ based on your defined notation.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 ## 1.c (4 Points)
 
@@ -139,6 +145,8 @@ the described problem based on your notation.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 1.d (2 Points)
 
 Is the model formulation a linear problem with binary variables?
@@ -162,6 +170,8 @@ Please explain your answer briefly.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 ## 1.e (8 Points)
 
@@ -196,6 +206,8 @@ the objective function while describing each with a few words.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 ## 1.f (8 Points)
 
@@ -234,6 +246,8 @@ the objective function while describing each with a few words.
 |
 ```
 
+------------------------------------------------------------------------
+
 # <span class="flow">Part II</span>
 
 ## 2.a (3 Points)
@@ -259,6 +273,8 @@ Please answer in 2-3 sentences.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 ## 2.b (3 Points)
 
@@ -304,6 +320,8 @@ transactions.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 2.c (2 Points)
 
 Briefly explain in 2-3 sentences what a global optimum in an
@@ -326,6 +344,8 @@ optimization problem is.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 ## 2.d (3 Points)
 
@@ -351,6 +371,8 @@ You are welcome to answer this question in bullet points.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 2.e (4 Points)
 
 Explain briefly in 2-3 sentences what so-called “Big-M” constraints can
@@ -373,6 +395,8 @@ be used for in mathematical modeling.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 # <span class="flow">Part III</span>
 
@@ -445,6 +469,8 @@ start_optimization(transport_model)
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 3.b (4 Points)
 
 In an optimization model, the following equations are given:
@@ -478,6 +504,8 @@ Please **define the equations in correct Julia syntax**.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 3.c (2 Points)
 
 For an optimization model the following binary variable is supposed to
@@ -505,6 +533,8 @@ Specify the definition of the variable in correct Julia syntax.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 3.d (2 Points)
 
 What is the difference between a linear and a nonlinear problem? Please
@@ -527,6 +557,8 @@ describe the difference in a few sentences.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 # <span class="flow">Wrap Up</span>
 
@@ -563,6 +595,8 @@ Questions?
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 

@@ -17,6 +17,8 @@ Dr. Tobias Vlćek
 >
 > I really appreciate active participation and interaction!
 
+------------------------------------------------------------------------
+
 # <span class="flow">Course Structure</span>
 
 ## Lectures
@@ -46,6 +48,8 @@ Dr. Tobias Vlćek
 > [!NOTE]
 >
 > Bonus points only count if the mark is at least 4.0!
+
+------------------------------------------------------------------------
 
 # <span class="flow">Course Objective</span>
 
@@ -77,6 +81,8 @@ Dr. Tobias Vlćek
 - Management Science
 - Operations Research
 - OR Spectrum
+
+------------------------------------------------------------------------
 
 # <span class="flow">Real-World Applications</span>
 
@@ -129,6 +135,8 @@ Haase et al. (2016)
 
 </div>
 
+------------------------------------------------------------------------
+
 # <span class="flow">Lecture Preview</span>
 
 ## Part I
@@ -152,6 +160,8 @@ Haase et al. (2016)
 11. Arena Seat Planning under Distancing Rules
 12. Sales Force Deployment for Teams
 13. Recap and Discussion
+
+------------------------------------------------------------------------
 
 # <span class="flow">Julia Programming Language</span>
 
@@ -206,6 +216,8 @@ class="r-stretch" data-max-width="400px" />
 - We will learn the syntax together in the first part
 - It is helpful to switch languages from time to time
 
+------------------------------------------------------------------------
+
 # <span class="flow">Algebraic Modeling</span>
 
 ## 
@@ -257,6 +269,8 @@ algebraic modeling?
 > [!TIP]
 >
 > Modeling is a creative process!
+
+------------------------------------------------------------------------
 
 ## Model Components
 
@@ -329,6 +343,8 @@ like this before?
   - Decision-making under constraints
   - Simulation and prediction
 
+------------------------------------------------------------------------
+
 # <span class="flow">Solar Panel Transport</span>
 
 ## <span class="invert-font">Case: Solar Panel Transport</span>
@@ -355,6 +371,8 @@ to Munich $j=2$ costs $c_{12}=4640$ Euro. Moreover, it is necessary to
 ## Graphical Illustration
 
 ![](https://images.beyondsimulations.com/ao/ao_transport.png)
+
+------------------------------------------------------------------------
 
 # <span class="flow">Understanding the Problem</span>
 
@@ -407,6 +425,8 @@ $$
 > We often use **plural** names for sets and a caligraphic letter, e.g.,
 > $\mathcal{I}$ and $\mathcal{J}$.
 
+------------------------------------------------------------------------
+
 ## Parameters
 
 Parameters are <span class="highlight">fixed values that are
@@ -432,6 +452,8 @@ $$
 >
 > We usually use the corresponding lower-case letter, e.g., $c$, $a$,
 > and $b$.
+
+------------------------------------------------------------------------
 
 ## Decision Variable
 
@@ -466,6 +488,8 @@ building blocks!
 
 </div>
 
+------------------------------------------------------------------------
+
 ## Objective Function
 
 - The objective function is the value we are trying to minimize
@@ -490,6 +514,8 @@ adhering to the available panels.
 $$
 \text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{i,j}
 $$
+
+------------------------------------------------------------------------
 
 ## Constraints
 
@@ -553,6 +579,8 @@ $$
 X_{i,j} \geq 0 \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 $$
 
+------------------------------------------------------------------------
+
 ## Transport Problem
 
 The complete model can then be written as:
@@ -594,6 +622,8 @@ Any
 questions?
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Profit Maximization</span>
 
@@ -686,6 +716,8 @@ any questions?
 
 </div>
 
+------------------------------------------------------------------------
+
 # <span class="flow">Installing Julia</span>
 
 ## Download and Install Julia
@@ -759,6 +791,8 @@ print("Hello World!")
 > Don’t worry if it is not running right away. We will fix this
 > together!
 
+------------------------------------------------------------------------
+
 # <span class="flow">Starting with Julia</span>
 
 ## How to get started?
@@ -773,6 +807,8 @@ print("Hello World!")
 > **And that’s it for todays lecture!**  
 > We now have covered a first introduction and are ready to start
 > solving some problems in the upcoming lectures.
+
+------------------------------------------------------------------------
 
 ## 
 

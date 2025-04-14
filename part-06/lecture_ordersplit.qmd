@@ -91,6 +91,8 @@ engine: julia
 :::
 :::
 
+---
+
 # [Problem Structure]{.flow} {.title}
 
 ## Split Order
@@ -152,6 +154,8 @@ engine: julia
 
 ::: footer
 :::
+
+---
 
 # [Problem Structure - Version 1]{.flow} {.title}
 
@@ -228,6 +232,8 @@ We aim to improve the **SKU[^1]-warehouse allocation** to minimize the number of
 
 [Question:]{.question} **What is your opinion on the assumption?**
 
+---
+
 ## Split-Order Minimization
 
 [Question:]{.question} **What could be our decision variable/s?**
@@ -273,6 +279,8 @@ could be done?
 
 ::: footer
 :::
+
+---
 
 # [Problem Structure - Version 2]{.flow} {.title}
 
@@ -343,6 +351,8 @@ display(Q)
 
 - How often each SKU appeared over all orders **(binary!)**
 
+---
+
 ## How to approach the problem?
 
 ::: {.incremental}
@@ -377,6 +387,7 @@ display(Q)
 We can focus on the SKUs and the warehouses, making the problem **much smaller**!
 :::
 
+---
 
 ## Available Parameters
 
@@ -393,6 +404,8 @@ We can focus on the SKUs and the warehouses, making the problem **much smaller**
 ## Transactional Data replaced
 Instead of the transactional data, we just **use the coappearance matrix** in our model!
 :::
+
+---
 
 # [Model Formulation]{.flow} {.title}
 
@@ -451,6 +464,8 @@ warehouse_model = Model(SCIP.Optimizer)
 @variable(warehouse_model, X[i in skus, k in warehouses], Bin)
 ```
 
+---
+
 ## Objective Function
 
 ::: {.callout-note}
@@ -503,6 +518,8 @@ Q = [2 1 2; 1 2 1; 2 1 2]
 )
 ```
 
+---
+
 # [Constraints]{.flow} {.title}
 
 ## What constraints?
@@ -524,6 +541,8 @@ Q = [2 1 2; 1 2 1; 2 1 2]
 :::
 :::
 :::
+
+---
 
 ## Single Allocation Constraint?
 
@@ -576,6 +595,8 @@ $$\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}$$
 )
 ```
 
+---
+
 ## Capacity Constraints?
 
 ::: {.callout-important}
@@ -621,6 +642,8 @@ capacities = Dict("Hamburg" => 2, "Berlin" => 1) # Add capacities
 )
 ```
 
+---
+
 ## QMK Model
 
 $$\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}$$
@@ -648,6 +671,8 @@ println("The optimal objective value is: ", objective_value(warehouse_model))
 println("The optimal solution is: ", value.(X))
 ```
 
+---
+
 # [Model Characteristics]{.flow} {.title}
 
 ## Characteristics
@@ -673,10 +698,11 @@ println("The optimal solution is: ", value.(X))
 Commercial solvers are **faster** and **more robust** as open source solvers but also **more expensive**. During your studies, you can use most of them for free though! Nonetheless, we will only use open source solvers in this course.
 :::
 
-
 ## Global vs Local Optimality
 
 [![Local vs Global Optimum by Christoph Roser](https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&ssl=1){width="80%"}](https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/)
+
+---
 
 ## Model Assumptions
 
@@ -722,6 +748,8 @@ Detect dependencies between products and allocate them accordingly, as products 
 
 ![](https://images.beyondsimulations.com/ao/ao_split-reasons){width="80%"}
 
+---
+
 ## Case Study
 
 - More than 100,000 SKUs and several millions of orders
@@ -756,6 +784,8 @@ Questions?
 
 ::: footer
 :::
+
+---
 
 # [Literature]{.flow} {.title}
 

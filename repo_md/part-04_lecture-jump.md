@@ -71,6 +71,8 @@ Dr. Tobias Vlćek
 > <span class="highlight">You can ask questions anytime in class or via
 > email!</span>
 
+------------------------------------------------------------------------
+
 # <span class="flow">Five Tutorials for this Week</span>
 
 ## Topics of the Tutorials
@@ -97,6 +99,8 @@ Dr. Tobias Vlćek
 > the fourth lecture. From next week, we will start with different
 > optimizations problems and topics, that we address together in the
 > course.
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 

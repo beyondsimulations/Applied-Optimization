@@ -12,6 +12,8 @@ Follow the structured instructions, implement your code in the
 designated blocks, and affirm your comprehension with `@assert`
 statements.
 
+------------------------------------------------------------------------
+
 # Section 1 - Creating and Accessing Dictionaries
 
 Think of it this way:
@@ -95,6 +97,8 @@ Change the author of “1984” to “Eric Blair” (George Orwell’s real name
 println("Great! You've successfully modified the books dictionary.")
 ```
 
+------------------------------------------------------------------------
+
 # Section 2 - Advanced Dictionary Operations
 
 Dictionaries can do more than just store simple information. Let’s
@@ -147,6 +151,8 @@ end
 > The `(student, grade_list)` is a tuple that contains the key and value
 > of each entry in the dictionary. We could also name the tuple as
 > `(key, value)` or `(a, b)`.
+
+------------------------------------------------------------------------
 
 ## Conclusion
 

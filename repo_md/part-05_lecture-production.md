@@ -92,6 +92,8 @@ challenge?
 
 </div>
 
+------------------------------------------------------------------------
+
 # <span class="flow">Problem Structure</span>
 
 ## Objective
@@ -140,6 +142,8 @@ the storage cost.</span>
 
 </div>
 
+------------------------------------------------------------------------
+
 ## Available Sets
 
 <span class="question">Question:</span> **What are sets again?**
@@ -176,6 +180,8 @@ parameters?**
 - $d_{i,t}$ - Demand of beer type $i\in\mathcal{I}$ in period
   $t\in\mathcal{T}$
 
+------------------------------------------------------------------------
+
 ## Decision Variables?
 
 > [!NOTE]
@@ -208,6 +214,8 @@ variable/s?**
   $t\in\mathcal{T}$, 0 otherwise
 - $X_{i,t}$ - Batch size of type $i\in\mathcal{I}$ in $t\in\mathcal{T}$
 
+------------------------------------------------------------------------
+
 # <span class="flow">Model Formulation</span>
 
 ## Objective Function?
@@ -235,6 +243,8 @@ function?**
 > - $Y_{i,t}$ - 1, if type $i\in\mathcal{I}$ is bottled in
 >   $t\in\mathcal{T}$, 0 otherwise
 
+------------------------------------------------------------------------
+
 ## Objective Function
 
 > [!NOTE]
@@ -248,6 +258,8 @@ function?**
 . . .
 
 $$\text{Minimize} \quad \sum_{i=1}^{\mathcal{I}} \sum_{t=1}^{\mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})$$
+
+------------------------------------------------------------------------
 
 ## Constraints
 
@@ -278,6 +290,8 @@ style="width:60.0%" />
 </div>
 
 </div>
+
+------------------------------------------------------------------------
 
 ## Demand/Inventory Constraints?
 
@@ -327,6 +341,8 @@ $$W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I},t\in\mat
 
 <span class="question">Question:</span> **What does $|t>1$ mean?**
 
+------------------------------------------------------------------------
+
 ## Setup Constraints?
 
 > [!IMPORTANT]
@@ -372,6 +388,8 @@ This type of constraint is called a **“Big-M”** constraint!
 - It is coupled with a binary variable (here $Y_{i,t}$)
 - <span class="highlight">Like an if-then constraint</span>
 
+------------------------------------------------------------------------
+
 ## Capacity Constraints?
 
 > [!IMPORTANT]
@@ -412,6 +430,8 @@ $$\sum_{i=1}^{\mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \q
 
 <span class="highlight">And that’s basically it!</span>
 
+------------------------------------------------------------------------
+
 ## CLSP: Objective Function
 
 $$\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})$$
@@ -451,6 +471,8 @@ $$W_{i,t}, X_{i,t}\geq 0 \quad \forall i\in\mathcal{I},t\in\mathcal{T}$$
 > The binary setup variable is either 0 or 1 and that the inventory and
 > batch size are non-negative.
 
+------------------------------------------------------------------------
+
 # <span class="flow">Model Characteristics</span>
 
 ## Recap on some Basics
@@ -482,6 +504,8 @@ There exist several types of optimization problems:
 
 </div>
 
+------------------------------------------------------------------------
+
 ## Model Characteristics
 
 <span class="question">Questions:</span> **On model characteristics**
@@ -506,6 +530,8 @@ There exist several types of optimization problems:
 - Any idea how to solve it?
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Impact</span>
 
@@ -581,6 +607,8 @@ Questions?
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 

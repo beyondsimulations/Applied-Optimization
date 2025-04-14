@@ -49,6 +49,8 @@ indices = ["A", "B", "C"]
 @variable(model, x[i in indices])      # Custom indexed array
 ```
 
+------------------------------------------------------------------------
+
 # Constraints
 
 ## Declaration
@@ -96,12 +98,6 @@ indices = ["A", "B", "C"]
 )
 ```
 
-## Key Points for Constraints
-
-- Use semicolon (;) to separate indices from conditions
-- Conditions can use any valid Julia boolean expression
-- Multiple conditions can be combined with && (and) or \|\| (or)
-
 ## Conditions while Summing
 
 ``` julia
@@ -115,6 +111,14 @@ indices = ["A", "B", "C"]
 )
 # Only sums over i != j and i + j <= 7
 ```
+
+## Key Points for Constraints
+
+- Use semicolon (;) to separate indices from conditions
+- Conditions can use any valid Julia boolean expression
+- Multiple conditions can be combined with && (and) or \|\| (or)
+
+------------------------------------------------------------------------
 
 # Objective Function
 
@@ -147,6 +151,8 @@ weights = [1, 2, 3, 4, 5]
 - Objective functions can be linear or nonlinear
 - Containers are useful for weighted objectives
 - Can reference external data (parameters)
+
+------------------------------------------------------------------------
 
 # Additional Features
 

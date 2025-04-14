@@ -30,6 +30,8 @@ Now, let’s load these packages:
 using Plots, StatsPlots
 ```
 
+------------------------------------------------------------------------
+
 # Section 1 - Creating Basic Plots
 
 The Plots.jl package simplifies the process of creating a wide array of
@@ -86,6 +88,8 @@ println("Great job! You've created your first scatter plot.")
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 2 - Customizing Plots
 
 One of the best things about Plots.jl is how easy it is to customize
@@ -136,6 +140,8 @@ println("Excellent! You've created a custom line plot.")
 >
 > Feel free to experiment with different options. There’s no “right”
 > answer here – it’s all about what looks good to you!
+
+------------------------------------------------------------------------
 
 # Section 3 - Adding Multiple Series to a Plot
 
@@ -194,6 +200,8 @@ println("Fantastic! You've created a plot with multiple series.")
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 3 - Saving Plots to Files
 
 Plots.jl supports saving your plots to various file formats including
@@ -231,6 +239,8 @@ println("Well done! You've saved your plot as an image file.")
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Section 4 - Advanced Plotting Techniques
 
@@ -283,6 +293,8 @@ display(box_plot)
 ```
 
 ![](tutorial-03-05-Plotting_files/figure-commonmark/cell-18-output-1.svg)
+
+------------------------------------------------------------------------
 
 # Conclusion
 

@@ -85,6 +85,8 @@ past lectures?
 >
 > That’s a lot and a great foundation for a seminar or a master thesis!
 
+------------------------------------------------------------------------
+
 # <span class="flow">How to continue?</span>
 
 ## How to continue after the lecture?
@@ -133,6 +135,8 @@ past lectures?
 > Cursor is a great IDE for AI pair programming, although it is not
 > completely free. It has Claude and ChatGPT integrated and makes work
 > much easier when compared to copying and pasting code.
+
+------------------------------------------------------------------------
 
 # <span class="flow">Final Words</span>
 

@@ -28,6 +28,8 @@ engine: julia
 
 # 1. Modelling the CLSP
 
+## Load the necessary packages and data
+
 {{< include ../include/activate_environment.qmd >}}
 
 Implement the CLSP from the lecture in Julia. Before we start, let's load the necessary packages and data.
@@ -61,6 +63,10 @@ plotly() # This will create interactive plots later on
 ::: {.callout-tip}
 If you haven't installed the packages yet, you can do so by running `using Pkg` first and then `Pkg.add("JuMP")`, `Pkg.add("HiGHS")`, `Pkg.add("DataFrames")`, `Pkg.add("Plots")`, and `Pkg.add("StatsPlots")`.
 :::
+
+---
+
+## Load the data
 
 Now, let's load the data. The weekly demand in bottles $d_{i,t}$, the available time at the bottling plant in hours $a_t$, the time required to bottle each beer in hours $b_i$, and the setup time in hours $g_i$ are provided as CSV files.
 
@@ -101,6 +107,10 @@ demandCustomers = CSV.read("$file_directory/demand.csv", DataFrame)
 println("First 5 rows of demand per beer:")
 println(demandCustomers[1:5, :])
 ```
+
+---
+
+## Define the parameters
 
 Consider in your implementation, that **each hour of setup** is associated with a cost of 1000 Euros, and the inventory holding cost for unsold bottles at the end of each period is 0.1 Euro per bottle. Implement **both parameters** for the cost of setup and the inventory holding cost in the model. Call them `setupHourCosts` and `warehouseCosts`.
 
@@ -150,6 +160,10 @@ dictDemand = Dict((row.beer_type,row.period) => row.demand for row in eachrow(de
 @assert all(b -> haskey(dictSetupTime, b), setupTime.beer_type) "Missing beer types in setup time dictionary"
 ```
 
+---
+
+## Define the model instance
+
 Next, we define the model instance for the CLSP.
 
 ```{julia}
@@ -159,6 +173,10 @@ lotsizeModel = Model(HiGHS.Optimizer)
 set_attribute(lotsizeModel, "presolve", "on")
 set_time_limit_sec(lotsizeModel, 60.0)
 ```
+
+---
+
+## Define the variables
 
 Now, create your variables. Please name them `productBottled` for the binary variable, `productQuantity` for the production quantity and `WarehouseStockPeriodEnd` for the warehouse stock at the end of each period. We will use these names later in the code to plot the results.
 
@@ -188,6 +206,10 @@ Now, create your variables. Please name them `productBottled` for the binary var
 @assert all(is_integer, WarehouseStockPeriodEnd) == false "WarehouseStockPeriodEnd must be continuous variables"
 ```
 
+---
+
+## Define the objective function
+
 Next, define the objective function.
 
 ```{julia}
@@ -211,6 +233,9 @@ obj_expr = objective_function(lotsizeModel)
 @assert contains(string(obj_expr), "WarehouseStockPeriodEnd") "Objective must include warehouse costs (WarehouseStockPeriodEnd)"
 ```
 
+---
+
+## Define the constraints
 
 Now, we need to define all necessary constraints for the model. Start with the demand/inventory balance constraint.
 
@@ -253,6 +278,10 @@ Last, we need to define the constraint that limits the production quantity to th
 
 ```
 
+---
+
+## Solve the model
+
 Finally, implement the solve statement for your model instance.
 
 ```{julia}
@@ -268,6 +297,10 @@ Finally, implement the solve statement for your model instance.
 ```
 
 Now, unfortunately we cannot assert the value of the objective function perfectly here as we have to abort the computation due to the time limit and everybody is likely getting different results. The solution for the first task will likely be in the [range of 600,000 to 700,000]{.highlight}. If your model is solved within seconds, your formulation is not correct.
+
+---
+
+## Create the plots
 
 The following code creates production and warehouse plots for you. Use it to verify and visualize your solution in the following tasks.
 
@@ -368,6 +401,10 @@ productionResults = create_production_results()
 p = create_warehouse_plot(productionResults)
 ```
 
+---
+
+## Calculate the setup and inventory costs
+
 Next, we calculate the setup and inventory costs for each period and store them in a DataFrame. This should also work for you, if you followed the previous name instructions.
 
 ```{julia}
@@ -435,6 +472,8 @@ stacked_costs = create_cost_results()
 p = create_cost_plot(stacked_costs)
 ```
 
+---
+
 # 2. Initial Warehouse Stock
 
 The model currently sets the initial warehouse stock levels without any restrictions. Modify your model to incorporate an initial stock for **all types of beer of zero** at the beginning of the **initial planning period**. 
@@ -472,6 +511,8 @@ p = create_warehouse_plot(productionResults)
 stacked_costs = create_cost_results()
 p = create_cost_plot(stacked_costs)
 ```
+
+---
 
 # 3. Scheduled Repair
 
@@ -512,6 +553,8 @@ stacked_costs = create_cost_results()
 p = create_cost_plot(stacked_costs)
 ```
 
+---
+
 # 4. Production Schedule Analysis
 
 Analyze the production schedule outlined in section 2 of this tutorial. Is the workload **distributed evenly** across all time periods? Provide a rationale for your assessment. 
@@ -534,6 +577,8 @@ Based on the production data from the final period, **calculate the ending inven
 # YOUR CODE BELOW
 
 ```
+
+---
 
 # 5. Biannual Bottling Strategy
 

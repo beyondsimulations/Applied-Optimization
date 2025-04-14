@@ -77,6 +77,8 @@ Dr. Tobias Vlćek
 >
 > You can ask questions anytime in class or via email!
 
+------------------------------------------------------------------------
+
 # <span class="flow">Five Tutorials for this Week</span>
 
 ## Topics of the Tutorials
@@ -101,6 +103,8 @@ Dr. Tobias Vlćek
 >
 > The remaining time we will already start working on the problems of
 > the third lecture.
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 

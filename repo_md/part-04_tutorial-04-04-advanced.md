@@ -25,6 +25,8 @@ Let’s start by loading the necessary packages:
 using JuMP, HiGHS
 ```
 
+------------------------------------------------------------------------
+
 # Section 1: Understanding Solver Options
 
 Solver options are like the “advanced settings” of our optimization
@@ -85,6 +87,8 @@ println("Great job! You've successfully set advanced solver options.")
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Section 2: Creating and Solving a Sample Problem
 
@@ -163,7 +167,7 @@ println("Gadgets to produce: ", value(gadgets))
       Primal bound      2780
       Dual bound        2800
       Gap               0.719% (tolerance: 1%)
-      P-D integral      4.45419845419e-06
+      P-D integral      4.88297199737e-06
       Solution status   feasible
                         2780 (objective)
                         0 (bound viol.)
@@ -216,6 +220,8 @@ println("Excellent work! You've successfully modified and solved the optimizatio
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 3: Interpreting Solver Output
 
 When we solve an optimization problem, the solver gives us information
@@ -240,6 +246,8 @@ Let’s break this down:
 - **Objective value**: The value of our objective function (in this
   case, our profit)
 - **Solve time**: How long it took to solve the problem
+
+------------------------------------------------------------------------
 
 # Conclusion
 

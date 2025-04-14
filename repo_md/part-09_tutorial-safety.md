@@ -31,6 +31,8 @@ set to 0.3 while the first period is not constrained. Consider that the
 number of pilgrims per group $s$ and the penalty value $f_{s,t}$ are
 given.
 
+------------------------------------------------------------------------
+
 # 1. Problem Identification
 
 You’ll need to create an optimization model that:
@@ -62,6 +64,8 @@ needed and which elements we can eliminate and why.
 
 =#
 ```
+
+------------------------------------------------------------------------
 
 # 2. Implementing the Model
 
@@ -113,6 +117,8 @@ with the resulting timetable?
 >
 > If you end up with an objective value of approximately 7, you have
 > likely found the optimal solution to the problem.
+
+------------------------------------------------------------------------
 
 ## Analyze the Results
 

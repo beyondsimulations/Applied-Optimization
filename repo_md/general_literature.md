@@ -6,6 +6,8 @@ your understanding of mathematical Modelling, Julia programming and
 related topics. Each recommendation includes a brief description to help
 you choose the most suitable resources for you.
 
+------------------------------------------------------------------------
+
 # Julia
 
 ## Books
@@ -31,6 +33,8 @@ you choose the most suitable resources for you.
     understanding optimization modeling in Julia, covering everything
     from simple linear models to advanced nonlinear and mixed-integer
     problems.
+
+------------------------------------------------------------------------
 
 # General
 

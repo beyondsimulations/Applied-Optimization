@@ -13,6 +13,8 @@ to higher shipping costs and frustrated customers.
 This tutorial explores how to optimize SKU allocation across warehouses
 to minimize split orders using mathematical optimization.
 
+------------------------------------------------------------------------
+
 ## 1. Coappearance Matrix
 
 First, we need to understand which products are frequently purchased
@@ -47,6 +49,8 @@ Q = [
 ]
 ```
 
+------------------------------------------------------------------------
+
 ## 2. Maximizing Coappearances
 
 FitGear currently operates two warehouses - one in Hamburg and one in
@@ -63,6 +67,8 @@ the assignment? Please provide it in the following cell.
 ``` julia
 objective_value_by_hand =
 ```
+
+------------------------------------------------------------------------
 
 ## 3. Counting Split Parcels
 
@@ -81,6 +87,8 @@ number_of_split_parcels =
 > Is the solution of the QMKP the optimal solution for the underlying
 > split parcel minimisation problem? Try to come up with another
 > solution that has less split or the same number of split parcels.
+
+------------------------------------------------------------------------
 
 ## 4. Implementing the model
 
@@ -170,20 +178,19 @@ Implement the model in Julia and solve it for the given data set.
 > The retailer has another requirement: each SKU can only be allocated
 > to one warehouse. Make sure to include this requirement in your model.
 
-> [!TIP]
->
-> ### Use the Juniper solver
->
-> If you don’t have Juniper, Ipopt and/or HiGHS installed, add the
-> solver via Pkg.add(“Juniper”) and Pkg.add(“Ipopt”) and
-> Pkg.add(“HiGHS”). Juniper is a solver for nonlinear problems, that can
-> be used in combination with Ipopt and HiGHS to solve mixed-integer
-> quadratic problems. If you want to use SCIP, you can also do this by
-> adding JuMP and SCIP and then change the solver in the model
-> definition to `warehouse_model = Model(SCIP.Optimizer())`. Note, that
-> this does not work automatically in Windows, as you will have to
-> install the SCIP binaries manually. On Mac and Linux, it should work
-> out of the box.
+------------------------------------------------------------------------
+
+## Use the Juniper solver
+
+If you don’t have Juniper, Ipopt and/or HiGHS installed, add the solver
+via Pkg.add(“Juniper”) and Pkg.add(“Ipopt”) and Pkg.add(“HiGHS”).
+Juniper is a solver for nonlinear problems, that can be used in
+combination with Ipopt and HiGHS to solve mixed-integer quadratic
+problems. If you want to use SCIP, you can also do this by adding JuMP
+and SCIP and then change the solver in the model definition to
+`warehouse_model = Model(SCIP.Optimizer())`. Note, that this does not
+work automatically in Windows, as you will have to install the SCIP
+binaries manually. On Mac and Linux, it should work out of the box. :::
 
 First, we start by defining the model.
 
@@ -208,6 +215,10 @@ warehouse_model = Model(
     ├ num_constraints: 0
     └ Names registered in the model: none
 
+------------------------------------------------------------------------
+
+## Compute the coappearance matrix
+
 Next, compute the coappearance matrix based on the transactional data
 provided in `T`.
 
@@ -226,6 +237,10 @@ println("Great! The coappearance matrix is correct.")
 ```
 
 </details>
+
+------------------------------------------------------------------------
+
+## Define the decision variable
 
 Now, define the decision variable for the SKU allocation. Please name
 the variable `X`.
@@ -247,6 +262,10 @@ println("Great! The decision variable is correctly defined as a binary variable 
 
 </details>
 
+------------------------------------------------------------------------
+
+## Define the objective function
+
 Then, define the objective function to maximize the coappearance.
 
 ``` julia
@@ -263,6 +282,10 @@ println("Great! The objective function is correctly defined.")
 ```
 
 </details>
+
+------------------------------------------------------------------------
+
+## Define the constraints
 
 To ensure that each SKU is allocated to one warehouse, add the first
 constraint.
@@ -300,6 +323,10 @@ println("Great! The capacity constraint is correctly defined.")
 
 </details>
 
+------------------------------------------------------------------------
+
+## Solve the model
+
 Finally, solve the model with a solve statement.
 
 ``` julia
@@ -317,6 +344,10 @@ println("Great! The model is correctly solved.")
 ```
 
 </details>
+
+------------------------------------------------------------------------
+
+## Print the results
 
 The following code prints the objective value, the SKU allocation and
 the warehouse capacities based on your optimal solution.
@@ -338,6 +369,10 @@ for k in 1:length(warehouses)
     println("Warehouse: ", warehouses[k], " Capacity: ", capacity[k], " Used: ", sum(value.(X[i,warehouses[k]]) for i in skus))
 end
 ```
+
+------------------------------------------------------------------------
+
+## Count the number of split orders
 
 Based on the output of the optimisation, we still don’t know the number
 of split orders. The following code calculates the number of split
@@ -397,6 +432,8 @@ println()
 println("Number of split orders (random): ", split_parcels_random)
 println("Number of regular orders (random): ", regular_parcels_random)
 ```
+
+------------------------------------------------------------------------
 
 ## 5. Analyzing the Results
 

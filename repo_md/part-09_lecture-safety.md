@@ -118,6 +118,8 @@ data-fig-align="center" />
 <span class="question">Question:</span> **What could we do to prevent
 this?**
 
+------------------------------------------------------------------------
+
 # <span class="flow">Pedestrian Traffic</span>
 
 ## 
@@ -205,6 +207,8 @@ data-fig-align="center" />
 > Adhere to **one-way flow systems** and define path options for each
 > camp under consideration of a unidirectional flow system.
 
+------------------------------------------------------------------------
+
 # <span class="flow">Problem Structure</span>
 
 ## Objective?
@@ -288,6 +292,8 @@ These bottlenecks should not be overcrowded at any time during the Hajj.
 
 ![](https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg)
 
+------------------------------------------------------------------------
+
 ## 
 
 <div class="r-fit-text">
@@ -351,6 +357,8 @@ later?**
 
 - Restrict the change of the utilization **between periods**
 
+------------------------------------------------------------------------
+
 ## Goals Summarized
 
 <div class="incremental">
@@ -365,6 +373,8 @@ later?**
     a safer event.
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Model Formulation</span>
 
@@ -426,6 +436,8 @@ complicated…
 > A smaller problem size **reduces the solution space** and **helps the
 > solver** in finding the optimal solution faster!
 
+------------------------------------------------------------------------
+
 ## Parameters?
 
 <span class="question">Question:</span> **What could be possible
@@ -439,6 +451,8 @@ parameters?**
   $p$
 - $b_{r,t}$ - Capacity of resource $r$ in period $t$
 - $\sigma_r$ - max. relative utilization deviation between $t$ for $r$
+
+------------------------------------------------------------------------
 
 ## First Decision Variable?
 
@@ -478,6 +492,8 @@ variable?**
 
 It’s a **binary assignment** of a group to a time slot and a path.
 
+------------------------------------------------------------------------
+
 ## Second Decision Variable?
 
 > [!IMPORTANT]
@@ -509,6 +525,8 @@ variable?**
 
 <span class="question">Question:</span> **Does anyone remember the third
 part?**
+
+------------------------------------------------------------------------
 
 ## Third Decision Variable?
 
@@ -561,6 +579,8 @@ objective function!
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 ## Objective Function?
 
@@ -625,6 +645,8 @@ linear?**
 - We can compute the **penalties in advance**
 - Do **not** depend on the decision variables
 
+------------------------------------------------------------------------
+
 # <span class="flow">Constraints</span>
 
 ## Constraints needed?
@@ -652,6 +674,8 @@ need?**
 
 </div>
 
+------------------------------------------------------------------------
+
 ## Assign Paths to Camps
 
 > [!IMPORTANT]
@@ -676,6 +700,8 @@ constraint?**
 $$
 \sum_{p \in \mathcal{P}_c} Y_{c,p} = 1 \quad \forall c \in \mathcal{C}
 $$
+
+------------------------------------------------------------------------
 
 ## Assign Time Slots to Groups?
 
@@ -718,6 +744,8 @@ $$
 > - $\mathcal{S}_c$ - Scheduling groups in camp $c$
 > - $\mathcal{T}_s$ - Available stoning periods for scheduling group $s$
 > - $\mathcal{P}_c$ - Feasible paths for camp $c$
+
+------------------------------------------------------------------------
 
 ## Relative Utilization and Capacities
 
@@ -801,6 +829,8 @@ this part?
 src="https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg"
 data-fig-align="center" />
 
+------------------------------------------------------------------------
+
 ## Keep Fluctuations within Bounds?
 
 > [!IMPORTANT]
@@ -844,6 +874,8 @@ works?**
 - The first one limits the **increase**
 - The second one limits the **decrease**
 
+------------------------------------------------------------------------
+
 ## Scheduling Problem I
 
 subject to:
@@ -860,6 +892,8 @@ subject to:
 > [!NOTE]
 >
 > All variables, except for $U_{r,t}$, are binary.
+
+------------------------------------------------------------------------
 
 # <span class="flow">Model Characteristics</span>
 
@@ -922,6 +956,8 @@ data-fig-align="center" />
 src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-5.png"
 data-fig-align="center" />
 
+------------------------------------------------------------------------
+
 ## Implementation
 
 - Optimization **part of a bigger picture**
@@ -963,6 +999,8 @@ Questions?
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 

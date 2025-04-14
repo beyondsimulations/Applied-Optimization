@@ -24,6 +24,8 @@ another_model = Model(HiGHS.Optimizer)
 println("Great! We've created a new optimization model.")
 ```
 
+------------------------------------------------------------------------
+
 # Section 1 - Objective Functions with Container Variables
 
 Defining objective functions with variables in containers allows for
@@ -68,6 +70,8 @@ println("Objective function with container variables defined successfully!")
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 2 - Constraints within Containers
 
 Defining constraints within containers allows for structured and easily
@@ -109,6 +113,8 @@ println("Constraints within containers defined successfully!")
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Section 3 - Implementing Conditional Constraints
 
@@ -176,9 +182,36 @@ bar(1:8, optimal_profits,
     legend=false)
 ```
 
+------------------------------------------------------------------------
+
 # Conclusion
 
 Congratulations! You’ve completed the tutorial on advanced handling of
 objective functions and constraints in JuMP. You’ve learned how to
 define objective functions and constraints using container variables.
 Continue to the next file to learn more.
+
+# Solutions
+
+You will likely find solutions to most exercises online. However, I
+strongly encourage you to work on these exercises independently without
+searching explicitly for the exact answers to the exercises.
+Understanding someone else’s solution is very different from developing
+your own. Use the lecture notes and try to solve the exercises on your
+own. This approach will significantly enhance your learning and
+problem-solving skills.
+
+Remember, the goal is not just to complete the exercises, but to
+understand the concepts and improve your programming abilities. If you
+encounter difficulties, review the lecture materials, experiment with
+different approaches, and don’t hesitate to ask for clarification during
+class discussions.
+
+Later, you will find the solutions to these exercises online in the
+associated GitHub repository, but we will also quickly go over them in
+next week’s tutorial. To access the solutions, click on the Github
+button on the lower right and search for the folder with today’s lecture
+and tutorial. Alternatively, you can ask ChatGPT or Claude to explain
+them to you. But please remember, the goal is not just to complete the
+exercises, but to understand the concepts and improve your programming
+abilities.

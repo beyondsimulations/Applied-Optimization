@@ -3,6 +3,8 @@
 
 # 1. Modelling the CLSP
 
+## Load the necessary packages and data
+
 Implement the CLSP from the lecture in Julia. Before we start, let’s
 load the necessary packages and data.
 
@@ -23,6 +25,10 @@ plotly() # This will create interactive plots later on
 > `using Pkg` first and then `Pkg.add("JuMP")`, `Pkg.add("HiGHS")`,
 > `Pkg.add("DataFrames")`, `Pkg.add("Plots")`, and
 > `Pkg.add("StatsPlots")`.
+
+------------------------------------------------------------------------
+
+## Load the data
 
 Now, let’s load the data. The weekly demand in bottles $d_{i,t}$, the
 available time at the bottling plant in hours $a_t$, the time required
@@ -110,6 +116,10 @@ println(demandCustomers[1:5, :])
        4 │ Brown_Ale   week_01   13880
        5 │ Porter      week_01   10642
 
+------------------------------------------------------------------------
+
+## Define the parameters
+
 Consider in your implementation, that **each hour of setup** is
 associated with a cost of 1000 Euros, and the inventory holding cost for
 unsold bottles at the end of each period is 0.1 Euro per bottle.
@@ -155,6 +165,10 @@ dictDemand = Dict((row.beer_type,row.period) => row.demand for row in eachrow(de
 
 </details>
 
+------------------------------------------------------------------------
+
+## Define the model instance
+
 Next, we define the model instance for the CLSP.
 
 ``` julia
@@ -163,6 +177,10 @@ lotsizeModel = Model(HiGHS.Optimizer)
 set_attribute(lotsizeModel, "presolve", "on")
 set_time_limit_sec(lotsizeModel, 60.0)
 ```
+
+------------------------------------------------------------------------
+
+## Define the variables
 
 Now, create your variables. Please name them `productBottled` for the
 binary variable, `productQuantity` for the production quantity and
@@ -197,6 +215,10 @@ period. We will use these names later in the code to plot the results.
 
 </details>
 
+------------------------------------------------------------------------
+
+## Define the objective function
+
 Next, define the objective function.
 
 ``` julia
@@ -221,6 +243,10 @@ obj_expr = objective_function(lotsizeModel)
 ```
 
 </details>
+
+------------------------------------------------------------------------
+
+## Define the constraints
 
 Now, we need to define all necessary constraints for the model. Start
 with the demand/inventory balance constraint.
@@ -268,6 +294,10 @@ available time.
 # YOUR CODE BELOW
 ```
 
+------------------------------------------------------------------------
+
+## Solve the model
+
 Finally, implement the solve statement for your model instance.
 
 ``` julia
@@ -290,6 +320,10 @@ and everybody is likely getting different results. The solution for the
 first task will likely be in the <span class="highlight">range of
 600,000 to 700,000</span>. If your model is solved within seconds, your
 formulation is not correct.
+
+------------------------------------------------------------------------
+
+## Create the plots
 
 The following code creates production and warehouse plots for you. Use
 it to verify and visualize your solution in the following tasks.
@@ -389,6 +423,10 @@ productionResults = create_production_results()
 p = create_warehouse_plot(productionResults)
 ```
 
+------------------------------------------------------------------------
+
+## Calculate the setup and inventory costs
+
 Next, we calculate the setup and inventory costs for each period and
 store them in a DataFrame. This should also work for you, if you
 followed the previous name instructions.
@@ -457,6 +495,8 @@ stacked_costs = create_cost_results()
 p = create_cost_plot(stacked_costs)
 ```
 
+------------------------------------------------------------------------
+
 # 2. Initial Warehouse Stock
 
 The model currently sets the initial warehouse stock levels without any
@@ -501,6 +541,8 @@ p = create_warehouse_plot(productionResults)
 stacked_costs = create_cost_results()
 p = create_cost_plot(stacked_costs)
 ```
+
+------------------------------------------------------------------------
 
 # 3. Scheduled Repair
 
@@ -547,6 +589,8 @@ stacked_costs = create_cost_results()
 p = create_cost_plot(stacked_costs)
 ```
 
+------------------------------------------------------------------------
+
 # 4. Production Schedule Analysis
 
 Analyze the production schedule outlined in section 2 of this tutorial.
@@ -574,6 +618,8 @@ the following cell. You can name the DataFrame however you want.
 ``` julia
 # YOUR CODE BELOW
 ```
+
+------------------------------------------------------------------------
 
 # 5. Biannual Bottling Strategy
 

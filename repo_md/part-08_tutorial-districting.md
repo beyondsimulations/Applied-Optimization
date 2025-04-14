@@ -40,6 +40,8 @@ Euclidean distance between the BAs, the driving time between BAs, the
 number of incidents per BA, and the hexagonal shapes (a `.shp` file and
 a `.dbf` file - you need both!).
 
+------------------------------------------------------------------------
+
 ## Loading Data and Packages
 
 We start by loading the new `Shapefile` package. **No mistakes here!**
@@ -84,6 +86,8 @@ p = 10
 # Define the weighted driving times
 weightedDriving = drivingTimes .* transpose(incidentWeights)
 ```
+
+------------------------------------------------------------------------
 
 ## Fixing the Mistakes
 
@@ -173,6 +177,10 @@ println("Great, the model was solved correctly.")
 
 </details>
 
+------------------------------------------------------------------------
+
+## Visualizing the Results
+
 The following code then builds and uses a function to plot the results.
 
 ``` julia
@@ -219,6 +227,8 @@ end
 plot_area = visualize_departments(hexshape, X, p)
 ```
 
+------------------------------------------------------------------------
+
 # 2. Ensuring District Connectivity
 
 The Police Chief has identified a critical flaw in the initial model:
@@ -264,6 +274,8 @@ over the BAs that are within 1.5 units of BA $i$.
     )
 ```
 
+------------------------------------------------------------------------
+
 ## Extending the Model
 
 Now, we can start to extend the model. Add the contiguity constraint
@@ -296,6 +308,8 @@ print_model_status(pMedianModel)
 display(visualize_departments(hexshape, X, p))
 ```
 
+------------------------------------------------------------------------
+
 ## Compute the Gap
 
 Based on your results, what is the gap between the solution in the
@@ -315,6 +329,8 @@ objective values.
 >
 > If you computer cannot determine the optimal solution, you can just
 > use the best solutions you found after both runs to compute the gap.
+
+------------------------------------------------------------------------
 
 # 3. Emergency Response Time Guarantees
 
@@ -352,6 +368,8 @@ limit.
 print_model_status(pMedianModel)
 display(visualize_departments(hexshape, X, p))
 ```
+
+------------------------------------------------------------------------
 
 # 4. Planning for Peak Demand
 

@@ -52,6 +52,8 @@ Pkg.add(["JuMP", "HiGHS"])
 using JuMP, HiGHS
 ```
 
+---
+
 # Section 1: Understanding Solver Options
 
 Solver options are like the "advanced settings" of our optimization tool. They allow us to control how the solver approaches our problem. Here are a few common options:
@@ -105,6 +107,8 @@ Now it's your turn! Set the following solver options:
 @assert MOI.get(model, MOI.RawOptimizerAttribute("presolve")) == "off" "Presolve should be off but is $(MOI.get(model, MOI.RawOptimizerAttribute("presolve")))"
 println("Great job! You've successfully set advanced solver options.")
 ```
+
+---
 
 # Section 2: Creating and Solving a Sample Problem
 
@@ -175,6 +179,8 @@ model = Model(HiGHS.Optimizer) # Don't forget to re-initialize the model
 println("Excellent work! You've successfully modified and solved the optimization problem.")
 ```
 
+---
+
 # Section 3: Interpreting Solver Output
 
 When we solve an optimization problem, the solver gives us information about how it went. Let's look at some key pieces of information:
@@ -195,6 +201,8 @@ Let's break this down:
 - **Dual status**: Relates to the mathematical properties of the solution (don't worry too much about this)
 - **Objective value**: The value of our objective function (in this case, our profit)
 - **Solve time**: How long it took to solve the problem
+
+---
 
 # Conclusion
 

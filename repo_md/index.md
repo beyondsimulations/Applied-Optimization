@@ -14,6 +14,8 @@ districts and locations for police departments, and many more. The
 module consists of the following two parts: Lectures (2 SWS) and
 Exercises (1 SWS).
 
+------------------------------------------------------------------------
+
 # Learning Outcomes
 
 You can find our specific outcomes in the module handbook. Our broader
@@ -46,6 +48,8 @@ format will make it possible to account for different levels of
 programming skills such that every student can take the most out of the
 course.
 
+------------------------------------------------------------------------
+
 # Course Blocks
 
 The core content of the course is organized in three blocks:
@@ -56,6 +60,8 @@ The core content of the course is organized in three blocks:
 
 You can find more information on the course blocks and the corresponding
 lectures in the [syllabus](general/syllabus.qmd).
+
+------------------------------------------------------------------------
 
 # Tutorials
 
@@ -71,6 +77,8 @@ exercise, up to 6.0 bonus points in total. Important: the bonus points
 will only be credited to you if you pass the exam with at least a 4.0.
 Furthermore, we will not award bonus points for exercises in which you
 have simply copied the results of another group.
+
+------------------------------------------------------------------------
 
 # How to see the slides
 

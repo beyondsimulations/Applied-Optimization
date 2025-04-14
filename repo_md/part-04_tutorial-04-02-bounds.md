@@ -28,6 +28,8 @@ println("Great! We've created a new optimization model.")
 
     Great! We've created a new optimization model.
 
+------------------------------------------------------------------------
+
 # Section 1 - Understanding Different Types of Variables
 
 In optimization problems, we often need to represent different kinds of
@@ -102,6 +104,8 @@ println("Excellent work! You've successfully created continuous, integer, and bi
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Section 2 - Creating Variables in Containers
 
@@ -244,6 +248,8 @@ println("Excellent! You've created a 3x4 matrix of binary variables for stocking
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 3 - Setting Bounds on Variables
 
 Often, we know that a variable can’t go below or above certain values.
@@ -281,6 +287,8 @@ println("Well done! You've created a variable for temperature with appropriate b
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Conclusion
 

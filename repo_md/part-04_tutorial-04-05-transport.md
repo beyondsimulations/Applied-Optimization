@@ -25,6 +25,8 @@ using JuMP, HiGHS
 using DataFrames, CSV
 ```
 
+------------------------------------------------------------------------
+
 # Section 1 - Understanding the Transportation Problem
 
 The transportation problem involves:
@@ -171,6 +173,8 @@ println("Number of solar farms: ", num_solar_farms)
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 2 - Using dictionaries to store the data
 
 Now, DataFrames are not a very convenient format for our purposes. We
@@ -297,6 +301,8 @@ Dictionaries make it a lot easier to access the data later on, as we can
 use the keys to directly access the desired value in our model. This
 will be useful when we want to define the constraints later on.
 
+------------------------------------------------------------------------
+
 # Section 3 - The model instance
 
 After the preprocessing and data loading, we now can create the model
@@ -321,6 +327,8 @@ println("Model instance created successfully!")
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Section 4 - Defining the model
 
@@ -393,6 +401,8 @@ convenient, though.
 ```
 
 And that’s it! We have now defined the model and can start optimizing.
+
+------------------------------------------------------------------------
 
 # Section 5 - Solving the model
 
@@ -490,6 +500,8 @@ first(transport_df,5)
 > values in a new DataFrame. This is a common pattern in optimization,
 > as we often want to convert the result of an optimization problem into
 > a more convenient format for reporting or further processing.
+
+------------------------------------------------------------------------
 
 # Conclusion
 

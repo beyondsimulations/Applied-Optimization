@@ -21,6 +21,8 @@ open-source community!
 > packages in Julia’s REPL (Read-Eval-Print Loop), which is like Julia’s
 > command center.
 
+------------------------------------------------------------------------
+
 # Section 1 - Using the Package Manager
 
 Julia’s built-in package manager, Pkg, provides a robust set of tools
@@ -54,6 +56,8 @@ end
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 2 - Adding Packages
 
 Adding packages in Julia is straightforward using the
@@ -84,6 +88,8 @@ end
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 3 - Updating and Removing Packages
 
 Just like apps on your phone, packages can be updated or removed when
@@ -100,6 +106,8 @@ If you wanted to update DataFrames, you’d use
 `Pkg.rm("DataFrames")`.
 
 </div>
+
+------------------------------------------------------------------------
 
 # Section 4 - Managing Environments
 
@@ -125,6 +133,8 @@ yet.
 > If you plan to stick to working with notebooks, you don’t have to care
 > about environments yet. Just use the regular environment for the
 > course and you don’t have to activate anything.
+
+------------------------------------------------------------------------
 
 ## Conclusion
 

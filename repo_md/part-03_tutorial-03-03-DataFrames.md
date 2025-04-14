@@ -22,6 +22,8 @@ Let’s begin by importing the DataFrames package:
 using DataFrames
 ```
 
+------------------------------------------------------------------------
+
 # Section 1 - Creating DataFrames
 
 A DataFrame in Julia is akin to a table in SQL or a spreadsheet - each
@@ -67,6 +69,8 @@ println(employees)
 > [!TIP]
 >
 > Remember, for more help, use `?` in the REPL and type `DataFrame`.
+
+------------------------------------------------------------------------
 
 # Section 2 - Accessing and Modifying Data
 
@@ -132,6 +136,8 @@ println(employees)
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 3 - Filtering Data
 
 Logical indexing can be used to filter rows in a DataFrame based on
@@ -170,6 +176,8 @@ println(high_earners)
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 4 - Basic Data Manipulation
 
 Julia provides functions for basic data manipulation tasks, including
@@ -203,6 +211,8 @@ println(sorted_df)
 > If you have more complicated data structures, take a look at JSON
 > files which can be used to work with all kind of differently
 > structured data sets.
+
+------------------------------------------------------------------------
 
 # Section 5 - Loop over DataFrames
 
@@ -272,6 +282,8 @@ println("Great job! All the bonuses are correct!")
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 6 - Filling a new DataFrame with values
 
 Do you remember the `push!` function? We can use it to fill a new
@@ -310,6 +322,8 @@ println(WorkingHours)
        1 │ John       40
        2 │ Mike       40
        3 │ Frank      30
+
+------------------------------------------------------------------------
 
 # Conclusion
 

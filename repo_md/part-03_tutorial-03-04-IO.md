@@ -15,6 +15,8 @@ result storage in real-world applications.
 Follow the instructions, write your code in the designated code blocks,
 and validate your results with `@assert` statements.
 
+------------------------------------------------------------------------
+
 # Section 1 - Working with Delimited Files
 
 Delimited files, such as CSV (Comma-Separated Values), are a common way
@@ -86,6 +88,8 @@ println("File 'matrix.csv' read successfully!")
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 2 - Working with CSV Files and DataFrames
 
 The CSV package in Julia provides powerful tools for reading and writing
@@ -153,6 +157,8 @@ println("CSV file 'table_out.csv' read successfully!")
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Conclusion
 

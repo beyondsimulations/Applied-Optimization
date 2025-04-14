@@ -67,6 +67,8 @@ happen?**
 - On crowded metro platforms and transfer stations
 - At ticket/turnstile bottlenecks and emergency exits
 
+------------------------------------------------------------------------
+
 ## Metrosystem of Doha
 
 <img src="https://images.byndsim.com/ao/ao_metro-metro.svg"
@@ -117,6 +119,8 @@ data-fig-align="center" />
 > This can lead to <span class="highlight">overcrowding and potential
 > crowd disasters!</span>
 
+------------------------------------------------------------------------
+
 ## General Issues
 
 <span class="question">Question:</span> **What could also be an issue?**
@@ -147,6 +151,8 @@ problem structure!
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Problem Structure</span>
 
@@ -193,6 +199,8 @@ of the authorities?**
 >
 > This is a **huge challenge**, but we can use **simulation** to
 > estimate the data.
+
+------------------------------------------------------------------------
 
 ## Simulation
 
@@ -246,6 +254,8 @@ of assumptions!
 
 </div>
 
+------------------------------------------------------------------------
+
 ## <span class="invert-font">Main risk: Metro</span>
 
 <div class="footer">
@@ -284,6 +294,8 @@ data-fig-align="center" />
 
 - Movement patterns have different origin-destination pairs
 - Regulating the inflow does not affect the destination
+
+------------------------------------------------------------------------
 
 # <span class="flow">Model Formulation</span>
 
@@ -372,6 +384,8 @@ $$
 - $I_p$ is the set of minutes $t$ that belong to period $p$
 - Minutes are **not overlapping**, but they are **continuous**
 
+------------------------------------------------------------------------
+
 ## Parameters?
 
 <span class="question">Question:</span> **What could be possible
@@ -389,6 +403,8 @@ parameters?**
 - $c_{o}^{max}$ - Max. station entry rate $o$ per minute with
   $o \in \mathcal{O}$
 - $\alpha$ - Maximal allowed arc utilization ($0 < \alpha < 1$)
+
+------------------------------------------------------------------------
 
 ## Metro Movement
 
@@ -455,6 +471,8 @@ $$\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \ma
 > queue for each station $o \in \mathcal{O}$ in each period
 > $p \in \mathcal{P}$.
 
+------------------------------------------------------------------------
+
 # <span class="flow">Variables and Objective</span>
 
 ## Decision Variable?
@@ -487,6 +505,8 @@ variable?**
 . . .
 
 - $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
+
+------------------------------------------------------------------------
 
 ## Objective Function?
 
@@ -528,6 +548,8 @@ $$
 \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 $$
 
+------------------------------------------------------------------------
+
 # <span class="flow">Constraints</span>
 
 ## Necessary Constraints
@@ -558,6 +580,8 @@ complicated now!
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 ## Central Question
 
@@ -636,6 +660,8 @@ different stations and periods.
 
 </div>
 
+------------------------------------------------------------------------
+
 ## Ensure Capacity Utilization?
 
 > [!IMPORTANT]
@@ -678,6 +704,8 @@ $$
 > Here, we combine the inflow at each station based on the o-d
 > proportion and let the people spread through the network, checking
 > that no arc is over-utilized at any minute.
+
+------------------------------------------------------------------------
 
 ## Dispatch Only Available People?
 
@@ -733,6 +761,8 @@ $$
 >     allowed inflow** or less if the queue is smaller than the minimum
 >     allowed inflow.
 
+------------------------------------------------------------------------
+
 ## Metro Inflow Model
 
 <div class="temp-math-size">
@@ -746,6 +776,8 @@ $$
 subject to:
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Model Characteristics</span>
 
@@ -772,6 +804,8 @@ subject to:
 - Are shortest paths a feasible assumption?
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Implementation and Impact</span>
 
@@ -859,6 +893,8 @@ Questions?
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 

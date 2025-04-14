@@ -11,6 +11,8 @@ tutorial will show you how to help computers make these comparisons!
 Follow the instructions, write your code in the designated code blocks,
 and execute the corresponding code cell.
 
+------------------------------------------------------------------------
+
 # Section 1 - Comparisons
 
 In everyday life, we make comparisons all the time:
@@ -121,6 +123,8 @@ println("Comparison2 is ", comparison2)
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Section 2 - Logical Operators
 
@@ -284,6 +288,8 @@ println("chained_comparison is ", chained_comparison)
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Conclusion
 

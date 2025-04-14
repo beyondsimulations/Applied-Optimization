@@ -69,6 +69,8 @@ execute:
 - On crowded metro platforms and transfer stations
 - At ticket/turnstile bottlenecks and emergency exits
 
+---
+
 ## Metrosystem of Doha
 
 ![](https://images.byndsim.com/ao/ao_metro-metro.svg){fig-align="center"}
@@ -113,6 +115,8 @@ execute:
 This can lead to [overcrowding and potential crowd disasters!]{.highlight}
 :::
 
+---
+
 ## General Issues
 
 [Question:]{.question} **What could also be an issue?**
@@ -137,6 +141,8 @@ problem structure!
 
 ::: footer
 :::
+
+---
 
 # [Problem Structure]{.flow} {.title}
 
@@ -175,6 +181,7 @@ This is a **huge challenge**, but we can use **simulation** to estimate the data
 
 :::
 
+---
 
 ## Simulation
 
@@ -214,6 +221,8 @@ of assumptions!
 ::: footer
 :::
 
+---
+
 ## [Main risk: Metro]{.invert-font} {background-image="https://images.byndsim.com/ao/ao_metro-risk_crowd.png" background-size="cover" background-position="center"}
 
 ::: {.footer}
@@ -246,6 +255,8 @@ of assumptions!
 
 - Movement patterns have different origin-destination pairs
 - Regulating the inflow does not affect the destination
+
+---
 
 # [Model Formulation]{.flow} {.title}
 
@@ -319,6 +330,8 @@ $$
 - $I_p$ is the set of minutes $t$ that belong to period $p$
 - Minutes are **not overlapping**, but they are **continuous**
 
+---
+
 ## Parameters?
 
 [Question:]{.question} **What could be possible parameters?**
@@ -331,6 +344,8 @@ $$
 - $c_{o}^{min}$ - Min. station entry rate $o$ per minute with $o \in \mathcal{O}$
 - $c_{o}^{max}$ - Max. station entry rate $o$ per minute with $o \in \mathcal{O}$
 - $\alpha$ - Maximal allowed arc utilization ($0 < \alpha < 1$)
+
+---
 
 ## Metro Movement
 
@@ -385,6 +400,8 @@ $$\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \ma
 Based on the ratio of the different destinations $d$ to the total queue for each station $o \in \mathcal{O}$ in each period $p \in \mathcal{P}$. 
 :::
 
+---
+
 # [Variables and Objective]{.flow} {.title}
 
 ## Decision Variable?
@@ -397,7 +414,6 @@ Regulate the **inflow** at **each individual station** to **minimize the queues*
 ::: {.callout-tip}
 There is **one queue for all passenger flow directions**, as managing multiple queues would be too complex for the planners!
 :::
-
 
 ## Decision Variable
 
@@ -413,6 +429,8 @@ There is **one queue for all passenger flow directions**, as managing multiple q
 . . .
 
 - $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
+
+---
 
 ## Objective Function?
 
@@ -450,6 +468,8 @@ $$
 \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 $$
 
+---
+
 # [Constraints]{.flow} {.title}
 
 ## Necessary Constraints
@@ -477,6 +497,8 @@ complicated now!
 
 ::: footer
 :::
+
+---
 
 ## Central Question
 
@@ -546,6 +568,8 @@ different stations and periods.
 ::: footer
 :::
 
+---
+
 ## Ensure Capacity Utilization?
 
 ::: {.callout-important}
@@ -580,6 +604,8 @@ $$
 ::: {.callout-note}
 Here, we combine the inflow at each station based on the o-d proportion and let the people spread through the network, checking that no arc is over-utilized at any minute.
 :::
+
+---
 
 ## Dispatch Only Available People?
 
@@ -628,6 +654,8 @@ We need this constraint for **two reasons**:
 2. We also need to ensure that we can dispatch at **least the minimum allowed inflow** or less if the queue is smaller than the minimum allowed inflow.
 :::
 
+---
+
 ## Metro Inflow Model
 
 ::: {.temp-math-size}
@@ -650,6 +678,8 @@ subject to:
 
 :::
 
+---
+
 # [Model Characteristics]{.flow} {.title}
 
 ## Characteristics
@@ -671,6 +701,8 @@ subject to:
 - Have we thought in detail about queues?
 - Are shortest paths a feasible assumption?
 :::
+
+---
 
 # [Implementation and Impact]{.flow} {.title}
 
@@ -744,6 +776,8 @@ Questions?
 
 ::: footer
 :::
+
+---
 
 # [Literature]{.flow} {.title}
 

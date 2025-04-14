@@ -47,6 +47,8 @@ str_num = string(42)       # Number to String
 - Use `typeof()` to check variable type
 - String interpolation is powerful for formatted output
 
+------------------------------------------------------------------------
+
 # Vectors, Matrices, and Tuples
 
 ## Vectors
@@ -103,6 +105,8 @@ age, city = person[2:3]    # Multiple assignment
 - Matrices: Mutable, 2-dimensional, good for linear algebra
 - Tuples: Immutable, fixed-size, good for grouping related constants
 
+------------------------------------------------------------------------
+
 # Comparison and Logical Operators
 
 ## Basic Comparisons
@@ -156,6 +160,8 @@ work_hours = 9 <= current_hour < 17
 - `||` requires at least one condition to be true
 - `!` inverts a boolean value
 - Chained comparisons make range checks more readable
+
+------------------------------------------------------------------------
 
 # Loops and Iterations
 
@@ -258,6 +264,8 @@ matrix = [i*j for i in 1:3, j in 1:3]    # 3x3 multiplication table
 - List comprehensions offer concise array creation
 - Nested loops are useful for multi-dimensional iteration
 
+------------------------------------------------------------------------
+
 # Dictionaries
 
 ## Basic Dictionary Operations
@@ -319,6 +327,8 @@ copy(dict)             # Create shallow copy
 - Use `haskey()` to safely check for key existence
 - Dictionaries are mutable (can be changed)
 - Keys are accessed with square brackets `dict["key"]`
+
+------------------------------------------------------------------------
 
 # Functions
 
@@ -388,6 +398,8 @@ operation("Hi", 42)        # Uses generic operation
 - Multiple dispatch allows different behavior based on argument types
 - Use `return` for early exits or conditional
 
+------------------------------------------------------------------------
+
 # Package Management
 
 ## Basic Package Operations
@@ -439,6 +451,8 @@ Pkg.activate()                     # Activate default environment
 - Create separate environments for different projects
 - Project.toml and Manifest.toml track dependencies
 - Package manager commands typically run in REPL
+
+------------------------------------------------------------------------
 
 # DataFrames
 
@@ -525,6 +539,8 @@ select(df, :Name)     # Select columns
 - push! to add new rows
 - Broadcasting with dot operators (.\>, .+, etc.)
 
+------------------------------------------------------------------------
+
 # File Input/Output
 
 ## DelimitedFiles Operations
@@ -586,6 +602,8 @@ isfile(path)                         # Check if file exists
 - Always use @\_\_DIR\_\_ for relative paths
 - Check file existence before operations
 - Consider using try-catch for file operations
+
+------------------------------------------------------------------------
 
 # Plotting with Plots.jl
 

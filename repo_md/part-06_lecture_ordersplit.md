@@ -79,6 +79,8 @@ style="width:90.0%" /></a>
 
 </div>
 
+------------------------------------------------------------------------
+
 # <span class="flow">Problem Structure</span>
 
 ## Split Order
@@ -153,6 +155,8 @@ mitigations?**
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Problem Structure - Version 1</span>
 
@@ -250,6 +254,8 @@ Example of $\boldsymbol{T}$
 <span class="question">Question:</span> **What is your opinion on the
 assumption?**
 
+------------------------------------------------------------------------
+
 ## Split-Order Minimization
 
 <span class="question">Question:</span> **What could be our decision
@@ -308,6 +314,8 @@ could be done?
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Problem Structure - Version 2</span>
 
@@ -394,6 +402,8 @@ values tell us?**
 
 - How often each SKU appeared over all orders **(binary!)**
 
+------------------------------------------------------------------------
+
 ## How to approach the problem?
 
 <div class="incremental">
@@ -434,6 +444,8 @@ style="width:75.0%" />
 > We can focus on the SKUs and the warehouses, making the problem **much
 > smaller**!
 
+------------------------------------------------------------------------
+
 ## Available Parameters
 
 <span class="question">Question:</span> **What are possible
@@ -455,6 +467,8 @@ parameters?**
 >
 > Instead of the transactional data, we just **use the coappearance
 > matrix** in our model!
+
+------------------------------------------------------------------------
 
 # <span class="flow">Model Formulation</span>
 
@@ -528,6 +542,8 @@ warehouse_model = Model(SCIP.Optimizer)
      X[Socks,Hamburg]       X[Socks,Berlin]
      X[Charger,Hamburg]     X[Charger,Berlin]
 
+------------------------------------------------------------------------
+
 ## Objective Function
 
 > [!NOTE]
@@ -591,6 +607,8 @@ Q = [2 1 2; 1 2 1; 2 1 2]
 
     X[Socks,Hamburg]*X[Smartphone,Hamburg] + X[Socks,Berlin]*X[Smartphone,Berlin] + 2 X[Charger,Hamburg]*X[Smartphone,Hamburg] + 2 X[Charger,Berlin]*X[Smartphone,Berlin] + X[Charger,Hamburg]*X[Socks,Hamburg] + X[Charger,Berlin]*X[Socks,Berlin]
 
+------------------------------------------------------------------------
+
 # <span class="flow">Constraints</span>
 
 ## What constraints?
@@ -620,6 +638,8 @@ style="width:90.0%" />
 </div>
 
 </div>
+
+------------------------------------------------------------------------
 
 ## Single Allocation Constraint?
 
@@ -681,6 +701,8 @@ constraint in Julia?**
      single_allocation[Socks] : X[Socks,Hamburg] + X[Socks,Berlin] ≥ 1
      single_allocation[Charger] : X[Charger,Hamburg] + X[Charger,Berlin] ≥ 1
 
+------------------------------------------------------------------------
+
 ## Capacity Constraints?
 
 > [!IMPORTANT]
@@ -733,6 +755,8 @@ capacities = Dict("Hamburg" => 2, "Berlin" => 1) # Add capacities
      capacity[Hamburg] : X[Smartphone,Hamburg] + X[Socks,Hamburg] + X[Charger,Hamburg] ≤ 2
      capacity[Berlin] : X[Smartphone,Berlin] + X[Socks,Berlin] + X[Charger,Berlin] ≤ 1
 
+------------------------------------------------------------------------
+
 ## QMK Model
 
 $$\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}$$
@@ -765,6 +789,8 @@ println("The optimal solution is: ", value.(X))
       1.0  0.0
      -0.0  1.0
       1.0  0.0
+
+------------------------------------------------------------------------
 
 # <span class="flow">Model Characteristics</span>
 
@@ -801,6 +827,8 @@ println("The optimal solution is: ", value.(X))
 [<img
 src="https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&amp;ssl=1"
 style="width:80.0%" />](https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/)
+
+------------------------------------------------------------------------
 
 ## Model Assumptions
 
@@ -851,6 +879,8 @@ applied?
 <img src="https://images.beyondsimulations.com/ao/ao_split-reasons.png"
 style="width:80.0%" />
 
+------------------------------------------------------------------------
+
 ## Case Study
 
 - More than 100,000 SKUs and several millions of orders
@@ -891,6 +921,8 @@ Questions?
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 

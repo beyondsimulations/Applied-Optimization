@@ -11,7 +11,7 @@ To prepare for the upcoming lectures, we start by installing the Julia
 Programming Language and an Integrated Development Environment (IDE) to
 work with Julia.
 
-## Installaing Julia
+## Installing Julia
 
 <img src="https://images.beyondsimulations.com/ao/ao_julia2.png"
 data-max-width="400px" />
@@ -76,6 +76,8 @@ print("Hello World!")
 > Don’t worry if it is not running right away. We will fix this
 > together!
 
+------------------------------------------------------------------------
+
 # <span class="flow">Learning Julia</span>
 
 ## Julia as a Programming Language
@@ -111,6 +113,8 @@ print("Hello World!")
 - The goal is to get you familiar with the language
 - You can discuss the problems with your fellow students
 - You can hand in your solutions to receive bonus points!
+
+------------------------------------------------------------------------
 
 # <span class="flow">Working with IJulia</span>
 
@@ -151,6 +155,8 @@ using IJulia; notebook()
 >
 > You can also run the notebooks in VS Code, if you prefer!
 
+------------------------------------------------------------------------
+
 # <span class="flow">Submission of Assignments</span>
 
 ## Submission of Assignments
@@ -180,6 +186,8 @@ using IJulia; notebook()
 >
 > The assignments are **not** mandatory, but highly recommended!
 
+------------------------------------------------------------------------
+
 # <span class="flow">Five Tutorials for this Week</span>
 
 ## Topics of the Tutorials
@@ -206,6 +214,8 @@ using IJulia; notebook()
 >
 > The remaining time we will already start working on the first
 > problems.
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 

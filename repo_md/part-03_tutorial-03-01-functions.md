@@ -12,6 +12,8 @@ in Julia, making your code more organized and reusable.
 Follow the instructions, input your code in the designated areas, and
 verify your implementations with `@assert` statements.
 
+------------------------------------------------------------------------
+
 # Section 1 - Creating and Calling Functions
 
 Functions in Julia encapsulate reusable code and can be defined using
@@ -104,6 +106,8 @@ println("The sum computed is $(add(10, 5)), wonderful!")
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 2 - Scope within Functions
 
 When you create variables inside a function, they’re like secret
@@ -174,6 +178,8 @@ println("The difference computed is $(subtract(10, 5)), perfect!")
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 3 - Multiple Dispatch
 
 Multiple dispatch in Julia allows defining function behavior based on
@@ -221,6 +227,8 @@ println("You solved it, the assertions are now correct!")
 >
 > **Hint**: Look at the types of arguments used in each `operation` call
 > and match them to the appropriate method.
+
+------------------------------------------------------------------------
 
 # Conclusion
 

@@ -57,6 +57,8 @@ using JuMP, HiGHS
 using DataFrames, CSV
 ```
 
+---
+
 # Section 1 - Understanding the Transportation Problem
 
 The transportation problem involves:
@@ -141,6 +143,8 @@ println("Number of warehouses: ", num_warehouses)
 println("Number of solar farms: ", num_solar_farms)
 ```
 
+---
+
 # Section 2 - Using dictionaries to store the data
 
 Now, DataFrames are not a very convenient format for our purposes. We have several options now on how to deal with these data sets. As our suppliers and customers are given names, it might be useful to convert the data into dictionaries. Dictionaries are a great data structure that allow us to store key-value pairs, where the keys are unique identifiers and the values are the data associated with those keys. By using dictionaries, we can easily access and modify the data associated with a specific key.
@@ -210,6 +214,8 @@ first(values(travelCosts_dict),5)
 
 Dictionaries make it a lot easier to access the data later on, as we can use the keys to directly access the desired value in our model. This will be useful when we want to define the constraints later on.
 
+---
+
 # Section 3 - The model instance
 
 After the preprocessing and data loading, we now can create the model instance with the HiGHS optimizer. 
@@ -230,6 +236,8 @@ From the last tutorial, you should know how to do this. Create a model instance 
 @assert typeof(transport_model) == JuMP.Model
 println("Model instance created successfully!")
 ```
+
+---
 
 # Section 4 - Defining the model
 
@@ -284,6 +292,8 @@ Naturally, we could also use the vectors with the names from the DataFrames to d
 ```
 
 And that's it! We have now defined the model and can start optimizing.
+
+---
 
 # Section 5 - Solving the model
 
@@ -359,6 +369,8 @@ first(transport_df,5)
 ::: {.callout-note}
 Although the above code looks rather complicated, it is essentially just iterating over the keys of the dictionaries and storing the values in a new DataFrame. This is a common pattern in optimization, as we often want to convert the result of an optimization problem into a more convenient format for reporting or further processing.
 :::
+
+---
 
 # Conclusion
 

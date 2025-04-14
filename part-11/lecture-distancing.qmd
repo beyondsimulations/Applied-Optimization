@@ -76,6 +76,8 @@ execute:
 Optimizing seating plans can help to **maximize revenue** while ensuring distancing rules and other constraints are met.
 :::
 
+---
+
 # [Problem Structure]{.flow} {.title}
 
 ## Example: Two different plans
@@ -92,6 +94,8 @@ Optimizing seating plans can help to **maximize revenue** while ensuring distanc
 ![Flexible group-value layout](https://images.byndsim.com/ao/ao_arena-layout_flex.png)
 :::
 :::
+
+---
 
 ## Different Approaches Possible
 
@@ -148,6 +152,8 @@ Optimizing seating plans can help to **maximize revenue** while ensuring distanc
 - Maximize the overall **space utilization**
 - Sell the resulting maximized seating pattern on **market**
 
+---
+
 ## [Main Question]{.invert-font} {background-image="https://images.unsplash.com/photo-1604975701397-6365ccbd028a?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
 
 [[Task:]{.task} **Fill the seating area given distancing regulations and venue-specific constraints.**]{.invert-font}
@@ -185,6 +191,8 @@ Optimizing seating plans can help to **maximize revenue** while ensuring distanc
 Idea behind the model was developed by [Dr. Matthes Koch](https://www.desior.net/).
 :::
 
+---
+
 ## Hands-on Exercise
 
 [Task:]{.task} **Allocate as many high-value groups as possible.**
@@ -218,6 +226,8 @@ You have 5 minutes to find a solution.
 
 [Question:]{.question} **What is your total score?**
 
+---
+
 # [Model Formulation]{.flow} {.title}
 
 ## Sets?
@@ -249,6 +259,8 @@ $\mathcal{C}_r$ ensures that we only consider unblocked seats in each row.
 - $b$ - Vertical safety distance between groups
 - $v_g$ - Value of an allocation of the group $g$
 
+---
+
 # [Variables and Objective]{.flow} {.title}
 
 ## Decision Variable?
@@ -278,6 +290,8 @@ Each group is represented by **one binary variable**. We don't need to block eac
 . . .
 
 - $X_{g,r,c}$ - 1, if **first left seat** of $g$ is assigned to $r$ in $c$, else 0
+
+---
 
 ## Objective Function?
 
@@ -315,6 +329,8 @@ $$
 \text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}
 $$
 
+---
+
 # [Constraints]{.flow} {.title}
 
 ## Necessary Constraints
@@ -327,6 +343,8 @@ $$
 - Restrict the **number of groups in each row**
 - Ensure the **horizontal social distance**
 - Keep the **vertical social distance**
+
+---
 
 ## Assign Each Group Only Once?
 
@@ -362,6 +380,8 @@ $$
 This "set packing" constraint ensures that a group is only **assigned once**.
 :::
 
+---
+
 ## Restrict Groups Per Row?
 
 ::: {.callout-important}
@@ -379,7 +399,7 @@ Ensure that the number of groups in each row does not exceed the maximum allowed
 
 :::
 
-## Assign Each Group Only Once
+## Restrict Groups Per Row
 
 [Question:]{.question} **What could be the constraint?**
 
@@ -406,6 +426,8 @@ somewhat tricky!
 
 ::: footer
 :::
+
+---
 
 # [Social Distance Implementation]{.flow} {.title}
 
@@ -443,6 +465,8 @@ Ensure that the horizontal social distance is maintained between groups.
 - $h$ - Safety distance between groups sitting next to each other
 
 :::
+
+---
 
 ## Horizontal Social Distance
 
@@ -517,6 +541,8 @@ the pattern?
 ::: footer
 :::
 
+---
+
 ## Vertical Social Distance?
 
 ::: {.callout-important}
@@ -582,6 +608,8 @@ Let's look at an [example]{.highlight}.
 - Yellow seats are **blocked by the group** in row 3 and column 8
 - Blue allocations are possible (if second group has **size 2**)
 
+---
+
 ## Arena Seating Problem
 
 ::: {.temp-math-size}
@@ -609,6 +637,8 @@ $$
 
 :::
 
+---
+
 # [Model Characteristics]{.flow} {.title}
 
 ## Characteristics
@@ -631,6 +661,8 @@ $$
 - What about aisle seats?
 - Can you think of any other real-world constraints?
 :::
+
+---
 
 # [Implementation and Impact]{.flow} {.title}
 
@@ -664,6 +696,8 @@ Estimated additional revenue of **8,435 EUR** for one match.
 - Music Hall Eindhoven
 - Safe Seating Solutions platform
 - General 2D-Knapsack applications
+
+---
 
 # [Conclusion]{.flow} {.title}
 
@@ -699,6 +733,8 @@ Questions?
 
 ::: footer
 :::
+
+---
 
 # [Literature]{.flow} {.title}
 

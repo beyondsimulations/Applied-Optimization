@@ -47,6 +47,8 @@ capable of handling any inflow that may result from the optimized
 restricted inflow. Nonetheless, queues are still necessary as the arcs
 cannot handle each input.
 
+------------------------------------------------------------------------
+
 # 1. Flow Analysis
 
 Suppose we are in minute 7 at the arc of (D,A). Which inflows from which
@@ -73,6 +75,8 @@ YOUR ANSWER BELOW
 
 =#
 ```
+
+------------------------------------------------------------------------
 
 # 2. Inflow Control
 
@@ -116,6 +120,8 @@ metro_model = Model()
 # YOUR CODE BELOW
 ```
 
+------------------------------------------------------------------------
+
 # 3. Bidirectional Flow
 
 ![Bidirectional Metro
@@ -135,6 +141,8 @@ explain your answer.
 =#
 ```
 
+------------------------------------------------------------------------
+
 # 4. Capacity Analysis
 
 Although the system is two-directional now, the **overall number of
@@ -150,6 +158,8 @@ Please explain your answer in a few sentences.
 
 =#
 ```
+
+------------------------------------------------------------------------
 
 # 5. Computing the Set $\mathcal{R}_{e,t}$
 

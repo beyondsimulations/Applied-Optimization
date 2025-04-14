@@ -69,11 +69,7 @@ this problem before?
 
 </div>
 
-## Visualization of Several Tours
-
-<iframe width="95%" height="600" src="https://libraries.byndsim.com/W1P1Optimization.html" title="Optimized Tours">
-
-</iframe>
+------------------------------------------------------------------------
 
 # <span class="flow">Problem Structure</span>
 
@@ -142,6 +138,8 @@ the problem!
 
 </div>
 
+------------------------------------------------------------------------
+
 # <span class="flow">Problem Visualization</span>
 
 ## Basic Problem Setting
@@ -167,6 +165,8 @@ style="width:99.0%" />
 <img
 src="https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg"
 style="width:99.0%" />
+
+------------------------------------------------------------------------
 
 # <span class="flow">Problem Structure</span>
 
@@ -201,6 +201,8 @@ parameters?**
 >
 > $t$ is the maximal duration of each tour, not the travel time on an
 > arc or an index!
+
+------------------------------------------------------------------------
 
 ## Decision Variable(s)?
 
@@ -285,6 +287,8 @@ variable/s?**
 > Only possible, if time and capacity constraints are equal for all
 > vehicles!
 
+------------------------------------------------------------------------
+
 # <span class="flow">Model Formulation</span>
 
 ## Objective Function?
@@ -327,6 +331,8 @@ $$\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}$$
 
 <span class="question">Question:</span> **What does
 $(i,j) \in \mathcal{A}$ under the sum mean?**
+
+------------------------------------------------------------------------
 
 ## Problem Constraints
 
@@ -372,6 +378,8 @@ subtour?
 <img
 src="https://images.beyondsimulations.com/ao/ao_routing-basic-05.svg"
 style="width:99.0%" />
+
+------------------------------------------------------------------------
 
 # <span class="flow">Constraints</span>
 
@@ -420,6 +428,8 @@ depot?**
 The depot is the **only node** that is <span class="highlight">visited
 multiple times!</span>
 
+------------------------------------------------------------------------
+
 ## Depot Entry and Exit Constraints?
 
 > [!IMPORTANT]
@@ -465,6 +475,8 @@ $$
 > No, theoretically we could also say that we only have to leave **or**
 > enter the depot exactly $|\mathcal{K}|$ times, as the other constraint
 > is already enforced by the “visit each customer once constraint”.
+
+------------------------------------------------------------------------
 
 # <span class="flow">Capacity and Subtour Elimination</span>
 
@@ -564,6 +576,8 @@ style="width:99.0%" />
 </div>
 
 </div>
+
+------------------------------------------------------------------------
 
 ## No connection between nodes
 
@@ -736,6 +750,8 @@ style="width:99.0%" />
 - $d_i \leq U_i \leq b$ → <span class="highlight">Overall capacity limit
   enforced!</span>
 
+------------------------------------------------------------------------
+
 # <span class="flow">Last Constraint</span>
 
 ## Ensure time limit?
@@ -786,6 +802,8 @@ Any questions?
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Asymmetric Vehicle Routing Problem</span>
 
@@ -888,6 +906,8 @@ $$
 > The binary setup variable is either 0 or 1 and the new variables are
 > below the time and capacity limit.
 
+------------------------------------------------------------------------
+
 # <span class="flow">Model Characteristics</span>
 
 ## Characteristics
@@ -914,6 +934,8 @@ $$
 
 </div>
 
+------------------------------------------------------------------------
+
 ## Extensions of the CVRP
 
 <span class="question">Questions:</span> **What extensions do you
@@ -927,6 +949,8 @@ know?**
 - heterogeneous fleet (HF)
 - backhauls (B)
 - pickup and delivery (PD)
+
+------------------------------------------------------------------------
 
 # <span class="flow">Implementation and Impact</span>
 
@@ -987,6 +1011,8 @@ with 40%-45%.
 
 </div>
 
+------------------------------------------------------------------------
+
 ## Problem is NP-hard
 
 - We have already seen that a problem **can be NP-hard**
@@ -1030,11 +1056,7 @@ the model?
 > For problems with 100+ locations, heuristics are often the only
 > practical choice.
 
-## Optimal Tours
-
-<iframe width="95%" height="600" src="https://libraries.byndsim.com/W1P1Optimization.html" title="Optimized Tours">
-
-</iframe>
+------------------------------------------------------------------------
 
 ## Applications Beyond Libraries
 
@@ -1097,6 +1119,8 @@ Questions?
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 

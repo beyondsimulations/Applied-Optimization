@@ -30,6 +30,8 @@ There are two ways to run the code:
 >
 > Always replace ‘YOUR CODE BELOW’ with your actual code.
 
+------------------------------------------------------------------------
+
 # Section 1 - Variables
 
 Think of variables as labeled containers. Just like you might label a
@@ -86,6 +88,8 @@ println("Good, the variable 'hi' now states \"$hi\".")
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Section 2 - Basic Types
 
@@ -172,6 +176,8 @@ println("Correct, you are a student now.")
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 3 - Type Annotations and Inference
 
 Sometimes we want to specify exactly what kind of “container” we want to
@@ -208,6 +214,8 @@ println("Great! You've created an Int64 variable 'y' with the value $y.")
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Section 4 - String Interpolation
 
@@ -262,6 +270,8 @@ println("Excellent! Your interpolated string is: $message")
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Conclusion
 

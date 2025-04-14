@@ -71,6 +71,8 @@ As we approach the end of the course, we’ll remove some previous
 > Don’t worry, if you cannot solve everything by yourself. Try your best
 > and ask for help if you need it!
 
+------------------------------------------------------------------------
+
 # 1. Implement the Model
 
 First, define all necessary sets, parameters, and variables to model the
@@ -94,6 +96,8 @@ The following distancing rules must be maintained:
 >
 > Watch out for the edge cases when implementing distancing
 > constraints - especially around blocked seats!
+
+------------------------------------------------------------------------
 
 ## Define the Model
 
@@ -166,6 +170,8 @@ blocked_seats = [
 # 3. Add constraints
 # 4. Solve the model
 ```
+
+------------------------------------------------------------------------
 
 ## Visualization
 
@@ -270,6 +276,8 @@ document your issues here:
 
 =#
 ```
+
+------------------------------------------------------------------------
 
 # 2. Maximize the number of seats in use
 

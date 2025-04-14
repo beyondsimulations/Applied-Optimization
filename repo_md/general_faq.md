@@ -16,6 +16,8 @@ suggestion on how to improve the course, please let me know in the
 [following form](https://tally.so/r/3qWY8d) or by creating an issue on
 [GitHub](https://github.com/beyondsimulations/Applied-Optimization/issues).
 
+------------------------------------------------------------------------
+
 ## FAQs
 
 ### Is the course difficult?
@@ -29,6 +31,8 @@ course is truly finished. I have adapted the slides based on feedback
 from the last two years and made all the examples as simple as possible.
 **In a nutshell**: If you are interested in the subject and equations do
 not scare you, you will likely do great in the course.
+
+------------------------------------------------------------------------
 
 ### How can I download PDF slides from the lecture?
 
@@ -53,6 +57,8 @@ You have two options:
 > Unfortunately, this method does not work perfectly on all browsers. If
 > you have a Chrome based browser, you should be fine.
 
+------------------------------------------------------------------------
+
 ## How does the calculation of the bonus points work?
 
 To reach the full 6 points, all exercises must be submitted. A maximum
@@ -60,6 +66,8 @@ of 0.5 points can be earned per exercise. In the overview, ‘1’ stands
 for successfully submitted, and ‘0.5’ for submitted (but without
 attempting to solve everything). In the end, I calculate this as half or
 quarter points towards the total score.
+
+------------------------------------------------------------------------
 
 ## Can I take a sheet with me to the exam?
 

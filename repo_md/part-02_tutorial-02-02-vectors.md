@@ -20,6 +20,8 @@ designated code blocks, and execute the corresponding code cell.
 > If a cell is marked with `YOUR CODE BELOW`, you are expected to write
 > your code in that cell.
 
+------------------------------------------------------------------------
+
 # Section 1 - Vectors
 
 Vectors in Julia are one-dimensional arrays used to store sequences of
@@ -146,6 +148,8 @@ println("The first three elements of the 'fib' vector: ", first_three_elements)
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Section 2 - Matrices
 
@@ -285,6 +289,8 @@ println("Result of adding 10 to each element in 'added_matrices':\n", added_matr
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 3: Tuples
 
 A tuple is like a sealed package - once you create it, you can’t change
@@ -341,6 +347,8 @@ println("The second element of 'my_tuple':\n", second_element)
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Conclusion
 

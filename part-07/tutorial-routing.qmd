@@ -27,6 +27,8 @@ The central warehouse operates a fleet of delivery vehicles that transport packa
 
 In this case study, we'll help FastDelivery optimize their delivery routes using the Capacitated Vehicle Routing Problem (CVRP) approach. We'll consider several real-world constraints like vehicle capacity (measured in standard shipping containers), driving distances, and operational costs to find the best possible delivery strategy.
 
+---
+
 # 1. Implementing the basic CVRP
 
 Implement the CVRP from the lecture without the constraints preventing subtours and restricting the driving time and capacities.
@@ -73,6 +75,8 @@ Make sure that you have downloaded the data in the `data` folder that is located
 
 :::
 
+---
+
 ## Define the parameters
 
 First, define the number of vehicles and the capacity as parameters. Name them `vehicles` and `capacity`.
@@ -105,6 +109,8 @@ Now, we need to compute the distance matrix. You can do so by using the Euclidea
 @assert all(isapprox(distance[(i,j)], distance[(j,i)]) for i in coord.location for j in coord.location if i != j) "Distances should be symmetric"
 println("Distance dictionary test passed successfully, great job!")
 ```
+
+---
 
 ## Define the model
 
@@ -146,6 +152,8 @@ You could use the `demand.location` vector to define the elements of the decisio
 println("Decision variable X test passed successfully, great job!")
 ```
 
+---
+
 ## Define the objective function
 
 We want to minimize the total distance of the routes based on the distance dictionary `distance` that you computed earlier. Create the objective function.
@@ -164,6 +172,8 @@ obj = objective_function(cvrp_model)
 println("Objective function defined successfully, great job!")
 println("Note, that it is not tested whether the objective function is correct!")
 ```
+
+---
 
 ## Define the constraints
 
@@ -201,6 +211,8 @@ expected_constraints = 2 * (nrow(demand) - 1) + 2  # indegree + outdegree for al
 println("Constraints for the inflow and outflow defined, great job!")
 ```
 
+---
+
 ## Solve the model
 
 Now, we can solve the model. This should work very fast, as the model is very simple without any subtour elimination constraints. Solve the model as usual.
@@ -234,6 +246,8 @@ print_model_status(cvrp_model)
 println("Model solved successfully, great job!")
 
 ```
+
+---
 
 ## Plot the results
 
@@ -305,6 +319,8 @@ end
 # Plot the routes
 display(plot_routes(X,coord))
 ```
+
+---
 
 # 2. Subtour elimination
 
@@ -404,6 +420,8 @@ end
 display(plot_capacity_usage(X, U, coord))
 ```
 
+---
+
 # 3. Computing the costs
 
 FastDelivery wants to know the costs of the optimal solution. Let's calculate the monthly operational costs based on the following parameters:
@@ -427,6 +445,8 @@ Calculate the total monthly costs and store them in `monthly_costs`.
 println("Costs calculated as $(monthly_costs) EUR successfully, great job!")
 ```
 
+---
+
 # 4. Optimal Solution?
 
 Although the costs can now be computed, the tour plan has not changed so far. FastDelivery asks you whether you have an idea of how to lower the costs associated with the parcel distribution. Take a look at your current plotted solution and try to come up with an idea. Discuss the potential shortcoming and assumptions of the current model in a few sentences. Propose at least one idea of how to lower the costs in the future.
@@ -440,6 +460,8 @@ You can do this in a comment in the cell below.
 
 =#
 ```
+
+---
 
 # 5. Number of Vehicles
 

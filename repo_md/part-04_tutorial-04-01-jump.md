@@ -70,6 +70,8 @@ using JuMP, HiGHS
 
 Great! We’re now ready to start building our optimization model.
 
+------------------------------------------------------------------------
+
 # Section 1 - Defining an Optimization Model
 
 The first step in solving an optimization problem is to create a model.
@@ -90,6 +92,8 @@ Let’s break this down: - `Model()` creates a new optimization model -
 
 Think of this as creating a blank canvas where we’ll paint our
 optimization problem.
+
+------------------------------------------------------------------------
 
 # Section 2 - Adding Variables
 
@@ -149,6 +153,8 @@ println("Variables added to the model successfully!")
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 3 - Adding Constraints
 
 Constraints are conditions that limit the possible values of the
@@ -205,6 +211,8 @@ println("The optimization later will show, whether the formulation was correct."
 
 </details>
 
+------------------------------------------------------------------------
+
 # Section 4 - Defining the Objective Function
 
 The objective function represents the goal of our optimization problem -
@@ -255,6 +263,8 @@ println("The optimization later will show, whether the formulation was correct."
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 # Section 5 - Solving the Model
 
@@ -324,6 +334,8 @@ println("Solution: Product A = ", val_productA, ", Product B = ", val_productB)
 @assert value(productB) ≈ 4 atol=1e-4 "Although you have a solution, val_productB should be 4 not $val_productB"
 println("You have solved the model correctly!")
 ```
+
+------------------------------------------------------------------------
 
 # Conclusion
 

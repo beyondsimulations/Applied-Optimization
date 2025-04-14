@@ -21,6 +21,8 @@ We’ll consider several real-world constraints like vehicle capacity
 (measured in standard shipping containers), driving distances, and
 operational costs to find the best possible delivery strategy.
 
+------------------------------------------------------------------------
+
 # 1. Implementing the basic CVRP
 
 Implement the CVRP from the lecture without the constraints preventing
@@ -60,6 +62,8 @@ coord = CSV.read("$(file_directory)/coord_x_y.csv", DataFrame)
 >
 > Make sure that you have downloaded the data in the `data` folder that
 > is located in the same directory as this notebook.
+
+------------------------------------------------------------------------
 
 ## Define the parameters
 
@@ -105,6 +109,8 @@ println("Distance dictionary test passed successfully, great job!")
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 ## Define the model
 
@@ -154,6 +160,8 @@ println("Decision variable X test passed successfully, great job!")
 
 </details>
 
+------------------------------------------------------------------------
+
 ## Define the objective function
 
 We want to minimize the total distance of the routes based on the
@@ -177,6 +185,8 @@ println("Note, that it is not tested whether the objective function is correct!"
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 ## Define the constraints
 
@@ -227,6 +237,8 @@ println("Constraints for the inflow and outflow defined, great job!")
 
 </details>
 
+------------------------------------------------------------------------
+
 ## Solve the model
 
 Now, we can solve the model. This should work very fast, as the model is
@@ -264,6 +276,8 @@ println("Model solved successfully, great job!")
 ```
 
 </details>
+
+------------------------------------------------------------------------
 
 ## Plot the results
 
@@ -336,6 +350,8 @@ end
 # Plot the routes
 display(plot_routes(X,coord))
 ```
+
+------------------------------------------------------------------------
 
 # 2. Subtour elimination
 
@@ -451,6 +467,8 @@ display(plot_capacity_usage(X, U, coord))
 
 </details>
 
+------------------------------------------------------------------------
+
 # 3. Computing the costs
 
 FastDelivery wants to know the costs of the optimal solution. Let’s
@@ -479,6 +497,8 @@ println("Costs calculated as $(monthly_costs) EUR successfully, great job!")
 
 </details>
 
+------------------------------------------------------------------------
+
 # 4. Optimal Solution?
 
 Although the costs can now be computed, the tour plan has not changed so
@@ -499,6 +519,8 @@ You can do this in a comment in the cell below.
 
 =#
 ```
+
+------------------------------------------------------------------------
 
 # 5. Number of Vehicles
 

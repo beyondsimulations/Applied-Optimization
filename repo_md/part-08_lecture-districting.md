@@ -112,6 +112,8 @@ layouts be suboptimal?**
 
 </div>
 
+------------------------------------------------------------------------
+
 ## 
 
 <div class="r-fit-text">
@@ -161,6 +163,8 @@ emergency services?**
 - Locate <span class="highlight">new departments</span> or
   <span class="highlight">close departments</span> (Liberatore,
   Camacho-Collados, and Vitoriano 2020)
+
+------------------------------------------------------------------------
 
 # <span class="flow">Case Studies</span>
 
@@ -233,6 +237,8 @@ problem?**
 >
 > This is a **common problem** in many emergency services.
 
+------------------------------------------------------------------------
+
 ## Response Time
 
 <div class="columns">
@@ -273,6 +279,8 @@ style="width:55.0%" />
 
 </div>
 
+------------------------------------------------------------------------
+
 # <span class="flow">Territory Design Problem</span>
 
 ## Territory Design Problem
@@ -295,6 +303,8 @@ style="width:90.0%" />
 </div>
 
 </div>
+
+------------------------------------------------------------------------
 
 ## Objective
 
@@ -346,6 +356,8 @@ style="width:85.0%" />
 
 </div>
 
+------------------------------------------------------------------------
+
 ## Why Hexagons?
 
 <div class="columns">
@@ -375,6 +387,8 @@ style="width:70.0%" />
 </div>
 
 </div>
+
+------------------------------------------------------------------------
 
 ## Response Time Components
 
@@ -411,6 +425,8 @@ time?**
 </div>
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Model Formulation</span>
 
@@ -479,6 +495,8 @@ and variables?**
 >
 > Parameters should be carefully calibrated with real-world data!
 
+------------------------------------------------------------------------
+
 ## Decision Variable(s)?
 
 > [!NOTE]
@@ -515,6 +533,8 @@ decision variable?**
 . . .
 
 - $X_{i,j} \in \{0,1\} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}$
+
+------------------------------------------------------------------------
 
 ## 
 
@@ -574,6 +594,8 @@ $$
 > - Weighted by **incident frequency**
 > - Considers **all possible BA-department pairs**
 
+------------------------------------------------------------------------
+
 # <span class="flow">Constraints</span>
 
 ## Key Constraints
@@ -604,6 +626,8 @@ style="width:90.0%" />
 </div>
 
 </div>
+
+------------------------------------------------------------------------
 
 ## Single Assignment Constraint?
 
@@ -641,6 +665,8 @@ $$
 > [!NOTE]
 >
 > Each BA must be assigned to exactly one department.
+
+------------------------------------------------------------------------
 
 ## Department Count Constraint?
 
@@ -683,6 +709,8 @@ departments than potential locations?**
 - We **can’t open more departments** than there are locations
 - The model **will be infeasible**
 
+------------------------------------------------------------------------
+
 ## Active Department Constraint?
 
 > [!IMPORTANT]
@@ -717,7 +745,11 @@ $$
 > locations and BA assignments** where BAs can only be assigned to
 > <span class="highlight">opened</span> departments.
 
+------------------------------------------------------------------------
+
 ## p-Median Problem
+
+------------------------------------------------------------------------
 
 # <span class="flow">Contiguity and Compactness</span>
 
@@ -832,6 +864,8 @@ police service districting?</span>
 
 </div>
 
+------------------------------------------------------------------------
+
 ## Contiguity Sets
 
 <span class="highlight">Additional Set and Parameter</span>
@@ -887,6 +921,8 @@ $$
 > At least **one department** has to be assigned to a BA that is
 > adjacent to BA $j$ and closer to department $i$!
 
+------------------------------------------------------------------------
+
 ## Contiguity and Compactness
 
 **All districts have to be contiguous and compact**
@@ -936,6 +972,8 @@ style="width:100.0%" alt="Up to three departments" />
 > Due to the constraints, there is **always a path back** to the
 > department if a BA is assigned to a department!
 
+------------------------------------------------------------------------
+
 # <span class="flow">Model Characteristics</span>
 
 ## Characteristics
@@ -962,6 +1000,8 @@ style="width:100.0%" alt="Up to three departments" />
 - Can we rely on incident data collected by the police?
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Implementation and Impact</span>
 
@@ -1045,6 +1085,8 @@ style="width:90.0%" />
 <img src="https://images.beyondsimulations.com/ao/ao_police-b2c3.svg"
 style="width:90.0%" />
 
+------------------------------------------------------------------------
+
 ## <span class="invert-font">Simulation Framework</span>
 
 <span class="invert-font"><span class="question">Question:</span> **How
@@ -1090,6 +1132,8 @@ did we validate the results?**</span>
 > Success requires balancing theoretical optimization with practical
 > constraints!
 
+------------------------------------------------------------------------
+
 ## Future Applications
 
 <span class="question">Question:</span> **Where else could this approach
@@ -1131,6 +1175,8 @@ Questions?
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 

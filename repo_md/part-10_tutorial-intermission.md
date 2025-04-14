@@ -21,6 +21,8 @@ good grade.
 > As some of these tasks are difficult to answer on a computer, you can
 > hand in your answer scanned or written digitally on an iPad or Laptop.
 
+------------------------------------------------------------------------
+
 # Part I
 
 ## 1.a (6 Points)
@@ -75,6 +77,8 @@ and variables.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 1.b (3 Points)
 
 Please define the objective function to model the described problem
@@ -102,6 +106,8 @@ based on your defined notation.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 ## 1.c (6 Points)
 
@@ -131,6 +137,8 @@ the described problem based on your notation.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 1.d (2 Points)
 
 Is the model formulation a nonlinear problem with continuous variables?
@@ -154,6 +162,8 @@ Please explain your answer briefly.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 ## 1.e (9 Points)
 
@@ -192,6 +202,8 @@ the objective function while describing each with a few words.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 1.f (4 points)
 
 What assumptions are made in the model that might not hold in the real
@@ -217,6 +229,8 @@ explain briefly why they might not hold.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 # Part II
 
@@ -251,6 +265,8 @@ Choose from:
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 2.b (4 Points)
 
 You are trying to solve the capacitated vehicle routing problem with
@@ -278,6 +294,8 @@ advantages and disadvantages of the approach in a few sentences.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 ## 2.c (3 Points)
 
@@ -312,6 +330,8 @@ good choice for the problem.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 2.d (2 Points)
 
 What is the purpose of a solver used in Mathematical Programming?
@@ -336,7 +356,9 @@ Please describe the answer in your own words in 2-3 sentences.
 |
 ```
 
-# <span class="flow">Part III</span>
+------------------------------------------------------------------------
+
+# Part III
 
 ## 3.a (3 Points)
 
@@ -365,6 +387,8 @@ Specify the definition of the variable in correct Julia syntax.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 ## 3.b (3 Points)
 
@@ -396,6 +420,8 @@ Specify the definition of the constraint in correct Julia syntax.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 3.c (2 Points)
 
 You are given the following JuMP code with a constraint that is not
@@ -426,6 +452,8 @@ it can be fixed.
 |
 ```
 
+------------------------------------------------------------------------
+
 ## 3.d (2 Points)
 
 What is the difference between a tuple and an array (vector) in Julia?
@@ -449,6 +477,8 @@ Please describe the difference in a 1-3 sentences.
 |
 |
 ```
+
+------------------------------------------------------------------------
 
 ## 3.e (5 Points)
 

@@ -49,6 +49,8 @@ the organizers?**
 > Optimizing seating plans can help to **maximize revenue** while
 > ensuring distancing rules and other constraints are met.
 
+------------------------------------------------------------------------
+
 # <span class="flow">Problem Structure</span>
 
 ## Example: Two different plans
@@ -74,6 +76,8 @@ layout](https://images.byndsim.com/ao/ao_arena-layout_flex.png)
 </div>
 
 </div>
+
+------------------------------------------------------------------------
 
 ## Different Approaches Possible
 
@@ -134,6 +138,8 @@ approach?**
 - Maximize the overall **space utilization**
 - Sell the resulting maximized seating pattern on **market**
 
+------------------------------------------------------------------------
+
 ## <span class="invert-font">Main Question</span>
 
 <span class="invert-font"><span class="task">Task:</span> **Fill the
@@ -176,6 +182,8 @@ constraints.**</span>
 > Idea behind the model was developed by [Dr. Matthes
 > Koch](https://www.desior.net/).
 
+------------------------------------------------------------------------
+
 ## Hands-on Exercise
 
 <span class="task">Task:</span> **Allocate as many high-value groups as
@@ -209,6 +217,8 @@ possible.**
 You have 5 minutes to find a solution.
 
 <span class="question">Question:</span> **What is your total score?**
+
+------------------------------------------------------------------------
 
 # <span class="flow">Model Formulation</span>
 
@@ -244,6 +254,8 @@ parameters?**
 - $b$ - Vertical safety distance between groups
 - $v_g$ - Value of an allocation of the group $g$
 
+------------------------------------------------------------------------
+
 # <span class="flow">Variables and Objective</span>
 
 ## Decision Variable?
@@ -277,6 +289,8 @@ variable?**
 
 - $X_{g,r,c}$ - 1, if **first left seat** of $g$ is assigned to $r$ in
   $c$, else 0
+
+------------------------------------------------------------------------
 
 ## Objective Function?
 
@@ -318,6 +332,8 @@ $$
 \text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}
 $$
 
+------------------------------------------------------------------------
+
 # <span class="flow">Constraints</span>
 
 ## Necessary Constraints
@@ -330,6 +346,8 @@ $$
 - Restrict the **number of groups in each row**
 - Ensure the **horizontal social distance**
 - Keep the **vertical social distance**
+
+------------------------------------------------------------------------
 
 ## Assign Each Group Only Once?
 
@@ -371,6 +389,8 @@ $$
 > This “set packing” constraint ensures that a group is only **assigned
 > once**.
 
+------------------------------------------------------------------------
+
 ## Restrict Groups Per Row?
 
 > [!IMPORTANT]
@@ -390,7 +410,7 @@ $$
 > - $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in
 >   $c$, else 0
 
-## Assign Each Group Only Once
+## Restrict Groups Per Row
 
 <span class="question">Question:</span> **What could be the
 constraint?**
@@ -424,6 +444,8 @@ somewhat tricky!
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Social Distance Implementation</span>
 
@@ -463,6 +485,8 @@ this?**
 >   $c$, else 0
 > - $d_g$ - Required seats of group $g$ in a row
 > - $h$ - Safety distance between groups sitting next to each other
+
+------------------------------------------------------------------------
 
 ## Horizontal Social Distance
 
@@ -542,6 +566,8 @@ the pattern?
 
 </div>
 
+------------------------------------------------------------------------
+
 ## Vertical Social Distance?
 
 > [!IMPORTANT]
@@ -610,6 +636,8 @@ Let’s look at an <span class="highlight">example</span>.
 - Yellow seats are **blocked by the group** in row 3 and column 8
 - Blue allocations are possible (if second group has **size 2**)
 
+------------------------------------------------------------------------
+
 ## Arena Seating Problem
 
 <div class="temp-math-size">
@@ -632,6 +660,8 @@ $$ subject to: $$
 $$
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Model Characteristics</span>
 
@@ -659,6 +689,8 @@ $$
 - Can you think of any other real-world constraints?
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Implementation and Impact</span>
 
@@ -694,6 +726,8 @@ globally:
 - Music Hall Eindhoven
 - Safe Seating Solutions platform
 - General 2D-Knapsack applications
+
+------------------------------------------------------------------------
 
 # <span class="flow">Conclusion</span>
 
@@ -736,6 +770,8 @@ Questions?
 <div class="footer">
 
 </div>
+
+------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 
