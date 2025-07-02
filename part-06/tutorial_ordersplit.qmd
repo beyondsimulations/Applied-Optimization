@@ -12,13 +12,8 @@ format:
         toc: true
         toc-location: right
         code-overflow: wrap
-    pdf: 
-        documentclass: report
-        geometry:
-            - margin=1in
-        fontfamily: roboto
-        fontfamilyoptions: sfdefault
-        colorlinks: true
+    typst:
+        papersize: a4
     ipynb:
         code-copy: true
         code-overflow: wrap
@@ -190,7 +185,6 @@ The retailer has another requirement: each SKU can only be allocated to one ware
 ## Use the Juniper solver
 
 If you don't have Juniper, Ipopt and/or HiGHS installed, add the solver via Pkg.add("Juniper") and Pkg.add("Ipopt") and Pkg.add("HiGHS"). Juniper is a solver for nonlinear problems, that can be used in combination with Ipopt and HiGHS to solve mixed-integer quadratic problems. If you want to use SCIP, you can also do this by adding JuMP and SCIP and then change the solver in the model definition to `warehouse_model = Model(SCIP.Optimizer())`. Note, that this does not work automatically in Windows, as you will have to install the SCIP binaries manually. On Mac and Linux, it should work out of the box.
-:::
 
 ```{julia}
 #| echo: false
