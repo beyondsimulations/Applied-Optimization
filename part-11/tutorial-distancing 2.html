@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.23">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-b8dcc8e054c2823b69df20dfe18708bb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3be7fb20125a51344d199a0701a31bee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -102,7 +102,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script defer="" src="https://umami.byndsim.com/getinfo" data-website-id="c9696f17-b99d-4e18-b36c-20af187a680b"></script>
+<script defer="" src="https://umi.byndsim.com/script.js" data-website-id="e230d76b-b0a6-477e-8c5d-19a7bd661e68"></script>
 
 
 </head>
@@ -544,6 +544,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../general/chat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Chat</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../general/literature.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Literature</span></a>
   </div>
@@ -573,7 +579,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#maximize-the-number-of-seats-in-use" id="toc-maximize-the-number-of-seats-in-use" class="nav-link" data-scroll-target="#maximize-the-number-of-seats-in-use">2. Maximize the number of seats in use</a></li>
   <li><a href="#solutions-1" id="toc-solutions-1" class="nav-link" data-scroll-target="#solutions-1">Solutions</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-11/tutorial-distancing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-11/tutorial-distancing.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-distancing.ipynb" download="tutorial-distancing.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-11/tutorial-distancing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-11/tutorial-distancing.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-distancing.pdf"><i class="bi bi-file-pdf"></i>Typst</a></li><li><a href="tutorial-distancing.ipynb" download="tutorial-distancing.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -619,7 +625,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Here’s our event venue’s seating arrangement, as we have used in the lecture:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://images.byndsim.com/ao/ao_arena-empty_exercise.svg" class="img-fluid figure-img"></p>
+<p><img src="images/ao_arena-empty_exercise.svg" class="img-fluid figure-img"></p>
 <figcaption>Each white square represents an available seat, while grey squares are blocked</figcaption>
 </figure>
 </div>
@@ -659,7 +665,7 @@ Tip
 <section id="implement-the-model" class="level1">
 <h1>1. Implement the Model</h1>
 <p>First, define all necessary sets, parameters, and variables to model the problem in Julia. The seating area layout is shown below:</p>
-<p><img src="https://images.byndsim.com/ao/ao_arena-empty_exercise.svg" class="img-fluid"></p>
+<p><img src="images/ao_arena-empty_exercise.svg" class="img-fluid"></p>
 <section id="distance-requirements" class="level2">
 <h2 class="anchored" data-anchor-id="distance-requirements">Distance Requirements</h2>
 <p>The following distancing rules must be maintained:</p>
@@ -700,7 +706,7 @@ Note
 <p>The groups are given <strong>differently than in the lecture</strong>! Either adjust the data or the model, depending on what you think is easier.</p>
 </div>
 </div>
-<div id="361cf7a9" class="cell" data-execution_count="2">
+<div id="fb50a689" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">HiGHS</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -769,7 +775,7 @@ Note
 <section id="visualization" class="level2">
 <h2 class="anchored" data-anchor-id="visualization">Visualization</h2>
 <p>To test your solution, visualize it with a plot in Julia. The visualization is a great tool to <span class="highlight">check if your solution is correct</span>. We figure it is likely, that you <strong>won’t have an applicable solution</strong> after the first round, even if your model is working correctly. <span class="highlight">If everything works from the start, great!</span></p>
-<div id="a641b80b" class="cell" data-execution_count="3">
+<div id="bd22f66e" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create visualization of the solution</span></span>
@@ -853,7 +859,7 @@ Note
 <span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If you encounter any difficulties ad cannot solve the problem, please document your issues here:</p>
-<div id="1710e636" class="cell" data-execution_count="4">
+<div id="e70dd664" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -880,12 +886,12 @@ Tip
 </div>
 </div>
 <p>Try implementing this new objective while keeping all the safety constraints in place.</p>
-<div id="1e853af8" class="cell" data-execution_count="5">
+<div id="8aa9c67f" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Check if your solution is correct by visualizing it with the <code>visualize_seating</code> function below.</p>
 <p>How many seats more are in use when compared to the previous solution? Write a short code that calculates and prints the difference.</p>
-<div id="cd948494" class="cell" data-execution_count="7">
+<div id="f8f6a31b" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
@@ -1322,6 +1328,12 @@ Tip
 </i> 
     </a>
   </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="mailto:vlcek@beyondsimulations.com">
+      <i class="bi bi-envelope" role="img">
+</i> 
+    </a>
+  </li>  
     <li class="nav-item">
     <a class="nav-link" href="../general/privacy.html">
 <p>Privacy Policy</p>
@@ -1354,7 +1366,8 @@ Tip
   }
   #dify-chatbot-bubble-window {
     width: 24rem !important;
-    height: 40rem !important;
+    height: 80vh !important;
+    position: fixed !important;
   }
 </style>
 

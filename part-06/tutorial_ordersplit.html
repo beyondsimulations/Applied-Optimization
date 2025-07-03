@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.23">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-b8dcc8e054c2823b69df20dfe18708bb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3be7fb20125a51344d199a0701a31bee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -102,7 +102,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script defer="" src="https://umami.byndsim.com/getinfo" data-website-id="c9696f17-b99d-4e18-b36c-20af187a680b"></script>
+<script defer="" src="https://umi.byndsim.com/script.js" data-website-id="e230d76b-b0a6-477e-8c5d-19a7bd661e68"></script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -611,7 +611,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-06/tutorial_ordersplit.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-06/tutorial_ordersplit.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial_ordersplit.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="tutorial_ordersplit.ipynb" download="tutorial_ordersplit.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/edit/main/part-06/tutorial_ordersplit.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/part-06/tutorial_ordersplit.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial_ordersplit.pdf"><i class="bi bi-file-pdf"></i>Typst</a></li><li><a href="tutorial_ordersplit.ipynb" download="tutorial_ordersplit.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -853,7 +853,7 @@ Each SKU can only be allocated to one warehouse!
 </section>
 <section id="use-the-juniper-solver" class="level2">
 <h2 class="anchored" data-anchor-id="use-the-juniper-solver">Use the Juniper solver</h2>
-<p>If you don’t have Juniper, Ipopt and/or HiGHS installed, add the solver via Pkg.add(“Juniper”) and Pkg.add(“Ipopt”) and Pkg.add(“HiGHS”). Juniper is a solver for nonlinear problems, that can be used in combination with Ipopt and HiGHS to solve mixed-integer quadratic problems. If you want to use SCIP, you can also do this by adding JuMP and SCIP and then change the solver in the model definition to <code>warehouse_model = Model(SCIP.Optimizer())</code>. Note, that this does not work automatically in Windows, as you will have to install the SCIP binaries manually. On Mac and Linux, it should work out of the box. :::</p>
+<p>If you don’t have Juniper, Ipopt and/or HiGHS installed, add the solver via Pkg.add(“Juniper”) and Pkg.add(“Ipopt”) and Pkg.add(“HiGHS”). Juniper is a solver for nonlinear problems, that can be used in combination with Ipopt and HiGHS to solve mixed-integer quadratic problems. If you want to use SCIP, you can also do this by adding JuMP and SCIP and then change the solver in the model definition to <code>warehouse_model = Model(SCIP.Optimizer())</code>. Note, that this does not work automatically in Windows, as you will have to install the SCIP binaries manually. On Mac and Linux, it should work out of the box.</p>
 <p>First, we start by defining the model.</p>
 <div id="14" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definition of the warehouse model</span></span>
@@ -1504,6 +1504,12 @@ Each SKU can only be allocated to one warehouse!
     <li class="nav-item compact">
     <a class="nav-link" href="https://linkedin.com/in/tobiasvlcek">
       <i class="bi bi-linkedin" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="mailto:vlcek@beyondsimulations.com">
+      <i class="bi bi-envelope" role="img">
 </i> 
     </a>
   </li>  
