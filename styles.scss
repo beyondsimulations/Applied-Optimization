@@ -1,94 +1,319 @@
-
 /*-- scss:defaults --*/
-$presentation-title-slide-text-align: left;
 
-// fonts from Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+// ========================================================================
+// GOOGLE FONTS IMPORT
+// ========================================================================
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Lato:wght@300;400;500;700&display=swap");
 
-// colors background
+// ========================================================================
+// COLOR PALETTE
+// ========================================================================
+
+// Base colors
 $background-color: #ffffff;
 
-// theme colors
-$theme-color-primary: #025259;
-$theme-color-secondary: #F29325;
-$theme-color-tertiary: #D94F04;
-$theme-color-quaternary: #F4E2DE;
+// Theme colors - main color palette for the website
+$theme-color-primary: #4f8c8c; // Teal - primary brand color
+$theme-color-secondary: #f2c299; // Light orange/cream
+$theme-color-tertiary: #df9d78; // Warm orange/peach
+$theme-color-quaternary: #99bfbb; // Soft blue-green
+$theme-color-quinary: #ad5769; // Muted red/pink
 
-// fonts colors
-$font-color: #000000;
+// Text colors
+$font-color: #465059; // Main text color
 $font-color-inverted: $background-color;
 $font-color-loud: $theme-color-secondary;
 
-// colors
+// Applied colors
 $body-bg: $background-color;
 $body-color: $font-color;
-$link-color: $theme-color-tertiary;
+$link-color: $theme-color-quinary; // Links use the muted red/pink
 
-// headings
-$presentation-heading-font: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif !default;
+// ========================================================================
+// TYPOGRAPHY
+// ========================================================================
 
-// line height
+// Font families
+$heading-font: "Merriweather", serif; // Elegant serif for headings
+$body-font: "Lato", sans-serif; // Clean sans-serif for body
+
+// Presentation settings
+$presentation-heading-font: $heading-font !default;
+$presentation-title-slide-text-align: left;
 $presentation-line-height: 1.5 !default;
 $presentation-heading-line-height: 1.5 !default;
 
 /*-- scss:rules --*/
 
-.reveal .title {
-  background-color: $theme-color-primary;
+// ========================================================================
+// BASE TYPOGRAPHY & FONTS
+// ========================================================================
+
+// Apply Lato to body text elements (excluding code and math)
+body,
+p,
+div:not(.sourceCode):not(.cell-code):not(.highlight),
+span:not(.math):not(.katex):not(.MathJax),
+li,
+td,
+th,
+blockquote,
+.sidebar-content,
+.page-content {
+    font-family: $body-font;
 }
 
-.title-slide.title {
-  background-color: $theme-color-quaternary !important;
+// Apply Merriweather to all headings
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-family: $heading-font;
 }
+
+// Preserve original fonts for code and mathematical content
+code,
+pre,
+.sourceCode,
+.cell-code,
+.highlight,
+.math,
+.katex,
+.MathJax,
+.MathJax_Display,
+.katex-display,
+.katex-html,
+kbd,
+samp,
+var {
+    font-family: inherit !important;
+}
+
+// Navigation and sidebar fonts
+.sidebar,
+.navbar,
+.nav {
+    font-family: $body-font;
+}
+
+.sidebar h1,
+.sidebar h2,
+.sidebar h3,
+.sidebar h4,
+.sidebar h5,
+.sidebar h6,
+.navbar h1,
+.navbar h2,
+.navbar h3,
+.navbar h4,
+.navbar h5,
+.navbar h6 {
+    font-family: $heading-font;
+}
+
+// ========================================================================
+// UTILITY CLASSES
+// ========================================================================
 
 .highlight {
-  color: $theme-color-primary;
-  font-weight: bold;
+    color: $theme-color-primary;
+    font-weight: bold;
 }
 
 .task {
-  color: $theme-color-secondary;
-  font-weight: bold;
+    color: $theme-color-secondary;
+    font-weight: bold;
 }
 
 .question {
-  color: $theme-color-tertiary;
-  font-weight: bold;
+    color: $theme-color-tertiary;
+    font-weight: bold;
 }
 
 .light {
-  color: $theme-color-quaternary;
+    color: $theme-color-quaternary;
+}
+
+.errors {
+    color: $theme-color-quinary;
+    font-weight: bold;
 }
 
 .invert-font {
-  color: $font-color-inverted;
-  background-color: #000000;
-  border-width: 5px;
-  border-radius: 0px;
-  border-color: #000000;
-  border-style: solid;
+    color: $font-color-inverted;
+    background-color: $font-color;
+    border: 5px solid $font-color;
+    border-radius: 0px;
+}
+
+// ========================================================================
+// PRESENTATION-SPECIFIC STYLES
+// ========================================================================
+
+.reveal .title {
+    background-color: $theme-color-primary;
+}
+
+.title-slide.title {
+    background-color: $theme-color-quaternary !important;
 }
 
 .loud-slide {
-  background-color: $theme-color-primary !important; 
-  color: $font-color-loud !important;
-  font-weight: bold !important;
+    background-color: $theme-color-primary !important;
+    color: $font-color-loud !important;
+    font-weight: bold !important;
 }
 
+// ========================================================================
+// SPECIAL EFFECTS & ANIMATIONS
+// ========================================================================
+
 .flow {
-  background-image: url("https://images.beyondsimulations.com/logo/image_applied-optimization.png");
-  background-size: 3840px 2160px;
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: animate 60s linear infinite;
+    background-image: url("https://images.beyondsimulations.com/logo/image_applied-optimization.png");
+    background-size: 3840px 2160px;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: animate 60s linear infinite;
+    font-family: $heading-font;
 }
 
 @keyframes animate {
-  0% {
-    background-position: left 384px top 216px;
-  }
-  100% {
-    background-position: left 3456px top 1944px;
-  }
+    0% {
+        background-position: left 384px top 216px;
+    }
+    100% {
+        background-position: left 3456px top 1944px;
+    }
+}
+
+// ========================================================================
+// CALLOUT STYLING - HTML FORMAT
+// ========================================================================
+
+// Note callouts (teal theme)
+div.callout-note.callout {
+    border-left-color: $theme-color-primary;
+}
+div.callout-note.callout-style-default > .callout-header {
+    background-color: transparent !important;
+}
+
+// Tip callouts (soft blue-green theme)
+div.callout-tip.callout {
+    border-left-color: $theme-color-quaternary;
+}
+div.callout-tip.callout-style-default > .callout-header {
+    background-color: transparent !important;
+}
+
+// Warning callouts (light orange theme)
+div.callout-warning.callout {
+    border-left-color: $theme-color-secondary;
+}
+div.callout-warning.callout-style-default > .callout-header {
+    background-color: transparent !important;
+}
+
+// Important callouts (muted red theme)
+div.callout-important.callout {
+    border-left-color: $theme-color-quinary;
+}
+div.callout-important.callout-style-default > .callout-header {
+    background-color: transparent !important;
+}
+
+// Caution callouts (warm orange theme)
+div.callout-caution.callout {
+    border-left-color: $theme-color-tertiary;
+}
+div.callout-caution.callout-style-default > .callout-header {
+    background-color: transparent !important;
+}
+
+// ========================================================================
+// CALLOUT STYLING - REVEAL.JS PRESENTATIONS
+// ========================================================================
+
+// Note callouts (teal theme)
+.reveal div.callout-note.callout {
+    border-left-color: $theme-color-primary;
+}
+.reveal div.callout-note.callout-style-default > .callout-header {
+    background-color: transparent !important;
+}
+
+// Tip callouts (soft blue-green theme)
+.reveal div.callout-tip.callout {
+    border-left-color: $theme-color-quaternary;
+}
+.reveal div.callout-tip.callout-style-default > .callout-header {
+    background-color: transparent !important;
+}
+
+// Warning callouts (light orange theme)
+.reveal div.callout-warning.callout {
+    border-left-color: $theme-color-secondary;
+}
+.reveal div.callout-warning.callout-style-default > .callout-header {
+    background-color: transparent !important;
+}
+
+// Important callouts (muted red theme)
+.reveal div.callout-important.callout {
+    border-left-color: $theme-color-quinary;
+}
+.reveal div.callout-important.callout-style-default > .callout-header {
+    background-color: transparent !important;
+}
+
+// Caution callouts (warm orange theme)
+.reveal div.callout-caution.callout {
+    border-left-color: $theme-color-tertiary;
+}
+.reveal div.callout-caution.callout-style-default > .callout-header {
+    background-color: transparent !important;
+}
+
+// ========================================================================
+// LINK STYLING
+// ========================================================================
+
+// Base link styles
+a {
+    color: $link-color;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: darken($link-color, 15%);
+    text-decoration: underline;
+}
+
+a:visited {
+    color: darken($link-color, 10%);
+}
+
+a:active {
+    color: $theme-color-primary;
+}
+
+// Navigation-specific link styling
+.sidebar a,
+.navbar a {
+    color: $font-color;
+}
+
+.sidebar a:hover,
+.navbar a:hover {
+    color: $link-color;
 }
