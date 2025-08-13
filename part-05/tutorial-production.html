@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-3be7fb20125a51344d199a0701a31bee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0545a0927027cf68205b244837cf65bc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -366,13 +366,13 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-06/lecture_ordersplit.html" class="sidebar-item-text sidebar-link">
+  <a href="../part-06/lecture-ordersplit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Lecture</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-06/tutorial_ordersplit.html" class="sidebar-item-text sidebar-link">
+  <a href="../part-06/tutorial-ordersplit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tutorial</span></a>
   </div>
 </li>
@@ -888,7 +888,7 @@ Tip
 <p>With these, we can now define the demand/inventory balance constraint. As this is the first constraint and might be a bit tricky, the solution is already given below.</p>
 <div id="36" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inventory balance constraints for periods after first period</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(lotsizeModel, </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(lotsizeModel,</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    demandBalance[i<span class="op">=</span><span class="fu">keys</span>(dictBottlingTime), t<span class="op">=</span><span class="fl">2</span><span class="op">:</span><span class="fu">length</span>(all_periods)],</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    WarehouseStockPeriodEnd[i,all_periods[t<span class="op">-</span><span class="fl">1</span>]] <span class="op">+</span> productQuantity[i,all_periods[t]] <span class="op">-</span> WarehouseStockPeriodEnd[i,all_periods[t]] <span class="op">==</span> dictDemand[i,all_periods[t]]</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -969,20 +969,20 @@ Note
 <span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the production plot</span></span>
 <span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_production_plot</span>(productionResults)</span>
 <span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fu">groupedbar</span>(</span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>        productionResults.period, </span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>        productionResults.productQuantity, </span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>        group<span class="op">=</span>productionResults.product, </span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>        productionResults.period,</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>        productionResults.productQuantity,</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>        group<span class="op">=</span>productionResults.product,</span>
 <span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>        ylabel<span class="op">=</span><span class="st">"Production Quantity (Bottles)"</span>,</span>
 <span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>        xlabel<span class="op">=</span><span class="st">"Period"</span>,</span>
 <span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Production Schedule by Beer Type"</span>,</span>
 <span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>(<span class="fl">1200</span>,<span class="fl">600</span>),</span>
 <span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>        palette <span class="op">=</span> <span class="op">:</span>Set3,</span>
 <span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=:</span>outertopright,</span>
-<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>        xrotation <span class="op">=</span> <span class="fl">45</span>,   </span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>        xrotation <span class="op">=</span> <span class="fl">45</span>,</span>
 <span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>        legendtitle<span class="op">=</span><span class="st">"Beer Type"</span>,</span>
-<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>        bar_width<span class="op">=</span><span class="fl">0.7</span>,    </span>
-<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,       </span>
-<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>        dpi<span class="op">=</span><span class="fl">300</span>           </span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>        bar_width<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,</span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>        dpi<span class="op">=</span><span class="fl">300</span></span>
 <span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
 <span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
@@ -990,20 +990,20 @@ Note
 <span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the warehouse stock plot</span></span>
 <span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_warehouse_plot</span>(productionResults)</span>
 <span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fu">groupedbar</span>(</span>
-<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>        productionResults.period, </span>
-<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>        productionResults.WarehouseStockPeriodEnd, </span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>        productionResults.period,</span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>        productionResults.WarehouseStockPeriodEnd,</span>
 <span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>        group<span class="op">=</span>productionResults.product,</span>
-<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>        ylabel<span class="op">=</span><span class="st">"Warehouse Stock"</span>, </span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>        ylabel<span class="op">=</span><span class="st">"Warehouse Stock"</span>,</span>
 <span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a>        xlabel<span class="op">=</span><span class="st">"Period"</span>,</span>
 <span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Warehouse Stock"</span>,</span>
 <span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>(<span class="fl">1200</span>,<span class="fl">600</span>),</span>
-<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>        palette <span class="op">=</span> <span class="op">:</span>Set3,  </span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>        palette <span class="op">=</span> <span class="op">:</span>Set3,</span>
 <span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=:</span>outertopright,</span>
-<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>        xrotation <span class="op">=</span> <span class="fl">45</span>,   </span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>        xrotation <span class="op">=</span> <span class="fl">45</span>,</span>
 <span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a>        legendtitle<span class="op">=</span><span class="st">"Beer Type"</span>,</span>
-<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>        bar_width<span class="op">=</span><span class="fl">0.7</span>,    </span>
-<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,       </span>
-<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>        dpi<span class="op">=</span><span class="fl">300</span>           </span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>        bar_width<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,</span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>        dpi<span class="op">=</span><span class="fl">300</span></span>
 <span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
 <span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
@@ -1036,16 +1036,16 @@ Note
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="fu">sort</span>(<span class="fu">collect</span>(<span class="fu">keys</span>(dictAvailableTime)))</span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate setup costs for this period</span></span>
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>        period_setup_costs <span class="op">=</span> <span class="fu">sum</span>(</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>            setupHourCosts <span class="op">*</span> dictSetupTime[i] <span class="op">*</span> <span class="fu">value</span>(productBottled[i,t]) </span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>            setupHourCosts <span class="op">*</span> dictSetupTime[i] <span class="op">*</span> <span class="fu">value</span>(productBottled[i,t])</span>
 <span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictBottlingTime)</span>
 <span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate inventory costs for this period</span></span>
 <span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>        period_inventory_costs <span class="op">=</span> <span class="fu">sum</span>(</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>            warehouseCosts <span class="op">*</span> <span class="fu">value</span>(WarehouseStockPeriodEnd[i,t]) </span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>            warehouseCosts <span class="op">*</span> <span class="fu">value</span>(WarehouseStockPeriodEnd[i,t])</span>
 <span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictBottlingTime)</span>
 <span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(costResults, (</span>
 <span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>            period <span class="op">=</span> t,</span>
 <span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>            setup_costs <span class="op">=</span> period_setup_costs,</span>
@@ -1054,7 +1054,7 @@ Note
 <span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
 <span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Stack the cost columns</span></span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>    stacked_costs <span class="op">=</span> <span class="fu">stack</span>(costResults, [<span class="op">:</span>setup_costs, <span class="op">:</span>inventory_costs], </span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>    stacked_costs <span class="op">=</span> <span class="fu">stack</span>(costResults, [<span class="op">:</span>setup_costs, <span class="op">:</span>inventory_costs],</span>
 <span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>                         variable_name<span class="op">=</span><span class="st">"Cost_Type"</span>, value_name<span class="op">=</span><span class="st">"Cost"</span>)</span>
 <span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> stacked_costs</span>
 <span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>

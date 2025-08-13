@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-3be7fb20125a51344d199a0701a31bee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0545a0927027cf68205b244837cf65bc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -366,13 +366,13 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-06/lecture_ordersplit.html" class="sidebar-item-text sidebar-link">
+  <a href="../part-06/lecture-ordersplit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Lecture</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-06/tutorial_ordersplit.html" class="sidebar-item-text sidebar-link">
+  <a href="../part-06/tutorial-ordersplit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tutorial</span></a>
   </div>
 </li>
@@ -713,22 +713,22 @@ window.Quarto = {
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(pMedianModel, X[i <span class="op">=</span> rangeDepartments,j <span class="op">=</span> rangeDepartments], Bin)</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Define objective function</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(pMedianModel, Max, </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(pMedianModel, Max,</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(weightedDriving[i,j]<span class="op">*</span> X[i,j] <span class="cf">for</span> i <span class="kw">in</span> rangeDepartments, j <span class="kw">in</span> rangeBAs)</span>
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the constraints</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(pMedianModel, </span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    eachAllocated[j<span class="op">=</span>rangeBAs], </span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(pMedianModel,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    eachAllocated[j<span class="op">=</span>rangeBAs],</span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> i <span class="kw">in</span> rangeDepartments) <span class="op">==</span> <span class="fl">0</span></span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(pMedianModel,</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    pLocations, </span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    pLocations,</span>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,i] <span class="cf">for</span> i <span class="kw">in</span> rangeDepartments) <span class="op">==</span> p</span>
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(pMedianModel, </span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(pMedianModel,</span>
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    departmentNecessary[i<span class="op">=</span>rangeDepartments,j<span class="op">=</span>rangeBAs],</span>
 <span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="fl">2</span> <span class="op">*</span> X[i,j] <span class="op">&lt;=</span> X[i,i]</span>
 <span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    )</span>
@@ -751,11 +751,11 @@ window.Quarto = {
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"The relative gap is </span><span class="sc">$</span>(<span class="fu">relative_gap</span>(pMedianModel))<span class="st">"</span>)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"The solve time (in seconds) is </span><span class="sc">$</span>(<span class="fu">solve_time</span>(pMedianModel))<span class="st">"</span>)</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elseif</span> <span class="fu">termination_status</span>(pMedianModel) <span class="op">==</span> TIME_LIMIT <span class="op">&amp;&amp;</span> <span class="fu">has_values</span>(pMedianModel)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"Solution is suboptimal due to a time limit, but a primal solution is available"</span>) </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"Solution is suboptimal due to a time limit, but a primal solution is available"</span>)</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">error</span>(<span class="st">"The model was not solved correctly."</span>) </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">error</span>(<span class="st">"The model was not solved correctly."</span>)</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"The objective value is "</span>, <span class="fu">objective_value</span>(pMedianModel)) </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"The objective value is "</span>, <span class="fu">objective_value</span>(pMedianModel))</span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -780,22 +780,22 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">visualize_departments</span>(hexshape, X, p)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert solution matrix to regular Matrix</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    allAssignments <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">value</span>.(X))</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find assignments where value &gt; 0.5 (accounting for potential floating-point imprecision)</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    assignments <span class="op">=</span> <span class="fu">findall</span>(allAssignments <span class="op">.&gt;</span> <span class="fl">0.5</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create copy of hexshape to avoid modifying original</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    plot_data <span class="op">=</span> <span class="fu">copy</span>(hexshape)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Assign departments and initialize colors</span></span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    plot_data.department <span class="op">=</span> rangeDepartments[<span class="fu">map</span>(x<span class="op">-&gt;</span>x[<span class="fl">1</span>], assignments)]</span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    plot_data.color <span class="op">=</span> <span class="fu">fill</span>(<span class="fu">RGB</span>(<span class="fl">0</span><span class="op">/</span><span class="fl">255</span>, <span class="fl">0</span><span class="op">/</span><span class="fl">255</span>, <span class="fl">0</span><span class="op">/</span><span class="fl">255</span>), <span class="fu">nrow</span>(plot_data))</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get unique department locations and create color mapping</span></span>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    department_locations <span class="op">=</span> <span class="fu">unique</span>(rangeDepartments[<span class="fu">map</span>(x<span class="op">-&gt;</span>x[<span class="fl">1</span>], assignments)])</span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    color_palette <span class="op">=</span> <span class="fu">cgrad</span>(<span class="op">:</span>Pastel1_9, p, categorical<span class="op">=</span><span class="cn">true</span>)</span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    color_dict <span class="op">=</span> <span class="fu">Dict</span>(department_locations[i] <span class="op">=&gt;</span> color_palette[i] <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>p)</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Color non-department locations</span></span>
 <span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> hex <span class="kw">in</span> <span class="fu">eachrow</span>(plot_data)</span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> hex.id <span class="kw">in</span> department_locations</span>
@@ -804,7 +804,7 @@ window.Quarto = {
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>            hex.color <span class="op">=</span> color_dict[hex.department]</span>
 <span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
 <span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create and return plot</span></span>
 <span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">plot</span>(</span>
 <span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        plot_data.geometry,</span>
@@ -835,10 +835,10 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="conditional-constraints">Conditional Constraints</h2>
 <p>Before we start, we will quickly repeat some basic concepts on constraints and conditions in JuMP. You can add conditions to constraints by using the <code>;</code> operator. This is useful if you want to add a constraint only under certain conditions. In the example below, the constraint is only active if the Euclidean distance between two BAs is less than 1.5.</p>
 <div id="18" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model, </span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model,</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    conditionalConstraint[</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        i<span class="op">=</span>rangeDepartments,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        j<span class="op">=</span>rangeBAs; </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        j<span class="op">=</span>rangeBAs;</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        euclidianDistances[i,j] <span class="op">&lt;</span> <span class="fl">1.5</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        ],</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    X[i,j] <span class="op">==</span> <span class="fl">1</span></span>
@@ -846,7 +846,7 @@ window.Quarto = {
 </div>
 <p>Furthermore,we can use conditions within constraints by using the <code>for</code> keyword. For example, in the constraint below, the sum is only taken over the BAs that are within 1.5 units of BA <span class="math inline">\(i\)</span>.</p>
 <div id="20" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model, </span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model,</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    conditionalConstraint2[i<span class="op">=</span>rangeDepartments],</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> j <span class="kw">in</span> rangeBAs <span class="cf">if</span> euclidianDistances[i,j] <span class="op">&lt;</span> <span class="fl">1.5</span>) <span class="op">&gt;=</span> <span class="fl">1</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

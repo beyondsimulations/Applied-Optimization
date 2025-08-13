@@ -115,7 +115,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-3c901e439054d7a7a1dc51f2fc5d8a30.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-34b197c93c4e83acdd1a41424d483ab7.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -856,8 +856,8 @@ And data, a 3×2 Matrix{JuMP.VariableRef}:
 <div id="10" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a></a>Q <span class="op">=</span> [<span class="fl">2</span> <span class="fl">1</span> <span class="fl">2</span>; <span class="fl">1</span> <span class="fl">2</span> <span class="fl">1</span>; <span class="fl">2</span> <span class="fl">1</span> <span class="fl">2</span>]</span>
 <span id="cb7-2"><a></a></span>
-<span id="cb7-3"><a></a><span class="pp">@objective</span>(warehouse_model, </span>
-<span id="cb7-4"><a></a>    Max, </span>
+<span id="cb7-3"><a></a><span class="pp">@objective</span>(warehouse_model,</span>
+<span id="cb7-4"><a></a>    Max,</span>
 <span id="cb7-5"><a></a>    <span class="fu">sum</span>(</span>
 <span id="cb7-6"><a></a>        X[skus[i], warehouses[k]] <span class="op">*</span> X[skus[j], warehouses[k]] <span class="op">*</span> Q[i,j]</span>
 <span id="cb7-7"><a></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fu">length</span>(skus)</span>
@@ -963,7 +963,7 @@ And data, a 3×2 Matrix{JuMP.VariableRef}:
 <section id="single-allocation-in-julia" class="slide level2">
 <h2>Single Allocation in Julia</h2>
 <div id="12" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a></a><span class="pp">@constraint</span>(warehouse_model, single_allocation[i <span class="kw">in</span> skus], </span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a></a><span class="pp">@constraint</span>(warehouse_model, single_allocation[i <span class="kw">in</span> skus],</span>
 <span id="cb9-2"><a></a>    <span class="fu">sum</span>(X[i, k] <span class="cf">for</span> k <span class="kw">in</span> warehouses) <span class="op">&gt;=</span> <span class="fl">1</span></span>
 <span id="cb9-3"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1030,7 +1030,7 @@ And data, a 3-element Vector{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.Con
 <div id="14" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a></a>capacities <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"Hamburg"</span> <span class="op">=&gt;</span> <span class="fl">2</span>, <span class="st">"Berlin"</span> <span class="op">=&gt;</span> <span class="fl">1</span>) <span class="co"># Add capacities</span></span>
 <span id="cb11-2"><a></a></span>
-<span id="cb11-3"><a></a><span class="pp">@constraint</span>(warehouse_model, capacity[k <span class="kw">in</span> warehouses], </span>
+<span id="cb11-3"><a></a><span class="pp">@constraint</span>(warehouse_model, capacity[k <span class="kw">in</span> warehouses],</span>
 <span id="cb11-4"><a></a>    <span class="fu">sum</span>(X[i, k] <span class="cf">for</span> i <span class="kw">in</span> skus) <span class="op">&lt;=</span> capacities[k]</span>
 <span id="cb11-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1266,7 +1266,7 @@ Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. <span>“Optimization o
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>Lecture VI - Minimizing Split Orders in E-Commerce | Dr.&nbsp;Tobias Vlćek | <a href="lecture-ordersplit.qmd">Home</a></p>
+<p>Lecture VI - Minimizing Split Orders in E-Commerce | Dr.&nbsp;Tobias Vlćek | <a href="../part-06/lecture-ordersplit.html">Home</a></p>
 </div>
 </div></div>
 

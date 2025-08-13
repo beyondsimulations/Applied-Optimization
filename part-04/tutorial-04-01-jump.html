@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-3be7fb20125a51344d199a0701a31bee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0545a0927027cf68205b244837cf65bc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -337,13 +337,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-06/lecture_ordersplit.html" class="sidebar-item-text sidebar-link">
+  <a href="../part-06/lecture-ordersplit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Lecture</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-06/tutorial_ordersplit.html" class="sidebar-item-text sidebar-link">
+  <a href="../part-06/tutorial-ordersplit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tutorial</span></a>
   </div>
 </li>
@@ -771,7 +771,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>objective_expression</code> is the mathematical expression of the objective function</li>
 </ul>
 <p>For example:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(model_name, Max, <span class="fl">2</span><span class="op">*</span>variableA <span class="op">+</span> <span class="fl">3</span><span class="op">*</span>variableB) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(model_name, Max, <span class="fl">2</span><span class="op">*</span>variableA <span class="op">+</span> <span class="fl">3</span><span class="op">*</span>variableB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This defines an objective function that maximizes something based on the values of <code>variableA</code> and <code>variableB</code>.</p>
 <section id="exercise-4.1---create-the-objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-4.1---create-the-objective-function">Exercise 4.1 - Create the Objective Function</h2>
@@ -811,15 +811,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <div id="26" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">begin</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> OPTIMAL </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> OPTIMAL</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"Solution is optimal"</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elseif</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> TIME_LIMIT <span class="op">&amp;&amp;</span> <span class="fu">has_values</span>(model) </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"Solution is suboptimal due to a time limit, </span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>            but a primal solution is available<span class="st">") </span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elseif</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> TIME_LIMIT <span class="op">&amp;&amp;</span> <span class="fu">has_values</span>(model)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"Solution is suboptimal due to a time limit,</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>            but a primal solution is available<span class="st">")</span></span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">error</span>(<span class="st">"The model was not solved correctly."</span>) </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">error</span>(<span class="st">"The model was not solved correctly."</span>)</span>
 <span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Objective value = "</span>, <span class="fu">objective_value</span>(model)) </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Objective value = "</span>, <span class="fu">objective_value</span>(model))</span>
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then get the values of the variables as follows:</p>

@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-3be7fb20125a51344d199a0701a31bee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0545a0927027cf68205b244837cf65bc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -340,13 +340,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-06/lecture_ordersplit.html" class="sidebar-item-text sidebar-link">
+  <a href="../part-06/lecture-ordersplit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Lecture</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-06/tutorial_ordersplit.html" class="sidebar-item-text sidebar-link">
+  <a href="../part-06/tutorial-ordersplit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tutorial</span></a>
   </div>
 </li>
@@ -893,7 +893,7 @@ Tip
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    requested.solar_farm <span class="op">.=&gt;</span> requested.truckload_demand</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>travelCosts_dict <span class="op">=</span> <span class="fu">Dict</span>(</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    (row.supplier,row.solar_farm) <span class="op">=&gt;</span> row.costs </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    (row.supplier,row.solar_farm) <span class="op">=&gt;</span> row.costs</span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row <span class="kw">in</span> <span class="fu">eachrow</span>(travelCosts)</span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1025,7 +1025,7 @@ Tip
 <div id="38" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define variable</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    transport_model, </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    transport_model,</span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    X[available.supplier,<span class="fu">keys</span>(requested_dict)] <span class="op">&gt;=</span> <span class="fl">0</span></span>
 <span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1034,8 +1034,8 @@ Tip
 <h2 class="anchored" data-anchor-id="define-the-objective">Define the objective</h2>
 <p>Next, we can define the objective of our model. We want to maximize the profit, which is the revenue minus the variable costs and the transportation costs. As before, we can use the <code>@objective</code> macro to define the objective. The syntax is <code>@objective(model, Max, expression)</code>, where <code>model</code> is the model instance, <code>Max</code> indicates that we want to maximize the expression, and <code>expression</code> is the expression we want to maximize.</p>
 <div id="40" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(transport_model, Max, </span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>((revenue<span class="op">-</span>varCosts<span class="op">-</span>travelCosts_dict[(i,j)]) <span class="op">*</span> X[i,j] </span>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(transport_model, Max,</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>((revenue<span class="op">-</span>varCosts<span class="op">-</span>travelCosts_dict[(i,j)]) <span class="op">*</span> X[i,j]</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(available_dict), j <span class="kw">in</span> <span class="fu">keys</span>(requested_dict))</span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1045,15 +1045,15 @@ Tip
 <p>We can now define the constraints of our model. We need to ensure that the supply from each supplier is enough to cover the demand of each customer. We can use the <code>@constraint</code> macro to define the constraints. The syntax is <code>@constraint(model, expression)</code>, where <code>model</code> is the model instance and <code>expression</code> is the expression we want to constrain.</p>
 <p>To illustrate the use of dictionaries, we will again use the keys of the dictionaries to define the constraints in the following code block.</p>
 <div id="42" class="cell" data-execution_count="0">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(transport_model, </span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    restrictAvailable[i <span class="kw">in</span> <span class="fu">keys</span>(available_dict)], </span>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(transport_model,</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    restrictAvailable[i <span class="kw">in</span> <span class="fu">keys</span>(available_dict)],</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> j <span class="kw">in</span> <span class="fu">keys</span>(requested_dict)) <span class="op">&lt;=</span> available_dict[i]</span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Naturally, we could also use the vectors with the names from the DataFrames to define the constraints or we could also just work with ranges from the beginning, e.g.&nbsp;<code>1:length(available.supplier)</code> and <code>1:length(requested.solar_farm)</code>. Working with names is often more convenient, though.</p>
 <div id="44" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(transport_model,</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    restrictDemand[j <span class="kw">in</span> requested.solar_farm], </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    restrictDemand[j <span class="kw">in</span> requested.solar_farm],</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> i <span class="kw">in</span> available.supplier) <span class="op">&lt;=</span> requested_dict[j]</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>

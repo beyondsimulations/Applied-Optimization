@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-3be7fb20125a51344d199a0701a31bee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0545a0927027cf68205b244837cf65bc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -337,13 +337,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-06/lecture_ordersplit.html" class="sidebar-item-text sidebar-link">
+  <a href="../part-06/lecture-ordersplit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Lecture</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../part-06/tutorial_ordersplit.html" class="sidebar-item-text sidebar-link">
+  <a href="../part-06/tutorial-ordersplit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tutorial</span></a>
   </div>
 </li>
@@ -647,8 +647,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="section-2---constraints-within-containers" class="level1">
 <h1>Section 2 - Constraints within Containers</h1>
 <p>Defining constraints within containers allows for structured and easily manageable models. This is especially important when models become larger! To define a constraint within a container, we can do, for example, the following:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(modelName, </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    constraintName[i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>], </span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(modelName,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    constraintName[i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>],</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    variableName[i] <span class="op">&lt;=</span> <span class="fl">100</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This would create a constraint called <code>constraintName</code> for each <code>i</code> - thus <code>1</code>,<code>2</code>, and <code>3</code> - where <code>variableName[1]</code>, <code>variableName[2]</code>, and <code>variableName[3]</code> are restricted to be maximally <code>100</code>.</p>
@@ -673,8 +673,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="section-3---implementing-conditional-constraints" class="level1">
 <h1>Section 3 - Implementing Conditional Constraints</h1>
 <p>Conditional constraints are added to the model based on certain conditions, allowing for dynamic and flexible model formulations. To define a constraint within a container under conditions, we can do the following:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(modelName, </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    constraintName[i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>; i <span class="op">&lt;=</span> <span class="fl">2</span>], </span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(modelName,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    constraintName[i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>; i <span class="op">&lt;=</span> <span class="fl">2</span>],</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    variableName[i] <span class="op">&lt;=</span> <span class="fl">50</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This would create a constraint called <code>constraintName</code> for each <code>i</code> - thus <code>1</code>,<code>2</code>, and <code>3</code> - where <code>variableName[1]</code>, <code>variableName[2]</code> are restricted to be maximally <code>50</code> and <code>variableName[3]</code> was not restricted.</p>
@@ -695,7 +695,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize!</span>(another_model)</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>status <span class="op">=</span> <span class="fu">termination_status</span>(another_model)</span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> status <span class="op">==</span> MOI.OPTIMAL <span class="st">"Sorry, something didn't work out as the model status is </span><span class="sc">$</span>status<span class="st">"</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">objective_value</span>(another_model) <span class="op">≈</span> <span class="fl">68</span> atol<span class="op">=</span><span class="fl">1e-4</span> <span class="st">"Although you have an optimal solution, </span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">objective_value</span>(another_model) <span class="op">≈</span> <span class="fl">68</span> atol<span class="op">=</span><span class="fl">1e-4</span> <span class="st">"Although you have an optimal solution,</span></span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    the should be <span class="fl">68</span> not <span class="op">$</span>(<span class="fu">objective_value</span>(another_model)). Is the model correct?<span class="st">"</span></span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Model components validated successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -710,10 +710,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming the model has been solved!!!</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>optimal_profits <span class="op">=</span> <span class="fu">value</span>.(profits)</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">bar</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">8</span>, optimal_profits, </span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Optimal Production Levels"</span>, </span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">"Product"</span>, </span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">"Profit"</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">bar</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">8</span>, optimal_profits,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Optimal Production Levels"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">"Product"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">"Profit"</span>,</span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="cn">false</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
