@@ -22,7 +22,7 @@ format:
         footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-ordersplit.qmd)"
         output-file: lecture-presentation.html
     html:
-        theme: [litera, ../styles.scss]
+        theme: [default, ../styles.scss]
 
 bibliography: ../AppliedBib.bib
 
@@ -507,8 +507,8 @@ The quadratic terms are $X_{ik}\times X_{jk}$. This objective function is based 
 #| output-location: fragment
 Q = [2 1 2; 1 2 1; 2 1 2]
 
-@objective(warehouse_model, 
-    Max, 
+@objective(warehouse_model,
+    Max,
     sum(
         X[skus[i], warehouses[k]] * X[skus[j], warehouses[k]] * Q[i,j]
         for i in 2:length(skus)
@@ -590,7 +590,7 @@ $$\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}$$
 ```{julia}
 #| eval: true
 #| output-location: fragment
-@constraint(warehouse_model, single_allocation[i in skus], 
+@constraint(warehouse_model, single_allocation[i in skus],
     sum(X[i, k] for k in warehouses) >= 1
 )
 ```
@@ -602,7 +602,7 @@ $$\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}$$
 ::: {.callout-important}
 ## The goal of these constraints is to:
 Ensure that the capacity of each warehouse is not exceeded.
-::: 
+:::
 
 . . .
 
@@ -637,7 +637,7 @@ $$\sum_{i \in \mathcal{I}} X_{ik} \leq c_k \quad \forall k \in \mathcal{K}$$
 #| output-location: fragment
 capacities = Dict("Hamburg" => 2, "Berlin" => 1) # Add capacities
 
-@constraint(warehouse_model, capacity[k in warehouses], 
+@constraint(warehouse_model, capacity[k in warehouses],
     sum(X[i, k] for i in skus) <= capacities[k]
 )
 ```
@@ -720,7 +720,7 @@ Commercial solvers are **faster** and **more robust** as open source solvers but
 
 ## {.loud-slide}
 ::: {.r-fit-text}
-Can this be 
+Can this be
 
 applied?
 :::
@@ -753,7 +753,7 @@ Detect dependencies between products and allocate them accordingly, as products 
 ## Case Study
 
 - More than 100,000 SKUs and several millions of orders
-- Comparison of **different heuristics**[^opt_not]	
+- Comparison of **different heuristics**[^opt_not]
     - **CHI**: based on Chi-Square tests @vlcek_optimizing_2024
     - **GP, GO, GS, BS**: based on greedy algorithms [@Catalan2012]
     - **RA**: Random allocation of SKUs to warehouses
@@ -792,4 +792,3 @@ Questions?
 ## Literature I
 
 For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
-

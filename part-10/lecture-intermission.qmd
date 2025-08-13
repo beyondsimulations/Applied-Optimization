@@ -22,7 +22,7 @@ format:
         footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-intermission.qmd)"
         output-file: lecture-presentation.html
     html:
-        theme: [litera, ../styles.scss]
+        theme: [default, ../styles.scss]
     typst:
         papersize: a4
 
@@ -74,7 +74,7 @@ You can take a **handwritten** DIN A4 sheet of paper with you!
 
 ## 1.a (6 Points) {.scrollable}
 
-A company that ships ice cream wants to maximize their profit. It can do that by transporting its different sorts of ice cream from their only production facility to several supermarkets. 
+A company that ships ice cream wants to maximize their profit. It can do that by transporting its different sorts of ice cream from their only production facility to several supermarkets.
 
 Each delivered sort of ice cream makes the ice cream company a different profit per unit. The transportation costs per truckload are totally negligible as is the routing, as all supermarkets are located very close to each other. The company should maximally deliver the agreed number of units of each ice cream sort to each individual supermarket.
 
@@ -224,7 +224,7 @@ $$
 
 ## 1.d (2 Points)  {.scrollable}
 
-Is the model formulation a linear problem with binary variables? 
+Is the model formulation a linear problem with binary variables?
 
 Please explain your answer briefly.
 
@@ -263,7 +263,7 @@ Yes, the model formulation is a linear problem but it does not have binary varia
 
 ## 1.e (8 Points) {.scrollable}
 
-The supermarkets are furious because the company doesn't always deliver the agreed truckloads of ice cream. Therefore, they want to penalize the company in the future, if it delivers less than the agreed amount. For each demand of a supermarket that could not be fulfilled, the company will have to pay a one-time fee for the ice-cream sort. 
+The supermarkets are furious because the company doesn't always deliver the agreed truckloads of ice cream. Therefore, they want to penalize the company in the future, if it delivers less than the agreed amount. For each demand of a supermarket that could not be fulfilled, the company will have to pay a one-time fee for the ice-cream sort.
 
 How can you expand your model to reflect this new situation? Write down all additional or modified sets, parameters, variables, constraints and the objective function while describing each with a few words.
 
@@ -322,7 +322,7 @@ $$
 
 Next to the production facility of the ice cream company sits a company that sells frozen fish. Due to declining fish stocks in the ocean, the company does not need all of its trucks. It offers to rent their trucks for a certain price to the ice cream company so it can transport more ice cream. These trucks have twice the capacity of the truck currently in use by the ice cream company.
 
-How can you expand your model to reflect this new situation? Write down all additional or modified Sets, parameters, variables, constraints and the objective function while describing each with a few words. 
+How can you expand your model to reflect this new situation? Write down all additional or modified Sets, parameters, variables, constraints and the objective function while describing each with a few words.
 
 ::: {.callout-tip}
 Note, that you only need to write down new and modified elements! If you haven't solved the previous task, work with the model defined before.
@@ -379,7 +379,7 @@ $$
 
 ## 2.a (3 Points)  {.scrollable}
 
-What is the goal of the Territory Design Problem (Districting Problem)? 
+What is the goal of the Territory Design Problem (Districting Problem)?
 
 Please answer in 2-3 sentences.
 
@@ -450,7 +450,7 @@ $\begin{bmatrix}
     5 & 2 & 2 & 4 \\
     2 & 2 & 0 & 2 \\
     2 & 0 & 2 & 2 \\
-    4 & 2 & 2 & 5 
+    4 & 2 & 2 & 5
 \end{bmatrix}$
 
 \newpage
@@ -521,7 +521,7 @@ In Operations Research (OR), a global optimum is the absolute best solution to a
 
 ## 2.d (3 Points)  {.scrollable}
 
-Name three optimization problems, e.g. Knapsack Problem. 
+Name three optimization problems, e.g. Knapsack Problem.
 
 You are welcome to answer this question in bullet points.
 
@@ -639,16 +639,16 @@ transport = Model(HiGHS.Optimizer)
 @variable(transport_model, X[i = nrSuppliers,j = 1:nrCustomers], Bin)
 
 # Define objective
-@objective(transport_model, Max, 
+@objective(transport_model, Max,
     sum(travelCosts[i,j]* X[i] for i in 1:nrSuppliers, j in 1:nrCustomers)
     )
 # Define the constraints
-@constraint(transport_model, 
-    restrictAvailable[i=1:nrSuppliers], 
+@constraint(transport_model,
+    restrictAvailable[i=1:nrSuppliers],
     sum(X[i,j] for j in 1:nrCustomers) <= available[i]
     )
 @constraint(transport_model,
-    restrictDemand[j=1:nrCustomers], 
+    restrictDemand[j=1:nrCustomers],
     sum(X[i,j] for i in 1:nrSuppliers) === requested[j]
     )
 # Start optimization
@@ -710,7 +710,7 @@ Assume that all required sets, variables, and parameters have already been defin
 **Solution**
 
 ```julia
-@constraint(model, newConstraint[g in G], sum(U[g,m] * T[m] for m in M) - sum(R[k] for k in K) <= D[g]) 
+@constraint(model, newConstraint[g in G], sum(U[g,m] * T[m] for m in M) - sum(R[k] for k in K) <= D[g])
 ```
 
 \newpage
@@ -745,7 +745,7 @@ Assume that all required sets, variables, and parameters have already been defin
 
 For an optimization model the following binary variable is supposed to be created:
 
-$X_{i,j}$ where $i \in \{1,2,...,10\}$ and $j \in \{1,2,...,5\}$. 
+$X_{i,j}$ where $i \in \{1,2,...,10\}$ and $j \in \{1,2,...,5\}$.
 
 Specify the definition of the variable in correct Julia syntax.
 

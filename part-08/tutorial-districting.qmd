@@ -4,7 +4,7 @@ subtitle: "Applied Optimization with Julia"
 
 format:
     html:
-        theme: litera
+        theme: default
         highlight-style: arrow
         linkcolor: "#a60000"
         code-copy: true
@@ -46,7 +46,7 @@ Your first task is to fix a prototype model. It contains 6 critical errors that 
 
 In this task it is **not yet necessary** to include contiguity and compactness constraints! If the model takes too long on your machine, you can set the **relative gap to 10% or decrease the time limit**.
 
-To execute the code, several files are provided, which contain the Euclidean distance between the BAs, the driving time between BAs, the number of incidents per BA, and the hexagonal shapes (a `.shp` file and a `.dbf` file - you need both!). 
+To execute the code, several files are provided, which contain the Euclidean distance between the BAs, the driving time between BAs, the number of incidents per BA, and the hexagonal shapes (a `.shp` file and a `.dbf` file - you need both!).
 
 ---
 
@@ -116,22 +116,22 @@ rangeDepartments = unique(rand(1:size(incidentWeights,1), 100))  # Ensure unique
 @variable(pMedianModel, X[i = rangeDepartments,j = rangeDepartments], Bin)
 
 # Define objective function
-@objective(pMedianModel, Max, 
+@objective(pMedianModel, Max,
     sum(weightedDriving[i,j]* X[i,j] for i in rangeDepartments, j in rangeBAs)
     )
 
 # Define the constraints
-@constraint(pMedianModel, 
-    eachAllocated[j=rangeBAs], 
+@constraint(pMedianModel,
+    eachAllocated[j=rangeBAs],
     sum(X[i,j] for i in rangeDepartments) == 0
     )
 
 @constraint(pMedianModel,
-    pLocations, 
+    pLocations,
     sum(X[i,i] for i in rangeDepartments) == p
     )
 
-@constraint(pMedianModel, 
+@constraint(pMedianModel,
     departmentNecessary[i=rangeDepartments,j=rangeBAs],
     2 * X[i,j] <= X[i,i]
     )
@@ -155,11 +155,11 @@ function print_model_status(model)
         println("The relative gap is $(relative_gap(pMedianModel))")
         println("The solve time (in seconds) is $(solve_time(pMedianModel))")
     elseif termination_status(pMedianModel) == TIME_LIMIT && has_values(pMedianModel)
-        println("Solution is suboptimal due to a time limit, but a primal solution is available") 
+        println("Solution is suboptimal due to a time limit, but a primal solution is available")
     else
-        error("The model was not solved correctly.") 
+        error("The model was not solved correctly.")
     end
-        println("The objective value is ", objective_value(pMedianModel)) 
+        println("The objective value is ", objective_value(pMedianModel))
     end
 end
 ```
@@ -183,22 +183,22 @@ The following code then builds and uses a function to plot the results.
 function visualize_departments(hexshape, X, p)
     # Convert solution matrix to regular Matrix
     allAssignments = Matrix(value.(X))
-    
+
     # Find assignments where value > 0.5 (accounting for potential floating-point imprecision)
     assignments = findall(allAssignments .> 0.5)
-    
+
     # Create copy of hexshape to avoid modifying original
     plot_data = copy(hexshape)
-    
+
     # Assign departments and initialize colors
     plot_data.department = rangeDepartments[map(x->x[1], assignments)]
     plot_data.color = fill(RGB(0/255, 0/255, 0/255), nrow(plot_data))
-    
+
     # Get unique department locations and create color mapping
     department_locations = unique(rangeDepartments[map(x->x[1], assignments)])
     color_palette = cgrad(:Pastel1_9, p, categorical=true)
     color_dict = Dict(department_locations[i] => color_palette[i] for i in 1:p)
-    
+
     # Color non-department locations
     for hex in eachrow(plot_data)
         if hex.id in department_locations
@@ -207,7 +207,7 @@ function visualize_departments(hexshape, X, p)
             hex.color = color_dict[hex.department]
         end
     end
-    
+
     # Create and return plot
     return plot(
         plot_data.geometry,
@@ -241,10 +241,10 @@ Before we start, we will quickly repeat some basic concepts on constraints and c
 
 ```{julia}
 #| eval: false
-@constraint(model, 
+@constraint(model,
     conditionalConstraint[
         i=rangeDepartments,
-        j=rangeBAs; 
+        j=rangeBAs;
         euclidianDistances[i,j] < 1.5
         ],
     X[i,j] == 1
@@ -255,7 +255,7 @@ Furthermore,we can use conditions within constraints by using the `for` keyword.
 
 ```{julia}
 #| eval: false
-@constraint(model, 
+@constraint(model,
     conditionalConstraint2[i=rangeDepartments],
     sum(X[i,j] for j in rangeBAs if euclidianDistances[i,j] < 1.5) >= 1
     )
@@ -374,8 +374,3 @@ display(visualize_departments(hexshape, X, p))
 ---
 
 {{< include ../include/tutorial_end.qmd >}}
-
-
-
-
-

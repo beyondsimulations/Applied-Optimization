@@ -4,7 +4,7 @@ subtitle: "Applied Optimization with Julia"
 
 format:
     html:
-        theme: litera
+        theme: default
         highlight-style: arrow
         linkcolor: "#a60000"
         code-copy: true
@@ -46,15 +46,15 @@ First, we need to understand which products are frequently purchased together. W
 | 7        | 1 | 0 | 0 | 1 |
 | 8        | 0 | 0 | 1 | 1 |
 
-What is the resulting **coappearance matrix** from the transactional data set? 
+What is the resulting **coappearance matrix** from the transactional data set?
 Please provide it in the following cell as matrix by changing the `0`s to the correct values.
 
 ```{julia}
 #| output: false
 Q = [
-    0 0 0 0; 
-    0 0 0 0; 
-    0 0 0 0; 
+    0 0 0 0;
+    0 0 0 0;
+    0 0 0 0;
     0 0 0 0;
 ]
 ```
@@ -66,7 +66,7 @@ Q = [
 FitGear currently operates two warehouses - one in Hamburg and one in Berlin. Each warehouse has limited storage capacity:
 
 - Hamburg can store 3 different product types (SKUs)
-- Berlin can also store 3 different product types 
+- Berlin can also store 3 different product types
 
 Based on the coappearance matrix you have determined in the previous assignment, use the model from the lecture to maximise the coappearances **manually by hand**. What is the resulting objective function value of the assignment? Please provide it in the following cell.
 
@@ -79,7 +79,7 @@ objective_value_by_hand =
 
 ## 3. Counting Split Parcels
 
-Based on the output of the optimisation, we don't know the number of split orders yet. Calculate the **number of split orders manually** from your previous solution. 
+Based on the output of the optimisation, we don't know the number of split orders yet. Calculate the **number of split orders manually** from your previous solution.
 
 ```{julia}
 #| eval: false
@@ -110,18 +110,18 @@ Thus, we'll now implement a scalable solution using Julia and JuMP that can hand
 #| output: false
 
 skus = [
-    "Running Shoes",      
-    "Athletic Socks",     
-    "Water Bottle",       
-    "Yoga Mat",          
-    "Resistance Bands",  
-    "Sports Bag",        
-    "Protein Powder",     
-    "Exercise Shorts",    
-    "Training Shirt",     
-    "Fitness Tracker",    
-    "Foam Roller",       
-    "Weight Gloves"       
+    "Running Shoes",
+    "Athletic Socks",
+    "Water Bottle",
+    "Yoga Mat",
+    "Resistance Bands",
+    "Sports Bag",
+    "Protein Powder",
+    "Exercise Shorts",
+    "Training Shirt",
+    "Fitness Tracker",
+    "Foam Roller",
+    "Weight Gloves"
 ]
 
 warehouses = ["Hamburg", "Berlin"]

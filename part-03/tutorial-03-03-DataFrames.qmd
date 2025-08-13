@@ -4,7 +4,7 @@ subtitle: "Applied Optimization with Julia"
 
 format:
     html:
-        theme: litera
+        theme: default
         highlight-style: arrow
         linkcolor: "#a60000"
         code-copy: true
@@ -46,8 +46,8 @@ A DataFrame in Julia is akin to a table in SQL or a spreadsheet - each column ca
 
 ```{julia}
 students = DataFrame(
-    Name = ["Elio", "Bob", "Yola"], 
-    Age = [18, 25,29], 
+    Name = ["Elio", "Bob", "Yola"],
+    Age = [18, 25,29],
 )
 ```
 
@@ -65,8 +65,8 @@ Create and Test a DataFrame. Create a DataFrame named `employees` with the colum
 #| code-fold: true
 # Test your answer
 @assert employees == DataFrame(
-    Name = ["John", "Mike", "Frank"], 
-    Age = [28, 23, 37], 
+    Name = ["John", "Mike", "Frank"],
+    Age = [28, 23, 37],
     Salary = [50000, 62000, 90000]
 )
 println("DataFrame created successfully!")
@@ -88,20 +88,20 @@ Accessing columns in a DataFrame can be done using the dot syntax, while rows ca
 #| output: false
 using DataFrames
 employees = DataFrame(
-    Name = ["John", "Mike", "Frank"], 
-    Age = [28, 23, 37], 
+    Name = ["John", "Mike", "Frank"],
+    Age = [28, 23, 37],
     Salary = [50000, 62000, 90000]
 )
 ```
 
 ```{julia}
-employees.Name 
+employees.Name
 ```
 
 To access the third name specifically, we could do:
 
 ```{julia}
-employees.Name[3] 
+employees.Name[3]
 ```
 
 ## Exercise 2.1 - Access the `Age` Column
@@ -149,16 +149,16 @@ Logical indexing can be used to filter rows in a DataFrame based on conditions. 
 allFranks = employees[employees.Name .== "Frank", :]
 ```
 
-Alternatively, the filter function provides a powerful tool to extract subsets of 
+Alternatively, the filter function provides a powerful tool to extract subsets of
 data based on a condition:
 
 ```{julia}
-allFranks = filter(row -> row.Name == "Frank", employees) 
+allFranks = filter(row -> row.Name == "Frank", employees)
 ```
 
 ## Exercise 3.1 - Filter the DataFrame
 
-Filter the DataFrame to include only employees with salaries above `60000`. Save the resulting employees in the DataFrame `high_earners`. 
+Filter the DataFrame to include only employees with salaries above `60000`. Save the resulting employees in the DataFrame `high_earners`.
 
 ```{julia}
 #| eval: false
@@ -199,7 +199,7 @@ println(sorted_df)
 ```
 
 ::: {.callout-tip}
-If you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets. 
+If you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets.
 :::
 
 ---
@@ -237,15 +237,15 @@ Create a new column called `Bonus` in the `employees` DataFrame. The bonus shoul
 #| code-fold: true
 # Test your answer
 @assert filter(
-    row -> row.Bonus == 2950, 
+    row -> row.Bonus == 2950,
     employees
 ).Name == ["John"] "John should have a bonus of 2950"
 @assert filter(
-    row -> row.Bonus == 3100, 
+    row -> row.Bonus == 3100,
     employees
 ).Name == ["Mike"] "Mike should have a bonus of 3100"
 @assert filter(
-    row -> row.Bonus == 9000, 
+    row -> row.Bonus == 9000,
     employees
 ).Name == ["Frank"] "Frank should have a bonus of 9000"
 println("Great job! All the bonuses are correct!")
@@ -267,12 +267,12 @@ WorkingHours = DataFrame(
 for row in eachrow(employees)
     if row.Age < 30
         push!(WorkingHours, (
-            Name = row.Name, 
+            Name = row.Name,
             Hours = 40
         ))
     else
         push!(WorkingHours, (
-            Name = row.Name, 
+            Name = row.Name,
             Hours = 30
         ))
     end

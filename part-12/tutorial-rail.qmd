@@ -4,7 +4,7 @@ subtitle: "Applied Optimization with Julia"
 
 format:
     html:
-        theme: [litera, ../styles.scss]
+        theme: [default, ../styles.scss]
         highlight-style: arrow
         linkcolor: "#a60000"
         code-copy: true
@@ -21,6 +21,8 @@ format:
 ---
 
 # Introduction
+
+{{< include ../include/activate_environment.qmd >}}
 
 {{< include ../include/tutorial_end.qmd >}}
 
@@ -96,7 +98,7 @@ YOUR ANSWER BELOW
 
 As there is a rather large fluctuation of allowed inflow between periods, you are asked to introduce new constraints for the model. In the first period, the inflow at each station is supposed to be unrestricted. Thereafter, it is maximally allowed to change by 20 persons in both directions per period at each station.
 
-Can you write out the decision variables and the additional constraints for the model as JuMP constraints? 
+Can you write out the decision variables and the additional constraints for the model as JuMP constraints?
 
 ::: {.callout-tip}
 You don't need to solve the model or define the objective function. You just need to constraint the fluctuations and add the appropriate variables.
@@ -250,7 +252,7 @@ end
 for e in Arcs
     for t in Minutes
         R[(e, t)] = [
-            (o, d, tt) 
+            (o, d, tt)
             for (o, d) in OD_pairs
             for tt in Minutes
             if e in paths[(o, d)] && (t - travel_times[(o,e[1])] == tt) && (tt >= 1) && (tt <= 10)
@@ -275,13 +277,13 @@ Minutes = 1:10
 Stations = [:A, :B, :C, :D]
 OD_pairs = [(o, d) for o in Stations, d in Stations if o != d]
 Arcs = [
-    (:A, :B), 
-    (:B, :C), 
-    (:C, :D), 
+    (:A, :B),
+    (:B, :C),
+    (:C, :D),
     (:D, :A),
-    (:B, :A), 
-    (:C, :B), 
-    (:D, :C), 
+    (:B, :A),
+    (:C, :B),
+    (:D, :C),
     (:A, :D),
 ]
 
@@ -330,7 +332,7 @@ end
 for e in Arcs
     for t in Minutes
         R[(e, t)] = [
-            (o, d, tt) 
+            (o, d, tt)
             for (o, d) in OD_pairs
             for tt in Minutes
             if e in paths[(o, d)] && (t - travel_times[(o,e[1])] == tt) && (tt >= 1) && (tt <= 10)

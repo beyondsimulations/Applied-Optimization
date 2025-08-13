@@ -4,7 +4,7 @@ subtitle: "Applied Optimization with Julia"
 
 format:
     html:
-        theme: litera
+        theme: default
         highlight-style: arrow
         linkcolor: "#a60000"
         code-copy: true
@@ -251,7 +251,7 @@ With these, we can now define the demand/inventory balance constraint. As this i
 ```{julia}
 #| eval: false
 # Inventory balance constraints for periods after first period
-@constraint(lotsizeModel, 
+@constraint(lotsizeModel,
     demandBalance[i=keys(dictBottlingTime), t=2:length(all_periods)],
     WarehouseStockPeriodEnd[i,all_periods[t-1]] + productQuantity[i,all_periods[t]] - WarehouseStockPeriodEnd[i,all_periods[t]] == dictDemand[i,all_periods[t]]
     )
@@ -338,20 +338,20 @@ end
 # Create the production plot
 function create_production_plot(productionResults)
     p = groupedbar(
-        productionResults.period, 
-        productionResults.productQuantity, 
-        group=productionResults.product, 
+        productionResults.period,
+        productionResults.productQuantity,
+        group=productionResults.product,
         ylabel="Production Quantity (Bottles)",
         xlabel="Period",
         title="Production Schedule by Beer Type",
         size=(1200,600),
         palette = :Set3,
         legend=:outertopright,
-        xrotation = 45,   
+        xrotation = 45,
         legendtitle="Beer Type",
-        bar_width=0.7,    
-        grid=false,       
-        dpi=300           
+        bar_width=0.7,
+        grid=false,
+        dpi=300
     )
     return p
 end
@@ -359,20 +359,20 @@ end
 # Create the warehouse stock plot
 function create_warehouse_plot(productionResults)
     p = groupedbar(
-        productionResults.period, 
-        productionResults.WarehouseStockPeriodEnd, 
+        productionResults.period,
+        productionResults.WarehouseStockPeriodEnd,
         group=productionResults.product,
-        ylabel="Warehouse Stock", 
+        ylabel="Warehouse Stock",
         xlabel="Period",
         title="Warehouse Stock",
         size=(1200,600),
-        palette = :Set3,  
+        palette = :Set3,
         legend=:outertopright,
-        xrotation = 45,   
+        xrotation = 45,
         legendtitle="Beer Type",
-        bar_width=0.7,    
-        grid=false,       
-        dpi=300           
+        bar_width=0.7,
+        grid=false,
+        dpi=300
     )
     return p
 end
@@ -415,16 +415,16 @@ function create_cost_results()
     for t in sort(collect(keys(dictAvailableTime)))
         # Calculate setup costs for this period
         period_setup_costs = sum(
-            setupHourCosts * dictSetupTime[i] * value(productBottled[i,t]) 
+            setupHourCosts * dictSetupTime[i] * value(productBottled[i,t])
             for i in keys(dictBottlingTime)
         )
-        
+
         # Calculate inventory costs for this period
         period_inventory_costs = sum(
-            warehouseCosts * value(WarehouseStockPeriodEnd[i,t]) 
+            warehouseCosts * value(WarehouseStockPeriodEnd[i,t])
             for i in keys(dictBottlingTime)
         )
-        
+
         push!(costResults, (
             period = t,
             setup_costs = period_setup_costs,
@@ -433,7 +433,7 @@ function create_cost_results()
     end
 
     # Stack the cost columns
-    stacked_costs = stack(costResults, [:setup_costs, :inventory_costs], 
+    stacked_costs = stack(costResults, [:setup_costs, :inventory_costs],
                          variable_name="Cost_Type", value_name="Cost")
     return stacked_costs
 end
@@ -471,7 +471,7 @@ p = create_cost_plot(stacked_costs)
 
 # 2. Initial Warehouse Stock
 
-The model currently sets the initial warehouse stock levels without any restrictions. Modify your model to incorporate an initial stock for **all types of beer of zero** at the beginning of the **initial planning period**. 
+The model currently sets the initial warehouse stock levels without any restrictions. Modify your model to incorporate an initial stock for **all types of beer of zero** at the beginning of the **initial planning period**.
 
 To solve this task, you can simply extend the previous model by these additional constraints in the cell below. Afterwards, you can re-run the optimization.
 
@@ -511,9 +511,9 @@ p = create_cost_plot(stacked_costs)
 
 # 3. Scheduled Repair
 
-Unfortunately, the bottling plant has to undergo maintenance in periods `"week_10"` and `"week_11"`. **Extend your model** to prevent any production in those two periods. 
+Unfortunately, the bottling plant has to undergo maintenance in periods `"week_10"` and `"week_11"`. **Extend your model** to prevent any production in those two periods.
 
-Again, to solve this task, you can simply extend the previous model by these additional constraints in the cell below. Afterwards, you can re-run the optimization.  
+Again, to solve this task, you can simply extend the previous model by these additional constraints in the cell below. Afterwards, you can re-run the optimization.
 
 ```{julia}
 #| eval: false
@@ -552,7 +552,7 @@ p = create_cost_plot(stacked_costs)
 
 # 4. Production Schedule Analysis
 
-Analyze the production schedule outlined in section 2 of this tutorial. Is the workload **distributed evenly** across all time periods? Provide a rationale for your assessment. 
+Analyze the production schedule outlined in section 2 of this tutorial. Is the workload **distributed evenly** across all time periods? Provide a rationale for your assessment.
 
 Please answer in the following cell. Note, that `#=` and `=#` are a comment delimiter for multiline comments. You can write whatever you want between them and the code will not be executed.
 
@@ -577,7 +577,7 @@ Based on the production data from the final period, **calculate the ending inven
 
 # 5. Biannual Bottling Strategy
 
-Reflecting on a scenario where the company schedules its bottling operations **biannually** using the current method: identify and discuss potential pitfalls of this strategy. 
+Reflecting on a scenario where the company schedules its bottling operations **biannually** using the current method: identify and discuss potential pitfalls of this strategy.
 
 Offer at least one actionable suggestion for enhancing the efficiency or effectiveness of the production planning process.
 

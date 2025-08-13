@@ -22,7 +22,7 @@ format:
         footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-rail.qmd)"
         output-file: lecture-presentation.html
     html:
-        theme: [litera, ../styles.scss]
+        theme: [default, ../styles.scss]
 
 bibliography: ../AppliedBib.bib
 
@@ -39,8 +39,6 @@ execute:
 :::
 
 ## Public transport
-
-{{< include ../include/tutorial_end.qmd >}}
 
 - FIFA Worldcup 2022 took place in a [small region]{.highlight}
 - The capacity of the metro system was **finite**
@@ -132,9 +130,9 @@ This can lead to [overcrowding and potential crowd disasters!]{.highlight}
 
 ## {.loud-slide}
 ::: {.r-fit-text}
-Let's take a 
+Let's take a
 
-closer look at the 
+closer look at the
 
 problem structure!
 :::
@@ -153,7 +151,7 @@ problem structure!
 . . .
 
 - A [safe and successful event]{.highlight} as host country
-- Good [publicity and a positive recognition]{.highlight} worldwide  
+- Good [publicity and a positive recognition]{.highlight} worldwide
 - [Satisfied visitors]{.highlight} that enjoyed their time
 
 . . .
@@ -206,14 +204,14 @@ Simulations was build in Julia. With 1,000,000 individuals walking,using cars, b
 ::: {.column width="50%"}
 - Detailed movement patterns throughout the region
 - Potential sections at risk in the transport infrastructure
-- Potential capacity overloads at event locations  
+- Potential capacity overloads at event locations
 :::
 
 ## {.loud-slide}
 ::: {.r-fit-text}
 But it is still
 
-based on a lot 
+based on a lot
 
 of assumptions!
 :::
@@ -354,7 +352,7 @@ $$
 . . .
 
 - Simple network: assume people use the **shortest path**
-- Use [Djikstra's algorithm]{.highlight} to compute it 
+- Use [Djikstra's algorithm]{.highlight} to compute it
 - From each station to all other stations
 
 . . .
@@ -397,7 +395,7 @@ $$\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \ma
 . . .
 
 ::: {.callout-note}
-Based on the ratio of the different destinations $d$ to the total queue for each station $o \in \mathcal{O}$ in each period $p \in \mathcal{P}$. 
+Based on the ratio of the different destinations $d$ to the total queue for each station $o \in \mathcal{O}$ in each period $p \in \mathcal{P}$.
 :::
 
 ---
@@ -488,9 +486,9 @@ $$
 
 ## {.loud-slide}
 ::: {.r-fit-text}
-Things are going to 
+Things are going to
 
-get a little 
+get a little
 
 complicated now!
 :::
@@ -520,7 +518,7 @@ We can add a new set $\mathcal{R}_{e,t}$ to help us with this.
 ## Set of Time-Delays
 
 $$
-\mathcal{R}_{e,t} = \{(o,d,p) \mid 
+\mathcal{R}_{e,t} = \{(o,d,p) \mid
     \begin{array}{l}
     (o,d) | o,d \in \mathcal{O}, \\
     q_{o,d,p} > 0, \\
@@ -554,13 +552,13 @@ $\{((A,D),3),((B,D),5),((C,D),11),((E,D),9)\}$.
 
 ## {.loud-slide}
 ::: {.r-fit-text}
-Essentially, we can use this 
+Essentially, we can use this
 
-set to compute the utilization 
+set to compute the utilization
 
-of an arc at each minute based 
+of an arc at each minute based
 
-on the inflow level at the 
+on the inflow level at the
 
 different stations and periods.
 :::
@@ -596,7 +594,7 @@ Ensure that the capacity of each arc is not exceeded at any minute.
 . . .
 
 $$
-\sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} \quad \forall e \in \mathcal{E}, t \in \mathcal{T} 
+\sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} \quad \forall e \in \mathcal{E}, t \in \mathcal{T}
 $$
 
 . . .
@@ -609,7 +607,7 @@ Here, we combine the inflow at each station based on the o-d proportion and let 
 
 ## Dispatch Only Available People?
 
-::: {.callout-important}    
+::: {.callout-important}
 ## The goal of this constraint is to:
 Ensure that we do not dispatch more people than are queued and less than the minimum allowed inflow, preventing over- and under-dispatching.
 :::
@@ -648,7 +646,7 @@ $$
 . . .
 
 ::: {.callout-note}
-We need this constraint for **two reasons**: 
+We need this constraint for **two reasons**:
 
 1. We could also dispatch more people than there are as this would **minimize the objective value. **
 2. We also need to ensure that we can dispatch at **least the minimum allowed inflow** or less if the queue is smaller than the minimum allowed inflow.
@@ -669,7 +667,7 @@ We need this constraint for **two reasons**:
 
 \begin{align*}
 	\text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
-\end{align*} 
+\end{align*}
 subject to:
 \begin{align*}
 	&  \sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} && \forall e \in \mathcal{E}, t \in \mathcal{T} \\
@@ -718,7 +716,7 @@ subject to:
 ## Metro Inflow Problem
 
 - Solved very fast [within seconds]{.highlight} for realistic problem sizes
-- **But** we cannot plan or control the metro inflow 
+- **But** we cannot plan or control the metro inflow
 - Queues are **too simplified** with passengers disappearing
 
 . . .
@@ -730,7 +728,7 @@ subject to:
 - Solve the model for the time-horizon of a **few periods**
 - Fix the inflow in the **current first period**
 - Decrease capacity in the network **based on the inflow**
-- Transfer **remaining queues** into the subsequent period 
+- Transfer **remaining queues** into the subsequent period
 - [Solve the model again]{.highlight}
 - **Repeat**, until the inflow is computed for all periods
 
@@ -758,8 +756,8 @@ Few dangerous situations, especially at the FIFA Fan Fest, were **handled well**
 ## Wrap Up
 
 - Model can help to achieve a [good balance]{.highlight}
-- Can be adapted easily to **any metro system worldwide ** 
-- Especially interesting for **larger Asian cities** 
+- Can be adapted easily to **any metro system worldwide **
+- Especially interesting for **larger Asian cities**
 
 . . .
 

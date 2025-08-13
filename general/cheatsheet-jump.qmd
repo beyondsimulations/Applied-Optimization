@@ -3,13 +3,12 @@ title: "JuMP Syntax Cheatsheet"
 subtitle: "Applied Optimization with Julia"
 
 html:
-    theme: litera
+    theme: [default, ../styles.scss]
     highlight-style: breezedark
-    linkcolor: "#a60000"
     code-copy: true
     code-link: true
     toc: true
-    
+
 typst:
       papersize: a4
 
@@ -86,7 +85,7 @@ indices = ["A", "B", "C"]
 @variable(model, x[1:5] >= 0)
 
 # Constraint for each variable
-@constraint(model, capacity[i=1:5], 
+@constraint(model, capacity[i=1:5],
     x[i] <= 100
 )
 
@@ -106,7 +105,7 @@ indices = ["A", "B", "C"]
 
 ```{julia}
 # Basic conditional constraint
-@constraint(model, cond[i=1:5; i > 2], 
+@constraint(model, cond[i=1:5; i > 2],
     x[i] <= 10
 )   # Only applies when i > 2
 
@@ -157,7 +156,7 @@ indices = ["A", "B", "C"]
 
 # Weighted objective
 weights = [1, 2, 3, 4, 5]
-@objective(model, Max, 
+@objective(model, Max,
     sum(weights[i] * z[i] for i in 1:5)
 )
 ```
@@ -228,7 +227,7 @@ dual_status(model)                    # Dual solution status
 solve_time(model)                     # Solution time
 
 # Common status checks
-if termination_status(model) == OPTIMAL 
+if termination_status(model) == OPTIMAL
     println("Solution is optimal")
 elseif termination_status(model) == TIME_LIMIT && has_values(model)
     println("Time limit reached with feasible solution")

@@ -4,7 +4,7 @@ subtitle: "Applied Optimization with Julia"
 
 format:
     html:
-        theme: litera
+        theme: default
         highlight-style: arrow
         linkcolor: "#a60000"
         code-copy: true
@@ -154,7 +154,7 @@ requested_dict = Dict(
     requested.solar_farm .=> requested.truckload_demand
 )
 travelCosts_dict = Dict(
-    (row.supplier,row.solar_farm) => row.costs 
+    (row.supplier,row.solar_farm) => row.costs
     for row in eachrow(travelCosts)
 )
 ```
@@ -213,7 +213,7 @@ Dictionaries make it a lot easier to access the data later on, as we can use the
 
 # Section 3 - The model instance
 
-After the preprocessing and data loading, we now can create the model instance with the HiGHS optimizer. 
+After the preprocessing and data loading, we now can create the model instance with the HiGHS optimizer.
 
 ## Exercise 3.1 - Creating the model instance
 
@@ -244,7 +244,7 @@ We can now define the variables of our model. We need to define a variable for e
 #| eval: false
 # Define variable
 @variable(
-    transport_model, 
+    transport_model,
     X[available.supplier,keys(requested_dict)] >= 0
 )
 ```
@@ -255,8 +255,8 @@ Next, we can define the objective of our model. We want to maximize the profit, 
 
 ```{julia}
 #| eval: false
-@objective(transport_model, Max, 
-    sum((revenue-varCosts-travelCosts_dict[(i,j)]) * X[i,j] 
+@objective(transport_model, Max,
+    sum((revenue-varCosts-travelCosts_dict[(i,j)]) * X[i,j]
     for i in keys(available_dict), j in keys(requested_dict))
 )
 ```
@@ -269,8 +269,8 @@ To illustrate the use of dictionaries, we will again use the keys of the diction
 
 ```{julia}
 #| eval: false
-@constraint(transport_model, 
-    restrictAvailable[i in keys(available_dict)], 
+@constraint(transport_model,
+    restrictAvailable[i in keys(available_dict)],
     sum(X[i,j] for j in keys(requested_dict)) <= available_dict[i]
 )
 
@@ -281,7 +281,7 @@ Naturally, we could also use the vectors with the names from the DataFrames to d
 ```{julia}
 #| eval: false
 @constraint(transport_model,
-    restrictDemand[j in requested.solar_farm], 
+    restrictDemand[j in requested.solar_farm],
     sum(X[i,j] for i in available.supplier) <= requested_dict[j]
 )
 ```
@@ -372,4 +372,3 @@ Although the above code looks rather complicated, it is essentially just iterati
 In this tutorial, we have learned how to model and solve the transportation problem using JuMP. We have also learned how to use dictionaries to store and access the data, which will be useful for more complex models. If you have any questions, feel free to ask me via email!
 
 {{< include ../include/tutorial_end.qmd >}}
-

@@ -4,7 +4,7 @@ subtitle: "Applied Optimization with Julia"
 
 format:
     html:
-        theme: litera
+        theme: default
         highlight-style: arrow
         linkcolor: "#a60000"
         code-copy: true
@@ -35,7 +35,7 @@ In this case study, we'll help FastDelivery optimize their delivery routes using
 
 Implement the CVRP from the lecture without the constraints preventing subtours and restricting the driving time and capacities.
 
-The demand per distribution center and the coordinates of the locations are provided as CSV files. 
+The demand per distribution center and the coordinates of the locations are provided as CSV files.
 
 The number of vehicles is 6 and each vehicle can transport up to 50 parcels to the distribution centers. Note that capacity of each vehicle is identical.
 
@@ -73,7 +73,7 @@ coord = CSV.read("$(file_directory)/coord_x_y.csv", DataFrame)
 
 ::: {.callout-tip}
 
-Make sure that you have downloaded the data in the `data` folder that is located in the same directory as this notebook. 
+Make sure that you have downloaded the data in the `data` folder that is located in the same directory as this notebook.
 
 :::
 
@@ -234,11 +234,11 @@ function print_model_status(model)
             println("The relative gap is $(relative_gap(model))")
             println("The solve time (in seconds) is $(solve_time(model))")
         elseif termination_status(model) == TIME_LIMIT && has_values(model)
-            println("Solution is suboptimal due to a time limit, but a primal solution is available") 
+            println("Solution is suboptimal due to a time limit, but a primal solution is available")
         else
-            error("The model was not solved correctly.") 
+            error("The model was not solved correctly.")
         end
-        println("The objective value is ", objective_value(model)) 
+        println("The objective value is ", objective_value(model))
     end
 end
 
@@ -394,10 +394,10 @@ function plot_capacity_usage(X, U, coord)
     end
 
     println(vehicle_routes)
-    
+
     # Sort by capacity usage for better visualization
     sort!(vehicle_routes, by = x -> x[2])
-    
+
     # Create bar plot
     fig = bar(
         [u[2] for u in vehicle_routes],
@@ -411,10 +411,10 @@ function plot_capacity_usage(X, U, coord)
         dpi=300,
         margin=5Plots.mm,
     )
-    
+
     # Add capacity limit line
     hline!([capacity], color=:red, linestyle=:dash, label="Capacity Limit")
-    
+
     return fig
 end
 
@@ -467,7 +467,7 @@ You can do this in a comment in the cell below.
 
 # 5. Number of Vehicles
 
-Together, you realize one potential area of improvement involves the number of vehicles: it might potentially not be necessary to have 6 vehicles which deliver the parcels to the distribution centers. You are thus tasked to find the optimal number of vehicles and the best tour plan to minimize the costs **(not the distance!)**. 
+Together, you realize one potential area of improvement involves the number of vehicles: it might potentially not be necessary to have 6 vehicles which deliver the parcels to the distribution centers. You are thus tasked to find the optimal number of vehicles and the best tour plan to minimize the costs **(not the distance!)**.
 
 ::: {.callout-tip}
 
@@ -503,4 +503,3 @@ Please answer this question in the cell below.
 ---
 
 {{< include ../include/tutorial_end.qmd >}}
-

@@ -4,7 +4,7 @@ subtitle: "Applied Optimization with Julia"
 
 format:
     html:
-        theme: litera
+        theme: default
         highlight-style: arrow
         linkcolor: "#a60000"
         code-copy: true
@@ -216,7 +216,7 @@ Where:
 For example:
 
 ```julia
-@objective(model_name, Max, 2*variableA + 3*variableB) 
+@objective(model_name, Max, 2*variableA + 3*variableB)
 ```
 
 This defines an objective function that maximizes something based on the values of `variableA` and `variableB`.
@@ -263,15 +263,15 @@ termination_status(model)
 ```{julia}
 #| eval: false
 begin
-    if termination_status(model) == OPTIMAL 
+    if termination_status(model) == OPTIMAL
         println("Solution is optimal")
-    elseif termination_status(model) == TIME_LIMIT && has_values(model) 
-        println("Solution is suboptimal due to a time limit, 
-            but a primal solution is available") 
+    elseif termination_status(model) == TIME_LIMIT && has_values(model)
+        println("Solution is suboptimal due to a time limit,
+            but a primal solution is available")
     else
-        error("The model was not solved correctly.") 
+        error("The model was not solved correctly.")
     end
-    println("Objective value = ", objective_value(model)) 
+    println("Objective value = ", objective_value(model))
 end
 ```
 
