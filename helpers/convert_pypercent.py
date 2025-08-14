@@ -1,8 +1,8 @@
 import jupytext
 from pathlib import Path
 
-# Find all .ipynb files
-for notebook_path in Path('.').rglob('*.ipynb'):
+# Find all .ipynb files in the _site folder only
+for notebook_path in Path('_site/tutorials').rglob('*.ipynb'):
     # Read the notebook
     notebook = jupytext.read(notebook_path)
 

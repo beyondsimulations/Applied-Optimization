@@ -1,5 +1,9 @@
 project:
   type: website
+  post-render:
+    - helpers/convert_pypercent.py
+    - helpers/convert_qmd_to_md.py
+    - helpers/create_pdf.py
   render:
     - index.qmd
     - 404.qmd
@@ -197,8 +201,16 @@ format:
           }
         </style>
 
+  hugo-md: default
+
   typst:
     papersize: a4
+
+format-links:
+  - html
+  - format: typst
+    text: PDF
+    icon: file-pdf
 
 bibliography: AppliedBib.bib
 
