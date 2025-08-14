@@ -6,10 +6,6 @@ format:
   revealjs:
     footer: ' {{< meta title >}} | {{< meta author >}} | [Home](lecture-05-production.qmd)'
     output-file: lecture-05-presentation.html
-format-links:
-  - text: PDF
-    href: lecture-05-presentation.pdf
-    icon: file-pdf
 ---
 
 

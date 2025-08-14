@@ -6,7 +6,6 @@ format:
   revealjs:
     footer: ' {{< meta title >}} | {{< meta author >}} | [Home](lecture-10-intermission.qmd)'
     output-file: lecture-10-presentation.html
-  typst: default
 ---
 
 
