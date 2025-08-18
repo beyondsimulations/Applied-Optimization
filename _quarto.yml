@@ -133,8 +133,6 @@ website:
             href: general/cheatsheet-jump.qmd
       - text: "FAQs"
         href: general/faq.qmd
-      - text: "Chat"
-        href: general/chat.qmd
       - text: "Literature"
         href: general/literature.qmd
 
@@ -169,36 +167,18 @@ format:
       - general/header.html
     include-after-body:
       text: |
+        <script src="https://cdn.jsdelivr.net/gh/beyondsimulations/web-embedded-chat@main/floating-chat.js"></script>
         <script>
-          window.difyChatbotConfig = {
-            token: 'qCOeS5mMpO5kI42U',
-            baseUrl: 'https://flow.byndsim.com',
-            systemVariables: {
-              // user_id: 'YOU CAN DEFINE USER ID HERE',
-            },
-            containerProps: {
-              style: {
-                  backgroundColor: '#ffffff',
-                  borderRadius: '0px',
-              },
-            },
-          }
+            new UniversalChatWidget({
+                title: "Course Assistant",
+                subtitle: "Applied Optimization",
+                apiEndpoint: "https://model-proxy.vlcek-4b4.workers.dev",
+                model: "applied-optimization",
+                userMessageOpacity: 0.5,
+                assistantMessageOpacity: 0.5,
+                position: "bottom-left"
+            });
         </script>
-        <script
-          src="https://flow.byndsim.com/embed.min.js"
-          id="qCOeS5mMpO5kI42U"
-          defer>
-        </script>
-        <style>
-          #dify-chatbot-bubble-button {
-            background-color: #F29325 !important;
-          }
-          #dify-chatbot-bubble-window {
-            width: 24rem !important;
-            height: 80vh !important;
-            position: fixed !important;
-          }
-        </style>
 
   hugo-md: default
 

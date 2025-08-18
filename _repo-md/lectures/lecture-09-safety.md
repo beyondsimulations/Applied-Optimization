@@ -9,12 +9,6 @@ format:
 ---
 
 
-## 
-
-<img src="../general/QRCode_P5X3Q.png" data-fig-align="center" />
-
-Please take a moment at the start of the lecture to fill out the <span class="highlight">lecture evaluation survey</span>. Thanks!
-
 # <span class="flow">Introduction</span>
 
 ## <span class="invert-font">Islamic Pilgrimage</span>
