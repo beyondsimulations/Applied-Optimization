@@ -8,6 +8,11 @@ format-links:
 ---
 
 
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous" data-relocate-top="true"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
 # Introduction
 
 Welcome to this tutorial on the transportation problem using JuMP! As always, don't worry if you're new to optimization - we'll walk through everything step by step using a real-world example.
@@ -26,6 +31,13 @@ Let's start by loading the necessary packages:
 using JuMP, HiGHS
 using DataFrames, CSV
 ```
+
+<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling JuMP [4076af6c-e467-56ae-b986-b466b2749572] (cache misses: wrong dep version loaded (4), wrong source (2))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling HiGHS [87dc4568-4c63-4d18-b0c0-bb2238e4078b] (cache misses: wrong dep version loaded (6))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling DataFrames [a93c6f00-e57d-5684-b7b6-d8193f3e46c0] (cache misses: wrong dep version loaded (6), incompatible header (2))
+</pre>
 
 ------------------------------------------------------------------------
 
@@ -81,6 +93,19 @@ first(available,5)
 
     Available panels:
 
+<div><div style = "float: left;"><span>5×2 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
+
+| Row | supplier | truckloads_available |
+|----:|:---------|---------------------:|
+|     | String7  |                Int64 |
+|   1 | a_1      |                  478 |
+|   2 | a_2      |                  371 |
+|   3 | a_3      |                  361 |
+|   4 | a_4      |                  415 |
+|   5 | a_5      |                  354 |
+
+</div>
+
 ``` julia
 println("Requested panels:")
 first(requested,5)
@@ -88,12 +113,38 @@ first(requested,5)
 
     Requested panels:
 
+<div><div style = "float: left;"><span>5×2 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
+
+| Row | solar_farm | truckload_demand |
+|----:|:-----------|-----------------:|
+|     | String7    |            Int64 |
+|   1 | b_1        |                9 |
+|   2 | b_2        |               31 |
+|   3 | b_3        |               47 |
+|   4 | b_4        |               46 |
+|   5 | b_5        |               12 |
+
+</div>
+
 ``` julia
 println("Travel costs:")
 first(travelCosts,5)
 ```
 
     Travel costs:
+
+<div><div style = "float: left;"><span>5×3 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
+
+| Row | supplier | solar_farm | costs |
+|----:|:---------|:-----------|------:|
+|     | String7  | String7    | Int64 |
+|   1 | a_1      | b_1        |  8052 |
+|   2 | a_2      | b_1        | 11845 |
+|   3 | a_3      | b_1        |  6103 |
+|   4 | a_4      | b_1        | 11099 |
+|   5 | a_5      | b_1        |  5625 |
+
+</div>
 
 ## Exercise 1.1 - Understand the Data
 
@@ -351,6 +402,14 @@ transport_df = DataFrame(
     truckloads = []
 )
 ```
+
+<div><div style = "float: left;"><span>0×3 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
+
+| Row | supplier | solar_farm | truckloads |
+|-----|----------|------------|------------|
+|     | Any      | Any        | Any        |
+
+</div>
 
 Then, we can iterate over the keys of the dictionaries and store the values in the DataFrame if they are greater than zero.
 

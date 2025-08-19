@@ -61,6 +61,11 @@ Now, let's load these packages:
 using JuMP, HiGHS
 ```
 
+<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling JuMP [4076af6c-e467-56ae-b986-b466b2749572] (cache misses: wrong dep version loaded (2), wrong source (2))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling HiGHS [87dc4568-4c63-4d18-b0c0-bb2238e4078b] (cache misses: wrong dep version loaded (6))
+</pre>
+
 Great! We're now ready to start building our optimization model.
 
 ------------------------------------------------------------------------

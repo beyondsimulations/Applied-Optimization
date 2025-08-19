@@ -46,17 +46,28 @@ println("First 5 rows of available time per period:")
 println(availableTime[1:5, :])
 ```
 
-    Number of periods: 27
-    First 5 rows of available time per period:
-    5×2 DataFrame
-     Row │ period   available_capacity 
-         │ String7  Int64              
-    ─────┼─────────────────────────────
-       1 │ week_01                 168
-       2 │ week_02                 168
-       3 │ week_03                 168
-       4 │ week_04                 168
-       5 │ week_05                  48
+<pre>Number of periods: 27
+
+First 5 rows of available time per period:
+
+<span class="ansi-bold">5×2 DataFrame</span>
+
+<span class="ansi-bold"> Row </span>│<span class="ansi-bold"> period  </span><span class="ansi-bold"> available_capacity </span>
+
+     │<span class="ansi-bright-black-fg"> String7 </span><span class="ansi-bright-black-fg"> Int64              </span>
+
+─────┼─────────────────────────────
+
+   1 │ week_01                 168
+
+   2 │ week_02                 168
+
+   3 │ week_03                 168
+
+   4 │ week_04                 168
+
+   5 │ week_05                  48
+</pre>
 
 ``` julia
 # Load the data about the bottling time for each beer
@@ -66,18 +77,30 @@ println("Bottling time per beer:")
 println(bottlingTime)
 ```
 
-    Number of beers: 6
-    Bottling time per beer:
-    6×2 DataFrame
-     Row │ beer_type   bottling_time 
-         │ String15    Float64       
-    ─────┼───────────────────────────
-       1 │ Pilsener          0.00222
-       2 │ Blonde_Ale        0.00111
-       3 │ Amber_Ale         0.00139
-       4 │ Brown_Ale         0.00222
-       5 │ Porter            0.00167
-       6 │ Stout             0.00111
+<pre>Number of beers: 6
+
+Bottling time per beer:
+
+<span class="ansi-bold">6×2 DataFrame</span>
+
+<span class="ansi-bold"> Row </span>│<span class="ansi-bold"> beer_type  </span><span class="ansi-bold"> bottling_time </span>
+
+     │<span class="ansi-bright-black-fg"> String15   </span><span class="ansi-bright-black-fg"> Float64       </span>
+
+─────┼───────────────────────────
+
+   1 │ Pilsener          0.00222
+
+   2 │ Blonde_Ale        0.00111
+
+   3 │ Amber_Ale         0.00139
+
+   4 │ Brown_Ale         0.00222
+
+   5 │ Porter            0.00167
+
+   6 │ Stout             0.00111
+</pre>
 
 ``` julia
 # Load the data about the setup time for each beer
@@ -86,17 +109,28 @@ println("Setup time per beer:")
 println(setupTime)
 ```
 
-    Setup time per beer:
-    6×2 DataFrame
-     Row │ beer_type   setup_time 
-         │ String15    Int64      
-    ─────┼────────────────────────
-       1 │ Pilsener            10
-       2 │ Blonde_Ale          11
-       3 │ Amber_Ale            8
-       4 │ Brown_Ale            8
-       5 │ Porter              11
-       6 │ Stout                9
+<pre>Setup time per beer:
+
+<span class="ansi-bold">6×2 DataFrame</span>
+
+<span class="ansi-bold"> Row </span>│<span class="ansi-bold"> beer_type  </span><span class="ansi-bold"> setup_time </span>
+
+     │<span class="ansi-bright-black-fg"> String15   </span><span class="ansi-bright-black-fg"> Int64      </span>
+
+─────┼────────────────────────
+
+   1 │ Pilsener            10
+
+   2 │ Blonde_Ale          11
+
+   3 │ Amber_Ale            8
+
+   4 │ Brown_Ale            8
+
+   5 │ Porter              11
+
+   6 │ Stout                9
+</pre>
 
 ``` julia
 # Load the data about the weekly demand for each beer
@@ -105,16 +139,26 @@ println("First 5 rows of demand per beer:")
 println(demandCustomers[1:5, :])
 ```
 
-    First 5 rows of demand per beer:
-    5×3 DataFrame
-     Row │ beer_type   period   demand 
-         │ String15    String7  Int64  
-    ─────┼─────────────────────────────
-       1 │ Pilsener    week_01    3853
-       2 │ Blonde_Ale  week_01    8372
-       3 │ Amber_Ale   week_01   16822
-       4 │ Brown_Ale   week_01   13880
-       5 │ Porter      week_01   10642
+<pre>First 5 rows of demand per beer:
+
+<span class="ansi-bold">5×3 DataFrame</span>
+
+<span class="ansi-bold"> Row </span>│<span class="ansi-bold"> beer_type  </span><span class="ansi-bold"> period  </span><span class="ansi-bold"> demand </span>
+
+     │<span class="ansi-bright-black-fg"> String15   </span><span class="ansi-bright-black-fg"> String7 </span><span class="ansi-bright-black-fg"> Int64  </span>
+
+─────┼─────────────────────────────
+
+   1 │ Pilsener    week_01    3853
+
+   2 │ Blonde_Ale  week_01    8372
+
+   3 │ Amber_Ale   week_01   16822
+
+   4 │ Brown_Ale   week_01   13880
+
+   5 │ Porter      week_01   10642
+</pre>
 
 ------------------------------------------------------------------------
 

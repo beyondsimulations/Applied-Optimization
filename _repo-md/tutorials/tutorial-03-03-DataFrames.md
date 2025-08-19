@@ -8,6 +8,11 @@ format-links:
 ---
 
 
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous" data-relocate-top="true"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
 # Introduction
 
 Imagine a DataFrame as a digital spreadsheet. It's a way to organize and work with data in rows and columns. Each column can hold different types of information, like names, ages, or salaries. In this tutorial, we'll learn how to create DataFrames, add and change data, and perform simple operations on our data.
@@ -35,6 +40,17 @@ students = DataFrame(
     Age = [18, 25,29],
 )
 ```
+
+<div><div style = "float: left;"><span>3×2 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
+
+| Row | Name   |   Age |
+|----:|:-------|------:|
+|     | String | Int64 |
+|   1 | Elio   |    18 |
+|   2 | Bob    |    25 |
+|   3 | Yola   |    29 |
+
+</div>
 
 ## Exercise 1.1 - Create a DataFrame
 
@@ -136,12 +152,30 @@ Logical indexing can be used to filter rows in a DataFrame based on conditions. 
 allFranks = employees[employees.Name .== "Frank", :]
 ```
 
+<div><div style = "float: left;"><span>1×3 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
+
+| Row | Name   |   Age | Salary |
+|----:|:-------|------:|-------:|
+|     | String | Int64 |  Int64 |
+|   1 | Frank  |    37 |  90000 |
+
+</div>
+
 Alternatively, the filter function provides a powerful tool to extract subsets of
 data based on a condition:
 
 ``` julia
 allFranks = filter(row -> row.Name == "Frank", employees)
 ```
+
+<div><div style = "float: left;"><span>1×3 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
+
+| Row | Name   |   Age | Salary |
+|----:|:-------|------:|-------:|
+|     | String | Int64 |  Int64 |
+|   1 | Frank  |    37 |  90000 |
+
+</div>
 
 ## Exercise 3.1 - Filter the DataFrame
 
@@ -281,13 +315,20 @@ end
 println(WorkingHours)
 ```
 
-    3×2 DataFrame
-     Row │ Name    Hours 
-         │ String  Int64 
-    ─────┼───────────────
-       1 │ John       40
-       2 │ Mike       40
-       3 │ Frank      30
+<pre><span class="ansi-bold">3×2 DataFrame</span>
+
+<span class="ansi-bold"> Row </span>│<span class="ansi-bold"> Name   </span><span class="ansi-bold"> Hours </span>
+
+     │<span class="ansi-bright-black-fg"> String </span><span class="ansi-bright-black-fg"> Int64 </span>
+
+─────┼───────────────
+
+   1 │ John       40
+
+   2 │ Mike       40
+
+   3 │ Frank      30
+</pre>
 
 ------------------------------------------------------------------------
 

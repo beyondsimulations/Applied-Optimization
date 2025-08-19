@@ -8,6 +8,11 @@ format-links:
 ---
 
 
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous" data-relocate-top="true"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
 # Introduction
 
 Welcome to "FastDelivery" - a local logistics service in Hamburg! We're working with a central warehouse that operates a decentralized distribution network: they deliver packages directly to smaller distribution centers in the region, ensuring efficient last-mile delivery across the area.
@@ -46,6 +51,40 @@ file_directory = "$(@__DIR__)/data"
 demand = CSV.read("$(file_directory)/routing-demand.csv", DataFrame)
 coord = CSV.read("$(file_directory)/coord_x_y.csv", DataFrame)
 ```
+
+<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling DataFrames [a93c6f00-e57d-5684-b7b6-d8193f3e46c0] (cache misses: wrong dep version loaded (4), incompatible header (2))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling JuMP [4076af6c-e467-56ae-b986-b466b2749572] (cache misses: wrong dep version loaded (6))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling HiGHS [87dc4568-4c63-4d18-b0c0-bb2238e4078b] (cache misses: wrong dep version loaded (6))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling Plots [91a5bcdd-55d7-5caf-9e0b-520d859cae80] (cache misses: wrong dep version loaded (6))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling IJuliaExt [2f4121a4-3b3a-5ce6-9c5e-1f2673ce168a] (cache misses: wrong dep version loaded (2))
+</pre>
+
+<div><div style = "float: left;"><span>15×3 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
+
+| Row | location |       x |         y |
+|----:|:---------|--------:|----------:|
+|     | String7  | Float64 |   Float64 |
+|   1 | central  |  155.24 |    151.63 |
+|   2 | dc_01    | 128.513 |   67.4002 |
+|   3 | dc_02    | 47.6949 |   194.738 |
+|   4 | dc_03    | 93.6483 |   181.213 |
+|   5 | dc_04    |  59.737 |   166.434 |
+|   6 | dc_05    | 197.681 |   102.756 |
+|   7 | dc_06    | 152.263 |   140.986 |
+|   8 | dc_07    | 183.943 |   182.649 |
+|   9 | dc_08    | 113.792 |   33.3626 |
+|  10 | dc_09    | 172.555 |   82.9658 |
+|  11 | dc_10    | 77.4372 |   27.0503 |
+|  12 | dc_11    | 132.689 |   152.717 |
+|  13 | dc_12    | 54.2646 | 0.0399352 |
+|  14 | dc_13    | 54.5474 |   31.4915 |
+|  15 | dc_14    | 66.5128 |    100.22 |
+
+</div>
 
 > **Tip**
 >

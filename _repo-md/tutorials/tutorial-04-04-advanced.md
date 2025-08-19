@@ -25,6 +25,11 @@ Let's start by loading the necessary packages:
 using JuMP, HiGHS
 ```
 
+<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling JuMP [4076af6c-e467-56ae-b986-b466b2749572] (cache misses: wrong dep version loaded (2), wrong source (2))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling HiGHS [87dc4568-4c63-4d18-b0c0-bb2238e4078b] (cache misses: wrong dep version loaded (6))
+</pre>
+
 ------------------------------------------------------------------------
 
 # Section 1: Understanding Solver Options
@@ -162,7 +167,7 @@ println("Gadgets to produce: ", value(gadgets))
       Primal bound      2780
       Dual bound        2800
       Gap               0.719% (tolerance: 1%)
-      P-D integral      0.000571176133005
+      P-D integral      0.000763482177335
       Solution status   feasible
                         2780 (objective)
                         0 (bound viol.)

@@ -179,6 +179,17 @@ warehouse_model = Model(
 )
 ```
 
+<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling JuMP [4076af6c-e467-56ae-b986-b466b2749572] (cache misses: wrong dep version loaded (4), wrong source (2))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling Ipopt [b6b21f68-93f8-5de0-b562-5493be1d77c9] (cache misses: wrong dep version loaded (2), wrong source (2))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling IpoptMathOptInterfaceExt [9f03943f-3ac1-51ea-b4a2-58bda43ee6d1] (cache misses: wrong dep version loaded (4))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling HiGHS [87dc4568-4c63-4d18-b0c0-bb2238e4078b] (cache misses: wrong dep version loaded (6))
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling Juniper [2ddba703-00a4-53a7-87a5-e8b9971dde84] (cache misses: wrong dep version loaded (4))
+</pre>
+
     A JuMP Model
     ├ solver: Juniper
     ├ objective_sense: FEASIBILITY_SENSE
