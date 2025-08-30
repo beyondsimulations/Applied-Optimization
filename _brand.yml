@@ -1,23 +1,30 @@
 color:
   palette:
-    one: "#0f6466"
-    two: "#fdcd9a"
-    three: "#d99f7e"
-    four: "#99bfbb"
-    five: "#df7d7d"
-    code: "#F2F0F2"
-    codeline: "#BF4D34"
-    darker: "#2c3532"
-    lighter: "#ffffff"
+    oneDark: "#F6B265"
+    oneLight: "#FCCF9C"
+    twoDark: "#52898E"
+    twoLight: "#9BC0C0"
+    threeDark: "#DB6B6B"
+    threeLight: "#EBADAD"
+    codeline: "#E7EDEF"
+    darker: "#363D45"
+    greyer: "#648090"
+    lighter: "#FFFDFC"
 
-  background: lighter
-  foreground: darker
-  primary: five
+  foreground: darker #The main text color. Typically will be close to black and must have high contrast with the background color.
+  background: lighter #The main background color. Tyically will be close to white and must have high contrast with the foreground color.
 
-  success: two
-  info: four
-  warning: three
-  danger: five
+  primary: twoDark #The primary accent color, used for hyperlinks, active states, and primary action buttons.
+  secondary: oneLight #The secondary accent color, often used for lighter text or disabled states.
+  tertiary: threeLight #The tertiary accent color, used for hover states, accents, and wells.
+
+  success: twoLight #The color used for positive or successful actions and information.
+  info: oneLight #The color used for neutral or informational actions and information.
+  warning: threeLight #The color used for warning or cautionary actions and information.
+  danger: threeDark #The color used for errors, dangerous actions, or negative information.
+
+  light: lighter #A bright color, used as a high-contrast foreground color on dark elements or low-contrast background color on light elements.
+  dark: darker #A dark color, used as a high-contrast foreground color on light elements or high-contrast background color on light elements.
 
 typography:
   fonts:
@@ -38,8 +45,21 @@ typography:
     family: Google Sans Code
   monospace-block:
     family: Google Sans Code
-    background-color: code
+    background-color: codeline
   monospace-inline:
     family: Google Sans Code
-    color: codeline
-    background-color: code
+    color: twoDark
+    background-color: codeline
+  link:
+    color: threeDark
+
+defaults:
+  quarto:
+    html:
+      highlight-style: arrow
+      code-copy: true
+      code-link: true
+      code-overflow: wrap
+      html-math-method:
+        method: mathjax
+        url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
