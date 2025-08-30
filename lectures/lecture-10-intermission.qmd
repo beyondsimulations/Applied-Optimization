@@ -1,0 +1,837 @@
+---
+title: "Lecture X - Intermission: Exam Preparation"
+subtitle: "Applied Optimization with Julia"
+author: "Dr. Tobias Vlćek"
+format:
+  revealjs:
+    footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-10-intermission.qmd)"
+    output-file: lecture-10-presentation.html
+---
+
+# [Intermission]{.flow} {.title}
+
+## Today's lecture
+
+{{< include ../include/activate_environment.qmd >}}
+
+- Today's lecture is a **little bit different**
+- Manage your expectations
+- Give you a **better idea** of what to expect from the exam
+- We will go through **some examples together!**
+
+## Exam's structure
+
+- Exam consists of **three parts**
+- Free modelling, questions, Julia coding
+- Each point corresponds to [approximately 1 minute of work]{.highlight}
+
+. . .
+
+::: {.callout-important}
+You can take a **handwritten** DIN A4 sheet of paper with you!
+:::
+
+## Exam Preparation Checklist
+
+::: {.callout-tip}
+## Before starting the exam:
+
+- [ ] Review modeling notation conventions
+- [ ] Practice writing sets, parameters, and variables
+- [ ] Review common constraint patterns
+- [ ] Practice Julia syntax
+- [ ] Prepare your DIN A4 cheat sheet
+:::
+
+---
+
+# [Part I]{.flow} {.title}
+
+## 1.a (6 Points) {.scrollable}
+
+A company that ships ice cream wants to maximize their profit. It can do that by transporting its different sorts of ice cream from their only production facility to several supermarkets.
+
+Each delivered sort of ice cream makes the ice cream company a different profit per unit. The transportation costs per truckload are totally negligible as is the routing, as all supermarkets are located very close to each other. The company should maximally deliver the agreed number of units of each ice cream sort to each individual supermarket.
+
+To do so, the company owns one truck which has a fixed total capacity for a number of units of ice cream. Note, that each unit of ice cream consumes a different amount of space in the truck! The required space for each unit of ice cream is given for each sort. The optimal number of units from each sort to ship to each supermarket should be computed by the model.
+
+Define all sets, parameters and variables required to model the problem described above. Select a suitable notation of your choice. Make sure to explicitly state in your notation which elements are sets, parameters and variables.
+
+::: {.callout-tip}
+Note that the problem does not have to be modeled yet!
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+- $i \in \mathcal{I}$ : Different sorts of ice cream (Set)
+- $j \in \mathcal{J}$ : Different supermarkets (Set)
+- $e_{i,j}$ : profit of each delivered sort $i$ to $j$ (Parameter)
+- $b_{i,j}$ : truckloads of sort $i$ demanded by $j$ (Parameter)
+- $u_i$ : capacity consumed by sort $i$ (Parameter)
+- $k$ : capacity per truck (Parameter)
+- $X_{i,j}$ : number of shipped truckloads from $i$ to $j$ (Variable)
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 1.b (2 Points)  {.scrollable}
+
+Please define the objective function to model the described problem based on your defined notation.
+
+::: {.callout-tip}
+If you need additional sets, parameters or variables that are not yet defined, please define them as well.
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+$$
+\text{max} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} e_{i,j} \times X_{i,j}
+$$
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 1.c (4 Points)  {.scrollable}
+
+Please define all necessary constraints and the variable ranges to model the described problem based on your notation.
+
+::: {.callout-tip}
+If you need additional sets, parameters or variables that are not yet defined, please define them as well.
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+$$
+\text{u.t.c} \quad X_{i,j} \leq b_{i,j} \quad \forall i \in \mathcal{I},j \in \mathcal{J}
+$$
+
+$$
+\sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} u_i \times X_{i,j} \leq k
+$$
+
+$$
+X_{i,j} \geq 0 \quad \forall i \in \mathcal{I},j \in \mathcal{J}
+$$
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 1.d (2 Points)  {.scrollable}
+
+Is the model formulation a linear problem with binary variables?
+
+Please explain your answer briefly.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+Yes, the model formulation is a linear problem but it does not have binary variables, but continuous variables.
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 1.e (8 Points) {.scrollable}
+
+The supermarkets are furious because the company doesn't always deliver the agreed truckloads of ice cream. Therefore, they want to penalize the company in the future, if it delivers less than the agreed amount. For each demand of a supermarket that could not be fulfilled, the company will have to pay a one-time fee for the ice-cream sort.
+
+How can you expand your model to reflect this new situation? Write down all additional or modified sets, parameters, variables, constraints and the objective function while describing each with a few words.
+
+::: {.callout-tip}
+Note, that you only need to write down new and modified elements!
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+- $p_i$ : One-time fee per unfulfilled demand (Parameter)
+- $Y_{i,j}$ : 1, if demand $b_{i,j}$ is unfulfilled (Variable)
+
+**New objective function**
+
+$$
+\text{max} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} (e_{i,j} \times X_{i,j} -  p_i \times Y_{i,j})
+$$
+
+**New constraint**
+
+$$
+b_{i,j} - X_{i,j} \leq Y_{i,j} \times b_{i,j} \quad \forall i \in \mathcal{I},j \in \mathcal{J}
+$$
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 1.f (8 Points) {.scrollable}
+
+Next to the production facility of the ice cream company sits a company that sells frozen fish. Due to declining fish stocks in the ocean, the company does not need all of its trucks. It offers to rent their trucks for a certain price to the ice cream company so it can transport more ice cream. These trucks have twice the capacity of the truck currently in use by the ice cream company.
+
+How can you expand your model to reflect this new situation? Write down all additional or modified Sets, parameters, variables, constraints and the objective function while describing each with a few words.
+
+::: {.callout-tip}
+Note, that you only need to write down new and modified elements! If you haven't solved the previous task, work with the model defined before.
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+- $r$ : Price for rented trucks (Parameter)
+- $Z$ : Number of rented trucks with Z as \textbf{integer variable} (Variable)
+
+**New objective function**
+
+$$
+\text{max} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} (e_{i,j} \times X_{i,j} -  p_i \times Y_{i,j}) - r \times Z
+$$
+
+**New constraint**
+
+$$
+\sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} u_i \times X_{i,j} \leq k + 2k \times Z
+$$
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+# [Part II]{.flow} {.title}
+
+## 2.a (3 Points)  {.scrollable}
+
+What is the goal of the Territory Design Problem (Districting Problem)?
+
+Please answer in 2-3 sentences.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+The goal of the Territory Design Problem (Districting Problem) is to aggregate smaller areas, often called basic areas, into clusters, called districts or territories, according to predefined goals. Those could for example  include:
+
+- Equal Workload: Territories should be designed to ensure that the workload (e.g., number of customers, sales potential, travel time) is distributed as evenly as possible across them. This promotes fairness and efficiency.
+- Contiguity: Territories should consist of basic units (e.g., neighborhoods, zip codes) that are connected without gaps or isolated sections. This is essential for many applications, like political districting or service area divisions.
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 2.b (3 Points) {.scrollable}
+
+::: {.columns}
+
+::: {.column width="50%"}
+| $t_{mi}$ | A | B | C | D |
+|----------|---|---|---|---|
+| 1        | 0 | 0 | 1 | 1 |
+| 2        | 1 | 0 | 1 | 0 |
+| 3        | 1 | 0 | 0 | 1 |
+| 4        | 1 | 0 | 1 | 1 |
+| 5        | 1 | 1 | 0 | 1 |
+| 6        | 1 | 1 | 0 | 1 |
+:::
+
+::: {.column width="50%"}
+Please compute the coappearance matrix that results from these transactions.
+
+:::
+
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+$\begin{bmatrix}
+    5 & 2 & 2 & 4 \\
+    2 & 2 & 0 & 2 \\
+    2 & 0 & 2 & 2 \\
+    4 & 2 & 2 & 5
+\end{bmatrix}$
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 2.c (2 Points)  {.scrollable}
+
+Briefly explain in 2-3 sentences what a global optimum in an optimization problem is.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+In Operations Research (OR), a global optimum is the absolute best solution to an optimization problem. This solution has the most favorable objective function value (either the lowest cost or highest profit, depending on how the problem is defined) compared to any other possible solution within the entire feasible region. In contrast, a local optimum is only the best solution within a smaller neighborhood of solutions. If the problem is linear, the global optimum is the same as the local optimum.
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 2.d (3 Points)  {.scrollable}
+
+Name three optimization problems, e.g. Knapsack Problem.
+
+You are welcome to answer this question in bullet points.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+- Traveling Salesperson Problem (TSP):  Finding the shortest possible route that visits a set of cities and returns to the starting city. This has applications in logistics, route planning, and manufacturing.
+- Vehicle Routing Problem (VRP): Designing optimal routes for a fleet of vehicles to deliver goods or services to a set of customers. This problem considers constraints like vehicle capacities, time windows for delivery, and aims to minimize factors like total distance or cost.
+- Facility Location Problem: Determining the best locations to open facilities (e.g., warehouses, factories) to serve a set of customers while minimizing costs related to transportation and facility operation.
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 2.e (4 Points)  {.scrollable}
+
+Explain briefly in 2-3 sentences what so-called "Big-M" constraints can be used for in mathematical modeling.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+Big-M constraints are used in mathematical modeling to handle logical relationships, especially when working with binary variables (0 or 1).  By assigning a very large positive value (M) to one side of the constraint, it effectively forces the binary variable to "turn on" that constraint when needed and leave it inactive when not. This allows incorporating logical rules into mathematical models for optimization problems.
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+# [Part III]{.flow} {.title}
+
+## Hints
+
+::: {.callout-note}
+## Programming Tips
+
+- Pay attention to variable names and consistency
+- Check for proper package imports
+- Verify array indexing
+- Remember to use the correct comparison operators
+- Make sure to use proper JuMP syntax
+:::
+
+\newpage
+
+## 3.a (7 Points) {.scrollable}
+
+The following Julia code contains seven errors. Highlight the errors in the code and briefly describe what would need to be done to correct them.
+
+::: {.callout-note}
+Assume that all variables containing data are loaded correctly, e.g. availablePanels and requestedPanels are already defined.
+:::
+
+```julia
+# Load the necessary packages
+using JuMP
+using HiGHS
+
+# Define the size of the problem instance
+nrSuppliers = length(availablePanels)
+nrCustomers = length(requestedPanels)
+
+# Create model instance
+transport = Model(HiGHS.Optimizer)
+
+# Define variable
+@variable(transport_model, X[i = nrSuppliers,j = 1:nrCustomers], Bin)
+
+# Define objective
+@objective(transport_model, Max,
+    sum(travelCosts[i,j]* X[i] for i in 1:nrSuppliers, j in 1:nrCustomers)
+    )
+# Define the constraints
+@constraint(transport_model,
+    restrictAvailable[i=1:nrSuppliers],
+    sum(X[i,j] for j in 1:nrCustomers) <= available[i]
+    )
+@constraint(transport_model,
+    restrictDemand[j=1:nrCustomers],
+    sum(X[i,j] for i in 1:nrSuppliers) === requested[j]
+    )
+# Start optimization
+start_optimization(transport_model)
+```
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+1. Model is called 'transport' instead of 'transportModel'
+2. 'i = nrSuppliers' should be replaced by 'i = 1:nrSuppliers'
+3. The variable should not be binary, but '.>= 0'
+4. We should minimize costs instead of maximizing them
+5. 'X[i]' is missing the 'j' dimension
+6. '===' should be replaced by '=='
+7. 'start\_optimization' should be replaced by 'optimize!'
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 3.b (4 Points)  {.scrollable}
+
+In an optimization model, the following equations are given:
+
+$$
+\sum_{m\in \mathcal{M}} 7 * U_{gm} * T_m - \sum_{k \in \mathcal{K}} R_k \leq D_g \quad \forall g \in \mathcal{G}
+$$
+
+Please **define the equations in correct Julia syntax**.
+
+::: {.callout-note}
+Assume that all required sets, variables, and parameters have already been defined.
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+```julia
+@constraint(model, newConstraint[g in G], sum(U[g,m] * T[m] for m in M) - sum(R[k] for k in K) <= D[g])
+```
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 3.c (2 Points)  {.scrollable}
+
+For an optimization model the following binary variable is supposed to be created:
+
+$X_{i,j}$ where $i \in \{1,2,...,10\}$ and $j \in \{1,2,...,5\}$.
+
+Specify the definition of the variable in correct Julia syntax.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+```julia
+@variable(model, X[i=1:10,j=1:5], Bin)
+```
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 3.d (2 Points)  {.scrollable}
+
+What is the difference between a linear and a nonlinear problem? Please describe the difference in a few sentences.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+A linear problem has both a linear objective function and linear constraints, meaning all variables appear only to the first power and are combined only through addition and subtraction. In contrast, a nonlinear problem contains at least one nonlinear element, such as quadratic terms (x²), products of variables (x₁×x₂), or other nonlinear functions (sin(x), e^x, etc.). Linear problems are generally easier to solve and guarantee global optimality, while nonlinear problems can be more complex and may have multiple local optima.
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+:::
+
+---
+
+# [Wrap Up]{.flow} {.title}
+
+## Key Takeaways
+
+::: {.callout-important}
+## Remember
+
+- Time management is crucial
+- Read questions carefully
+- Describe your work clearly
+- Use your cheat sheet strategically
+- Double-check your answers if time permits
+:::
+
+## The end
+
+::: {.callout-note}
+## And that's it for todays lecture!
+
+We now have covered the structure of the exam and you have a better idea of what to expect from the exam. In our upcoming tuorial, we will go through some additional examples and practice tasks.
+:::
+
+## {.loud-slide}
+::: {.r-fit-text}
+Questions?
+:::
+
+::: footer
+:::
+
+---
+
+# [Literature]{.flow} {.title}
+
+
+## Literature I
+
+For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.

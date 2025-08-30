@@ -1,0 +1,721 @@
+---
+title: "Lecture XI - Arena Seat Planning under Distancing Rules"
+subtitle: "Applied Optimization with Julia"
+author: "Dr. Tobias Vlćek"
+format:
+  revealjs:
+    footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-11-distancing.qmd)"
+    output-file: lecture-11-presentation.html
+---
+
+# [Introduction]{.flow} {.title}
+
+## [Covid-19 Pandemic]{.invert-font} {background-image="https://images.unsplash.com/photo-1583423230902-b653abc541eb?q=80&w=3732&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
+
+::: {.footer}
+:::
+
+## Challenges for Live Events
+
+{{< include ../include/activate_environment.qmd >}}
+
+- Overall number of participants at events **was restricted**
+- Certain **spacing between participants** had to be ensured
+- Larger events required **vaccination certificates** for all
+
+. . .
+
+[Question:]{.question} **What are the main issues for the organizers?**
+
+## Main Difficulties
+
+- Organization of larger events **is costly**
+- Even without a pandemic a **financial risk**
+- **Administrative Burden** for vaccination certificates
+- Reduced capacity is a **loss of revenue**
+- Implementing and enforcing **distancing rules**
+- Managing **different priorities** of groups
+
+## [Idea: Optimizing Seating Plans]{.invert-font} {background-image="https://images.unsplash.com/photo-1602453870769-970391ee6fc1?q=80&w=3925&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
+
+::: {.footer}
+:::
+
+## Background
+
+- **Applications:** sport arenas, concert halls, movie theaters, lecture halls, etc.
+- People from the same group are **seated together**
+- Venues have **specific seating**, season tickets, VIPs, etc.
+
+. . .
+
+:::{.callout-important}
+Optimizing seating plans can help to **maximize revenue** while ensuring distancing rules and other constraints are met.
+:::
+
+---
+
+# [Problem Structure]{.flow} {.title}
+
+## Example: Two different plans
+
+::: {.columns}
+::: {.column width="45%"}
+![Fixed double-seat layout](https://images.byndsim.com/ao/ao_arena-layout_starr.png)
+:::
+
+::: {.column width="10%"}
+:::
+
+::: {.column width="45%"}
+![Flexible group-value layout](https://images.byndsim.com/ao/ao_arena-layout_flex.png)
+:::
+:::
+
+---
+
+## Different Approaches Possible
+
+1. Operational
+2. Tactical
+3. Strategic
+
+. . .
+
+[Question:]{.question} **What are these approaches in general and how do they relate to arena seating?**
+
+## Operational
+
+  - **Short-term**, day-to-day decisions
+  - Focused on [immediate execution]{.highlight}
+
+. . .
+
+[Question:]{.question} **What is an example for this approach?**
+
+. . .
+
+- Given **tomorrow's demand** of differently sized groups
+- Score groups (importance, sponsors, VIP, season ticket,...)
+- Assigning specific seats for **tomorrow's event**
+
+## Tactical
+
+- **Medium-term** planning (weeks to months)
+- Bridges operational and strategic levels
+
+. . .
+
+[Question:]{.question} **What is an example for this approach?**
+
+. . .
+
+- Given distribution of **expected demand** for groups
+- Score groups (importance, sponsors, VIP, season ticket,...)
+- Plan seating arrangements for an **upcoming season**
+
+## Strategic
+
+- Long-term planning (months to years)
+- Focus on overall goals and policies
+
+. . .
+
+[Question:]{.question} **What is an example for this approach?**
+
+. . .
+
+- Designing flexible seating layouts that work for scenarios
+- Maximize the overall **space utilization**
+- Sell the resulting maximized seating pattern on **market**
+
+---
+
+## [Main Question]{.invert-font} {background-image="https://images.unsplash.com/photo-1604975701397-6365ccbd028a?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
+
+[[Task:]{.task} **Fill the seating area given distancing regulations and venue-specific constraints.**]{.invert-font}
+
+[[Question:]{.question} **Any ideas on how to approach this?**]{.fragment .invert-font}
+
+::: {.footer}
+:::
+
+# [Knapsack]{.flow} {.title}
+
+## Knapsack Problem
+
+![](https://images.byndsim.com/ao/ao_arena-knapsack.svg)
+
+-  [Standard model in Operations Research]{.highlight}
+-  **Select items** from a pool under **capacity constraints**
+
+## Knapsack Problem in 2D
+
+![](https://images.byndsim.com/ao/ao_arena-knapsack_2d.svg)
+
+- Now, Items block space in 2D, as illustrated here
+
+## Adaption to Seating
+
+- Horizontal dimension to place groups of participants
+- Vertical dimension to ensure enough spacing between rows
+- Maximize the "value" of the allocated groups
+- Value can be the number of seats or a score
+
+. . .
+
+:::{.callout-note}
+Idea behind the model was developed by [Dr. Matthes Koch](https://www.desior.net/).
+:::
+
+---
+
+## Hands-on Exercise
+
+[Task:]{.task} **Allocate as many high-value groups as possible.**
+
+![](images/ao_arena-empty_exercise.svg)
+
+## Available Groups {.smaller}
+
+| Grouptype | Req. Seats | Score | Available | Allocated | Value |
+|-----------|------------|-------|-----------|-----------|--------|
+| a         | 1          | 1     | 3         |           |        |
+| b         | 2          | 2     | 2         |           |        |
+| c         | 2          | 4     | 3         |           |        |
+| d         | 4          | 4     | 5         |           |        |
+| e         | 4          | 5     | 2         |           |        |
+| f         | 6          | 6     | 1         |           |        |
+| g         | 6          | 12    | 1         |           |        |
+| **Total** |            |       |           |           |        |
+
+## Seating Constraints
+
+- 1 empty seat **between** groups
+- 1 empty seat **front-to-back**
+- 1 empty seat **diagonally**
+- Only **2 groups per row** are allowed
+- Grey seats represent **obstacles**
+
+. . .
+
+You have 5 minutes to find a solution.
+
+[Question:]{.question} **What is your total score?**
+
+---
+
+# [Model Formulation]{.flow} {.title}
+
+## Sets?
+
+[Question:]{.question} **What could be the sets?**
+
+. . .
+
+- $\mathcal{G}$ - Set of groups, indexed by $g$
+- $\mathcal{R}$ - Set of rows, indexed by $r$
+- $\mathcal{C}$ - Set of columns, indexed by $c$
+- $\mathcal{C}_{g,r}$ - Available seats of row $r$ for group $g$, indexed by $c$
+
+. . .
+
+::: {.callout-note}
+$\mathcal{C}_r$ ensures that we only consider unblocked seats in each row.
+:::
+
+## Parameters?
+
+[Question:]{.question} **What could be possible parameters?**
+
+. . .
+
+- $p_r$ - Maximal number of groups allowed in one row $r$
+- $d_g$ - Required seats of a group $g$ in a row
+- $h$ - Safety distance between groups sitting next to each other
+- $b$ - Vertical safety distance between groups
+- $v_g$ - Value of an allocation of the group $g$
+
+---
+
+# [Variables and Objective]{.flow} {.title}
+
+## Decision Variable?
+
+::: {.callout-important}
+## Our goal is to:
+Maximize the group values by filling the seating area given distancing regulations between groups and venue-specific constraints.
+:::
+
+::: {.callout-tip}
+Each group is represented by **one binary variable**. We don't need to block each seat explicitly with a binary variable!
+:::
+
+
+## Decision Variable
+
+::: {.callout-note}
+## We need the following sets:
+
+- All the groups, $g \in \mathcal{G}$
+- All the rows, $r \in \mathcal{R}$
+- All the columns, $c \in \mathcal{C}$
+:::
+
+[Question:]{.question} **What could be our decision variable?**
+
+. . .
+
+- $X_{g,r,c}$ - 1, if **first left seat** of $g$ is assigned to $r$ in $c$, else 0
+
+---
+
+## Objective Function?
+
+::: {.callout-important}
+## Our main objective is to:
+
+Maximize the group values by filling the seating area given distancing regulations between groups and venue-specific constraints.
+:::
+
+. . .
+
+[Question:]{.question} **How again are groups allocated?**
+
+. . .
+
+- By the allocation of the **first left seat** of a group to a row and column in the seating area
+
+## Objective Function
+
+::: {.callout-note}
+## We need the following parameters and variables:
+
+- $v_g$ - Value of an allocation of the group $g$
+- $X_{g,r,c}$ - 1, if **first left seat** of $g$ is assigned to $r$ in $c$, else 0
+
+:::
+
+. . .
+
+[Question:]{.question} **What could be our objective function?**
+
+. . .
+
+$$
+\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}
+$$
+
+---
+
+# [Constraints]{.flow} {.title}
+
+## Necessary Constraints
+
+[Question:]{.question} **What constraints do we need?**
+
+. . .
+
+- Assign **each group only once**
+- Restrict the **number of groups in each row**
+- Ensure the **horizontal social distance**
+- Keep the **vertical social distance**
+
+---
+
+## Assign Each Group Only Once?
+
+::: {.callout-important}
+## The goal of this constraint is to:
+Ensure that each group is allocated only once in the entire seating area.
+:::
+
+. . .
+
+::: {.callout-note}
+## We need the following:
+
+- $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
+- $\mathcal{G}$ - Set of groups, indexed by $g$
+- $\mathcal{R}$ - Set of rows, indexed by $r$
+- $\mathcal{C}_{g,r}$ - Set of columns of row $r$ for group $g$, indexed by $c$
+:::
+
+## Assign Each Group Only Once
+
+[Question:]{.question} **What could be the constraint?**
+
+. . .
+
+$$
+\sum_{r \in \mathcal{R}} \sum_{c \in \mathcal{C}_{g,r}} X_{g,r,c} \leq 1 \quad \forall g \in \mathcal{G}
+$$
+
+. . .
+
+::: {.callout-note}
+This "set packing" constraint ensures that a group is only **assigned once**.
+:::
+
+---
+
+## Restrict Groups Per Row?
+
+::: {.callout-important}
+## The goal of this constraint is to:
+Ensure that the number of groups in each row does not exceed the maximum allowed number of groups.
+:::
+
+. . .
+
+::: {.callout-note}
+## We need the following:
+
+- $p_r$ - Maximal number of groups allowed in one row $r$
+- $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
+
+:::
+
+## Restrict Groups Per Row
+
+[Question:]{.question} **What could be the constraint?**
+
+. . .
+
+$$
+\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_{r} \quad r \in \mathcal{R}
+$$
+
+. . .
+
+::: {.callout-note}
+We want to place as **many highly scoring groups as possible**, but people need to move to buy drinks or use restroom. Depending on the venue, they should **not cross other groups** in the **same row**.
+:::
+
+## {.loud-slide}
+::: {.r-fit-text}
+The last two
+
+constraints are
+
+somewhat tricky!
+:::
+
+::: footer
+:::
+
+---
+
+# [Social Distance Implementation]{.flow} {.title}
+
+
+## Central Idea
+
+![](https://images.beyondsimulations.com/ao/ao_arena-two_groups.png)
+
+. . .
+
+::: {.callout-tip}
+
+Assume **one seat between groups must be kept empty**. If one group takes seat 8, it uses seats 8 and 9. We thus **cannot allocate** another group of size 2 to seats 6, 7 or 8.
+
+:::
+
+## Horizontal Social Distance?
+
+[Question:]{.question} **Any ideas how to implement this?**
+
+. . .
+
+::: {.callout-important}
+## The goal of this constraint is to:
+Ensure that the horizontal social distance is maintained between groups.
+:::
+
+. . .
+
+::: {.callout-note}
+## We need the following:
+
+- $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
+- $d_g$ - Required seats of group $g$ in a row
+- $h$ - Safety distance between groups sitting next to each other
+
+:::
+
+---
+
+## Horizontal Social Distance
+
+As the constraint is based on a rather complex set, you don't have to find it by yourself.
+
+. . .
+
+$$\sum_{g \in \mathcal{G}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{c,g}} X_{g,r,\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}$$
+
+. . .
+
+::: {.callout-note}
+At first glance, this constraint [looks rather easy]{.highlight}, but it is not -  it is based on the set $\mathcal{C}_{c,g}$ not defined yet in the lecture.
+:::
+
+## The Social Distancing Set
+
+$$\tilde{\mathcal{C}}_{c,g} = \{\tilde{c}\in \mathcal{C}| c - d_g + 1 - h \leq \tilde{c} \leq c \}$$
+
+. . .
+
+::: {.callout-note}
+## Remember:
+
+- $d_g$ - Required seats of group $g$ in a row
+- $h$ - Safety distance between groups sitting next to each other
+
+:::
+
+. . .
+
+[Question:]{.question} **Can anybody explain the set?**
+
+## Example: Two Groups {.smaller}
+
+![](https://images.beyondsimulations.com/ao/ao_arena-two_groups.png)
+
+$$\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} \leq 1 \quad (r=2,c=8)$$
+
+## Example: Different Group Sizes {.smaller}
+
+![](https://images.beyondsimulations.com/ao/ao_arena-two_groups_b.png)
+
+$$\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{5}}+X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} \leq 1 \quad (r=2,c=8)$$
+
+## Example: Three Groups {.smaller}
+
+![](https://images.beyondsimulations.com/ao/ao_arena-three_groups.png)
+
+::: {.temp-math-size}
+
+```{=html}
+<style>
+.temp-math-size .math.display .MathJax  {
+  font-size: 85% !important;
+}
+</style>
+```
+$$
+\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} + \underbrace{X_{3,2,\textbf{5}}+X_{3,2,\textbf{6}}+X_{3,2,\textbf{7}}+X_{3,2,\textbf{8}}}_{g=3} \leq 1 \quad (r=2,c=8)
+$$
+
+:::
+
+## {.loud-slide}
+::: {.r-fit-text}
+Do you see
+
+the pattern?
+:::
+
+::: footer
+:::
+
+---
+
+## Vertical Social Distance?
+
+::: {.callout-important}
+## The goal of this constraint is to:
+Ensure that the vertical social distance is maintained between groups.
+:::
+
+. . .
+
+::: {.callout-note}
+## We need the following:
+
+- $b$ - Vertical safety distance between groups
+- $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
+
+:::
+
+
+## Vertical Social Distance
+
+[Question:]{.question} **What could be the constraint?**
+
+. . .
+
+::: {.callout-tip}
+It is an extension of the horizontal social distance constraint we used before, but now we **block a rectangular area** instead of a single row.
+:::
+
+. . .
+
+$$
+\sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \mathcal{R}_r} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{cg}} X_{g\tilde{r}\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}
+$$
+
+## Vertical Distance Set
+
+[Question:]{.question} **What could be the set?**
+
+. . .
+
+$$
+\tilde{\mathcal{R}}_{r} = \{\tilde{r}\in \mathcal{R}| r-b \leq \tilde{r} \leq r \}
+$$
+
+. . .
+
+::: {.callout-note}
+Remember:
+
+- $b$ - Vertical safety distance between groups
+- $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
+
+:::
+
+. . .
+
+Let's look at an [example]{.highlight}.
+
+## Example: Two Groups
+
+![](https://images.beyondsimulations.com/ao/ao_arena-two_groups_vertical_b.png)
+
+- Yellow seats are **blocked by the group** in row 3 and column 8
+- Blue allocations are possible (if second group has **size 2**)
+
+---
+
+## Arena Seating Problem
+
+::: {.temp-math-size}
+
+```{=html}
+<style>
+.temp-math-size .math.display .MathJax  {
+  font-size: 85% !important;
+}
+</style>
+```
+
+$$
+\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_r} v_g \times X_{g,r,c}
+$$
+subject to:
+$$
+\begin{align*}
+& \sum_{r \in \mathcal{R}}\sum_{c \in \mathcal{C}_r} X_{g,r,c} \leq 1 && \forall g \in \mathcal{G} \\
+& \sum_{g \in \mathcal{G}}\sum_{c\in \mathcal{C}_r} X_{g,r,c} \leq p_r && \forall r \in \mathcal{R} \\
+& \sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \tilde{\mathcal{R}}_{r}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{c,g}} X_{g,\tilde{r},\tilde{c}} \leq 1 && \forall r\in \mathcal{R}, c\in \mathcal{C} \\
+& X_{g,r,c} \in \{0,1\} && \forall g \in \mathcal{G}, \forall r\in \mathcal{R}, c\in \mathcal{C}_r
+\end{align*}
+$$
+
+:::
+
+---
+
+# [Model Characteristics]{.flow} {.title}
+
+## Characteristics
+
+[Questions:]{.question} **On model characteristics**
+
+::: {.incremental}
+- Is the model formulation linear/ non-linear?
+- What kind of variable domains do we have?
+:::
+
+## Model Assumptions
+
+[Questions:]{.question} **On model assumptions**
+
+::: {.incremental}
+- What assumptions have we made?
+- Is our approach strategic or tactical/operational?
+- Have we considered all social distancing constraints?
+- What about aisle seats?
+- Can you think of any other real-world constraints?
+:::
+
+---
+
+# [Implementation and Impact]{.flow} {.title}
+
+## [Arena Seating Optimization]{.invert-font} {background-image="https://images.beyondsimulations.com/ao/ao_arena-vfl_matthes_justus.jpg" background-size="cover" background-position="center"}
+
+::: {.footer}
+:::
+
+## Case study VfL Osnabrück
+
+- Relegation Return Match in 2021
+- 241 additional seats allocated (+12 percent)
+- Compliance with all distancing requirements
+- Approval from authorities
+
+. . .
+
+::: {.callout-important}
+Estimated additional revenue of **8,435 EUR** for one match.
+:::
+
+## Seating Plan
+
+![](https://images.beyondsimulations.com/ao/ao_arena-vfl_rechnung.png)
+
+## Related Work
+
+[Similar studies]{.highlight} have been conducted globally:
+
+- US College-level venues, e.g. Football, Basketball, Hockey
+- Music Hall Eindhoven
+- Safe Seating Solutions platform
+- General 2D-Knapsack applications
+
+---
+
+# [Conclusion]{.flow} {.title}
+
+## Optimization Benefits
+
+- Optimization enables **rapid generation and evaluation**
+- We can easily adapt to **various distancing requirements**:
+    - Horizontal and vertical spacing between groups
+    - Groups per row limits
+    - Aisle seat restrictions
+    - Group size constraints
+    - Multi-row group allocation
+
+## Wrap Up
+
+- [Revenue optimization]{.highlight} through applied optimization
+- **Increased participant capacity** vs basic approaches
+- Flexible adaptation to **various distancing requirements**
+- Can be adapted easily to **any seating requirements**
+
+. . .
+
+::: {.callout-note}
+## And that's it for todays lecture!
+
+We now have covered the arena seating problem based on a real-world application and are ready to start solving the corresponding tasks in the upcoming tutorial.
+:::
+
+## {.loud-slide}
+::: {.r-fit-text}
+Questions?
+:::
+
+::: footer
+:::
+
+---
+
+# [Literature]{.flow} {.title}
+
+
+## Literature I
+
+For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.

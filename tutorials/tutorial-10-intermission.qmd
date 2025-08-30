@@ -1,0 +1,831 @@
+---
+title: "Tutorial X - Intermission: Exam Preparation"
+subtitle: "Applied Optimization with Julia"
+execute:
+    eval: false
+---
+
+# Introduction
+
+{{< include ../include/activate_environment.qmd >}}
+
+This tutorial is another short intermission to give you an idea of the structure of the exam. You can hand in your answers at the end to receive half a **bonus point**, if at least 75 % of the answers are correct and you describe your work clearly. If you have any questions or suggestions on how to improve the structure of the exam, please ask them.
+
+The exam is just meant to be a **tool** to check your understanding of the material and to give you a chance to show your skills. It is not meant to be a stressful event or a punishment. If you have followed the course and put in the effort, you should be able to pass the exam with a good grade.
+
+::: {.callout-tip}
+As some of these tasks are difficult to answer on a computer, you can hand in your answer scanned or written digitally on an iPad or Laptop.
+:::
+
+---
+
+# Part I
+
+## 1.a (6 Points)
+
+As temperatures rise due to global warming, so does the demand for ice cream. The ice cream company was amazed by your transportation plan from the lecture and asked if you could help with their production plan.
+
+The company wants to optimize its production to keep up with the customer demand. To do so, they offer different flavors of ice cream that are made and stored in a warehouse. Each flavor has a unique production time per unit of ice cream and no setup time for the production. In the first period, the company has 100 units of each flavor in storage at the end of the period.
+
+Furthermore, each setup of a different flavor costs a fixed amount of money identical for all flavors and periods, while the ice cream storage costs in the warehouse are different for each flavor but identical for all periods. These storage costs occur at the end of each period per unit of ice cream for all units not sold to cover the varying demand per flavor and period.
+
+Each period matches a shift length of a certain number of hours, identical for all periods. The objective is to minimize the total cost of production and storage while satisfying all demands and production capacities.
+
+Define all sets, parameters and variables required to model the problem described above. Select a suitable notation of your choice. Make sure to explicitly state in your notation which elements are sets, parameters and variables.
+
+::: {.callout-tip}
+Note that the problem does not have to be modeled yet!
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+- $i \in \mathcal{I}$ : flavors of ice cream (Set)
+- $t \in \mathcal{T}$ : different periods under consideration (Set)
+- $p_{i}$ : production time of sort $i$ (Parameter)
+- $f$ : fixed setup costs of all sorts (Parameter)
+- $c_i$ : storage costs per period of sort $i$ (Parameter)
+- $d_{i,t}$ : ice cream demand per period (Parameter)
+- $W_{i,t}$ : quantity stored at end of period (Variable)
+- $X_{i,t}$ : production quantity per sort and period (Variable)
+- $Y_{i,t}$ : 1, if product is set up in period (Variable)
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 1.b (3 Points)
+
+Please define the objective function to model the described problem based on your defined notation.
+
+::: {.callout-tip}
+If you need additional sets, parameters or variables that are not yet defined, please define them as well.
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+$$
+\text{min} \quad \sum_{i \in \mathcal{I}}\sum_{t \in \mathcal{T}} (f \times Y_{i,t} + c_i \times W_{i,t})
+$$
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 1.c (6 Points)
+
+Please define all necessary constraints and the variable ranges to model the described problem based on your notation.
+
+::: {.callout-tip}
+If you need additional sets, parameters or variables that are not yet defined, please define them as well.
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+$$
+X_{i,t} + W_{i,t-1} -W_{i,t} = d_{i,t} \quad \forall i \in \mathcal{I},t \in \mathcal{T}: t \neq 1
+$$
+
+$$
+X_{i,t} -W_{i,t} = d_{i,t} \quad \forall i \in \mathcal{I},t \in \mathcal{T}: t = 1
+$$
+
+$$
+X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i \in \mathcal{I},t \in \mathcal{T}
+$$
+
+$$
+\sum_{i \in \mathcal{I}} p_i \times X_{i,t} \leq q \quad \forall i \in \mathcal{I},t \in \mathcal{T}
+$$
+
+$$
+W_{i,t} = 100 \quad \forall i \in \mathcal{I},t \in \mathcal{T}: t = 1
+$$
+
+$$
+W_{i,t} \geq 0 \quad \forall i \in \mathcal{I},t \in \mathcal{T}
+$$
+
+$$
+X_{i,t} \geq 0 \quad \forall i \in \mathcal{I},t \in \mathcal{T}
+$$
+
+$$
+Y_{i,t} \in \{0,1\} \quad \forall i \in \mathcal{I},t \in \mathcal{T}
+$$
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 1.d (2 Points)
+
+Is the model formulation a nonlinear problem with continuous variables?
+
+Please explain your answer briefly.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+No, the solution is not a nonlinear problem with continuous variables. The objective function is linear and the constraints are linear as well. Furthermore, we also have binary variables.
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 1.e (9 Points)
+
+Due to the success of the companies, workers demand higher wages and a compensation for working overtime. Your task is to extend the model to reflect this new situation. In the future, each worked hour in a period has a fixed cost per shift hour, identical for all periods. If the production time in one period exceeds the shift-length, workers have to work overtime. For each hour working overtime, the fixed costs per hour are 50% higher than usual. Furthermore, more than an additional time of a half a shift length is not allowed due to legal reasons.
+
+How can you expand your model to reflect this new situation? Write down all additional or modified sets, parameters, variables, constraints and the objective function while describing each with a few words.
+
+::: {.callout-tip}
+Note, that you only need to write down new and modified elements!
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+**New Parameters**
+
+- $s$ : fixed costs per shift hour (Parameter)
+- $q$ : shift length (Parameter)
+
+**New Variables**
+
+- $Z_t$ : number of additional working hours in period (Variable)
+
+**New objective function**
+
+$$
+\text{min} \quad \sum_{i \in \mathcal{I}}\sum_{t \in \mathcal{T}} (f \times Y_{i,t} + c_i \times W_{i,t}) + \sum_{t \in \mathcal{T}} (s \times q + 1.5 \times s \times q \times Z_t)
+$$
+
+**New constraints**
+
+$$
+\sum_{i \in \mathcal{I}} p_i \times X_{i,t} \leq q + q \times Z_t \quad \forall i \in \mathcal{I},t \in \mathcal{T}
+$$
+
+$$
+0 \leq Z_t \leq 0.5 \times q \quad \forall t \in \mathcal{T}
+$$
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 1.f (4 points)
+
+What assumptions are made in the model that might not hold in the real world?
+
+Please describe at least two assumptions with a 1-3 sentences and explain briefly why they might not hold.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+- The demand is known and fixed for each period. In reality, the demand is not known in advance and can vary, we can only estimate it.
+- The production time is known and fixed for each period. In reality, the production time can vary due to different production rates or machine breakdowns.
+- The workers are available and can work overtime. In reality, workers might be unavailable or have other constraints.
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+# Part II
+
+## 2.a (6 Points)
+
+Throughout the course, we covered several different optimization problems. For one of the following two problems, briefly:
+
+- Describe the main objective of the problem (2 points)
+- Describe two key assumptions of the model (2 points per assumption)
+
+Choose from:
+
+- Transportation Problem (Solar Panel Transport)
+- Split Order Minimization Problem (E-Commerce)
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+**Transportation Problem (Solar Panel Transport)**
+
+- Main objective: Minimize the total cost of transporting solar panels from different factories to the customers.
+- Key assumptions: The demand is known and fixed for each period, a vehicle can only visit one customer per tour.
+
+**Split Order Minimization Problem (E-Commerce)**
+
+- Main objective: Minimize the number of split orders to minimize shipping costs.
+- Key assumptions: Each product has the same shipping cost per unit, the future demand is known.
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 2.b (4 Points)
+
+You are trying to solve the capacitated vehicle routing problem with more than 500 customers and 10 vehicles. Unfortunately, your computer is not able to handle the problem. What could you try to solve the problem instead?
+
+Please describe one approach to adress the problem and describe the advantages and disadvantages of the approach in a few sentences.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+One approach would be to use a heuristic to solve the problem.
+
+Advantages of a heuristic:
+
+- Breaks down the large problem into manageable problems that can be solved
+- Significantly reduces computational complexity
+- Can still produce good quality solutions
+
+Disadvantages of a heuristic:
+
+- May miss better solutions as the solution is not guaranteed to be optimal
+- The quality of the final solution depends heavily on the heuristic used
+
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 2.c (3 Points)
+
+Suppose you aim to improve the shifts of workers in a hospital. As the administration finds it difficult to find new workers, they want to optimize the shifts of the current workers to improve their satisfaction. What potential objective could be used in an objective function?
+
+Please describe the objective function and explain why it would be a good choice for the problem.
+
+::: {.callout-tip}
+You don't need to write any code or mathematical model here!
+:::
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+One potential objective function could be to minimize the maximum number of consecutive working days for any worker. This would help ensure a more balanced distribution of shifts and prevent worker burnout.
+
+This objective is good because:
+
+1. It directly addresses worker satisfaction by preventing long stretches of work without breaks
+2. It naturally leads to more equitable shift distributions among workers
+3. It can help reduce fatigue-related errors which is especially important in a hospital setting
+
+Alternative objectives could include minimizing the number of undesirable shifts (like night shifts) per worker or maximizing the number of preferred shift requests that can be granted.
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 2.d (2 Points)
+
+What is the purpose of a solver used in Mathematical Programming?
+
+Please describe the answer in your own words in 2-3 sentences.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+A solver is a software that finds solutions to mathematical optimization problems by implementing specific algorithms.
+
+It takes a mathematical model (with objective function, constraints, and variables) as input and attempts to find the (optimal) solution that satisfies all constraints while maximizing or minimizing the objective function.
+
+The solver handles the computational complexity of searching through the solution space efficiently, which would be impractical to do manually.
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+# Part III
+
+## 3.a (3 Points)
+
+Create a JuMP variable with the following properties: A continuous variable `Production[t,p]` for time periods $t \in 1:T$ and products $p \in 1:P$ which must be non-negative and has an upper bound stored in parameter `capacity[t,p]`. All parameters (`T`, `P`, `capacity`) are already defined, the model is not created yet.
+
+Specify the definition of the variable in correct Julia syntax.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+```{julia}
+#| eval: true
+#| output: false
+#| echo: false
+
+using JuMP
+T = 2
+P = 2
+capacity = [10 10; 10 10]
+```
+
+```{julia}
+model = Model()
+@variable(model, 0 <= Production[t in 1:T, p in 1:P] <= capacity[t, p])
+```
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 3.b (3 Points)
+
+Write JuMP code to implement the following constraint:
+
+$$\sum_{f \in F} Y_{f,z} \leq 1 \quad \forall z \in Z$$
+
+Assume variables `Y` is already defined as binary variables and the sets `F` and `Z` are already defined as well. The model is also already created.
+
+Specify the definition of the constraint in correct Julia syntax.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+```{julia}
+#| eval: true
+#| output: false
+#| echo: false
+using JuMP
+model = Model()
+
+Z = 1:2
+F = 1:3
+@variable(model, Y[f in F, z in Z], Bin)
+```
+
+```{julia}
+@constraint(model, my_constraint[z in Z], sum(Y[f, z] for f in F) <= 1)
+```
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 3.c (2 Points)
+
+You are given the following JuMP code with a constraint that is not correctly implemented.
+
+```julia
+@constraint(sum(X[i,j] for i in 1:10, j in 1:5) == 10)
+```
+
+Please explain why the constraint is not correctly implemented and how it can be fixed.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+```{julia}
+#| eval: true
+#| output: false
+#| echo: false
+
+@variable(model, X[i in 1:10, j in 1:5], Bin)
+```
+
+The constraint is missing the model parameter in the `@constraint` macro. The correct syntax should be:
+
+```{julia}
+#| output: false
+@constraint(model, sum(X[i,j] for i in 1:10, j in 1:5) == 10)
+```
+
+Additionally, when using `@constraint`, it's generally good practice to give the constraint a name for better debugging and reference.
+
+A fully improved version would be:
+
+```{julia}
+#| output: false
+@constraint(model, sum_constraint, sum(X[i,j] for i in 1:10, j in 1:5) == 10)
+```
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 3.d (2 Points)
+
+What is the difference between a tuple and an array (vector) in Julia?
+
+Please describe the difference in a 1-3 sentences.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+A tuple in Julia is an immutable fixed-size container (once created, its elements cannot be modified), while an array is mutable and can be resized.
+
+Tuples are defined using parentheses like `(1,2,3)` and are often used for small collections where the values won't change, while arrays use square brackets like `[1,2,3]` and are better suited for larger collections that need to be modified.
+\newpage
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::
+
+---
+
+## 3.e (5 Points)
+
+You are given the following code in Julia:
+
+```{julia}
+#| eval: false
+mySet = 1:8
+vectorA = ["Hello", "World"]
+for i in mySet
+    if i <= 2
+        println(vectorA[i])
+    elseif i <= 4
+        println(vectorA[i-2])
+    elseif i > 6 && i <= 8
+        println("This is $i")
+    elseif i == 9
+        break
+    else
+        println("Hi $i")
+    end
+end
+```
+
+Please write down the output of the code.
+
+::: {.content-visible when-profile="solutions"}
+
+**Solution**
+
+```{julia}
+#| eval: true
+#| echo: false
+
+mySet = 1:8
+vectorA = ["Hello", "World"]
+for i in mySet
+    if i <= 2
+        println(vectorA[i])
+    elseif i <= 4
+        println(vectorA[i-2])
+    elseif i > 6 && i <= 8
+        println("This is $i")
+    elseif i == 9
+        break
+    else
+        println("Hi $i")
+    end
+end
+```
+:::
+
+::: {.content-visible unless-profile="solutions"}
+\vspace{0.1in}
+```{julia}
+#| eval: false
+# Your answer here
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+\newpage
+:::

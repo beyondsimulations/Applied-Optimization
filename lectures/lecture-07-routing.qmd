@@ -1,0 +1,1015 @@
+---
+title: "Lecture VII - Library Routing Optimization"
+subtitle: "Applied Optimization with Julia"
+author: "Dr. Tobias Vlćek"
+format:
+  revealjs:
+    footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-07-routing.qmd)"
+    output-file: lecture-07-presentation.html
+---
+
+# [Introduction]{.flow} {.title}
+
+## [Central Libraries]{.invert-font} {background-color="#000000" background-image="https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
+
+. . .
+
+[**Question:** Anybody an idea what a central library is?]{.invert-font .fragment}
+
+:::{.footer}
+:::
+
+## Central Libraries
+
+{{< include ../include/activate_environment.qmd >}}
+
+- [Book Delivery to Libraries]{.highlight} in Germany
+- They supply **all local libraries** within the same state
+- Complex, as the **number of libraries** per state can be large
+- Books and media in the libraries **change often**
+- Customers can **request books** from other libraries
+
+
+## Structure of the Deliveries
+
+- For delivery, central has [several employees and cars]{.highlight}
+- Local libraries differ in size, some receive **more items**
+- Items are **collected as well** during the tours[^tour-duration]
+- They are **transported back** to the central library
+
+[^tour-duration]: Due to regulations, the delivery tours cannot exceed a certain duration
+
+
+## Potential Decisions
+
+[Question]{.question}: **What decisions can the library make for tours?**
+
+. . .
+
+- Subdivide their set of libraries into **several ordered tours**
+- Decide in **which order to visit** the libraries
+- Evaluate **which car to use** for each of the tours
+- Decide **which driver** to assign to each of the tours
+
+## Impact of the Decisions
+
+[Question]{.question}: **What is the impact of the decisions?**
+
+. . .
+
+- Longer driving routes [increase the footprint]{.highlight} of the deliveries
+- Suboptimal tours can lead to **unnecessary costs**
+- Fuel, personnel, and repairs **are increased**
+- Unhappy customers due to **waiting times** on ordered books
+
+## {.loud-slide}
+::: {.r-fit-text}
+Have you heard of
+
+this problem before?
+:::
+
+::: footer
+:::
+
+---
+
+# [Problem Structure]{.flow} {.title}
+
+## Objective
+
+[Question]{.question}: **What could be the objective for central libraries?**
+
+. . .
+
+- [Lowering costs]{.highlight} through improved tours
+- Improvement of their **footprint** through shorter tours
+- **Faster fulfillment** of the deliveries
+
+## Modelling
+
+[Question]{.question}: **What could we try to model?**
+
+. . .
+
+**Minimization** of the travel time while [supplying all libraries]{.highlight} in the state and adhering to **the vehicle capacities and driving time restrictions.**
+
+
+## {.loud-slide}
+::: {.r-fit-text}
+Capacitated
+
+Vehicle Routing
+
+(CVRP)
+:::
+
+::: footer
+:::
+
+## Vehicle Routing Problem
+
+- CVRP is a **subproblem**
+- Main problem is **Vehicle Routing Problem (VRP)**
+- Problem class about **designing routes for vehicle fleets**
+
+. . .
+
+:::{.callout-note}
+
+There are many variants of the VRP! E.g., with time windows, periodic deliveries, allowing for pickups or deliveries, [and much more!]{.highlight}
+
+:::
+
+
+## {.loud-slide}
+::: {.r-fit-text}
+Let's visualize
+
+the problem!
+:::
+
+::: footer
+:::
+
+---
+
+# [Problem Visualization]{.flow} {.title}
+
+## Basic Problem Setting
+
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-01.svg){width="99%"}
+
+
+## Basic Problem Setting with Arcs
+
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-02.svg){width="99%"}
+
+
+## Setting with Vehicles
+
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-03.svg){width="99%"}
+
+
+## Basic Problem Setting with Tours
+
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg){width="99%"}
+
+---
+
+# [Problem Structure]{.flow} {.title}
+
+## Available Sets
+
+[Question:]{.question} **What could be the sets here?**
+
+. . .
+
+- $\mathcal{V}$ - Set of all nodes, index $i \in \{0,1,2,...,n\}$
+- $\mathcal{A}$ - Set of all arcs between the nodes, index $(i,j) \in \mathcal{A}$
+- $\mathcal{K}$ - Set of vehicles with identical capacity, index $k \in \mathcal{K}$
+- $0 \in \mathcal{V}$ - Depot where the vehicles start
+
+## Available Parameters
+
+[Question:]{.question} **What are possible parameters?**
+
+. . .
+
+- $b$ - Capacity per vehicle
+- $t$ - Maximal duration of each tour
+- $d_i$ - Demand at node $i$
+- $c_{i,j}$ - Travel time on an arc from $i$ to $j$
+
+. . .
+
+:::{.callout-tip}
+
+$t$ is the maximal duration of each tour, not the travel time on an arc or an index!
+
+:::
+
+---
+
+## Decision Variable(s)?
+
+::: {.callout-note}
+## We have the following sets:
+  - All nodes, including the depot, $i \in \mathcal{V}$
+  - All arcs between the nodes, $(i,j) \in \mathcal{A}$
+  - The available vehicles, $k \in \mathcal{K}$
+:::
+
+. . .
+
+::: {.callout-important}
+## Our objective is to:
+Minimize the **total travel time** while supplying **all customers** and adhering to the **vehicle capacities and duration restrictions**.
+:::
+
+. . .
+
+[Question:]{.question} **What could be our decision variable/s?**
+
+## Decision Variables
+
+- $X_{i,j,k}$ - 1, if $k$ passes between $i$ and $j$ on its tour, 0 otherwise
+
+. . .
+
+::: {.callout-note}
+## Variable Domain
+
+$X_{i,j,k}$ is a **binary variable**, as it can only take values 0 or 1. But most likely, you will already have spotted that!
+
+:::
+
+. . .
+
+[Question:]{.question} **Why this might make the problem difficult?**
+
+## Decision Variable/s (again)?
+
+::: {.callout-note}
+## We have the following sets:
+  - All nodes, including the depot, $i \in \mathcal{V}$
+  - All arcs between the nodes, $(i,j) \in \mathcal{A}$
+  - The available vehicles, $k \in \mathcal{K}$
+:::
+
+. . .
+
+::: {.callout-important}
+## Our objective is to:
+Minimization of the travel time (or driving distance), while supplying all customers and adhering to the vehicle capacities and duration restrictions. **Hint:** Even with many vehicles, [each arc can maximally be passed once]{.highlight}!
+:::
+
+## Decision Variables (again)
+
+[Question:]{.question} **What could be our decision variable/s?**
+
+. . .
+
+
+- $X_{i,j}$ - 1, if the arc between $i$ and $j$ is part of a tour, else 0
+
+. . .
+
+::: {.callout-important}
+## Only possible under certain conditions!
+Only possible, if time and capacity constraints are equal for all vehicles!
+:::
+
+---
+
+# [Model Formulation]{.flow} {.title}
+
+## Objective Function?
+
+::: {.callout-important}
+## Our objective is to:
+
+Minimization of the travel time (or driving distance), while supplying all customers and adhering to the vehicle capacities and duration restrictions.
+:::
+
+. . .
+
+[Question:]{.question} **What could be our objective function?**
+
+. . .
+
+::: {.callout-note}
+## We need the following variable:
+
+- $X_{i,j}$ - 1, if the arc between $i$ and $j$ is part of a tour, else 0
+
+:::
+
+
+## Objective Function
+
+::: {.callout-note}
+## We need the following parameters:
+
+- $c_{i,j}$ - travel time on an arc from $i$ to $j$
+
+:::
+
+. . .
+
+$$\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}$$
+
+. . .
+
+[Question:]{.question} **What does $(i,j) \in \mathcal{A}$ under the sum mean?**
+
+---
+
+## Problem Constraints
+
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg){width="99%"}
+
+## Constraints?
+
+[Question:]{.question} **What constraints do we need?**
+
+. . .
+
+- Each customer has to be **visited once**
+- The depot has to be **entered and left** $|\mathcal{K}|$ times
+- We have to enforce the **capacity of our vehicles**
+- We have to ensure the **maximal duration of each tour**
+
+. . .
+
+::: {.callout-important}
+## Subtours
+In addition, we have to prevent **subtours**!
+:::
+
+## {.loud-slide}
+::: {.r-fit-text}
+What is a
+
+subtour?
+:::
+
+::: footer
+:::
+
+## Subtours
+
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-05.svg){width="99%"}
+
+---
+
+# [Constraints]{.flow} {.title}
+
+## Visit Each Customer Once?
+
+::: {.callout-important}
+## The goal of these constraints is to:
+Ensure that each customer is visited exactly once. Essentially, we could also say that each node **has to be entered and left exactly once.**
+:::
+
+. . .
+
+::: {.callout-note}
+## We need the following sets and variables:
+
+- $\mathcal{V}$ - Set of all nodes, index $i \in \{0,1,2,...,n\}$
+- $X_{i,j}$ - 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise
+
+:::
+
+## Visit Each Customer Once
+
+[Question:]{.question} **What could the constraint look like?**
+
+. . .
+
+$$
+\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
+$$
+
+$$
+\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
+$$
+
+. . .
+
+[Question:]{.question} **Why for all nodes except the depot?**
+
+. . .
+
+The depot is the **only node** that is [visited multiple times!]{.highlight}
+
+---
+
+## Depot Entry and Exit Constraints?
+
+::: {.callout-important}
+## The goal of these constraints is to:
+Ensure that each vehicle enters and leaves the depot exactly $|\mathcal{K}|$ times, as we have $|\mathcal{K}|$ vehicles and each vehicle has to return to the depot.
+:::
+
+. . .
+
+::: {.callout-note}
+## We need the following sets and variables:
+
+- $\mathcal{V}$ - Set of all nodes, index $i \in \{0,1,2,...,n\}$
+- $|\mathcal{K}|$ - Number of vehicles
+- $X_{i,j}$ - 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise
+
+:::
+
+. . .
+
+[Question:]{.question} **What could the constraint look like?**
+
+## Depot Entry and Exit Constraints
+
+$$
+\sum_{i \in \mathcal{V} \setminus \{0\}} X_{i,0} = |\mathcal{K}|
+$$
+
+$$
+\sum_{j \in \mathcal{V} \setminus \{0\}} X_{0,j} = |\mathcal{K}|
+$$
+
+. . .
+
+::: {.callout-note}
+## Are all constraints necessary?
+No, theoretically we could also say that we only have to leave **or** enter the depot exactly $|\mathcal{K}|$ times, as the other constraint is already enforced by the "visit each customer once constraint".
+:::
+
+---
+
+# [Capacity and Subtour Elimination]{.flow} {.title}
+
+## {.loud-slide}
+
+::: {.r-fit-text}
+
+The next ones are
+
+a little bit tricky.
+
+:::
+
+::: footer
+:::
+
+## MTZ Formulation
+
+
+::: {.incremental}
+- **Miller-Tucker-Zemlin (MTZ)** Constraints
+- Formulation by @KARA2004793
+- Prevent subtours and **track routes** and **capacity utilization**
+- First, we need [an additional variable!]{.highlight}
+- $U_{i}$ - Capacity utilization at $i$ of vehicle on its tour with $i \in \mathcal{I}$
+:::
+
+. . .
+
+::: {.callout-note}
+
+You don't need to guess these constraints, as they are quite tricky!
+
+:::
+
+## MTZ Constraints
+
+::: {.callout-note}
+## We need the following sets, parameters, and variables:
+
+- $\mathcal{V}$ - Set of all nodes, index $i \in \{0,1,2,...,n\}$
+- $X_{i,j}$ - 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise
+- $U_{i}$ - Capacity utilization at $i$ of vehicle on its tour with $i \in \mathcal{I}$
+- $b$ - Capacity per vehicle (all are identical!)
+- $d_i$ - Demand at node $i$
+
+:::
+
+. . .
+
+$$
+U_i - U_j + b \times X_{i,j} \leq b - d_j \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
+$$
+
+. . .
+
+$$
+d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
+$$
+
+## {.loud-slide}
+
+::: {.r-fit-text}
+
+Too
+
+complicated?
+
+:::
+
+::: footer
+:::
+
+## Don't worry!
+
+::: {.columns}
+
+::: {.column width="50%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg){width="99%"}
+:::
+
+::: {.column width="50%" .incremental}
+- Let's [break it down!]{.highlight}
+- $d_i$ for **all customers** is 1
+- Capacity $b$ **per vehicle** is 5
+- $U_i$ is the current **capacity utilization** at node $i \in \mathcal{I}$
+:::
+
+:::
+
+---
+
+## No connection between nodes
+
+::: {.columns}
+
+::: {.column width="50%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg){width="99%"}
+:::
+
+::: {.column width="50%" .incremental}
+- In case $X_{ij} = 0$:
+  - $U_i - U_j \leq b - d_j$
+  - **Non-binding** for relation between two nodes
+- Following is [perfectly fine]{.highlight}:
+  - $U_i \leq b$ and $U_j \geq d_j$
+:::
+
+:::
+
+## Connection between two nodes
+
+::: {.columns}
+
+::: {.column width="50%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg){width="99%"}
+:::
+
+::: {.column width="50%" .incremental}
+- In case $X_{ij} = 1$:
+  - $$U_i - U_j + b \leq b - d_j$$
+  - **Binding** for relation between two nodes
+- [Can be summarized to]{.highlight}:
+  - $U_j \geq d_j + U_i$
+
+:::
+
+:::
+
+## Connection in more detail
+
+[Question:]{.question} **Why is it binding?**
+
+. . .
+
+- Binding as $U_j$ has to be **at least as large** as $d_i + U_i$
+- Hence, fullfiled if the demand of $i$ is [added to the vehicle]{.highlight}
+
+. . .
+
+[Question:]{.question} **Do you get the idea?**
+
+. . .
+
+- If $X_{ij} = 1$, then $U_j$ has to be **at least as large** as $d_i + U_i$
+- If $X_{ij} = 0$, then $U_i \leq b$ and $U_j \geq d_j$
+
+## Tour from the Depot
+
+::: {.columns}
+
+::: {.column width="50%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-03.svg){width="99%"}
+:::
+
+::: {.column width="50%" .incremental}
+
+- Tour of vehicle A ok
+- Depot is the only node [visited multiple times]{.highlight}
+- But the constraints are **not applied here!**
+
+:::
+
+:::
+
+## Tour on its Own
+
+::: {.columns}
+
+::: {.column width="50%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-04.svg){width="99%"}
+:::
+
+::: {.column width="50%" .incremental}
+
+- Let's start at node $H$
+- We drive to node $C$
+- $U_C$ = 1
+:::
+
+:::
+
+## Tour on its Own II
+
+::: {.columns}
+
+::: {.column width="50%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-05.svg){width="99%"}
+:::
+
+::: {.column width="50%" .incremental}
+
+- We continue to node $I$
+- $U_I$ = 2
+
+:::
+
+:::
+
+## Tour on its Own III
+
+::: {.columns}
+
+::: {.column width="50%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-06.svg){width="99%"}
+:::
+
+::: {.column width="50%" .incremental}
+
+- We continue to node $H$
+- $U_H$ = 3
+- Connection from $H$ to $C$
+- $U_H$ is **greater** than $U_C$!
+- [Infeasible solution!]{.highlight}
+
+:::
+
+:::
+
+## Subtour Elimination
+
+- Connection in the other direction wouldn't work as well
+- **Only depot as "reset" **, as constraints are not applied here
+
+[Question:]{.question} **What about the capacity?**
+
+. . .
+
+- Remember variable domain of $U_i$?
+- $d_i \leq U_i \leq b$ → [Overall capacity limit enforced!]{.highlight}
+
+---
+
+# [Last Constraint]{.flow} {.title}
+
+## Ensure time limit?
+
+[Question:]{.question} **Anybody an idea?**
+
+. . .
+
+- Constraints basically **follow the same idea**!
+- First, we again need an additional variable
+- $T_{i}$ - Time spent on tour at the node $i$ of a vehicle with $i \in \mathcal{I}$
+
+## Ensure time limit
+
+::: {.callout-note}
+## We need the following sets and variables:
+
+- $\mathcal{V}$ - Set of all nodes, index $i \in \{0,1,2,...,n\}$
+- $X_{i,j}$ - 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise
+- $T_{i}$ - Time spent on tour at the node $i$ of a vehicle with $i \in \mathcal{I}$
+- $t$ - Maximal duration of a tour
+- $c_{i,j}$ - Travel time on an arc from $i$ to $j$
+
+:::
+
+. . .
+
+$$
+T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
+$$
+
+. . .
+
+$$
+0 \leq T_{i} \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+$$
+
+
+## {.loud-slide}
+
+::: {.r-fit-text}
+
+Any questions?
+
+:::
+
+::: footer
+:::
+
+---
+
+# [Asymmetric Vehicle Routing Problem]{.flow} {.title}
+
+## Objective
+
+$$
+\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}
+$$
+
+::: {.callout-important}
+## The goal of the objective function is to:
+
+Minimize the total travel distance.
+
+:::
+
+## Each customer is visited once
+
+$$
+\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
+$$
+
+$$
+\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
+$$
+
+::: {.callout-important}
+## Our constraints ensure:
+
+Each customer is visited exactly once.
+
+:::
+
+## Depot entry and exit
+
+$$
+\sum_{i \in \mathcal{V} \setminus \{0\}} X_{i,0} = |\mathcal{K}|
+$$
+
+$$
+\sum_{j \in \mathcal{V} \setminus \{0\}} X_{0,j} = |\mathcal{K}|
+$$
+
+::: {.callout-important}
+## Our constraints ensure:
+
+The depot is visited by exactly $|\mathcal{K}|$ vehicles. Note, that we could remove one of the constraints and the solution would still be optimal.
+
+:::
+
+## Capacity and subtour elimination
+
+$$
+U_i - U_j + b \times X_{i,j} \leq b - d_j \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
+$$
+
+$$
+d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
+$$
+
+::: {.callout-important}
+## Our constraints ensure:
+
+The capacity limit is respected and subtours are eliminated.
+
+:::
+
+## Time constraints
+
+$$
+T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
+$$
+
+$$
+0 \leq T_i \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+$$
+
+::: {.callout-important}
+## Our constraints ensure:
+
+The time limit is respected (and subtours are eliminated).
+
+:::
+
+## Variables
+
+$$
+X_{i,j} \in \{0,1\} \quad \forall i,j \in \mathcal{V}
+$$
+
+$$
+d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
+$$
+
+$$
+0 \leq T_i \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+$$
+
+::: {.callout-important}
+## The variable domains make sure that:
+
+The binary setup variable is either 0 or 1 and the new variables are below the time and capacity limit.
+
+:::
+
+---
+
+# [Model Characteristics]{.flow} {.title}
+
+## Characteristics
+
+[Questions:]{.question} **On model characteristics**
+
+::: {.incremental}
+
+- Is the model formulation linear/ non-linear?
+- What kind of variable domains do we have?
+- What do you think, can the model be solved quickly?
+
+:::
+
+## Model Assumptions
+
+[Questions:]{.question} **On model assumptions**
+
+::: {.incremental}
+
+- What assumptions have we made?
+- What are likely issues that can arise if the model is applied?
+- Have we considered service times?
+
+:::
+
+---
+
+## Extensions of the CVRP
+
+[Questions:]{.question} **What extensions do you know?**
+
+. . .
+
+- time windows (TW)
+- soft time windows (STW)
+- multiple depots (MD)
+- heterogeneous fleet (HF)
+- backhauls (B)
+- pickup and delivery (PD)
+
+---
+
+# [Implementation and Impact]{.flow} {.title}
+
+## [Case Study in Schleswig-Holstein]{.invert-font} {background-color="#000000" background-image="https://images.unsplash.com/photo-1652305489491-789257d2e95c?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
+
+. . .
+
+::: {.invert-font}
+
+- 165 libraries
+- 119 visited biweekly
+- Up to 9 different tours
+- Time-Limit of 8 hours for each tour
+
+:::
+
+::: footer
+:::
+
+## {.loud-slide}
+
+::: {.r-fit-text}
+
+Can our formulation
+
+solve the problem
+
+on a real-world instance?
+
+:::
+
+::: footer
+:::
+
+## {.loud-slide}
+
+::: {.r-fit-text}
+
+No, although we can find
+
+solutions within one hour,
+
+the gap is still very large
+
+with 40%-45%.
+
+:::
+
+::: footer
+:::
+
+---
+
+## Problem is NP-hard
+
+- We have already seen that a problem **can be NP-hard**
+- Likely, that there are **no polynomial-time algorithms**
+- [Doesn't mean that it can't be solved!]{.highlight}
+
+. . .
+
+::: {.callout-note}
+We won't go deeper into this, but feel free to ask me!
+:::
+
+## {.loud-slide}
+
+::: {.r-fit-text}
+
+Can we do
+
+anything to solve
+
+the model?
+
+:::
+
+::: footer
+:::
+
+## Heuristics
+
+- We can still solve the problem **with a heuristic**
+- [Likely not the optimal solution]{.highlight}, but a lot of research goes into efficient algorithms to solve these problems
+- In our case study we applied **Hybrid Genetic Search** for the CVRP (HGS-CVRP) by @Vidal_2022
+
+. . .
+
+:::{.callout-tip}
+For problems with 100+ locations, heuristics are often the only practical choice.
+:::
+
+---
+
+## Applications Beyond Libraries
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Logistics & Delivery**
+
+- Package delivery
+- Food delivery services
+- Grocery delivery
+- Mail distribution
+:::
+
+::: {.column width="50%"}
+**Service Industries**
+
+- Maintenance crews
+- Home healthcare visits
+- Waste collection
+- School bus routing
+:::
+
+::::
+
+. . .
+
+[Question:]{.question} **Can you think of other applications?**
+
+## Conclusion
+
+- Standard problem that [occurs in many different places]{.highlight}
+- Solving the problem with a mathematical model **is difficult**
+- Nowadays, there are **many good heuristics**
+- **Many companies** are working on the problem
+
+. . .
+
+::: {.callout-note}
+## And that's it for todays lecture!
+
+We now have covered the Capacitated Vehicle Routing Problem and are ready to start solving some tasks in the upcoming tutorial.
+:::
+
+## {.loud-slide}
+::: {.r-fit-text}
+Questions?
+:::
+
+::: footer
+:::
+
+---
+
+# [Literature]{.flow} {.title}
+
+
+## Literature I
+
+For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
+
+## Literature II
