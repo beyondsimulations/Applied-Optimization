@@ -6,7 +6,7 @@ This repository contains the lecture materials and tutorials for the course "App
 
 The course covers applied optimization methods with hands-on tutorials and real-world examples. Students learn to solve optimization problems using Julia and various optimization packages.
 
-## 📁 Project Structure
+## Project Structure
 
 ### Content Directories
 
@@ -57,7 +57,7 @@ project:
     - helpers/create_pdf.py
 ```
 
-## 🛠 Helper Functions
+## Helper Functions
 
 The `helpers/` directory contains automation scripts that run after each build:
 
@@ -103,7 +103,6 @@ The `helpers/` directory contains automation scripts that run after each build:
 1. **Julia** - For running computational content
 2. **Python** - For helper scripts and Quarto
 3. **Quarto** - For building the website
-4. **Node.js** - For Playwright browser automation
 
 ### Installation
 
@@ -120,15 +119,8 @@ The `helpers/` directory contains automation scripts that run after each build:
 
 3. Install Python dependencies:
    ```bash
-   pip install pipenv
-   pipenv install
-   pipenv shell
-   ```
-
-4. Install Playwright browsers:
-   ```bash
-   playwright install chromium
-   ```
+   uv sync
+    ```
 
 ### Building the Site
 
@@ -154,7 +146,7 @@ quarto preview
 
 Note: Post-render scripts only run on full renders, not during preview mode.
 
-## 📚 Content Creation
+## Content Creation
 
 ### Adding New Lectures
 
@@ -185,7 +177,7 @@ Note: Post-render scripts only run on full renders, not during preview mode.
 
 This project is licensed under the terms specified in the LICENSE file.
 
-## 🔗 Links
+## Links
 
 - **Course Website**: https://beyondsimulations.github.io/Applied-Optimization
 - **Source Repository**: https://github.com/beyondsimulations/Applied-Optimization

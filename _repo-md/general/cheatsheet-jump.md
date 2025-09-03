@@ -1,6 +1,7 @@
 ---
 title: JuMP Syntax Cheatsheet
 subtitle: Applied Optimization with Julia
+author: Dr. Tobias Vlćek
 execute:
   eval: false
 ---
