@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-46eeb4c476de49ef7df495821a6125d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.19">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-a6e161b2431e1f94a14e0f5d32135a3c.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.24">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture VII - Library Routing Optimization</title>
@@ -49,7 +49,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-4f2531899f9193fda64fb09d09b4e1cf.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-073661835fecda96e0ed3cfe92341d70.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -155,7 +155,10 @@
 <div class="quarto-title-author-name">
 Dr.&nbsp;Tobias Vlćek 
 </div>
-</div>
+        <p class="quarto-title-affiliation">
+            University of Hamburg - Fall 2025
+          </p>
+    </div>
 </div>
 
 </section>
@@ -271,13 +274,10 @@ Dr.&nbsp;Tobias Vlćek
 <li>Problem class about <strong>designing routes for vehicle fleets</strong></li>
 </ul>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-style-simple">
 <div class="callout-body">
-<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
-</div>
-<p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
 <p>There are many variants of the VRP! E.g., with time windows, periodic deliveries, allowing for pickups or deliveries, <span class="highlight">and much more!</span></p>
@@ -352,13 +352,10 @@ Dr.&nbsp;Tobias Vlćek
 </ul>
 </div>
 <div class="fragment">
-<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
-<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
-</div>
-<p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
 <p><span class="math inline">\(t\)</span> is the maximal duration of each tour, not the travel time on an arc or an index!</p>
@@ -369,7 +366,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="decision-variables" class="slide level2">
 <h2>Decision Variable(s)?</h2>
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -387,7 +384,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 <div class="fragment">
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -411,7 +408,7 @@ Dr.&nbsp;Tobias Vlćek
 <li><span class="math inline">\(X_{i,j,k}\)</span> - 1, if <span class="math inline">\(k\)</span> passes between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> on its tour, 0 otherwise</li>
 </ul>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -431,7 +428,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="decision-variables-again" class="slide level2">
 <h2>Decision Variable/s (again)?</h2>
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -449,7 +446,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 <div class="fragment">
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -473,7 +470,7 @@ Dr.&nbsp;Tobias Vlćek
 </ul>
 </div>
 <div class="fragment">
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -498,7 +495,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="objective-function" class="slide level2">
 <h2>Objective Function?</h2>
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -515,7 +512,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could be our objective function?</strong></p>
 </div>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -534,7 +531,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="objective-function-1" class="slide level2">
 <h2>Objective Function</h2>
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -572,7 +569,7 @@ Dr.&nbsp;Tobias Vlćek
 </ul>
 </div>
 <div class="fragment">
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -611,7 +608,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="visit-each-customer-once" class="slide level2">
 <h2>Visit Each Customer Once?</h2>
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -625,7 +622,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -663,7 +660,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="depot-entry-and-exit-constraints" class="slide level2">
 <h2>Depot Entry and Exit Constraints?</h2>
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -677,7 +674,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -708,7 +705,7 @@ Dr.&nbsp;Tobias Vlćek
 \sum_{j \in \mathcal{V} \setminus \{0\}} X_{0,j} = |\mathcal{K}|
 \]</span></p>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -751,13 +748,10 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment"><span class="math inline">\(U_{i}\)</span> - Capacity utilization at <span class="math inline">\(i\)</span> of vehicle on its tour with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
 </ul>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-style-simple">
 <div class="callout-body">
-<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
-</div>
-<p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
 <p>You don’t need to guess these constraints, as they are quite tricky!</p>
@@ -768,7 +762,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="mtz-constraints" class="slide level2">
 <h2>MTZ Constraints</h2>
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -967,7 +961,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 </section>
 <section id="ensure-time-limit-1" class="slide level2">
 <h2>Ensure time limit</h2>
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -1019,7 +1013,7 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 <p><span class="math display">\[
 \text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}
 \]</span></p>
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -1041,7 +1035,7 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 <p><span class="math display">\[
 \sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -1063,7 +1057,7 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 <p><span class="math display">\[
 \sum_{j \in \mathcal{V} \setminus \{0\}} X_{0,j} = |\mathcal{K}|
 \]</span></p>
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -1085,7 +1079,7 @@ U_i - U_j + b \times X_{i,j} \leq b - d_j \quad \forall i,j \in \mathcal{V} \set
 <p><span class="math display">\[
 d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 \]</span></p>
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -1107,7 +1101,7 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 <p><span class="math display">\[
 0 \leq T_i \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
 \]</span></p>
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -1132,7 +1126,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <p><span class="math display">\[
 0 \leq T_i \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
 \]</span></p>
-<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -1241,13 +1235,10 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <li><span class="highlight">Doesn’t mean that it can’t be solved!</span></li>
 </ul>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-style-simple">
 <div class="callout-body">
-<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
-</div>
-<p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
 <p>We won’t go deeper into this, but feel free to ask me!</p>
@@ -1275,13 +1266,10 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <li>In our case study we applied <strong>Hybrid Genetic Search</strong> for the CVRP (HGS-CVRP) by <span class="citation" data-cites="Vidal_2022">Vidal (<a href="#/literature-ii" role="doc-biblioref" onclick="">2022</a>)</span></li>
 </ul>
 <div class="fragment">
-<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
-<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
-</div>
-<p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
 <p>For problems with 100+ locations, heuristics are often the only practical choice.</p>
@@ -1323,7 +1311,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <li><strong>Many companies</strong> are working on the problem</li>
 </ul>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -1636,13 +1624,14 @@ Vidal, Thibaut. 2022. <span>“Hybrid Genetic Search for the CVRP: Open-Source I
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

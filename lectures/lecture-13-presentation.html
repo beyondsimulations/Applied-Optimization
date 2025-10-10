@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-46eeb4c476de49ef7df495821a6125d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.19">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-a6e161b2431e1f94a14e0f5d32135a3c.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.24">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture XIII - Recap and Discussion</title>
@@ -29,7 +29,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-ca90b1bd16d199a85f5da27a4dea0ea5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-073661835fecda96e0ed3cfe92341d70.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -135,7 +135,10 @@
 <div class="quarto-title-author-name">
 Dr.&nbsp;Tobias Vlćek 
 </div>
-</div>
+        <p class="quarto-title-affiliation">
+            University of Hamburg - Fall 2025
+          </p>
+    </div>
 </div>
 
 </section>
@@ -226,13 +229,10 @@ Dr.&nbsp;Tobias Vlćek
 <li>How to <strong>question</strong> model assumptions</li>
 </ul>
 <div class="fragment">
-<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
-<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
-</div>
-<p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
 <p>That’s a lot and a great foundation for a seminar or a master thesis!</p>
@@ -258,13 +258,10 @@ Dr.&nbsp;Tobias Vlćek
 <li>There are <strong>many interesting topics</strong> to explore!</li>
 </ul>
 <div class="fragment">
-<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
-<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
-</div>
-<p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
 <p>Getting your supervisors on board is the hardest part! But note, that it is often worth it and the tools we have used are all free and open-source.</p>
@@ -282,13 +279,10 @@ Dr.&nbsp;Tobias Vlćek
 <li>Start a small personal project using the tools learned</li>
 </ul>
 <div class="fragment">
-<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
-<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
-</div>
-<p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
 <p>If you want to start a small personal project, try to find a problem that you are interested in and that you can solve using the tools we have learned.</p>
@@ -305,13 +299,10 @@ Dr.&nbsp;Tobias Vlćek
 <li>If you want to try <strong>AI pair programming</strong>, use Cursor as IDE</li>
 </ul>
 <div class="fragment">
-<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
-<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
-</div>
-<p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
 <p>Cursor is a great IDE for AI pair programming, although it is not completely free. It has Claude and ChatGPT integrated and makes work much easier when compared to copying and pasting code.</p>
@@ -337,13 +328,10 @@ Dr.&nbsp;Tobias Vlćek
 <li>I wish you <strong>all the best for your studies and your career!</strong></li>
 </ul>
 <div class="fragment">
-<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout callout-note callout-style-simple">
 <div class="callout-body">
-<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
-</div>
-<p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
 <p>If you have any questions on optimization in the future, feel free to contact me!</p>
@@ -631,13 +619,14 @@ Dr.&nbsp;Tobias Vlćek
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
