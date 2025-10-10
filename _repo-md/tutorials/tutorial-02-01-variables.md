@@ -1,10 +1,6 @@
 ---
 title: Tutorial II.I - Variables and Types
 subtitle: Applied Optimization with Julia
-format-links:
-  - text: Julia
-    href: tutorial-02-01-variables.jl
-    icon: hand-thumbs-up
 ---
 
 

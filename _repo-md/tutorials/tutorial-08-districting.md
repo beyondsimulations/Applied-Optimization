@@ -1,10 +1,6 @@
 ---
 title: Tutorial VIII - Police Districting
 subtitle: Applied Optimization with Julia
-format-links:
-  - text: Julia
-    href: tutorial-08-districting.jl
-    icon: hand-thumbs-up
 ---
 
 

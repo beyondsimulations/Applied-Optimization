@@ -1,10 +1,6 @@
 ---
 title: Tutorial IV.V - Modelling the Transportation Problem with JuMP
 subtitle: Applied Optimization with Julia
-format-links:
-  - text: Julia
-    href: tutorial-04-05-transport.jl
-    icon: hand-thumbs-up
 ---
 
 
@@ -31,11 +27,6 @@ Let's start by loading the necessary packages:
 using JuMP, HiGHS
 using DataFrames, CSV
 ```
-
-<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling JuMP [4076af6c-e467-56ae-b986-b466b2749572] (cache misses: wrong dep version loaded (6))
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling HiGHS [87dc4568-4c63-4d18-b0c0-bb2238e4078b] (cache misses: wrong dep version loaded (6))
-</pre>
 
 ------------------------------------------------------------------------
 

@@ -1,10 +1,6 @@
 ---
 title: Tutorial III.IV - Input and Output
 subtitle: Applied Optimization with Julia
-format-links:
-  - text: Julia
-    href: tutorial-03-04-IO.jl
-    icon: hand-thumbs-up
 ---
 
 

@@ -1,10 +1,6 @@
 ---
 title: Tutorial II.II - Vectors and Matrices
 subtitle: Applied Optimization with Julia
-format-links:
-  - text: Julia
-    href: tutorial-02-02-vectors.jl
-    icon: hand-thumbs-up
 ---
 
 

@@ -1,10 +1,6 @@
 ---
 title: Tutorial II.III - Comparison Operators
 subtitle: Applied Optimization with Julia
-format-links:
-  - text: Julia
-    href: tutorial-02-03-comparisons.jl
-    icon: hand-thumbs-up
 ---
 
 

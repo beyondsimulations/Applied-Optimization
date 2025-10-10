@@ -1,10 +1,6 @@
 ---
 title: Tutorial IX - Safety Planning for the Islamic Pilgrimage in Mecca
 subtitle: Applied Optimization with Julia
-format-links:
-  - text: Julia
-    href: tutorial-09-safety.jl
-    icon: hand-thumbs-up
 ---
 
 

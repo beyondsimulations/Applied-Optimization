@@ -103,8 +103,6 @@ format:
 >
 > The remaining time we will already start working on the problems of the third lecture.
 
-------------------------------------------------------------------------
-
 # <span class="flow">Literature</span>
 
 ## Literature

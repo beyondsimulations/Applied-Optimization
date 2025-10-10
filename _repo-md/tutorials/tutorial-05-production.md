@@ -1,10 +1,6 @@
 ---
 title: Tutorial V - Production Planning in Breweries
 subtitle: Applied Optimization with Julia
-format-links:
-  - text: Julia
-    href: tutorial-05-production.jl
-    icon: hand-thumbs-up
 ---
 
 

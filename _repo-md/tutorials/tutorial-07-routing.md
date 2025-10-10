@@ -1,10 +1,6 @@
 ---
 title: Tutorial VII - Periodic Library Routing
 subtitle: Applied Optimization with Julia
-format-links:
-  - text: Julia
-    href: tutorial-07-routing.jl
-    icon: hand-thumbs-up
 ---
 
 
@@ -51,17 +47,6 @@ file_directory = "$(@__DIR__)/data"
 demand = CSV.read("$(file_directory)/routing-demand.csv", DataFrame)
 coord = CSV.read("$(file_directory)/coord_x_y.csv", DataFrame)
 ```
-
-<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling JuMP [4076af6c-e467-56ae-b986-b466b2749572] (cache misses: wrong dep version loaded (6))
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling HiGHS [87dc4568-4c63-4d18-b0c0-bb2238e4078b] (cache misses: wrong dep version loaded (6))
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling Plots [91a5bcdd-55d7-5caf-9e0b-520d859cae80] (cache misses: wrong dep version loaded (8))
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling SpecialFunctionsExt [997ecda8-951a-5f50-90ea-61382e97704b] (cache misses: wrong dep version loaded (6))
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling IJuliaExt [2f4121a4-3b3a-5ce6-9c5e-1f2673ce168a] (cache misses: wrong dep version loaded (2))
-</pre>
 
 <div><div style = "float: left;"><span>15×3 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
 

@@ -1,10 +1,6 @@
 ---
 title: Tutorial XI - Arena Seat Planning under Distancing Rules
 subtitle: Applied Optimization with Julia
-format-links:
-  - text: Julia
-    href: tutorial-11-distancing.jl
-    icon: hand-thumbs-up
 ---
 
 
