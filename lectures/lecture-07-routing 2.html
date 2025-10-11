@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Tobias Vlćek">
+
+<title>Lecture VII - Library Routing Optimization – Applied Optimization with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-46d4eb725d7d2b8695ccd307f5b3c105.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-197188da37a79cb9418c4f38e6d23e8d.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-46d4eb725d7d2b8695ccd307f5b3c105.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5bd52b611082767485e7c12f2e4776f2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-327d2f8b99d2507556122c7edd57a2b0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-5bd52b611082767485e7c12f2e4776f2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script defer="" src="https://umi.byndsim.com/script.js" data-website-id="e230d76b-b0a6-477e-8c5d-19a7bd661e68"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../lectures/lecture-07-routing.html">07 Routing</a></li><li class="breadcrumb-item"><a href="../lectures/lecture-07-routing.html">Lecture</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="https://images.beyondsimulations.com/lectures/mj-romeo-juliet.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="https://images.beyondsimulations.com/lectures/mj-romeo-juliet.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../general/syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+ <span class="menu-text">***</span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-01-introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01 Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">02 First Steps</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-02-firststeps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-02-01-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01 - Variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-02-02-vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02 - Vectors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-02-03-comparisons.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03 - Comparisons</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-02-04-loops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04 - Loops</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-02-05-dicts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 - Dictionaries</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">03 Data</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-03-packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-03-01-functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01 - Functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-03-02-handling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02 - Packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-03-03-DataFrames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03 - DataFrames</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-03-04-IO.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04 - Input and Output</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-03-05-Plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 - Plotting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">04 Optimization</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-04-jump.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-04-01-jump.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01 - JuMP</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-04-02-bounds.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02 - Bounds</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-04-03-constraints.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03 - Constraints</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-04-04-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04 - Advanced</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-04-05-transport.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 - Transport</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">05 Production</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-05-production.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-05-production.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">06 Warehouse</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-06-ordersplit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-06-ordersplit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">07 Routing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-07-routing.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-07-routing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">08 Districting</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-08-districting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-08-districting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">09 Safety</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-09-safety.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-09-safety.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">10 Intermission</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-10-intermission.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-10-intermission.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">11 Distancing</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-11-distancing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-11-distancing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+ <span class="menu-text">12 Metro</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-12-rail.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-12-rail.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">13 Recap</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lectures/lecture-13-recap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial-13-recap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">***</span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">Cheatsheets</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../general/cheatsheet-julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Julia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../general/cheatsheet-jump.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">JuMP</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../general/faq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FAQs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../general/literature.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Literature</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="flow">Introduction</span></a>
+  <ul class="collapse">
+  <li><a href="#central-libraries" id="toc-central-libraries" class="nav-link" data-scroll-target="#central-libraries"><span class="invert-font">Central Libraries</span></a></li>
+  <li><a href="#central-libraries-1" id="toc-central-libraries-1" class="nav-link" data-scroll-target="#central-libraries-1">Central Libraries</a></li>
+  <li><a href="#structure-of-the-deliveries" id="toc-structure-of-the-deliveries" class="nav-link" data-scroll-target="#structure-of-the-deliveries">Structure of the Deliveries</a></li>
+  <li><a href="#potential-decisions" id="toc-potential-decisions" class="nav-link" data-scroll-target="#potential-decisions">Potential Decisions</a></li>
+  <li><a href="#impact-of-the-decisions" id="toc-impact-of-the-decisions" class="nav-link" data-scroll-target="#impact-of-the-decisions">Impact of the Decisions</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
+  </ul></li>
+  <li><a href="#problem-structure" id="toc-problem-structure" class="nav-link" data-scroll-target="#problem-structure"><span class="flow">Problem Structure</span></a>
+  <ul class="collapse">
+  <li><a href="#objective" id="toc-objective" class="nav-link" data-scroll-target="#objective">Objective</a></li>
+  <li><a href="#modelling" id="toc-modelling" class="nav-link" data-scroll-target="#modelling">Modelling</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1"></a></li>
+  <li><a href="#vehicle-routing-problem" id="toc-vehicle-routing-problem" class="nav-link" data-scroll-target="#vehicle-routing-problem">Vehicle Routing Problem</a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2"></a></li>
+  </ul></li>
+  <li><a href="#problem-visualization" id="toc-problem-visualization" class="nav-link" data-scroll-target="#problem-visualization"><span class="flow">Problem Visualization</span></a>
+  <ul class="collapse">
+  <li><a href="#basic-problem-setting" id="toc-basic-problem-setting" class="nav-link" data-scroll-target="#basic-problem-setting">Basic Problem Setting</a></li>
+  <li><a href="#basic-problem-setting-with-arcs" id="toc-basic-problem-setting-with-arcs" class="nav-link" data-scroll-target="#basic-problem-setting-with-arcs">Basic Problem Setting with Arcs</a></li>
+  <li><a href="#setting-with-vehicles" id="toc-setting-with-vehicles" class="nav-link" data-scroll-target="#setting-with-vehicles">Setting with Vehicles</a></li>
+  <li><a href="#basic-problem-setting-with-tours" id="toc-basic-problem-setting-with-tours" class="nav-link" data-scroll-target="#basic-problem-setting-with-tours">Basic Problem Setting with Tours</a></li>
+  </ul></li>
+  <li><a href="#problem-structure-1" id="toc-problem-structure-1" class="nav-link" data-scroll-target="#problem-structure-1"><span class="flow">Problem Structure</span></a>
+  <ul class="collapse">
+  <li><a href="#available-sets" id="toc-available-sets" class="nav-link" data-scroll-target="#available-sets">Available Sets</a></li>
+  <li><a href="#available-parameters" id="toc-available-parameters" class="nav-link" data-scroll-target="#available-parameters">Available Parameters</a></li>
+  <li><a href="#decision-variables" id="toc-decision-variables" class="nav-link" data-scroll-target="#decision-variables">Decision Variable(s)?</a></li>
+  <li><a href="#decision-variables-1" id="toc-decision-variables-1" class="nav-link" data-scroll-target="#decision-variables-1">Decision Variables</a></li>
+  <li><a href="#decision-variables-again" id="toc-decision-variables-again" class="nav-link" data-scroll-target="#decision-variables-again">Decision Variable/s (again)?</a></li>
+  <li><a href="#decision-variables-again-1" id="toc-decision-variables-again-1" class="nav-link" data-scroll-target="#decision-variables-again-1">Decision Variables (again)</a></li>
+  </ul></li>
+  <li><a href="#model-formulation" id="toc-model-formulation" class="nav-link" data-scroll-target="#model-formulation"><span class="flow">Model Formulation</span></a>
+  <ul class="collapse">
+  <li><a href="#objective-function" id="toc-objective-function" class="nav-link" data-scroll-target="#objective-function">Objective Function?</a></li>
+  <li><a href="#objective-function-1" id="toc-objective-function-1" class="nav-link" data-scroll-target="#objective-function-1">Objective Function</a></li>
+  <li><a href="#problem-constraints" id="toc-problem-constraints" class="nav-link" data-scroll-target="#problem-constraints">Problem Constraints</a></li>
+  <li><a href="#constraints" id="toc-constraints" class="nav-link" data-scroll-target="#constraints">Constraints?</a></li>
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3"></a></li>
+  <li><a href="#subtours-1" id="toc-subtours-1" class="nav-link" data-scroll-target="#subtours-1">Subtours</a></li>
+  </ul></li>
+  <li><a href="#constraints-1" id="toc-constraints-1" class="nav-link" data-scroll-target="#constraints-1"><span class="flow">Constraints</span></a>
+  <ul class="collapse">
+  <li><a href="#visit-each-customer-once" id="toc-visit-each-customer-once" class="nav-link" data-scroll-target="#visit-each-customer-once">Visit Each Customer Once?</a></li>
+  <li><a href="#visit-each-customer-once-1" id="toc-visit-each-customer-once-1" class="nav-link" data-scroll-target="#visit-each-customer-once-1">Visit Each Customer Once</a></li>
+  <li><a href="#depot-entry-and-exit-constraints" id="toc-depot-entry-and-exit-constraints" class="nav-link" data-scroll-target="#depot-entry-and-exit-constraints">Depot Entry and Exit Constraints?</a></li>
+  <li><a href="#depot-entry-and-exit-constraints-1" id="toc-depot-entry-and-exit-constraints-1" class="nav-link" data-scroll-target="#depot-entry-and-exit-constraints-1">Depot Entry and Exit Constraints</a></li>
+  </ul></li>
+  <li><a href="#capacity-and-subtour-elimination" id="toc-capacity-and-subtour-elimination" class="nav-link" data-scroll-target="#capacity-and-subtour-elimination"><span class="flow">Capacity and Subtour Elimination</span></a>
+  <ul class="collapse">
+  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4"></a></li>
+  <li><a href="#mtz-formulation" id="toc-mtz-formulation" class="nav-link" data-scroll-target="#mtz-formulation">MTZ Formulation</a></li>
+  <li><a href="#mtz-constraints" id="toc-mtz-constraints" class="nav-link" data-scroll-target="#mtz-constraints">MTZ Constraints</a></li>
+  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5"></a></li>
+  <li><a href="#dont-worry" id="toc-dont-worry" class="nav-link" data-scroll-target="#dont-worry">Don’t worry!</a></li>
+  <li><a href="#no-connection-between-nodes" id="toc-no-connection-between-nodes" class="nav-link" data-scroll-target="#no-connection-between-nodes">No connection between nodes</a></li>
+  <li><a href="#connection-between-two-nodes" id="toc-connection-between-two-nodes" class="nav-link" data-scroll-target="#connection-between-two-nodes">Connection between two nodes</a></li>
+  <li><a href="#connection-in-more-detail" id="toc-connection-in-more-detail" class="nav-link" data-scroll-target="#connection-in-more-detail">Connection in more detail</a></li>
+  <li><a href="#tour-from-the-depot" id="toc-tour-from-the-depot" class="nav-link" data-scroll-target="#tour-from-the-depot">Tour from the Depot</a></li>
+  <li><a href="#tour-on-its-own" id="toc-tour-on-its-own" class="nav-link" data-scroll-target="#tour-on-its-own">Tour on its Own</a></li>
+  <li><a href="#tour-on-its-own-ii" id="toc-tour-on-its-own-ii" class="nav-link" data-scroll-target="#tour-on-its-own-ii">Tour on its Own II</a></li>
+  <li><a href="#tour-on-its-own-iii" id="toc-tour-on-its-own-iii" class="nav-link" data-scroll-target="#tour-on-its-own-iii">Tour on its Own III</a></li>
+  <li><a href="#subtour-elimination" id="toc-subtour-elimination" class="nav-link" data-scroll-target="#subtour-elimination">Subtour Elimination</a></li>
+  </ul></li>
+  <li><a href="#last-constraint" id="toc-last-constraint" class="nav-link" data-scroll-target="#last-constraint"><span class="flow">Last Constraint</span></a>
+  <ul class="collapse">
+  <li><a href="#ensure-time-limit" id="toc-ensure-time-limit" class="nav-link" data-scroll-target="#ensure-time-limit">Ensure time limit?</a></li>
+  <li><a href="#ensure-time-limit-1" id="toc-ensure-time-limit-1" class="nav-link" data-scroll-target="#ensure-time-limit-1">Ensure time limit</a></li>
+  <li><a href="#section-6" id="toc-section-6" class="nav-link" data-scroll-target="#section-6"></a></li>
+  </ul></li>
+  <li><a href="#asymmetric-vehicle-routing-problem" id="toc-asymmetric-vehicle-routing-problem" class="nav-link" data-scroll-target="#asymmetric-vehicle-routing-problem"><span class="flow">Asymmetric Vehicle Routing Problem</span></a>
+  <ul class="collapse">
+  <li><a href="#objective-1" id="toc-objective-1" class="nav-link" data-scroll-target="#objective-1">Objective</a></li>
+  <li><a href="#each-customer-is-visited-once" id="toc-each-customer-is-visited-once" class="nav-link" data-scroll-target="#each-customer-is-visited-once">Each customer is visited once</a></li>
+  <li><a href="#depot-entry-and-exit" id="toc-depot-entry-and-exit" class="nav-link" data-scroll-target="#depot-entry-and-exit">Depot entry and exit</a></li>
+  <li><a href="#capacity-and-subtour-elimination-1" id="toc-capacity-and-subtour-elimination-1" class="nav-link" data-scroll-target="#capacity-and-subtour-elimination-1">Capacity and subtour elimination</a></li>
+  <li><a href="#time-constraints" id="toc-time-constraints" class="nav-link" data-scroll-target="#time-constraints">Time constraints</a></li>
+  <li><a href="#variables" id="toc-variables" class="nav-link" data-scroll-target="#variables">Variables</a></li>
+  </ul></li>
+  <li><a href="#model-characteristics" id="toc-model-characteristics" class="nav-link" data-scroll-target="#model-characteristics"><span class="flow">Model Characteristics</span></a>
+  <ul class="collapse">
+  <li><a href="#characteristics" id="toc-characteristics" class="nav-link" data-scroll-target="#characteristics">Characteristics</a></li>
+  <li><a href="#model-assumptions" id="toc-model-assumptions" class="nav-link" data-scroll-target="#model-assumptions">Model Assumptions</a></li>
+  <li><a href="#extensions-of-the-cvrp" id="toc-extensions-of-the-cvrp" class="nav-link" data-scroll-target="#extensions-of-the-cvrp">Extensions of the CVRP</a></li>
+  </ul></li>
+  <li><a href="#implementation-and-impact" id="toc-implementation-and-impact" class="nav-link" data-scroll-target="#implementation-and-impact"><span class="flow">Implementation and Impact</span></a>
+  <ul class="collapse">
+  <li><a href="#case-study-in-schleswig-holstein" id="toc-case-study-in-schleswig-holstein" class="nav-link" data-scroll-target="#case-study-in-schleswig-holstein"><span class="invert-font">Case Study in Schleswig-Holstein</span></a></li>
+  <li><a href="#section-7" id="toc-section-7" class="nav-link" data-scroll-target="#section-7"></a></li>
+  <li><a href="#section-8" id="toc-section-8" class="nav-link" data-scroll-target="#section-8"></a></li>
+  <li><a href="#problem-is-np-hard" id="toc-problem-is-np-hard" class="nav-link" data-scroll-target="#problem-is-np-hard">Problem is NP-hard</a></li>
+  <li><a href="#section-9" id="toc-section-9" class="nav-link" data-scroll-target="#section-9"></a></li>
+  <li><a href="#heuristics" id="toc-heuristics" class="nav-link" data-scroll-target="#heuristics">Heuristics</a></li>
+  <li><a href="#applications-beyond-libraries" id="toc-applications-beyond-libraries" class="nav-link" data-scroll-target="#applications-beyond-libraries">Applications Beyond Libraries</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#section-10" id="toc-section-10" class="nav-link" data-scroll-target="#section-10"></a></li>
+  </ul></li>
+  <li><a href="#literature" id="toc-literature" class="nav-link" data-scroll-target="#literature"><span class="flow">Literature</span></a>
+  <ul class="collapse">
+  <li><a href="#literature-i" id="toc-literature-i" class="nav-link" data-scroll-target="#literature-i">Literature I</a></li>
+  <li><a href="#literature-ii" id="toc-literature-ii" class="nav-link" data-scroll-target="#literature-ii">Literature II</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/lectures/lecture-07-routing.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lecture-07-routing.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="lecture-07-presentation.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../lectures/lecture-07-routing.html">07 Routing</a></li><li class="breadcrumb-item"><a href="../lectures/lecture-07-routing.html">Lecture</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Lecture VII - Library Routing Optimization</h1>
+<p class="subtitle lead">Applied Optimization with Julia</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Dr.&nbsp;Tobias Vlćek </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Hamburg - Fall 2025
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level1 title">
+<h1 class="title"><span class="flow">Introduction</span></h1>
+<section id="central-libraries" class="level2" data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?q=80&amp;w=3540&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
+<h2 data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?q=80&amp;w=3540&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center" class="anchored" data-anchor-id="central-libraries"><span class="invert-font">Central Libraries</span></h2>
+<p>. . .</p>
+<p><span class="invert-font fragment"><strong>Question:</strong> Anybody an idea what a central library is?</span></p>
+<div class="footer">
+
+</div>
+</section>
+<section id="central-libraries-1" class="level2">
+<h2 class="anchored" data-anchor-id="central-libraries-1">Central Libraries</h2>
+<ul>
+<li><span class="highlight">Book Delivery to Libraries</span> in Germany</li>
+<li>They supply <strong>all local libraries</strong> within the same state</li>
+<li>Complex, as the <strong>number of libraries</strong> per state can be large</li>
+<li>Books and media in the libraries <strong>change often</strong></li>
+<li>Customers can <strong>request books</strong> from other libraries</li>
+</ul>
+</section>
+<section id="structure-of-the-deliveries" class="level2">
+<h2 class="anchored" data-anchor-id="structure-of-the-deliveries">Structure of the Deliveries</h2>
+<ul>
+<li>For delivery, central has <span class="highlight">several employees and cars</span></li>
+<li>Local libraries differ in size, some receive <strong>more items</strong></li>
+<li>Items are <strong>collected as well</strong> during the tours<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li>They are <strong>transported back</strong> to the central library</li>
+</ul>
+</section>
+<section id="potential-decisions" class="level2">
+<h2 class="anchored" data-anchor-id="potential-decisions">Potential Decisions</h2>
+<p><span class="question">Question</span>: <strong>What decisions can the library make for tours?</strong></p>
+<p>. . .</p>
+<ul>
+<li>Subdivide their set of libraries into <strong>several ordered tours</strong></li>
+<li>Decide in <strong>which order to visit</strong> the libraries</li>
+<li>Evaluate <strong>which car to use</strong> for each of the tours</li>
+<li>Decide <strong>which driver</strong> to assign to each of the tours</li>
+</ul>
+</section>
+<section id="impact-of-the-decisions" class="level2">
+<h2 class="anchored" data-anchor-id="impact-of-the-decisions">Impact of the Decisions</h2>
+<p><span class="question">Question</span>: <strong>What is the impact of the decisions?</strong></p>
+<p>. . .</p>
+<ul>
+<li>Longer driving routes <span class="highlight">increase the footprint</span> of the deliveries</li>
+<li>Suboptimal tours can lead to <strong>unnecessary costs</strong></li>
+<li>Fuel, personnel, and repairs <strong>are increased</strong></li>
+<li>Unhappy customers due to <strong>waiting times</strong> on ordered books</li>
+</ul>
+</section>
+<section id="section" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section"></h2>
+<div class="r-fit-text">
+<p>Have you heard of</p>
+<p>this problem before?</p>
+</div>
+<div class="footer">
+
+</div>
+<hr>
+</section>
+</section>
+<section id="problem-structure" class="level1 title">
+<h1 class="title"><span class="flow">Problem Structure</span></h1>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">Objective</h2>
+<p><span class="question">Question</span>: <strong>What could be the objective for central libraries?</strong></p>
+<p>. . .</p>
+<ul>
+<li><span class="highlight">Lowering costs</span> through improved tours</li>
+<li>Improvement of their <strong>footprint</strong> through shorter tours</li>
+<li><strong>Faster fulfillment</strong> of the deliveries</li>
+</ul>
+</section>
+<section id="modelling" class="level2">
+<h2 class="anchored" data-anchor-id="modelling">Modelling</h2>
+<p><span class="question">Question</span>: <strong>What could we try to model?</strong></p>
+<p>. . .</p>
+<p><strong>Minimization</strong> of the travel time while <span class="highlight">supplying all libraries</span> in the state and adhering to <strong>the vehicle capacities and driving time restrictions.</strong></p>
+</section>
+<section id="section-1" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-1"></h2>
+<div class="r-fit-text">
+<p>Capacitated</p>
+<p>Vehicle Routing</p>
+<p>(CVRP)</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="vehicle-routing-problem" class="level2">
+<h2 class="anchored" data-anchor-id="vehicle-routing-problem">Vehicle Routing Problem</h2>
+<ul>
+<li>CVRP is a <strong>subproblem</strong></li>
+<li>Main problem is <strong>Vehicle Routing Problem (VRP)</strong></li>
+<li>Problem class about <strong>designing routes for vehicle fleets</strong></li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>There are many variants of the VRP! E.g., with time windows, periodic deliveries, allowing for pickups or deliveries, <span class="highlight">and much more!</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="section-2" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-2"></h2>
+<div class="r-fit-text">
+<p>Let’s visualize</p>
+<p>the problem!</p>
+</div>
+<div class="footer">
+
+</div>
+<hr>
+</section>
+</section>
+<section id="problem-visualization" class="level1 title">
+<h1 class="title"><span class="flow">Problem Visualization</span></h1>
+<section id="basic-problem-setting" class="level2">
+<h2 class="anchored" data-anchor-id="basic-problem-setting">Basic Problem Setting</h2>
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-01.svg" class="img-fluid" style="width:99.0%"></p>
+</section>
+<section id="basic-problem-setting-with-arcs" class="level2">
+<h2 class="anchored" data-anchor-id="basic-problem-setting-with-arcs">Basic Problem Setting with Arcs</h2>
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-02.svg" class="img-fluid" style="width:99.0%"></p>
+</section>
+<section id="setting-with-vehicles" class="level2">
+<h2 class="anchored" data-anchor-id="setting-with-vehicles">Setting with Vehicles</h2>
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-03.svg" class="img-fluid" style="width:99.0%"></p>
+</section>
+<section id="basic-problem-setting-with-tours" class="level2">
+<h2 class="anchored" data-anchor-id="basic-problem-setting-with-tours">Basic Problem Setting with Tours</h2>
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg" class="img-fluid" style="width:99.0%"></p>
+<hr>
+</section>
+</section>
+<section id="problem-structure-1" class="level1 title">
+<h1 class="title"><span class="flow">Problem Structure</span></h1>
+<section id="available-sets" class="level2">
+<h2 class="anchored" data-anchor-id="available-sets">Available Sets</h2>
+<p><span class="question">Question:</span> <strong>What could be the sets here?</strong></p>
+<p>. . .</p>
+<ul>
+<li><span class="math inline">\(\mathcal{V}\)</span> - Set of all nodes, index <span class="math inline">\(i \in \{0,1,2,...,n\}\)</span></li>
+<li><span class="math inline">\(\mathcal{A}\)</span> - Set of all arcs between the nodes, index <span class="math inline">\((i,j) \in \mathcal{A}\)</span></li>
+<li><span class="math inline">\(\mathcal{K}\)</span> - Set of vehicles with identical capacity, index <span class="math inline">\(k \in \mathcal{K}\)</span></li>
+<li><span class="math inline">\(0 \in \mathcal{V}\)</span> - Depot where the vehicles start</li>
+</ul>
+</section>
+<section id="available-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="available-parameters">Available Parameters</h2>
+<p><span class="question">Question:</span> <strong>What are possible parameters?</strong></p>
+<p>. . .</p>
+<ul>
+<li><span class="math inline">\(b\)</span> - Capacity per vehicle</li>
+<li><span class="math inline">\(t\)</span> - Maximal duration of each tour</li>
+<li><span class="math inline">\(d_i\)</span> - Demand at node <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(c_{i,j}\)</span> - Travel time on an arc from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span></li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span class="math inline">\(t\)</span> is the maximal duration of each tour, not the travel time on an arc or an index!</p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="decision-variables" class="level2">
+<h2 class="anchored" data-anchor-id="decision-variables">Decision Variable(s)?</h2>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>We have the following sets:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>All nodes, including the depot, <span class="math inline">\(i \in \mathcal{V}\)</span></li>
+<li>All arcs between the nodes, <span class="math inline">\((i,j) \in \mathcal{A}\)</span></li>
+<li>The available vehicles, <span class="math inline">\(k \in \mathcal{K}\)</span></li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Our objective is to:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Minimize the <strong>total travel time</strong> while supplying <strong>all customers</strong> and adhering to the <strong>vehicle capacities and duration restrictions</strong>.</p>
+</div>
+</div>
+<p>. . .</p>
+<p><span class="question">Question:</span> <strong>What could be our decision variable/s?</strong></p>
+</section>
+<section id="decision-variables-1" class="level2">
+<h2 class="anchored" data-anchor-id="decision-variables-1">Decision Variables</h2>
+<ul>
+<li><span class="math inline">\(X_{i,j,k}\)</span> - 1, if <span class="math inline">\(k\)</span> passes between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> on its tour, 0 otherwise</li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Variable Domain
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(X_{i,j,k}\)</span> is a <strong>binary variable</strong>, as it can only take values 0 or 1. But most likely, you will already have spotted that!</p>
+</div>
+</div>
+<p>. . .</p>
+<p><span class="question">Question:</span> <strong>Why this might make the problem difficult?</strong></p>
+</section>
+<section id="decision-variables-again" class="level2">
+<h2 class="anchored" data-anchor-id="decision-variables-again">Decision Variable/s (again)?</h2>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>We have the following sets:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>All nodes, including the depot, <span class="math inline">\(i \in \mathcal{V}\)</span></li>
+<li>All arcs between the nodes, <span class="math inline">\((i,j) \in \mathcal{A}\)</span></li>
+<li>The available vehicles, <span class="math inline">\(k \in \mathcal{K}\)</span></li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Our objective is to:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Minimization of the travel time (or driving distance), while supplying all customers and adhering to the vehicle capacities and duration restrictions. <strong>Hint:</strong> Even with many vehicles, <span class="highlight">each arc can maximally be passed once</span>!</p>
+</div>
+</div>
+</section>
+<section id="decision-variables-again-1" class="level2">
+<h2 class="anchored" data-anchor-id="decision-variables-again-1">Decision Variables (again)</h2>
+<p><span class="question">Question:</span> <strong>What could be our decision variable/s?</strong></p>
+<p>. . .</p>
+<ul>
+<li><span class="math inline">\(X_{i,j}\)</span> - 1, if the arc between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is part of a tour, else 0</li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Only possible under certain conditions!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Only possible, if time and capacity constraints are equal for all vehicles!</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="model-formulation" class="level1 title">
+<h1 class="title"><span class="flow">Model Formulation</span></h1>
+<section id="objective-function" class="level2">
+<h2 class="anchored" data-anchor-id="objective-function">Objective Function?</h2>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Our objective is to:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Minimization of the travel time (or driving distance), while supplying all customers and adhering to the vehicle capacities and duration restrictions.</p>
+</div>
+</div>
+<p>. . .</p>
+<p><span class="question">Question:</span> <strong>What could be our objective function?</strong></p>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>We need the following variable:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><span class="math inline">\(X_{i,j}\)</span> - 1, if the arc between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is part of a tour, else 0</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="objective-function-1" class="level2">
+<h2 class="anchored" data-anchor-id="objective-function-1">Objective Function</h2>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>We need the following parameters:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><span class="math inline">\(c_{i,j}\)</span> - travel time on an arc from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span></li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<p><span class="math display">\[\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}\]</span></p>
+<p>. . .</p>
+<p><span class="question">Question:</span> <strong>What does <span class="math inline">\((i,j) \in \mathcal{A}\)</span> under the sum mean?</strong></p>
+<hr>
+</section>
+<section id="problem-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="problem-constraints">Problem Constraints</h2>
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg" class="img-fluid" style="width:99.0%"></p>
+</section>
+<section id="constraints" class="level2">
+<h2 class="anchored" data-anchor-id="constraints">Constraints?</h2>
+<p><span class="question">Question:</span> <strong>What constraints do we need?</strong></p>
+<p>. . .</p>
+<ul>
+<li>Each customer has to be <strong>visited once</strong></li>
+<li>The depot has to be <strong>entered and left</strong> <span class="math inline">\(|\mathcal{K}|\)</span> times</li>
+<li>We have to enforce the <strong>capacity of our vehicles</strong></li>
+<li>We have to ensure the <strong>maximal duration of each tour</strong></li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Subtours
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In addition, we have to prevent <strong>subtours</strong>!</p>
+</div>
+</div>
+</section>
+<section id="section-3" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-3"></h2>
+<div class="r-fit-text">
+<p>What is a</p>
+<p>subtour?</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="subtours-1" class="level2">
+<h2 class="anchored" data-anchor-id="subtours-1">Subtours</h2>
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-05.svg" class="img-fluid" style="width:99.0%"></p>
+<hr>
+</section>
+</section>
+<section id="constraints-1" class="level1 title">
+<h1 class="title"><span class="flow">Constraints</span></h1>
+<section id="visit-each-customer-once" class="level2">
+<h2 class="anchored" data-anchor-id="visit-each-customer-once">Visit Each Customer Once?</h2>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>The goal of these constraints is to:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ensure that each customer is visited exactly once. Essentially, we could also say that each node <strong>has to be entered and left exactly once.</strong></p>
+</div>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>We need the following sets and variables:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><span class="math inline">\(\mathcal{V}\)</span> - Set of all nodes, index <span class="math inline">\(i \in \{0,1,2,...,n\}\)</span></li>
+<li><span class="math inline">\(X_{i,j}\)</span> - 1, if the arc between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is part of a tour, 0 otherwise</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="visit-each-customer-once-1" class="level2">
+<h2 class="anchored" data-anchor-id="visit-each-customer-once-1">Visit Each Customer Once</h2>
+<p><span class="question">Question:</span> <strong>What could the constraint look like?</strong></p>
+<p>. . .</p>
+<p><span class="math display">\[
+\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
+\]</span></p>
+<p><span class="math display">\[
+\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
+\]</span></p>
+<p>. . .</p>
+<p><span class="question">Question:</span> <strong>Why for all nodes except the depot?</strong></p>
+<p>. . .</p>
+<p>The depot is the <strong>only node</strong> that is <span class="highlight">visited multiple times!</span></p>
+<hr>
+</section>
+<section id="depot-entry-and-exit-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="depot-entry-and-exit-constraints">Depot Entry and Exit Constraints?</h2>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>The goal of these constraints is to:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ensure that each vehicle enters and leaves the depot exactly <span class="math inline">\(|\mathcal{K}|\)</span> times, as we have <span class="math inline">\(|\mathcal{K}|\)</span> vehicles and each vehicle has to return to the depot.</p>
+</div>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>We need the following sets and variables:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><span class="math inline">\(\mathcal{V}\)</span> - Set of all nodes, index <span class="math inline">\(i \in \{0,1,2,...,n\}\)</span></li>
+<li><span class="math inline">\(|\mathcal{K}|\)</span> - Number of vehicles</li>
+<li><span class="math inline">\(X_{i,j}\)</span> - 1, if the arc between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is part of a tour, 0 otherwise</li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<p><span class="question">Question:</span> <strong>What could the constraint look like?</strong></p>
+</section>
+<section id="depot-entry-and-exit-constraints-1" class="level2">
+<h2 class="anchored" data-anchor-id="depot-entry-and-exit-constraints-1">Depot Entry and Exit Constraints</h2>
+<p><span class="math display">\[
+\sum_{i \in \mathcal{V} \setminus \{0\}} X_{i,0} = |\mathcal{K}|
+\]</span></p>
+<p><span class="math display">\[
+\sum_{j \in \mathcal{V} \setminus \{0\}} X_{0,j} = |\mathcal{K}|
+\]</span></p>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Are all constraints necessary?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No, theoretically we could also say that we only have to leave <strong>or</strong> enter the depot exactly <span class="math inline">\(|\mathcal{K}|\)</span> times, as the other constraint is already enforced by the “visit each customer once constraint”.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="capacity-and-subtour-elimination" class="level1 title">
+<h1 class="title"><span class="flow">Capacity and Subtour Elimination</span></h1>
+<section id="section-4" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-4"></h2>
+<div class="r-fit-text">
+<p>The next ones are</p>
+<p>a little bit tricky.</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="mtz-formulation" class="level2">
+<h2 class="anchored" data-anchor-id="mtz-formulation">MTZ Formulation</h2>
+<div class="incremental">
+<ul class="incremental">
+<li><strong>Miller-Tucker-Zemlin (MTZ)</strong> Constraints</li>
+<li>Formulation by <span class="citation" data-cites="KARA2004793">Kara, Laporte, and Bektas (<a href="#ref-KARA2004793" role="doc-biblioref">2004</a>)</span></li>
+<li>Prevent subtours and <strong>track routes</strong> and <strong>capacity utilization</strong></li>
+<li>First, we need <span class="highlight">an additional variable!</span></li>
+<li><span class="math inline">\(U_{i}\)</span> - Capacity utilization at <span class="math inline">\(i\)</span> of vehicle on its tour with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+</ul>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>You don’t need to guess these constraints, as they are quite tricky!</p>
+</div>
+</div>
+</div>
+</section>
+<section id="mtz-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="mtz-constraints">MTZ Constraints</h2>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>We need the following sets, parameters, and variables:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><span class="math inline">\(\mathcal{V}\)</span> - Set of all nodes, index <span class="math inline">\(i \in \{0,1,2,...,n\}\)</span></li>
+<li><span class="math inline">\(X_{i,j}\)</span> - 1, if the arc between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is part of a tour, 0 otherwise</li>
+<li><span class="math inline">\(U_{i}\)</span> - Capacity utilization at <span class="math inline">\(i\)</span> of vehicle on its tour with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+<li><span class="math inline">\(b\)</span> - Capacity per vehicle (all are identical!)</li>
+<li><span class="math inline">\(d_i\)</span> - Demand at node <span class="math inline">\(i\)</span></li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<p><span class="math display">\[
+U_i - U_j + b \times X_{i,j} \leq b - d_j \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
+\]</span></p>
+<p>. . .</p>
+<p><span class="math display">\[
+d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
+\]</span></p>
+</section>
+<section id="section-5" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-5"></h2>
+<div class="r-fit-text">
+<p>Too</p>
+<p>complicated?</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="dont-worry" class="level2">
+<h2 class="anchored" data-anchor-id="dont-worry">Don’t worry!</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg" class="img-fluid" style="width:99.0%"></p>
+</div><div class="column incremental" style="width:50%;">
+<ul class="incremental">
+<li>Let’s <span class="highlight">break it down!</span></li>
+<li><span class="math inline">\(d_i\)</span> for <strong>all customers</strong> is 1</li>
+<li>Capacity <span class="math inline">\(b\)</span> <strong>per vehicle</strong> is 5</li>
+<li><span class="math inline">\(U_i\)</span> is the current <strong>capacity utilization</strong> at node <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="no-connection-between-nodes" class="level2">
+<h2 class="anchored" data-anchor-id="no-connection-between-nodes">No connection between nodes</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg" class="img-fluid" style="width:99.0%"></p>
+</div><div class="column incremental" style="width:50%;">
+<ul class="incremental">
+<li>In case <span class="math inline">\(X_{ij} = 0\)</span>:
+<ul class="incremental">
+<li><span class="math inline">\(U_i - U_j \leq b - d_j\)</span></li>
+<li><strong>Non-binding</strong> for relation between two nodes</li>
+</ul></li>
+<li>Following is <span class="highlight">perfectly fine</span>:
+<ul class="incremental">
+<li><span class="math inline">\(U_i \leq b\)</span> and <span class="math inline">\(U_j \geq d_j\)</span></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="connection-between-two-nodes" class="level2">
+<h2 class="anchored" data-anchor-id="connection-between-two-nodes">Connection between two nodes</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg" class="img-fluid" style="width:99.0%"></p>
+</div><div class="column incremental" style="width:50%;">
+<ul class="incremental">
+<li>In case <span class="math inline">\(X_{ij} = 1\)</span>:
+<ul class="incremental">
+<li><span class="math display">\[U_i - U_j + b \leq b - d_j\]</span></li>
+<li><strong>Binding</strong> for relation between two nodes</li>
+</ul></li>
+<li><span class="highlight">Can be summarized to</span>:
+<ul class="incremental">
+<li><span class="math inline">\(U_j \geq d_j + U_i\)</span></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="connection-in-more-detail" class="level2">
+<h2 class="anchored" data-anchor-id="connection-in-more-detail">Connection in more detail</h2>
+<p><span class="question">Question:</span> <strong>Why is it binding?</strong></p>
+<p>. . .</p>
+<ul>
+<li>Binding as <span class="math inline">\(U_j\)</span> has to be <strong>at least as large</strong> as <span class="math inline">\(d_i + U_i\)</span></li>
+<li>Hence, fullfiled if the demand of <span class="math inline">\(i\)</span> is <span class="highlight">added to the vehicle</span></li>
+</ul>
+<p>. . .</p>
+<p><span class="question">Question:</span> <strong>Do you get the idea?</strong></p>
+<p>. . .</p>
+<ul>
+<li>If <span class="math inline">\(X_{ij} = 1\)</span>, then <span class="math inline">\(U_j\)</span> has to be <strong>at least as large</strong> as <span class="math inline">\(d_i + U_i\)</span></li>
+<li>If <span class="math inline">\(X_{ij} = 0\)</span>, then <span class="math inline">\(U_i \leq b\)</span> and <span class="math inline">\(U_j \geq d_j\)</span></li>
+</ul>
+</section>
+<section id="tour-from-the-depot" class="level2">
+<h2 class="anchored" data-anchor-id="tour-from-the-depot">Tour from the Depot</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-subtours-03.svg" class="img-fluid" style="width:99.0%"></p>
+</div><div class="column incremental" style="width:50%;">
+<ul class="incremental">
+<li>Tour of vehicle A ok</li>
+<li>Depot is the only node <span class="highlight">visited multiple times</span></li>
+<li>But the constraints are <strong>not applied here!</strong></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="tour-on-its-own" class="level2">
+<h2 class="anchored" data-anchor-id="tour-on-its-own">Tour on its Own</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-subtours-04.svg" class="img-fluid" style="width:99.0%"></p>
+</div><div class="column incremental" style="width:50%;">
+<ul class="incremental">
+<li>Let’s start at node <span class="math inline">\(H\)</span></li>
+<li>We drive to node <span class="math inline">\(C\)</span></li>
+<li><span class="math inline">\(U_C\)</span> = 1</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="tour-on-its-own-ii" class="level2">
+<h2 class="anchored" data-anchor-id="tour-on-its-own-ii">Tour on its Own II</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-subtours-05.svg" class="img-fluid" style="width:99.0%"></p>
+</div><div class="column incremental" style="width:50%;">
+<ul class="incremental">
+<li>We continue to node <span class="math inline">\(I\)</span></li>
+<li><span class="math inline">\(U_I\)</span> = 2</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="tour-on-its-own-iii" class="level2">
+<h2 class="anchored" data-anchor-id="tour-on-its-own-iii">Tour on its Own III</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img src="https://images.beyondsimulations.com/ao/ao_routing-subtours-06.svg" class="img-fluid" style="width:99.0%"></p>
+</div><div class="column incremental" style="width:50%;">
+<ul class="incremental">
+<li>We continue to node <span class="math inline">\(H\)</span></li>
+<li><span class="math inline">\(U_H\)</span> = 3</li>
+<li>Connection from <span class="math inline">\(H\)</span> to <span class="math inline">\(C\)</span></li>
+<li><span class="math inline">\(U_H\)</span> is <strong>greater</strong> than <span class="math inline">\(U_C\)</span>!</li>
+<li><span class="highlight">Infeasible solution!</span></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="subtour-elimination" class="level2">
+<h2 class="anchored" data-anchor-id="subtour-elimination">Subtour Elimination</h2>
+<ul>
+<li>Connection in the other direction wouldn’t work as well</li>
+<li><strong>Only depot as “reset” </strong>, as constraints are not applied here</li>
+</ul>
+<p><span class="question">Question:</span> <strong>What about the capacity?</strong></p>
+<p>. . .</p>
+<ul>
+<li>Remember variable domain of <span class="math inline">\(U_i\)</span>?</li>
+<li><span class="math inline">\(d_i \leq U_i \leq b\)</span> → <span class="highlight">Overall capacity limit enforced!</span></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="last-constraint" class="level1 title">
+<h1 class="title"><span class="flow">Last Constraint</span></h1>
+<section id="ensure-time-limit" class="level2">
+<h2 class="anchored" data-anchor-id="ensure-time-limit">Ensure time limit?</h2>
+<p><span class="question">Question:</span> <strong>Anybody an idea?</strong></p>
+<p>. . .</p>
+<ul>
+<li>Constraints basically <strong>follow the same idea</strong>!</li>
+<li>First, we again need an additional variable</li>
+<li><span class="math inline">\(T_{i}\)</span> - Time spent on tour at the node <span class="math inline">\(i\)</span> of a vehicle with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+</ul>
+</section>
+<section id="ensure-time-limit-1" class="level2">
+<h2 class="anchored" data-anchor-id="ensure-time-limit-1">Ensure time limit</h2>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>We need the following sets and variables:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><span class="math inline">\(\mathcal{V}\)</span> - Set of all nodes, index <span class="math inline">\(i \in \{0,1,2,...,n\}\)</span></li>
+<li><span class="math inline">\(X_{i,j}\)</span> - 1, if the arc between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is part of a tour, 0 otherwise</li>
+<li><span class="math inline">\(T_{i}\)</span> - Time spent on tour at the node <span class="math inline">\(i\)</span> of a vehicle with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+<li><span class="math inline">\(t\)</span> - Maximal duration of a tour</li>
+<li><span class="math inline">\(c_{i,j}\)</span> - Travel time on an arc from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span></li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<p><span class="math display">\[
+T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
+\]</span></p>
+<p>. . .</p>
+<p><span class="math display">\[
+0 \leq T_{i} \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+\]</span></p>
+</section>
+<section id="section-6" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-6"></h2>
+<div class="r-fit-text">
+<p>Any questions?</p>
+</div>
+<div class="footer">
+
+</div>
+<hr>
+</section>
+</section>
+<section id="asymmetric-vehicle-routing-problem" class="level1 title">
+<h1 class="title"><span class="flow">Asymmetric Vehicle Routing Problem</span></h1>
+<section id="objective-1" class="level2">
+<h2 class="anchored" data-anchor-id="objective-1">Objective</h2>
+<p><span class="math display">\[
+\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}
+\]</span></p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>The goal of the objective function is to:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Minimize the total travel distance.</p>
+</div>
+</div>
+</section>
+<section id="each-customer-is-visited-once" class="level2">
+<h2 class="anchored" data-anchor-id="each-customer-is-visited-once">Each customer is visited once</h2>
+<p><span class="math display">\[
+\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
+\]</span></p>
+<p><span class="math display">\[
+\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
+\]</span></p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Our constraints ensure:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Each customer is visited exactly once.</p>
+</div>
+</div>
+</section>
+<section id="depot-entry-and-exit" class="level2">
+<h2 class="anchored" data-anchor-id="depot-entry-and-exit">Depot entry and exit</h2>
+<p><span class="math display">\[
+\sum_{i \in \mathcal{V} \setminus \{0\}} X_{i,0} = |\mathcal{K}|
+\]</span></p>
+<p><span class="math display">\[
+\sum_{j \in \mathcal{V} \setminus \{0\}} X_{0,j} = |\mathcal{K}|
+\]</span></p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Our constraints ensure:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The depot is visited by exactly <span class="math inline">\(|\mathcal{K}|\)</span> vehicles. Note, that we could remove one of the constraints and the solution would still be optimal.</p>
+</div>
+</div>
+</section>
+<section id="capacity-and-subtour-elimination-1" class="level2">
+<h2 class="anchored" data-anchor-id="capacity-and-subtour-elimination-1">Capacity and subtour elimination</h2>
+<p><span class="math display">\[
+U_i - U_j + b \times X_{i,j} \leq b - d_j \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
+\]</span></p>
+<p><span class="math display">\[
+d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
+\]</span></p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Our constraints ensure:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The capacity limit is respected and subtours are eliminated.</p>
+</div>
+</div>
+</section>
+<section id="time-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="time-constraints">Time constraints</h2>
+<p><span class="math display">\[
+T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
+\]</span></p>
+<p><span class="math display">\[
+0 \leq T_i \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+\]</span></p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Our constraints ensure:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The time limit is respected (and subtours are eliminated).</p>
+</div>
+</div>
+</section>
+<section id="variables" class="level2">
+<h2 class="anchored" data-anchor-id="variables">Variables</h2>
+<p><span class="math display">\[
+X_{i,j} \in \{0,1\} \quad \forall i,j \in \mathcal{V}
+\]</span></p>
+<p><span class="math display">\[
+d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
+\]</span></p>
+<p><span class="math display">\[
+0 \leq T_i \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+\]</span></p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>The variable domains make sure that:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The binary setup variable is either 0 or 1 and the new variables are below the time and capacity limit.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="model-characteristics" class="level1 title">
+<h1 class="title"><span class="flow">Model Characteristics</span></h1>
+<section id="characteristics" class="level2">
+<h2 class="anchored" data-anchor-id="characteristics">Characteristics</h2>
+<p><span class="question">Questions:</span> <strong>On model characteristics</strong></p>
+<div class="incremental">
+<ul class="incremental">
+<li>Is the model formulation linear/ non-linear?</li>
+<li>What kind of variable domains do we have?</li>
+<li>What do you think, can the model be solved quickly?</li>
+</ul>
+</div>
+</section>
+<section id="model-assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="model-assumptions">Model Assumptions</h2>
+<p><span class="question">Questions:</span> <strong>On model assumptions</strong></p>
+<div class="incremental">
+<ul class="incremental">
+<li>What assumptions have we made?</li>
+<li>What are likely issues that can arise if the model is applied?</li>
+<li>Have we considered service times?</li>
+</ul>
+</div>
+<hr>
+</section>
+<section id="extensions-of-the-cvrp" class="level2">
+<h2 class="anchored" data-anchor-id="extensions-of-the-cvrp">Extensions of the CVRP</h2>
+<p><span class="question">Questions:</span> <strong>What extensions do you know?</strong></p>
+<p>. . .</p>
+<ul>
+<li>time windows (TW)</li>
+<li>soft time windows (STW)</li>
+<li>multiple depots (MD)</li>
+<li>heterogeneous fleet (HF)</li>
+<li>backhauls (B)</li>
+<li>pickup and delivery (PD)</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="implementation-and-impact" class="level1 title">
+<h1 class="title"><span class="flow">Implementation and Impact</span></h1>
+<section id="case-study-in-schleswig-holstein" class="level2" data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1652305489491-789257d2e95c?q=80&amp;w=2670&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
+<h2 data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1652305489491-789257d2e95c?q=80&amp;w=2670&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center" class="anchored" data-anchor-id="case-study-in-schleswig-holstein"><span class="invert-font">Case Study in Schleswig-Holstein</span></h2>
+<p>. . .</p>
+<div class="invert-font">
+<ul>
+<li>165 libraries</li>
+<li>119 visited biweekly</li>
+<li>Up to 9 different tours</li>
+<li>Time-Limit of 8 hours for each tour</li>
+</ul>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="section-7" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-7"></h2>
+<div class="r-fit-text">
+<p>Can our formulation</p>
+<p>solve the problem</p>
+<p>on a real-world instance?</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="section-8" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-8"></h2>
+<div class="r-fit-text">
+<p>No, although we can find</p>
+<p>solutions within one hour,</p>
+<p>the gap is still very large</p>
+<p>with 40%-45%.</p>
+</div>
+<div class="footer">
+
+</div>
+<hr>
+</section>
+<section id="problem-is-np-hard" class="level2">
+<h2 class="anchored" data-anchor-id="problem-is-np-hard">Problem is NP-hard</h2>
+<ul>
+<li>We have already seen that a problem <strong>can be NP-hard</strong></li>
+<li>Likely, that there are <strong>no polynomial-time algorithms</strong></li>
+<li><span class="highlight">Doesn’t mean that it can’t be solved!</span></li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>We won’t go deeper into this, but feel free to ask me!</p>
+</div>
+</div>
+</div>
+</section>
+<section id="section-9" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-9"></h2>
+<div class="r-fit-text">
+<p>Can we do</p>
+<p>anything to solve</p>
+<p>the model?</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="heuristics" class="level2">
+<h2 class="anchored" data-anchor-id="heuristics">Heuristics</h2>
+<ul>
+<li>We can still solve the problem <strong>with a heuristic</strong></li>
+<li><span class="highlight">Likely not the optimal solution</span>, but a lot of research goes into efficient algorithms to solve these problems</li>
+<li>In our case study we applied <strong>Hybrid Genetic Search</strong> for the CVRP (HGS-CVRP) by <span class="citation" data-cites="Vidal_2022">Vidal (<a href="#ref-Vidal_2022" role="doc-biblioref">2022</a>)</span></li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>For problems with 100+ locations, heuristics are often the only practical choice.</p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="applications-beyond-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="applications-beyond-libraries">Applications Beyond Libraries</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Logistics &amp; Delivery</strong></p>
+<ul>
+<li>Package delivery</li>
+<li>Food delivery services</li>
+<li>Grocery delivery</li>
+<li>Mail distribution</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Service Industries</strong></p>
+<ul>
+<li>Maintenance crews</li>
+<li>Home healthcare visits</li>
+<li>Waste collection</li>
+<li>School bus routing</li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<p><span class="question">Question:</span> <strong>Can you think of other applications?</strong></p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<ul>
+<li>Standard problem that <span class="highlight">occurs in many different places</span></li>
+<li>Solving the problem with a mathematical model <strong>is difficult</strong></li>
+<li>Nowadays, there are <strong>many good heuristics</strong></li>
+<li><strong>Many companies</strong> are working on the problem</li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>And that’s it for todays lecture!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We now have covered the Capacitated Vehicle Routing Problem and are ready to start solving some tasks in the upcoming tutorial.</p>
+</div>
+</div>
+</section>
+<section id="section-10" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-10"></h2>
+<div class="r-fit-text">
+<p>Questions?</p>
+</div>
+<div class="footer">
+
+</div>
+<hr>
+</section>
+</section>
+<section id="literature" class="level1 title">
+<h1 class="title"><span class="flow">Literature</span></h1>
+<section id="literature-i" class="level2">
+<h2 class="anchored" data-anchor-id="literature-i">Literature I</h2>
+<p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
+</section>
+<section id="literature-ii" class="level2">
+
+
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Literature II</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-KARA2004793" class="csl-entry" role="listitem">
+Kara, Imdat, Gilbert Laporte, and Tolga Bektas. 2004. <span>“A Note on the Lifted Miller–Tucker–Zemlin Subtour Elimination Constraints for the Capacitated Vehicle Routing Problem.”</span> <em>European Journal of Operational Research</em> 158 (3): 793–95. https://doi.org/<a href="https://doi.org/10.1016/S0377-2217(03)00377-1">https://doi.org/10.1016/S0377-2217(03)00377-1</a>.
+</div>
+<div id="ref-Vidal_2022" class="csl-entry" role="listitem">
+Vidal, Thibaut. 2022. <span>“Hybrid Genetic Search for the CVRP: Open-Source Implementation and SWAP* Neighborhood.”</span> <em>Computers &amp; Operations Research</em> 140 (April): 105643. <a href="https://doi.org/10.1016/j.cor.2021.105643">https://doi.org/10.1016/j.cor.2021.105643</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Due to regulations, the delivery tours cannot exceed a certain duration<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/beyondsimulations\.github\.io\/Applied-Optimization");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Applied Optimization with Julia, Tobias Vlćek<br>CC BY-SA 4.0</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/lectures/lecture-07-routing.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/beyondsimulations/Applied-Optimization">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/tobiasvlcek">
+      <i class="bi bi-linkedin" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="mailto:vlcek@beyondsimulations.com">
+      <i class="bi bi-envelope" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../general/privacy.html">
+<p>Privacy Policy</p>
+</a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/gh/beyondsimulations/web-embedded-chat@latest/floating-chat.js"></script>
+<script>
+    new UniversalChatWidget({
+        title: "Course Assistant",
+        apiEndpoint: "https://model-proxy.vlcek-4b4.workers.dev/api",
+        model: "applied-optimization",
+        userMessageOpacity: 0.5,
+        assistantMessageOpacity: 0.5,
+        position: "bottom-right",
+        windowHeight: 800
+    });
+</script>
+
+
+
+
+</body></html>
