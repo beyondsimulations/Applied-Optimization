@@ -659,11 +659,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="setting-up" class="level2">
 <h2 class="anchored" data-anchor-id="setting-up">Setting Up</h2>
 <p>First, we need to install and load the necessary packages. If you haven’t already installed JuMP and HiGHS, run the following code:</p>
-<div id="482cefd1" class="cell" data-execution_count="2">
+<div id="3158fdde" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg;</span> Pkg.add(["JuMP",<span class="bu">"HiGHS"])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, let’s load these packages:</p>
-<div id="7a48adac" class="cell" data-execution_count="3">
+<div id="a09eb4ce" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Great! We’re now ready to start building our optimization model.</p>
@@ -674,7 +674,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Section 1 - Defining an Optimization Model</h1>
 <p>The first step in solving an optimization problem is to create a model. This model will contain all the information about our problem: the variables, constraints, and objective.</p>
 <p>In JuMP, we create a model like this:</p>
-<div id="b21ebe80" class="cell" data-execution_count="4">
+<div id="46525865" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Optimization model created successfully!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -702,10 +702,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-2.1---create-variables" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---create-variables">Exercise 2.1 - Create Variables</h2>
 <p>Now it’s your turn! Create two continuous variables equal to or larger than 0 called <code>productA</code> and <code>productB</code> that represent the number of units produced in our problem for our model <code>model</code>.</p>
-<div id="f5685ecf" class="cell" data-execution_count="5">
+<div id="dd801753" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="ce241dc7" class="cell" data-execution_count="6">
+<div id="acf2f8e4" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -742,10 +742,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-3.1---create-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-3.1---create-constraints">Exercise 3.1 - Create Constraints</h2>
 <p>Create two constraints based on the on the Cutting and Finishing department hours of the problem description in this tutorial. Call the first constraint <code>cutting_constraint</code> and the second constraint <code>finishing_constraint</code>.</p>
-<div id="5b2862bc" class="cell" data-execution_count="7">
+<div id="6cc822bf" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="76e7f5de" class="cell" data-execution_count="8">
+<div id="9bbda4d6" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -776,10 +776,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-4.1---create-the-objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-4.1---create-the-objective-function">Exercise 4.1 - Create the Objective Function</h2>
 <p>Create the objective function based on the problem description of this tutorial. The objective is to maximize profit based on the values of <code>productA</code> and <code>productB</code>.</p>
-<div id="899c616e" class="cell" data-execution_count="9">
+<div id="2a188aaa" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="04b85591" class="cell" data-execution_count="10">
+<div id="f8bd8f9a" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -797,19 +797,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>Solve the model:</li>
 </ol>
-<div id="42b914c8" class="cell" data-execution_count="11">
+<div id="45399aa2" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize!</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol start="2" type="1">
 <li>Check the status of the solution:</li>
 </ol>
-<div id="934cf99a" class="cell" data-execution_count="12">
+<div id="6414212c" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">termination_status</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol start="3" type="1">
 <li>If the solution is optimal, we can retrieve the optimal values of our variables and the objective function. If the time limit is reached, we can check whether a primal solution is available. We do so by checking whether the model has values.</li>
 </ol>
-<div id="d10739dd" class="cell" data-execution_count="13">
+<div id="39e31c97" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">begin</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> OPTIMAL</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"Solution is optimal"</span>)</span>
@@ -823,7 +823,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can then get the values of the variables as follows:</p>
-<div id="4502a358" class="cell" data-execution_count="14">
+<div id="dde9122b" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Product A quantity: </span><span class="sc">$</span>(<span class="fu">value</span>(productA))<span class="st">"</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Product B quantity: </span><span class="sc">$</span>(<span class="fu">value</span>(productB))<span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -845,7 +845,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The following code block tests whether the solution is correct or whether you have made a mistake in the formulation of the problem.</p>
-<div id="7b17a895" class="cell" data-execution_count="15">
+<div id="f04018a7" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> MOI.OPTIMAL <span class="st">"Sorry, something didn't work out as the model status is </span><span class="sc">$</span>termination_status<span class="st">(model)"</span>.</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solution: Product A = "</span>, val_productA, <span class="st">", Product B = "</span>, val_productB)</span>
@@ -863,7 +863,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Solutions</h1>
 <p>You will likely find solutions to most exercises online. However, I strongly encourage you to work on these exercises independently without searching explicitly for the exact answers to the exercises. Understanding someone else’s solution is very different from developing your own. Use the lecture notes and try to solve the exercises on your own. This approach will significantly enhance your learning and problem-solving skills.</p>
 <p>Remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities. If you encounter difficulties, review the lecture materials, experiment with different approaches, and don’t hesitate to ask for clarification during class discussions.</p>
-<p>Later, you will find the solutions to these exercises online in the associated GitHub repository, but we will also quickly go over them in next week’s tutorial. To access the solutions, click on the Github button on the lower right and search for the folder with today’s lecture and tutorial. Alternatively, you can ask ChatGPT or Claude to explain them to you. But please remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities.</p>
 
 
 </section>

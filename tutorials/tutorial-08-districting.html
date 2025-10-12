@@ -661,12 +661,12 @@ window.Quarto = {
 <section id="loading-data-and-packages" class="level2">
 <h2 class="anchored" data-anchor-id="loading-data-and-packages">Loading Data and Packages</h2>
 <p>We start by loading the new <code>Shapefile</code> package. <strong>No mistakes here!</strong></p>
-<div id="e6c965ad" class="cell" data-execution_count="2">
+<div id="6f7b7459" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"Shapefile"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We then load the required packages. If you have not installed them yet, you can do so by modifying the code chunk above to include the missing packages. <strong>Still no mistakes!</strong></p>
-<div id="5625ab61" class="cell" data-execution_count="3">
+<div id="c24f619b" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DelimitedFiles</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Shapefile</span></span>
@@ -674,7 +674,7 @@ window.Quarto = {
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We then define the number of departments, load the data into scope and define the number of departments and the weighted driving times. Make sure to use the correct path to the data files - it should be relative to the location notebook file in a folder called <code>data</code>. <strong>Again, no mistakes!</strong></p>
-<div id="24ad693f" class="cell" data-execution_count="4">
+<div id="dc950ba4" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data into scope</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>file_directory <span class="op">=</span> <span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/data"</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>euclidianDistances <span class="op">=</span> <span class="fu">readdlm</span>(<span class="st">"</span><span class="sc">$</span>file_directory<span class="st">/euclidianDistances0510.csv"</span>,<span class="ch">'\t'</span>)</span>
@@ -696,7 +696,7 @@ window.Quarto = {
 <section id="fixing-the-mistakes" class="level2">
 <h2 class="anchored" data-anchor-id="fixing-the-mistakes">Fixing the Mistakes</h2>
 <p>From here on, the code contains <strong>6 mistakes</strong> you need to correct in order to solve the model. <strong>Mistakes can be anything so be careful!</strong></p>
-<div id="e6d1e222" class="cell" data-execution_count="5">
+<div id="15db6a2c" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MISTAKES BELOW</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the model instance</span></span>
@@ -739,7 +739,7 @@ window.Quarto = {
 <span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co"># MISTAKES ABOVE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We then check the solution. <strong>No mistakes here, as all mistakes are in the code in the cell above!</strong></p>
-<div id="96cf9921" class="cell" data-execution_count="6">
+<div id="436597b0" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to print the model status</span></span>
@@ -763,7 +763,7 @@ window.Quarto = {
 <pre><code>print_model_status (generic function with 1 method)</code></pre>
 </div>
 </div>
-<div id="db662661" class="cell" data-execution_count="7">
+<div id="26f8b78a" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
@@ -776,7 +776,7 @@ window.Quarto = {
 <section id="visualizing-the-results" class="level2">
 <h2 class="anchored" data-anchor-id="visualizing-the-results">Visualizing the Results</h2>
 <p>The following code then builds and uses a function to plot the results.</p>
-<div id="29d9296e" class="cell" data-execution_count="8">
+<div id="c028882a" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">visualize_departments</span>(hexshape, X, p)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert solution matrix to regular Matrix</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    allAssignments <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">value</span>.(X))</span>
@@ -834,7 +834,7 @@ window.Quarto = {
 <section id="conditional-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="conditional-constraints">Conditional Constraints</h2>
 <p>Before we start, we will quickly repeat some basic concepts on constraints and conditions in JuMP. You can add conditions to constraints by using the <code>;</code> operator. This is useful if you want to add a constraint only under certain conditions. In the example below, the constraint is only active if the Euclidean distance between two BAs is less than 1.5.</p>
-<div id="6e6af762" class="cell" data-execution_count="9">
+<div id="9e3adb1d" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model,</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    conditionalConstraint[</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        i<span class="op">=</span>rangeDepartments,</span>
@@ -845,7 +845,7 @@ window.Quarto = {
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Furthermore,we can use conditions within constraints by using the <code>for</code> keyword. For example, in the constraint below, the sum is only taken over the BAs that are within 1.5 units of BA <span class="math inline">\(i\)</span>.</p>
-<div id="187bd0f1" class="cell" data-execution_count="10">
+<div id="d7190134" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(model,</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    conditionalConstraint2[i<span class="op">=</span>rangeDepartments],</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> j <span class="kw">in</span> rangeBAs <span class="cf">if</span> euclidianDistances[i,j] <span class="op">&lt;</span> <span class="fl">1.5</span>) <span class="op">&gt;=</span> <span class="fl">1</span></span>
@@ -866,15 +866,15 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="7d4ba187" class="cell" data-execution_count="11">
+<div id="d407243c" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Solve the model again, this time with the contiguity constraint.</p>
-<div id="a698e2fd" class="cell" data-execution_count="12">
+<div id="f08f5fdf" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The following code prints the model status and visualizes the districts. If your implementation is correct, the districts should be contiguous and the model should have reached optimality or found a feasible solution before hitting the time limit.</p>
-<div id="df8d552d" class="cell" data-execution_count="13">
+<div id="2c0960a4" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, p))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -883,7 +883,7 @@ window.Quarto = {
 <section id="compute-the-gap" class="level2">
 <h2 class="anchored" data-anchor-id="compute-the-gap">Compute the Gap</h2>
 <p>Based on your results, what is the gap between the solution in the previous task and this task? Write a comment answering the question in cell below. You can also use the cell, to compute the gap based on the objective values.</p>
-<div id="ee99d2cb" class="cell" data-execution_count="14">
+<div id="44013f72" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -907,7 +907,7 @@ window.Quarto = {
 <h1>3. Emergency Response Time Guarantees</h1>
 <p>Hamburg’s City Council has mandated that high-priority emergencies must receive a response within 20 minutes. Your previous model doesn’t guarantee this! Your task: Implement maximum response time constraints.</p>
 <p>Extend your model by an additional parameter <code>max_driving_time = 20</code> to ensure that no allocation with a driving time <span class="math inline">\(d_{i,j}\)</span> higher than <code>max_driving_time</code> minutes from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span> is possible.</p>
-<div id="f326135f" class="cell" data-execution_count="15">
+<div id="5eb261eb" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-simple callout-tip">
@@ -921,11 +921,11 @@ window.Quarto = {
 </div>
 </div>
 <p>Again, solve the model.</p>
-<div id="938df841" class="cell" data-execution_count="16">
+<div id="05abeff9" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The following code prints the model status and visualizes the districts. If your implementation is correct, the districts with previously longer driving times should have shrinked. Furthermore, the model should have reached optimality or found a feasible solution before hitting the time limit.</p>
-<div id="073fda68" class="cell" data-execution_count="17">
+<div id="113ed71c" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, p))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -934,7 +934,7 @@ window.Quarto = {
 <section id="planning-for-peak-demand" class="level1">
 <h1>4. Planning for Peak Demand</h1>
 <p>During major events or crime waves, districts need backup support from neighboring stations. The Police Union has emphasized this as a critical safety requirement for their officers. Your task: Design constraints ensuring each district has backup support within 20 minutes of the driving time.</p>
-<div id="302abb86" class="cell" data-execution_count="18">
+<div id="e58fa63e" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-simple callout-tip">
@@ -948,11 +948,11 @@ window.Quarto = {
 </div>
 </div>
 <p>In case you came up with a solution, solve the model to optimize the layout of the districts.</p>
-<div id="eb81c3f8" class="cell" data-execution_count="19">
+<div id="cf4b2159" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>If your implementation is correct, the districts are contiguous and distributed across the city. In addition, the model should have reached optimality or found a feasible solution before hitting the time limit.</p>
-<div id="1422f05c" class="cell" data-execution_count="20">
+<div id="bcfb4638" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, p))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -962,7 +962,6 @@ window.Quarto = {
 <h1>Solutions</h1>
 <p>You will likely find solutions to most exercises online. However, I strongly encourage you to work on these exercises independently without searching explicitly for the exact answers to the exercises. Understanding someone else’s solution is very different from developing your own. Use the lecture notes and try to solve the exercises on your own. This approach will significantly enhance your learning and problem-solving skills.</p>
 <p>Remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities. If you encounter difficulties, review the lecture materials, experiment with different approaches, and don’t hesitate to ask for clarification during class discussions.</p>
-<p>Later, you will find the solutions to these exercises online in the associated GitHub repository, but we will also quickly go over them in next week’s tutorial. To access the solutions, click on the Github button on the lower right and search for the folder with today’s lecture and tutorial. Alternatively, you can ask ChatGPT or Claude to explain them to you. But please remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities.</p>
 
 
 </section>
