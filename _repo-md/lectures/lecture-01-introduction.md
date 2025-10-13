@@ -131,10 +131,11 @@ Haase et al. (2016)
 ## Part III
 
 1.  Safety Planning for the Islamic Pilgrimage in Mecca
-2.  Passenger Flow Control in Urban Rail
+2.  Intermission
 3.  Arena Seat Planning under Distancing Rules
-4.  Sales Force Deployment for Teams
+4.  Passenger Flow Control in Urban Rail
 5.  Recap and Discussion
+6.  ????
 
 # <span class="flow">Julia Programming Language</span>
 
@@ -287,6 +288,25 @@ $$
     -   Decision-making under constraints
     -   Simulation and prediction
 
+## From Abstract to Concrete
+
+<span class="highlight">We've just seen the general structure:</span>
+
+-   Sets ($\mathcal{I}$, $\mathcal{J}$)
+-   Parameters ($c_j$, $a_{i,j}$, $b_i$)
+-   Decision variables ($X_j$)
+-   Objective function and constraints
+
+. . .
+
+**Now let's see how this works with a real problem!**
+
+. . .
+
+> **Tip**
+>
+> Watch for these components as we build our first model together.
+
 # <span class="flow">Solar Panel Transport</span>
 
 ## <span class="invert-font">Case: Solar Panel Transport</span>
@@ -403,7 +423,7 @@ building blocks!
 
 ## Objective Function
 
--   The objective function is the value we are trying to minimize
+-   The objective function is the value we are trying to minimize (or maximize)
 -   Formalized as a sum of decision variables and parameters
 
 . . .
@@ -412,7 +432,7 @@ building blocks!
 
 ## Minimizing the Transport Costs
 
-<span class="highlight">Minimize</span> the transport costs over all truckloads while meeting the demand based on the available solar panels adhering to the available panels.
+<span class="highlight">Minimize</span> the transport costs over all truckloads while meeting customer demand within the available supply from production sites.
 
 . . .
 
@@ -433,7 +453,7 @@ $$
 
 . . .
 
--   The value is <span class="higlight">zero</span>
+-   The value is <span class="highlight">zero</span>
 -   We can transport any number of panels
 
 . . .
@@ -442,7 +462,7 @@ $$
 
 ## Supply Constraints
 
-Ensure that the number of panels transported from a location does not exceed the available panels.
+Ensure that the number of panels transported from a location **does not exceed** the available panels.
 
 . . .
 
@@ -456,7 +476,7 @@ $$
 
 ## Demand Constraints
 
-Ensure that the demand of each customer is covered.
+Ensure that the demand of each customer **is covered.**
 
 . . .
 
@@ -470,7 +490,7 @@ $$
 
 ## Non-negativity Constraints
 
-Ensure no negative number of truckloads are transported.
+Ensure **no negative number of truckloads** are transported.
 
 . . .
 
@@ -510,7 +530,9 @@ $$
 
 <span class="question">Question:</span> Why won't we transport more than the demand?
 
--   Due to the associated costs
+. . .
+
+-   Due to the associated costs!
 
 ## 
 
@@ -522,7 +544,7 @@ questions?
 
 ## Description
 
-Unfortunately, the margins on solar panels are low. After the previous contract has been fulfilled, the company produced the <span class="highlight">same number of panels</span> as before. In addition, all three customers want to order the <span class="highlight">same number of truckloads</span> with solar panels again. The sales volume per truckload of panels is 11,000 Euros. The complete production of a truckload of solar panels, including materials, costs 6,300 Euros.
+Unfortunately, the margins on solar panels are low. After the previous contract has been fulfilled, the company produced the <span class="highlight">same number of panels</span> as before. In addition, all three customers want to order the <span class="highlight">same number of truckloads</span> with solar panels again. The revenue per truckload of panels is 11,000 Euros. The complete production of a truckload of solar panels, including materials, costs 6,300 Euros.
 
 ## New Objective
 
@@ -536,6 +558,7 @@ In the new contract, the company wants to <span class="highlight">maximize its p
 
 -   We need to change the objective function
 -   We need to change some parameters
+-   We need to adjust some constraints
 
 . . .
 
@@ -549,7 +572,7 @@ In the new contract, the company wants to <span class="highlight">maximize its p
 
 $$
 \begin{aligned}
-p &: \text{Sales volume per truckload of solar panels,} \\
+r &: \text{Revenue per truckload of solar panels,} \\
 c &: \text{Production costs per truckload of solar panels.}
 \end{aligned}
 $$
@@ -561,7 +584,7 @@ $$
 . . .
 
 $$
-p - c
+p = r - c
 $$
 
 ## Former Model
@@ -576,17 +599,87 @@ $$
 \end{aligned}
 $$
 
+. . .
+
+<span class="question">Question:</span> What do we need to change here?
+
 ## New Model
 
 $$
 \begin{aligned}
-\text{Maximize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} (p-c-c_{i,j}) \times X_{i,j} \\
+\text{Maximize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} (p-c_{i,j}) \times X_{i,j} \\
 \text{subject to:} \quad
 &\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &&\forall i \in \mathcal{I} \\
 &\sum_{i \in \mathcal{I}} X_{i,j} \leq b_j \quad &&\forall j \in \mathcal{J} \\
 &X_{i,j} \geq 0 \quad &&\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 \end{aligned}
 $$
+
+## Model Reflection
+
+<span class="highlight">Take a moment to think about what we just built:</span>
+
+### Complexity
+
+**How many decision variables does this problem have?**
+
+$|\mathcal{I}| \times |\mathcal{J}| = 2 \times 3 = 6$ variables
+
+Each represents a shipping route from a production site to a customer.
+
+### Scalability
+
+**What happens if we add more production sites?**
+
+The number of variables grows as $|\mathcal{I}| \times |\mathcal{J}|$
+
+-   5 sites × 10 customers = 50 variables
+-   10 sites × 20 customers = 200 variables
+-   The model structure stays the same, but computational complexity increases!
+
+### Assumptions
+
+**What real-world factors are we ignoring?**
+
+-   Vehicle capacity limits per route
+-   Time windows for delivery
+-   Driver working hours and breaks
+-   Traffic conditions and travel time
+-   Fuel costs vs. distance relationship
+-   Possibility of multi-stop routes
+
+### Variations
+
+**How would the model change for different scenarios?**
+
+-   Air transport: Higher costs, faster delivery, weight limits
+-   Multiple vehicle types: Different capacities and costs
+-   Time-sensitive deliveries: Add scheduling constraints
+-   Partial shipments: Allow fractional truckloads
+
+## What Did We Learn?
+
+<span class="highlight">Modeling Process:</span>
+
+-   Define the problem clearly
+-   Identify decision variables
+-   Formulate obj. function
+-   Add necessary constraints
+-   Verify completeness
+
+<span class="highlight">Key Insights:</span>
+
+-   Sets organize our indices
+-   Parameters hold data
+-   Variables = decisions
+-   Constraints limit feasibility
+-   Obj. drives optimization
+
+. . .
+
+> **Tip**
+>
+> This systematic approach works for **any** optimization problem!
 
 ## 
 
@@ -607,6 +700,10 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 <img src="https://images.beyondsimulations.com/ao/ao_julia2.png" data-max-width="400px" />
 
 -   Head to [julialang.org](https://julialang.org) and follow the instructions.
+-   The easiest way to install Julia is via the shell/terminal
+-   Later, you can then manage Julia with `juliaup`
+
+. . .
 
 > **Tip**
 >
@@ -617,13 +714,7 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 <img src="https://images.beyondsimulations.com/ao/ao_codium_cnl.png" data-max-width="400px" />
 
 -   Next, we are going to install VS Code
--   Alternatively, you can install VS Codium
--   It is essentially VS Code but without any tracking by MS
-
-## Installing VS Code
-
 -   Head to the website [code.visualstudio.com](https://code.visualstudio.com)
--   OR to the webside [vscodium.com](https://vscodium.com)
 -   Download and install the latest release
 
 ## Verify the Installation
@@ -632,6 +723,12 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 -   Search for the field "Extensions" on the left sidebar
 -   Click it and search for "Julia"
 -   Download and install "Julia (Julia Language Support)"
+
+. . .
+
+> **Warning**
+>
+> Any problems? Ask me for help!
 
 ## Create a new file
 
@@ -645,19 +742,39 @@ print("Hello World!")
 
     Hello World!
 
+. . .
+
 -   Run the file by clicking "run" in the upper right corner
 -   OR by pressing "Control+Enter" or "STRG+Enter"
 
 ## Everything working?
 
 -   If the terminal opens with a `Hello World!` → perfect!
--   If not, it is likely that the IDE <span class="highlight">cannot find the path</span> to Julia
+-   If not, the IDE likely <span class="highlight">cannot find the path</span> to Julia
 -   Try to determine the path and save it to VS Code
 -   After saving it, try to run the file again
+
+. . .
 
 > **Tip**
 >
 > Don't worry if it is not running right away. We will fix this together!
+
+## Installation Checklist
+
+Before the next lecture, try to ensure you can:
+
+-   [ ] Open VS Code
+-   [ ] See Julia extension in the extensions panel
+-   [ ] Create a new `.jl` file
+-   [ ] See syntax highlighting in your Julia file
+-   [ ] Run code and see output in the terminal
+
+. . .
+
+> **Warning**
+>
+> **Having trouble?** We will fix your issues together in the next lecture!
 
 # <span class="flow">Starting with Julia</span>
 
@@ -667,6 +784,8 @@ print("Hello World!")
 -   It is best to start with some small, interactive problems
 -   Then, slowly increase the scope of the tasks
 -   We will do this <span class="highlight">together in class</span>!
+
+. . .
 
 > **Note**
 >
@@ -681,7 +800,7 @@ Questions?
 
 ## Literature I
 
-For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
+For interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
 
 ## Literature II
 
@@ -691,6 +810,6 @@ Mickein, Markus, Matthes Koch, and Knut Haase. 2022. "A Decision Support System 
 
 Vlćek, Tobias, Knut Haase, Malte Fliedner, and Tobias Cors. 2024. "Police Service District Planning." *OR Spectrum*, February. <https://doi.org/10.1007/s00291-024-00745-3>.
 
-Vlćek, Tobias, Knut Haase, Matthes Koch, Lena Dolz, Anneke Weygandt, and Jan Pape. 2024. "Controlling Passenger Flows into Metro Systems to Mitigate Overcrowding During Large-Scale Events." *Submitted to Transportation Science*.
+Vlćek, Tobias, Knut Haase, Matthes Koch, Lena Dolz, Anneke Weygandt, and Jan Pape. 2024. "Controlling Passenger Flows into Metro Systems to Mitigate Overcrowding During Large-Scale Events." *Submitted to Transportation Research: Part B*.
 
-Vlćek, Tobias, and Guido Voigt. 2024. "Optimizing SKU-Warehouse Allocations to Minimize Split Parcels in E-Commerce Environments." *Submitted to Decision Sciences*.
+Vlćek, Tobias, and Guido Voigt. 2024. "Optimizing SKU-Warehouse Allocations to Minimize Split Parcels in E-Commerce Environments." *To Be Submitted Soon*.

@@ -684,7 +684,7 @@ Pitney Bowes Inc. 2017. "<span class="nocase">Pitney Bowes Parcel Shipping Index
 
 ---------. 2020. "<span class="nocase">Pitney Bowes Parcel Shipping Index Reports Continued Growth as Global Parcel Volume Exceeds 100 billion for First Time Ever</span>." 2020. <https://www.businesswire.com/news/home/20201012005150/en/>.
 
-Vlćek, Tobias, and Guido Voigt. 2024. "Optimizing SKU-Warehouse Allocations to Minimize Split Parcels in E-Commerce Environments." *Submitted to Decision Sciences*.
+Vlćek, Tobias, and Guido Voigt. 2024. "Optimizing SKU-Warehouse Allocations to Minimize Split Parcels in E-Commerce Environments." *To Be Submitted Soon*.
 
 Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. "Optimization of Product Category Allocation in Multiple Warehouses to Minimize Splitting of Online Supermarket Customer Orders." *European Journal of Operational Research* 290 (2): 556--71. <https://doi.org/10.1016/j.ejor.2020.08.024>.
 

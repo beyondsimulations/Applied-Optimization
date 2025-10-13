@@ -149,12 +149,11 @@ Usama Dkaidik and Matthes Koch; Current research with a likely paper submission 
 ## Part III
 
 9. Safety Planning for the Islamic Pilgrimage in Mecca
-10. Passenger Flow Control in Urban Rail
+10. Intermission
 11. Arena Seat Planning under Distancing Rules
-12. Sales Force Deployment for Teams
+12. Passenger Flow Control in Urban Rail
 13. Recap and Discussion
-
-
+14. ????
 
 # [Julia Programming Language]{.flow} {.title}
 
@@ -325,6 +324,24 @@ $$
     - Decision-making under constraints
     - Simulation and prediction
 
+## From Abstract to Concrete
+
+[We've just seen the general structure:]{.highlight}
+
+- Sets ($\mathcal{I}$, $\mathcal{J}$)
+- Parameters ($c_j$, $a_{i,j}$, $b_i$)
+- Decision variables ($X_j$)
+- Objective function and constraints
+
+. . .
+
+**Now let's see how this works with a real problem!**
+
+. . .
+
+::: {.callout-tip}
+Watch for these components as we build our first model together.
+:::
 
 
 # [Solar Panel Transport]{.flow} {.title}
@@ -348,7 +365,6 @@ A company is producing **solar panels** in Dresden and Laupheim and has to trans
 ## Graphical Illustration
 
 ![](https://images.beyondsimulations.com/ao/ao_transport.png)
-
 
 
 # [Understanding the Problem]{.flow} {.title}
@@ -453,7 +469,7 @@ building blocks!
 
 ## Objective Function
 
-- The objective function is the value we are trying to minimize
+- The objective function is the value we are trying to minimize (or maximize)
 - Formalized as a sum of decision variables and parameters
 
 . . .
@@ -463,7 +479,7 @@ building blocks!
 
 ## Minimizing the Transport Costs
 
-[Minimize]{.highlight} the transport costs over all truckloads while meeting the demand based on the available solar panels adhering to the available panels.
+[Minimize]{.highlight} the transport costs over all truckloads while meeting customer demand within the available supply from production sites.
 
 . . .
 
@@ -486,7 +502,7 @@ $$
 
 . . .
 
-- The value is [zero]{.higlight}
+- The value is [zero]{.highlight}
 - We can transport any number of panels
 
 . . .
@@ -495,7 +511,7 @@ $$
 
 
 ## Supply Constraints
-Ensure that the number of panels transported from a location does not exceed the available panels.
+Ensure that the number of panels transported from a location **does not exceed** the available panels.
 
 . . .
 
@@ -508,7 +524,7 @@ $$
 $$
 
 ## Demand Constraints
-Ensure that the demand of each customer is covered.
+Ensure that the demand of each customer **is covered.**
 
 . . .
 
@@ -522,7 +538,7 @@ $$
 
 ## Non-negativity Constraints
 
-Ensure no negative number of truckloads are transported.
+Ensure **no negative number of truckloads** are transported.
 
 . . .
 
@@ -564,7 +580,9 @@ $$
 
 [Question:]{.question} Why won't we transport more than the demand?
 
-- Due to the associated costs
+. . .
+
+- Due to the associated costs!
 
 ## {.loud-slide}
 ::: {.r-fit-text}
@@ -574,11 +592,10 @@ questions?
 :::
 
 
-
 # [Profit Maximization]{.flow} {.title}
 
 ## Description
-Unfortunately, the margins on solar panels are low. After the previous contract has been fulfilled, the company produced the [same number of panels]{.highlight} as before. In addition, all three customers want to order the [same number of truckloads]{.highlight} with solar panels again. The sales volume per truckload of panels is 11,000 Euros. The complete production of a truckload of solar panels, including materials, costs 6,300 Euros.
+Unfortunately, the margins on solar panels are low. After the previous contract has been fulfilled, the company produced the [same number of panels]{.highlight} as before. In addition, all three customers want to order the [same number of truckloads]{.highlight} with solar panels again. The revenue per truckload of panels is 11,000 Euros. The complete production of a truckload of solar panels, including materials, costs 6,300 Euros.
 
 ## New Objective
 
@@ -592,6 +609,7 @@ In the new contract, the company wants to [maximize its profits]{.highlight} whi
 
 - We need to change the objective function
 - We need to change some parameters
+- We need to adjust some constraints
 
 . . .
 
@@ -605,7 +623,7 @@ In the new contract, the company wants to [maximize its profits]{.highlight} whi
 
 $$
 \begin{aligned}
-p &: \text{Sales volume per truckload of solar panels,} \\
+r &: \text{Revenue per truckload of solar panels,} \\
 c &: \text{Production costs per truckload of solar panels.}
 \end{aligned}
 $$
@@ -617,7 +635,7 @@ $$
 . . .
 
 $$
-p - c
+p = r - c
 $$
 
 ## Former Model
@@ -632,11 +650,15 @@ $$
 \end{aligned}
 $$
 
+. . .
+
+[Question:]{.question} What do we need to change here?
+
 ## New Model
 
 $$
 \begin{aligned}
-\text{Maximize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} (p-c-c_{i,j}) \times X_{i,j} \\
+\text{Maximize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} (p-c_{i,j}) \times X_{i,j} \\
 \text{subject to:} \quad
 &\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &&\forall i \in \mathcal{I} \\
 &\sum_{i \in \mathcal{I}} X_{i,j} \leq b_j \quad &&\forall j \in \mathcal{J} \\
@@ -644,13 +666,99 @@ $$
 \end{aligned}
 $$
 
+## Model Reflection
+
+[Take a moment to think about what we just built:]{.highlight}
+
+::: {.panel-tabset}
+
+### Complexity
+
+**How many decision variables does this problem have?**
+
+::: {.fragment}
+$|\mathcal{I}| \times |\mathcal{J}| = 2 \times 3 = 6$ variables
+
+Each represents a shipping route from a production site to a customer.
+:::
+
+### Scalability
+
+**What happens if we add more production sites?**
+
+::: {.fragment}
+
+The number of variables grows as $|\mathcal{I}| \times |\mathcal{J}|$
+
+- 5 sites × 10 customers = 50 variables
+- 10 sites × 20 customers = 200 variables
+- The model structure stays the same, but computational complexity increases!
+:::
+
+### Assumptions
+
+**What real-world factors are we ignoring?**
+
+::: {.fragment}
+- Vehicle capacity limits per route
+- Time windows for delivery
+- Driver working hours and breaks
+- Traffic conditions and travel time
+- Fuel costs vs. distance relationship
+- Possibility of multi-stop routes
+:::
+
+### Variations
+
+**How would the model change for different scenarios?**
+
+::: {.fragment}
+- Air transport: Higher costs, faster delivery, weight limits
+- Multiple vehicle types: Different capacities and costs
+- Time-sensitive deliveries: Add scheduling constraints
+- Partial shipments: Allow fractional truckloads
+:::
+
+:::
+
+## What Did We Learn?
+
+::: {.columns}
+
+::: {.column width="50%"}
+[Modeling Process:]{.highlight}
+
+- Define the problem clearly
+- Identify decision variables
+- Formulate obj. function
+- Add necessary constraints
+- Verify completeness
+:::
+
+::: {.column width="50%"}
+[Key Insights:]{.highlight}
+
+- Sets organize our indices
+- Parameters hold data
+- Variables = decisions
+- Constraints limit feasibility
+- Obj. drives optimization
+:::
+
+:::
+
+. . .
+
+::: {.callout-tip}
+This systematic approach works for **any** optimization problem!
+:::
+
 ## {.loud-slide}
 ::: {.r-fit-text}
 Do you have
 
 any questions?
 :::
-
 
 
 # [Installing Julia]{.flow} {.title}
@@ -666,6 +774,10 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 ![](https://images.beyondsimulations.com/ao/ao_julia2.png){max-width=400px}
 
 - Head to [julialang.org](https://julialang.org) and follow the instructions.
+- The easiest way to install Julia is via the shell/terminal
+- Later, you can then manage Julia with `juliaup`
+
+. . .
 
 :::{.callout-tip}
 If you are ever asked to add something to your "PATH", do so!
@@ -676,13 +788,7 @@ If you are ever asked to add something to your "PATH", do so!
 ![](https://images.beyondsimulations.com/ao/ao_codium_cnl.png){max-width=400px}
 
 - Next, we are going to install VS Code
-- Alternatively, you can install VS Codium
-- It is essentially VS Code but without any tracking by MS
-
-## Installing VS Code
-
 - Head to the website [code.visualstudio.com](https://code.visualstudio.com)
-- OR to the webside [vscodium.com](https://vscodium.com)
 - Download and install the latest release
 
 ## Verify the Installation
@@ -691,6 +797,12 @@ If you are ever asked to add something to your "PATH", do so!
 - Search for the field "Extensions" on the left sidebar
 - Click it and search for "Julia"
 - Download and install "Julia (Julia Language Support)"
+
+. . .
+
+:::{.callout-warning}
+Any problems? Ask me for help!
+:::
 
 ## Create a new file
 
@@ -722,7 +834,21 @@ print("Hello World!")
 Don't worry if it is not running right away. We will fix this together!
 :::
 
+## Installation Checklist
 
+Before the next lecture, try to ensure you can:
+
+- [ ] Open VS Code
+- [ ] See Julia extension in the extensions panel
+- [ ] Create a new `.jl` file
+- [ ] See syntax highlighting in your Julia file
+- [ ] Run code and see output in the terminal
+
+. . .
+
+::: {.callout-warning}
+**Having trouble?** We will fix your issues together in the next lecture!
+:::
 
 # [Starting with Julia]{.flow} {.title}
 
@@ -733,12 +859,12 @@ Don't worry if it is not running right away. We will fix this together!
 - Then, slowly increase the scope of the tasks
 - We will do this [together in class]{.highlight}!
 
+. . .
+
 ::: {.callout-note}
 **And that's it for todays lecture!**\
 We now have covered a first introduction and are ready to start solving some problems in the upcoming lectures.
 :::
-
-
 
 ## {.loud-slide}
 ::: {.r-fit-text}
@@ -747,9 +873,8 @@ Questions?
 
 # [Literature]{.flow} {.title}
 
-
 ## Literature I
 
-For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
+For interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
 
 ## Literature II
