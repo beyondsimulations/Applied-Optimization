@@ -414,10 +414,11 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Part III</h2>
 <ol start="9" type="1">
 <li>Safety Planning for the Islamic Pilgrimage in Mecca</li>
-<li>Passenger Flow Control in Urban Rail</li>
+<li>Intermission</li>
 <li>Arena Seat Planning under Distancing Rules</li>
-<li>Sales Force Deployment for Teams</li>
+<li>Passenger Flow Control in Urban Rail</li>
 <li>Recap and Discussion</li>
+<li>????</li>
 </ol>
 </section></section>
 <section>
@@ -620,6 +621,31 @@ b_{i}   &amp;: \text{parameters}
 <li>Simulation and prediction</li>
 </ul></li>
 </ul>
+</section>
+<section id="from-abstract-to-concrete" class="slide level2">
+<h2>From Abstract to Concrete</h2>
+<p><span class="highlight">We’ve just seen the general structure:</span></p>
+<ul>
+<li>Sets (<span class="math inline">\(\mathcal{I}\)</span>, <span class="math inline">\(\mathcal{J}\)</span>)</li>
+<li>Parameters (<span class="math inline">\(c_j\)</span>, <span class="math inline">\(a_{i,j}\)</span>, <span class="math inline">\(b_i\)</span>)</li>
+<li>Decision variables (<span class="math inline">\(X_j\)</span>)</li>
+<li>Objective function and constraints</li>
+</ul>
+<div class="fragment">
+<p><strong>Now let’s see how this works with a real problem!</strong></p>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Watch for these components as we build our first model together.</p>
+</div>
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="solar-panel-transport" class="title-slide slide level1 title center">
@@ -787,7 +813,7 @@ X_{i,j} \text{Trucks that deliver panels from site } i \text{ to customer } j.
 <section id="objective-function" class="slide level2">
 <h2>Objective Function</h2>
 <ul>
-<li>The objective function is the value we are trying to minimize</li>
+<li>The objective function is the value we are trying to minimize (or maximize)</li>
 <li>Formalized as a sum of decision variables and parameters</li>
 </ul>
 <div class="fragment">
@@ -796,7 +822,7 @@ X_{i,j} \text{Trucks that deliver panels from site } i \text{ to customer } j.
 </section>
 <section id="minimizing-the-transport-costs" class="slide level2">
 <h2>Minimizing the Transport Costs</h2>
-<p><span class="highlight">Minimize</span> the transport costs over all truckloads while meeting the demand based on the available solar panels adhering to the available panels.</p>
+<p><span class="highlight">Minimize</span> the transport costs over all truckloads while meeting customer demand within the available supply from production sites.</p>
 <div class="fragment">
 <p><span class="question">Question:</span> How can we write this down?</p>
 </div>
@@ -815,7 +841,7 @@ X_{i,j} \text{Trucks that deliver panels from site } i \text{ to customer } j.
 <p><span class="question">Question:</span> Objective value without any constraints?</p>
 <div class="fragment">
 <ul>
-<li>The value is <span class="higlight">zero</span></li>
+<li>The value is <span class="highlight">zero</span></li>
 <li>We can transport any number of panels</li>
 </ul>
 </div>
@@ -825,7 +851,7 @@ X_{i,j} \text{Trucks that deliver panels from site } i \text{ to customer } j.
 </section>
 <section id="supply-constraints" class="slide level2">
 <h2>Supply Constraints</h2>
-<p>Ensure that the number of panels transported from a location does not exceed the available panels.</p>
+<p>Ensure that the number of panels transported from a location <strong>does not exceed</strong> the available panels.</p>
 <div class="fragment">
 <p><span class="question">Question:</span> How can we formalize this?</p>
 </div>
@@ -837,7 +863,7 @@ X_{i,j} \text{Trucks that deliver panels from site } i \text{ to customer } j.
 </section>
 <section id="demand-constraints" class="slide level2">
 <h2>Demand Constraints</h2>
-<p>Ensure that the demand of each customer is covered.</p>
+<p>Ensure that the demand of each customer <strong>is covered.</strong></p>
 <div class="fragment">
 <p><span class="question">Question:</span> Any ideas?</p>
 </div>
@@ -849,7 +875,7 @@ X_{i,j} \text{Trucks that deliver panels from site } i \text{ to customer } j.
 </section>
 <section id="non-negativity-constraints" class="slide level2">
 <h2>Non-negativity Constraints</h2>
-<p>Ensure no negative number of truckloads are transported.</p>
+<p>Ensure <strong>no negative number of truckloads</strong> are transported.</p>
 <div class="fragment">
 <p><span class="question">Question:</span> Has anyone an idea how to write this down?</p>
 </div>
@@ -884,8 +910,10 @@ X_{i,j} \geq 0 \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 </div>
 <div class="fragment">
 <p><span class="question">Question:</span> Why won’t we transport more than the demand?</p>
+</div>
+<div class="fragment">
 <ul>
-<li>Due to the associated costs</li>
+<li>Due to the associated costs!</li>
 </ul>
 </div>
 </section>
@@ -903,7 +931,7 @@ X_{i,j} \geq 0 \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 </section>
 <section id="description-1" class="slide level2">
 <h2>Description</h2>
-<p>Unfortunately, the margins on solar panels are low. After the previous contract has been fulfilled, the company produced the <span class="highlight">same number of panels</span> as before. In addition, all three customers want to order the <span class="highlight">same number of truckloads</span> with solar panels again. The sales volume per truckload of panels is 11,000 Euros. The complete production of a truckload of solar panels, including materials, costs 6,300 Euros.</p>
+<p>Unfortunately, the margins on solar panels are low. After the previous contract has been fulfilled, the company produced the <span class="highlight">same number of panels</span> as before. In addition, all three customers want to order the <span class="highlight">same number of truckloads</span> with solar panels again. The revenue per truckload of panels is 11,000 Euros. The complete production of a truckload of solar panels, including materials, costs 6,300 Euros.</p>
 </section>
 <section id="new-objective" class="slide level2">
 <h2>New Objective</h2>
@@ -915,6 +943,7 @@ X_{i,j} \geq 0 \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <ul>
 <li>We need to change the objective function</li>
 <li>We need to change some parameters</li>
+<li>We need to adjust some constraints</li>
 </ul>
 </div>
 <div class="fragment">
@@ -930,7 +959,7 @@ X_{i,j} \geq 0 \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <h2>New Parameters</h2>
 <p><span class="math display">\[
 \begin{aligned}
-p &amp;: \text{Sales volume per truckload of solar panels,} \\
+r &amp;: \text{Revenue per truckload of solar panels,} \\
 c &amp;: \text{Production costs per truckload of solar panels.}
 \end{aligned}
 \]</span></p>
@@ -939,7 +968,7 @@ c &amp;: \text{Production costs per truckload of solar panels.}
 </div>
 <div class="fragment">
 <p><span class="math display">\[
-p - c
+p = r - c
 \]</span></p>
 </div>
 </section>
@@ -954,18 +983,107 @@ p - c
 &amp;X_{i,j} \geq 0 \quad &amp;&amp;\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 \end{aligned}
 \]</span></p>
+<div class="fragment">
+<p><span class="question">Question:</span> What do we need to change here?</p>
+</div>
 </section>
 <section id="new-model" class="slide level2">
 <h2>New Model</h2>
 <p><span class="math display">\[
 \begin{aligned}
-\text{Maximize} \quad F &amp;= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} (p-c-c_{i,j}) \times X_{i,j} \\
+\text{Maximize} \quad F &amp;= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} (p-c_{i,j}) \times X_{i,j} \\
 \text{subject to:} \quad
 &amp;\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &amp;&amp;\forall i \in \mathcal{I} \\
 &amp;\sum_{i \in \mathcal{I}} X_{i,j} \leq b_j \quad &amp;&amp;\forall j \in \mathcal{J} \\
 &amp;X_{i,j} \geq 0 \quad &amp;&amp;\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 \end{aligned}
 \]</span></p>
+</section>
+<section id="model-reflection" class="slide level2">
+<h2>Model Reflection</h2>
+<p><span class="highlight">Take a moment to think about what we just built:</span></p>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Complexity</a></li><li><a href="#tabset-1-2">Scalability</a></li><li><a href="#tabset-1-3">Assumptions</a></li><li><a href="#tabset-1-4">Variations</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<p><strong>How many decision variables does this problem have?</strong></p>
+<div class="fragment">
+<p><span class="math inline">\(|\mathcal{I}| \times |\mathcal{J}| = 2 \times 3 = 6\)</span> variables</p>
+<p>Each represents a shipping route from a production site to a customer.</p>
+</div>
+</div>
+<div id="tabset-1-2">
+<p><strong>What happens if we add more production sites?</strong></p>
+<div class="fragment">
+<p>The number of variables grows as <span class="math inline">\(|\mathcal{I}| \times |\mathcal{J}|\)</span></p>
+<ul>
+<li>5 sites × 10 customers = 50 variables</li>
+<li>10 sites × 20 customers = 200 variables</li>
+<li>The model structure stays the same, but computational complexity increases!</li>
+</ul>
+</div>
+</div>
+<div id="tabset-1-3">
+<p><strong>What real-world factors are we ignoring?</strong></p>
+<div class="fragment">
+<ul>
+<li>Vehicle capacity limits per route</li>
+<li>Time windows for delivery</li>
+<li>Driver working hours and breaks</li>
+<li>Traffic conditions and travel time</li>
+<li>Fuel costs vs.&nbsp;distance relationship</li>
+<li>Possibility of multi-stop routes</li>
+</ul>
+</div>
+</div>
+<div id="tabset-1-4">
+<p><strong>How would the model change for different scenarios?</strong></p>
+<div class="fragment">
+<ul>
+<li>Air transport: Higher costs, faster delivery, weight limits</li>
+<li>Multiple vehicle types: Different capacities and costs</li>
+<li>Time-sensitive deliveries: Add scheduling constraints</li>
+<li>Partial shipments: Allow fractional truckloads</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="what-did-we-learn" class="slide level2">
+<h2>What Did We Learn?</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span class="highlight">Modeling Process:</span></p>
+<ul>
+<li>Define the problem clearly</li>
+<li>Identify decision variables</li>
+<li>Formulate obj. function</li>
+<li>Add necessary constraints</li>
+<li>Verify completeness</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><span class="highlight">Key Insights:</span></p>
+<ul>
+<li>Sets organize our indices</li>
+<li>Parameters hold data</li>
+<li>Variables = decisions</li>
+<li>Constraints limit feasibility</li>
+<li>Obj. drives optimization</li>
+</ul>
+</div></div>
+<div class="fragment">
+<div class="callout callout-tip callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>This systematic approach works for <strong>any</strong> optimization problem!</p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="section-4" class="slide level2 loud-slide">
 <h2></h2>
@@ -989,7 +1107,10 @@ p - c
 
 <img data-src="https://images.beyondsimulations.com/ao/ao_julia2.png" data-max-width="400px" class="r-stretch"><ul>
 <li>Head to <a href="https://julialang.org">julialang.org</a> and follow the instructions.</li>
+<li>The easiest way to install Julia is via the shell/terminal</li>
+<li>Later, you can then manage Julia with <code>juliaup</code></li>
 </ul>
+<div class="fragment">
 <div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
 <div class="callout-icon-container">
@@ -1000,21 +1121,14 @@ p - c
 </div>
 </div>
 </div>
+</div>
 </section>
 <section id="vs-code" class="slide level2">
 <h2>VS Code</h2>
 
 <img data-src="https://images.beyondsimulations.com/ao/ao_codium_cnl.png" data-max-width="400px" class="r-stretch"><ul>
 <li>Next, we are going to install VS Code</li>
-<li>Alternatively, you can install VS Codium</li>
-<li>It is essentially VS Code but without any tracking by MS</li>
-</ul>
-</section>
-<section id="installing-vs-code" class="slide level2">
-<h2>Installing VS Code</h2>
-<ul>
 <li>Head to the website <a href="https://code.visualstudio.com">code.visualstudio.com</a></li>
-<li>OR to the webside <a href="https://vscodium.com">vscodium.com</a></li>
 <li>Download and install the latest release</li>
 </ul>
 </section>
@@ -1026,6 +1140,18 @@ p - c
 <li>Click it and search for “Julia”</li>
 <li>Download and install “Julia (Julia Language Support)”</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-warning callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Any problems? Ask me for help!</p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="create-a-new-file" class="slide level2">
 <h2>Create a new file</h2>
@@ -1034,7 +1160,7 @@ p - c
 <li>Save it somewhere on your computer</li>
 <li>e.g., in a folder that you will use in the course</li>
 </ul>
-<div id="c78d4047" class="cell" data-execution_count="1">
+<div id="2dab9f7a" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a><span class="fu">print</span>(<span class="st">"Hello World!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell fragment" data-execution_count="1">
@@ -1042,19 +1168,22 @@ p - c
 <pre><code>Hello World!</code></pre>
 </div>
 </div>
+<div class="fragment">
 <ul>
 <li>Run the file by clicking “run” in the upper right corner</li>
 <li>OR by pressing “Control+Enter” or “STRG+Enter”</li>
 </ul>
+</div>
 </section>
 <section id="everything-working" class="slide level2">
 <h2>Everything working?</h2>
 <ul>
 <li>If the terminal opens with a <code>Hello World!</code> → perfect!</li>
-<li>If not, it is likely that the IDE <span class="highlight">cannot find the path</span> to Julia</li>
+<li>If not, the IDE likely <span class="highlight">cannot find the path</span> to Julia</li>
 <li>Try to determine the path and save it to VS Code</li>
 <li>After saving it, try to run the file again</li>
 </ul>
+<div class="fragment">
 <div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
 <div class="callout-icon-container">
@@ -1062,6 +1191,30 @@ p - c
 </div>
 <div class="callout-content">
 <p>Don’t worry if it is not running right away. We will fix this together!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="installation-checklist" class="slide level2">
+<h2>Installation Checklist</h2>
+<p>Before the next lecture, try to ensure you can:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Open VS Code</label></li>
+<li><label><input type="checkbox">See Julia extension in the extensions panel</label></li>
+<li><label><input type="checkbox">Create a new <code>.jl</code> file</label></li>
+<li><label><input type="checkbox">See syntax highlighting in your Julia file</label></li>
+<li><label><input type="checkbox">Run code and see output in the terminal</label></li>
+</ul>
+<div class="fragment">
+<div class="callout callout-warning callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p><strong>Having trouble?</strong> We will fix your issues together in the next lecture!</p>
+</div>
 </div>
 </div>
 </div>
@@ -1079,6 +1232,7 @@ p - c
 <li>Then, slowly increase the scope of the tasks</li>
 <li>We will do this <span class="highlight">together in class</span>!</li>
 </ul>
+<div class="fragment">
 <div class="callout callout-note callout-style-simple">
 <div class="callout-body">
 <div class="callout-icon-container">
@@ -1087,6 +1241,7 @@ p - c
 <div class="callout-content">
 <p><strong>And that’s it for todays lecture!</strong><br>
 We now have covered a first introduction and are ready to start solving some problems in the upcoming lectures.</p>
+</div>
 </div>
 </div>
 </div>
@@ -1104,7 +1259,7 @@ We now have covered a first introduction and are ready to start solving some pro
 </section>
 <section id="literature-i" class="slide level2">
 <h2>Literature I</h2>
-<p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
+<p>For interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
 </section>
 <section id="literature-ii" class="slide level2 smaller scrollable">
 <h2>Literature II</h2>
@@ -1121,10 +1276,10 @@ Mickein, Markus, Matthes Koch, and Knut Haase. 2022. <span>“A Decision Support
 Vlćek, Tobias, Knut Haase, Malte Fliedner, and Tobias Cors. 2024. <span>“Police Service District Planning.”</span> <em>OR Spectrum</em>, February. <a href="https://doi.org/10.1007/s00291-024-00745-3">https://doi.org/10.1007/s00291-024-00745-3</a>.
 </div>
 <div id="ref-vlcek_controlling_2024" class="csl-entry" role="listitem">
-Vlćek, Tobias, Knut Haase, Matthes Koch, Lena Dolz, Anneke Weygandt, and Jan Pape. 2024. <span>“Controlling <span>Passenger</span> <span>Flows</span> into <span>Metro</span> <span>Systems</span> to <span>Mitigate</span> <span>Overcrowding</span> During Large-Scale <span>Events</span>.”</span> <em>Submitted to Transportation Science</em>.
+Vlćek, Tobias, Knut Haase, Matthes Koch, Lena Dolz, Anneke Weygandt, and Jan Pape. 2024. <span>“Controlling <span>Passenger</span> <span>Flows</span> into <span>Metro</span> <span>Systems</span> to <span>Mitigate</span> <span>Overcrowding</span> During Large-Scale <span>Events</span>.”</span> <em>Submitted to Transportation Research: Part B</em>.
 </div>
 <div id="ref-vlcek_optimizing_2024" class="csl-entry" role="listitem">
-Vlćek, Tobias, and Guido Voigt. 2024. <span>“Optimizing <span>SKU</span>-<span>Warehouse</span> <span>Allocations</span> to Minimize <span>Split</span> <span>Parcels</span> in <span>E</span>-<span>Commerce</span> <span>Environments</span>.”</span> <em>Submitted to Decision Sciences</em>.
+Vlćek, Tobias, and Guido Voigt. 2024. <span>“Optimizing <span>SKU</span>-<span>Warehouse</span> <span>Allocations</span> to Minimize <span>Split</span> <span>Parcels</span> in <span>E</span>-<span>Commerce</span> <span>Environments</span>.”</span> <em>To Be Submitted Soon</em>.
 </div>
 </div>
 </section></section>
