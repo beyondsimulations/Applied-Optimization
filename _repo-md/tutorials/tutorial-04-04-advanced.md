@@ -158,7 +158,7 @@ println("Gadgets to produce: ", value(gadgets))
       Primal bound      2780
       Dual bound        2800
       Gap               0.719% (tolerance: 1%)
-      P-D integral      0.000290498884909
+      P-D integral      0.000295226318831
       Solution status   feasible
                         2780 (objective)
                         0 (bound viol.)
