@@ -48,7 +48,9 @@ Your goal is to decide how many of each product to make to maximize your total p
 First, we need to install and load the necessary packages. If you haven't already installed JuMP and HiGHS, run the following code:
 
 ``` julia
-import Pkg; Pkg.add(["JuMP","HiGHS"])
+import Pkg
+Pkg.activate("applied-optimization")
+Pkg.add(["JuMP","HiGHS"])
 ```
 
 Now, let's load these packages:
@@ -56,6 +58,103 @@ Now, let's load these packages:
 ``` julia
 using JuMP, HiGHS
 ```
+
+<pre><span class="ansi-bright-red-fg ansi-bold">┌ </span><span class="ansi-bright-red-fg ansi-bold">Error: </span>Error during loading of extension SpecialFunctionsExt of ColorVectorSpace, use `Base.retry_load_extensions()` to retry.
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>  exception =
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   1-element ExceptionStack:
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   ArgumentError: Package SpecialFunctionsExt [997ecda8-951a-5f50-90ea-61382e97704b] is required but does not seem to be installed:
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    - Run `Pkg.instantiate()` to install all recorded dependencies.
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   Stacktrace:
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [1] <span class="ansi-bold">__require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::Nothing<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2587</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [2] <span class="ansi-bold">_require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">uuidkey</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::Nothing<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2465</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [3] <span class="ansi-bold">_require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">uuidkey</span>::Base.PkgId<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2459</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [4] <span class="ansi-bold">run_extension_callbacks</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">extid</span>::Base.ExtensionId<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1579</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [5] <span class="ansi-bold">run_extension_callbacks</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkgid</span>::Base.PkgId<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1616</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [6] <span class="ansi-bold">run_package_callbacks</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">modkey</span>::Base.PkgId<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1432</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [7] <span class="ansi-bold">_require_search_from_serialized</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">sourcepath</span>::String, <span class="ansi-bright-black-fg">build_id</span>::UInt128, <span class="ansi-bright-black-fg">stalecheck</span>::Bool; <span class="ansi-bright-black-fg">reasons</span>::Dict<span class="ansi-bright-black-fg">{String, Int64}</span>, <span class="ansi-bright-black-fg">DEPOT_PATH</span>::Vector<span class="ansi-bright-black-fg">{String}</span><span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2106</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [8] <span class="ansi-bold">_require_search_from_serialized</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1981</span><span class="ansi-bright-black-fg"> [inlined]</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [9] <span class="ansi-bold">__require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::String<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2599</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [10] <span class="ansi-bold">_require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">uuidkey</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::String<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2465</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [11] <span class="ansi-bold">macro expansion</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2393</span><span class="ansi-bright-black-fg"> [inlined]</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [12] <span class="ansi-bold">macro expansion</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lock.jl:376</span><span class="ansi-bright-black-fg"> [inlined]</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [13] <span class="ansi-bold">__require</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">into</span>::Module, <span class="ansi-bright-black-fg">mod</span>::Symbol<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2358</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [14] <span class="ansi-bold">require</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">into</span>::Module, <span class="ansi-bright-black-fg">mod</span>::Symbol<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2334</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [15] <span class="ansi-bold">eval</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::Module, <span class="ansi-bright-black-fg">e</span>::Any<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Core</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">boot.jl:489</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [16] <span class="ansi-bold">include_string</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">mapexpr</span>::typeof(REPL.softscope), <span class="ansi-bright-black-fg">mod</span>::Module, <span class="ansi-bright-black-fg">code</span>::String, <span class="ansi-bright-black-fg">filename</span>::String<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2843</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [17] <span class="ansi-bold">softscope_include_string</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::Module, <span class="ansi-bright-black-fg">code</span>::String, <span class="ansi-bright-black-fg">filename</span>::String<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-magenta-fg">SoftGlobalScope</span> <span class="ansi-bright-black-fg">~/.julia/packages/SoftGlobalScope/u4UzH/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">SoftGlobalScope.jl:65</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [18] <span class="ansi-bold">execute_request</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">socket</span>::ZMQ.Socket, <span class="ansi-bright-black-fg">msg</span>::IJulia.Msg<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">execute_request.jl:81</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [19] <span class="ansi-bold">eventloop</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">socket</span>::ZMQ.Socket<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">eventloop.jl:14</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [20] <span class="ansi-bold">(::IJulia.var"#waitloop##2#waitloop##3")</span><span class="ansi-bold">(</span><span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">eventloop.jl:58</span>
+
+<span class="ansi-bright-red-fg ansi-bold">└ </span><span class="ansi-bright-black-fg">@ Base loading.jl:1589</span>
+</pre>
 
 Great! We're now ready to start building our optimization model.
 
