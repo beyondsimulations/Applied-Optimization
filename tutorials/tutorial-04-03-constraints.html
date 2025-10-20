@@ -609,11 +609,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Welcome to this tutorial on constraints in JuMP! In this lesson, we’ll explore how to add rules (constraints) to our optimization problems.</p>
 <p>By the end of this tutorial, you’ll be able to: 1. Create simple constraints for your optimization problems 2. Use containers (like arrays) to manage multiple similar constraints 3. Create more complex constraints based on conditions</p>
 <p>Let’s start by loading the necessary packages:</p>
-<div id="30a79666" class="cell" data-execution_count="3">
+<div id="61fb3a9f" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, let’s create a model that we’ll use throughout this tutorial:</p>
-<div id="d5116be7" class="cell" data-execution_count="4">
+<div id="b6015efc" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>another_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great! We've created a new optimization model."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -629,10 +629,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="exercise-1.1---define-arrays">Exercise 1.1 - Define arrays</h2>
 <p>Scenario: Imagine you’re optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.</p>
 <p>Define an array of variables and an objective function for <code>another_model</code>. The variables should be called <code>profits</code> and have a range from <code>1:8</code>. It has a lower bound of <code>0</code>. The objective should be a Maximization of the sum of all <code>profits</code>.</p>
-<div id="fb4e4396" class="cell" data-execution_count="5">
+<div id="3ac8a9f0" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="5c27def9" class="cell" data-execution_count="6">
+<div id="02f21ce8" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -657,10 +657,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Exercise 2.1 - Define constraints</h1>
 <p>Continuing our factory scenario: Each product has a maximum daily production capacity due to machine limitations.</p>
 <p>Define constraints called <code>maxProfit</code> using an array of variables. The logic: Each profit defined in the previous task should be less than or equal to <code>12</code>.</p>
-<div id="a3314ea9" class="cell" data-execution_count="7">
+<div id="45ed9ea1" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="db809854" class="cell" data-execution_count="8">
+<div id="87c34370" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -682,10 +682,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="exercise-3.1---add-a-conditional-constraints">Exercise 3.1 - Add a conditional constraints</h2>
 <p>Scenario extension: The first 4 products are new and have limited market demand.</p>
 <p>Add a conditional constraint <code>smallProfit</code> to the previous model. Condition: Only the first 4 variables profit have to be lower or equalthan 5.</p>
-<div id="99a28be0" class="cell" data-execution_count="9">
+<div id="50819937" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="da5b52b1" class="cell" data-execution_count="10">
+<div id="5cefa3db" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -705,7 +705,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="visualization-of-results" class="level1">
 <h1>Visualization of Results</h1>
 <p>Let’s visualize our optimal solution:</p>
-<div id="9490307f" class="cell" data-execution_count="11">
+<div id="79270295" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming the model has been solved!!!</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>optimal_profits <span class="op">=</span> <span class="fu">value</span>.(profits)</span>

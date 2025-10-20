@@ -659,12 +659,134 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="setting-up" class="level2">
 <h2 class="anchored" data-anchor-id="setting-up">Setting Up</h2>
 <p>First, we need to install and load the necessary packages. If you haven’t already installed JuMP and HiGHS, run the following code:</p>
-<div id="e3cf170a" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg;</span> Pkg.add(["JuMP",<span class="bu">"HiGHS"])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="736aa00a" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"applied-optimization"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>([<span class="st">"JuMP"</span>,<span class="st">"HiGHS"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, let’s load these packages:</p>
-<div id="7469f558" class="cell" data-execution_count="3">
+<div id="11bce108" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling JuMP [4076af6c-e467-56ae-b986-b466b2749572] (cache misses: wrong dep version loaded (2), wrong source (2))
+
+
+
+SYSTEM: caught exception of type :MethodError while trying to print a failed Task notice; giving up
+
+<span class="ansi-bright-red-fg ansi-bold">┌ </span><span class="ansi-bright-red-fg ansi-bold">Error: </span>Error during loading of extension SpecialFunctionsExt of ColorVectorSpace, use `Base.retry_load_extensions()` to retry.
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>  exception =
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   1-element ExceptionStack:
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   ArgumentError: Package SpecialFunctionsExt [997ecda8-951a-5f50-90ea-61382e97704b] is required but does not seem to be installed:
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    - Run `Pkg.instantiate()` to install all recorded dependencies.
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   Stacktrace:
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [1] <span class="ansi-bold">__require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::Nothing<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2587</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [2] <span class="ansi-bold">_require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">uuidkey</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::Nothing<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2465</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [3] <span class="ansi-bold">_require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">uuidkey</span>::Base.PkgId<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2459</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [4] <span class="ansi-bold">run_extension_callbacks</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">extid</span>::Base.ExtensionId<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1579</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [5] <span class="ansi-bold">run_extension_callbacks</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkgid</span>::Base.PkgId<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1616</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [6] <span class="ansi-bold">run_package_callbacks</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">modkey</span>::Base.PkgId<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1432</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [7] <span class="ansi-bold">_tryrequire_from_serialized</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">modkey</span>::Base.PkgId, <span class="ansi-bright-black-fg">build_id</span>::UInt128<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1930</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [8] <span class="ansi-bold">_tryrequire_from_serialized</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">path</span>::String, <span class="ansi-bright-black-fg">ocachepath</span>::String<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1968</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [9] <span class="ansi-bold">__require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::String<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2668</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [10] <span class="ansi-bold">_require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">uuidkey</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::String<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2465</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [11] <span class="ansi-bold">macro expansion</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2393</span><span class="ansi-bright-black-fg"> [inlined]</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [12] <span class="ansi-bold">macro expansion</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lock.jl:376</span><span class="ansi-bright-black-fg"> [inlined]</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [13] <span class="ansi-bold">__require</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">into</span>::Module, <span class="ansi-bright-black-fg">mod</span>::Symbol<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2358</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [14] <span class="ansi-bold">require</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">into</span>::Module, <span class="ansi-bright-black-fg">mod</span>::Symbol<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2334</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [15] <span class="ansi-bold">eval</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::Module, <span class="ansi-bright-black-fg">e</span>::Any<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Core</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">boot.jl:489</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [16] <span class="ansi-bold">include_string</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">mapexpr</span>::typeof(REPL.softscope), <span class="ansi-bright-black-fg">mod</span>::Module, <span class="ansi-bright-black-fg">code</span>::String, <span class="ansi-bright-black-fg">filename</span>::String<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2843</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [17] <span class="ansi-bold">softscope_include_string</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::Module, <span class="ansi-bright-black-fg">code</span>::String, <span class="ansi-bright-black-fg">filename</span>::String<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">SoftGlobalScope</span> <span class="ansi-bright-black-fg">~/.julia/packages/SoftGlobalScope/u4UzH/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">SoftGlobalScope.jl:65</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [18] <span class="ansi-bold">execute_request</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">socket</span>::ZMQ.Socket, <span class="ansi-bright-black-fg">msg</span>::IJulia.Msg<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-magenta-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">execute_request.jl:81</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [19] <span class="ansi-bold">eventloop</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">socket</span>::ZMQ.Socket<span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-magenta-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">eventloop.jl:14</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>    [20] <span class="ansi-bold">(::IJulia.var"#waitloop##2#waitloop##3")</span><span class="ansi-bold">(</span><span class="ansi-bold">)</span>
+
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-magenta-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">eventloop.jl:58</span>
+
+<span class="ansi-bright-red-fg ansi-bold">└ </span><span class="ansi-bright-black-fg">@ Base loading.jl:1589</span>
+
+
+
+SYSTEM: caught exception of type :MethodError while trying to print a failed Task notice; giving up
+
+<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling HiGHS [87dc4568-4c63-4d18-b0c0-bb2238e4078b] (cache misses: wrong dep version loaded (4))
+
+
+
+SYSTEM: caught exception of type :MethodError while trying to print a failed Task notice; giving up
+
+
+
+SYSTEM: caught exception of type :MethodError while trying to print a failed Task notice; giving up
+</pre>
+</div>
+</div>
 </div>
 <p>Great! We’re now ready to start building our optimization model.</p>
 <hr>
@@ -674,7 +796,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Section 1 - Defining an Optimization Model</h1>
 <p>The first step in solving an optimization problem is to create a model. This model will contain all the information about our problem: the variables, constraints, and objective.</p>
 <p>In JuMP, we create a model like this:</p>
-<div id="34d840d2" class="cell" data-execution_count="4">
+<div id="aa18825d" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Optimization model created successfully!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -702,10 +824,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-2.1---create-variables" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---create-variables">Exercise 2.1 - Create Variables</h2>
 <p>Now it’s your turn! Create two continuous variables equal to or larger than 0 called <code>productA</code> and <code>productB</code> that represent the number of units produced in our problem for our model <code>model</code>.</p>
-<div id="4f089790" class="cell" data-execution_count="5">
+<div id="d66e0fe4" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="f8ec2403" class="cell" data-execution_count="6">
+<div id="7ac5622d" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -742,10 +864,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-3.1---create-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-3.1---create-constraints">Exercise 3.1 - Create Constraints</h2>
 <p>Create two constraints based on the on the Cutting and Finishing department hours of the problem description in this tutorial. Call the first constraint <code>cutting_constraint</code> and the second constraint <code>finishing_constraint</code>.</p>
-<div id="3c62c68f" class="cell" data-execution_count="7">
+<div id="3692ca76" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="4ba20300" class="cell" data-execution_count="8">
+<div id="91b669ba" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -776,10 +898,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-4.1---create-the-objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-4.1---create-the-objective-function">Exercise 4.1 - Create the Objective Function</h2>
 <p>Create the objective function based on the problem description of this tutorial. The objective is to maximize profit based on the values of <code>productA</code> and <code>productB</code>.</p>
-<div id="29c86fcb" class="cell" data-execution_count="9">
+<div id="69bded9b" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="4691c622" class="cell" data-execution_count="10">
+<div id="65a517e2" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -797,19 +919,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>Solve the model:</li>
 </ol>
-<div id="531ac0e7" class="cell" data-execution_count="11">
+<div id="3128cba0" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize!</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol start="2" type="1">
 <li>Check the status of the solution:</li>
 </ol>
-<div id="c2efc06a" class="cell" data-execution_count="12">
+<div id="df36390d" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">termination_status</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol start="3" type="1">
 <li>If the solution is optimal, we can retrieve the optimal values of our variables and the objective function. If the time limit is reached, we can check whether a primal solution is available. We do so by checking whether the model has values.</li>
 </ol>
-<div id="b323a3e6" class="cell" data-execution_count="13">
+<div id="eeccb567" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">begin</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> OPTIMAL</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"Solution is optimal"</span>)</span>
@@ -823,7 +945,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can then get the values of the variables as follows:</p>
-<div id="bfcb77c3" class="cell" data-execution_count="14">
+<div id="99b8fec4" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Product A quantity: </span><span class="sc">$</span>(<span class="fu">value</span>(productA))<span class="st">"</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Product B quantity: </span><span class="sc">$</span>(<span class="fu">value</span>(productB))<span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -845,7 +967,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The following code block tests whether the solution is correct or whether you have made a mistake in the formulation of the problem.</p>
-<div id="1f39a12f" class="cell" data-execution_count="15">
+<div id="960d6453" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> MOI.OPTIMAL <span class="st">"Sorry, something didn't work out as the model status is </span><span class="sc">$</span>termination_status<span class="st">(model)"</span>.</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solution: Product A = "</span>, val_productA, <span class="st">", Product B = "</span>, val_productB)</span>

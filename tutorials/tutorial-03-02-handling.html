@@ -569,12 +569,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#exercise-1.1---import-the-pkg-module" id="toc-exercise-1.1---import-the-pkg-module" class="nav-link" data-scroll-target="#exercise-1.1---import-the-pkg-module">Exercise 1.1 - Import the Pkg Module</a></li>
   </ul></li>
-  <li><a href="#section-2---adding-packages" id="toc-section-2---adding-packages" class="nav-link" data-scroll-target="#section-2---adding-packages">Section 2 - Adding Packages</a>
+  <li><a href="#section-2---managing-environments-and-adding-packages" id="toc-section-2---managing-environments-and-adding-packages" class="nav-link" data-scroll-target="#section-2---managing-environments-and-adding-packages">Section 2 - Managing Environments and Adding Packages</a>
   <ul class="collapse">
   <li><a href="#exercise-2.1---add-the-dataframes-package" id="toc-exercise-2.1---add-the-dataframes-package" class="nav-link" data-scroll-target="#exercise-2.1---add-the-dataframes-package">Exercise 2.1 - Add the DataFrames Package</a></li>
   </ul></li>
-  <li><a href="#section-3---updating-and-removing-packages" id="toc-section-3---updating-and-removing-packages" class="nav-link" data-scroll-target="#section-3---updating-and-removing-packages">Section 3 - Updating and Removing Packages</a></li>
-  <li><a href="#section-4---managing-environments" id="toc-section-4---managing-environments" class="nav-link" data-scroll-target="#section-4---managing-environments">Section 4 - Managing Environments</a>
+  <li><a href="#section-3---updating-and-removing-packages" id="toc-section-3---updating-and-removing-packages" class="nav-link" data-scroll-target="#section-3---updating-and-removing-packages">Section 3 - Updating and Removing Packages</a>
   <ul class="collapse">
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
@@ -624,14 +623,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="section-1---using-the-package-manager" class="level1">
 <h1>Section 1 - Using the Package Manager</h1>
-<p>Julia’s built-in package manager, Pkg, provides a robust set of tools for managing packages. To utilize these tools, start by importing the Pkg module. This module allows you to add, update, and remove packages, and manage environments efficiently. Note, <code>import PackageName</code> lets you access exported functions with <code>PackageName.function</code>, while <code>using PackageName</code> imports all exported names into the local namespace for direct access.</p>
+<p>Julia’s built-in package manager, Pkg, provides a robust set of tools for managing packages. To utilize these tools, start by importing the Pkg module. This module allows you to add, update, and remove packages, and manage environments efficiently.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Note, <code>import PackageName</code> lets you access exported functions with <code>PackageName.function</code>, while <code>using PackageName</code> imports all exported names into the local namespace for direct access.</p>
+</div>
+</div>
+</div>
 <section id="exercise-1.1---import-the-pkg-module" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---import-the-pkg-module">Exercise 1.1 - Import the Pkg Module</h2>
 <p>Import the Pkg module to start managing packages effectively.</p>
-<div id="0b63dc94" class="cell" data-execution_count="2">
+<div id="bbc5c4fe" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="23b2197f" class="cell" data-execution_count="3">
+<div id="eea566ed" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -646,25 +655,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="section-2---adding-packages" class="level1">
-<h1>Section 2 - Adding Packages</h1>
-<p>Adding packages in Julia is straightforward using the <code>Pkg.add("PackageName")</code> function. Replace <code>PackageName</code> with the actual package name you wish to add.</p>
+<section id="section-2---managing-environments-and-adding-packages" class="level1">
+<h1>Section 2 - Managing Environments and Adding Packages</h1>
+<p>Think of environments as separate workspaces for different projects. It’s like having different folders for different school subjects. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with <code>Pkg.activate("new_environment")</code> and add packages to it with <code>Pkg.add("PackageName")</code>. This ensures that each of your projects has a clean, dedicated set of dependencies. When you create a new environment, Julia generates two important files:</p>
+<ol type="1">
+<li><code>Project.toml</code>: Lists direct dependencies of your project.</li>
+<li><code>Manifest.toml</code>: Contains a complete dependency graph of your project.</li>
+</ol>
+<p>These files help ensure reproducibility and should be version controlled with your project. Remember what we did at the start of the lecture? We activated <code>Pkg.activate("applied-optimization")</code> together, which means we are already working in an environment!</p>
+<p>Before installing new packages, we should always activate this environment again. This ensures that the packages are <strong>installed in the environment</strong> and not globally.</p>
+<p>Remember how we did this at the start?</p>
+<div id="55496758" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"applied-optimization"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Our environment is linked to the Jupyter kernel. It is the thing in the upper right corner we are using in this course. Therefore, we don’t need to activate it most of the time as it is already running automatically. But to update packages or add new packages, we should activate it so the packages are added permanently.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Once created and while working in the folder with <code>Project.toml</code> and <code>Manifest.toml</code>, a simple <code>Pkg.activate()</code> is faster and enough to load the environment in the working folder!</p>
+</div>
+</div>
+</div>
+<p>Adding packages in Julia is afterwards straightforward using the <code>Pkg.add("PackageName")</code> function. Replace <code>PackageName</code> with the actual package name you wish to add.</p>
 <section id="exercise-2.1---add-the-dataframes-package" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---add-the-dataframes-package">Exercise 2.1 - Add the DataFrames Package</h2>
 <p>Let’s add a popular package called DataFrames. It’s great for working with structured data, like spreadsheets.</p>
-<div id="e27950ec" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="eca3d71c" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="bb50854f" class="cell" data-execution_count="5">
+<div id="f2816261" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">using</span> <span class="bu">DataFrames</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Package added successfully!"</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">catch</span> <span class="cn">e</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"Package was not added yet! Have you used the correct syntax?"</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Package added successfully!"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">catch</span> <span class="cn">e</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"Package was not added yet! Have you used the correct syntax?"</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <hr>
@@ -681,27 +721,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-example">
 <p>If you wanted to update DataFrames, you’d use <code>Pkg.update("DataFrames")</code>. To remove it, you’d use <code>Pkg.rm("DataFrames")</code>.</p>
 </div>
-<hr>
-</section>
-<section id="section-4---managing-environments" class="level1">
-<h1>Section 4 - Managing Environments</h1>
-<p>Think of environments as separate workspaces for different projects. It’s like having different folders for different school subjects. It’s a best practice to create a new environment for each project to avoid conflicts between package versions. Activate a new environment with <code>Pkg.activate("new_environment")</code> and add packages to it with <code>Pkg.add("PackageName")</code>. This ensures that each of your projects has a clean, dedicated set of dependencies. When you create a new environment, Julia generates two important files:</p>
-<ol type="1">
-<li><code>Project.toml</code>: Lists direct dependencies of your project.</li>
-<li><code>Manifest.toml</code>: Contains a complete dependency graph of your project.</li>
-</ol>
-<p>These files help ensure reproducibility and should be version controlled with your project. But don’t worry, you don’t have to worry about this yet.</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>If you plan to stick to working with notebooks, you don’t have to care about environments yet. Just use the regular environment for the course and you don’t have to activate anything.</p>
-</div>
-</div>
-</div>
-<hr>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>Congratulations! You’ve completed the tutorial on packages and package management in Julia. These skills are important for effectively managing and utilizing external libraries. Continue to the next file to learn more.</p>

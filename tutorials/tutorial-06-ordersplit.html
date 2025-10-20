@@ -714,7 +714,7 @@ window.Quarto = {
 </tbody>
 </table>
 <p>What is the resulting <strong>coappearance matrix</strong> from the transactional data set? Please provide it in the following cell as matrix by changing the <code>0</code>s to the correct values.</p>
-<div id="1c75c586" class="cell" data-execution_count="2">
+<div id="dd83f0e5" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> [</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span>;</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span>;</span>
@@ -732,7 +732,7 @@ window.Quarto = {
 <li>Berlin can also store 3 different product types</li>
 </ul>
 <p>Based on the coappearance matrix you have determined in the previous assignment, use the model from the lecture to maximise the coappearances <strong>manually by hand</strong>. What is the resulting objective function value of the assignment? Please provide it in the following cell.</p>
-<div id="02fdb561" class="cell" data-execution_count="3">
+<div id="8fcef397" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>objective_value_by_hand <span class="op">=</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
@@ -740,7 +740,7 @@ window.Quarto = {
 <section id="counting-split-parcels" class="level2">
 <h2 class="anchored" data-anchor-id="counting-split-parcels">3. Counting Split Parcels</h2>
 <p>Based on the output of the optimisation, we don’t know the number of split orders yet. Calculate the <strong>number of split orders manually</strong> from your previous solution.</p>
-<div id="90c0e8d0" class="cell" data-execution_count="4">
+<div id="0cddc748" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>number_of_split_parcels <span class="op">=</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-simple callout-note callout-titled">
@@ -771,7 +771,7 @@ window.Quarto = {
 </ul></li>
 </ul>
 <p>Thus, we’ll now implement a scalable solution using Julia and JuMP that can handle larger datasets.</p>
-<div id="c3a6dec1" class="cell" data-execution_count="5">
+<div id="6bb0592a" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>skus <span class="op">=</span> [</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Running Shoes"</span>,</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Athletic Socks"</span>,</span>
@@ -855,7 +855,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="use-the-juniper-solver">Use the Juniper solver</h2>
 <p>If you don’t have Juniper, Ipopt and/or HiGHS installed, add the solver via Pkg.add(“Juniper”) and Pkg.add(“Ipopt”) and Pkg.add(“HiGHS”). Juniper is a solver for nonlinear problems, that can be used in combination with Ipopt and HiGHS to solve mixed-integer quadratic problems. If you want to use SCIP, you can also do this by adding JuMP and SCIP and then change the solver in the model definition to <code>warehouse_model = Model(SCIP.Optimizer())</code>. Note, that this does not work automatically in Windows, as you will have to install the SCIP binaries manually. On Mac and Linux, it should work out of the box.</p>
 <p>First, we start by defining the model.</p>
-<div id="da87aad6" class="cell" data-execution_count="7">
+<div id="efabf22e" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definition of the warehouse model</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">Ipopt</span>, <span class="bu">HiGHS</span>, <span class="bu">Juniper</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ipopt <span class="op">=</span> <span class="fu">optimizer_with_attributes</span>(Ipopt.Optimizer, <span class="st">"print_level"</span> <span class="op">=&gt;</span> <span class="fl">0</span>)</span>
@@ -881,10 +881,10 @@ window.Quarto = {
 <section id="compute-the-coappearance-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="compute-the-coappearance-matrix">Compute the coappearance matrix</h2>
 <p>Next, compute the coappearance matrix based on the transactional data provided in <code>T</code>.</p>
-<div id="48de553c" class="cell" data-execution_count="8">
+<div id="a191afc5" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="1cd508a9" class="cell" data-execution_count="9">
+<div id="c7f9dadf" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the coappearance matrix is correct.</span></span>
@@ -898,10 +898,10 @@ window.Quarto = {
 <section id="define-the-decision-variable" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-decision-variable">Define the decision variable</h2>
 <p>Now, define the decision variable for the SKU allocation. Please name the variable <code>X</code>.</p>
-<div id="720e6cc9" class="cell" data-execution_count="10">
+<div id="71ed1e50" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="16264f96" class="cell" data-execution_count="11">
+<div id="8814f15e" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the decision variable is correct.</span></span>
@@ -916,10 +916,10 @@ window.Quarto = {
 <section id="define-the-objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-objective-function">Define the objective function</h2>
 <p>Then, define the objective function to maximize the coappearance.</p>
-<div id="587bae10" class="cell" data-execution_count="12">
+<div id="5b967392" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="3160dd7e" class="cell" data-execution_count="13">
+<div id="ed5bd59e" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the objective function is correct.</span></span>
@@ -932,10 +932,10 @@ window.Quarto = {
 <section id="define-the-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-constraints">Define the constraints</h2>
 <p>To ensure that each SKU is allocated to one warehouse, add the first constraint.</p>
-<div id="17044391" class="cell" data-execution_count="14">
+<div id="93165890" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="3e97d107" class="cell" data-execution_count="15">
+<div id="fbfb7565" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the single allocation constraint is correct.</span></span>
@@ -944,10 +944,10 @@ window.Quarto = {
 </details>
 </div>
 <p>To ensure that the capacity of each warehouse is not exceeded, add the second constraint.</p>
-<div id="e43fdbfb" class="cell" data-execution_count="16">
+<div id="7b376c59" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="dade30a2" class="cell" data-execution_count="17">
+<div id="d776a8cb" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the capacity constraint is correct.</span></span>
@@ -960,10 +960,10 @@ window.Quarto = {
 <section id="solve-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="solve-the-model">Solve the model</h2>
 <p>Finally, solve the model with a solve statement.</p>
-<div id="86886a61" class="cell" data-execution_count="18">
+<div id="32ff27f9" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="3a551ed1" class="cell" data-execution_count="19">
+<div id="5a6e426a" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert whether the model is solved correctly.</span></span>
@@ -977,7 +977,7 @@ window.Quarto = {
 <section id="print-the-results" class="level2">
 <h2 class="anchored" data-anchor-id="print-the-results">Print the results</h2>
 <p>The following code prints the objective value, the SKU allocation and the warehouse capacities based on your optimal solution.</p>
-<div id="d8571216" class="cell" data-execution_count="20">
+<div id="d64aaa60" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective value: "</span>, <span class="fu">objective_value</span>(warehouse_model))</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>()</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"SKU Allocation:"</span>)</span>
@@ -999,7 +999,7 @@ window.Quarto = {
 <section id="count-the-number-of-split-orders" class="level2">
 <h2 class="anchored" data-anchor-id="count-the-number-of-split-orders">Count the number of split orders</h2>
 <p>Based on the output of the optimisation, we still don’t know the number of split orders. The following code calculates the number of split orders from the SKU allocation for the optimal solution.</p>
-<div id="dafaa08d" class="cell" data-execution_count="21">
+<div id="e79c5a00" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Binary matrix indicating whether a SKU is allocated to a warehouse.</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>X_values <span class="op">=</span> [<span class="fu">value</span>(X[i,j]) <span class="op">&gt;</span> <span class="fl">0</span> ? <span class="cn">true</span> <span class="op">:</span> <span class="cn">false</span> for i <span class="kw">in</span> skus, j <span class="kw">in</span> warehouses]</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1064,7 +1064,7 @@ window.Quarto = {
 <li>How might this new allocation affect warehouse operations and picking efficiency?</li>
 </ul>
 <p>Your answer goes here, thinking from the business perspective. A few sentences are fully sufficient!</p>
-<div id="d0948532" class="cell" data-execution_count="22">
+<div id="8d66d977" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWER BELOW</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
