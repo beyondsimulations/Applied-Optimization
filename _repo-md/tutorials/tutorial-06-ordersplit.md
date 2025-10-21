@@ -1,6 +1,10 @@
 ---
 title: Tutorial VI - Minimizing Split Orders in E-Commerce
 subtitle: Applied Optimization with Julia
+code-links:
+  - text: Julia
+    icon: hand-thumbs-up
+    href: tutorial-06-ordersplit.jl
 ---
 
 

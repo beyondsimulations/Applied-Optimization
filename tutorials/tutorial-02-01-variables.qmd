@@ -1,6 +1,10 @@
 ---
 title: "Tutorial II.I - Variables and Types"
 subtitle: "Applied Optimization with Julia"
+code-links:
+  - text: Julia
+    icon: hand-thumbs-up
+    href: tutorial-02-01-variables.jl
 ---
 
 # Introduction
@@ -11,47 +15,28 @@ Welcome to this interactive Julia tutorial which introduces the basics of variab
 
 This script is designed to be interactive. Follow the instructions, write your code in the designated code blocks, and then execute the corresponding code. Each exercise is followed by an `@assert` statement that checks your solution.
 
-There are two ways to run the code:
-
-  1. Running Julia notebooks in VS Code
-  2. Running Julia notebooks in the browser
-
 ## Julia in VS Code
 
-1. First, install the Julia and the Jupyter Extension from the menu on the left side.
-2. Now you can open the downloaded `.ipynb` files but you can't run them yet!
-3. Open the terminal and copy and paste the following code snippets:
+1. First, install the [Julia](https://marketplace.visualstudio.com/items?itemName=julialang.language-julia) and the [Jupyter Extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter) from the menu on the left side.
+2. Install the [Jupytext for Notebooks Extension](https://marketplace.visualstudio.com/items?itemName=congyiwu.vscode-jupytext)
+3. Now you can open the downloaded `.jl` files but you can't run them as notebooks yet!
+4. Open the terminal and copy and paste the following code snippets:
    - `julia` (This will activate Julia)
    - `using Pkg`(This will load the package manager (more on this later))
    - `Pkg.activate("applied-optimization")`(This will activate an environment for our course)
    - `Pkg.add("IJulia")` (This will add IJulia - the support for notebooks - to the environment)
    - `using IJulia` (This will tell the system to load IJulia for the session)
-4. On the right side in the upper corner click there is a button saying something like "Julia Release Channel" or "Pick kernel". Click this button.
-5. Now, select the field "Select another kernel", click it, and then select "Jupyter Kernel"
-6. Finally, select the Julia kernel which contains the word applied-optimization.
+5. Now, you can right click on the downloaded file and select "Open with Jupyter Notebook".
+6. On the right side in the upper corner click there is a button saying something like "Julia Release Channel" or "Pick kernel". Click this button.
+7. Now, select the field "Select another kernel", click it, and then select "Jupyter Kernel"
+8. Finally, select the Julia kernel which contains the word applied-optimization.
 
 :::{.callout-note}
-Sorry, that this start is rather complicated. But in following this, we have a clean environment we can work in and you basically cannot break anything with the installation of packages.
+Sorry, that this start is rather complicated. But in following this, we have a clean environment we can work in and you basically cannot break anything with the installation of packages. Your file is saved as `.jl` file while also being a notebook which is great for Git (version control)!
 :::
 
 :::{.callout-tip}
 Activating an environment creates some files in your folder. These essentially save which packages our environment needs to work properly.
-:::
-
-## Julia in the Browser
-
-1. First, follow steps 1 to 3 from the previous section to install IJulia.
-2. Now, each time you want to start it from the terminal open a new terminal first.
-3. Then, use the following code snippets:
-   - `julia` (This will activate Julia (again) in the terminal)
-   - `using Pkg`(This will load the package manager first, which allows us to load the environment
-   - `Pkg.activate("applied-optimization")`(This will activate our created environment)
-   - `using IJulia; notebook()` (This will load the web browser with IJulia for you)
-4. Now, in the browser you can open the `.ipynb` files.
-5. To run a file, select the correct kernel on the right side (contains "applied-optimization")
-
-:::{.callout-note}
-Always replace 'YOUR CODE BELOW' with your actual code.
 :::
 
 ---
@@ -85,6 +70,10 @@ Declare a variable named `x` and assign it the value `1`.
 @assert x == 1 "Check again, the value of x should be 1. Remember to assign the value directly to x."
 println("Great, you have correctly assigned the value $x to the variable 'x'.")
 ```
+
+:::{.callout-note}
+Always replace 'YOUR CODE BELOW' with your actual code.
+:::
 
 ## Exercise 1.2 - Declare a String Variable
 

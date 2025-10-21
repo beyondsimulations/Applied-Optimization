@@ -1,6 +1,10 @@
 ---
 title: Tutorial IV.IV - Advanced Solver Options with HiGHS in JuMP
 subtitle: Applied Optimization with Julia
+code-links:
+  - text: Julia
+    icon: hand-thumbs-up
+    href: tutorial-04-04-advanced.jl
 ---
 
 
@@ -158,7 +162,7 @@ println("Gadgets to produce: ", value(gadgets))
       Primal bound      2780
       Dual bound        2800
       Gap               0.719% (tolerance: 1%)
-      P-D integral      0.000295067895221
+      P-D integral      0.000302037697498
       Solution status   feasible
                         2780 (objective)
                         0 (bound viol.)

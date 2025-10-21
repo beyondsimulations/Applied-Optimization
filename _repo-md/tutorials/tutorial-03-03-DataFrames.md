@@ -1,6 +1,10 @@
 ---
 title: Tutorial III.III - DataFrames in Julia
 subtitle: Applied Optimization with Julia
+code-links:
+  - text: Julia
+    icon: hand-thumbs-up
+    href: tutorial-03-03-DataFrames.jl
 ---
 
 

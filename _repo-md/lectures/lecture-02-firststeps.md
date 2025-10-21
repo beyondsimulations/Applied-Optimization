@@ -76,8 +76,6 @@ print("Hello World!")
 >
 > Don't worry if it is not running right away. We will fix this together!
 
-------------------------------------------------------------------------
-
 # <span class="flow">Learning Julia</span>
 
 ## Julia as a Programming Language
@@ -87,21 +85,21 @@ print("Hello World!")
 -   Focus in the first two lectures on the programming language
 -   Third lecture dedicated to <span class="highlight">Mathematical Optimization</span>
 
-# <span class="flow">Working with VS Code</span>
+# <span class="flow">Working with VS Code and Julia</span>
 
 ## Notebooks in VS Code
 
 -   The easiest way is by using VS Code
--   Install the Jupyter Extension
--   Now, you can open `.ipynb` files
--   Here you can run the code in the cells
+-   For the detailed instructions, just open the first tutorial.
+-   It explains step-by-step how to use `.jl` files as notebook
+-   This allows us to use **notebooks** and **version control**
 
 ## Downloading the Notebooks
 
 -   You will find the tutorial notebooks next to the tutorial pages
--   On each page, you will find a button `Jupyter` on the right
--   Click it to download the notebook and save it
--   I'd recommend storing the notebooks <span class="highlight">in a separate directory for this course</span>
+-   On each page, you will find a button `Julia` on the right
+-   Click it to download the `jl` file and save it
+-   I'd recommend storing the files <span class="highlight">in a separate directory for this course</span>
 
 ## Learning by doing
 
@@ -111,47 +109,68 @@ print("Hello World!")
 -   You can discuss the problems with your fellow students
 -   You can hand in your solutions to receive bonus points!
 
-------------------------------------------------------------------------
+# <span class="flow">Working with Git</span>
 
-# <span class="flow">Working with IJulia</span>
+## What is Git?
 
-## IJulia
+-   Git is a **version control system** that tracks changes in your code
+-   Can be used for collaboration and keeping track of your work
+-   Allows you to save "snapshots" of your project at different stages
+-   You can always go back to previous versions if something goes wrong
+-   No need to create files like `tutorial_v1.jl` and `tutorial_v2.jl`
 
--   IJulia is an interface between Julia and Jupyter Notebooks
--   Popular tool for data analysis and visualization
--   You can use IJulia to run <span class="highlight">Julia code in the notebooks</span>
+## Installing Git
+
+-   Head to [git-scm.com](https://git-scm.com) and download Git
+-   Follow the installation instructions on the website for your OS
+
+> **Tip**
+>
+> If you have any questions, feel free to ask!
+
+## Git Extension in VS Code
+
+-   VS Code has **built-in Git support**!
+-   Look for the **"Source Control"** icon in the left sidebar (looks like a branch)
+-   For enhanced features, install the [GitGraph extension](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph)
 
 . . .
 
 > **Tip**
 >
-> You can also copy and paste code from the notebooks into your IDE!
+> You don't need to use Git, but once you get used to it it becomes invaluable, especially if you are working with a lot of code!
 
-## Installing IJulia
+### Initialize a Repository
 
--   Open the VS Code IDE and start a terminal
--   Start Julia by typing `julia` in the terminal
--   Install IJulia by typing `]` to open the package manager
--   Install IJulia by typing `add IJulia`
--   Press `Enter`
+-   Open your project folder (of our lecture) in VS Code
+-   Click on "Source Control" in the left sidebar
+-   Click "Initialize Repository" button
+-   Your folder is now a Git repository!
 
-## Running IJulia
+> **Tip**
+>
+> You can also synchronize your repository with GitHub or other hosting services. Then, your code is saved in a remote location, making it accessible from anywhere and allowing collaboration with others.
 
-``` julia
-using IJulia; notebook()
-```
+### Making Your First Commit
 
--   Start IJulia by typing the above code in the Julia prompt
--   This will open a new browser window
--   You can now run code in the notebooks
+-   Make changes to your files (e.g., work on a tutorial `.jl` file)
+-   Go to Source Control panel
+-   You'll see your changes listed under "Changes"
+-   Click the "+" next to files to **stage** them
+-   Add a commit message describing your changes
+-   Click the checkmark ✓ to **commit**
+
+### Viewing History
+
+-   Use the "Git Graph" extension for a visual representation
+-   Click the "Git Graph" button in the Source Control panel
+-   See your commit history as a branching diagram
 
 . . .
 
 > **Tip**
 >
-> You can also run the notebooks in VS Code, if you prefer!
-
-------------------------------------------------------------------------
+> Start using Git from day one! Even for small projects, it's a good habit to develop.
 
 # <span class="flow">Submission of Assignments</span>
 
@@ -180,8 +199,6 @@ using IJulia; notebook()
 > **Note**
 >
 > The assignments are **not** mandatory, but highly recommended!
-
-------------------------------------------------------------------------
 
 # <span class="flow">Five Tutorials for this Week</span>
 

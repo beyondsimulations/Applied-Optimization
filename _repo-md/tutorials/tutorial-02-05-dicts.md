@@ -1,6 +1,10 @@
 ---
 title: Tutorial II.V - Dictionaries
 subtitle: Applied Optimization with Julia
+code-links:
+  - text: Julia
+    icon: hand-thumbs-up
+    href: tutorial-02-05-dicts.jl
 ---
 
 

@@ -1,6 +1,10 @@
 ---
 title: Tutorial IV.V - Modelling the Transportation Problem with JuMP
 subtitle: Applied Optimization with Julia
+code-links:
+  - text: Julia
+    icon: hand-thumbs-up
+    href: tutorial-04-05-transport.jl
 ---
 
 

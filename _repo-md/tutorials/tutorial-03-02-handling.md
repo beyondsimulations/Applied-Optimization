@@ -1,6 +1,10 @@
 ---
 title: Tutorial III.II - Package Management
 subtitle: Applied Optimization with Julia
+code-links:
+  - text: Julia
+    icon: hand-thumbs-up
+    href: tutorial-03-02-handling.jl
 ---
 
 

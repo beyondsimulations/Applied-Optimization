@@ -1,6 +1,10 @@
 ---
 title: Tutorial XII - Passenger Flow Control in Urban Rail
 subtitle: Applied Optimization with Julia
+code-links:
+  - text: Julia
+    icon: hand-thumbs-up
+    href: tutorial-12-rail.jl
 ---
 
 

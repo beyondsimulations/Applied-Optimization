@@ -60,12 +60,6 @@ Looking ahead, I want to ensure this course continues to evolve and meet student
 -   Is there any course at the university you would like to see in the future?
 -   Have I missed anything important? Here is your chance!
 
-# Feedback Form
-
-<iframe data-tally-src="https://tally.so/embed/w58Z5E?alignLeft=1&amp;hideTitle=1&amp;transparentBackground=1&amp;dynamicHeight=1" loading="lazy" width="100%" height="181" frameborder="0" marginheight="0" marginwidth="0" title="Feedback: Applied Optimization">
-</iframe>
-<script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
-
 # Wrap-up
 
 Thank's for your participation! I wish you all the best for your exam and I hope you enjoyed the course! If you have any questions, please feel free to ask me or send me an email. We offer seminars each summer semester where you can explore different topics in more depth. In case you are interested in writing your thesis with me, please let me know and we can discuss potential topics.

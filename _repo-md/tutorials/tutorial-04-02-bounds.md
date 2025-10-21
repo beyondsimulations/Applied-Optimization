@@ -1,6 +1,10 @@
 ---
 title: Tutorial IV.II - Variables and Bounds in JuMP
 subtitle: Applied Optimization with Julia
+code-links:
+  - text: Julia
+    icon: hand-thumbs-up
+    href: tutorial-04-02-bounds.jl
 ---
 
 
