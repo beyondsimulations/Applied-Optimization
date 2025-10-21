@@ -37,44 +37,67 @@
 #     [Julia](https://marketplace.visualstudio.com/items?itemName=julialang.language-julia)
 #     and the [Jupyter
 #     Extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter)
-#     from the menu on the left side.
+#     from the extensions menu on the left side.
+#
 # 2.  Install the [Jupytext for Notebooks
 #     Extension](https://marketplace.visualstudio.com/items?itemName=congyiwu.vscode-jupytext)
-# 3.  Now you can open the downloaded `.jl` files but you can’t run them
-#     as notebooks yet!
-# 4.  Open the terminal and copy and paste the following code snippets:
-#     -   `julia` (This will activate Julia)
-#     -   `using Pkg`(This will load the package manager (more on this
-#         later))
-#     -   `Pkg.activate("applied-optimization")`(This will activate an
-#         environment for our course)
-#     -   `Pkg.add("IJulia")` (This will add IJulia - the support for
-#         notebooks - to the environment)
-#     -   `using IJulia` (This will tell the system to load IJulia for the
-#         session)
-# 5.  Now, you can right click on the downloaded file and select “Open
-#     with Jupyter Notebook”.
-# 6.  On the right side in the upper corner click there is a button saying
-#     something like “Julia Release Channel” or “Pick kernel”. Click this
-#     button.
-# 7.  Now, select the field “Select another kernel”, click it, and then
-#     select “Jupyter Kernel”
-# 8.  Finally, select the Julia kernel which contains the word
-#     applied-optimization.
 #
-# > **Note**
+# 3.  Open VS Code and navigate to the folder where you want to save all
+#     the files for this course.
+#
+# 4.  Open the terminal in VS Code (Terminal → New Terminal) and run:
+#
+#         julia --project=applied-optimization
+#
+#     This starts Julia with the course project environment.
+#
+# 5.  In the Julia REPL that opens, run:
+#
+#     ``` julia
+#     using Pkg
+#     Pkg.instantiate()  # Initialize the project
+#     Pkg.add("IJulia")  # Add IJulia to the environment
+#     ```
+#
+# 6.  Still in Julia, run:
+#
+#     ``` julia
+#     using IJulia
+#     IJulia.installkernel("Applied Optimization", "--project=applied-optimization")
+#     ```
+#
+#     This creates a Jupyter kernel that uses the course environment.
+#
+# 7.  Type `exit()` or press Ctrl+D to exit the Julia REPL.
+#
+# 8.  Download the first notebook from the course website and save it in
+#     your course folder. I recommend to download the `.jl` Julia files by
+#     clicking on Julia. If these don’t work, download the `.ipynb` files
+#     by clicking on Jupyter on the course website.
+#
+# 9.  If you work with `.jl` files, right-click on any dowloaded `.jl`
+#     file and select “Open with Jupyter Notebook”. If you work with
+#     `.ipynb` files, just open the file and you are good to go.
+#
+# 10. Click the kernel selector (top-right corner) and choose “Applied
+#     Optimization” from the list.
+#
+# > **Warning**
 # >
 # > Sorry, that this start is rather complicated. But in following this,
 # > we have a clean environment we can work in and you basically cannot
-# > break anything with the installation of packages. Your file is saved
-# > as `.jl` file while also being a notebook which is great for Git
-# > (version control)!
+# > break anything with the installation of packages. If you use `.jl`
+# > files your files are saved as `.jl` file while also being a notebook
+# > which is great for Git version control (Git)! If you use `.ipynb`,
+# > it’s fine as well, although version control of notebooks does not work
+# > so good.
 #
-# > **Tip**
+# > **Note**
 # >
-# > Activating an environment creates some files in your folder. These
-# > essentially save which packages our environment needs to work
-# > properly.
+# > These steps ensure you’re working in the correct Julia environment
+# > with all course dependencies. The `--project=.` flag tells Julia to
+# > use the `Project.toml` file in the current directory, keeping all
+# > packages organized and avoiding conflicts.
 #
 # ------------------------------------------------------------------------
 #
