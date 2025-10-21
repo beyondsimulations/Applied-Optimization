@@ -140,7 +140,7 @@ print("Hello World!")
 >
 > You don't need to use Git, but once you get used to it it becomes invaluable, especially if you are working with a lot of code!
 
-### Initialize a Repository
+## Initialize a Repository
 
 -   Open your project folder (of our lecture) in VS Code
 -   Click on "Source Control" in the left sidebar
@@ -151,7 +151,7 @@ print("Hello World!")
 >
 > You can also synchronize your repository with GitHub or other hosting services. Then, your code is saved in a remote location, making it accessible from anywhere and allowing collaboration with others.
 
-### Making Your First Commit
+## Making Your First Commit
 
 -   Make changes to your files (e.g., work on a tutorial `.jl` file)
 -   Go to Source Control panel
@@ -160,7 +160,7 @@ print("Hello World!")
 -   Add a commit message describing your changes
 -   Click the checkmark ✓ to **commit**
 
-### Viewing History
+## Viewing History
 
 -   Use the "Git Graph" extension for a visual representation
 -   Click the "Git Graph" button in the Source Control panel

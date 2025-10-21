@@ -4,7 +4,7 @@ subtitle: Applied Optimization with Julia
 code-links:
   - text: Julia
     icon: hand-thumbs-up
-    href: tutorial-02-01-vectors.jl
+    href: tutorial-02-02-vectors.jl
 ---
 
 
