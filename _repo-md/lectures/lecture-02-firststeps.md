@@ -91,15 +91,22 @@ print("Hello World!")
 
 -   The easiest way is by using VS Code
 -   For the detailed instructions, just open the first tutorial.
--   It explains step-by-step how to use `.jl` files as notebook
--   This allows us to use **notebooks** and **version control**
+-   It explains step-by-step how to use `.jl` or `.ipynb` files as notebook
+
+. . .
+
+> **Note**
+>
+> If you use `.jl` files, you can also put them under version control with Git, as you will see later in this lecture.
 
 ## Downloading the Notebooks
 
 -   You will find the tutorial notebooks next to the tutorial pages
 -   On each page, you will find a button `Julia` on the right
 -   Click it to download the `jl` file and save it
--   I'd recommend storing the files <span class="highlight">in a separate directory for this course</span>
+-   If `.jl` files do not work for you, you can also click on `Jupyter`
+-   This will download a `.ipynb`file which you can use directly as notebook
+-   I'd really recommend storing the files <span class="highlight">in a separate directory for this course</span>
 
 ## Learning by doing
 
@@ -146,6 +153,8 @@ print("Hello World!")
 -   Click on "Source Control" in the left sidebar
 -   Click "Initialize Repository" button
 -   Your folder is now a Git repository!
+
+. . .
 
 > **Tip**
 >
