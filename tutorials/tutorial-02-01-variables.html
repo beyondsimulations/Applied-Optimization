@@ -567,7 +567,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
   <li><a href="#julia-in-vs-code" id="toc-julia-in-vs-code" class="nav-link" data-scroll-target="#julia-in-vs-code">Julia in VS Code</a></li>
-  <li><a href="#julia-in-the-browser" id="toc-julia-in-the-browser" class="nav-link" data-scroll-target="#julia-in-the-browser">Julia in the Browser</a></li>
   </ul></li>
   <li><a href="#section-1---variables" id="toc-section-1---variables" class="nav-link" data-scroll-target="#section-1---variables">Section 1 - Variables</a>
   <ul class="collapse">
@@ -591,7 +590,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/tutorials/tutorial-02-01-variables.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-02-01-variables.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="tutorial-02-01-variables.ipynb" download="tutorial-02-01-variables.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/tutorials/tutorial-02-01-variables.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-02-01-variables.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div><div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="tutorial-02-01-variables.jl"><i class="bi bi-hand-thumbs-up"></i>Julia</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -620,16 +619,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Introduction</h1>
 <p>Welcome to this interactive Julia tutorial which introduces the basics of variables and types. Understanding variables and their types is crucial as they are the building blocks of any program. They determine how data is stored, manipulated, and how efficiently your code runs.</p>
 <p>This script is designed to be interactive. Follow the instructions, write your code in the designated code blocks, and then execute the corresponding code. Each exercise is followed by an <code>@assert</code> statement that checks your solution.</p>
-<p>There are two ways to run the code:</p>
-<ol type="1">
-<li>Running Julia notebooks in VS Code</li>
-<li>Running Julia notebooks in the browser</li>
-</ol>
 <section id="julia-in-vs-code" class="level2">
 <h2 class="anchored" data-anchor-id="julia-in-vs-code">Julia in VS Code</h2>
 <ol type="1">
-<li>First, install the Julia and the Jupyter Extension from the menu on the left side.</li>
-<li>Now you can open the downloaded <code>.ipynb</code> files but you can’t run them yet!</li>
+<li>First, install the <a href="https://marketplace.visualstudio.com/items?itemName=julialang.language-julia">Julia</a> and the <a href="https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter">Jupyter Extension</a> from the menu on the left side.</li>
+<li>Install the <a href="https://marketplace.visualstudio.com/items?itemName=congyiwu.vscode-jupytext">Jupytext for Notebooks Extension</a></li>
+<li>Now you can open the downloaded <code>.jl</code> files but you can’t run them as notebooks yet!</li>
 <li>Open the terminal and copy and paste the following code snippets:
 <ul>
 <li><code>julia</code> (This will activate Julia)</li>
@@ -638,6 +633,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>Pkg.add("IJulia")</code> (This will add IJulia - the support for notebooks - to the environment)</li>
 <li><code>using IJulia</code> (This will tell the system to load IJulia for the session)</li>
 </ul></li>
+<li>Now, you can right click on the downloaded file and select “Open with Jupyter Notebook”.</li>
 <li>On the right side in the upper corner click there is a button saying something like “Julia Release Channel” or “Pick kernel”. Click this button.</li>
 <li>Now, select the field “Select another kernel”, click it, and then select “Jupyter Kernel”</li>
 <li>Finally, select the Julia kernel which contains the word applied-optimization.</li>
@@ -648,7 +644,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>Sorry, that this start is rather complicated. But in following this, we have a clean environment we can work in and you basically cannot break anything with the installation of packages.</p>
+<p>Sorry, that this start is rather complicated. But in following this, we have a clean environment we can work in and you basically cannot break anything with the installation of packages. Your file is saved as <code>.jl</code> file while also being a notebook which is great for Git (version control)!</p>
 </div>
 </div>
 </div>
@@ -662,22 +658,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<hr>
 </section>
-<section id="julia-in-the-browser" class="level2">
-<h2 class="anchored" data-anchor-id="julia-in-the-browser">Julia in the Browser</h2>
-<ol type="1">
-<li>First, follow steps 1 to 3 from the previous section to install IJulia.</li>
-<li>Now, each time you want to start it from the terminal open a new terminal first.</li>
-<li>Then, use the following code snippets:
-<ul>
-<li><code>julia</code> (This will activate Julia (again) in the terminal)</li>
-<li><code>using Pkg</code>(This will load the package manager first, which allows us to load the environment</li>
-<li><code>Pkg.activate("applied-optimization")</code>(This will activate our created environment)</li>
-<li><code>using IJulia; notebook()</code> (This will load the web browser with IJulia for you)</li>
-</ul></li>
-<li>Now, in the browser you can open the <code>.ipynb</code> files.</li>
-<li>To run a file, select the correct kernel on the right side (contains “applied-optimization”)</li>
-</ol>
+</section>
+<section id="section-1---variables" class="level1">
+<h1>Section 1 - Variables</h1>
+<p>Think of variables as labeled containers. Just like you might label a box “Books” to store books, in programming we label our data with variable names. For example:</p>
+<div id="0f8f9025" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>age <span class="op">=</span> <span class="fl">30</span>        <span class="co"># A box labeled "age" containing the number 30</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>30</code></pre>
+</div>
+</div>
+<div id="b7d84546" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">"Tobias"</span>  <span class="co"># A box labeled "name" containing the text "Tobias"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>"Tobias"</code></pre>
+</div>
+</div>
+<section id="exercise-1.1---declare-a-variable" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1.1---declare-a-variable">Exercise 1.1 - Declare a Variable</h2>
+<p>Declare a variable named <code>x</code> and assign it the value <code>1</code>.</p>
+<div id="90d3b962" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="2455850b" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> x <span class="op">==</span> <span class="fl">1</span> <span class="st">"Check again, the value of x should be 1. Remember to assign the value directly to x."</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great, you have correctly assigned the value </span><span class="sc">$</span>x<span class="st"> to the variable 'x'."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -688,46 +700,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<hr>
-</section>
-</section>
-<section id="section-1---variables" class="level1">
-<h1>Section 1 - Variables</h1>
-<p>Think of variables as labeled containers. Just like you might label a box “Books” to store books, in programming we label our data with variable names. For example:</p>
-<div id="64f6dc6f" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>age <span class="op">=</span> <span class="fl">30</span>        <span class="co"># A box labeled "age" containing the number 30</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>30</code></pre>
-</div>
-</div>
-<div id="855b194f" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">"Tobias"</span>  <span class="co"># A box labeled "name" containing the text "Tobias"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>"Tobias"</code></pre>
-</div>
-</div>
-<section id="exercise-1.1---declare-a-variable" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-1.1---declare-a-variable">Exercise 1.1 - Declare a Variable</h2>
-<p>Declare a variable named <code>x</code> and assign it the value <code>1</code>.</p>
-<div id="e168aef2" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="3977e36c" class="cell" data-execution_count="5">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> x <span class="op">==</span> <span class="fl">1</span> <span class="st">"Check again, the value of x should be 1. Remember to assign the value directly to x."</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Great, you have correctly assigned the value </span><span class="sc">$</span>x<span class="st"> to the variable 'x'."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
 </section>
 <section id="exercise-1.2---declare-a-string-variable" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.2---declare-a-string-variable">Exercise 1.2 - Declare a String Variable</h2>
 <p>Declare a variable named <code>hi</code> and assign it the string <code>"Hello, Optimization!"</code>.</p>
-<div id="ac9dbfe2" class="cell" data-execution_count="6">
+<div id="45327276" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="6d3dd471" class="cell" data-execution_count="7">
+<div id="9cfe90f3" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -748,14 +728,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Strings (String): Text in quotes like <code>"Hello"</code></li>
 </ul>
 <p>You can check what type of “container” a variable is using <code>typeof()</code>. Try this:</p>
-<div id="0d1110d4" class="cell" data-execution_count="8">
+<div id="cdb52e10" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>age <span class="op">=</span> <span class="fl">25</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(age)     <span class="co"># Will show Int64 (integer type)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>Int64</code></pre>
 </div>
 </div>
-<div id="6f737661" class="cell" data-execution_count="9">
+<div id="26915a4c" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>price <span class="op">=</span> <span class="fl">19.99</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(price)   <span class="co"># Will show Float64 (decimal number type)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
@@ -765,10 +745,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-2.1---create-an-integer-variable" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---create-an-integer-variable">Exercise 2.1 - Create an Integer Variable</h2>
 <p>Create an Integer variable <code>answerUniverse</code> and set it to <code>42</code>.</p>
-<div id="ac719386" class="cell" data-execution_count="10">
+<div id="e95074b5" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="f1afdc7f" class="cell" data-execution_count="11">
+<div id="4e59bd84" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -780,10 +760,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-2.2---create-a-float-variable" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.2---create-a-float-variable">Exercise 2.2 - Create a Float Variable</h2>
 <p>Create a Float variable <code>money</code> and set it to <code>1.35</code>.</p>
-<div id="a795744d" class="cell" data-execution_count="12">
+<div id="8683cce5" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="af2beaf2" class="cell" data-execution_count="13">
+<div id="12c600f4" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -795,10 +775,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-2.3---create-a-boolean-variable" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.3---create-a-boolean-variable">Exercise 2.3 - Create a Boolean Variable</h2>
 <p>Create a Boolean variable <code>isStudent</code> and set it to <code>true</code>.</p>
-<div id="befd1a78" class="cell" data-execution_count="14">
+<div id="44ac103a" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="7acdf3ee" class="cell" data-execution_count="15">
+<div id="1bbff7c8" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -812,13 +792,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="section-3---type-annotations-and-inference" class="level1">
 <h1>Section 3 - Type Annotations and Inference</h1>
 <p>Sometimes we want to specify exactly what kind of “container” we want to use. In Julia, we can do this using type annotations:</p>
-<div id="f2776924" class="cell" data-execution_count="16">
+<div id="a4595f7a" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>temperature<span class="op">::</span><span class="dt">Float64 </span><span class="op">=</span> <span class="fl">98.6</span>    <span class="co"># Specifically saying we want a decimal number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>98.6</code></pre>
 </div>
 </div>
-<div id="c2d4ceef" class="cell" data-execution_count="17">
+<div id="76d4fcb8" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>count<span class="op">::</span><span class="dt">Int64 </span><span class="op">=</span> <span class="fl">100</span>            <span class="co"># Specifically saying we want a whole number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>100</code></pre>
@@ -827,10 +807,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-3.1---type-annotation" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-3.1---type-annotation">Exercise 3.1 - Type Annotation</h2>
 <p>Declare a variable <code>y</code> with an explicit type annotation of <code>Int64</code> and assign it the value <code>5</code>.</p>
-<div id="0c8d306c" class="cell" data-execution_count="18">
+<div id="13b64a77" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="8188a07a" class="cell" data-execution_count="19">
+<div id="c39d1f5e" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -844,7 +824,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="section-4---string-interpolation" class="level1">
 <h1>Section 4 - String Interpolation</h1>
 <p>String interpolation is like filling in blanks in a sentence. Instead of writing:</p>
-<div id="72852660" class="cell" data-execution_count="20">
+<div id="fe03e811" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">"Tobias"</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>age <span class="op">=</span> <span class="fl">30</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The hard way:</span></span>
@@ -854,14 +834,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We can use the <code>$</code> symbol to insert variables directly into our text:</p>
-<div id="ed67f150" class="cell" data-execution_count="21">
+<div id="6c2c53e0" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>message <span class="op">=</span> <span class="st">"My name is </span><span class="sc">$</span>name<span class="st"> and I am </span><span class="sc">$</span>age<span class="st"> years old"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>"My name is Tobias and I am 30 years old"</code></pre>
 </div>
 </div>
 <p>It’s like having a template where Julia automatically fills in the values for you! If you have paid attention to the previous excercise, you have already seen this in action. The following example illustrates this again:</p>
-<div id="ca928f55" class="cell" data-execution_count="22">
+<div id="47df1195" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>language <span class="op">=</span> <span class="st">"Julia"</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"I'm learning </span><span class="sc">$</span>language<span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -871,10 +851,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exercise-4.1---string-interpolation" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-4.1---string-interpolation">Exercise 4.1 - String Interpolation</h2>
 <p>Create a string <code>message</code> that says <code>"y is [value of y]"</code> using string interpolation.</p>
-<div id="3c7d12a0" class="cell" data-execution_count="23">
+<div id="d664f30c" class="cell" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="af27ce3f" class="cell" data-execution_count="24">
+<div id="37ab0da9" class="cell" data-execution_count="24">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>

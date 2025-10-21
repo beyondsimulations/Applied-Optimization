@@ -588,7 +588,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/tutorials/tutorial-04-01-jump.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-04-01-jump.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="tutorial-04-01-jump.ipynb" download="tutorial-04-01-jump.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/tutorials/tutorial-04-01-jump.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-04-01-jump.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div><div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="tutorial-04-01-jump.jl"><i class="bi bi-hand-thumbs-up"></i>Julia</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -659,23 +659,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="setting-up" class="level2">
 <h2 class="anchored" data-anchor-id="setting-up">Setting Up</h2>
 <p>First, we need to install and load the necessary packages. If you haven’t already installed JuMP and HiGHS, run the following code:</p>
-<div id="736aa00a" class="cell" data-execution_count="2">
+<div id="d82b621d" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"applied-optimization"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>([<span class="st">"JuMP"</span>,<span class="st">"HiGHS"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, let’s load these packages:</p>
-<div id="11bce108" class="cell" data-execution_count="3">
+<div id="dcc5bfc2" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <div class="ansi-escaped-output">
-<pre><span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling JuMP [4076af6c-e467-56ae-b986-b466b2749572] (cache misses: wrong dep version loaded (2), wrong source (2))
-
-
-
-SYSTEM: caught exception of type :MethodError while trying to print a failed Task notice; giving up
-
-<span class="ansi-bright-red-fg ansi-bold">┌ </span><span class="ansi-bright-red-fg ansi-bold">Error: </span>Error during loading of extension SpecialFunctionsExt of ColorVectorSpace, use `Base.retry_load_extensions()` to retry.
+<pre><span class="ansi-bright-red-fg ansi-bold">┌ </span><span class="ansi-bright-red-fg ansi-bold">Error: </span>Error during loading of extension SpecialFunctionsExt of ColorVectorSpace, use `Base.retry_load_extensions()` to retry.
 
 <span class="ansi-bright-red-fg ansi-bold">│ </span>  exception =
 
@@ -713,17 +707,17 @@ SYSTEM: caught exception of type :MethodError while trying to print a failed Tas
 
 <span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1432</span>
 
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [7] <span class="ansi-bold">_tryrequire_from_serialized</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">modkey</span>::Base.PkgId, <span class="ansi-bright-black-fg">build_id</span>::UInt128<span class="ansi-bold">)</span>
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [7] <span class="ansi-bold">_require_search_from_serialized</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">sourcepath</span>::String, <span class="ansi-bright-black-fg">build_id</span>::UInt128, <span class="ansi-bright-black-fg">stalecheck</span>::Bool; <span class="ansi-bright-black-fg">reasons</span>::Dict<span class="ansi-bright-black-fg">{String, Int64}</span>, <span class="ansi-bright-black-fg">DEPOT_PATH</span>::Vector<span class="ansi-bright-black-fg">{String}</span><span class="ansi-bold">)</span>
 
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1930</span>
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2106</span>
 
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [8] <span class="ansi-bold">_tryrequire_from_serialized</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">path</span>::String, <span class="ansi-bright-black-fg">ocachepath</span>::String<span class="ansi-bold">)</span>
+<span class="ansi-bright-red-fg ansi-bold">│ </span>     [8] <span class="ansi-bold">_require_search_from_serialized</span>
 
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1968</span>
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1981</span><span class="ansi-bright-black-fg"> [inlined]</span>
 
 <span class="ansi-bright-red-fg ansi-bold">│ </span>     [9] <span class="ansi-bold">__require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::String<span class="ansi-bold">)</span>
 
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2668</span>
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2599</span>
 
 <span class="ansi-bright-red-fg ansi-bold">│ </span>    [10] <span class="ansi-bold">_require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">uuidkey</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::String<span class="ansi-bold">)</span>
 
@@ -755,35 +749,21 @@ SYSTEM: caught exception of type :MethodError while trying to print a failed Tas
 
 <span class="ansi-bright-red-fg ansi-bold">│ </span>    [17] <span class="ansi-bold">softscope_include_string</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::Module, <span class="ansi-bright-black-fg">code</span>::String, <span class="ansi-bright-black-fg">filename</span>::String<span class="ansi-bold">)</span>
 
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">SoftGlobalScope</span> <span class="ansi-bright-black-fg">~/.julia/packages/SoftGlobalScope/u4UzH/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">SoftGlobalScope.jl:65</span>
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-magenta-fg">SoftGlobalScope</span> <span class="ansi-bright-black-fg">~/.julia/packages/SoftGlobalScope/u4UzH/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">SoftGlobalScope.jl:65</span>
 
 <span class="ansi-bright-red-fg ansi-bold">│ </span>    [18] <span class="ansi-bold">execute_request</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">socket</span>::ZMQ.Socket, <span class="ansi-bright-black-fg">msg</span>::IJulia.Msg<span class="ansi-bold">)</span>
 
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-magenta-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">execute_request.jl:81</span>
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">execute_request.jl:81</span>
 
 <span class="ansi-bright-red-fg ansi-bold">│ </span>    [19] <span class="ansi-bold">eventloop</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">socket</span>::ZMQ.Socket<span class="ansi-bold">)</span>
 
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-magenta-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">eventloop.jl:14</span>
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">eventloop.jl:14</span>
 
 <span class="ansi-bright-red-fg ansi-bold">│ </span>    [20] <span class="ansi-bold">(::IJulia.var"#waitloop##2#waitloop##3")</span><span class="ansi-bold">(</span><span class="ansi-bold">)</span>
 
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-magenta-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">eventloop.jl:58</span>
+<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">eventloop.jl:58</span>
 
 <span class="ansi-bright-red-fg ansi-bold">└ </span><span class="ansi-bright-black-fg">@ Base loading.jl:1589</span>
-
-
-
-SYSTEM: caught exception of type :MethodError while trying to print a failed Task notice; giving up
-
-<span class="ansi-cyan-fg ansi-bold">[ </span><span class="ansi-cyan-fg ansi-bold">Info: </span>Precompiling HiGHS [87dc4568-4c63-4d18-b0c0-bb2238e4078b] (cache misses: wrong dep version loaded (4))
-
-
-
-SYSTEM: caught exception of type :MethodError while trying to print a failed Task notice; giving up
-
-
-
-SYSTEM: caught exception of type :MethodError while trying to print a failed Task notice; giving up
 </pre>
 </div>
 </div>
@@ -796,7 +776,7 @@ SYSTEM: caught exception of type :MethodError while trying to print a failed Tas
 <h1>Section 1 - Defining an Optimization Model</h1>
 <p>The first step in solving an optimization problem is to create a model. This model will contain all the information about our problem: the variables, constraints, and objective.</p>
 <p>In JuMP, we create a model like this:</p>
-<div id="aa18825d" class="cell" data-execution_count="4">
+<div id="d0687283" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Optimization model created successfully!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -824,10 +804,10 @@ SYSTEM: caught exception of type :MethodError while trying to print a failed Tas
 <section id="exercise-2.1---create-variables" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---create-variables">Exercise 2.1 - Create Variables</h2>
 <p>Now it’s your turn! Create two continuous variables equal to or larger than 0 called <code>productA</code> and <code>productB</code> that represent the number of units produced in our problem for our model <code>model</code>.</p>
-<div id="d66e0fe4" class="cell" data-execution_count="5">
+<div id="95e82cac" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="7ac5622d" class="cell" data-execution_count="6">
+<div id="5f17b47a" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -864,10 +844,10 @@ SYSTEM: caught exception of type :MethodError while trying to print a failed Tas
 <section id="exercise-3.1---create-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-3.1---create-constraints">Exercise 3.1 - Create Constraints</h2>
 <p>Create two constraints based on the on the Cutting and Finishing department hours of the problem description in this tutorial. Call the first constraint <code>cutting_constraint</code> and the second constraint <code>finishing_constraint</code>.</p>
-<div id="3692ca76" class="cell" data-execution_count="7">
+<div id="3d0f5267" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="91b669ba" class="cell" data-execution_count="8">
+<div id="529d0809" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -898,10 +878,10 @@ SYSTEM: caught exception of type :MethodError while trying to print a failed Tas
 <section id="exercise-4.1---create-the-objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-4.1---create-the-objective-function">Exercise 4.1 - Create the Objective Function</h2>
 <p>Create the objective function based on the problem description of this tutorial. The objective is to maximize profit based on the values of <code>productA</code> and <code>productB</code>.</p>
-<div id="69bded9b" class="cell" data-execution_count="9">
+<div id="4875896a" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="65a517e2" class="cell" data-execution_count="10">
+<div id="960b3302" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
@@ -919,19 +899,19 @@ SYSTEM: caught exception of type :MethodError while trying to print a failed Tas
 <ol type="1">
 <li>Solve the model:</li>
 </ol>
-<div id="3128cba0" class="cell" data-execution_count="11">
+<div id="b140e03f" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize!</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol start="2" type="1">
 <li>Check the status of the solution:</li>
 </ol>
-<div id="df36390d" class="cell" data-execution_count="12">
+<div id="056aa544" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">termination_status</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol start="3" type="1">
 <li>If the solution is optimal, we can retrieve the optimal values of our variables and the objective function. If the time limit is reached, we can check whether a primal solution is available. We do so by checking whether the model has values.</li>
 </ol>
-<div id="eeccb567" class="cell" data-execution_count="13">
+<div id="bc08268b" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">begin</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> OPTIMAL</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(<span class="st">"Solution is optimal"</span>)</span>
@@ -945,7 +925,7 @@ SYSTEM: caught exception of type :MethodError while trying to print a failed Tas
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can then get the values of the variables as follows:</p>
-<div id="99b8fec4" class="cell" data-execution_count="14">
+<div id="151d273d" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Product A quantity: </span><span class="sc">$</span>(<span class="fu">value</span>(productA))<span class="st">"</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Product B quantity: </span><span class="sc">$</span>(<span class="fu">value</span>(productB))<span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -967,7 +947,7 @@ SYSTEM: caught exception of type :MethodError while trying to print a failed Tas
 </div>
 </div>
 <p>The following code block tests whether the solution is correct or whether you have made a mistake in the formulation of the problem.</p>
-<div id="960d6453" class="cell" data-execution_count="15">
+<div id="7dffba0f" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> MOI.OPTIMAL <span class="st">"Sorry, something didn't work out as the model status is </span><span class="sc">$</span>termination_status<span class="st">(model)"</span>.</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solution: Product A = "</span>, val_productA, <span class="st">", Product B = "</span>, val_productB)</span>
