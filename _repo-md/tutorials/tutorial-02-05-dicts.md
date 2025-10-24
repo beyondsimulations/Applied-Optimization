@@ -67,7 +67,7 @@ end
 
 ## Exercise 1.1 - Create and Modify a Dictionary
 
-Add a new book called "Harry Potter and the Philosopher's Stone" with the author "J.K. Rowling" to the created dictionary.
+Add a new book called "Harry Potter and the Philosophers Stone" with the author "J.K. Rowling" to the created dictionary.
 
 ``` julia
 # Creates a dictionary of books and authors
@@ -80,7 +80,7 @@ books = Dict(
 
 ``` julia
 # Test your answer
-@assert haskey(books, "Harry Potter and the Philosopher's Stone")
+@assert haskey(books, "Harry Potter and the Philosophers Stone")
 println("Great! You've successfully added a new book to the books dictionary.")
 ```
 

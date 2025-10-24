@@ -32,6 +32,7 @@ This script is designed to be interactive. Follow the instructions, write your c
 
     ``` julia
     using Pkg
+    Pkg.instantiate()  # Initialize the project
     Pkg.add("IJulia")  # Add IJulia to the environment
     ```
 
@@ -39,7 +40,7 @@ This script is designed to be interactive. Follow the instructions, write your c
 
     ``` julia
     using IJulia
-    IJulia.installkernel("Applied Optimization", "--project=." * pwd())
+    IJulia.installkernel("Applied Optimization", "--project=applied-optimization")
     ```
 
     This creates a Jupyter kernel that uses the course environment.
