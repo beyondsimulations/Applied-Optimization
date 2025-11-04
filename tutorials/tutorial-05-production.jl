@@ -33,7 +33,7 @@ using DelimitedFiles
 using DataFrames
 using Plots
 using StatsPlots
-import Pkg; Pkg.add("PlotlyBase")
+import Pkg; Pkg.add("PlotlyKaleido")
 plotly() # This will create interactive plots later on
 
 # %% [markdown]
