@@ -3,8 +3,17 @@ title: Tutorial IV.V - Modelling the Transportation Problem with JuMP
 subtitle: Applied Optimization with Julia
 code-links:
   - text: Julia
-    icon: hand-thumbs-up
+    icon: code
     href: tutorial-04-05-transport.jl
+  - text: Panels
+    icon: filetype-csv
+    href: data/available-panels.csv
+  - text: Demand
+    icon: filetype-csv
+    href: data/panel-demand.csv
+  - text: Costs
+    icon: filetype-csv
+    href: data/cost.csv
 ---
 
 
@@ -75,7 +84,7 @@ println("Data loaded successfully!")
 
 > **Tip**
 >
-> Make sure, that you donwload the datasets from Github and store them in a folder called `data` in the same directory as the script you are currently working on. You can find the data sets in the GitHub repository for this tutorial. Note, that you don't need to preprocess the data in any way. This tutorial we will focus on the modeling part.
+> Make sure, that you download the datasets from the website (below the notebook) and store them in a folder called `data` in the same directory as the script you are currently working on. Note, that you don't need to preprocess the data in any way. This tutorial we will focus on the modeling part.
 
 Now, we can check out the data by printing the first few rows of each DataFrame. We can use the `first` function to get the first few rows of a DataFrame.
 

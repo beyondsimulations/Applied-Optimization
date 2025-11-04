@@ -3,8 +3,20 @@ title: Tutorial V - Production Planning in Breweries
 subtitle: Applied Optimization with Julia
 code-links:
   - text: Julia
-    icon: hand-thumbs-up
+    icon: code
     href: tutorial-05-production.jl
+  - text: Time
+    icon: filetype-csv
+    href: data/availabletime.csv
+  - text: Bottling
+    icon: filetype-csv
+    href: data/bottlingtime.csv
+  - text: Setup
+    icon: filetype-csv
+    href: data/setuptime.csv
+  - text: Demand
+    icon: filetype-csv
+    href: data/demand.csv
 ---
 
 
