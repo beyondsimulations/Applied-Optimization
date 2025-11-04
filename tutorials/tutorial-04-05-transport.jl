@@ -90,11 +90,11 @@ println("Data loaded successfully!")
 # %% [markdown]
 # > **Tip**
 # >
-# > Make sure, that you donwload the datasets from Github and store them
-# > in a folder called `data` in the same directory as the script you are
-# > currently working on. You can find the data sets in the GitHub
-# > repository for this tutorial. Note, that you don’t need to preprocess
-# > the data in any way. This tutorial we will focus on the modeling part.
+# > Make sure, that you download the datasets from the website (below the
+# > notebook) and store them in a folder called `data` in the same
+# > directory as the script you are currently working on. Note, that you
+# > don’t need to preprocess the data in any way. This tutorial we will
+# > focus on the modeling part.
 #
 # Now, we can check out the data by printing the first few rows of each
 # DataFrame. We can use the `first` function to get the first few rows of
