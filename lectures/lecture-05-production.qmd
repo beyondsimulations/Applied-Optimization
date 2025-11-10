@@ -1,5 +1,5 @@
 ---
-title: "Lecture V - Production Planning in Breweries"
+title: "Lecture V - Planning in Breweries"
 subtitle: "Applied Optimization with Julia"
 author: "Dr. Tobias Vlćek"
 format:
@@ -73,8 +73,6 @@ challenge?
 ::: footer
 :::
 
----
-
 # [Problem Structure]{.flow} {.title}
 
 ## Objective
@@ -142,10 +140,8 @@ Sets are [collections of objects]{.highlight}.
 - $b_i$ - Time used for bottling one unit of beer type $i\in\mathcal{I}$
 - $g_i$ - Setup time for beer type $i\in\mathcal{I}$
 - $f_i$ - Setup cost of beer type $i\in\mathcal{I}$
-- $c_i$ - Inventory holding cost for one unit of beer type $i\in\mathcal{I}$
+- $c_i$ - Inventory holding cost for unit of beer type $i\in\mathcal{I}$
 - $d_{i,t}$ - Demand of beer type $i\in\mathcal{I}$ in period $t\in\mathcal{T}$
-
----
 
 ## Decision Variables?
 
@@ -172,8 +168,6 @@ Minimize the combined setup and inventory holding cost while satisfying the dema
 - $Y_{i,t}$ - 1, if type $i\in\mathcal{I}$ is bottled in $t\in\mathcal{T}$, 0 otherwise
 - $X_{i,t}$ - Batch size of type $i\in\mathcal{I}$ in $t\in\mathcal{T}$
 
----
-
 # [Model Formulation]{.flow} {.title}
 
 ## Objective Function?
@@ -198,8 +192,6 @@ Minimize the combined setup and inventory holding cost while satisfying the dema
 
 :::
 
----
-
 ## Objective Function
 
 ::: {.callout-note}
@@ -213,8 +205,6 @@ Minimize the combined setup and inventory holding cost while satisfying the dema
 . . .
 
 $$\text{Minimize} \quad \sum_{i=1}^{\mathcal{I}} \sum_{t=1}^{\mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})$$
-
----
 
 ## Constraints
 
@@ -232,15 +222,13 @@ $$\text{Minimize} \quad \sum_{i=1}^{\mathcal{I}} \sum_{t=1}^{\mathcal{T}} (c_i \
 - Transfer **unused** inventory
 - **Fulfill** the customer demand
 - **Set up** beer types
-- Calculate the **batch size** per set-up
+- Calculate **batch size** per set-up
 - Compute **remaining** inventory
 - **Limit** the bottling plant
 
 :::
 :::
 :::
-
----
 
 ## Demand/Inventory Constraints?
 
@@ -283,8 +271,6 @@ $$W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I},t\in\mat
 
 [Question:]{.question} **What does $|t>1$ mean?**
 
----
-
 ## Setup Constraints?
 
 ::: {.callout-important}
@@ -325,8 +311,6 @@ This type of constraint is called a **"Big-M"** constraint!
 - It is coupled with a binary variable (here $Y_{i,t}$)
 - [Like an if-then constraint]{.highlight}
 
----
-
 ## Capacity Constraints?
 
 ::: {.callout-important}
@@ -360,8 +344,6 @@ $$\sum_{i=1}^{\mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \q
 . . .
 
 [And that's basically it!]{.highlight}
-
----
 
 ## CLSP: Objective Function
 
@@ -402,7 +384,56 @@ The binary setup variable is either 0 or 1 and that the inventory and batch size
 
 :::
 
----
+# [Julia Implementation]{.flow} {.title}
+
+## Variables in Julia
+
+[Question:]{.question} **How could we formulate the variables in Julia?**
+
+. . .
+
+```{julia}
+#| eval: true
+#| output: false
+using JuMP, HiGHS
+beer_types = ["IPA", "Lager", "Stout"] # Beer types
+periods = ["week_1", "week_2", "week_3"] # Time periods
+clsp_model = Model(HiGHS.Optimizer)
+```
+
+. . .
+
+```{julia}
+#| eval: true
+#| output-location: fragment
+@variable(clsp_model, Y[i in beer_types, t in periods], Bin)
+@variable(clsp_model, X[i in beer_types, t in periods] >= 0)
+@variable(clsp_model, W[i in beer_types, t in periods] >= 0)
+```
+
+## Objective Function in Julia
+
+$$\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})$$
+
+. . .
+
+```{julia}
+#| eval: true
+#| output: false
+c = Dict("IPA" => 0.1, "Lager" => 0.1, "Stout" => 0.1) # Holding costs
+f = Dict("IPA" => 5000, "Lager" => 4000, "Stout" => 6000) # Setup costs
+```
+
+. . .
+
+```{julia}
+#| eval: true
+#| output: false
+@objective(clsp_model, Min,
+    sum(c[i] * W[i,t] + f[i] * Y[i,t]
+        for i in beer_types, t in periods)
+)
+```
 
 # [Model Characteristics]{.flow} {.title}
 
@@ -434,8 +465,6 @@ There exist several types of optimization problems:
 
 :::
 
----
-
 ## Model Characteristics
 
 [Questions:]{.question} **On model characteristics**
@@ -460,8 +489,6 @@ There exist several types of optimization problems:
 - Any idea how to solve it?
 
 :::
-
----
 
 
 # [Impact]{.flow} {.title}
@@ -527,8 +554,6 @@ Questions?
 
 ::: footer
 :::
-
----
 
 # [Literature]{.flow} {.title}
 
