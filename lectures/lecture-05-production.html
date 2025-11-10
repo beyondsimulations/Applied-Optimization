@@ -8,7 +8,7 @@
 
 <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
 
-<title>Lecture V - Production Planning in Breweries – Applied Optimization with Julia</title>
+<title>Lecture V - Planning in Breweries – Applied Optimization with Julia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -610,6 +645,11 @@ window.Quarto = {
   <li><a href="#clsp-constraints" id="toc-clsp-constraints" class="nav-link" data-scroll-target="#clsp-constraints">CLSP: Constraints</a></li>
   <li><a href="#clsp-variable-domains" id="toc-clsp-variable-domains" class="nav-link" data-scroll-target="#clsp-variable-domains">CLSP: Variable Domains</a></li>
   </ul></li>
+  <li><a href="#julia-implementation" id="toc-julia-implementation" class="nav-link" data-scroll-target="#julia-implementation"><span class="flow">Julia Implementation</span></a>
+  <ul class="collapse">
+  <li><a href="#variables-in-julia" id="toc-variables-in-julia" class="nav-link" data-scroll-target="#variables-in-julia">Variables in Julia</a></li>
+  <li><a href="#objective-function-in-julia" id="toc-objective-function-in-julia" class="nav-link" data-scroll-target="#objective-function-in-julia">Objective Function in Julia</a></li>
+  </ul></li>
   <li><a href="#model-characteristics" id="toc-model-characteristics" class="nav-link" data-scroll-target="#model-characteristics"><span class="flow">Model Characteristics</span></a>
   <ul class="collapse">
   <li><a href="#recap-on-some-basics" id="toc-recap-on-some-basics" class="nav-link" data-scroll-target="#recap-on-some-basics">Recap on some Basics</a></li>
@@ -639,7 +679,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../lectures/lecture-05-production.html">05 Production</a></li><li class="breadcrumb-item"><a href="../lectures/lecture-05-production.html">Lecture</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Lecture V - Production Planning in Breweries</h1>
+<h1 class="title">Lecture V - Planning in Breweries</h1>
 <p class="subtitle lead">Applied Optimization with Julia</p>
 </div>
 
@@ -729,7 +769,6 @@ window.Quarto = {
 <div class="footer">
 
 </div>
-<hr>
 </section>
 </section>
 <section id="problem-structure" class="level1 title">
@@ -779,10 +818,9 @@ window.Quarto = {
 <li><span class="math inline">\(b_i\)</span> - Time used for bottling one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
 <li><span class="math inline">\(g_i\)</span> - Setup time for beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
 <li><span class="math inline">\(f_i\)</span> - Setup cost of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
-<li><span class="math inline">\(c_i\)</span> - Inventory holding cost for one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(c_i\)</span> - Inventory holding cost for unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
 <li><span class="math inline">\(d_{i,t}\)</span> - Demand of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
 </ul>
-<hr>
 </section>
 <section id="decision-variables" class="level2">
 <h2 class="anchored" data-anchor-id="decision-variables">Decision Variables?</h2>
@@ -826,7 +864,6 @@ window.Quarto = {
 <li><span class="math inline">\(Y_{i,t}\)</span> - 1, if type <span class="math inline">\(i\in\mathcal{I}\)</span> is bottled in <span class="math inline">\(t\in\mathcal{T}\)</span>, 0 otherwise</li>
 <li><span class="math inline">\(X_{i,t}\)</span> - Batch size of type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span></li>
 </ul>
-<hr>
 </section>
 </section>
 <section id="model-formulation" class="level1 title">
@@ -865,7 +902,6 @@ window.Quarto = {
 </ul>
 </div>
 </div>
-<hr>
 </section>
 <section id="objective-function-1" class="level2">
 <h2 class="anchored" data-anchor-id="objective-function-1">Objective Function</h2>
@@ -887,7 +923,6 @@ window.Quarto = {
 </div>
 <p>. . .</p>
 <p><span class="math display">\[\text{Minimize} \quad \sum_{i=1}^{\mathcal{I}} \sum_{t=1}^{\mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
-<hr>
 </section>
 <section id="constraints" class="level2">
 <h2 class="anchored" data-anchor-id="constraints">Constraints</h2>
@@ -901,14 +936,13 @@ window.Quarto = {
 <li>Transfer <strong>unused</strong> inventory</li>
 <li><strong>Fulfill</strong> the customer demand</li>
 <li><strong>Set up</strong> beer types</li>
-<li>Calculate the <strong>batch size</strong> per set-up</li>
+<li>Calculate <strong>batch size</strong> per set-up</li>
 <li>Compute <strong>remaining</strong> inventory</li>
 <li><strong>Limit</strong> the bottling plant</li>
 </ul>
 </div>
 </div>
 </div>
-<hr>
 </section>
 <section id="demandinventory-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="demandinventory-constraints">Demand/Inventory Constraints?</h2>
@@ -969,7 +1003,6 @@ window.Quarto = {
 </div>
 <p>. . .</p>
 <p><span class="question">Question:</span> <strong>What does <span class="math inline">\(|t&gt;1\)</span> mean?</strong></p>
-<hr>
 </section>
 <section id="setup-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="setup-constraints">Setup Constraints?</h2>
@@ -1020,7 +1053,6 @@ window.Quarto = {
 <li>It is coupled with a binary variable (here <span class="math inline">\(Y_{i,t}\)</span>)</li>
 <li><span class="highlight">Like an if-then constraint</span></li>
 </ul>
-<hr>
 </section>
 <section id="capacity-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="capacity-constraints">Capacity Constraints?</h2>
@@ -1066,7 +1098,6 @@ window.Quarto = {
 <p><span class="math display">\[\sum_{i=1}^{\mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t\in\mathcal{T}\]</span></p>
 <p>. . .</p>
 <p><span class="highlight">And that’s basically it!</span></p>
-<hr>
 </section>
 <section id="clsp-objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="clsp-objective-function">CLSP: Objective Function</h2>
@@ -1121,7 +1152,51 @@ window.Quarto = {
 <p>The binary setup variable is either 0 or 1 and that the inventory and batch size are non-negative.</p>
 </div>
 </div>
-<hr>
+</section>
+</section>
+<section id="julia-implementation" class="level1 title">
+<h1 class="title"><span class="flow">Julia Implementation</span></h1>
+<section id="variables-in-julia" class="level2">
+<h2 class="anchored" data-anchor-id="variables-in-julia">Variables in Julia</h2>
+<p><span class="question">Question:</span> <strong>How could we formulate the variables in Julia?</strong></p>
+<p>. . .</p>
+<div id="b5c1eda7" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>beer_types <span class="op">=</span> [<span class="st">"IPA"</span>, <span class="st">"Lager"</span>, <span class="st">"Stout"</span>] <span class="co"># Beer types</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>periods <span class="op">=</span> [<span class="st">"week_1"</span>, <span class="st">"week_2"</span>, <span class="st">"week_3"</span>] <span class="co"># Time periods</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>clsp_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>. . .</p>
+<div id="c367c29c" class="cell" data-output-location="fragment" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(clsp_model, Y[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods], Bin)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(clsp_model, X[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods] <span class="op">&gt;=</span> <span class="fl">0</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(clsp_model, W[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="74">
+<pre><code>2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:
+    Dimension 1, ["IPA", "Lager", "Stout"]
+    Dimension 2, ["week_1", "week_2", "week_3"]
+And data, a 3×3 Matrix{VariableRef}:
+ W[IPA,week_1]    W[IPA,week_2]    W[IPA,week_3]
+ W[Lager,week_1]  W[Lager,week_2]  W[Lager,week_3]
+ W[Stout,week_1]  W[Stout,week_2]  W[Stout,week_3]</code></pre>
+</div>
+</div>
+</section>
+<section id="objective-function-in-julia" class="level2">
+<h2 class="anchored" data-anchor-id="objective-function-in-julia">Objective Function in Julia</h2>
+<p><span class="math display">\[\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
+<p>. . .</p>
+<div id="54142f52" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>) <span class="co"># Holding costs</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">5000</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">4000</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">6000</span>) <span class="co"># Setup costs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>. . .</p>
+<div id="2ce260af" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(clsp_model, Min,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(c[i] <span class="op">*</span> W[i,t] <span class="op">+</span> f[i] <span class="op">*</span> Y[i,t]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 </section>
 <section id="model-characteristics" class="level1 title">
@@ -1152,7 +1227,6 @@ window.Quarto = {
 <li><strong>Graph theoretical methods</strong> (network flow, shortest path)</li>
 </ul>
 </div>
-<hr>
 </section>
 <section id="model-characteristics-1" class="level2">
 <h2 class="anchored" data-anchor-id="model-characteristics-1">Model Characteristics</h2>
@@ -1176,7 +1250,6 @@ window.Quarto = {
 <li>Any idea how to solve it?</li>
 </ul>
 </div>
-<hr>
 </section>
 </section>
 <section id="impact" class="level1 title page-columns page-full">
@@ -1251,7 +1324,6 @@ Mickein, Markus, Matthes Koch, and Knut Haase. 2022. <span>“A Decision Support
 <div class="footer">
 
 </div>
-<hr>
 </section>
 </section>
 <section id="literature" class="level1 title">

@@ -279,7 +279,7 @@
     "href": "tutorials/tutorial-05-production.html",
     "title": "Tutorial V - Production Planning in Breweries",
     "section": "",
-    "text": "Implement the CLSP from the lecture in Julia. Before we start, let’s load the necessary packages and data.\n\nusing JuMP, HiGHS\nusing CSV\nusing DelimitedFiles\nusing DataFrames\nusing Plots\nusing StatsPlots\nimport Pkg; Pkg.add(\"PlotlyKaleido\")\nplotly() # This will create interactive plots later on\n\n\n\n\n\n\n\nIf you haven’t installed the packages yet, you can do so by running using Pkg first and then Pkg.add(\"JuMP\"), Pkg.add(\"HiGHS\"), Pkg.add(\"DataFrames\"), Pkg.add(\"Plots\"), and Pkg.add(\"StatsPlots\").\n\n\n\n\n\n\n\nNow, let’s load the data. The weekly demand in bottles \\(d_{i,t}\\), the available time at the bottling plant in hours \\(a_t\\), the time required to bottle each beer in hours \\(b_i\\), and the setup time in hours \\(g_i\\) are provided as CSV files.\n\n# Get the directory of the current file\nfile_directory = \"$(@__DIR__)/data\"\n\n# Load the data about the available time at the bottling plant\navailableTime = CSV.read(\"$file_directory/availabletime.csv\", DataFrame)\nprintln(\"Number of periods: $(nrow(availableTime))\")\nprintln(\"First 5 rows of available time per period:\")\nprintln(availableTime[1:5, :])\n\n\nNumber of periods: 27\n\nFirst 5 rows of available time per period:\n\n5×2 DataFrame\n\n Row │ period   available_capacity \n\n     │ String7  Int64              \n\n─────┼─────────────────────────────\n\n   1 │ week_01                 168\n\n   2 │ week_02                 168\n\n   3 │ week_03                 168\n\n   4 │ week_04                 168\n\n   5 │ week_05                  48\n\n\n\n\n\n# Load the data about the bottling time for each beer\nbottlingTime = CSV.read(\"$file_directory/bottlingtime.csv\", DataFrame)\nprintln(\"Number of beers: $(nrow(bottlingTime))\")\nprintln(\"Bottling time per beer:\")\nprintln(bottlingTime)\n\n\nNumber of beers: 6\n\nBottling time per beer:\n\n6×2 DataFrame\n\n Row │ beer_type   bottling_time \n\n     │ String15    Float64       \n\n─────┼───────────────────────────\n\n   1 │ Pilsener          0.00222\n\n   2 │ Blonde_Ale        0.00111\n\n   3 │ Amber_Ale         0.00139\n\n   4 │ Brown_Ale         0.00222\n\n   5 │ Porter            0.00167\n\n   6 │ Stout             0.00111\n\n\n\n\n\n# Load the data about the setup time for each beer\nsetupTime = CSV.read(\"$file_directory/setuptime.csv\", DataFrame)\nprintln(\"Setup time per beer:\")\nprintln(setupTime)\n\n\nSetup time per beer:\n\n6×2 DataFrame\n\n Row │ beer_type   setup_time \n\n     │ String15    Int64      \n\n─────┼────────────────────────\n\n   1 │ Pilsener            10\n\n   2 │ Blonde_Ale          11\n\n   3 │ Amber_Ale            8\n\n   4 │ Brown_Ale            8\n\n   5 │ Porter              11\n\n   6 │ Stout                9\n\n\n\n\n\n# Load the data about the weekly demand for each beer\ndemandCustomers = CSV.read(\"$file_directory/demand.csv\", DataFrame)\nprintln(\"First 5 rows of demand per beer:\")\nprintln(demandCustomers[1:5, :])\n\n\nFirst 5 rows of demand per beer:\n\n5×3 DataFrame\n\n Row │ beer_type   period   demand \n\n     │ String15    String7  Int64  \n\n─────┼─────────────────────────────\n\n   1 │ Pilsener    week_01    3853\n\n   2 │ Blonde_Ale  week_01    8372\n\n   3 │ Amber_Ale   week_01   16822\n\n   4 │ Brown_Ale   week_01   13880\n\n   5 │ Porter      week_01   10642\n\n\n\n\n\n\n\n\nConsider in your implementation, that each hour of setup is associated with a cost of 1000 Euros, and the inventory holding cost for unsold bottles at the end of each period is 0.1 Euro per bottle. Implement both parameters for the cost of setup and the inventory holding cost in the model. Call them setupHourCosts and warehouseCosts.\n\n# YOUR CODE BELOW\n\nNext, you need to prepare the given data for the model. Create a dictionary for the available time, bottling time, and setup time. Call them dictAvailableTime, dictBottlingTime, and dictSetupTime.\n\n# Prepare the data for the model\ndictDemand = Dict((row.beer_type,row.period) =&gt; row.demand for row in eachrow(demandCustomers))\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n@assert length(dictAvailableTime) == nrow(availableTime) \"Available time dictionary should have same length as input data\"\n@assert length(dictBottlingTime) == nrow(bottlingTime) \"Bottling time dictionary should have same length as input data\"\n@assert length(dictSetupTime) == nrow(setupTime) \"Setup time dictionary should have same length as input data\"\n\n# Check that all values are positive\n@assert all(v -&gt; v &gt; 0, values(dictAvailableTime)) \"All available time values must be positive\"\n@assert all(v -&gt; v &gt; 0, values(dictBottlingTime)) \"All bottling time values must be positive\"\n@assert all(v -&gt; v &gt; 0, values(dictSetupTime)) \"All setup time values must be positive\"\n\n# Check that dictionaries contain all expected keys\n@assert all(p -&gt; haskey(dictAvailableTime, p), availableTime.period) \"Missing periods in available time dictionary\"\n@assert all(b -&gt; haskey(dictBottlingTime, b), bottlingTime.beer_type) \"Missing beer types in bottling time dictionary\"\n@assert all(b -&gt; haskey(dictSetupTime, b), setupTime.beer_type) \"Missing beer types in setup time dictionary\"\n\n\n\n\n\n\nNext, we define the model instance for the CLSP.\n\n# Prepare the model instance\nlotsizeModel = Model(HiGHS.Optimizer)\nset_attribute(lotsizeModel, \"presolve\", \"on\")\nset_time_limit_sec(lotsizeModel, 60.0)\n\n\n\n\n\nNow, create your variables. Please name them productBottled for the binary variable, productQuantity for the production quantity and WarehouseStockPeriodEnd for the warehouse stock at the end of each period. We will use these names later in the code to plot the results.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n# Check if variables exist in the model\n@assert haskey(lotsizeModel.obj_dict, :productBottled) \"productBottled variable not found in model\"\n@assert haskey(lotsizeModel.obj_dict, :productQuantity) \"productQuantity variable not found in model\"\n@assert haskey(lotsizeModel.obj_dict, :WarehouseStockPeriodEnd) \"WarehouseStockPeriodEnd variable not found in model\"\n\n# Check variable dimensions\n@assert length(productBottled) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for productBottled\"\n@assert length(productQuantity) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for productQuantity\"\n@assert length(WarehouseStockPeriodEnd) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for WarehouseStockPeriodEnd\"\n\n# Check variable types\n@assert all(is_binary, productBottled) \"productBottled must be binary variables\"\n@assert all(is_integer, productQuantity) == false \"productQuantity must be continuous variables\"\n@assert all(is_integer, WarehouseStockPeriodEnd) == false \"WarehouseStockPeriodEnd must be continuous variables\"\n\n\n\n\n\n\nNext, define the objective function.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n# Check if the model has an objective\n@assert objective_function(lotsizeModel) !== nothing \"Model must have an objective function\"\n\n# Check if it's a minimization problem\n@assert objective_sense(lotsizeModel) == MOI.MIN_SENSE \"Objective should be minimization\"\n\n# Check if the objective function contains both cost components\nobj_expr = objective_function(lotsizeModel)\n@assert contains(string(obj_expr), \"productBottled\") \"Objective must include setup costs (productBottled)\"\n@assert contains(string(obj_expr), \"WarehouseStockPeriodEnd\") \"Objective must include warehouse costs (WarehouseStockPeriodEnd)\"\n\n\n\n\n\n\nNow, we need to define all necessary constraints for the model. Start with the demand/inventory balance constraint.\n\n\n\n\n\n\nThe first period is special, as it does not have a previous period. Furthermore, we are working with strings as variable references, thus we cannot use t-1 directly as in the lecture. To address this, we could collect and sort all keys and then use their indices to address the previous period. For example, all_periods[t-1] would then be the previous period, if we index t just as a range from 2:length(all_periods).\n\n\n\n\n# Get the first period and all periods\nfirst_period = first(sort(collect(keys(dictAvailableTime))))\nall_periods = sort(collect(keys(dictAvailableTime)))\n\nWith these, we can now define the demand/inventory balance constraint. As this is the first constraint and might be a bit tricky, the solution is already given below.\n\n# Inventory balance constraints for periods after first period\n@constraint(lotsizeModel,\n    demandBalance[i=keys(dictBottlingTime), t=2:length(all_periods)],\n    WarehouseStockPeriodEnd[i,all_periods[t-1]] + productQuantity[i,all_periods[t]] - WarehouseStockPeriodEnd[i,all_periods[t]] == dictDemand[i,all_periods[t]]\n    )\n\nNext, we need to ensure that we setup the production for a beer type only if we bottle the type at least once.\n\n# YOUR CODE BELOW\n\nLast, we need to define the constraint that limits the production quantity to the number of bottles that can be bottled within the available time.\n\n# YOUR CODE BELOW\n\n\n\n\n\nFinally, implement the solve statement for your model instance.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n@assert 600000 &lt;= objective_value(lotsizeModel) &lt;= 700000 \"Objective value should be between 600,000 and 700,000\"\n\n\nNow, unfortunately we cannot assert the value of the objective function perfectly here as we have to abort the computation due to the time limit and everybody is likely getting different results. The solution for the first task will likely be in the range of 600,000 to 700,000. If your model is solved within seconds, your formulation is not correct.\n\n\n\n\nThe following code creates production and warehouse plots for you. Use it to verify and visualize your solution in the following tasks.\n\n\n\n\n\n\nThe creation of the dataframes and the plots is implemented inside of a function, as we will need to use it multiple times in the following tasks.\n\n\n\n\n# Create the production results\nfunction create_production_results()\n    # Create a DataFrame to store the results\n    productionResults = DataFrame(\n        period = String[],\n        product = String[],\n        productBottled = Bool[],\n        productQuantity=Int[],\n        WarehouseStockPeriodEnd=Int[]\n    )\n\n    # Populate the DataFrame with the results\n    for i in keys(dictSetupTime)\n        for t in keys(dictAvailableTime)\n            push!(\n                productionResults,(\n                period = t,\n                product = i,\n                productBottled = value(productBottled[i,t])&gt;0.5 ? true : false,\n                productQuantity = ceil(Int,value(productQuantity[i,t])),\n                WarehouseStockPeriodEnd = ceil(Int,value(WarehouseStockPeriodEnd[i,t])),\n                )\n            )\n        end\n    end\n\n    sort!(productionResults,[:period, :product])\n    return productionResults\nend\n\n# Create the production plot\nfunction create_production_plot(productionResults)\n    p = groupedbar(\n        productionResults.period,\n        productionResults.productQuantity,\n        group=productionResults.product,\n        ylabel=\"Production Quantity (Bottles)\",\n        xlabel=\"Period\",\n        title=\"Production Schedule by Beer Type\",\n        size=(1200,600),\n        palette = :Set3,\n        legend=:outertopright,\n        xrotation = 45,\n        legendtitle=\"Beer Type\",\n        bar_width=0.7,\n        grid=false,\n        dpi=300\n    )\n    return p\nend\n\n# Create the warehouse stock plot\nfunction create_warehouse_plot(productionResults)\n    p = groupedbar(\n        productionResults.period,\n        productionResults.WarehouseStockPeriodEnd,\n        group=productionResults.product,\n        ylabel=\"Warehouse Stock\",\n        xlabel=\"Period\",\n        title=\"Warehouse Stock\",\n        size=(1200,600),\n        palette = :Set3,\n        legend=:outertopright,\n        xrotation = 45,\n        legendtitle=\"Beer Type\",\n        bar_width=0.7,\n        grid=false,\n        dpi=300\n    )\n    return p\nend\n\nThe following code creates the production plot.\n\nproductionResults = create_production_results()\np = create_production_plot(productionResults)\n\nThe following code creates the warehouse stock plot.\n\nproductionResults = create_production_results()\np = create_warehouse_plot(productionResults)\n\n\n\n\n\nNext, we calculate the setup and inventory costs for each period and store them in a DataFrame. This should also work for you, if you followed the previous name instructions.\n\n# Calculate costs per period\nfunction create_cost_results()\n    costResults = DataFrame(\n        period = String[],\n        setup_costs = Float64[],\n        inventory_costs = Float64[]\n    )\n\n    for t in sort(collect(keys(dictAvailableTime)))\n        # Calculate setup costs for this period\n        period_setup_costs = sum(\n            setupHourCosts * dictSetupTime[i] * value(productBottled[i,t])\n            for i in keys(dictBottlingTime)\n        )\n\n        # Calculate inventory costs for this period\n        period_inventory_costs = sum(\n            warehouseCosts * value(WarehouseStockPeriodEnd[i,t])\n            for i in keys(dictBottlingTime)\n        )\n\n        push!(costResults, (\n            period = t,\n            setup_costs = period_setup_costs,\n            inventory_costs = period_inventory_costs\n        ))\n    end\n\n    # Stack the cost columns\n    stacked_costs = stack(costResults, [:setup_costs, :inventory_costs],\n                         variable_name=\"Cost_Type\", value_name=\"Cost\")\n    return stacked_costs\nend\n\n# Create the cost plot\nfunction create_cost_plot(stacked_costs)\n    p = groupedbar(\n        stacked_costs.period,\n        stacked_costs.Cost,\n        group=stacked_costs.Cost_Type,\n        ylabel=\"Costs (€)\",\n        xlabel=\"Period\",\n        title=\"Setup and Inventory Costs per Period\",\n        size=(1200,600),\n        palette=:Set2,\n        legend=:outertopright,\n        xrotation=45,\n        legendtitle=\"Cost Type\",\n        bar_width=0.7,\n        grid=false,\n        dpi=300\n    )\n    return p\nend\n\nThe following code calls the setup and inventory costs plot.\n\nstacked_costs = create_cost_results()\np = create_cost_plot(stacked_costs)",
+    "text": "Implement the CLSP from the lecture in Julia. Before we start, let’s load the necessary packages and data.\n\nusing JuMP, HiGHS\nusing CSV\nusing DelimitedFiles\nusing DataFrames\nusing Plots\nusing StatsPlots\nimport Pkg; Pkg.add(\"PlotlyKaleido\")\nplotly() # This will create interactive plots later on\n\n\n\n\n\n\n\nIf you haven’t installed the packages yet, you can do so by running using Pkg first and then Pkg.add(\"JuMP\"), Pkg.add(\"HiGHS\"), Pkg.add(\"DataFrames\"), Pkg.add(\"Plots\"), and Pkg.add(\"StatsPlots\").\n\n\n\n\n\n\n\nNow, let’s load the data. The weekly demand in bottles \\(d_{i,t}\\), the available time at the bottling plant in hours \\(a_t\\), the time required to bottle each beer in hours \\(b_i\\), and the setup time in hours \\(g_i\\) are provided as CSV files.\n\n# Get the directory of the current file\nfile_directory = \"$(@__DIR__)/data\"\n\n# Load the data about the available time at the bottling plant\navailableTime = CSV.read(\"$file_directory/availabletime.csv\", DataFrame)\nprintln(\"Number of periods: $(nrow(availableTime))\")\nprintln(\"First 5 rows of available time per period:\")\nprintln(availableTime[1:5, :])\n\n\nNumber of periods: 27\n\nFirst 5 rows of available time per period:\n\n5×2 DataFrame\n\n Row │ period   available_capacity \n\n     │ String7  Int64              \n\n─────┼─────────────────────────────\n\n   1 │ week_01                 168\n\n   2 │ week_02                 168\n\n   3 │ week_03                 168\n\n   4 │ week_04                 168\n\n   5 │ week_05                  48\n\n\n\n\n\n# Load the data about the bottling time for each beer\nbottlingTime = CSV.read(\"$file_directory/bottlingtime.csv\", DataFrame)\nprintln(\"Number of beers: $(nrow(bottlingTime))\")\nprintln(\"Bottling time per beer:\")\nprintln(bottlingTime)\n\n\nNumber of beers: 6\n\nBottling time per beer:\n\n6×2 DataFrame\n\n Row │ beer_type   bottling_time \n\n     │ String15    Float64       \n\n─────┼───────────────────────────\n\n   1 │ Pilsener          0.00222\n\n   2 │ Blonde_Ale        0.00111\n\n   3 │ Amber_Ale         0.00139\n\n   4 │ Brown_Ale         0.00222\n\n   5 │ Porter            0.00167\n\n   6 │ Stout             0.00111\n\n\n\n\n\n# Load the data about the setup time for each beer\nsetupTime = CSV.read(\"$file_directory/setuptime.csv\", DataFrame)\nprintln(\"Setup time per beer:\")\nprintln(setupTime)\n\n\nSetup time per beer:\n\n6×2 DataFrame\n\n Row │ beer_type   setup_time \n\n     │ String15    Int64      \n\n─────┼────────────────────────\n\n   1 │ Pilsener            10\n\n   2 │ Blonde_Ale          11\n\n   3 │ Amber_Ale            8\n\n   4 │ Brown_Ale            8\n\n   5 │ Porter              11\n\n   6 │ Stout                9\n\n\n\n\n\n# Load the data about the weekly demand for each beer\ndemandCustomers = CSV.read(\"$file_directory/demand.csv\", DataFrame)\nprintln(\"First 5 rows of demand per beer:\")\nprintln(demandCustomers[1:5, :])\n\n\nFirst 5 rows of demand per beer:\n\n5×3 DataFrame\n\n Row │ beer_type   period   demand \n\n     │ String15    String7  Int64  \n\n─────┼─────────────────────────────\n\n   1 │ Pilsener    week_01    3853\n\n   2 │ Blonde_Ale  week_01    8372\n\n   3 │ Amber_Ale   week_01   16822\n\n   4 │ Brown_Ale   week_01   13880\n\n   5 │ Porter      week_01   10642\n\n\n\n\n\n\n\n\nConsider in your implementation, that each hour of setup is associated with a cost of 1000 Euros, and the inventory holding cost for unsold bottles at the end of each period is 0.1 Euro per bottle. Implement both parameters for the cost of setup and the inventory holding cost in the model. Call them setupHourCosts and warehouseCosts.\n\n# YOUR CODE BELOW\n\nNext, you need to prepare the given data for the model. Create a dictionary for the available time, bottling time, and setup time. Call them dictAvailableTime, dictBottlingTime, and dictSetupTime.\n\n\n\n\n\n\nLet’s understand what’s happening with dictDemand in the code. It creates a dictionary where:\n\nKeys are tuples (beer_type, period), e.g., (\"IPA\", \"week_1\")\nValues are the demand numbers for that beer in that period\n\nYou can use this pattern to create dictionaries for:\n\ndictAvailableTime: Maps each period (single key) → available time\ndictBottlingTime: Maps each beer type (single key) → bottling time per bottle\ndictSetupTime: Maps each beer type (single key) → setup time\n\nNotice that these dictionaries have single keys (just the period or just the beer type), not tuple keys like dictDemand.\n\n\n\n\n# Prepare the data for the model\ndictDemand = Dict((row.beer_type,row.period) =&gt; row.demand for row in eachrow(demandCustomers))\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n@assert length(dictAvailableTime) == nrow(availableTime) \"Available time dictionary should have same length as input data\"\n@assert length(dictBottlingTime) == nrow(bottlingTime) \"Bottling time dictionary should have same length as input data\"\n@assert length(dictSetupTime) == nrow(setupTime) \"Setup time dictionary should have same length as input data\"\n\n# Check that all values are positive\n@assert all(v -&gt; v &gt; 0, values(dictAvailableTime)) \"All available time values must be positive\"\n@assert all(v -&gt; v &gt; 0, values(dictBottlingTime)) \"All bottling time values must be positive\"\n@assert all(v -&gt; v &gt; 0, values(dictSetupTime)) \"All setup time values must be positive\"\n\n# Check that dictionaries contain all expected keys\n@assert all(p -&gt; haskey(dictAvailableTime, p), availableTime.period) \"Missing periods in available time dictionary\"\n@assert all(b -&gt; haskey(dictBottlingTime, b), bottlingTime.beer_type) \"Missing beer types in bottling time dictionary\"\n@assert all(b -&gt; haskey(dictSetupTime, b), setupTime.beer_type) \"Missing beer types in setup time dictionary\"\n\n\n\n\n\n\nNext, we define the model instance for the CLSP.\n\n# Prepare the model instance\nlotsizeModel = Model(HiGHS.Optimizer)\nset_attribute(lotsizeModel, \"presolve\", \"on\")\nset_time_limit_sec(lotsizeModel, 60.0)\n\n\n\n\n\nNow, create your variables. Please name them productBottled for the binary variable, productQuantity for the production quantity and WarehouseStockPeriodEnd for the warehouse stock at the end of each period. We will use these names later in the code to plot the results.\n\n\n\n\n\n\nWhen creating your variables, you’ll have to create one variable for each combination of beer type and period. You can use the dictionary keys directly in the variable definition:\n@variable(model, x[keys(dictBottlingTime), keys(dictAvailableTime)])\nThis creates variables indexed by:\n\nFirst index: beer types (from dictBottlingTime)\nSecond index: periods (from dictAvailableTime)\n\nSo you’ll have variables like x[\"IPA\", \"week_1\"], x[\"IPA\", \"week_2\"], etc.\n\n\n\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n# Check if variables exist in the model\n@assert haskey(lotsizeModel.obj_dict, :productBottled) \"productBottled variable not found in model\"\n@assert haskey(lotsizeModel.obj_dict, :productQuantity) \"productQuantity variable not found in model\"\n@assert haskey(lotsizeModel.obj_dict, :WarehouseStockPeriodEnd) \"WarehouseStockPeriodEnd variable not found in model\"\n\n# Check variable dimensions\n@assert length(productBottled) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for productBottled\"\n@assert length(productQuantity) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for productQuantity\"\n@assert length(WarehouseStockPeriodEnd) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for WarehouseStockPeriodEnd\"\n\n# Check variable types\n@assert all(is_binary, productBottled) \"productBottled must be binary variables\"\n@assert all(is_integer, productQuantity) == false \"productQuantity must be continuous variables\"\n@assert all(is_integer, WarehouseStockPeriodEnd) == false \"WarehouseStockPeriodEnd must be continuous variables\"\n\n\n\n\n\n\nNext, define the objective function.\n\n\n\n\n\n\nThe objective function needs to sum costs across all beer types and all periods. With dictionaries, you reference the data like this:\n@objective(model, Min,\n    sum(... for i in keys(dictBottlingTime), t in keys(dictAvailableTime))\n)\nInside the sum, you’ll need:\n\nSetup costs: setupHourCosts * dictSetupTime[i] * productBottled[i,t]\n\nThis uses dictSetupTime[i] to get the setup time for beer type i\n\nInventory holding costs: warehouseCosts * WarehouseStockPeriodEnd[i,t]\n\nNotice how we access dictionary values using dict[key] notation!\n\n\n\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n# Check if the model has an objective\n@assert objective_function(lotsizeModel) !== nothing \"Model must have an objective function\"\n\n# Check if it's a minimization problem\n@assert objective_sense(lotsizeModel) == MOI.MIN_SENSE \"Objective should be minimization\"\n\n# Check if the objective function contains both cost components\nobj_expr = objective_function(lotsizeModel)\n@assert contains(string(obj_expr), \"productBottled\") \"Objective must include setup costs (productBottled)\"\n@assert contains(string(obj_expr), \"WarehouseStockPeriodEnd\") \"Objective must include warehouse costs (WarehouseStockPeriodEnd)\"\n\n\n\n\n\n\nNow, we need to define all necessary constraints for the model. Start with the demand/inventory balance constraint.\n\n\n\n\n\n\nThe first period is special, as it does not have a previous period. Furthermore, we are working with strings as variable references, thus we cannot use t-1 directly as in the lecture. To address this, we could collect and sort all keys and then use their indices to address the previous period. For example, all_periods[t-1] would then be the previous period, if we index t just as a range from 2:length(all_periods).\n\n\n\n\n# Get the first period and all periods\nfirst_period = first(sort(collect(keys(dictAvailableTime))))\nall_periods = sort(collect(keys(dictAvailableTime)))\n\nWith these, we can now define the demand/inventory balance constraint. As this is the first constraint and might be a bit tricky, the solution is already given below.\n\n# Inventory balance constraints for periods after first period\n@constraint(lotsizeModel,\n    demandBalance[i=keys(dictBottlingTime), t=2:length(all_periods)],\n    WarehouseStockPeriodEnd[i,all_periods[t-1]] + productQuantity[i,all_periods[t]] - WarehouseStockPeriodEnd[i,all_periods[t]] == dictDemand[i,all_periods[t]]\n    )\n\nNext, we need to ensure that we setup the production for a beer type only if we bottle the type at least once.\n\n# YOUR CODE BELOW\n\nLast, we need to define the constraint that limits the production quantity to the number of bottles that can be bottled within the available time.\n\n# YOUR CODE BELOW\n\n\n\n\n\nFinally, implement the solve statement for your model instance.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n@assert 600000 &lt;= objective_value(lotsizeModel) &lt;= 700000 \"Objective value should be between 600,000 and 700,000\"\n\n\nNow, unfortunately we cannot assert the value of the objective function perfectly here as we have to abort the computation due to the time limit and everybody is likely getting different results. The solution for the first task will likely be in the range of 600,000 to 700,000. If your model is solved within seconds, your formulation is not correct.\n\n\n\n\nThe following code creates production and warehouse plots for you. Use it to verify and visualize your solution in the following tasks.\n\n\n\n\n\n\nThe creation of the dataframes and the plots is implemented inside of a function, as we will need to use it multiple times in the following tasks.\n\n\n\n\n# Create the production results\nfunction create_production_results()\n    # Create a DataFrame to store the results\n    productionResults = DataFrame(\n        period = String[],\n        product = String[],\n        productBottled = Bool[],\n        productQuantity=Int[],\n        WarehouseStockPeriodEnd=Int[]\n    )\n\n    # Populate the DataFrame with the results\n    for i in keys(dictSetupTime)\n        for t in keys(dictAvailableTime)\n            push!(\n                productionResults,(\n                period = t,\n                product = i,\n                productBottled = value(productBottled[i,t])&gt;0.5 ? true : false,\n                productQuantity = ceil(Int,value(productQuantity[i,t])),\n                WarehouseStockPeriodEnd = ceil(Int,value(WarehouseStockPeriodEnd[i,t])),\n                )\n            )\n        end\n    end\n\n    sort!(productionResults,[:period, :product])\n    return productionResults\nend\n\n# Create the production plot\nfunction create_production_plot(productionResults)\n    p = groupedbar(\n        productionResults.period,\n        productionResults.productQuantity,\n        group=productionResults.product,\n        ylabel=\"Production Quantity (Bottles)\",\n        xlabel=\"Period\",\n        title=\"Production Schedule by Beer Type\",\n        size=(1200,600),\n        palette = :Set3,\n        legend=:outertopright,\n        xrotation = 45,\n        legendtitle=\"Beer Type\",\n        bar_width=0.7,\n        grid=false,\n        dpi=300\n    )\n    return p\nend\n\n# Create the warehouse stock plot\nfunction create_warehouse_plot(productionResults)\n    p = groupedbar(\n        productionResults.period,\n        productionResults.WarehouseStockPeriodEnd,\n        group=productionResults.product,\n        ylabel=\"Warehouse Stock\",\n        xlabel=\"Period\",\n        title=\"Warehouse Stock\",\n        size=(1200,600),\n        palette = :Set3,\n        legend=:outertopright,\n        xrotation = 45,\n        legendtitle=\"Beer Type\",\n        bar_width=0.7,\n        grid=false,\n        dpi=300\n    )\n    return p\nend\n\nThe following code creates the production plot.\n\nproductionResults = create_production_results()\np = create_production_plot(productionResults)\n\nThe following code creates the warehouse stock plot.\n\nproductionResults = create_production_results()\np = create_warehouse_plot(productionResults)\n\n\n\n\n\nNext, we calculate the setup and inventory costs for each period and store them in a DataFrame. This should also work for you, if you followed the previous name instructions.\n\n# Calculate costs per period\nfunction create_cost_results()\n    costResults = DataFrame(\n        period = String[],\n        setup_costs = Float64[],\n        inventory_costs = Float64[]\n    )\n\n    for t in sort(collect(keys(dictAvailableTime)))\n        # Calculate setup costs for this period\n        period_setup_costs = sum(\n            setupHourCosts * dictSetupTime[i] * value(productBottled[i,t])\n            for i in keys(dictBottlingTime)\n        )\n\n        # Calculate inventory costs for this period\n        period_inventory_costs = sum(\n            warehouseCosts * value(WarehouseStockPeriodEnd[i,t])\n            for i in keys(dictBottlingTime)\n        )\n\n        push!(costResults, (\n            period = t,\n            setup_costs = period_setup_costs,\n            inventory_costs = period_inventory_costs\n        ))\n    end\n\n    # Stack the cost columns\n    stacked_costs = stack(costResults, [:setup_costs, :inventory_costs],\n                         variable_name=\"Cost_Type\", value_name=\"Cost\")\n    return stacked_costs\nend\n\n# Create the cost plot\nfunction create_cost_plot(stacked_costs)\n    p = groupedbar(\n        stacked_costs.period,\n        stacked_costs.Cost,\n        group=stacked_costs.Cost_Type,\n        ylabel=\"Costs (€)\",\n        xlabel=\"Period\",\n        title=\"Setup and Inventory Costs per Period\",\n        size=(1200,600),\n        palette=:Set2,\n        legend=:outertopright,\n        xrotation=45,\n        legendtitle=\"Cost Type\",\n        bar_width=0.7,\n        grid=false,\n        dpi=300\n    )\n    return p\nend\n\nThe following code calls the setup and inventory costs plot.\n\nstacked_costs = create_cost_results()\np = create_cost_plot(stacked_costs)",
     "crumbs": [
       "05 Production",
       "Tutorial"
@@ -312,7 +312,7 @@
     "href": "tutorials/tutorial-05-production.html#define-the-parameters",
     "title": "Tutorial V - Production Planning in Breweries",
     "section": "",
-    "text": "Consider in your implementation, that each hour of setup is associated with a cost of 1000 Euros, and the inventory holding cost for unsold bottles at the end of each period is 0.1 Euro per bottle. Implement both parameters for the cost of setup and the inventory holding cost in the model. Call them setupHourCosts and warehouseCosts.\n\n# YOUR CODE BELOW\n\nNext, you need to prepare the given data for the model. Create a dictionary for the available time, bottling time, and setup time. Call them dictAvailableTime, dictBottlingTime, and dictSetupTime.\n\n# Prepare the data for the model\ndictDemand = Dict((row.beer_type,row.period) =&gt; row.demand for row in eachrow(demandCustomers))\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n@assert length(dictAvailableTime) == nrow(availableTime) \"Available time dictionary should have same length as input data\"\n@assert length(dictBottlingTime) == nrow(bottlingTime) \"Bottling time dictionary should have same length as input data\"\n@assert length(dictSetupTime) == nrow(setupTime) \"Setup time dictionary should have same length as input data\"\n\n# Check that all values are positive\n@assert all(v -&gt; v &gt; 0, values(dictAvailableTime)) \"All available time values must be positive\"\n@assert all(v -&gt; v &gt; 0, values(dictBottlingTime)) \"All bottling time values must be positive\"\n@assert all(v -&gt; v &gt; 0, values(dictSetupTime)) \"All setup time values must be positive\"\n\n# Check that dictionaries contain all expected keys\n@assert all(p -&gt; haskey(dictAvailableTime, p), availableTime.period) \"Missing periods in available time dictionary\"\n@assert all(b -&gt; haskey(dictBottlingTime, b), bottlingTime.beer_type) \"Missing beer types in bottling time dictionary\"\n@assert all(b -&gt; haskey(dictSetupTime, b), setupTime.beer_type) \"Missing beer types in setup time dictionary\"",
+    "text": "Consider in your implementation, that each hour of setup is associated with a cost of 1000 Euros, and the inventory holding cost for unsold bottles at the end of each period is 0.1 Euro per bottle. Implement both parameters for the cost of setup and the inventory holding cost in the model. Call them setupHourCosts and warehouseCosts.\n\n# YOUR CODE BELOW\n\nNext, you need to prepare the given data for the model. Create a dictionary for the available time, bottling time, and setup time. Call them dictAvailableTime, dictBottlingTime, and dictSetupTime.\n\n\n\n\n\n\nLet’s understand what’s happening with dictDemand in the code. It creates a dictionary where:\n\nKeys are tuples (beer_type, period), e.g., (\"IPA\", \"week_1\")\nValues are the demand numbers for that beer in that period\n\nYou can use this pattern to create dictionaries for:\n\ndictAvailableTime: Maps each period (single key) → available time\ndictBottlingTime: Maps each beer type (single key) → bottling time per bottle\ndictSetupTime: Maps each beer type (single key) → setup time\n\nNotice that these dictionaries have single keys (just the period or just the beer type), not tuple keys like dictDemand.\n\n\n\n\n# Prepare the data for the model\ndictDemand = Dict((row.beer_type,row.period) =&gt; row.demand for row in eachrow(demandCustomers))\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n@assert length(dictAvailableTime) == nrow(availableTime) \"Available time dictionary should have same length as input data\"\n@assert length(dictBottlingTime) == nrow(bottlingTime) \"Bottling time dictionary should have same length as input data\"\n@assert length(dictSetupTime) == nrow(setupTime) \"Setup time dictionary should have same length as input data\"\n\n# Check that all values are positive\n@assert all(v -&gt; v &gt; 0, values(dictAvailableTime)) \"All available time values must be positive\"\n@assert all(v -&gt; v &gt; 0, values(dictBottlingTime)) \"All bottling time values must be positive\"\n@assert all(v -&gt; v &gt; 0, values(dictSetupTime)) \"All setup time values must be positive\"\n\n# Check that dictionaries contain all expected keys\n@assert all(p -&gt; haskey(dictAvailableTime, p), availableTime.period) \"Missing periods in available time dictionary\"\n@assert all(b -&gt; haskey(dictBottlingTime, b), bottlingTime.beer_type) \"Missing beer types in bottling time dictionary\"\n@assert all(b -&gt; haskey(dictSetupTime, b), setupTime.beer_type) \"Missing beer types in setup time dictionary\"",
     "crumbs": [
       "05 Production",
       "Tutorial"
@@ -334,7 +334,7 @@
     "href": "tutorials/tutorial-05-production.html#define-the-variables",
     "title": "Tutorial V - Production Planning in Breweries",
     "section": "",
-    "text": "Now, create your variables. Please name them productBottled for the binary variable, productQuantity for the production quantity and WarehouseStockPeriodEnd for the warehouse stock at the end of each period. We will use these names later in the code to plot the results.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n# Check if variables exist in the model\n@assert haskey(lotsizeModel.obj_dict, :productBottled) \"productBottled variable not found in model\"\n@assert haskey(lotsizeModel.obj_dict, :productQuantity) \"productQuantity variable not found in model\"\n@assert haskey(lotsizeModel.obj_dict, :WarehouseStockPeriodEnd) \"WarehouseStockPeriodEnd variable not found in model\"\n\n# Check variable dimensions\n@assert length(productBottled) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for productBottled\"\n@assert length(productQuantity) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for productQuantity\"\n@assert length(WarehouseStockPeriodEnd) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for WarehouseStockPeriodEnd\"\n\n# Check variable types\n@assert all(is_binary, productBottled) \"productBottled must be binary variables\"\n@assert all(is_integer, productQuantity) == false \"productQuantity must be continuous variables\"\n@assert all(is_integer, WarehouseStockPeriodEnd) == false \"WarehouseStockPeriodEnd must be continuous variables\"",
+    "text": "Now, create your variables. Please name them productBottled for the binary variable, productQuantity for the production quantity and WarehouseStockPeriodEnd for the warehouse stock at the end of each period. We will use these names later in the code to plot the results.\n\n\n\n\n\n\nWhen creating your variables, you’ll have to create one variable for each combination of beer type and period. You can use the dictionary keys directly in the variable definition:\n@variable(model, x[keys(dictBottlingTime), keys(dictAvailableTime)])\nThis creates variables indexed by:\n\nFirst index: beer types (from dictBottlingTime)\nSecond index: periods (from dictAvailableTime)\n\nSo you’ll have variables like x[\"IPA\", \"week_1\"], x[\"IPA\", \"week_2\"], etc.\n\n\n\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n# Check if variables exist in the model\n@assert haskey(lotsizeModel.obj_dict, :productBottled) \"productBottled variable not found in model\"\n@assert haskey(lotsizeModel.obj_dict, :productQuantity) \"productQuantity variable not found in model\"\n@assert haskey(lotsizeModel.obj_dict, :WarehouseStockPeriodEnd) \"WarehouseStockPeriodEnd variable not found in model\"\n\n# Check variable dimensions\n@assert length(productBottled) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for productBottled\"\n@assert length(productQuantity) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for productQuantity\"\n@assert length(WarehouseStockPeriodEnd) == length(dictBottlingTime) * length(dictAvailableTime) \"Incorrect dimensions for WarehouseStockPeriodEnd\"\n\n# Check variable types\n@assert all(is_binary, productBottled) \"productBottled must be binary variables\"\n@assert all(is_integer, productQuantity) == false \"productQuantity must be continuous variables\"\n@assert all(is_integer, WarehouseStockPeriodEnd) == false \"WarehouseStockPeriodEnd must be continuous variables\"",
     "crumbs": [
       "05 Production",
       "Tutorial"
@@ -345,7 +345,7 @@
     "href": "tutorials/tutorial-05-production.html#define-the-objective-function",
     "title": "Tutorial V - Production Planning in Breweries",
     "section": "",
-    "text": "Next, define the objective function.\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n# Check if the model has an objective\n@assert objective_function(lotsizeModel) !== nothing \"Model must have an objective function\"\n\n# Check if it's a minimization problem\n@assert objective_sense(lotsizeModel) == MOI.MIN_SENSE \"Objective should be minimization\"\n\n# Check if the objective function contains both cost components\nobj_expr = objective_function(lotsizeModel)\n@assert contains(string(obj_expr), \"productBottled\") \"Objective must include setup costs (productBottled)\"\n@assert contains(string(obj_expr), \"WarehouseStockPeriodEnd\") \"Objective must include warehouse costs (WarehouseStockPeriodEnd)\"",
+    "text": "Next, define the objective function.\n\n\n\n\n\n\nThe objective function needs to sum costs across all beer types and all periods. With dictionaries, you reference the data like this:\n@objective(model, Min,\n    sum(... for i in keys(dictBottlingTime), t in keys(dictAvailableTime))\n)\nInside the sum, you’ll need:\n\nSetup costs: setupHourCosts * dictSetupTime[i] * productBottled[i,t]\n\nThis uses dictSetupTime[i] to get the setup time for beer type i\n\nInventory holding costs: warehouseCosts * WarehouseStockPeriodEnd[i,t]\n\nNotice how we access dictionary values using dict[key] notation!\n\n\n\n\n# YOUR CODE BELOW\n\n\n\nCode\n# Validate your solution\n# Check if the model has an objective\n@assert objective_function(lotsizeModel) !== nothing \"Model must have an objective function\"\n\n# Check if it's a minimization problem\n@assert objective_sense(lotsizeModel) == MOI.MIN_SENSE \"Objective should be minimization\"\n\n# Check if the objective function contains both cost components\nobj_expr = objective_function(lotsizeModel)\n@assert contains(string(obj_expr), \"productBottled\") \"Objective must include setup costs (productBottled)\"\n@assert contains(string(obj_expr), \"WarehouseStockPeriodEnd\") \"Objective must include warehouse costs (WarehouseStockPeriodEnd)\"",
     "crumbs": [
       "05 Production",
       "Tutorial"
@@ -4421,245 +4421,259 @@
   {
     "objectID": "lectures/lecture-05-presentation.html#case-study",
     "href": "lectures/lecture-05-presentation.html#case-study",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Case Study",
     "text": "Case Study\n\n\n\n\n\nLarge brewery\nBrews and sells beverages\nProduction planning by hand\nPlanner has a lot of experience\nBut will retire soon"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#challenges",
     "href": "lectures/lecture-05-presentation.html#challenges",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Challenges",
     "text": "Challenges\n\n\n\n\n\nStrong competition\nCustomer demand is changing\nCraft beer gains popularity\nVariety of drinks is increasing\nBatch sizes are getting smaller"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#different-costs",
     "href": "lectures/lecture-05-presentation.html#different-costs",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Different costs",
     "text": "Different costs\n\n\n\n\n\nPlant can fill multiple types\nTime depends on type and batch\nChanging type leads to set-up costs for preparation and cleaning\nUnsold beer bottles can be stored in a warehouse\nThis leads to inventory costs"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#section",
     "href": "lectures/lecture-05-presentation.html#section",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Where is the\nchallenge?"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#objective",
     "href": "lectures/lecture-05-presentation.html#objective",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Objective",
     "text": "Objective\n\n\n\n\nQuestion: What could be the objective?\nMinimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity."
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#trade-off",
     "href": "lectures/lecture-05-presentation.html#trade-off",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Trade-Off",
     "text": "Trade-Off\n\n\n\n\nQuestion: What is the trade-off?\nLarger batches require less setup cost per bottle, but increase the storage cost."
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#available-sets",
     "href": "lectures/lecture-05-presentation.html#available-sets",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Available Sets",
     "text": "Available Sets\nQuestion: What are sets again?\n\nSets are collections of objects.\n\n\nQuestion: What could be the sets here?\n\n\n\n\\(\\mathcal{I}\\) - Set of beer types indexed by \\(i \\in \\{1,2,...,|\\mathcal{I}|\\}\\)\n\\(\\mathcal{T}\\) - Set of time periods indexed by \\(t \\in \\{1,2,...,|\\mathcal{T}|\\}\\)"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#available-parameters",
     "href": "lectures/lecture-05-presentation.html#available-parameters",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Available Parameters",
-    "text": "Available Parameters\nQuestion: What are possible parameters?\n\n\n\\(a_t\\) - Available time on the bottling plant in period \\(t\\in\\mathcal{T}\\)\n\\(b_i\\) - Time used for bottling one unit of beer type \\(i\\in\\mathcal{I}\\)\n\\(g_i\\) - Setup time for beer type \\(i\\in\\mathcal{I}\\)\n\\(f_i\\) - Setup cost of beer type \\(i\\in\\mathcal{I}\\)\n\\(c_i\\) - Inventory holding cost for one unit of beer type \\(i\\in\\mathcal{I}\\)\n\\(d_{i,t}\\) - Demand of beer type \\(i\\in\\mathcal{I}\\) in period \\(t\\in\\mathcal{T}\\)"
+    "text": "Available Parameters\nQuestion: What are possible parameters?\n\n\n\\(a_t\\) - Available time on the bottling plant in period \\(t\\in\\mathcal{T}\\)\n\\(b_i\\) - Time used for bottling one unit of beer type \\(i\\in\\mathcal{I}\\)\n\\(g_i\\) - Setup time for beer type \\(i\\in\\mathcal{I}\\)\n\\(f_i\\) - Setup cost of beer type \\(i\\in\\mathcal{I}\\)\n\\(c_i\\) - Inventory holding cost for unit of beer type \\(i\\in\\mathcal{I}\\)\n\\(d_{i,t}\\) - Demand of beer type \\(i\\in\\mathcal{I}\\) in period \\(t\\in\\mathcal{T}\\)"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#decision-variables",
     "href": "lectures/lecture-05-presentation.html#decision-variables",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Decision Variables?",
     "text": "Decision Variables?\n\n\n\n\n\n\nWe have the following sets:\n\n\n\nBeer types indexed by \\(i \\in \\{1,2,...,|\\mathcal{I}|\\}\\)\nTime periods of the planning horizon indexed by \\(t \\in \\{1,2,...,|\\mathcal{T}|\\}\\)\n\n\n\n\n\n\n\n\n\n\n\nOur objective is to:\n\n\nMinimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.\n\n\n\n\n\nQuestion: What could be our decision variable/s?"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#decision-variables-1",
     "href": "lectures/lecture-05-presentation.html#decision-variables-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Decision Variables",
     "text": "Decision Variables\n\n\\(W_{i,t}\\) - Inventory of type \\(i\\in\\mathcal{I}\\) at the end of \\(t\\in\\mathcal{T}\\)\n\\(Y_{i,t}\\) - 1, if type \\(i\\in\\mathcal{I}\\) is bottled in \\(t\\in\\mathcal{T}\\), 0 otherwise\n\\(X_{i,t}\\) - Batch size of type \\(i\\in\\mathcal{I}\\) in \\(t\\in\\mathcal{T}\\)"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#objective-function",
     "href": "lectures/lecture-05-presentation.html#objective-function",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Objective Function?",
     "text": "Objective Function?\n\n\n\n\n\n\nOur objective is to:\n\n\nMinimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.\n\n\n\n\nQuestion: What could be our objective function?\n\n\n\n\n\n\n\n\nWe need the following variables:\n\n\n\n\\(W_{i,t}\\) - Inventory of type \\(i\\in\\mathcal{I}\\) at the end of \\(t\\in\\mathcal{T}\\)\n\\(Y_{i,t}\\) - 1, if type \\(i\\in\\mathcal{I}\\) is bottled in \\(t\\in\\mathcal{T}\\), 0 otherwise"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#objective-function-1",
     "href": "lectures/lecture-05-presentation.html#objective-function-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Objective Function",
     "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters:\n\n\n\n\\(f_i\\) - Setup cost of beer type \\(i\\in\\mathcal{I}\\)\n\\(c_i\\) - Inventory holding cost for one unit of beer type \\(i\\in\\mathcal{I}\\)\n\n\n\n\n\n\\[\\text{Minimize} \\quad \\sum_{i=1}^{\\mathcal{I}} \\sum_{t=1}^{\\mathcal{T}} (c_i \\times W_{i,t} + f_i \\times Y_{i,t})\\]"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#constraints",
     "href": "lectures/lecture-05-presentation.html#constraints",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Constraints",
-    "text": "Constraints\n\n\n\n\nQuestion: What constraints?\n\n\nTransfer unused inventory\nFulfill the customer demand\nSet up beer types\nCalculate the batch size per set-up\nCompute remaining inventory\nLimit the bottling plant"
+    "text": "Constraints\n\n\n\n\nQuestion: What constraints?\n\n\nTransfer unused inventory\nFulfill the customer demand\nSet up beer types\nCalculate batch size per set-up\nCompute remaining inventory\nLimit the bottling plant"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#demandinventory-constraints",
     "href": "lectures/lecture-05-presentation.html#demandinventory-constraints",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Demand/Inventory Constraints?",
     "text": "Demand/Inventory Constraints?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\nConsider the current inventory and batch sizes and compute the remaining inventory.\n\n\n\n\n\n\n\n\n\n\nWe need the following variables and parameters:\n\n\n\n\\(W_{i,t}\\) - Inventory of beer type \\(i\\in\\mathcal{I}\\) at the end of period \\(t\\in\\mathcal{T}\\)\n\\(X_{i,t}\\) - Batch size of beer type \\(i\\in\\mathcal{I}\\) in \\(t\\in\\mathcal{T}\\)\n\\(d_{i,t}\\) - Demand of beer type \\(i\\in\\mathcal{I}\\) in period \\(t\\in\\mathcal{T}\\)\n\n\n\n\n\n\nQuestion: What could the constraint look like?"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#demandinventory-constraints-1",
     "href": "lectures/lecture-05-presentation.html#demandinventory-constraints-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Demand/Inventory Constraints",
     "text": "Demand/Inventory Constraints\n\\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \\quad \\forall i\\in\\mathcal{I},t\\in\\mathcal{T}|t&gt;1\\]\n\n\n\n\n\n\n\nRemember, these are the variables and parameters:\n\n\n\n\\(W_{i,t}\\) - Inventory of beer type \\(i\\in\\mathcal{I}\\) at the end of period \\(t\\in\\mathcal{T}\\)\n\\(X_{i,t}\\) - Batch size of beer type \\(i\\in\\mathcal{I}\\) in \\(t\\in\\mathcal{T}\\)\n\\(d_{i,t}\\) - Demand of beer type \\(i\\in\\mathcal{I}\\) in period \\(t\\in\\mathcal{T}\\)\n\n\n\n\n\n\nQuestion: What does \\(|t&gt;1\\) mean?"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#setup-constraints",
     "href": "lectures/lecture-05-presentation.html#setup-constraints",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Setup Constraints?",
     "text": "Setup Constraints?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\nSet up beer types where the batch size is \\(\\geq\\) 0.\n\n\n\n\n\n\n\n\n\n\nWe need the following variables and parameters:\n\n\n\n\\(Y_{i,t}\\) - 1, if beer type \\(i\\in\\mathcal{I}\\) is bottled in period \\(t\\in\\mathcal{T}\\), 0 otherwise\n\\(X_{i,t}\\) - Batch size of beer type \\(i\\in\\mathcal{I}\\) in \\(t\\in\\mathcal{T}\\)\n\\(d_{i,t}\\) - Demand of beer type \\(i\\in\\mathcal{I}\\) in period \\(t\\in\\mathcal{T}\\)\n\n\n\n\n\n\nQuestion: What could the second constraint be?"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#setup-constraints-1",
     "href": "lectures/lecture-05-presentation.html#setup-constraints-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Setup Constraints",
     "text": "Setup Constraints\n\\[X_{i,t} \\leq Y_{i,t} \\times \\sum_{\\tau=1}^{\\mathcal{T}} d_{i\\tau} \\quad \\forall i\\in\\mathcal{I},\\forall t\\in\\mathcal{T}\\]\n\nQuestion: Do you know this type of constraint?\n\n\nThis type of constraint is called a “Big-M” constraint!\n\n\n\nM (here \\(\\sum_{\\tau=1}^{\\mathcal{T}} d_{i\\tau}\\)) is a large number\nIt is coupled with a binary variable (here \\(Y_{i,t}\\))\nLike an if-then constraint"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#capacity-constraints",
     "href": "lectures/lecture-05-presentation.html#capacity-constraints",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Capacity Constraints?",
     "text": "Capacity Constraints?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\nLimit the capacity of the bottling plant per period.\n\n\n\n\n\n\n\n\n\n\nWe need the following variables and parameters:\n\n\n\n\\(Y_{i,t}\\) - 1, if beer type \\(i\\in\\mathcal{I}\\) is bottled in period \\(t\\in\\mathcal{T}\\), 0 otherwise\n\\(X_{i,t}\\) - Batch size of beer type \\(i\\in\\mathcal{I}\\) in \\(t\\in\\mathcal{T}\\)\n\\(a_t\\) - Available time on the bottling plant in period \\(t\\in\\mathcal{T}\\)\n\\(b_i\\) - Time used for bottling one unit of beer type \\(i\\in\\mathcal{I}\\)\n\\(g_i\\) - Setup time for beer type \\(i\\in\\mathcal{I}\\)"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#capacity-constraints-1",
     "href": "lectures/lecture-05-presentation.html#capacity-constraints-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Capacity Constraints",
     "text": "Capacity Constraints\nQuestion: What could the third constraint be?\nIt has more variables and parameters when compared to the other constraints but it is easier to understand.\n\n\\[\\sum_{i=1}^{\\mathcal{I}} (b_i \\times X_{i,t} + g_i \\times Y_{i,t}) \\leq a_t \\quad \\forall t\\in\\mathcal{T}\\]\n\n\nAnd that’s basically it!"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#clsp-objective-function",
     "href": "lectures/lecture-05-presentation.html#clsp-objective-function",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "CLSP: Objective Function",
     "text": "CLSP: Objective Function\n\\[\\text{Minimize} \\quad \\sum_{i \\in \\mathcal{I}} \\sum_{t \\in \\mathcal{T}} (c_i \\times W_{i,t} + f_i \\times Y_{i,t})\\]\n\n\n\n\n\n\nThe goal of the objective function is to:\n\n\nMinimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity."
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#clsp-constraints",
     "href": "lectures/lecture-05-presentation.html#clsp-constraints",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "CLSP: Constraints",
     "text": "CLSP: Constraints\n\\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \\quad \\forall i\\in\\mathcal{I},t\\in\\mathcal{T}|t&gt;1\\]\n\\[X_{i,t} \\leq Y_{i,t} \\times \\sum_{\\tau \\in \\mathcal{T}} d_{i,\\tau} \\quad \\forall i\\in\\mathcal{I},\\forall t\\in\\mathcal{T}\\]\n\\[\\sum_{i \\in \\mathcal{I}} (b_i \\times X_{i,t} + g_i \\times Y_{i,t}) \\leq a_t \\quad \\forall t\\in\\mathcal{T}\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\nDemand is met, inventory transferred, setup taken care of, and capacity respected."
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#clsp-variable-domains",
     "href": "lectures/lecture-05-presentation.html#clsp-variable-domains",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "CLSP: Variable Domains",
     "text": "CLSP: Variable Domains\n\\[Y_{i,t}\\in\\{0,1\\} \\quad \\forall i\\in\\mathcal{I},t\\in\\mathcal{T}\\]\n\\[W_{i,t}, X_{i,t}\\geq 0 \\quad \\forall i\\in\\mathcal{I},t\\in\\mathcal{T}\\]\n\n\n\n\n\n\nThe variable domains make sure that:\n\n\nThe binary setup variable is either 0 or 1 and that the inventory and batch size are non-negative."
   },
   {
+    "objectID": "lectures/lecture-05-presentation.html#variables-in-julia",
+    "href": "lectures/lecture-05-presentation.html#variables-in-julia",
+    "title": "Lecture V - Planning in Breweries",
+    "section": "Variables in Julia",
+    "text": "Variables in Julia\nQuestion: How could we formulate the variables in Julia?\n\n\nusing JuMP, HiGHS\nbeer_types = [\"IPA\", \"Lager\", \"Stout\"] # Beer types\nperiods = [\"week_1\", \"week_2\", \"week_3\"] # Time periods\nclsp_model = Model(HiGHS.Optimizer)\n\n\n\n\n@variable(clsp_model, Y[i in beer_types, t in periods], Bin)\n@variable(clsp_model, X[i in beer_types, t in periods] &gt;= 0)\n@variable(clsp_model, W[i in beer_types, t in periods] &gt;= 0)\n\n\n\n2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:\n    Dimension 1, [\"IPA\", \"Lager\", \"Stout\"]\n    Dimension 2, [\"week_1\", \"week_2\", \"week_3\"]\nAnd data, a 3×3 Matrix{VariableRef}:\n W[IPA,week_1]    W[IPA,week_2]    W[IPA,week_3]\n W[Lager,week_1]  W[Lager,week_2]  W[Lager,week_3]\n W[Stout,week_1]  W[Stout,week_2]  W[Stout,week_3]"
+  },
+  {
+    "objectID": "lectures/lecture-05-presentation.html#objective-function-in-julia",
+    "href": "lectures/lecture-05-presentation.html#objective-function-in-julia",
+    "title": "Lecture V - Planning in Breweries",
+    "section": "Objective Function in Julia",
+    "text": "Objective Function in Julia\n\\[\\text{Minimize} \\quad \\sum_{i \\in \\mathcal{I}} \\sum_{t \\in \\mathcal{T}} (c_i \\times W_{i,t} + f_i \\times Y_{i,t})\\]\n\n\nc = Dict(\"IPA\" =&gt; 0.1, \"Lager\" =&gt; 0.1, \"Stout\" =&gt; 0.1) # Holding costs\nf = Dict(\"IPA\" =&gt; 5000, \"Lager\" =&gt; 4000, \"Stout\" =&gt; 6000) # Setup costs\n\n\n\n\n@objective(clsp_model, Min,\n    sum(c[i] * W[i,t] + f[i] * Y[i,t]\n        for i in beer_types, t in periods)\n)"
+  },
+  {
     "objectID": "lectures/lecture-05-presentation.html#recap-on-some-basics",
     "href": "lectures/lecture-05-presentation.html#recap-on-some-basics",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Recap on some Basics",
     "text": "Recap on some Basics\nThere exist several types of optimization problems:\n\nLinear (LP): Linear constraints and objective function\nMixed-integer (MIP): Linear constraints and objective function, but discrete variable domains\nQuadratic (QP): Quadratic constraints and/or objective\nNon-linear (NLP): Non-linear constraints and/or objective\nAnd more!"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#recap-on-solution-algorithms",
     "href": "lectures/lecture-05-presentation.html#recap-on-solution-algorithms",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Recap on Solution Algorithms",
     "text": "Recap on Solution Algorithms\n\nSimplex algorithm to solve LPs\nBranch & Bound to solve MIPs\nOuter-Approximation for mixed-integer NLPs\nMath-Heuristics (e.g., Fix-and-Optimize, Tabu-Search, …)\nDecomposition methods (Lagrange, Benders, …)\nHeuristics (greedy, construction method, n-opt, …)\nGraph theoretical methods (network flow, shortest path)"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#model-characteristics-1",
     "href": "lectures/lecture-05-presentation.html#model-characteristics-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Model Characteristics",
     "text": "Model Characteristics\nQuestions: On model characteristics\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domains do we have?\nWhat kind of solver could we use?\nCan the Big-M constraint be tightened?"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#model-assumptions",
     "href": "lectures/lecture-05-presentation.html#model-assumptions",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Model Assumptions",
     "text": "Model Assumptions\nQuestions: On model assumptions\n\nWhat assumptions have we made?\nWhat is the problem with the planning horizon?\nAny idea how to solve it?"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#section-1",
     "href": "lectures/lecture-05-presentation.html#section-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Can this be\napplied?"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#scale-as-a-problem",
     "href": "lectures/lecture-05-presentation.html#scale-as-a-problem",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Scale as a Problem",
     "text": "Scale as a Problem\nSolving the problem with commercial solvers is not feasible."
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#scale-of-the-case-study",
     "href": "lectures/lecture-05-presentation.html#scale-of-the-case-study",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Scale of the Case Study",
     "text": "Scale of the Case Study\n\n220 finished products\n100 semi-finished products\n13 production resources\n8 storage resources\n3 main production levels\n52 weeks planning horizon"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#section-2",
     "href": "lectures/lecture-05-presentation.html#section-2",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Any idea what\ncould be done?"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#heuristics-and-optimization",
     "href": "lectures/lecture-05-presentation.html#heuristics-and-optimization",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Heuristics and Optimization",
     "text": "Heuristics and Optimization\n\nMulti-level Capacitated Lot-Sizing Problem\nHeuristic fix and optimize approach 1\nOperating cost reduction by 5% and planning effort by 40%\n\n\n\n\n\n\n\n\nAnd that’s it for todays lecture!\n\n\nWe now have covered the basics of the CLSP and are ready to start solving some tasks in the upcoming tutorial.\n\n\n\n\nMickein, Koch, and Haase (2022)"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#section-3",
     "href": "lectures/lecture-05-presentation.html#section-3",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Questions?"
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#literature-i",
     "href": "lectures/lecture-05-presentation.html#literature-i",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Literature I",
     "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course."
   },
   {
     "objectID": "lectures/lecture-05-presentation.html#literature-ii",
     "href": "lectures/lecture-05-presentation.html#literature-ii",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Literature II",
     "text": "Literature II\n\n\n\n\nMickein, Markus, Matthes Koch, and Knut Haase. 2022. “A Decision Support System for Brewery Production Planning at Feldschlösschen.” INFORMS Journal on Applied Analytics 52 (2): 158–72."
   },
   {
     "objectID": "lectures/lecture-05-production.html",
     "href": "lectures/lecture-05-production.html",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Large brewery\nBrews and sells beverages\nProduction planning by hand\nPlanner has a lot of experience\nBut will retire soon\n\n\n\n\n\n\n\n\n\n\n\nStrong competition\nCustomer demand is changing\nCraft beer gains popularity\nVariety of drinks is increasing\nBatch sizes are getting smaller\n\n\n\n\n\n\n\n\n\n\n\nPlant can fill multiple types\nTime depends on type and batch\nChanging type leads to set-up costs for preparation and cleaning\nUnsold beer bottles can be stored in a warehouse\nThis leads to inventory costs\n\n\n\n\n\n\n\nWhere is the\nchallenge?",
     "crumbs": [
@@ -4670,7 +4684,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#case-study",
     "href": "lectures/lecture-05-production.html#case-study",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Large brewery\nBrews and sells beverages\nProduction planning by hand\nPlanner has a lot of experience\nBut will retire soon",
     "crumbs": [
@@ -4681,7 +4695,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#challenges",
     "href": "lectures/lecture-05-production.html#challenges",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Strong competition\nCustomer demand is changing\nCraft beer gains popularity\nVariety of drinks is increasing\nBatch sizes are getting smaller",
     "crumbs": [
@@ -4692,7 +4706,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#different-costs",
     "href": "lectures/lecture-05-production.html#different-costs",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Plant can fill multiple types\nTime depends on type and batch\nChanging type leads to set-up costs for preparation and cleaning\nUnsold beer bottles can be stored in a warehouse\nThis leads to inventory costs",
     "crumbs": [
@@ -4703,7 +4717,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#section",
     "href": "lectures/lecture-05-production.html#section",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Where is the\nchallenge?",
     "crumbs": [
@@ -4714,7 +4728,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#objective",
     "href": "lectures/lecture-05-production.html#objective",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Objective",
     "text": "Objective\n\n\n\n\nQuestion: What could be the objective?\nMinimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.",
     "crumbs": [
@@ -4725,7 +4739,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#trade-off",
     "href": "lectures/lecture-05-production.html#trade-off",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Trade-Off",
     "text": "Trade-Off\n\n\n\n\nQuestion: What is the trade-off?\nLarger batches require less setup cost per bottle, but increase the storage cost.",
     "crumbs": [
@@ -4736,7 +4750,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#available-sets",
     "href": "lectures/lecture-05-production.html#available-sets",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Available Sets",
     "text": "Available Sets\nQuestion: What are sets again?\n. . .\nSets are collections of objects.\n. . .\nQuestion: What could be the sets here?\n. . .\n\n\\(\\mathcal{I}\\) - Set of beer types indexed by \\(i \\in \\{1,2,...,|\\mathcal{I}|\\}\\)\n\\(\\mathcal{T}\\) - Set of time periods indexed by \\(t \\in \\{1,2,...,|\\mathcal{T}|\\}\\)",
     "crumbs": [
@@ -4747,9 +4761,9 @@
   {
     "objectID": "lectures/lecture-05-production.html#available-parameters",
     "href": "lectures/lecture-05-production.html#available-parameters",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Available Parameters",
-    "text": "Available Parameters\nQuestion: What are possible parameters?\n. . .\n\n\\(a_t\\) - Available time on the bottling plant in period \\(t\\in\\mathcal{T}\\)\n\\(b_i\\) - Time used for bottling one unit of beer type \\(i\\in\\mathcal{I}\\)\n\\(g_i\\) - Setup time for beer type \\(i\\in\\mathcal{I}\\)\n\\(f_i\\) - Setup cost of beer type \\(i\\in\\mathcal{I}\\)\n\\(c_i\\) - Inventory holding cost for one unit of beer type \\(i\\in\\mathcal{I}\\)\n\\(d_{i,t}\\) - Demand of beer type \\(i\\in\\mathcal{I}\\) in period \\(t\\in\\mathcal{T}\\)",
+    "text": "Available Parameters\nQuestion: What are possible parameters?\n. . .\n\n\\(a_t\\) - Available time on the bottling plant in period \\(t\\in\\mathcal{T}\\)\n\\(b_i\\) - Time used for bottling one unit of beer type \\(i\\in\\mathcal{I}\\)\n\\(g_i\\) - Setup time for beer type \\(i\\in\\mathcal{I}\\)\n\\(f_i\\) - Setup cost of beer type \\(i\\in\\mathcal{I}\\)\n\\(c_i\\) - Inventory holding cost for unit of beer type \\(i\\in\\mathcal{I}\\)\n\\(d_{i,t}\\) - Demand of beer type \\(i\\in\\mathcal{I}\\) in period \\(t\\in\\mathcal{T}\\)",
     "crumbs": [
       "05 Production",
       "Lecture"
@@ -4758,7 +4772,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#decision-variables",
     "href": "lectures/lecture-05-production.html#decision-variables",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Decision Variables?",
     "text": "Decision Variables?\n\n\n\n\n\n\nNoteWe have the following sets:\n\n\n\n\nBeer types indexed by \\(i \\in \\{1,2,...,|\\mathcal{I}|\\}\\)\nTime periods of the planning horizon indexed by \\(t \\in \\{1,2,...,|\\mathcal{T}|\\}\\)\n\n\n\n. . .\n\n\n\n\n\n\nImportantOur objective is to:\n\n\n\nMinimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.\n\n\n. . .\nQuestion: What could be our decision variable/s?",
     "crumbs": [
@@ -4769,7 +4783,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#decision-variables-1",
     "href": "lectures/lecture-05-production.html#decision-variables-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Decision Variables",
     "text": "Decision Variables\n\n\\(W_{i,t}\\) - Inventory of type \\(i\\in\\mathcal{I}\\) at the end of \\(t\\in\\mathcal{T}\\)\n\\(Y_{i,t}\\) - 1, if type \\(i\\in\\mathcal{I}\\) is bottled in \\(t\\in\\mathcal{T}\\), 0 otherwise\n\\(X_{i,t}\\) - Batch size of type \\(i\\in\\mathcal{I}\\) in \\(t\\in\\mathcal{T}\\)",
     "crumbs": [
@@ -4780,7 +4794,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#objective-function",
     "href": "lectures/lecture-05-production.html#objective-function",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Objective Function?",
     "text": "Objective Function?\n\n\n\n\n\n\nImportantOur objective is to:\n\n\n\nMinimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.\n\n\n. . .\nQuestion: What could be our objective function?\n. . .\n\n\n\n\n\n\nNoteWe need the following variables:\n\n\n\n\n\\(W_{i,t}\\) - Inventory of type \\(i\\in\\mathcal{I}\\) at the end of \\(t\\in\\mathcal{T}\\)\n\\(Y_{i,t}\\) - 1, if type \\(i\\in\\mathcal{I}\\) is bottled in \\(t\\in\\mathcal{T}\\), 0 otherwise",
     "crumbs": [
@@ -4791,7 +4805,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#objective-function-1",
     "href": "lectures/lecture-05-production.html#objective-function-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Objective Function",
     "text": "Objective Function\n\n\n\n\n\n\nNoteWe need the following parameters:\n\n\n\n\n\\(f_i\\) - Setup cost of beer type \\(i\\in\\mathcal{I}\\)\n\\(c_i\\) - Inventory holding cost for one unit of beer type \\(i\\in\\mathcal{I}\\)\n\n\n\n. . .\n\\[\\text{Minimize} \\quad \\sum_{i=1}^{\\mathcal{I}} \\sum_{t=1}^{\\mathcal{T}} (c_i \\times W_{i,t} + f_i \\times Y_{i,t})\\]",
     "crumbs": [
@@ -4802,9 +4816,9 @@
   {
     "objectID": "lectures/lecture-05-production.html#constraints",
     "href": "lectures/lecture-05-production.html#constraints",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Constraints",
-    "text": "Constraints\n\n\n\n\nQuestion: What constraints?\n\n\nTransfer unused inventory\nFulfill the customer demand\nSet up beer types\nCalculate the batch size per set-up\nCompute remaining inventory\nLimit the bottling plant",
+    "text": "Constraints\n\n\n\n\nQuestion: What constraints?\n\n\nTransfer unused inventory\nFulfill the customer demand\nSet up beer types\nCalculate batch size per set-up\nCompute remaining inventory\nLimit the bottling plant",
     "crumbs": [
       "05 Production",
       "Lecture"
@@ -4813,7 +4827,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#demandinventory-constraints",
     "href": "lectures/lecture-05-production.html#demandinventory-constraints",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Demand/Inventory Constraints?",
     "text": "Demand/Inventory Constraints?\n\n\n\n\n\n\nImportantThe goal of these constraints is to:\n\n\n\nConsider the current inventory and batch sizes and compute the remaining inventory.\n\n\n. . .\n\n\n\n\n\n\nNoteWe need the following variables and parameters:\n\n\n\n\n\\(W_{i,t}\\) - Inventory of beer type \\(i\\in\\mathcal{I}\\) at the end of period \\(t\\in\\mathcal{T}\\)\n\\(X_{i,t}\\) - Batch size of beer type \\(i\\in\\mathcal{I}\\) in \\(t\\in\\mathcal{T}\\)\n\\(d_{i,t}\\) - Demand of beer type \\(i\\in\\mathcal{I}\\) in period \\(t\\in\\mathcal{T}\\)\n\n\n\n. . .\nQuestion: What could the constraint look like?",
     "crumbs": [
@@ -4824,7 +4838,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#demandinventory-constraints-1",
     "href": "lectures/lecture-05-production.html#demandinventory-constraints-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Demand/Inventory Constraints",
     "text": "Demand/Inventory Constraints\n\\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \\quad \\forall i\\in\\mathcal{I},t\\in\\mathcal{T}|t&gt;1\\]\n. . .\n\n\n\n\n\n\nNoteRemember, these are the variables and parameters:\n\n\n\n\n\\(W_{i,t}\\) - Inventory of beer type \\(i\\in\\mathcal{I}\\) at the end of period \\(t\\in\\mathcal{T}\\)\n\\(X_{i,t}\\) - Batch size of beer type \\(i\\in\\mathcal{I}\\) in \\(t\\in\\mathcal{T}\\)\n\\(d_{i,t}\\) - Demand of beer type \\(i\\in\\mathcal{I}\\) in period \\(t\\in\\mathcal{T}\\)\n\n\n\n. . .\nQuestion: What does \\(|t&gt;1\\) mean?",
     "crumbs": [
@@ -4835,7 +4849,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#setup-constraints",
     "href": "lectures/lecture-05-production.html#setup-constraints",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Setup Constraints?",
     "text": "Setup Constraints?\n\n\n\n\n\n\nImportantThe goal of these constraints is to:\n\n\n\nSet up beer types where the batch size is \\(\\geq\\) 0.\n\n\n. . .\n\n\n\n\n\n\nNoteWe need the following variables and parameters:\n\n\n\n\n\\(Y_{i,t}\\) - 1, if beer type \\(i\\in\\mathcal{I}\\) is bottled in period \\(t\\in\\mathcal{T}\\), 0 otherwise\n\\(X_{i,t}\\) - Batch size of beer type \\(i\\in\\mathcal{I}\\) in \\(t\\in\\mathcal{T}\\)\n\\(d_{i,t}\\) - Demand of beer type \\(i\\in\\mathcal{I}\\) in period \\(t\\in\\mathcal{T}\\)\n\n\n\n. . .\nQuestion: What could the second constraint be?",
     "crumbs": [
@@ -4846,7 +4860,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#setup-constraints-1",
     "href": "lectures/lecture-05-production.html#setup-constraints-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Setup Constraints",
     "text": "Setup Constraints\n\\[X_{i,t} \\leq Y_{i,t} \\times \\sum_{\\tau=1}^{\\mathcal{T}} d_{i\\tau} \\quad \\forall i\\in\\mathcal{I},\\forall t\\in\\mathcal{T}\\]\n. . .\nQuestion: Do you know this type of constraint?\n. . .\nThis type of constraint is called a “Big-M” constraint!\n. . .\n\nM (here \\(\\sum_{\\tau=1}^{\\mathcal{T}} d_{i\\tau}\\)) is a large number\nIt is coupled with a binary variable (here \\(Y_{i,t}\\))\nLike an if-then constraint",
     "crumbs": [
@@ -4857,7 +4871,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#capacity-constraints",
     "href": "lectures/lecture-05-production.html#capacity-constraints",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Capacity Constraints?",
     "text": "Capacity Constraints?\n\n\n\n\n\n\nImportantThe goal of these constraints is to:\n\n\n\nLimit the capacity of the bottling plant per period.\n\n\n. . .\n\n\n\n\n\n\nNoteWe need the following variables and parameters:\n\n\n\n\n\\(Y_{i,t}\\) - 1, if beer type \\(i\\in\\mathcal{I}\\) is bottled in period \\(t\\in\\mathcal{T}\\), 0 otherwise\n\\(X_{i,t}\\) - Batch size of beer type \\(i\\in\\mathcal{I}\\) in \\(t\\in\\mathcal{T}\\)\n\\(a_t\\) - Available time on the bottling plant in period \\(t\\in\\mathcal{T}\\)\n\\(b_i\\) - Time used for bottling one unit of beer type \\(i\\in\\mathcal{I}\\)\n\\(g_i\\) - Setup time for beer type \\(i\\in\\mathcal{I}\\)",
     "crumbs": [
@@ -4868,7 +4882,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#capacity-constraints-1",
     "href": "lectures/lecture-05-production.html#capacity-constraints-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Capacity Constraints",
     "text": "Capacity Constraints\nQuestion: What could the third constraint be?\nIt has more variables and parameters when compared to the other constraints but it is easier to understand.\n. . .\n\\[\\sum_{i=1}^{\\mathcal{I}} (b_i \\times X_{i,t} + g_i \\times Y_{i,t}) \\leq a_t \\quad \\forall t\\in\\mathcal{T}\\]\n. . .\nAnd that’s basically it!",
     "crumbs": [
@@ -4879,7 +4893,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#clsp-objective-function",
     "href": "lectures/lecture-05-production.html#clsp-objective-function",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "CLSP: Objective Function",
     "text": "CLSP: Objective Function\n\\[\\text{Minimize} \\quad \\sum_{i \\in \\mathcal{I}} \\sum_{t \\in \\mathcal{T}} (c_i \\times W_{i,t} + f_i \\times Y_{i,t})\\]\n\n\n\n\n\n\nImportantThe goal of the objective function is to:\n\n\n\nMinimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.",
     "crumbs": [
@@ -4890,7 +4904,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#clsp-constraints",
     "href": "lectures/lecture-05-production.html#clsp-constraints",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "CLSP: Constraints",
     "text": "CLSP: Constraints\n\\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \\quad \\forall i\\in\\mathcal{I},t\\in\\mathcal{T}|t&gt;1\\]\n\\[X_{i,t} \\leq Y_{i,t} \\times \\sum_{\\tau \\in \\mathcal{T}} d_{i,\\tau} \\quad \\forall i\\in\\mathcal{I},\\forall t\\in\\mathcal{T}\\]\n\\[\\sum_{i \\in \\mathcal{I}} (b_i \\times X_{i,t} + g_i \\times Y_{i,t}) \\leq a_t \\quad \\forall t\\in\\mathcal{T}\\]\n\n\n\n\n\n\nImportantOur constraints ensure:\n\n\n\nDemand is met, inventory transferred, setup taken care of, and capacity respected.",
     "crumbs": [
@@ -4901,7 +4915,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#clsp-variable-domains",
     "href": "lectures/lecture-05-production.html#clsp-variable-domains",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "CLSP: Variable Domains",
     "text": "CLSP: Variable Domains\n\\[Y_{i,t}\\in\\{0,1\\} \\quad \\forall i\\in\\mathcal{I},t\\in\\mathcal{T}\\]\n\\[W_{i,t}, X_{i,t}\\geq 0 \\quad \\forall i\\in\\mathcal{I},t\\in\\mathcal{T}\\]\n\n\n\n\n\n\nImportantThe variable domains make sure that:\n\n\n\nThe binary setup variable is either 0 or 1 and that the inventory and batch size are non-negative.",
     "crumbs": [
@@ -4910,9 +4924,31 @@
     ]
   },
   {
+    "objectID": "lectures/lecture-05-production.html#variables-in-julia",
+    "href": "lectures/lecture-05-production.html#variables-in-julia",
+    "title": "Lecture V - Planning in Breweries",
+    "section": "Variables in Julia",
+    "text": "Variables in Julia\nQuestion: How could we formulate the variables in Julia?\n. . .\n\nusing JuMP, HiGHS\nbeer_types = [\"IPA\", \"Lager\", \"Stout\"] # Beer types\nperiods = [\"week_1\", \"week_2\", \"week_3\"] # Time periods\nclsp_model = Model(HiGHS.Optimizer)\n\n. . .\n\n@variable(clsp_model, Y[i in beer_types, t in periods], Bin)\n@variable(clsp_model, X[i in beer_types, t in periods] &gt;= 0)\n@variable(clsp_model, W[i in beer_types, t in periods] &gt;= 0)\n\n2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:\n    Dimension 1, [\"IPA\", \"Lager\", \"Stout\"]\n    Dimension 2, [\"week_1\", \"week_2\", \"week_3\"]\nAnd data, a 3×3 Matrix{VariableRef}:\n W[IPA,week_1]    W[IPA,week_2]    W[IPA,week_3]\n W[Lager,week_1]  W[Lager,week_2]  W[Lager,week_3]\n W[Stout,week_1]  W[Stout,week_2]  W[Stout,week_3]",
+    "crumbs": [
+      "05 Production",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-05-production.html#objective-function-in-julia",
+    "href": "lectures/lecture-05-production.html#objective-function-in-julia",
+    "title": "Lecture V - Planning in Breweries",
+    "section": "Objective Function in Julia",
+    "text": "Objective Function in Julia\n\\[\\text{Minimize} \\quad \\sum_{i \\in \\mathcal{I}} \\sum_{t \\in \\mathcal{T}} (c_i \\times W_{i,t} + f_i \\times Y_{i,t})\\]\n. . .\n\nc = Dict(\"IPA\" =&gt; 0.1, \"Lager\" =&gt; 0.1, \"Stout\" =&gt; 0.1) # Holding costs\nf = Dict(\"IPA\" =&gt; 5000, \"Lager\" =&gt; 4000, \"Stout\" =&gt; 6000) # Setup costs\n\n. . .\n\n@objective(clsp_model, Min,\n    sum(c[i] * W[i,t] + f[i] * Y[i,t]\n        for i in beer_types, t in periods)\n)",
+    "crumbs": [
+      "05 Production",
+      "Lecture"
+    ]
+  },
+  {
     "objectID": "lectures/lecture-05-production.html#recap-on-some-basics",
     "href": "lectures/lecture-05-production.html#recap-on-some-basics",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Recap on some Basics",
     "text": "Recap on some Basics\nThere exist several types of optimization problems:\n\n\nLinear (LP): Linear constraints and objective function\nMixed-integer (MIP): Linear constraints and objective function, but discrete variable domains\nQuadratic (QP): Quadratic constraints and/or objective\nNon-linear (NLP): Non-linear constraints and/or objective\nAnd more!",
     "crumbs": [
@@ -4923,7 +4959,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#recap-on-solution-algorithms",
     "href": "lectures/lecture-05-production.html#recap-on-solution-algorithms",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Recap on Solution Algorithms",
     "text": "Recap on Solution Algorithms\n\n\nSimplex algorithm to solve LPs\nBranch & Bound to solve MIPs\nOuter-Approximation for mixed-integer NLPs\nMath-Heuristics (e.g., Fix-and-Optimize, Tabu-Search, …)\nDecomposition methods (Lagrange, Benders, …)\nHeuristics (greedy, construction method, n-opt, …)\nGraph theoretical methods (network flow, shortest path)",
     "crumbs": [
@@ -4934,7 +4970,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#model-characteristics-1",
     "href": "lectures/lecture-05-production.html#model-characteristics-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Model Characteristics",
     "text": "Model Characteristics\nQuestions: On model characteristics\n\n\nIs the model formulation linear/ non-linear?\nWhat kind of variable domains do we have?\nWhat kind of solver could we use?\nCan the Big-M constraint be tightened?",
     "crumbs": [
@@ -4945,7 +4981,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#model-assumptions",
     "href": "lectures/lecture-05-production.html#model-assumptions",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Model Assumptions",
     "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nWhat is the problem with the planning horizon?\nAny idea how to solve it?",
     "crumbs": [
@@ -4956,7 +4992,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#section-1",
     "href": "lectures/lecture-05-production.html#section-1",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Can this be\napplied?",
     "crumbs": [
@@ -4967,7 +5003,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#scale-as-a-problem",
     "href": "lectures/lecture-05-production.html#scale-as-a-problem",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Scale as a Problem",
     "text": "Scale as a Problem\nSolving the problem with commercial solvers is not feasible.",
     "crumbs": [
@@ -4978,7 +5014,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#scale-of-the-case-study",
     "href": "lectures/lecture-05-production.html#scale-of-the-case-study",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Scale of the Case Study",
     "text": "Scale of the Case Study\n\n220 finished products\n100 semi-finished products\n13 production resources\n8 storage resources\n3 main production levels\n52 weeks planning horizon",
     "crumbs": [
@@ -4989,7 +5025,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#section-2",
     "href": "lectures/lecture-05-production.html#section-2",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Any idea what\ncould be done?",
     "crumbs": [
@@ -5000,7 +5036,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#heuristics-and-optimization",
     "href": "lectures/lecture-05-production.html#heuristics-and-optimization",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Heuristics and Optimization",
     "text": "Heuristics and Optimization\n\nMulti-level Capacitated Lot-Sizing Problem\nHeuristic fix and optimize approach 1\nOperating cost reduction by 5% and planning effort by 40%\n\n1 Mickein, Koch, and Haase (2022)\nMickein, Markus, Matthes Koch, and Knut Haase. 2022. “A Decision Support System for Brewery Production Planning at Feldschlösschen.” INFORMS Journal on Applied Analytics 52 (2): 158–72.\n. . .\n\n\n\n\n\n\nNoteAnd that’s it for todays lecture!\n\n\n\nWe now have covered the basics of the CLSP and are ready to start solving some tasks in the upcoming tutorial.",
     "crumbs": [
@@ -5011,7 +5047,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#section-3",
     "href": "lectures/lecture-05-production.html#section-3",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "",
     "text": "Questions?",
     "crumbs": [
@@ -5022,7 +5058,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#literature-i",
     "href": "lectures/lecture-05-production.html#literature-i",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Literature I",
     "text": "Literature I\nFor more interesting literature to learn more about Julia, take a look at the literature list of this course.",
     "crumbs": [
@@ -5033,7 +5069,7 @@
   {
     "objectID": "lectures/lecture-05-production.html#literature-ii",
     "href": "lectures/lecture-05-production.html#literature-ii",
-    "title": "Lecture V - Production Planning in Breweries",
+    "title": "Lecture V - Planning in Breweries",
     "section": "Literature II",
     "text": "Literature II",
     "crumbs": [
