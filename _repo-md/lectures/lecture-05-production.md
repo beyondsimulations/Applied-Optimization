@@ -1,5 +1,5 @@
 ---
-title: Lecture V - Production Planning in Breweries
+title: Lecture V - Planning in Breweries
 subtitle: Applied Optimization with Julia
 author: Dr. Tobias Vlćek
 format:
@@ -46,8 +46,6 @@ format:
 Where is the
 
 challenge?
-
-------------------------------------------------------------------------
 
 # <span class="flow">Problem Structure</span>
 
@@ -96,10 +94,8 @@ Sets are <span class="highlight">collections of objects</span>.
 -   $b_i$ - Time used for bottling one unit of beer type $i\in\mathcal{I}$
 -   $g_i$ - Setup time for beer type $i\in\mathcal{I}$
 -   $f_i$ - Setup cost of beer type $i\in\mathcal{I}$
--   $c_i$ - Inventory holding cost for one unit of beer type $i\in\mathcal{I}$
+-   $c_i$ - Inventory holding cost for unit of beer type $i\in\mathcal{I}$
 -   $d_{i,t}$ - Demand of beer type $i\in\mathcal{I}$ in period $t\in\mathcal{T}$
-
-------------------------------------------------------------------------
 
 ## Decision Variables?
 
@@ -124,8 +120,6 @@ Sets are <span class="highlight">collections of objects</span>.
 -   $Y_{i,t}$ - 1, if type $i\in\mathcal{I}$ is bottled in $t\in\mathcal{T}$, 0 otherwise
 -   $X_{i,t}$ - Batch size of type $i\in\mathcal{I}$ in $t\in\mathcal{T}$
 
-------------------------------------------------------------------------
-
 # <span class="flow">Model Formulation</span>
 
 ## Objective Function?
@@ -145,8 +139,6 @@ Sets are <span class="highlight">collections of objects</span>.
 > -   $W_{i,t}$ - Inventory of type $i\in\mathcal{I}$ at the end of $t\in\mathcal{T}$
 > -   $Y_{i,t}$ - 1, if type $i\in\mathcal{I}$ is bottled in $t\in\mathcal{T}$, 0 otherwise
 
-------------------------------------------------------------------------
-
 ## Objective Function
 
 > **We need the following parameters:**
@@ -158,8 +150,6 @@ Sets are <span class="highlight">collections of objects</span>.
 
 $$\text{Minimize} \quad \sum_{i=1}^{\mathcal{I}} \sum_{t=1}^{\mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})$$
 
-------------------------------------------------------------------------
-
 ## Constraints
 
 <img src="https://images.beyondsimulations.com/ao/ao_clsp_overview.png" style="width:60.0%" />
@@ -169,11 +159,9 @@ $$\text{Minimize} \quad \sum_{i=1}^{\mathcal{I}} \sum_{t=1}^{\mathcal{T}} (c_i \
 -   Transfer **unused** inventory
 -   **Fulfill** the customer demand
 -   **Set up** beer types
--   Calculate the **batch size** per set-up
+-   Calculate **batch size** per set-up
 -   Compute **remaining** inventory
 -   **Limit** the bottling plant
-
-------------------------------------------------------------------------
 
 ## Demand/Inventory Constraints?
 
@@ -208,8 +196,6 @@ $$W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I},t\in\mat
 . . .
 
 <span class="question">Question:</span> **What does $|t>1$ mean?**
-
-------------------------------------------------------------------------
 
 ## Setup Constraints?
 
@@ -247,8 +233,6 @@ This type of constraint is called a **"Big-M"** constraint!
 -   It is coupled with a binary variable (here $Y_{i,t}$)
 -   <span class="highlight">Like an if-then constraint</span>
 
-------------------------------------------------------------------------
-
 ## Capacity Constraints?
 
 > **The goal of these constraints is to:**
@@ -278,8 +262,6 @@ $$\sum_{i=1}^{\mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \q
 . . .
 
 <span class="highlight">And that's basically it!</span>
-
-------------------------------------------------------------------------
 
 ## CLSP: Objective Function
 
@@ -311,7 +293,56 @@ $$W_{i,t}, X_{i,t}\geq 0 \quad \forall i\in\mathcal{I},t\in\mathcal{T}$$
 >
 > The binary setup variable is either 0 or 1 and that the inventory and batch size are non-negative.
 
-------------------------------------------------------------------------
+# <span class="flow">Julia Implementation</span>
+
+## Variables in Julia
+
+<span class="question">Question:</span> **How could we formulate the variables in Julia?**
+
+. . .
+
+``` julia
+using JuMP, HiGHS
+beer_types = ["IPA", "Lager", "Stout"] # Beer types
+periods = ["week_1", "week_2", "week_3"] # Time periods
+clsp_model = Model(HiGHS.Optimizer)
+```
+
+. . .
+
+``` julia
+@variable(clsp_model, Y[i in beer_types, t in periods], Bin)
+@variable(clsp_model, X[i in beer_types, t in periods] >= 0)
+@variable(clsp_model, W[i in beer_types, t in periods] >= 0)
+```
+
+    2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:
+        Dimension 1, ["IPA", "Lager", "Stout"]
+        Dimension 2, ["week_1", "week_2", "week_3"]
+    And data, a 3×3 Matrix{VariableRef}:
+     W[IPA,week_1]    W[IPA,week_2]    W[IPA,week_3]
+     W[Lager,week_1]  W[Lager,week_2]  W[Lager,week_3]
+     W[Stout,week_1]  W[Stout,week_2]  W[Stout,week_3]
+
+## Objective Function in Julia
+
+$$\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})$$
+
+. . .
+
+``` julia
+c = Dict("IPA" => 0.1, "Lager" => 0.1, "Stout" => 0.1) # Holding costs
+f = Dict("IPA" => 5000, "Lager" => 4000, "Stout" => 6000) # Setup costs
+```
+
+. . .
+
+``` julia
+@objective(clsp_model, Min,
+    sum(c[i] * W[i,t] + f[i] * Y[i,t]
+        for i in beer_types, t in periods)
+)
+```
 
 # <span class="flow">Model Characteristics</span>
 
@@ -335,8 +366,6 @@ There exist several types of optimization problems:
 -   **Heuristics** (greedy, construction method, n-opt, ...)
 -   **Graph theoretical methods** (network flow, shortest path)
 
-------------------------------------------------------------------------
-
 ## Model Characteristics
 
 <span class="question">Questions:</span> **On model characteristics**
@@ -353,8 +382,6 @@ There exist several types of optimization problems:
 -   What assumptions have we made?
 -   What is the problem with the planning horizon?
 -   Any idea how to solve it?
-
-------------------------------------------------------------------------
 
 # <span class="flow">Impact</span>
 
@@ -398,8 +425,6 @@ could be done?
 ## 
 
 Questions?
-
-------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 
