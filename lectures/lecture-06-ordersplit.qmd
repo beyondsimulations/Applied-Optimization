@@ -114,21 +114,6 @@ format:
 - **Transshipment**: Ship between warehouses before delivery
 - **Co-allocation**: Predict [co-appearance of products]{.highlight} and allocate them to the [same warehouse]{.highlight}
 
-## [Case Study]{.invert-font} {background-color="#000000" background-image="https://images.unsplash.com/photo-1672552226380-486fe900b322?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
-
-::: {.invert-font .fragment}
-**Key information** about the case:
-
-- a large European e-commerce retailer
-- the retailer has two warehouses
-- product range cannot be stored in either warehouse
-- product deliveries can be made to both warehouses
-- products do not have to be stored exclusively
-:::
-
-::: footer
-:::
-
 # [Problem Structure - Version 1]{.flow} {.title}
 
 ## Optimizing Co-allocation
@@ -741,30 +726,6 @@ Detect dependencies between products and allocate them accordingly, as products 
 
 # [CHI Heuristic]{.flow} {.title}
 
-## Why CHI?
-
-[Question:]{.question} **What's wrong with QMK?**
-
-. . .
-
-::: {.columns}
-::: {.column width="50%"}
-**QMK Problems**:
-
-- Slow for large instances
-- May allocate SKUs to [multiple warehouses]{.highlight}
-- Doesn't distinguish dependencies
-:::
-
-::: {.column width="50%"}
-**CHI Solution**:
-
-- Fast: $O(|\mathcal{K}| \times |\mathcal{I}|^2)$
-- Uses [statistical tests]{.highlight}
-- 50,000 SKUs in 10 minutes
-:::
-:::
-
 ## Statistical Independence
 
 [Question:]{.question} **When are two SKUs independent?**
@@ -801,20 +762,9 @@ Use **chi-square tests** to detect if SKUs are dependent:
 **Phase 2**: Refine with local search
 :::
 
-## CHI Algorithm Overview
-
-::: {.incremental}
-1. **Identify dependencies**: Chi-square tests on all SKU pairs
-2. **Separate matrices**: 
-    - $\boldsymbol{E}$: Independent coappearances
-    - $\boldsymbol{D}$: "Dependency premium"
-3. **Allocate strategically**: Cluster dependent SKUs together
-4. **Refine**: Local search for improvements
-:::
-
 . . .
 
-[Result:]{.highlight} Better than QMK on large instances!
+[Result:]{.highlight} Works on large instances, 50,000 SKUs in 10 minutes!
 
 # [Practical Implementation]{.flow} {.title}
 
@@ -843,17 +793,30 @@ Grouped SKUs by **category-brand combinations** to reduce problem size while mai
 
 ## Case Study
 
-- More than 100,000 SKUs and several millions of orders
-- Comparison of **different heuristics**[^opt_not]
-    - **CHI**: based on Chi-Square tests @vlcek_optimizing_2024
-    - **GP, GO, GS, BS**: based on greedy algorithms [@Catalan2012]
-    - **RA**: Random allocation of SKUs to warehouses
+::: {.columns}
+::: {.column width="50%"}
+**Problem characteristics**:
+
+- 100,000+ SKUs
+- Several million orders
+- Multiple warehouses
+- Storage capacity constraints
+:::
+
+::: {.column width="50%"}
+**Heuristics compared**[^opt_not]:
+
+- **CHI**: Chi-Square tests [@vlcek_optimizing_2024]
+- **GP, GO, GS, BS**: Greedy [@Catalan2012]
+- **RA**: Random allocation
+:::
+:::
 
 [^opt_not]:QMKP is not applicable for instance in case study
 
-## Real Data Set
+. . .
 
-![](https://images.beyondsimulations.com/ao/ao_split-case.png){width="80%"}
+![](https://images.beyondsimulations.com/ao/ao_split-case.png){width="70%"}
 
 ## Implementation Results
 
