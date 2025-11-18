@@ -91,7 +91,6 @@ Aligning the objectives of the three interest groups is challenging.
 :::
 :::
 
----
 
 ## {.loud-slide}
 ::: {.r-fit-text}
@@ -130,7 +129,6 @@ Extensive data collected, but often [lack of tools or knowledge]{.highlight} to 
 - Help administrators in making **strategic decisions**
 - Locate [new departments]{.highlight} or [close departments]{.highlight} [@Liberatore2020]
 
----
 
 # [Case Studies]{.flow} {.title}
 
@@ -194,7 +192,6 @@ Part of the force patrols the streets, another part is **stationed at the depart
 This is a **common problem** in many emergency services.
 :::
 
----
 
 ## Response Time
 
@@ -222,11 +219,10 @@ This is a **common problem** in many emergency services.
 - Traffic conditions
 :::
 
----
 
 # [Territory Design Problem]{.flow} {.title}
 
-## Territory Design Problem
+## What is Territory Design?
 
 ::: {.columns}
 ::: {.column width="40%"}
@@ -235,16 +231,83 @@ This is a **common problem** in many emergency services.
 
 ::: {.column width="55%"}
 
-
 > Aggregation of **small geographic areas**, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to **pre-defined planning criteria**[^zoltners].
+
 :::
 :::
 
 [^zoltners]: @Zoltners1983
 
----
+. . .
 
-## Objective
+::: {.callout-note}
+Territory design is a [general framework]{.highlight} applicable to many domains: emergency services, sales territories, political districts, school districts, etc.
+:::
+
+## Territory Design Components
+
+[Question:]{.question} **What are the key components?**
+
+::: {.incremental}
+- **Basic Areas (BAs)**: Smallest indivisible geographic units
+- **Districts/Territories**: Aggregation of BAs
+- **Planning Criteria**: Rules and objectives for grouping
+- **Decision**: Which BAs belong to which district?
+:::
+
+. . .
+
+::: {.callout-tip}
+In our police case: BAs are hexagonal cells, districts are service areas for police departments.
+:::
+
+## Common Territory Design Objectives
+
+::: {.columns}
+::: {.column width="50%"}
+**Balance Criteria**:
+
+- Equal [workload]{.highlight} distribution
+- Equal sales potential
+- Equal population coverage
+- Resource balance
+:::
+
+::: {.column width="50%"}
+**Geographic Criteria**:
+
+- [Contiguity]{.highlight}: No isolated areas
+- [Compactness]{.highlight}: Round shape
+- Minimize travel distances
+- Respect boundaries
+:::
+:::
+
+. . .
+
+::: {.callout-important}
+These criteria often [conflict]{.highlight} with each other - optimization helps find the best trade-off!
+:::
+
+## Applications of Territory Design
+
+[Question:]{.question} **Where else is this used?**
+
+::: {.incremental}
+- **Sales force deployment**: Assign sales representatives to territories
+- **Political districting**: Electoral boundaries
+- **School districts**: Student assignment zones
+- **Waste collection**: Service route planning
+- **Healthcare**: Hospital catchment areas
+:::
+
+. . .
+
+::: {.callout-note}
+Same mathematical structure, different objectives and constraints!
+:::
+
+## Police Districting Specifics
 
 [Question:]{.question} **What could be the objective?**
 
@@ -262,25 +325,51 @@ This is a **common problem** in many emergency services.
 - Compact and contiguous territories to **improve patrol**
 - Prevention of **isolated departments**
 
-## Basic Structure
+## From Geography to Graph
 
 ::: {.columns}
 ::: {.column width="25%"}
 ![](https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg){width=85%}
 :::
 ::: {.column width="75%"}
-[Question:]{.question} **How can we structure this?**
+[Question:]{.question} **How do we model this mathematically?**
 
 ::: {.incremental}
-- Model as a **digraph** with vertices and edges
-- Each BA centroid becomes a **vertex**
-- $\mathcal{J}$ : set of BAs, indexed by $j$
-- $\mathcal{I}$ : set of potential district centres $(\mathcal{I} \subseteq \mathcal{J})$
+- Geographic areas → [Centroids]{.highlight} (center points)
+- Centroids → **Vertices** in a graph
+- Spatial relationships → **Edges** between vertices
 :::
 :::
 :::
 
----
+. . .
+
+::: {.callout-tip}
+This abstraction allows us to use [powerful optimization techniques]{.highlight} from graph theory and location science!
+:::
+
+## Mathematical Structure
+
+::: {.columns}
+::: {.column width="25%"}
+![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70%}
+:::
+::: {.column width="75%"}
+[Question:]{.question} **What sets do we need?**
+
+::: {.incremental}
+- $\mathcal{J}$ : Set of **all BAs** (basic areas), indexed by $j$
+- $\mathcal{I}$ : Set of **potential department locations** where $\mathcal{I} \subseteq \mathcal{J}$, indexed by $i$
+:::
+
+. . .
+
+::: {.callout-important}
+Note: Department locations are a [subset]{.highlight} of all BAs - not every BA can host a department!
+:::
+:::
+:::
+
 
 ## Why Hexagons?
 
@@ -299,8 +388,6 @@ This is a **common problem** in many emergency services.
 :::
 :::
 :::
-
----
 
 ## Response Time Components
 
@@ -323,8 +410,6 @@ We focus on **minimizing expected driving times** between departments and incide
 :::
 :::
 :::
-
----
 
 # [Model Formulation]{.flow} {.title}
 
@@ -383,7 +468,6 @@ The depot locations are a [subset]{.highlight} of the basic areas!
 Parameters should be carefully calibrated with real-world data!
 :::
 
----
 
 ## Decision Variable(s)?
 
@@ -417,7 +501,6 @@ Parameters should be carefully calibrated with real-world data!
 
 - $X_{i,j} \in \{0,1\} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}$
 
----
 
 ## {.loud-slide}
 ::: {.r-fit-text}
@@ -469,7 +552,6 @@ $$
 
 :::
 
----
 
 # [Constraints]{.flow} {.title}
 
@@ -496,7 +578,6 @@ $$
 
 :::
 
----
 
 ## Single Assignment Constraint?
 
@@ -534,7 +615,6 @@ $$
 Each BA must be assigned to exactly one department.
 :::
 
----
 
 ## Department Count Constraint?
 
@@ -574,7 +654,6 @@ $$
 - We **can't open more departments** than there are locations
 - The model **will be infeasible**
 
----
 
 ## Active Department Constraint?
 
@@ -604,7 +683,6 @@ $$
 This constraint creates a **logical connection between department locations and BA assignments** where BAs can only be assigned to [opened]{.highlight} departments.
 :::
 
----
 
 ## p-Median Problem
 
@@ -616,7 +694,36 @@ This constraint creates a **logical connection between department locations and 
 & X_{i,j} \in \{0,1\}  && \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 \end{align}
 
----
+## Connection to Facility Location
+
+[Question:]{.question} **How does this relate to facility location problems?**
+
+. . .
+
+::: {.columns}
+::: {.column width="50%"}
+**p-Median Problem**:
+
+- Fixed number of facilities ($p$)
+- Minimize [total distance]{.highlight}
+- All customers served
+- No capacity constraints
+:::
+
+::: {.column width="50%"}
+**Similar problems**:
+
+- **UFLP**: Uncapacitated Facility Location
+- **p-Center**: Minimize [maximum]{.highlight} distance
+- **Capacitated**: Add capacity limits
+:::
+:::
+
+. . .
+
+::: {.callout-note}
+Our police districting is a **p-Median variant** with additional geographic constraints (contiguity, compactness)!
+:::
 
 # [Contiguity and Compactness]{.flow} {.title}
 
@@ -691,8 +798,6 @@ Compactness has **no univocal definition**; a district is commonly declared comp
 :::{.footer}
 :::
 
----
-
 ## Contiguity Sets
 
 [Additional Set and Parameter]{.highlight}
@@ -747,7 +852,6 @@ At least **one department** has to be assigned to a BA that is adjacent to BA $j
 
 :::
 
----
 
 ## Contiguity and Compactness
 
@@ -788,7 +892,6 @@ At least **one department** has to be assigned to **two BAs** that are adjacent 
 Due to the constraints, there is **always a path back** to the department if a BA is assigned to a department!
 :::
 
----
 
 # [Model Characteristics]{.flow} {.title}
 
@@ -817,7 +920,6 @@ Due to the constraints, there is **always a path back** to the department if a B
 
 :::
 
----
 
 # [Implementation and Impact]{.flow} {.title}
 
@@ -885,7 +987,6 @@ Due to the constraints, there is **always a path back** to the department if a B
 
 ![](https://images.beyondsimulations.com/ao/ao_police-b2c3.svg){width=90%}
 
----
 
 ## [Simulation Framework]{.invert-font} {background-image="https://images.beyondsimulations.com/ao/ao_police-streets.svg"}
 
@@ -928,7 +1029,6 @@ All improvements are **without additional staff**!
 Success requires balancing theoretical optimization with practical constraints!
 :::
 
----
 
 ## Future Applications
 
@@ -963,7 +1063,6 @@ Questions?
 ::: footer
 :::
 
----
 
 # [Literature]{.flow} {.title}
 
