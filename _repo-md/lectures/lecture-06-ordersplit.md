@@ -1,5 +1,5 @@
 ---
-title: Lecture VI - Minimizing Split Orders in E-Commerce
+title: Lecture VI - Minimizing Split Orders
 subtitle: Applied Optimization with Julia
 author: Dr. Tobias Vlćek
 format:
@@ -29,13 +29,13 @@ format:
 -   The number of parcels is rising:
     -   **2014**: 44 billion parcels (Pitney Bowes Inc. 2017)
     -   **2019**: 103 billion parcels (Pitney Bowes Inc. 2019)
-    -   **2026**: 220 -- 262 billion parcels [^1] (Pitney Bowes Inc. 2020)
+    -   **2026**: 220 -- 262 billion[^1] (Pitney Bowes Inc. 2020)
 
 ## Pressure on infrastructure
 
 <a href="https://unsplash.com/photos/person-holding-black-samsung-android-smartphone-hTUZW7E7krg" width="85%"><img src="https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?q=80&amp;w=2832&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" /></a>
 
--   Consumers nowadays expect <span class="highlight">free and fast deliveries and returns</span>
+-   Consumers nowadays expect <span class="highlight">free, fast deliveries and returns</span>
 -   Existing warehouses have to store an **increasing range of products**
 -   Better customer service requires **faster deliveries**
 -   Incurred fulfillment costs **depend on the number of parcels**
@@ -47,8 +47,6 @@ format:
 -   **Each parcel packaging** consumes resources during production
 -   Every dispatched parcel to the customer <span class="highlight">causes CO₂ emissions</span>
 -   In case of returns, **more parcels cause more emissions**
-
-------------------------------------------------------------------------
 
 # <span class="flow">Problem Structure</span>
 
@@ -106,8 +104,6 @@ format:
 -   product deliveries can be made to both warehouses
 -   products do not have to be stored exclusively
 
-------------------------------------------------------------------------
-
 # <span class="flow">Problem Structure - Version 1</span>
 
 ## Optimizing Co-allocation
@@ -122,8 +118,6 @@ We aim to improve the **SKU[^2]-warehouse allocation** to minimize the number of
 
 <span class="question">Question:</span> **What could be the sets here?**
 
-. . .
-
 -   $\mathcal{I}$ - Set of products indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
 -   $\mathcal{K}$ - Set of warehouses indexed by $k \in \{1,\dots,|\mathcal{K}|\}$
 -   $\mathcal{M}$ - Set of customer orders $m \in \{1,2,...,|\mathcal{M}|\}$
@@ -131,8 +125,6 @@ We aim to improve the **SKU[^2]-warehouse allocation** to minimize the number of
 ## Available Parameters
 
 <span class="question">Question:</span> **What are possible parameters?**
-
-. . .
 
 -   $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$
 -   $\boldsymbol{T}= (t_{m,i})$ - Past customer orders for SKUs
@@ -166,8 +158,6 @@ Example of $\boldsymbol{T}$
 . . .
 
 <span class="question">Question:</span> **What is your opinion on the assumption?**
-
-------------------------------------------------------------------------
 
 ## Split-Order Minimization
 
@@ -208,8 +198,6 @@ Example of $\boldsymbol{T}$
 Any idea what
 
 could be done?
-
-------------------------------------------------------------------------
 
 # <span class="flow">Problem Structure - Version 2</span>
 
@@ -276,8 +264,6 @@ display(Q)
 
 -   How often each SKU appeared over all orders **(binary!)**
 
-------------------------------------------------------------------------
-
 ## How to approach the problem?
 
 -   **Greedy Heuristic**[^3]: Allocation based on matrix
@@ -305,8 +291,6 @@ display(Q)
 >
 > We can focus on the SKUs and the warehouses, making the problem **much smaller**!
 
-------------------------------------------------------------------------
-
 ## Available Parameters
 
 <span class="question">Question:</span> **What are possible parameters?**
@@ -319,8 +303,6 @@ display(Q)
 > **Transactional Data replaced**
 >
 > Instead of the transactional data, we just **use the coappearance matrix** in our model!
-
-------------------------------------------------------------------------
 
 # <span class="flow">Model Formulation</span>
 
@@ -379,8 +361,6 @@ warehouse_model = Model(SCIP.Optimizer)
      X[Socks,Hamburg]       X[Socks,Berlin]
      X[Charger,Hamburg]     X[Charger,Berlin]
 
-------------------------------------------------------------------------
-
 ## Objective Function
 
 > **We need the following:**
@@ -430,8 +410,6 @@ Q = [2 1 2; 1 2 1; 2 1 2]
 
 \$ X\_{Socks,Hamburg}X\_{Smartphone,Hamburg} + X\_{Socks,Berlin}X\_{Smartphone,Berlin} + 2 X\_{Charger,Hamburg}X\_{Smartphone,Hamburg} + 2 X\_{Charger,Berlin}X\_{Smartphone,Berlin} + X\_{Charger,Hamburg}X\_{Socks,Hamburg} + X\_{Charger,Berlin}X\_{Socks,Berlin} \$
 
-------------------------------------------------------------------------
-
 # <span class="flow">Constraints</span>
 
 ## What constraints?
@@ -443,8 +421,6 @@ Q = [2 1 2; 1 2 1; 2 1 2]
 -   Allocate each SKU **at least once**
 -   Warehouses have a **finite capacity**
 -   Capacity is **not exceeded**
-
-------------------------------------------------------------------------
 
 ## Single Allocation Constraint?
 
@@ -495,8 +471,6 @@ $$\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}$$
      single_allocation[Socks] : X[Socks,Hamburg] + X[Socks,Berlin] ≥ 1
      single_allocation[Charger] : X[Charger,Hamburg] + X[Charger,Berlin] ≥ 1
 
-------------------------------------------------------------------------
-
 ## Capacity Constraints?
 
 > **The goal of these constraints is to:**
@@ -542,8 +516,6 @@ capacities = Dict("Hamburg" => 2, "Berlin" => 1) # Add capacities
      capacity[Hamburg] : X[Smartphone,Hamburg] + X[Socks,Hamburg] + X[Charger,Hamburg] ≤ 2
      capacity[Berlin] : X[Smartphone,Berlin] + X[Socks,Berlin] + X[Charger,Berlin] ≤ 1
 
-------------------------------------------------------------------------
-
 ## QMK Model
 
 $$\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}$$
@@ -577,7 +549,9 @@ println("The optimal solution is: ", value.(X))
      -0.0  1.0
       1.0  0.0
 
-------------------------------------------------------------------------
+. . .
+
+<span class="question">Question:</span> What does this value tell us?
 
 # <span class="flow">Model Characteristics</span>
 
@@ -607,7 +581,19 @@ println("The optimal solution is: ", value.(X))
 <figcaption>Local vs Global Optimum by Christoph Roser</figcaption>
 </figure>
 
-------------------------------------------------------------------------
+## Solver Comparison[^6]
+
+| SKUs   | SCIP         | HiGHS | Gurobi     |
+|--------|--------------|-------|------------|
+| 100    | 118s         | X     | ~400s      |
+| 1,000  | 1,011s (18%) | X     | ~200s (2%) |
+| 10,000 | X            | X     | X          |
+
+. . .
+
+-   <span class="highlight">SCIP</span>: Best open-source for MIQCP, but limited scalability
+-   **Commercial solvers**: Better but still fail on 10,000+ SKUs
+-   **Conclusion**: Heuristics necessary for realistic problems!
 
 ## Model Assumptions
 
@@ -616,6 +602,29 @@ println("The optimal solution is: ", value.(X))
 -   What assumptions have we made?
 -   Problem with allocating SKUs to multiple warehouses?
 -   What else might pose a problem in the real world?
+
+## Model Limitations
+
+-   **Stock-outs**: Model assumes <span class="highlight">perfect availability</span>
+    -   Real stockouts create splits despite optimal allocation
+-   **Storage costs**: No differentiation between costs
+-   **Demand dynamics**: Weather, promotions, seasonality
+-   **SKU sizes**: Uniform capacity assumption unrealistic
+-   **Shipping costs**: No consideration of distance or weight
+
+## Practical Limitations
+
+**Allocation changes**:
+
+-   Frequent reallocation <span class="highlight">disrupts operations</span>
+-   Physical inventory movements costly
+-   Need for change minimization
+
+**Workload imbalance**:
+
+-   Optimal allocation may <span class="highlight">overload</span> some warehouses
+-   High-frequency SKUs cluster together
+-   Trade-off: splits vs. balance
 
 # <span class="flow">Impact</span>
 
@@ -627,8 +636,8 @@ applied?
 
 ## Problem Size is Crucial
 
--   Up to 10,000 SKUs → **commercial solvers**
--   More than 10,000 SKUs → **heuristics**
+-   Up to 1,000 SKUs → **commercial solvers**
+-   More than 1,000 SKUs → **heuristics**
 -   For example, the <span class="highlight">CHI</span> heuristic
 
 . . .
@@ -637,12 +646,99 @@ applied?
 >
 > Detect dependencies between products and allocate them accordingly, as products within orders can have dependencies and products are bought with different frequencies!
 
-------------------------------------------------------------------------
+# <span class="flow">CHI Heuristic</span>
+
+## Why CHI?
+
+<span class="question">Question:</span> **What's wrong with QMK?**
+
+. . .
+
+**QMK Problems**:
+
+-   Slow for large instances
+-   May allocate SKUs to <span class="highlight">multiple warehouses</span>
+-   Doesn't distinguish dependencies
+
+**CHI Solution**:
+
+-   Fast: $O(|\mathcal{K}| \times |\mathcal{I}|^2)$
+-   Uses <span class="highlight">statistical tests</span>
+-   50,000 SKUs in 10 minutes
+
+## Statistical Independence
+
+<span class="question">Question:</span> **When are two SKUs independent?**
+
+. . .
+
+If purchasing one doesn't affect purchasing the other:
+
+$$P(A \cap B) = P(A) \times P(B)$$
+
+. . .
+
+**Example**: If $A$ appears in 10% of orders and $B$ in 20%:
+
+-   **Independent**: Appear together in $0.10 \times 0.20 = 2\%$ of orders
+-   **Dependent**: Appear together in <span class="highlight">5% of orders</span> → customers buy them together!
+
+## Chi-Square Test Intuition
+
+Use **chi-square tests** to detect if SKUs are dependent:
+
+-   Calculate <span class="highlight">expected coappearances</span> under independence
+-   Compare with **actual coappearances**
+-   If difference is significant → SKUs are **dependent**
+-   Allocate dependent SKUs to <span class="highlight">same warehouse</span>!
+
+. . .
+
+> **Two-Phase Approach**
+>
+> **Phase 1**: Build allocation using dependencies  
+> **Phase 2**: Refine with local search
+
+## CHI Algorithm Overview
+
+1.  **Identify dependencies**: Chi-square tests on all SKU pairs
+2.  **Separate matrices**:
+    -   $\boldsymbol{E}$: Independent coappearances
+    -   $\boldsymbol{D}$: "Dependency premium"
+3.  **Allocate strategically**: Cluster dependent SKUs together
+4.  **Refine**: Local search for improvements
+
+. . .
+
+<span class="highlight">Result:</span> Better than QMK on large instances!
+
+# <span class="flow">Practical Implementation</span>
+
+## Real-World Challenges
+
+<span class="question">Question:</span> **What challenges might arise in practice?**
+
+-   **New products**: Allocate SKUs without historical data?
+-   **Dynamic inventory**: SKUs appear and disappear
+-   **Different sizes**: SKUs consume varying storage space
+-   **Computational limits**: Problems with 50,000+ SKUs
+
+## Rolling Horizon Approach
+
+-   Use **5-week training window** for allocation decisions
+-   Update allocations **weekly** based on recent patterns
+-   Balance <span class="highlight">stability</span> vs. <span class="highlight">responsiveness</span>
+
+. . .
+
+> **Tip**
+>
+> Grouped SKUs by **category-brand combinations** to reduce problem size while maintaining allocation quality. New SKUs inherit allocation from their cluster!
 
 ## Case Study
 
 -   More than 100,000 SKUs and several millions of orders
--   Comparison of **different heuristics**[^6]
+-   Comparison of **different heuristics**[^7]
     -   **CHI**: based on Chi-Square tests Vlćek and Voigt (2024)
     -   **GP, GO, GS, BS**: based on greedy algorithms (Catalán and Fisher 2012)
     -   **RA**: Random allocation of SKUs to warehouses
@@ -651,12 +747,23 @@ applied?
 
 <img src="https://images.beyondsimulations.com/ao/ao_split-case.png" style="width:80.0%" />
 
+## Implementation Results
+
+**Theoretical improvements**:
+
+-   CHI: **82.25%** reduction
+-   BS: **62.63%** reduction  
+-   GS: **59.16%** reduction
+-   vs. retailer: **6.95%** split ratio
+
 ## Conclusion
 
 -   Splits are **of no benefit**, except **faster customer deliveries**
 -   <span class="highlight">Increase workload, packaging and shipping costs</span>
 -   Mathematical Optimisation of **"full" problem not solvable**
 -   **CHI** Heuristic close to mathematical optimisation
+
+. . .
 
 > **And that's it for todays lecture!**
 >
@@ -698,4 +805,6 @@ Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. "Optimization of Produc
 
 [^5]: Greedy Randomized Adaptive Search Procedure, Zhu et al. (2021)
 
-[^6]: QMKP is not applicable for instance in case study
+[^6]: Based on numerical experiments (QMK). The percentage in the table shows instances that could be solved within one hour and their average time (if solved).
+
+[^7]: QMKP is not applicable for instance in case study

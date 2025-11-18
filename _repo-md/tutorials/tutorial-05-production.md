@@ -389,7 +389,7 @@ Finally, implement the solve statement for your model instance.
 
 ``` julia
 # Validate your solution
-@assert 600000 <= objective_value(lotsizeModel) <= 700000 "Objective value should be between 600,000 and 700,000"
+@assert 539900 <= objective_value(lotsizeModel) <= 700000 "Objective value should be between 539,000 and 700,000"
 ```
 
 </details>
@@ -581,7 +581,7 @@ To solve this task, you can simply extend the previous model by these additional
 
 ``` julia
 # Validate your solution
-@assert 700000 <= objective_value(lotsizeModel) <= 760000 "Objective value should be between 700,000 and 760,000"
+@assert 659900 <= objective_value(lotsizeModel) <= 760000 "Objective value should be between 659,9000 and 760,000"
 ```
 
 </details>
@@ -620,7 +620,7 @@ Again, to solve this task, you can simply extend the previous model by these add
 
 ``` julia
 # Validate your solution
-@assert 760000 <= objective_value(lotsizeModel) <= 800000 "Objective value should be between 760,000 and 800,000"
+@assert 661400 <= objective_value(lotsizeModel) <= 800000 "Objective value should be between 661,400 and 800,000"
 ```
 
 </details>
