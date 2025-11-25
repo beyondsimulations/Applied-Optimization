@@ -94,16 +94,6 @@ format:
 -   **Transshipment**: Ship between warehouses before delivery
 -   **Co-allocation**: Predict <span class="highlight">co-appearance of products</span> and allocate them to the <span class="highlight">same warehouse</span>
 
-## <span class="invert-font">Case Study</span>
-
-**Key information** about the case:
-
--   a large European e-commerce retailer
--   the retailer has two warehouses
--   product range cannot be stored in either warehouse
--   product deliveries can be made to both warehouses
--   products do not have to be stored exclusively
-
 # <span class="flow">Problem Structure - Version 1</span>
 
 ## Optimizing Co-allocation
@@ -648,24 +638,6 @@ applied?
 
 # <span class="flow">CHI Heuristic</span>
 
-## Why CHI?
-
-<span class="question">Question:</span> **What's wrong with QMK?**
-
-. . .
-
-**QMK Problems**:
-
--   Slow for large instances
--   May allocate SKUs to <span class="highlight">multiple warehouses</span>
--   Doesn't distinguish dependencies
-
-**CHI Solution**:
-
--   Fast: $O(|\mathcal{K}| \times |\mathcal{I}|^2)$
--   Uses <span class="highlight">statistical tests</span>
--   50,000 SKUs in 10 minutes
-
 ## Statistical Independence
 
 <span class="question">Question:</span> **When are two SKUs independent?**
@@ -699,18 +671,9 @@ Use **chi-square tests** to detect if SKUs are dependent:
 > **Phase 1**: Build allocation using dependencies  
 > **Phase 2**: Refine with local search
 
-## CHI Algorithm Overview
-
-1.  **Identify dependencies**: Chi-square tests on all SKU pairs
-2.  **Separate matrices**:
-    -   $\boldsymbol{E}$: Independent coappearances
-    -   $\boldsymbol{D}$: "Dependency premium"
-3.  **Allocate strategically**: Cluster dependent SKUs together
-4.  **Refine**: Local search for improvements
-
 . . .
 
-<span class="highlight">Result:</span> Better than QMK on large instances!
+<span class="highlight">Result:</span> Works on large instances, 50,000 SKUs in 10 minutes!
 
 # <span class="flow">Practical Implementation</span>
 
@@ -737,15 +700,22 @@ Use **chi-square tests** to detect if SKUs are dependent:
 
 ## Case Study
 
--   More than 100,000 SKUs and several millions of orders
--   Comparison of **different heuristics**[^7]
-    -   **CHI**: based on Chi-Square tests Vlćek and Voigt (2024)
-    -   **GP, GO, GS, BS**: based on greedy algorithms (Catalán and Fisher 2012)
-    -   **RA**: Random allocation of SKUs to warehouses
+**Problem characteristics**:
 
-## Real Data Set
+-   100,000+ SKUs
+-   Several million orders
+-   Multiple warehouses
+-   Storage capacity constraints
 
-<img src="https://images.beyondsimulations.com/ao/ao_split-case.png" style="width:80.0%" />
+**Heuristics compared**[^7]:
+
+-   **CHI**: Chi-Square tests (Vlćek and Voigt 2024)
+-   **GP, GO, GS, BS**: Greedy (Catalán and Fisher 2012)
+-   **RA**: Random allocation
+
+. . .
+
+<img src="https://images.beyondsimulations.com/ao/ao_split-case.png" style="width:70.0%" />
 
 ## Implementation Results
 

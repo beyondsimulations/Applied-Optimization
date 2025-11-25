@@ -21,7 +21,7 @@ format:
 
 -   <span class="highlight">Book Delivery to Libraries</span> in Germany
 -   They supply **all local libraries** within the same state
--   Complex, as the **number of libraries** per state can be large
+-   Complex, as **number of libraries** per state can be large
 -   Books and media in the libraries **change often**
 -   Customers can **request books** from other libraries
 
@@ -38,7 +38,7 @@ format:
 
 . . .
 
--   Subdivide their set of libraries into **several ordered tours**
+-   Subdivide set of libraries into **several ordered tours**
 -   Decide in **which order to visit** the libraries
 -   Evaluate **which car to use** for each of the tours
 -   Decide **which driver** to assign to each of the tours
@@ -49,18 +49,16 @@ format:
 
 . . .
 
--   Longer driving routes <span class="highlight">increase the footprint</span> of the deliveries
+-   Longer driving <span class="highlight">increases the footprint</span> of the deliveries
 -   Suboptimal tours can lead to **unnecessary costs**
 -   Fuel, personnel, and repairs **are increased**
--   Unhappy customers due to **waiting times** on ordered books
+-   Unhappy customers due to **waiting times** on books
 
 ## 
 
 Have you heard of
 
 this problem before?
-
-------------------------------------------------------------------------
 
 # <span class="flow">Problem Structure</span>
 
@@ -80,7 +78,7 @@ this problem before?
 
 . . .
 
-**Minimization** of the travel time while <span class="highlight">supplying all libraries</span> in the state and adhering to **the vehicle capacities and driving time restrictions.**
+**Minimization** of the travel time while <span class="highlight">supplying all libraries</span> in the state and respecting **the vehicle capacities and driving time restrictions.**
 
 ## 
 
@@ -108,15 +106,13 @@ Let's visualize
 
 the problem!
 
-------------------------------------------------------------------------
-
 # <span class="flow">Problem Visualization</span>
 
 ## Basic Problem Setting
 
 <img src="https://images.beyondsimulations.com/ao/ao_routing-basic-01.svg" style="width:99.0%" />
 
-## Basic Problem Setting with Arcs
+## Basic Setting with Arcs
 
 <img src="https://images.beyondsimulations.com/ao/ao_routing-basic-02.svg" style="width:99.0%" />
 
@@ -124,11 +120,9 @@ the problem!
 
 <img src="https://images.beyondsimulations.com/ao/ao_routing-basic-03.svg" style="width:99.0%" />
 
-## Basic Problem Setting with Tours
+## Basic Setting with Tours
 
 <img src="https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg" style="width:99.0%" />
-
-------------------------------------------------------------------------
 
 # <span class="flow">Problem Structure</span>
 
@@ -159,8 +153,6 @@ the problem!
 > **Tip**
 >
 > $t$ is the maximal duration of each tour, not the travel time on an arc or an index!
-
-------------------------------------------------------------------------
 
 ## Decision Variable(s)?
 
@@ -222,8 +214,6 @@ the problem!
 >
 > Only possible, if time and capacity constraints are equal for all vehicles!
 
-------------------------------------------------------------------------
-
 # <span class="flow">Model Formulation</span>
 
 ## Objective Function?
@@ -256,7 +246,31 @@ $$\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}$$
 
 <span class="question">Question:</span> **What does $(i,j) \in \mathcal{A}$ under the sum mean?**
 
-------------------------------------------------------------------------
+## From Math to Code
+
+The objective function in **JuMP** looks very similar:
+
+``` julia
+using JuMP, HiGHS
+
+# Simple example with 4 nodes
+nodes = ["depot", "A", "B", "C"]
+arcs = [(i,j) for i in nodes, j in nodes if i != j]
+c = Dict(("depot","A") => 10, ("depot","B") => 15, ("depot","C") => 20,
+         ("A","depot") => 10, ("A","B") => 12, ("A","C") => 8,
+         ("B","depot") => 15, ("B","A") => 12, ("B","C") => 5,
+         ("C","depot") => 20, ("C","A") => 8, ("C","B") => 5)
+
+model = Model(HiGHS.Optimizer)
+@variable(model, X[arcs], Bin)
+@objective(model, Min, sum(c[i,j] * X[(i,j)] for (i,j) in arcs))
+```
+
+. . .
+
+> **Note**
+>
+> The JuMP syntax `sum(c[i,j] * X[(i,j)] for (i,j) in arcs)` directly mirrors our mathematical notation $\sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}$!
 
 ## Problem Constraints
 
@@ -288,8 +302,6 @@ subtour?
 ## Subtours
 
 <img src="https://images.beyondsimulations.com/ao/ao_routing-basic-05.svg" style="width:99.0%" />
-
-------------------------------------------------------------------------
 
 # <span class="flow">Constraints</span>
 
@@ -328,9 +340,7 @@ $$
 
 The depot is the **only node** that is <span class="highlight">visited multiple times!</span>
 
-------------------------------------------------------------------------
-
-## Depot Entry and Exit Constraints?
+## Depot Entry/ Exit Constraints?
 
 > **The goal of these constraints is to:**
 >
@@ -348,7 +358,7 @@ The depot is the **only node** that is <span class="highlight">visited multiple 
 
 <span class="question">Question:</span> **What could the constraint look like?**
 
-## Depot Entry and Exit Constraints
+## Depot Entry/ Exit Constraints
 
 $$
 \sum_{i \in \mathcal{V} \setminus \{0\}} X_{i,0} = |\mathcal{K}|
@@ -363,8 +373,6 @@ $$
 > **Are all constraints necessary?**
 >
 > No, theoretically we could also say that we only have to leave **or** enter the depot exactly $|\mathcal{K}|$ times, as the other constraint is already enforced by the "visit each customer once constraint".
-
-------------------------------------------------------------------------
 
 # <span class="flow">Capacity and Subtour Elimination</span>
 
@@ -424,8 +432,6 @@ complicated?
 -   $d_i$ for **all customers** is 1
 -   Capacity $b$ **per vehicle** is 5
 -   $U_i$ is the current **capacity utilization** at node $i \in \mathcal{I}$
-
-------------------------------------------------------------------------
 
 ## No connection between nodes
 
@@ -510,8 +516,6 @@ complicated?
 -   Remember variable domain of $U_i$?
 -   $d_i \leq U_i \leq b$ → <span class="highlight">Overall capacity limit enforced!</span>
 
-------------------------------------------------------------------------
-
 # <span class="flow">Last Constraint</span>
 
 ## Ensure time limit?
@@ -522,7 +526,7 @@ complicated?
 
 -   Constraints basically **follow the same idea**!
 -   First, we again need an additional variable
--   $T_{i}$ - Time spent on tour at the node $i$ of a vehicle with $i \in \mathcal{I}$
+-   $T_{i}$ - Time spent on tour at node $i$ of a vehicle with $i \in \mathcal{I}$
 
 ## Ensure time limit
 
@@ -549,8 +553,6 @@ $$
 ## 
 
 Any questions?
-
-------------------------------------------------------------------------
 
 # <span class="flow">Asymmetric Vehicle Routing Problem</span>
 
@@ -592,7 +594,7 @@ $$
 >
 > The depot is visited by exactly $|\mathcal{K}|$ vehicles. Note, that we could remove one of the constraints and the solution would still be optimal.
 
-## Capacity and subtour elimination
+## Capacity/ subtour elimination
 
 $$
 U_i - U_j + b \times X_{i,j} \leq b - d_j \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
@@ -638,8 +640,6 @@ $$
 >
 > The binary setup variable is either 0 or 1 and the new variables are below the time and capacity limit.
 
-------------------------------------------------------------------------
-
 # <span class="flow">Model Characteristics</span>
 
 ## Characteristics
@@ -655,8 +655,39 @@ $$
 <span class="question">Questions:</span> **On model assumptions**
 
 -   What assumptions have we made?
--   What are likely issues that can arise if the model is applied?
+-   What are issues that can arise if the model is applied?
 -   Have we considered service times?
+
+## Model Limitations
+
+Our formulation makes <span class="highlight">several simplifying assumptions</span>:
+
+-   **No service time** at customer locations
+-   **Homogeneous fleet** (all vehicles are identical)
+-   **Deterministic demand** (known exactly in advance)
+-   **Single depot** (all vehicles start and end at same location)
+
+## Real-World Complications
+
+**Operational Challenges**
+
+-   Traffic variability
+-   Driver breaks and regulations
+-   Vehicle breakdowns
+-   Weather conditions
+
+**Planning Challenges**
+
+-   Dynamic customer requests
+-   Uncertain demand
+-   Last-minute cancellations
+-   Multi-day horizons
+
+. . .
+
+> **Tip**
+>
+> These complications often require **extensions** of the basic CVRP model or **robust optimization** approaches!
 
 ------------------------------------------------------------------------
 
@@ -672,8 +703,6 @@ $$
 -   heterogeneous fleet (HF)
 -   backhauls (B)
 -   pickup and delivery (PD)
-
-------------------------------------------------------------------------
 
 # <span class="flow">Implementation and Impact</span>
 
@@ -704,8 +733,6 @@ the gap is still very large
 
 with 40%-45%.
 
-------------------------------------------------------------------------
-
 ## Problem is NP-hard
 
 -   We have already seen that a problem **can be NP-hard**
@@ -716,7 +743,30 @@ with 40%-45%.
 
 > **Note**
 >
-> We won't go deeper into this, but feel free to ask me!
+> The CVRP is a generalization of the **Traveling Salesman Problem (TSP)**, which is itself NP-hard!
+
+## Why Does This Matter?
+
+The solution space grows **explosively** with problem size:
+
+| Nodes | Possible Tour Orders | Approx. Computation |
+|-------|----------------------|---------------------|
+| 10    | 3.6 million          | Seconds             |
+| 15    | 1.3 trillion         | Minutes             |
+| 20    | 2.4 × 10^18          | Hours to days       |
+| 50    | 3 × 10^64            | Infeasible          |
+
+. . .
+
+<span class="question">Question:</span> **Why is the 40-45% gap after 1 hour expected?**
+
+## Understanding Optimality Gap
+
+-   The **optimality gap** measures:
+    $$\frac{\text{Best Solution} - \text{Lower Bound}}{\text{Lower Bound}} \times 100\%$$
+-   A 40% gap means our solution **could be** up to 40% worse than optimal
+-   For 165 libraries, even **state-of-the-art solvers** struggle
+-   <span class="highlight">This is why we need heuristics!</span>
 
 ## 
 
@@ -730,7 +780,6 @@ the model?
 
 -   We can still solve the problem **with a heuristic**
 -   <span class="highlight">Likely not the optimal solution</span>, but a lot of research goes into efficient algorithms to solve these problems
--   In our case study we applied **Hybrid Genetic Search** for the CVRP (HGS-CVRP) by Vidal (2022)
 
 . . .
 
@@ -738,7 +787,65 @@ the model?
 >
 > For problems with 100+ locations, heuristics are often the only practical choice.
 
-------------------------------------------------------------------------
+## Heuristics for VRP
+
+**Construction**
+
+Build a solution from scratch
+
+-   Nearest neighbor
+-   Savings algorithm
+-   Sweep method
+
+**Improvement**
+
+Refine existing solutions
+
+-   2-opt (swap edges)
+-   Or-opt (relocate)
+-   Exchange moves
+
+**Metaheuristics**
+
+Intelligent search strategies
+
+-   Genetic algorithms
+-   Simulated annealing
+-   Tabu search
+
+. . .
+
+> **Tip**
+>
+> Interested in more details? Check the lecture [Management Science](https://beyondsimulations.github.io/Management-Science/)
+
+## HGS-CVRP: State-of-the-Art
+
+In our case study we applied **Hybrid Genetic Search** for the CVRP (HGS-CVRP) by Vidal (2022)
+
+-   Maintains **diverse population** of solutions
+-   Applies **intensive local search** to improve offspring
+-   Achieves near-optimal solutions in **seconds to minutes**
+
+. . .
+
+> **Tip**
+>
+> For real-world applications, also consider OR-Tools by Google, it is open-source and production-ready!
+
+## Case Study Results
+
+Using **HGS-CVRP** instead of exact optimization:
+
+-   Solution found in **\< 5 minutes** (vs. hours with MIP)
+-   Total driving distance reduced by **~20%** compared to manual planning
+-   CO₂ emissions reduced by approximately **12-15 tonnes/year**
+
+. . .
+
+> **Important**
+>
+> The heuristic solution is **better** than what the MIP solver found in 1 hour!
 
 ## Applications Beyond Libraries
 
@@ -776,8 +883,6 @@ the model?
 ## 
 
 Questions?
-
-------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 
