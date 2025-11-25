@@ -3213,7 +3213,7 @@
     "href": "lectures/lecture-07-presentation.html#central-libraries-1",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Central Libraries",
-    "text": "Central Libraries\n\nBook Delivery to Libraries in Germany\nThey supply all local libraries within the same state\nComplex, as the number of libraries per state can be large\nBooks and media in the libraries change often\nCustomers can request books from other libraries"
+    "text": "Central Libraries\n\nBook Delivery to Libraries in Germany\nThey supply all local libraries within the same state\nComplex, as number of libraries per state can be large\nBooks and media in the libraries change often\nCustomers can request books from other libraries"
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#structure-of-the-deliveries",
@@ -3227,14 +3227,14 @@
     "href": "lectures/lecture-07-presentation.html#potential-decisions",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Potential Decisions",
-    "text": "Potential Decisions\nQuestion: What decisions can the library make for tours?\n\n\nSubdivide their set of libraries into several ordered tours\nDecide in which order to visit the libraries\nEvaluate which car to use for each of the tours\nDecide which driver to assign to each of the tours"
+    "text": "Potential Decisions\nQuestion: What decisions can the library make for tours?\n\n\nSubdivide set of libraries into several ordered tours\nDecide in which order to visit the libraries\nEvaluate which car to use for each of the tours\nDecide which driver to assign to each of the tours"
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#impact-of-the-decisions",
     "href": "lectures/lecture-07-presentation.html#impact-of-the-decisions",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Impact of the Decisions",
-    "text": "Impact of the Decisions\nQuestion: What is the impact of the decisions?\n\n\nLonger driving routes increase the footprint of the deliveries\nSuboptimal tours can lead to unnecessary costs\nFuel, personnel, and repairs are increased\nUnhappy customers due to waiting times on ordered books"
+    "text": "Impact of the Decisions\nQuestion: What is the impact of the decisions?\n\n\nLonger driving increases the footprint of the deliveries\nSuboptimal tours can lead to unnecessary costs\nFuel, personnel, and repairs are increased\nUnhappy customers due to waiting times on books"
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#section",
@@ -3255,7 +3255,7 @@
     "href": "lectures/lecture-07-presentation.html#modelling",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Modelling",
-    "text": "Modelling\nQuestion: What could we try to model?\n\nMinimization of the travel time while supplying all libraries in the state and adhering to the vehicle capacities and driving time restrictions."
+    "text": "Modelling\nQuestion: What could we try to model?\n\nMinimization of the travel time while supplying all libraries in the state and respecting the vehicle capacities and driving time restrictions."
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#section-1",
@@ -3286,11 +3286,11 @@
     "text": "Basic Problem Setting"
   },
   {
-    "objectID": "lectures/lecture-07-presentation.html#basic-problem-setting-with-arcs",
-    "href": "lectures/lecture-07-presentation.html#basic-problem-setting-with-arcs",
+    "objectID": "lectures/lecture-07-presentation.html#basic-setting-with-arcs",
+    "href": "lectures/lecture-07-presentation.html#basic-setting-with-arcs",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Basic Problem Setting with Arcs",
-    "text": "Basic Problem Setting with Arcs"
+    "section": "Basic Setting with Arcs",
+    "text": "Basic Setting with Arcs"
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#setting-with-vehicles",
@@ -3300,11 +3300,11 @@
     "text": "Setting with Vehicles"
   },
   {
-    "objectID": "lectures/lecture-07-presentation.html#basic-problem-setting-with-tours",
-    "href": "lectures/lecture-07-presentation.html#basic-problem-setting-with-tours",
+    "objectID": "lectures/lecture-07-presentation.html#basic-setting-with-tours",
+    "href": "lectures/lecture-07-presentation.html#basic-setting-with-tours",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Basic Problem Setting with Tours",
-    "text": "Basic Problem Setting with Tours"
+    "section": "Basic Setting with Tours",
+    "text": "Basic Setting with Tours"
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#available-sets",
@@ -3363,6 +3363,13 @@
     "text": "Objective Function\n\n\n\n\n\n\nWe need the following parameters:\n\n\n\n\\(c_{i,j}\\) - travel time on an arc from \\(i\\) to \\(j\\)\n\n\n\n\n\n\\[\\text{minimize} \\quad \\sum_{(i,j) \\in \\mathcal{A}} c_{i,j} \\times X_{i,j}\\]\n\n\nQuestion: What does \\((i,j) \\in \\mathcal{A}\\) under the sum mean?"
   },
   {
+    "objectID": "lectures/lecture-07-presentation.html#from-math-to-code",
+    "href": "lectures/lecture-07-presentation.html#from-math-to-code",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "From Math to Code",
+    "text": "From Math to Code\nThe objective function in JuMP looks very similar:\n\nusing JuMP, HiGHS\n\n# Simple example with 4 nodes\nnodes = [\"depot\", \"A\", \"B\", \"C\"]\narcs = [(i,j) for i in nodes, j in nodes if i != j]\nc = Dict((\"depot\",\"A\") =&gt; 10, (\"depot\",\"B\") =&gt; 15, (\"depot\",\"C\") =&gt; 20,\n         (\"A\",\"depot\") =&gt; 10, (\"A\",\"B\") =&gt; 12, (\"A\",\"C\") =&gt; 8,\n         (\"B\",\"depot\") =&gt; 15, (\"B\",\"A\") =&gt; 12, (\"B\",\"C\") =&gt; 5,\n         (\"C\",\"depot\") =&gt; 20, (\"C\",\"A\") =&gt; 8, (\"C\",\"B\") =&gt; 5)\n\nmodel = Model(HiGHS.Optimizer)\n@variable(model, X[arcs], Bin)\n@objective(model, Min, sum(c[i,j] * X[(i,j)] for (i,j) in arcs))\n\n\n\n\n\n\n\n\nThe JuMP syntax sum(c[i,j] * X[(i,j)] for (i,j) in arcs) directly mirrors our mathematical notation \\(\\sum_{(i,j) \\in \\mathcal{A}} c_{i,j} \\times X_{i,j}\\)!"
+  },
+  {
     "objectID": "lectures/lecture-07-presentation.html#problem-constraints",
     "href": "lectures/lecture-07-presentation.html#problem-constraints",
     "title": "Lecture VII - Library Routing Optimization",
@@ -3405,18 +3412,18 @@
     "text": "Visit Each Customer Once\nQuestion: What could the constraint look like?\n\n\\[\n\\sum_{i \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall j \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V}} X_{i,j} = 1 \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\n\nQuestion: Why for all nodes except the depot?\n\n\nThe depot is the only node that is visited multiple times!"
   },
   {
-    "objectID": "lectures/lecture-07-presentation.html#depot-entry-and-exit-constraints",
-    "href": "lectures/lecture-07-presentation.html#depot-entry-and-exit-constraints",
+    "objectID": "lectures/lecture-07-presentation.html#depot-entry-exit-constraints",
+    "href": "lectures/lecture-07-presentation.html#depot-entry-exit-constraints",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Depot Entry and Exit Constraints?",
-    "text": "Depot Entry and Exit Constraints?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\nEnsure that each vehicle enters and leaves the depot exactly \\(|\\mathcal{K}|\\) times, as we have \\(|\\mathcal{K}|\\) vehicles and each vehicle has to return to the depot.\n\n\n\n\n\n\n\n\n\n\nWe need the following sets and variables:\n\n\n\n\\(\\mathcal{V}\\) - Set of all nodes, index \\(i \\in \\{0,1,2,...,n\\}\\)\n\\(|\\mathcal{K}|\\) - Number of vehicles\n\\(X_{i,j}\\) - 1, if the arc between \\(i\\) and \\(j\\) is part of a tour, 0 otherwise\n\n\n\n\n\n\nQuestion: What could the constraint look like?"
+    "section": "Depot Entry/ Exit Constraints?",
+    "text": "Depot Entry/ Exit Constraints?\n\n\n\n\n\n\nThe goal of these constraints is to:\n\n\nEnsure that each vehicle enters and leaves the depot exactly \\(|\\mathcal{K}|\\) times, as we have \\(|\\mathcal{K}|\\) vehicles and each vehicle has to return to the depot.\n\n\n\n\n\n\n\n\n\n\nWe need the following sets and variables:\n\n\n\n\\(\\mathcal{V}\\) - Set of all nodes, index \\(i \\in \\{0,1,2,...,n\\}\\)\n\\(|\\mathcal{K}|\\) - Number of vehicles\n\\(X_{i,j}\\) - 1, if the arc between \\(i\\) and \\(j\\) is part of a tour, 0 otherwise\n\n\n\n\n\n\nQuestion: What could the constraint look like?"
   },
   {
-    "objectID": "lectures/lecture-07-presentation.html#depot-entry-and-exit-constraints-1",
-    "href": "lectures/lecture-07-presentation.html#depot-entry-and-exit-constraints-1",
+    "objectID": "lectures/lecture-07-presentation.html#depot-entry-exit-constraints-1",
+    "href": "lectures/lecture-07-presentation.html#depot-entry-exit-constraints-1",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Depot Entry and Exit Constraints",
-    "text": "Depot Entry and Exit Constraints\n\\[\n\\sum_{i \\in \\mathcal{V} \\setminus \\{0\\}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V} \\setminus \\{0\\}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\n\nAre all constraints necessary?\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”."
+    "section": "Depot Entry/ Exit Constraints",
+    "text": "Depot Entry/ Exit Constraints\n\\[\n\\sum_{i \\in \\mathcal{V} \\setminus \\{0\\}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V} \\setminus \\{0\\}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\n\nAre all constraints necessary?\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”."
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#section-4",
@@ -3514,7 +3521,7 @@
     "href": "lectures/lecture-07-presentation.html#ensure-time-limit",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Ensure time limit?",
-    "text": "Ensure time limit?\nQuestion: Anybody an idea?\n\n\nConstraints basically follow the same idea!\nFirst, we again need an additional variable\n\\(T_{i}\\) - Time spent on tour at the node \\(i\\) of a vehicle with \\(i \\in \\mathcal{I}\\)"
+    "text": "Ensure time limit?\nQuestion: Anybody an idea?\n\n\nConstraints basically follow the same idea!\nFirst, we again need an additional variable\n\\(T_{i}\\) - Time spent on tour at node \\(i\\) of a vehicle with \\(i \\in \\mathcal{I}\\)"
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#ensure-time-limit-1",
@@ -3552,11 +3559,11 @@
     "text": "Depot entry and exit\n\\[\n\\sum_{i \\in \\mathcal{V} \\setminus \\{0\\}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V} \\setminus \\{0\\}} X_{0,j} = |\\mathcal{K}|\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\nThe depot is visited by exactly \\(|\\mathcal{K}|\\) vehicles. Note, that we could remove one of the constraints and the solution would still be optimal."
   },
   {
-    "objectID": "lectures/lecture-07-presentation.html#capacity-and-subtour-elimination-1",
-    "href": "lectures/lecture-07-presentation.html#capacity-and-subtour-elimination-1",
+    "objectID": "lectures/lecture-07-presentation.html#capacity-subtour-elimination",
+    "href": "lectures/lecture-07-presentation.html#capacity-subtour-elimination",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Capacity and subtour elimination",
-    "text": "Capacity and subtour elimination\n\\[\nU_i - U_j + b \\times X_{i,j} \\leq b - d_j \\quad \\forall i,j \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\\[\nd_i \\leq U_i \\leq b \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\nThe capacity limit is respected and subtours are eliminated."
+    "section": "Capacity/ subtour elimination",
+    "text": "Capacity/ subtour elimination\n\\[\nU_i - U_j + b \\times X_{i,j} \\leq b - d_j \\quad \\forall i,j \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\\[\nd_i \\leq U_i \\leq b \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\n\n\n\n\n\nOur constraints ensure:\n\n\nThe capacity limit is respected and subtours are eliminated."
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#time-constraints",
@@ -3584,7 +3591,21 @@
     "href": "lectures/lecture-07-presentation.html#model-assumptions",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Model Assumptions",
-    "text": "Model Assumptions\nQuestions: On model assumptions\n\nWhat assumptions have we made?\nWhat are likely issues that can arise if the model is applied?\nHave we considered service times?"
+    "text": "Model Assumptions\nQuestions: On model assumptions\n\nWhat assumptions have we made?\nWhat are issues that can arise if the model is applied?\nHave we considered service times?"
+  },
+  {
+    "objectID": "lectures/lecture-07-presentation.html#model-limitations",
+    "href": "lectures/lecture-07-presentation.html#model-limitations",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Model Limitations",
+    "text": "Model Limitations\nOur formulation makes several simplifying assumptions:\n\nNo service time at customer locations\nHomogeneous fleet (all vehicles are identical)\nDeterministic demand (known exactly in advance)\nSingle depot (all vehicles start and end at same location)"
+  },
+  {
+    "objectID": "lectures/lecture-07-presentation.html#real-world-complications",
+    "href": "lectures/lecture-07-presentation.html#real-world-complications",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Real-World Complications",
+    "text": "Real-World Complications\n\n\nOperational Challenges\n\nTraffic variability\nDriver breaks and regulations\nVehicle breakdowns\nWeather conditions\n\n\nPlanning Challenges\n\nDynamic customer requests\nUncertain demand\nLast-minute cancellations\nMulti-day horizons\n\n\n\n\n\n\n\n\n\nThese complications often require extensions of the basic CVRP model or robust optimization approaches!"
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#extensions-of-the-cvrp",
@@ -3619,7 +3640,21 @@
     "href": "lectures/lecture-07-presentation.html#problem-is-np-hard",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Problem is NP-hard",
-    "text": "Problem is NP-hard\n\nWe have already seen that a problem can be NP-hard\nLikely, that there are no polynomial-time algorithms\nDoesn’t mean that it can’t be solved!\n\n\n\n\n\n\n\n\nWe won’t go deeper into this, but feel free to ask me!"
+    "text": "Problem is NP-hard\n\nWe have already seen that a problem can be NP-hard\nLikely, that there are no polynomial-time algorithms\nDoesn’t mean that it can’t be solved!\n\n\n\n\n\n\n\n\nThe CVRP is a generalization of the Traveling Salesman Problem (TSP), which is itself NP-hard!"
+  },
+  {
+    "objectID": "lectures/lecture-07-presentation.html#why-does-this-matter",
+    "href": "lectures/lecture-07-presentation.html#why-does-this-matter",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Why Does This Matter?",
+    "text": "Why Does This Matter?\nThe solution space grows explosively with problem size:\n\n\n\nNodes\nPossible Tour Orders\nApprox. Computation\n\n\n\n\n10\n3.6 million\nSeconds\n\n\n15\n1.3 trillion\nMinutes\n\n\n20\n2.4 × 10^18\nHours to days\n\n\n50\n3 × 10^64\nInfeasible\n\n\n\n\nQuestion: Why is the 40-45% gap after 1 hour expected?"
+  },
+  {
+    "objectID": "lectures/lecture-07-presentation.html#understanding-optimality-gap",
+    "href": "lectures/lecture-07-presentation.html#understanding-optimality-gap",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Understanding Optimality Gap",
+    "text": "Understanding Optimality Gap\n\nThe optimality gap measures: \\[\\frac{\\text{Best Solution} - \\text{Lower Bound}}{\\text{Lower Bound}} \\times 100\\%\\]\nA 40% gap means our solution could be up to 40% worse than optimal\nFor 165 libraries, even state-of-the-art solvers struggle\nThis is why we need heuristics!"
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#section-9",
@@ -3633,7 +3668,28 @@
     "href": "lectures/lecture-07-presentation.html#heuristics",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Heuristics",
-    "text": "Heuristics\n\nWe can still solve the problem with a heuristic\nLikely not the optimal solution, but a lot of research goes into efficient algorithms to solve these problems\nIn our case study we applied Hybrid Genetic Search for the CVRP (HGS-CVRP) by Vidal (2022)\n\n\n\n\n\n\n\n\nFor problems with 100+ locations, heuristics are often the only practical choice."
+    "text": "Heuristics\n\nWe can still solve the problem with a heuristic\nLikely not the optimal solution, but a lot of research goes into efficient algorithms to solve these problems\n\n\n\n\n\n\n\n\nFor problems with 100+ locations, heuristics are often the only practical choice."
+  },
+  {
+    "objectID": "lectures/lecture-07-presentation.html#heuristics-for-vrp",
+    "href": "lectures/lecture-07-presentation.html#heuristics-for-vrp",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Heuristics for VRP",
+    "text": "Heuristics for VRP\n\n\nConstruction\nBuild a solution from scratch\n\nNearest neighbor\nSavings algorithm\nSweep method\n\n\nImprovement\nRefine existing solutions\n\n2-opt (swap edges)\nOr-opt (relocate)\nExchange moves\n\n\nMetaheuristics\nIntelligent search strategies\n\nGenetic algorithms\nSimulated annealing\nTabu search\n\n\n\n\n\n\n\n\n\nInterested in more details? Check the lecture Management Science"
+  },
+  {
+    "objectID": "lectures/lecture-07-presentation.html#hgs-cvrp-state-of-the-art",
+    "href": "lectures/lecture-07-presentation.html#hgs-cvrp-state-of-the-art",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "HGS-CVRP: State-of-the-Art",
+    "text": "HGS-CVRP: State-of-the-Art\nIn our case study we applied Hybrid Genetic Search for the CVRP (HGS-CVRP) by Vidal (2022)\n\nMaintains diverse population of solutions\nApplies intensive local search to improve offspring\nAchieves near-optimal solutions in seconds to minutes\n\n\n\n\n\n\n\n\nFor real-world applications, also consider OR-Tools by Google, it is open-source and production-ready!"
+  },
+  {
+    "objectID": "lectures/lecture-07-presentation.html#case-study-results",
+    "href": "lectures/lecture-07-presentation.html#case-study-results",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Case Study Results",
+    "text": "Case Study Results\nUsing HGS-CVRP instead of exact optimization:\n\nSolution found in &lt; 5 minutes (vs. hours with MIP)\nTotal driving distance reduced by ~20% compared to manual planning\nCO₂ emissions reduced by approximately 12-15 tonnes/year\n\n\n\n\n\n\n\n\nThe heuristic solution is better than what the MIP solver found in 1 hour!"
   },
   {
     "objectID": "lectures/lecture-07-presentation.html#applications-beyond-libraries",
@@ -3675,7 +3731,7 @@
     "href": "lectures/lecture-07-routing.html",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "",
-    "text": ". . .\nQuestion: Anybody an idea what a central library is?\n\n\n\n\n\n\n\nBook Delivery to Libraries in Germany\nThey supply all local libraries within the same state\nComplex, as the number of libraries per state can be large\nBooks and media in the libraries change often\nCustomers can request books from other libraries\n\n\n\n\n\nFor delivery, central has several employees and cars\nLocal libraries differ in size, some receive more items\nItems are collected as well during the tours1\nThey are transported back to the central library\n\n1 Due to regulations, the delivery tours cannot exceed a certain duration\n\n\nQuestion: What decisions can the library make for tours?\n. . .\n\nSubdivide their set of libraries into several ordered tours\nDecide in which order to visit the libraries\nEvaluate which car to use for each of the tours\nDecide which driver to assign to each of the tours\n\n\n\n\nQuestion: What is the impact of the decisions?\n. . .\n\nLonger driving routes increase the footprint of the deliveries\nSuboptimal tours can lead to unnecessary costs\nFuel, personnel, and repairs are increased\nUnhappy customers due to waiting times on ordered books\n\n\n\n\n\nHave you heard of\nthis problem before?",
+    "text": ". . .\nQuestion: Anybody an idea what a central library is?\n\n\n\n\n\n\n\nBook Delivery to Libraries in Germany\nThey supply all local libraries within the same state\nComplex, as number of libraries per state can be large\nBooks and media in the libraries change often\nCustomers can request books from other libraries\n\n\n\n\n\nFor delivery, central has several employees and cars\nLocal libraries differ in size, some receive more items\nItems are collected as well during the tours1\nThey are transported back to the central library\n\n1 Due to regulations, the delivery tours cannot exceed a certain duration\n\n\nQuestion: What decisions can the library make for tours?\n. . .\n\nSubdivide set of libraries into several ordered tours\nDecide in which order to visit the libraries\nEvaluate which car to use for each of the tours\nDecide which driver to assign to each of the tours\n\n\n\n\nQuestion: What is the impact of the decisions?\n. . .\n\nLonger driving increases the footprint of the deliveries\nSuboptimal tours can lead to unnecessary costs\nFuel, personnel, and repairs are increased\nUnhappy customers due to waiting times on books\n\n\n\n\n\nHave you heard of\nthis problem before?",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -3697,7 +3753,7 @@
     "href": "lectures/lecture-07-routing.html#central-libraries-1",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "",
-    "text": "Book Delivery to Libraries in Germany\nThey supply all local libraries within the same state\nComplex, as the number of libraries per state can be large\nBooks and media in the libraries change often\nCustomers can request books from other libraries",
+    "text": "Book Delivery to Libraries in Germany\nThey supply all local libraries within the same state\nComplex, as number of libraries per state can be large\nBooks and media in the libraries change often\nCustomers can request books from other libraries",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -3719,7 +3775,7 @@
     "href": "lectures/lecture-07-routing.html#potential-decisions",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "",
-    "text": "Question: What decisions can the library make for tours?\n. . .\n\nSubdivide their set of libraries into several ordered tours\nDecide in which order to visit the libraries\nEvaluate which car to use for each of the tours\nDecide which driver to assign to each of the tours",
+    "text": "Question: What decisions can the library make for tours?\n. . .\n\nSubdivide set of libraries into several ordered tours\nDecide in which order to visit the libraries\nEvaluate which car to use for each of the tours\nDecide which driver to assign to each of the tours",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -3730,7 +3786,7 @@
     "href": "lectures/lecture-07-routing.html#impact-of-the-decisions",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "",
-    "text": "Question: What is the impact of the decisions?\n. . .\n\nLonger driving routes increase the footprint of the deliveries\nSuboptimal tours can lead to unnecessary costs\nFuel, personnel, and repairs are increased\nUnhappy customers due to waiting times on ordered books",
+    "text": "Question: What is the impact of the decisions?\n. . .\n\nLonger driving increases the footprint of the deliveries\nSuboptimal tours can lead to unnecessary costs\nFuel, personnel, and repairs are increased\nUnhappy customers due to waiting times on books",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -3763,7 +3819,7 @@
     "href": "lectures/lecture-07-routing.html#modelling",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Modelling",
-    "text": "Modelling\nQuestion: What could we try to model?\n. . .\nMinimization of the travel time while supplying all libraries in the state and adhering to the vehicle capacities and driving time restrictions.",
+    "text": "Modelling\nQuestion: What could we try to model?\n. . .\nMinimization of the travel time while supplying all libraries in the state and respecting the vehicle capacities and driving time restrictions.",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -3814,11 +3870,11 @@
     ]
   },
   {
-    "objectID": "lectures/lecture-07-routing.html#basic-problem-setting-with-arcs",
-    "href": "lectures/lecture-07-routing.html#basic-problem-setting-with-arcs",
+    "objectID": "lectures/lecture-07-routing.html#basic-setting-with-arcs",
+    "href": "lectures/lecture-07-routing.html#basic-setting-with-arcs",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Basic Problem Setting with Arcs",
-    "text": "Basic Problem Setting with Arcs",
+    "section": "Basic Setting with Arcs",
+    "text": "Basic Setting with Arcs",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -3836,11 +3892,11 @@
     ]
   },
   {
-    "objectID": "lectures/lecture-07-routing.html#basic-problem-setting-with-tours",
-    "href": "lectures/lecture-07-routing.html#basic-problem-setting-with-tours",
+    "objectID": "lectures/lecture-07-routing.html#basic-setting-with-tours",
+    "href": "lectures/lecture-07-routing.html#basic-setting-with-tours",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Basic Problem Setting with Tours",
-    "text": "Basic Problem Setting with Tours",
+    "section": "Basic Setting with Tours",
+    "text": "Basic Setting with Tours",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -3935,6 +3991,17 @@
     ]
   },
   {
+    "objectID": "lectures/lecture-07-routing.html#from-math-to-code",
+    "href": "lectures/lecture-07-routing.html#from-math-to-code",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "From Math to Code",
+    "text": "From Math to Code\nThe objective function in JuMP looks very similar:\n\nusing JuMP, HiGHS\n\n# Simple example with 4 nodes\nnodes = [\"depot\", \"A\", \"B\", \"C\"]\narcs = [(i,j) for i in nodes, j in nodes if i != j]\nc = Dict((\"depot\",\"A\") =&gt; 10, (\"depot\",\"B\") =&gt; 15, (\"depot\",\"C\") =&gt; 20,\n         (\"A\",\"depot\") =&gt; 10, (\"A\",\"B\") =&gt; 12, (\"A\",\"C\") =&gt; 8,\n         (\"B\",\"depot\") =&gt; 15, (\"B\",\"A\") =&gt; 12, (\"B\",\"C\") =&gt; 5,\n         (\"C\",\"depot\") =&gt; 20, (\"C\",\"A\") =&gt; 8, (\"C\",\"B\") =&gt; 5)\n\nmodel = Model(HiGHS.Optimizer)\n@variable(model, X[arcs], Bin)\n@objective(model, Min, sum(c[i,j] * X[(i,j)] for (i,j) in arcs))\n\n. . .\n\n\n\n\n\n\nThe JuMP syntax sum(c[i,j] * X[(i,j)] for (i,j) in arcs) directly mirrors our mathematical notation \\(\\sum_{(i,j) \\in \\mathcal{A}} c_{i,j} \\times X_{i,j}\\)!",
+    "crumbs": [
+      "07 Routing",
+      "Lecture"
+    ]
+  },
+  {
     "objectID": "lectures/lecture-07-routing.html#problem-constraints",
     "href": "lectures/lecture-07-routing.html#problem-constraints",
     "title": "Lecture VII - Library Routing Optimization",
@@ -4001,22 +4068,22 @@
     ]
   },
   {
-    "objectID": "lectures/lecture-07-routing.html#depot-entry-and-exit-constraints",
-    "href": "lectures/lecture-07-routing.html#depot-entry-and-exit-constraints",
+    "objectID": "lectures/lecture-07-routing.html#depot-entry-exit-constraints",
+    "href": "lectures/lecture-07-routing.html#depot-entry-exit-constraints",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Depot Entry and Exit Constraints?",
-    "text": "Depot Entry and Exit Constraints?\n\n\n\n\n\n\nImportantThe goal of these constraints is to:\n\n\n\nEnsure that each vehicle enters and leaves the depot exactly \\(|\\mathcal{K}|\\) times, as we have \\(|\\mathcal{K}|\\) vehicles and each vehicle has to return to the depot.\n\n\n. . .\n\n\n\n\n\n\nNoteWe need the following sets and variables:\n\n\n\n\n\\(\\mathcal{V}\\) - Set of all nodes, index \\(i \\in \\{0,1,2,...,n\\}\\)\n\\(|\\mathcal{K}|\\) - Number of vehicles\n\\(X_{i,j}\\) - 1, if the arc between \\(i\\) and \\(j\\) is part of a tour, 0 otherwise\n\n\n\n. . .\nQuestion: What could the constraint look like?",
+    "section": "Depot Entry/ Exit Constraints?",
+    "text": "Depot Entry/ Exit Constraints?\n\n\n\n\n\n\nImportantThe goal of these constraints is to:\n\n\n\nEnsure that each vehicle enters and leaves the depot exactly \\(|\\mathcal{K}|\\) times, as we have \\(|\\mathcal{K}|\\) vehicles and each vehicle has to return to the depot.\n\n\n. . .\n\n\n\n\n\n\nNoteWe need the following sets and variables:\n\n\n\n\n\\(\\mathcal{V}\\) - Set of all nodes, index \\(i \\in \\{0,1,2,...,n\\}\\)\n\\(|\\mathcal{K}|\\) - Number of vehicles\n\\(X_{i,j}\\) - 1, if the arc between \\(i\\) and \\(j\\) is part of a tour, 0 otherwise\n\n\n\n. . .\nQuestion: What could the constraint look like?",
     "crumbs": [
       "07 Routing",
       "Lecture"
     ]
   },
   {
-    "objectID": "lectures/lecture-07-routing.html#depot-entry-and-exit-constraints-1",
-    "href": "lectures/lecture-07-routing.html#depot-entry-and-exit-constraints-1",
+    "objectID": "lectures/lecture-07-routing.html#depot-entry-exit-constraints-1",
+    "href": "lectures/lecture-07-routing.html#depot-entry-exit-constraints-1",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Depot Entry and Exit Constraints",
-    "text": "Depot Entry and Exit Constraints\n\\[\n\\sum_{i \\in \\mathcal{V} \\setminus \\{0\\}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V} \\setminus \\{0\\}} X_{0,j} = |\\mathcal{K}|\n\\]\n. . .\n\n\n\n\n\n\nNoteAre all constraints necessary?\n\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”.",
+    "section": "Depot Entry/ Exit Constraints",
+    "text": "Depot Entry/ Exit Constraints\n\\[\n\\sum_{i \\in \\mathcal{V} \\setminus \\{0\\}} X_{i,0} = |\\mathcal{K}|\n\\]\n\\[\n\\sum_{j \\in \\mathcal{V} \\setminus \\{0\\}} X_{0,j} = |\\mathcal{K}|\n\\]\n. . .\n\n\n\n\n\n\nNoteAre all constraints necessary?\n\n\n\nNo, theoretically we could also say that we only have to leave or enter the depot exactly \\(|\\mathcal{K}|\\) times, as the other constraint is already enforced by the “visit each customer once constraint”.",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -4170,7 +4237,7 @@
     "href": "lectures/lecture-07-routing.html#ensure-time-limit",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Ensure time limit?",
-    "text": "Ensure time limit?\nQuestion: Anybody an idea?\n. . .\n\nConstraints basically follow the same idea!\nFirst, we again need an additional variable\n\\(T_{i}\\) - Time spent on tour at the node \\(i\\) of a vehicle with \\(i \\in \\mathcal{I}\\)",
+    "text": "Ensure time limit?\nQuestion: Anybody an idea?\n. . .\n\nConstraints basically follow the same idea!\nFirst, we again need an additional variable\n\\(T_{i}\\) - Time spent on tour at node \\(i\\) of a vehicle with \\(i \\in \\mathcal{I}\\)",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -4232,11 +4299,11 @@
     ]
   },
   {
-    "objectID": "lectures/lecture-07-routing.html#capacity-and-subtour-elimination-1",
-    "href": "lectures/lecture-07-routing.html#capacity-and-subtour-elimination-1",
+    "objectID": "lectures/lecture-07-routing.html#capacity-subtour-elimination",
+    "href": "lectures/lecture-07-routing.html#capacity-subtour-elimination",
     "title": "Lecture VII - Library Routing Optimization",
-    "section": "Capacity and subtour elimination",
-    "text": "Capacity and subtour elimination\n\\[\nU_i - U_j + b \\times X_{i,j} \\leq b - d_j \\quad \\forall i,j \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\\[\nd_i \\leq U_i \\leq b \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\n\n\n\n\n\nImportantOur constraints ensure:\n\n\n\nThe capacity limit is respected and subtours are eliminated.",
+    "section": "Capacity/ subtour elimination",
+    "text": "Capacity/ subtour elimination\n\\[\nU_i - U_j + b \\times X_{i,j} \\leq b - d_j \\quad \\forall i,j \\in \\mathcal{V} \\setminus \\{0\\}, i \\neq j\n\\]\n\\[\nd_i \\leq U_i \\leq b \\quad \\forall i \\in \\mathcal{V} \\setminus \\{0\\}\n\\]\n\n\n\n\n\n\nImportantOur constraints ensure:\n\n\n\nThe capacity limit is respected and subtours are eliminated.",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -4280,7 +4347,29 @@
     "href": "lectures/lecture-07-routing.html#model-assumptions",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Model Assumptions",
-    "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nWhat are likely issues that can arise if the model is applied?\nHave we considered service times?",
+    "text": "Model Assumptions\nQuestions: On model assumptions\n\n\nWhat assumptions have we made?\nWhat are issues that can arise if the model is applied?\nHave we considered service times?",
+    "crumbs": [
+      "07 Routing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-07-routing.html#model-limitations",
+    "href": "lectures/lecture-07-routing.html#model-limitations",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Model Limitations",
+    "text": "Model Limitations\nOur formulation makes several simplifying assumptions:\n\n\nNo service time at customer locations\nHomogeneous fleet (all vehicles are identical)\nDeterministic demand (known exactly in advance)\nSingle depot (all vehicles start and end at same location)",
+    "crumbs": [
+      "07 Routing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-07-routing.html#real-world-complications",
+    "href": "lectures/lecture-07-routing.html#real-world-complications",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Real-World Complications",
+    "text": "Real-World Complications\n\n\nOperational Challenges\n\nTraffic variability\nDriver breaks and regulations\nVehicle breakdowns\nWeather conditions\n\n\nPlanning Challenges\n\nDynamic customer requests\nUncertain demand\nLast-minute cancellations\nMulti-day horizons\n\n\n\n. . .\n\n\n\n\n\n\nThese complications often require extensions of the basic CVRP model or robust optimization approaches!",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -4335,7 +4424,29 @@
     "href": "lectures/lecture-07-routing.html#problem-is-np-hard",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Problem is NP-hard",
-    "text": "Problem is NP-hard\n\nWe have already seen that a problem can be NP-hard\nLikely, that there are no polynomial-time algorithms\nDoesn’t mean that it can’t be solved!\n\n. . .\n\n\n\n\n\n\nWe won’t go deeper into this, but feel free to ask me!",
+    "text": "Problem is NP-hard\n\nWe have already seen that a problem can be NP-hard\nLikely, that there are no polynomial-time algorithms\nDoesn’t mean that it can’t be solved!\n\n. . .\n\n\n\n\n\n\nThe CVRP is a generalization of the Traveling Salesman Problem (TSP), which is itself NP-hard!",
+    "crumbs": [
+      "07 Routing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-07-routing.html#why-does-this-matter",
+    "href": "lectures/lecture-07-routing.html#why-does-this-matter",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Why Does This Matter?",
+    "text": "Why Does This Matter?\nThe solution space grows explosively with problem size:\n\n\n\nNodes\nPossible Tour Orders\nApprox. Computation\n\n\n\n\n10\n3.6 million\nSeconds\n\n\n15\n1.3 trillion\nMinutes\n\n\n20\n2.4 × 10^18\nHours to days\n\n\n50\n3 × 10^64\nInfeasible\n\n\n\n. . .\nQuestion: Why is the 40-45% gap after 1 hour expected?",
+    "crumbs": [
+      "07 Routing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-07-routing.html#understanding-optimality-gap",
+    "href": "lectures/lecture-07-routing.html#understanding-optimality-gap",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Understanding Optimality Gap",
+    "text": "Understanding Optimality Gap\n\n\nThe optimality gap measures: \\[\\frac{\\text{Best Solution} - \\text{Lower Bound}}{\\text{Lower Bound}} \\times 100\\%\\]\nA 40% gap means our solution could be up to 40% worse than optimal\nFor 165 libraries, even state-of-the-art solvers struggle\nThis is why we need heuristics!",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -4357,7 +4468,40 @@
     "href": "lectures/lecture-07-routing.html#heuristics",
     "title": "Lecture VII - Library Routing Optimization",
     "section": "Heuristics",
-    "text": "Heuristics\n\nWe can still solve the problem with a heuristic\nLikely not the optimal solution, but a lot of research goes into efficient algorithms to solve these problems\nIn our case study we applied Hybrid Genetic Search for the CVRP (HGS-CVRP) by Vidal (2022)\n\n\nVidal, Thibaut. 2022. “Hybrid Genetic Search for the CVRP: Open-Source Implementation and SWAP* Neighborhood.” Computers & Operations Research 140 (April): 105643. https://doi.org/10.1016/j.cor.2021.105643.\n. . .\n\n\n\n\n\n\nFor problems with 100+ locations, heuristics are often the only practical choice.",
+    "text": "Heuristics\n\nWe can still solve the problem with a heuristic\nLikely not the optimal solution, but a lot of research goes into efficient algorithms to solve these problems\n\n. . .\n\n\n\n\n\n\nFor problems with 100+ locations, heuristics are often the only practical choice.",
+    "crumbs": [
+      "07 Routing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-07-routing.html#heuristics-for-vrp",
+    "href": "lectures/lecture-07-routing.html#heuristics-for-vrp",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Heuristics for VRP",
+    "text": "Heuristics for VRP\n\n\nConstruction\nBuild a solution from scratch\n\nNearest neighbor\nSavings algorithm\nSweep method\n\n\nImprovement\nRefine existing solutions\n\n2-opt (swap edges)\nOr-opt (relocate)\nExchange moves\n\n\nMetaheuristics\nIntelligent search strategies\n\nGenetic algorithms\nSimulated annealing\nTabu search\n\n\n\n. . .\n\n\n\n\n\n\nInterested in more details? Check the lecture Management Science",
+    "crumbs": [
+      "07 Routing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-07-routing.html#hgs-cvrp-state-of-the-art",
+    "href": "lectures/lecture-07-routing.html#hgs-cvrp-state-of-the-art",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "HGS-CVRP: State-of-the-Art",
+    "text": "HGS-CVRP: State-of-the-Art\nIn our case study we applied Hybrid Genetic Search for the CVRP (HGS-CVRP) by Vidal (2022)\n\nVidal, Thibaut. 2022. “Hybrid Genetic Search for the CVRP: Open-Source Implementation and SWAP* Neighborhood.” Computers & Operations Research 140 (April): 105643. https://doi.org/10.1016/j.cor.2021.105643.\n\n\nMaintains diverse population of solutions\nApplies intensive local search to improve offspring\nAchieves near-optimal solutions in seconds to minutes\n\n\n. . .\n\n\n\n\n\n\nFor real-world applications, also consider OR-Tools by Google, it is open-source and production-ready!",
+    "crumbs": [
+      "07 Routing",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-07-routing.html#case-study-results",
+    "href": "lectures/lecture-07-routing.html#case-study-results",
+    "title": "Lecture VII - Library Routing Optimization",
+    "section": "Case Study Results",
+    "text": "Case Study Results\nUsing HGS-CVRP instead of exact optimization:\n\n\nSolution found in &lt; 5 minutes (vs. hours with MIP)\nTotal driving distance reduced by ~20% compared to manual planning\nCO₂ emissions reduced by approximately 12-15 tonnes/year\n\n\n. . .\n\n\n\n\n\n\nThe heuristic solution is better than what the MIP solver found in 1 hour!",
     "crumbs": [
       "07 Routing",
       "Lecture"
@@ -8020,17 +8164,6 @@
     ]
   },
   {
-    "objectID": "lectures/lecture-06-ordersplit.html#case-study",
-    "href": "lectures/lecture-06-ordersplit.html#case-study",
-    "title": "Lecture VI - Minimizing Split Orders",
-    "section": "Case Study",
-    "text": "Case Study\n\nKey information about the case:\n\na large European e-commerce retailer\nthe retailer has two warehouses\nproduct range cannot be stored in either warehouse\nproduct deliveries can be made to both warehouses\nproducts do not have to be stored exclusively",
-    "crumbs": [
-      "06 Warehouse",
-      "Lecture"
-    ]
-  },
-  {
     "objectID": "lectures/lecture-06-ordersplit.html#optimizing-co-allocation",
     "href": "lectures/lecture-06-ordersplit.html#optimizing-co-allocation",
     "title": "Lecture VI - Minimizing Split Orders",
@@ -8482,17 +8615,6 @@
     ]
   },
   {
-    "objectID": "lectures/lecture-06-ordersplit.html#why-chi",
-    "href": "lectures/lecture-06-ordersplit.html#why-chi",
-    "title": "Lecture VI - Minimizing Split Orders",
-    "section": "Why CHI?",
-    "text": "Why CHI?\nQuestion: What’s wrong with QMK?\n. . .\n\n\nQMK Problems:\n\nSlow for large instances\nMay allocate SKUs to multiple warehouses\nDoesn’t distinguish dependencies\n\n\nCHI Solution:\n\nFast: \\(O(|\\mathcal{K}| \\times |\\mathcal{I}|^2)\\)\nUses statistical tests\n50,000 SKUs in 10 minutes",
-    "crumbs": [
-      "06 Warehouse",
-      "Lecture"
-    ]
-  },
-  {
     "objectID": "lectures/lecture-06-ordersplit.html#statistical-independence",
     "href": "lectures/lecture-06-ordersplit.html#statistical-independence",
     "title": "Lecture VI - Minimizing Split Orders",
@@ -8508,18 +8630,7 @@
     "href": "lectures/lecture-06-ordersplit.html#chi-square-test-intuition",
     "title": "Lecture VI - Minimizing Split Orders",
     "section": "Chi-Square Test Intuition",
-    "text": "Chi-Square Test Intuition\nUse chi-square tests to detect if SKUs are dependent:\n\n\nCalculate expected coappearances under independence\nCompare with actual coappearances\nIf difference is significant → SKUs are dependent\nAllocate dependent SKUs to same warehouse!\n\n\n. . .\n\n\n\n\n\n\nTipTwo-Phase Approach\n\n\n\nPhase 1: Build allocation using dependencies\nPhase 2: Refine with local search",
-    "crumbs": [
-      "06 Warehouse",
-      "Lecture"
-    ]
-  },
-  {
-    "objectID": "lectures/lecture-06-ordersplit.html#chi-algorithm-overview",
-    "href": "lectures/lecture-06-ordersplit.html#chi-algorithm-overview",
-    "title": "Lecture VI - Minimizing Split Orders",
-    "section": "CHI Algorithm Overview",
-    "text": "CHI Algorithm Overview\n\n\nIdentify dependencies: Chi-square tests on all SKU pairs\nSeparate matrices:\n\n\\(\\boldsymbol{E}\\): Independent coappearances\n\\(\\boldsymbol{D}\\): “Dependency premium”\n\nAllocate strategically: Cluster dependent SKUs together\nRefine: Local search for improvements\n\n\n. . .\nResult: Better than QMK on large instances!",
+    "text": "Chi-Square Test Intuition\nUse chi-square tests to detect if SKUs are dependent:\n\n\nCalculate expected coappearances under independence\nCompare with actual coappearances\nIf difference is significant → SKUs are dependent\nAllocate dependent SKUs to same warehouse!\n\n\n. . .\n\n\n\n\n\n\nTipTwo-Phase Approach\n\n\n\nPhase 1: Build allocation using dependencies\nPhase 2: Refine with local search\n\n\n. . .\nResult: Works on large instances, 50,000 SKUs in 10 minutes!",
     "crumbs": [
       "06 Warehouse",
       "Lecture"
@@ -8548,22 +8659,11 @@
     ]
   },
   {
-    "objectID": "lectures/lecture-06-ordersplit.html#case-study-1",
-    "href": "lectures/lecture-06-ordersplit.html#case-study-1",
+    "objectID": "lectures/lecture-06-ordersplit.html#case-study",
+    "href": "lectures/lecture-06-ordersplit.html#case-study",
     "title": "Lecture VI - Minimizing Split Orders",
     "section": "Case Study",
-    "text": "Case Study\n\nMore than 100,000 SKUs and several millions of orders\nComparison of different heuristics7\n\nCHI: based on Chi-Square tests Vlćek and Voigt (2024)\nGP, GO, GS, BS: based on greedy algorithms (Catalán and Fisher 2012)\nRA: Random allocation of SKUs to warehouses\n\n\n7 QMKP is not applicable for instance in case study\nVlćek, Tobias, and Guido Voigt. 2024. “Optimizing SKU-Warehouse Allocations to Minimize Split Parcels in E-Commerce Environments.” To Be Submitted Soon.",
-    "crumbs": [
-      "06 Warehouse",
-      "Lecture"
-    ]
-  },
-  {
-    "objectID": "lectures/lecture-06-ordersplit.html#real-data-set",
-    "href": "lectures/lecture-06-ordersplit.html#real-data-set",
-    "title": "Lecture VI - Minimizing Split Orders",
-    "section": "Real Data Set",
-    "text": "Real Data Set",
+    "text": "Case Study\n\n\nProblem characteristics:\n\n100,000+ SKUs\nSeveral million orders\nMultiple warehouses\nStorage capacity constraints\n\n\nHeuristics compared7:\n7 QMKP is not applicable for instance in case study\nCHI: Chi-Square tests (Vlćek and Voigt 2024)\nGP, GO, GS, BS: Greedy (Catalán and Fisher 2012)\nRA: Random allocation\n\n\nVlćek, Tobias, and Guido Voigt. 2024. “Optimizing SKU-Warehouse Allocations to Minimize Split Parcels in E-Commerce Environments.” To Be Submitted Soon.\n\n\n. . .",
     "crumbs": [
       "06 Warehouse",
       "Lecture"
@@ -8682,13 +8782,6 @@
     "title": "Lecture VI - Minimizing Split Orders",
     "section": "Mitigations?",
     "text": "Mitigations?\nQuestion: What are possible mitigations?\n\n\nConsolidation: Ship to a central warehouse before dispatch\nCross-docking: Ship directly from supplier to customer\nTransshipment: Ship between warehouses before delivery\nCo-allocation: Predict co-appearance of products and allocate them to the same warehouse"
-  },
-  {
-    "objectID": "lectures/lecture-06-presentation.html#case-study",
-    "href": "lectures/lecture-06-presentation.html#case-study",
-    "title": "Lecture VI - Minimizing Split Orders",
-    "section": "Case Study",
-    "text": "Case Study\n\nKey information about the case:\n\na large European e-commerce retailer\nthe retailer has two warehouses\nproduct range cannot be stored in either warehouse\nproduct deliveries can be made to both warehouses\nproducts do not have to be stored exclusively"
   },
   {
     "objectID": "lectures/lecture-06-presentation.html#optimizing-co-allocation",
@@ -8978,13 +9071,6 @@
     "text": "Problem Size is Crucial\n\nUp to 1,000 SKUs → commercial solvers\nMore than 1,000 SKUs → heuristics\nFor example, the CHI heuristic\n\n\n\n\n\n\n\n\nCHI-Heuristic\n\n\nDetect dependencies between products and allocate them accordingly, as products within orders can have dependencies and products are bought with different frequencies!"
   },
   {
-    "objectID": "lectures/lecture-06-presentation.html#why-chi",
-    "href": "lectures/lecture-06-presentation.html#why-chi",
-    "title": "Lecture VI - Minimizing Split Orders",
-    "section": "Why CHI?",
-    "text": "Why CHI?\nQuestion: What’s wrong with QMK?\n\n\n\nQMK Problems:\n\nSlow for large instances\nMay allocate SKUs to multiple warehouses\nDoesn’t distinguish dependencies\n\n\nCHI Solution:\n\nFast: \\(O(|\\mathcal{K}| \\times |\\mathcal{I}|^2)\\)\nUses statistical tests\n50,000 SKUs in 10 minutes"
-  },
-  {
     "objectID": "lectures/lecture-06-presentation.html#statistical-independence",
     "href": "lectures/lecture-06-presentation.html#statistical-independence",
     "title": "Lecture VI - Minimizing Split Orders",
@@ -8996,14 +9082,7 @@
     "href": "lectures/lecture-06-presentation.html#chi-square-test-intuition",
     "title": "Lecture VI - Minimizing Split Orders",
     "section": "Chi-Square Test Intuition",
-    "text": "Chi-Square Test Intuition\nUse chi-square tests to detect if SKUs are dependent:\n\nCalculate expected coappearances under independence\nCompare with actual coappearances\nIf difference is significant → SKUs are dependent\nAllocate dependent SKUs to same warehouse!\n\n\n\n\n\n\n\n\nTwo-Phase Approach\n\n\nPhase 1: Build allocation using dependencies\nPhase 2: Refine with local search"
-  },
-  {
-    "objectID": "lectures/lecture-06-presentation.html#chi-algorithm-overview",
-    "href": "lectures/lecture-06-presentation.html#chi-algorithm-overview",
-    "title": "Lecture VI - Minimizing Split Orders",
-    "section": "CHI Algorithm Overview",
-    "text": "CHI Algorithm Overview\n\nIdentify dependencies: Chi-square tests on all SKU pairs\nSeparate matrices:\n\n\\(\\boldsymbol{E}\\): Independent coappearances\n\\(\\boldsymbol{D}\\): “Dependency premium”\n\nAllocate strategically: Cluster dependent SKUs together\nRefine: Local search for improvements\n\n\nResult: Better than QMK on large instances!"
+    "text": "Chi-Square Test Intuition\nUse chi-square tests to detect if SKUs are dependent:\n\nCalculate expected coappearances under independence\nCompare with actual coappearances\nIf difference is significant → SKUs are dependent\nAllocate dependent SKUs to same warehouse!\n\n\n\n\n\n\n\n\nTwo-Phase Approach\n\n\nPhase 1: Build allocation using dependencies\nPhase 2: Refine with local search\n\n\n\n\n\nResult: Works on large instances, 50,000 SKUs in 10 minutes!"
   },
   {
     "objectID": "lectures/lecture-06-presentation.html#real-world-challenges",
@@ -9020,18 +9099,11 @@
     "text": "Rolling Horizon Approach\n\nUse 5-week training window for allocation decisions\nUpdate allocations weekly based on recent patterns\nBalance stability vs. responsiveness\n\n\n\n\n\n\n\n\nGrouped SKUs by category-brand combinations to reduce problem size while maintaining allocation quality. New SKUs inherit allocation from their cluster!"
   },
   {
-    "objectID": "lectures/lecture-06-presentation.html#case-study-1",
-    "href": "lectures/lecture-06-presentation.html#case-study-1",
+    "objectID": "lectures/lecture-06-presentation.html#case-study",
+    "href": "lectures/lecture-06-presentation.html#case-study",
     "title": "Lecture VI - Minimizing Split Orders",
     "section": "Case Study",
-    "text": "Case Study\n\nMore than 100,000 SKUs and several millions of orders\nComparison of different heuristics1\n\nCHI: based on Chi-Square tests Vlćek and Voigt (2024)\nGP, GO, GS, BS: based on greedy algorithms (Catalán and Fisher 2012)\nRA: Random allocation of SKUs to warehouses\n\n\nQMKP is not applicable for instance in case study"
-  },
-  {
-    "objectID": "lectures/lecture-06-presentation.html#real-data-set",
-    "href": "lectures/lecture-06-presentation.html#real-data-set",
-    "title": "Lecture VI - Minimizing Split Orders",
-    "section": "Real Data Set",
-    "text": "Real Data Set"
+    "text": "Case Study\n\n\nProblem characteristics:\n\n100,000+ SKUs\nSeveral million orders\nMultiple warehouses\nStorage capacity constraints\n\n\nHeuristics compared1:\n\nCHI: Chi-Square tests (Vlćek and Voigt 2024)\nGP, GO, GS, BS: Greedy (Catalán and Fisher 2012)\nRA: Random allocation\n\n\n\n\n\nQMKP is not applicable for instance in case study"
   },
   {
     "objectID": "lectures/lecture-06-presentation.html#implementation-results",
@@ -9066,7 +9138,7 @@
     "href": "lectures/lecture-08-districting.html",
     "title": "Lecture VIII - Police Districting",
     "section": "",
-    "text": "Vlćek et al. (2024)\n\nVlćek, Tobias, Knut Haase, Malte Fliedner, and Tobias Cors. 2024. “Police Service District Planning.” OR Spectrum, February. https://doi.org/10.1007/s00291-024-00745-3.\n\n\n\n\nQuestion: What makes the work of emergency services complex?\n\n\nDynamic urban development\nChanging population patterns\nResource constraints\nNeed for rapid response\nMultiple stakeholder interests\n\n\n\n\n\n\n\n\n\nEmergency services address the needs of three interest groups:\n\nCitizens\nService personnel\nAdministrators\n\nQuestion: What could be the objectives of these groups?\n\n\n\n\n\n\n\n\nCitizens\n\nFast response times\nReliable service coverage\n\nService Personnel\n\nManageable workloads\nSafe working conditions\n\n\n\n\nAdministrators\n\nCost efficiency\nResource optimization\n\n\n\n\n\n\n\n\nAligning the objectives of the three interest groups is challenging.\n\n\n\n\n\n\n\n\n\n\n\n\nQuestion: Why might current district layouts be suboptimal?\n\n\nMany layouts date back several decades\nOften designed along highways and regions (Bruce 2009)\nExtensive data not used for data-driven improvement\n\n\nBruce, Christopher. 2009. “Districting and Resource Allocation: A Question of Balance.” A Quarterly Bulletin of Applied Geography for the Study of Crime & Public Safety 1 (4): 1–3.\n\n\n\n\n\n\n\n\nHow can we improve\nthis situation?\n\n\n\n\n\n\n\n\nQuestion: What data can help improve emergency services?\n\n\nHistorical incident patterns\nResponse time analysis\nResource utilization metrics\nPopulation densities and traffic patterns\n\n\n\n. . .\n\n\n\n\n\n\nExtensive data collected, but often lack of tools or knowledge to leverage it.\n\n\n\n\n\n\n\nOperations research (OR) models can help!\nBased on incident records and geographical information\nImprove the response of emergency services\nHelp administrators in making strategic decisions\nLocate new departments or close departments (Liberatore, Camacho-Collados, and Vitoriano 2020)\n\n\nLiberatore, Federico, Miguel Camacho-Collados, and Begoña Vitoriano. 2020. “Police Districting Problem: Literature Review and Annotated Bibliography.” In International Series in Operations Research & Management Science: Optimal Districting and Territory Design, edited by Roger Z. Ríos-Mercado, 9–29. Cham: Springer International Publishing. https://doi.org/10.1007/978-3-030-34312-5_2.",
+    "text": "Vlćek et al. (2024)\n\nVlćek, Tobias, Knut Haase, Malte Fliedner, and Tobias Cors. 2024. “Police Service District Planning.” OR Spectrum, February. https://doi.org/10.1007/s00291-024-00745-3.\n\n\n\n\nQuestion: What makes the work of emergency services complex?\n\n\nDynamic urban development\nChanging population patterns\nResource constraints\nNeed for rapid response\nMultiple stakeholder interests\n\n\n\n\n\n\n\n\n\nEmergency services address the needs of three interest groups:\n\nCitizens\nService personnel\nAdministrators\n\nQuestion: What could be the objectives of these groups?\n\n\n\n\n\n\n\n\nCitizens\n\nFast response times\nReliable service coverage\n\nService Personnel\n\nManageable workloads\nSafe working conditions\n\n\n\n\nAdministrators\n\nCost efficiency\nResource optimization\n\n\n\n\n\n\n\n\nAligning the objectives of the three interest groups is challenging.\n\n\n\n\n\n\n\n\n\n\n\n\nQuestion: Why might current district layouts be suboptimal?\n\n\nMany layouts date back several decades\nOften designed along highways and regions (Bruce 2009)\nExtensive data not used for data-driven improvement\n\n\nBruce, Christopher. 2009. “Districting and Resource Allocation: A Question of Balance.” A Quarterly Bulletin of Applied Geography for the Study of Crime & Public Safety 1 (4): 1–3.\n\n\n\n\n\n\n\nHow can we improve\nthis situation?\n\n\n\n\n\n\n\n\nQuestion: What data can help improve emergency services?\n\n\nHistorical incident patterns\nResponse time analysis\nResource utilization metrics\nPopulation densities and traffic patterns\n\n\n\n. . .\n\n\n\n\n\n\nExtensive data collected, but often lack of tools or knowledge to leverage it.\n\n\n\n\n\n\n\nOperations research (OR) models can help!\nBased on incident records and geographical information\nImprove the response of emergency services\nHelp administrators in making strategic decisions\nLocate new departments or close departments (Liberatore, Camacho-Collados, and Vitoriano 2020)\n\n\nLiberatore, Federico, Miguel Camacho-Collados, and Begoña Vitoriano. 2020. “Police Districting Problem: Literature Review and Annotated Bibliography.” In International Series in Operations Research & Management Science: Optimal Districting and Territory Design, edited by Roger Z. Ríos-Mercado, 9–29. Cham: Springer International Publishing. https://doi.org/10.1007/978-3-030-34312-5_2.",
     "crumbs": [
       "08 Districting",
       "Lecture"
@@ -9249,33 +9321,77 @@
     ]
   },
   {
-    "objectID": "lectures/lecture-08-districting.html#territory-design-problem-1",
-    "href": "lectures/lecture-08-districting.html#territory-design-problem-1",
+    "objectID": "lectures/lecture-08-districting.html#what-is-territory-design",
+    "href": "lectures/lecture-08-districting.html#what-is-territory-design",
     "title": "Lecture VIII - Police Districting",
-    "section": "Territory Design Problem",
-    "text": "Territory Design Problem\n\n\n\n\n\nAggregation of small geographic areas, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to pre-defined planning criteria1.\n1 Zoltners and Sinha (1983)\nZoltners, Andris A., and Prabhakant Sinha. 1983. “Sales Territory Alignment: A Review and Model.” Management Science 29 (11): 1237–56. https://doi.org/10.1287/mnsc.29.11.1237.",
+    "section": "What is Territory Design?",
+    "text": "What is Territory Design?\n\n\n\n\n\nAggregation of small geographic areas, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to pre-defined planning criteria1.\n1 Zoltners and Sinha (1983)\nZoltners, Andris A., and Prabhakant Sinha. 1983. “Sales Territory Alignment: A Review and Model.” Management Science 29 (11): 1237–56. https://doi.org/10.1287/mnsc.29.11.1237.\n\n\n\n. . .\n\n\n\n\n\n\nTerritory design is a general framework applicable to many domains: emergency services, sales territories, political districts, school districts, etc.",
     "crumbs": [
       "08 Districting",
       "Lecture"
     ]
   },
   {
-    "objectID": "lectures/lecture-08-districting.html#objective",
-    "href": "lectures/lecture-08-districting.html#objective",
+    "objectID": "lectures/lecture-08-districting.html#territory-design-components",
+    "href": "lectures/lecture-08-districting.html#territory-design-components",
     "title": "Lecture VIII - Police Districting",
-    "section": "Objective",
-    "text": "Objective\nQuestion: What could be the objective?\n. . .\n\nMinimize the response time to help citizens faster while increasing the confidence in the service\n\n. . .\nQuestion: What could be further objectives?\n. . .\n\nReallocate only part of the police department’s\nCompact and contiguous territories to improve patrol\nPrevention of isolated departments",
+    "section": "Territory Design Components",
+    "text": "Territory Design Components\nQuestion: What are the key components?\n\n\nBasic Areas (BAs): Smallest indivisible geographic units\nDistricts/Territories: Aggregation of BAs\nPlanning Criteria: Rules and objectives for grouping\nDecision: Which BAs belong to which district?\n\n\n. . .\n\n\n\n\n\n\nIn our police case: BAs are hexagonal cells, districts are service areas for police departments.",
     "crumbs": [
       "08 Districting",
       "Lecture"
     ]
   },
   {
-    "objectID": "lectures/lecture-08-districting.html#basic-structure",
-    "href": "lectures/lecture-08-districting.html#basic-structure",
+    "objectID": "lectures/lecture-08-districting.html#common-territory-design-objectives",
+    "href": "lectures/lecture-08-districting.html#common-territory-design-objectives",
     "title": "Lecture VIII - Police Districting",
-    "section": "Basic Structure",
-    "text": "Basic Structure\n\n\n\n\nQuestion: How can we structure this?\n\n\nModel as a digraph with vertices and edges\nEach BA centroid becomes a vertex\n\\(\\mathcal{J}\\) : set of BAs, indexed by \\(j\\)\n\\(\\mathcal{I}\\) : set of potential district centres \\((\\mathcal{I} \\subseteq \\mathcal{J})\\)",
+    "section": "Common Territory Design Objectives",
+    "text": "Common Territory Design Objectives\n\n\nBalance Criteria:\n\nEqual workload distribution\nEqual sales potential\nEqual population coverage\nResource balance\n\n\nGeographic Criteria:\n\nContiguity: No isolated areas\nCompactness: Round shape\nMinimize travel distances\nRespect boundaries\n\n\n\n. . .\n\n\n\n\n\n\nThese criteria often conflict with each other - optimization helps find the best trade-off!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-08-districting.html#applications-of-territory-design",
+    "href": "lectures/lecture-08-districting.html#applications-of-territory-design",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Applications of Territory Design",
+    "text": "Applications of Territory Design\nQuestion: Where else is this used?\n\n\nSales force deployment: Assign sales representatives to territories\nPolitical districting: Electoral boundaries\nSchool districts: Student assignment zones\nWaste collection: Service route planning\nHealthcare: Hospital catchment areas\n\n\n. . .\n\n\n\n\n\n\nSame mathematical structure, different objectives and constraints!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-08-districting.html#police-districting-specifics",
+    "href": "lectures/lecture-08-districting.html#police-districting-specifics",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Police Districting Specifics",
+    "text": "Police Districting Specifics\nQuestion: What could be the objective?\n. . .\n\nMinimize the response time to help citizens faster while increasing the confidence in the service\n\n. . .\nQuestion: What could be further objectives?\n. . .\n\nReallocate only part of the police department’s\nCompact and contiguous territories to improve patrol\nPrevention of isolated departments",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-08-districting.html#from-geography-to-graph",
+    "href": "lectures/lecture-08-districting.html#from-geography-to-graph",
+    "title": "Lecture VIII - Police Districting",
+    "section": "From Geography to Graph",
+    "text": "From Geography to Graph\n\n\n\n\nQuestion: How do we model this mathematically?\n\n\nGeographic areas → Centroids (center points)\nCentroids → Vertices in a graph\nSpatial relationships → Edges between vertices\n\n\n\n\n. . .\n\n\n\n\n\n\nThis abstraction allows us to use powerful optimization techniques from graph theory and location science!",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-08-districting.html#mathematical-structure",
+    "href": "lectures/lecture-08-districting.html#mathematical-structure",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Mathematical Structure",
+    "text": "Mathematical Structure\n\n\n\n\nQuestion: What sets do we need?\n\n\n\\(\\mathcal{J}\\) : Set of all BAs (basic areas), indexed by \\(j\\)\n\\(\\mathcal{I}\\) : Set of potential department locations where \\(\\mathcal{I} \\subseteq \\mathcal{J}\\), indexed by \\(i\\)\n\n\n. . .\n\n\n\n\n\n\nNote: Department locations are a subset of all BAs - not every BA can host a department!",
     "crumbs": [
       "08 Districting",
       "Lecture"
@@ -9485,6 +9601,17 @@
     "title": "Lecture VIII - Police Districting",
     "section": "p-Median Problem",
     "text": "p-Median Problem\n\\[\\begin{align}\n\\text{minimize} \\quad & \\sum_{i \\in \\mathcal{I}}\\sum_{j \\in \\mathcal{J}} t_{i,j} \\times X_{i,j} \\\\\n\\text{subject to:} \\quad & \\sum_{i \\in \\mathcal{I}} X_{i,j}= 1 && \\forall j \\in \\mathcal{J} \\\\\n& \\sum_{i \\in \\mathcal{I}} X_{i,i} = p &&  \\\\\n& X_{i,j} \\leq X_{i,i} &&  \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}  \\\\\n& X_{i,j} \\in \\{0,1\\}  && \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}\n\\end{align}\\]",
+    "crumbs": [
+      "08 Districting",
+      "Lecture"
+    ]
+  },
+  {
+    "objectID": "lectures/lecture-08-districting.html#connection-to-facility-location",
+    "href": "lectures/lecture-08-districting.html#connection-to-facility-location",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Connection to Facility Location",
+    "text": "Connection to Facility Location\nQuestion: How does this relate to facility location problems?\n. . .\n\n\np-Median Problem:\n\nFixed number of facilities (\\(p\\))\nMinimize total distance\nAll customers served\nNo capacity constraints\n\n\nSimilar problems:\n\nUFLP: Uncapacitated Facility Location\np-Center: Minimize maximum distance\nCapacitated: Add capacity limits\n\n\n\n. . .\n\n\n\n\n\n\nOur police districting is a p-Median variant with additional geographic constraints (contiguity, compactness)!",
     "crumbs": [
       "08 Districting",
       "Lecture"
@@ -9900,25 +10027,53 @@
     "text": "Response Time Influencers\nQuestion: What affects response time?\n\nInitial contact\nInformation gathering\nUnit assignment\nResource coordination\nRoute to location\nTraffic conditions"
   },
   {
-    "objectID": "lectures/lecture-08-presentation.html#territory-design-problem-1",
-    "href": "lectures/lecture-08-presentation.html#territory-design-problem-1",
+    "objectID": "lectures/lecture-08-presentation.html#what-is-territory-design",
+    "href": "lectures/lecture-08-presentation.html#what-is-territory-design",
     "title": "Lecture VIII - Police Districting",
-    "section": "Territory Design Problem",
-    "text": "Territory Design Problem\n\n\n\n\n\nAggregation of small geographic areas, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to pre-defined planning criteria1.\n\n\nZoltners and Sinha (1983)"
+    "section": "What is Territory Design?",
+    "text": "What is Territory Design?\n\n\n\n\n\nAggregation of small geographic areas, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to pre-defined planning criteria1.\n\n\n\n\n\n\n\n\n\nTerritory design is a general framework applicable to many domains: emergency services, sales territories, political districts, school districts, etc.\n\n\n\n\nZoltners and Sinha (1983)"
   },
   {
-    "objectID": "lectures/lecture-08-presentation.html#objective",
-    "href": "lectures/lecture-08-presentation.html#objective",
+    "objectID": "lectures/lecture-08-presentation.html#territory-design-components",
+    "href": "lectures/lecture-08-presentation.html#territory-design-components",
     "title": "Lecture VIII - Police Districting",
-    "section": "Objective",
-    "text": "Objective\nQuestion: What could be the objective?\n\n\nMinimize the response time to help citizens faster while increasing the confidence in the service\n\n\n\nQuestion: What could be further objectives?\n\n\n\nReallocate only part of the police department’s\nCompact and contiguous territories to improve patrol\nPrevention of isolated departments"
+    "section": "Territory Design Components",
+    "text": "Territory Design Components\nQuestion: What are the key components?\n\nBasic Areas (BAs): Smallest indivisible geographic units\nDistricts/Territories: Aggregation of BAs\nPlanning Criteria: Rules and objectives for grouping\nDecision: Which BAs belong to which district?\n\n\n\n\n\n\n\n\nIn our police case: BAs are hexagonal cells, districts are service areas for police departments."
   },
   {
-    "objectID": "lectures/lecture-08-presentation.html#basic-structure",
-    "href": "lectures/lecture-08-presentation.html#basic-structure",
+    "objectID": "lectures/lecture-08-presentation.html#common-territory-design-objectives",
+    "href": "lectures/lecture-08-presentation.html#common-territory-design-objectives",
     "title": "Lecture VIII - Police Districting",
-    "section": "Basic Structure",
-    "text": "Basic Structure\n\n\n\n\nQuestion: How can we structure this?\n\nModel as a digraph with vertices and edges\nEach BA centroid becomes a vertex\n\\(\\mathcal{J}\\) : set of BAs, indexed by \\(j\\)\n\\(\\mathcal{I}\\) : set of potential district centres \\((\\mathcal{I} \\subseteq \\mathcal{J})\\)"
+    "section": "Common Territory Design Objectives",
+    "text": "Common Territory Design Objectives\n\n\nBalance Criteria:\n\nEqual workload distribution\nEqual sales potential\nEqual population coverage\nResource balance\n\n\nGeographic Criteria:\n\nContiguity: No isolated areas\nCompactness: Round shape\nMinimize travel distances\nRespect boundaries\n\n\n\n\n\n\n\n\n\nThese criteria often conflict with each other - optimization helps find the best trade-off!"
+  },
+  {
+    "objectID": "lectures/lecture-08-presentation.html#applications-of-territory-design",
+    "href": "lectures/lecture-08-presentation.html#applications-of-territory-design",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Applications of Territory Design",
+    "text": "Applications of Territory Design\nQuestion: Where else is this used?\n\nSales force deployment: Assign sales representatives to territories\nPolitical districting: Electoral boundaries\nSchool districts: Student assignment zones\nWaste collection: Service route planning\nHealthcare: Hospital catchment areas\n\n\n\n\n\n\n\n\nSame mathematical structure, different objectives and constraints!"
+  },
+  {
+    "objectID": "lectures/lecture-08-presentation.html#police-districting-specifics",
+    "href": "lectures/lecture-08-presentation.html#police-districting-specifics",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Police Districting Specifics",
+    "text": "Police Districting Specifics\nQuestion: What could be the objective?\n\n\nMinimize the response time to help citizens faster while increasing the confidence in the service\n\n\n\nQuestion: What could be further objectives?\n\n\n\nReallocate only part of the police department’s\nCompact and contiguous territories to improve patrol\nPrevention of isolated departments"
+  },
+  {
+    "objectID": "lectures/lecture-08-presentation.html#from-geography-to-graph",
+    "href": "lectures/lecture-08-presentation.html#from-geography-to-graph",
+    "title": "Lecture VIII - Police Districting",
+    "section": "From Geography to Graph",
+    "text": "From Geography to Graph\n\n\n\n\nQuestion: How do we model this mathematically?\n\nGeographic areas → Centroids (center points)\nCentroids → Vertices in a graph\nSpatial relationships → Edges between vertices\n\n\n\n\n\n\n\n\n\nThis abstraction allows us to use powerful optimization techniques from graph theory and location science!"
+  },
+  {
+    "objectID": "lectures/lecture-08-presentation.html#mathematical-structure",
+    "href": "lectures/lecture-08-presentation.html#mathematical-structure",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Mathematical Structure",
+    "text": "Mathematical Structure\n\n\n\n\nQuestion: What sets do we need?\n\n\\(\\mathcal{J}\\) : Set of all BAs (basic areas), indexed by \\(j\\)\n\\(\\mathcal{I}\\) : Set of potential department locations where \\(\\mathcal{I} \\subseteq \\mathcal{J}\\), indexed by \\(i\\)\n\n. . .\n\n\n\n\n\n\nNote: Department locations are a subset of all BAs - not every BA can host a department!"
   },
   {
     "objectID": "lectures/lecture-08-presentation.html#why-hexagons",
@@ -10052,6 +10207,13 @@
     "title": "Lecture VIII - Police Districting",
     "section": "p-Median Problem",
     "text": "p-Median Problem\n\\[\\begin{align}\n\\text{minimize} \\quad & \\sum_{i \\in \\mathcal{I}}\\sum_{j \\in \\mathcal{J}} t_{i,j} \\times X_{i,j} \\\\\n\\text{subject to:} \\quad & \\sum_{i \\in \\mathcal{I}} X_{i,j}= 1 && \\forall j \\in \\mathcal{J} \\\\\n& \\sum_{i \\in \\mathcal{I}} X_{i,i} = p &&  \\\\\n& X_{i,j} \\leq X_{i,i} &&  \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}  \\\\\n& X_{i,j} \\in \\{0,1\\}  && \\forall i \\in \\mathcal{I}, \\forall j \\in \\mathcal{J}\n\\end{align}\\]"
+  },
+  {
+    "objectID": "lectures/lecture-08-presentation.html#connection-to-facility-location",
+    "href": "lectures/lecture-08-presentation.html#connection-to-facility-location",
+    "title": "Lecture VIII - Police Districting",
+    "section": "Connection to Facility Location",
+    "text": "Connection to Facility Location\nQuestion: How does this relate to facility location problems?\n\n\n\np-Median Problem:\n\nFixed number of facilities (\\(p\\))\nMinimize total distance\nAll customers served\nNo capacity constraints\n\n\nSimilar problems:\n\nUFLP: Uncapacitated Facility Location\np-Center: Minimize maximum distance\nCapacitated: Add capacity limits\n\n\n\n\n\n\n\n\n\n\nOur police districting is a p-Median variant with additional geographic constraints (contiguity, compactness)!"
   },
   {
     "objectID": "lectures/lecture-08-presentation.html#contiguity-introduction",

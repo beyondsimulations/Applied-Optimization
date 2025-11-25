@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -599,9 +634,9 @@ window.Quarto = {
   <li><a href="#problem-visualization" id="toc-problem-visualization" class="nav-link" data-scroll-target="#problem-visualization"><span class="flow">Problem Visualization</span></a>
   <ul class="collapse">
   <li><a href="#basic-problem-setting" id="toc-basic-problem-setting" class="nav-link" data-scroll-target="#basic-problem-setting">Basic Problem Setting</a></li>
-  <li><a href="#basic-problem-setting-with-arcs" id="toc-basic-problem-setting-with-arcs" class="nav-link" data-scroll-target="#basic-problem-setting-with-arcs">Basic Problem Setting with Arcs</a></li>
+  <li><a href="#basic-setting-with-arcs" id="toc-basic-setting-with-arcs" class="nav-link" data-scroll-target="#basic-setting-with-arcs">Basic Setting with Arcs</a></li>
   <li><a href="#setting-with-vehicles" id="toc-setting-with-vehicles" class="nav-link" data-scroll-target="#setting-with-vehicles">Setting with Vehicles</a></li>
-  <li><a href="#basic-problem-setting-with-tours" id="toc-basic-problem-setting-with-tours" class="nav-link" data-scroll-target="#basic-problem-setting-with-tours">Basic Problem Setting with Tours</a></li>
+  <li><a href="#basic-setting-with-tours" id="toc-basic-setting-with-tours" class="nav-link" data-scroll-target="#basic-setting-with-tours">Basic Setting with Tours</a></li>
   </ul></li>
   <li><a href="#problem-structure-1" id="toc-problem-structure-1" class="nav-link" data-scroll-target="#problem-structure-1"><span class="flow">Problem Structure</span></a>
   <ul class="collapse">
@@ -616,6 +651,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#objective-function" id="toc-objective-function" class="nav-link" data-scroll-target="#objective-function">Objective Function?</a></li>
   <li><a href="#objective-function-1" id="toc-objective-function-1" class="nav-link" data-scroll-target="#objective-function-1">Objective Function</a></li>
+  <li><a href="#from-math-to-code" id="toc-from-math-to-code" class="nav-link" data-scroll-target="#from-math-to-code">From Math to Code</a></li>
   <li><a href="#problem-constraints" id="toc-problem-constraints" class="nav-link" data-scroll-target="#problem-constraints">Problem Constraints</a></li>
   <li><a href="#constraints" id="toc-constraints" class="nav-link" data-scroll-target="#constraints">Constraints?</a></li>
   <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3"></a></li>
@@ -625,8 +661,8 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#visit-each-customer-once" id="toc-visit-each-customer-once" class="nav-link" data-scroll-target="#visit-each-customer-once">Visit Each Customer Once?</a></li>
   <li><a href="#visit-each-customer-once-1" id="toc-visit-each-customer-once-1" class="nav-link" data-scroll-target="#visit-each-customer-once-1">Visit Each Customer Once</a></li>
-  <li><a href="#depot-entry-and-exit-constraints" id="toc-depot-entry-and-exit-constraints" class="nav-link" data-scroll-target="#depot-entry-and-exit-constraints">Depot Entry and Exit Constraints?</a></li>
-  <li><a href="#depot-entry-and-exit-constraints-1" id="toc-depot-entry-and-exit-constraints-1" class="nav-link" data-scroll-target="#depot-entry-and-exit-constraints-1">Depot Entry and Exit Constraints</a></li>
+  <li><a href="#depot-entry-exit-constraints" id="toc-depot-entry-exit-constraints" class="nav-link" data-scroll-target="#depot-entry-exit-constraints">Depot Entry/ Exit Constraints?</a></li>
+  <li><a href="#depot-entry-exit-constraints-1" id="toc-depot-entry-exit-constraints-1" class="nav-link" data-scroll-target="#depot-entry-exit-constraints-1">Depot Entry/ Exit Constraints</a></li>
   </ul></li>
   <li><a href="#capacity-and-subtour-elimination" id="toc-capacity-and-subtour-elimination" class="nav-link" data-scroll-target="#capacity-and-subtour-elimination"><span class="flow">Capacity and Subtour Elimination</span></a>
   <ul class="collapse">
@@ -655,7 +691,7 @@ window.Quarto = {
   <li><a href="#objective-1" id="toc-objective-1" class="nav-link" data-scroll-target="#objective-1">Objective</a></li>
   <li><a href="#each-customer-is-visited-once" id="toc-each-customer-is-visited-once" class="nav-link" data-scroll-target="#each-customer-is-visited-once">Each customer is visited once</a></li>
   <li><a href="#depot-entry-and-exit" id="toc-depot-entry-and-exit" class="nav-link" data-scroll-target="#depot-entry-and-exit">Depot entry and exit</a></li>
-  <li><a href="#capacity-and-subtour-elimination-1" id="toc-capacity-and-subtour-elimination-1" class="nav-link" data-scroll-target="#capacity-and-subtour-elimination-1">Capacity and subtour elimination</a></li>
+  <li><a href="#capacity-subtour-elimination" id="toc-capacity-subtour-elimination" class="nav-link" data-scroll-target="#capacity-subtour-elimination">Capacity/ subtour elimination</a></li>
   <li><a href="#time-constraints" id="toc-time-constraints" class="nav-link" data-scroll-target="#time-constraints">Time constraints</a></li>
   <li><a href="#variables" id="toc-variables" class="nav-link" data-scroll-target="#variables">Variables</a></li>
   </ul></li>
@@ -663,6 +699,8 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#characteristics" id="toc-characteristics" class="nav-link" data-scroll-target="#characteristics">Characteristics</a></li>
   <li><a href="#model-assumptions" id="toc-model-assumptions" class="nav-link" data-scroll-target="#model-assumptions">Model Assumptions</a></li>
+  <li><a href="#model-limitations" id="toc-model-limitations" class="nav-link" data-scroll-target="#model-limitations">Model Limitations</a></li>
+  <li><a href="#real-world-complications" id="toc-real-world-complications" class="nav-link" data-scroll-target="#real-world-complications">Real-World Complications</a></li>
   <li><a href="#extensions-of-the-cvrp" id="toc-extensions-of-the-cvrp" class="nav-link" data-scroll-target="#extensions-of-the-cvrp">Extensions of the CVRP</a></li>
   </ul></li>
   <li><a href="#implementation-and-impact" id="toc-implementation-and-impact" class="nav-link" data-scroll-target="#implementation-and-impact"><span class="flow">Implementation and Impact</span></a>
@@ -671,8 +709,13 @@ window.Quarto = {
   <li><a href="#section-7" id="toc-section-7" class="nav-link" data-scroll-target="#section-7"></a></li>
   <li><a href="#section-8" id="toc-section-8" class="nav-link" data-scroll-target="#section-8"></a></li>
   <li><a href="#problem-is-np-hard" id="toc-problem-is-np-hard" class="nav-link" data-scroll-target="#problem-is-np-hard">Problem is NP-hard</a></li>
+  <li><a href="#why-does-this-matter" id="toc-why-does-this-matter" class="nav-link" data-scroll-target="#why-does-this-matter">Why Does This Matter?</a></li>
+  <li><a href="#understanding-optimality-gap" id="toc-understanding-optimality-gap" class="nav-link" data-scroll-target="#understanding-optimality-gap">Understanding Optimality Gap</a></li>
   <li><a href="#section-9" id="toc-section-9" class="nav-link" data-scroll-target="#section-9"></a></li>
   <li><a href="#heuristics" id="toc-heuristics" class="nav-link" data-scroll-target="#heuristics">Heuristics</a></li>
+  <li><a href="#heuristics-for-vrp" id="toc-heuristics-for-vrp" class="nav-link" data-scroll-target="#heuristics-for-vrp">Heuristics for VRP</a></li>
+  <li><a href="#hgs-cvrp-state-of-the-art" id="toc-hgs-cvrp-state-of-the-art" class="nav-link" data-scroll-target="#hgs-cvrp-state-of-the-art">HGS-CVRP: State-of-the-Art</a></li>
+  <li><a href="#case-study-results" id="toc-case-study-results" class="nav-link" data-scroll-target="#case-study-results">Case Study Results</a></li>
   <li><a href="#applications-beyond-libraries" id="toc-applications-beyond-libraries" class="nav-link" data-scroll-target="#applications-beyond-libraries">Applications Beyond Libraries</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#section-10" id="toc-section-10" class="nav-link" data-scroll-target="#section-10"></a></li>
@@ -736,7 +779,7 @@ window.Quarto = {
 <ul>
 <li><span class="highlight">Book Delivery to Libraries</span> in Germany</li>
 <li>They supply <strong>all local libraries</strong> within the same state</li>
-<li>Complex, as the <strong>number of libraries</strong> per state can be large</li>
+<li>Complex, as <strong>number of libraries</strong> per state can be large</li>
 <li>Books and media in the libraries <strong>change often</strong></li>
 <li>Customers can <strong>request books</strong> from other libraries</li>
 </ul>
@@ -755,7 +798,7 @@ window.Quarto = {
 <p><span class="question">Question</span>: <strong>What decisions can the library make for tours?</strong></p>
 <p>. . .</p>
 <ul>
-<li>Subdivide their set of libraries into <strong>several ordered tours</strong></li>
+<li>Subdivide set of libraries into <strong>several ordered tours</strong></li>
 <li>Decide in <strong>which order to visit</strong> the libraries</li>
 <li>Evaluate <strong>which car to use</strong> for each of the tours</li>
 <li>Decide <strong>which driver</strong> to assign to each of the tours</li>
@@ -766,10 +809,10 @@ window.Quarto = {
 <p><span class="question">Question</span>: <strong>What is the impact of the decisions?</strong></p>
 <p>. . .</p>
 <ul>
-<li>Longer driving routes <span class="highlight">increase the footprint</span> of the deliveries</li>
+<li>Longer driving <span class="highlight">increases the footprint</span> of the deliveries</li>
 <li>Suboptimal tours can lead to <strong>unnecessary costs</strong></li>
 <li>Fuel, personnel, and repairs <strong>are increased</strong></li>
-<li>Unhappy customers due to <strong>waiting times</strong> on ordered books</li>
+<li>Unhappy customers due to <strong>waiting times</strong> on books</li>
 </ul>
 </section>
 <section id="section" class="level2 loud-slide">
@@ -781,7 +824,6 @@ window.Quarto = {
 <div class="footer">
 
 </div>
-<hr>
 </section>
 </section>
 <section id="problem-structure" class="level1 title">
@@ -800,7 +842,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="modelling">Modelling</h2>
 <p><span class="question">Question</span>: <strong>What could we try to model?</strong></p>
 <p>. . .</p>
-<p><strong>Minimization</strong> of the travel time while <span class="highlight">supplying all libraries</span> in the state and adhering to <strong>the vehicle capacities and driving time restrictions.</strong></p>
+<p><strong>Minimization</strong> of the travel time while <span class="highlight">supplying all libraries</span> in the state and respecting <strong>the vehicle capacities and driving time restrictions.</strong></p>
 </section>
 <section id="section-1" class="level2 loud-slide">
 <h2 class="loud-slide anchored" data-anchor-id="section-1"></h2>
@@ -841,7 +883,6 @@ window.Quarto = {
 <div class="footer">
 
 </div>
-<hr>
 </section>
 </section>
 <section id="problem-visualization" class="level1 title">
@@ -850,18 +891,17 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="basic-problem-setting">Basic Problem Setting</h2>
 <p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-01.svg" class="img-fluid" style="width:99.0%"></p>
 </section>
-<section id="basic-problem-setting-with-arcs" class="level2">
-<h2 class="anchored" data-anchor-id="basic-problem-setting-with-arcs">Basic Problem Setting with Arcs</h2>
+<section id="basic-setting-with-arcs" class="level2">
+<h2 class="anchored" data-anchor-id="basic-setting-with-arcs">Basic Setting with Arcs</h2>
 <p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-02.svg" class="img-fluid" style="width:99.0%"></p>
 </section>
 <section id="setting-with-vehicles" class="level2">
 <h2 class="anchored" data-anchor-id="setting-with-vehicles">Setting with Vehicles</h2>
 <p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-03.svg" class="img-fluid" style="width:99.0%"></p>
 </section>
-<section id="basic-problem-setting-with-tours" class="level2">
-<h2 class="anchored" data-anchor-id="basic-problem-setting-with-tours">Basic Problem Setting with Tours</h2>
+<section id="basic-setting-with-tours" class="level2">
+<h2 class="anchored" data-anchor-id="basic-setting-with-tours">Basic Setting with Tours</h2>
 <p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg" class="img-fluid" style="width:99.0%"></p>
-<hr>
 </section>
 </section>
 <section id="problem-structure-1" class="level1 title">
@@ -898,7 +938,6 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<hr>
 </section>
 <section id="decision-variables" class="level2">
 <h2 class="anchored" data-anchor-id="decision-variables">Decision Variable(s)?</h2>
@@ -1013,7 +1052,6 @@ window.Quarto = {
 <p>Only possible, if time and capacity constraints are equal for all vehicles!</p>
 </div>
 </div>
-<hr>
 </section>
 </section>
 <section id="model-formulation" class="level1 title">
@@ -1073,7 +1111,36 @@ window.Quarto = {
 <p><span class="math display">\[\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}\]</span></p>
 <p>. . .</p>
 <p><span class="question">Question:</span> <strong>What does <span class="math inline">\((i,j) \in \mathcal{A}\)</span> under the sum mean?</strong></p>
-<hr>
+</section>
+<section id="from-math-to-code" class="level2">
+<h2 class="anchored" data-anchor-id="from-math-to-code">From Math to Code</h2>
+<p>The objective function in <strong>JuMP</strong> looks very similar:</p>
+<div id="4c88ba72" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple example with 4 nodes</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>nodes <span class="op">=</span> [<span class="st">"depot"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>arcs <span class="op">=</span> [(i,j) for i <span class="kw">in</span> nodes, j <span class="kw">in</span> nodes if i <span class="op">!=</span> j]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> <span class="fu">Dict</span>((<span class="st">"depot"</span>,<span class="st">"A"</span>) <span class="op">=&gt;</span> <span class="fl">10</span>, (<span class="st">"depot"</span>,<span class="st">"B"</span>) <span class="op">=&gt;</span> <span class="fl">15</span>, (<span class="st">"depot"</span>,<span class="st">"C"</span>) <span class="op">=&gt;</span> <span class="fl">20</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>         (<span class="st">"A"</span>,<span class="st">"depot"</span>) <span class="op">=&gt;</span> <span class="fl">10</span>, (<span class="st">"A"</span>,<span class="st">"B"</span>) <span class="op">=&gt;</span> <span class="fl">12</span>, (<span class="st">"A"</span>,<span class="st">"C"</span>) <span class="op">=&gt;</span> <span class="fl">8</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>         (<span class="st">"B"</span>,<span class="st">"depot"</span>) <span class="op">=&gt;</span> <span class="fl">15</span>, (<span class="st">"B"</span>,<span class="st">"A"</span>) <span class="op">=&gt;</span> <span class="fl">12</span>, (<span class="st">"B"</span>,<span class="st">"C"</span>) <span class="op">=&gt;</span> <span class="fl">5</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>         (<span class="st">"C"</span>,<span class="st">"depot"</span>) <span class="op">=&gt;</span> <span class="fl">20</span>, (<span class="st">"C"</span>,<span class="st">"A"</span>) <span class="op">=&gt;</span> <span class="fl">8</span>, (<span class="st">"C"</span>,<span class="st">"B"</span>) <span class="op">=&gt;</span> <span class="fl">5</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, X[arcs], Bin)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(model, Min, <span class="fu">sum</span>(c[i,j] <span class="op">*</span> X[(i,j)] <span class="cf">for</span> (i,j) <span class="kw">in</span> arcs))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The JuMP syntax <code>sum(c[i,j] * X[(i,j)] for (i,j) in arcs)</code> directly mirrors our mathematical notation <span class="math inline">\(\sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}\)</span>!</p>
+</div>
+</div>
+</div>
 </section>
 <section id="problem-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="problem-constraints">Problem Constraints</h2>
@@ -1117,7 +1184,6 @@ window.Quarto = {
 <section id="subtours-1" class="level2">
 <h2 class="anchored" data-anchor-id="subtours-1">Subtours</h2>
 <p><img src="https://images.beyondsimulations.com/ao/ao_routing-basic-05.svg" class="img-fluid" style="width:99.0%"></p>
-<hr>
 </section>
 </section>
 <section id="constraints-1" class="level1 title">
@@ -1169,10 +1235,9 @@ window.Quarto = {
 <p><span class="question">Question:</span> <strong>Why for all nodes except the depot?</strong></p>
 <p>. . .</p>
 <p>The depot is the <strong>only node</strong> that is <span class="highlight">visited multiple times!</span></p>
-<hr>
 </section>
-<section id="depot-entry-and-exit-constraints" class="level2">
-<h2 class="anchored" data-anchor-id="depot-entry-and-exit-constraints">Depot Entry and Exit Constraints?</h2>
+<section id="depot-entry-exit-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="depot-entry-exit-constraints">Depot Entry/ Exit Constraints?</h2>
 <div class="callout callout-style-simple callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1207,8 +1272,8 @@ window.Quarto = {
 <p>. . .</p>
 <p><span class="question">Question:</span> <strong>What could the constraint look like?</strong></p>
 </section>
-<section id="depot-entry-and-exit-constraints-1" class="level2">
-<h2 class="anchored" data-anchor-id="depot-entry-and-exit-constraints-1">Depot Entry and Exit Constraints</h2>
+<section id="depot-entry-exit-constraints-1" class="level2">
+<h2 class="anchored" data-anchor-id="depot-entry-exit-constraints-1">Depot Entry/ Exit Constraints</h2>
 <p><span class="math display">\[
 \sum_{i \in \mathcal{V} \setminus \{0\}} X_{i,0} = |\mathcal{K}|
 \]</span></p>
@@ -1229,7 +1294,6 @@ window.Quarto = {
 <p>No, theoretically we could also say that we only have to leave <strong>or</strong> enter the depot exactly <span class="math inline">\(|\mathcal{K}|\)</span> times, as the other constraint is already enforced by the “visit each customer once constraint”.</p>
 </div>
 </div>
-<hr>
 </section>
 </section>
 <section id="capacity-and-subtour-elimination" class="level1 title page-columns page-full">
@@ -1323,7 +1387,6 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 </ul>
 </div>
 </div>
-<hr>
 </section>
 <section id="no-connection-between-nodes" class="level2">
 <h2 class="anchored" data-anchor-id="no-connection-between-nodes">No connection between nodes</h2>
@@ -1450,7 +1513,6 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <li>Remember variable domain of <span class="math inline">\(U_i\)</span>?</li>
 <li><span class="math inline">\(d_i \leq U_i \leq b\)</span> → <span class="highlight">Overall capacity limit enforced!</span></li>
 </ul>
-<hr>
 </section>
 </section>
 <section id="last-constraint" class="level1 title">
@@ -1462,7 +1524,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <ul>
 <li>Constraints basically <strong>follow the same idea</strong>!</li>
 <li>First, we again need an additional variable</li>
-<li><span class="math inline">\(T_{i}\)</span> - Time spent on tour at the node <span class="math inline">\(i\)</span> of a vehicle with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+<li><span class="math inline">\(T_{i}\)</span> - Time spent on tour at node <span class="math inline">\(i\)</span> of a vehicle with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
 </ul>
 </section>
 <section id="ensure-time-limit-1" class="level2">
@@ -1503,7 +1565,6 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 <div class="footer">
 
 </div>
-<hr>
 </section>
 </section>
 <section id="asymmetric-vehicle-routing-problem" class="level1 title">
@@ -1571,8 +1632,8 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 </div>
 </div>
 </section>
-<section id="capacity-and-subtour-elimination-1" class="level2">
-<h2 class="anchored" data-anchor-id="capacity-and-subtour-elimination-1">Capacity and subtour elimination</h2>
+<section id="capacity-subtour-elimination" class="level2">
+<h2 class="anchored" data-anchor-id="capacity-subtour-elimination">Capacity/ subtour elimination</h2>
 <p><span class="math display">\[
 U_i - U_j + b \times X_{i,j} \leq b - d_j \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
@@ -1639,7 +1700,6 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <p>The binary setup variable is either 0 or 1 and the new variables are below the time and capacity limit.</p>
 </div>
 </div>
-<hr>
 </section>
 </section>
 <section id="model-characteristics" class="level1 title">
@@ -1661,9 +1721,54 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <div class="incremental">
 <ul class="incremental">
 <li>What assumptions have we made?</li>
-<li>What are likely issues that can arise if the model is applied?</li>
+<li>What are issues that can arise if the model is applied?</li>
 <li>Have we considered service times?</li>
 </ul>
+</div>
+</section>
+<section id="model-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="model-limitations">Model Limitations</h2>
+<p>Our formulation makes <span class="highlight">several simplifying assumptions</span>:</p>
+<div class="incremental">
+<ul class="incremental">
+<li><strong>No service time</strong> at customer locations</li>
+<li><strong>Homogeneous fleet</strong> (all vehicles are identical)</li>
+<li><strong>Deterministic demand</strong> (known exactly in advance)</li>
+<li><strong>Single depot</strong> (all vehicles start and end at same location)</li>
+</ul>
+</div>
+</section>
+<section id="real-world-complications" class="level2">
+<h2 class="anchored" data-anchor-id="real-world-complications">Real-World Complications</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Operational Challenges</strong></p>
+<ul>
+<li>Traffic variability</li>
+<li>Driver breaks and regulations</li>
+<li>Vehicle breakdowns</li>
+<li>Weather conditions</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Planning Challenges</strong></p>
+<ul>
+<li>Dynamic customer requests</li>
+<li>Uncertain demand</li>
+<li>Last-minute cancellations</li>
+<li>Multi-day horizons</li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>These complications often require <strong>extensions</strong> of the basic CVRP model or <strong>robust optimization</strong> approaches!</p>
+</div>
+</div>
 </div>
 <hr>
 </section>
@@ -1679,7 +1784,6 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <li>backhauls (B)</li>
 <li>pickup and delivery (PD)</li>
 </ul>
-<hr>
 </section>
 </section>
 <section id="implementation-and-impact" class="level1 title page-columns page-full">
@@ -1721,7 +1825,6 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <div class="footer">
 
 </div>
-<hr>
 </section>
 <section id="problem-is-np-hard" class="level2">
 <h2 class="anchored" data-anchor-id="problem-is-np-hard">Problem is NP-hard</h2>
@@ -1737,9 +1840,57 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>We won’t go deeper into this, but feel free to ask me!</p>
+<p>The CVRP is a generalization of the <strong>Traveling Salesman Problem (TSP)</strong>, which is itself NP-hard!</p>
 </div>
 </div>
+</div>
+</section>
+<section id="why-does-this-matter" class="level2">
+<h2 class="anchored" data-anchor-id="why-does-this-matter">Why Does This Matter?</h2>
+<p>The solution space grows <strong>explosively</strong> with problem size:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Nodes</th>
+<th>Possible Tour Orders</th>
+<th>Approx. Computation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>10</td>
+<td>3.6 million</td>
+<td>Seconds</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>1.3 trillion</td>
+<td>Minutes</td>
+</tr>
+<tr class="odd">
+<td>20</td>
+<td>2.4 × 10^18</td>
+<td>Hours to days</td>
+</tr>
+<tr class="even">
+<td>50</td>
+<td>3 × 10^64</td>
+<td>Infeasible</td>
+</tr>
+</tbody>
+</table>
+<p>. . .</p>
+<p><span class="question">Question:</span> <strong>Why is the 40-45% gap after 1 hour expected?</strong></p>
+</section>
+<section id="understanding-optimality-gap" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-optimality-gap">Understanding Optimality Gap</h2>
+<div class="incremental">
+<ul class="incremental">
+<li>The <strong>optimality gap</strong> measures: <span class="math display">\[\frac{\text{Best Solution} - \text{Lower Bound}}{\text{Lower Bound}} \times 100\%\]</span></li>
+<li>A 40% gap means our solution <strong>could be</strong> up to 40% worse than optimal</li>
+<li>For 165 libraries, even <strong>state-of-the-art solvers</strong> struggle</li>
+<li><span class="highlight">This is why we need heuristics!</span></li>
+</ul>
 </div>
 </section>
 <section id="section-9" class="level2 loud-slide">
@@ -1753,16 +1904,13 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 
 </div>
 </section>
-<section id="heuristics" class="level2 page-columns page-full">
+<section id="heuristics" class="level2">
 <h2 class="anchored" data-anchor-id="heuristics">Heuristics</h2>
 <ul>
 <li>We can still solve the problem <strong>with a heuristic</strong></li>
 <li><span class="highlight">Likely not the optimal solution</span>, but a lot of research goes into efficient algorithms to solve these problems</li>
-<li>In our case study we applied <strong>Hybrid Genetic Search</strong> for the CVRP (HGS-CVRP) by <span class="citation" data-cites="Vidal_2022">Vidal (<a href="#ref-Vidal_2022" role="doc-biblioref">2022</a>)</span></li>
 </ul>
-<div class="no-row-height column-margin column-container"><div id="ref-Vidal_2022" class="csl-entry" role="listitem">
-Vidal, Thibaut. 2022. <span>“Hybrid Genetic Search for the CVRP: Open-Source Implementation and SWAP* Neighborhood.”</span> <em>Computers &amp; Operations Research</em> 140 (April): 105643. <a href="https://doi.org/10.1016/j.cor.2021.105643">https://doi.org/10.1016/j.cor.2021.105643</a>.
-</div></div><p>. . .</p>
+<p>. . .</p>
 <div class="callout callout-style-simple callout-tip">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -1773,7 +1921,93 @@ Vidal, Thibaut. 2022. <span>“Hybrid Genetic Search for the CVRP: Open-Source I
 </div>
 </div>
 </div>
-<hr>
+</section>
+<section id="heuristics-for-vrp" class="level2">
+<h2 class="anchored" data-anchor-id="heuristics-for-vrp">Heuristics for VRP</h2>
+<div class="columns">
+<div class="column" style="width:33%;">
+<p><strong>Construction</strong></p>
+<p>Build a solution from scratch</p>
+<ul>
+<li>Nearest neighbor</li>
+<li>Savings algorithm</li>
+<li>Sweep method</li>
+</ul>
+</div><div class="column" style="width:33%;">
+<p><strong>Improvement</strong></p>
+<p>Refine existing solutions</p>
+<ul>
+<li>2-opt (swap edges)</li>
+<li>Or-opt (relocate)</li>
+<li>Exchange moves</li>
+</ul>
+</div><div class="column" style="width:34%;">
+<p><strong>Metaheuristics</strong></p>
+<p>Intelligent search strategies</p>
+<ul>
+<li>Genetic algorithms</li>
+<li>Simulated annealing</li>
+<li>Tabu search</li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Interested in more details? Check the lecture <a href="https://beyondsimulations.github.io/Management-Science/">Management Science</a></p>
+</div>
+</div>
+</div>
+</section>
+<section id="hgs-cvrp-state-of-the-art" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="hgs-cvrp-state-of-the-art">HGS-CVRP: State-of-the-Art</h2>
+<p>In our case study we applied <strong>Hybrid Genetic Search</strong> for the CVRP (HGS-CVRP) by <span class="citation" data-cites="Vidal_2022">Vidal (<a href="#ref-Vidal_2022" role="doc-biblioref">2022</a>)</span></p>
+<div class="no-row-height column-margin column-container"><div id="ref-Vidal_2022" class="csl-entry" role="listitem">
+Vidal, Thibaut. 2022. <span>“Hybrid Genetic Search for the CVRP: Open-Source Implementation and SWAP* Neighborhood.”</span> <em>Computers &amp; Operations Research</em> 140 (April): 105643. <a href="https://doi.org/10.1016/j.cor.2021.105643">https://doi.org/10.1016/j.cor.2021.105643</a>.
+</div></div><div class="incremental">
+<ul class="incremental">
+<li>Maintains <strong>diverse population</strong> of solutions</li>
+<li>Applies <strong>intensive local search</strong> to improve offspring</li>
+<li>Achieves near-optimal solutions in <strong>seconds to minutes</strong></li>
+</ul>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>For real-world applications, also consider OR-Tools by Google, it is open-source and production-ready!</p>
+</div>
+</div>
+</div>
+</section>
+<section id="case-study-results" class="level2">
+<h2 class="anchored" data-anchor-id="case-study-results">Case Study Results</h2>
+<p>Using <strong>HGS-CVRP</strong> instead of exact optimization:</p>
+<div class="incremental">
+<ul class="incremental">
+<li>Solution found in <strong>&lt; 5 minutes</strong> (vs.&nbsp;hours with MIP)</li>
+<li>Total driving distance reduced by <strong>~20%</strong> compared to manual planning</li>
+<li>CO₂ emissions reduced by approximately <strong>12-15 tonnes/year</strong></li>
+</ul>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-important">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The heuristic solution is <strong>better</strong> than what the MIP solver found in 1 hour!</p>
+</div>
+</div>
+</div>
 </section>
 <section id="applications-beyond-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="applications-beyond-libraries">Applications Beyond Libraries</h2>
@@ -1830,7 +2064,6 @@ Vidal, Thibaut. 2022. <span>“Hybrid Genetic Search for the CVRP: Open-Source I
 <div class="footer">
 
 </div>
-<hr>
 </section>
 </section>
 <section id="literature" class="level1 title">

@@ -294,9 +294,6 @@ Dr.&nbsp;Tobias Vlćek
 <li>Help administrators in making <strong>strategic decisions</strong></li>
 <li>Locate <span class="highlight">new departments</span> or <span class="highlight">close departments</span> <span class="citation" data-cites="Liberatore2020">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Liberatore, Camacho-Collados, and Vitoriano 2020</a>)</span></li>
 </ul>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="case-studies" class="title-slide slide level1 title center">
@@ -414,17 +411,14 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment">Route to location</li>
 <li class="fragment">Traffic conditions</li>
 </ul>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="territory-design-problem" class="title-slide slide level1 title center">
 <h1><span class="flow">Territory Design Problem</span></h1>
 
 </section>
-<section id="territory-design-problem-1" class="slide level2">
-<h2>Territory Design Problem</h2>
+<section id="what-is-territory-design" class="slide level2">
+<h2>What is Territory Design?</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
 <p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:90.0%"></p>
@@ -433,9 +427,99 @@ Dr.&nbsp;Tobias Vlćek
 <p>Aggregation of <strong>small geographic areas</strong>, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to <strong>pre-defined planning criteria</strong><sup>1</sup>.</p>
 </blockquote>
 </div></div>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Territory design is a <span class="highlight">general framework</span> applicable to many domains: emergency services, sales territories, political districts, school districts, etc.</p>
+</div>
+</div>
+</div>
+</div>
 <aside><ol class="aside-footnotes"><li id="fn1"><p><span class="citation" data-cites="Zoltners1983">Zoltners and Sinha (<a href="#/literature-ii" role="doc-biblioref" onclick="">1983</a>)</span></p></li></ol></aside></section>
-<section id="objective" class="slide level2">
-<h2>Objective</h2>
+<section id="territory-design-components" class="slide level2">
+<h2>Territory Design Components</h2>
+<p><span class="question">Question:</span> <strong>What are the key components?</strong></p>
+<ul>
+<li class="fragment"><strong>Basic Areas (BAs)</strong>: Smallest indivisible geographic units</li>
+<li class="fragment"><strong>Districts/Territories</strong>: Aggregation of BAs</li>
+<li class="fragment"><strong>Planning Criteria</strong>: Rules and objectives for grouping</li>
+<li class="fragment"><strong>Decision</strong>: Which BAs belong to which district?</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-tip callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>In our police case: BAs are hexagonal cells, districts are service areas for police departments.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="common-territory-design-objectives" class="slide level2">
+<h2>Common Territory Design Objectives</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Balance Criteria</strong>:</p>
+<ul>
+<li>Equal <span class="highlight">workload</span> distribution</li>
+<li>Equal sales potential</li>
+<li>Equal population coverage</li>
+<li>Resource balance</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Geographic Criteria</strong>:</p>
+<ul>
+<li><span class="highlight">Contiguity</span>: No isolated areas</li>
+<li><span class="highlight">Compactness</span>: Round shape</li>
+<li>Minimize travel distances</li>
+<li>Respect boundaries</li>
+</ul>
+</div></div>
+<div class="fragment">
+<div class="callout callout-important callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>These criteria often <span class="highlight">conflict</span> with each other - optimization helps find the best trade-off!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="applications-of-territory-design" class="slide level2">
+<h2>Applications of Territory Design</h2>
+<p><span class="question">Question:</span> <strong>Where else is this used?</strong></p>
+<ul>
+<li class="fragment"><strong>Sales force deployment</strong>: Assign sales representatives to territories</li>
+<li class="fragment"><strong>Political districting</strong>: Electoral boundaries</li>
+<li class="fragment"><strong>School districts</strong>: Student assignment zones</li>
+<li class="fragment"><strong>Waste collection</strong>: Service route planning</li>
+<li class="fragment"><strong>Healthcare</strong>: Hospital catchment areas</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Same mathematical structure, different objectives and constraints!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="police-districting-specifics" class="slide level2">
+<h2>Police Districting Specifics</h2>
 <p><span class="question">Question:</span> <strong>What could be the objective?</strong></p>
 <div class="fragment">
 <ul>
@@ -453,19 +537,54 @@ Dr.&nbsp;Tobias Vlćek
 </ul>
 </div>
 </section>
-<section id="basic-structure" class="slide level2">
-<h2>Basic Structure</h2>
+<section id="from-geography-to-graph" class="slide level2">
+<h2>From Geography to Graph</h2>
 <div class="columns">
 <div class="column" style="width:25%;">
 <p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg" style="width:85.0%"></p>
 </div><div class="column" style="width:75%;">
-<p><span class="question">Question:</span> <strong>How can we structure this?</strong></p>
+<p><span class="question">Question:</span> <strong>How do we model this mathematically?</strong></p>
 <ul>
-<li class="fragment">Model as a <strong>digraph</strong> with vertices and edges</li>
-<li class="fragment">Each BA centroid becomes a <strong>vertex</strong></li>
-<li class="fragment"><span class="math inline">\(\mathcal{J}\)</span> : set of BAs, indexed by <span class="math inline">\(j\)</span></li>
-<li class="fragment"><span class="math inline">\(\mathcal{I}\)</span> : set of potential district centres <span class="math inline">\((\mathcal{I} \subseteq \mathcal{J})\)</span></li>
+<li class="fragment">Geographic areas → <span class="highlight">Centroids</span> (center points)</li>
+<li class="fragment">Centroids → <strong>Vertices</strong> in a graph</li>
+<li class="fragment">Spatial relationships → <strong>Edges</strong> between vertices</li>
 </ul>
+</div></div>
+<div class="fragment">
+<div class="callout callout-tip callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>This abstraction allows us to use <span class="highlight">powerful optimization techniques</span> from graph theory and location science!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="mathematical-structure" class="slide level2">
+<h2>Mathematical Structure</h2>
+<div class="columns">
+<div class="column" style="width:25%;">
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg" style="width:70.0%"></p>
+</div><div class="column" style="width:75%;">
+<p><span class="question">Question:</span> <strong>What sets do we need?</strong></p>
+<ul>
+<li class="fragment"><span class="math inline">\(\mathcal{J}\)</span> : Set of <strong>all BAs</strong> (basic areas), indexed by <span class="math inline">\(j\)</span></li>
+<li class="fragment"><span class="math inline">\(\mathcal{I}\)</span> : Set of <strong>potential department locations</strong> where <span class="math inline">\(\mathcal{I} \subseteq \mathcal{J}\)</span>, indexed by <span class="math inline">\(i\)</span></li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-important callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Note: Department locations are a <span class="highlight">subset</span> of all BAs - not every BA can host a department!</p>
+</div>
+</div>
+</div>
 </div></div>
 </section>
 <section id="why-hexagons" class="slide level2">
@@ -511,9 +630,6 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div></div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="model-formulation" class="title-slide slide level1 title center">
@@ -696,9 +812,6 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="constraints" class="title-slide slide level1 title center">
@@ -886,8 +999,40 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 &amp; X_{i,j} \in \{0,1\}  &amp;&amp; \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 \end{align}\]</span></p>
 </section>
-<section class="slide level2">
-
+<section id="connection-to-facility-location" class="slide level2">
+<h2>Connection to Facility Location</h2>
+<p><span class="question">Question:</span> <strong>How does this relate to facility location problems?</strong></p>
+<div class="fragment">
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>p-Median Problem</strong>:</p>
+<ul>
+<li>Fixed number of facilities (<span class="math inline">\(p\)</span>)</li>
+<li>Minimize <span class="highlight">total distance</span></li>
+<li>All customers served</li>
+<li>No capacity constraints</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Similar problems</strong>:</p>
+<ul>
+<li><strong>UFLP</strong>: Uncapacitated Facility Location</li>
+<li><strong>p-Center</strong>: Minimize <span class="highlight">maximum</span> distance</li>
+<li><strong>Capacitated</strong>: Add capacity limits</li>
+</ul>
+</div></div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Our police districting is a <strong>p-Median variant</strong> with additional geographic constraints (contiguity, compactness)!</p>
+</div>
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="contiguity-and-compactness" class="title-slide slide level1 title center">
@@ -1095,9 +1240,6 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="model-characteristics" class="title-slide slide level1 title center">
@@ -1122,9 +1264,6 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <li class="fragment">Use Euclidean distances to approximate driving time?</li>
 <li class="fragment">Can we rely on incident data collected by the police?</li>
 </ul>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="implementation-and-impact" class="title-slide slide level1 title center">
@@ -1300,9 +1439,6 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <div class="footer">
 
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="literature" class="title-slide slide level1 title center">
