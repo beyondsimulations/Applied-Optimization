@@ -25,7 +25,7 @@ format:
 
 - [Book Delivery to Libraries]{.highlight} in Germany
 - They supply **all local libraries** within the same state
-- Complex, as the **number of libraries** per state can be large
+- Complex, as **number of libraries** per state can be large
 - Books and media in the libraries **change often**
 - Customers can **request books** from other libraries
 
@@ -46,7 +46,7 @@ format:
 
 . . .
 
-- Subdivide their set of libraries into **several ordered tours**
+- Subdivide set of libraries into **several ordered tours**
 - Decide in **which order to visit** the libraries
 - Evaluate **which car to use** for each of the tours
 - Decide **which driver** to assign to each of the tours
@@ -57,10 +57,10 @@ format:
 
 . . .
 
-- Longer driving routes [increase the footprint]{.highlight} of the deliveries
+- Longer driving [increases the footprint]{.highlight} of the deliveries
 - Suboptimal tours can lead to **unnecessary costs**
 - Fuel, personnel, and repairs **are increased**
-- Unhappy customers due to **waiting times** on ordered books
+- Unhappy customers due to **waiting times** on books
 
 ## {.loud-slide}
 ::: {.r-fit-text}
@@ -71,8 +71,6 @@ this problem before?
 
 ::: footer
 :::
-
----
 
 # [Problem Structure]{.flow} {.title}
 
@@ -92,7 +90,7 @@ this problem before?
 
 . . .
 
-**Minimization** of the travel time while [supplying all libraries]{.highlight} in the state and adhering to **the vehicle capacities and driving time restrictions.**
+**Minimization** of the travel time while [supplying all libraries]{.highlight} in the state and respecting **the vehicle capacities and driving time restrictions.**
 
 
 ## {.loud-slide}
@@ -132,8 +130,6 @@ the problem!
 ::: footer
 :::
 
----
-
 # [Problem Visualization]{.flow} {.title}
 
 ## Basic Problem Setting
@@ -141,7 +137,7 @@ the problem!
 ![](https://images.beyondsimulations.com/ao/ao_routing-basic-01.svg){width="99%"}
 
 
-## Basic Problem Setting with Arcs
+## Basic Setting with Arcs
 
 ![](https://images.beyondsimulations.com/ao/ao_routing-basic-02.svg){width="99%"}
 
@@ -151,11 +147,10 @@ the problem!
 ![](https://images.beyondsimulations.com/ao/ao_routing-basic-03.svg){width="99%"}
 
 
-## Basic Problem Setting with Tours
+## Basic Setting with Tours
 
 ![](https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg){width="99%"}
 
----
 
 # [Problem Structure]{.flow} {.title}
 
@@ -188,8 +183,6 @@ the problem!
 $t$ is the maximal duration of each tour, not the travel time on an arc or an index!
 
 :::
-
----
 
 ## Decision Variable(s)?
 
@@ -260,8 +253,6 @@ Minimization of the travel time (or driving distance), while supplying all custo
 Only possible, if time and capacity constraints are equal for all vehicles!
 :::
 
----
-
 # [Model Formulation]{.flow} {.title}
 
 ## Objective Function?
@@ -303,7 +294,34 @@ $$\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}$$
 
 [Question:]{.question} **What does $(i,j) \in \mathcal{A}$ under the sum mean?**
 
----
+## From Math to Code
+
+The objective function in **JuMP** looks very similar:
+
+```{julia}
+#| eval: true
+#| echo: true
+#| output: false
+using JuMP, HiGHS
+
+# Simple example with 4 nodes
+nodes = ["depot", "A", "B", "C"]
+arcs = [(i,j) for i in nodes, j in nodes if i != j]
+c = Dict(("depot","A") => 10, ("depot","B") => 15, ("depot","C") => 20,
+         ("A","depot") => 10, ("A","B") => 12, ("A","C") => 8,
+         ("B","depot") => 15, ("B","A") => 12, ("B","C") => 5,
+         ("C","depot") => 20, ("C","A") => 8, ("C","B") => 5)
+
+model = Model(HiGHS.Optimizer)
+@variable(model, X[arcs], Bin)
+@objective(model, Min, sum(c[i,j] * X[(i,j)] for (i,j) in arcs))
+```
+
+. . .
+
+::: {.callout-note}
+The JuMP syntax `sum(c[i,j] * X[(i,j)] for (i,j) in arcs)` directly mirrors our mathematical notation $\sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}$!
+:::
 
 ## Problem Constraints
 
@@ -340,8 +358,6 @@ subtour?
 ## Subtours
 
 ![](https://images.beyondsimulations.com/ao/ao_routing-basic-05.svg){width="99%"}
-
----
 
 # [Constraints]{.flow} {.title}
 
@@ -384,9 +400,7 @@ $$
 
 The depot is the **only node** that is [visited multiple times!]{.highlight}
 
----
-
-## Depot Entry and Exit Constraints?
+## Depot Entry/ Exit Constraints?
 
 ::: {.callout-important}
 ## The goal of these constraints is to:
@@ -408,7 +422,7 @@ Ensure that each vehicle enters and leaves the depot exactly $|\mathcal{K}|$ tim
 
 [Question:]{.question} **What could the constraint look like?**
 
-## Depot Entry and Exit Constraints
+## Depot Entry/ Exit Constraints
 
 $$
 \sum_{i \in \mathcal{V} \setminus \{0\}} X_{i,0} = |\mathcal{K}|
@@ -424,8 +438,6 @@ $$
 ## Are all constraints necessary?
 No, theoretically we could also say that we only have to leave **or** enter the depot exactly $|\mathcal{K}|$ times, as the other constraint is already enforced by the "visit each customer once constraint".
 :::
-
----
 
 # [Capacity and Subtour Elimination]{.flow} {.title}
 
@@ -515,8 +527,6 @@ complicated?
 :::
 
 :::
-
----
 
 ## No connection between nodes
 
@@ -657,8 +667,6 @@ complicated?
 - Remember variable domain of $U_i$?
 - $d_i \leq U_i \leq b$ → [Overall capacity limit enforced!]{.highlight}
 
----
-
 # [Last Constraint]{.flow} {.title}
 
 ## Ensure time limit?
@@ -669,7 +677,7 @@ complicated?
 
 - Constraints basically **follow the same idea**!
 - First, we again need an additional variable
-- $T_{i}$ - Time spent on tour at the node $i$ of a vehicle with $i \in \mathcal{I}$
+- $T_{i}$ - Time spent on tour at node $i$ of a vehicle with $i \in \mathcal{I}$
 
 ## Ensure time limit
 
@@ -707,8 +715,6 @@ Any questions?
 
 ::: footer
 :::
-
----
 
 # [Asymmetric Vehicle Routing Problem]{.flow} {.title}
 
@@ -759,7 +765,7 @@ The depot is visited by exactly $|\mathcal{K}|$ vehicles. Note, that we could re
 
 :::
 
-## Capacity and subtour elimination
+## Capacity/ subtour elimination
 
 $$
 U_i - U_j + b \times X_{i,j} \leq b - d_j \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
@@ -814,7 +820,6 @@ The binary setup variable is either 0 or 1 and the new variables are below the t
 
 :::
 
----
 
 # [Model Characteristics]{.flow} {.title}
 
@@ -837,9 +842,52 @@ The binary setup variable is either 0 or 1 and the new variables are below the t
 ::: {.incremental}
 
 - What assumptions have we made?
-- What are likely issues that can arise if the model is applied?
+- What are issues that can arise if the model is applied?
 - Have we considered service times?
 
+:::
+
+## Model Limitations
+
+Our formulation makes [several simplifying assumptions]{.highlight}:
+
+::: {.incremental}
+
+- **No service time** at customer locations
+- **Homogeneous fleet** (all vehicles are identical)
+- **Deterministic demand** (known exactly in advance)
+- **Single depot** (all vehicles start and end at same location)
+
+:::
+
+## Real-World Complications
+
+::: {.columns}
+
+::: {.column width="50%"}
+**Operational Challenges**
+
+- Traffic variability
+- Driver breaks and regulations
+- Vehicle breakdowns
+- Weather conditions
+:::
+
+::: {.column width="50%"}
+**Planning Challenges**
+
+- Dynamic customer requests
+- Uncertain demand
+- Last-minute cancellations
+- Multi-day horizons
+:::
+
+::::
+
+. . .
+
+::: {.callout-tip}
+These complications often require **extensions** of the basic CVRP model or **robust optimization** approaches!
 :::
 
 ---
@@ -856,8 +904,6 @@ The binary setup variable is either 0 or 1 and the new variables are below the t
 - heterogeneous fleet (HF)
 - backhauls (B)
 - pickup and delivery (PD)
-
----
 
 # [Implementation and Impact]{.flow} {.title}
 
@@ -909,7 +955,6 @@ with 40%-45%.
 ::: footer
 :::
 
----
 
 ## Problem is NP-hard
 
@@ -920,7 +965,34 @@ with 40%-45%.
 . . .
 
 ::: {.callout-note}
-We won't go deeper into this, but feel free to ask me!
+The CVRP is a generalization of the **Traveling Salesman Problem (TSP)**, which is itself NP-hard!
+:::
+
+## Why Does This Matter?
+
+The solution space grows **explosively** with problem size:
+
+| Nodes | Possible Tour Orders | Approx. Computation |
+|-------|---------------------|---------------------|
+| 10    | 3.6 million         | Seconds             |
+| 15    | 1.3 trillion        | Minutes             |
+| 20    | 2.4 × 10^18         | Hours to days       |
+| 50    | 3 × 10^64           | Infeasible          |
+
+. . .
+
+[Question:]{.question} **Why is the 40-45% gap after 1 hour expected?**
+
+## Understanding Optimality Gap
+
+::: {.incremental}
+
+- The **optimality gap** measures: 
+    $$\frac{\text{Best Solution} - \text{Lower Bound}}{\text{Lower Bound}} \times 100\%$$
+- A 40% gap means our solution **could be** up to 40% worse than optimal
+- For 165 libraries, even **state-of-the-art solvers** struggle
+- [This is why we need heuristics!]{.highlight}
+
 :::
 
 ## {.loud-slide}
@@ -942,7 +1014,6 @@ the model?
 
 - We can still solve the problem **with a heuristic**
 - [Likely not the optimal solution]{.highlight}, but a lot of research goes into efficient algorithms to solve these problems
-- In our case study we applied **Hybrid Genetic Search** for the CVRP (HGS-CVRP) by @Vidal_2022
 
 . . .
 
@@ -950,7 +1021,77 @@ the model?
 For problems with 100+ locations, heuristics are often the only practical choice.
 :::
 
----
+## Types of Heuristics for VRP
+
+::: {.columns}
+
+::: {.column width="33%"}
+**Construction**
+
+Build a solution from scratch
+
+- Nearest neighbor
+- Savings algorithm
+- Sweep method
+:::
+
+::: {.column width="33%"}
+**Improvement**
+
+Refine existing solutions
+
+- 2-opt (swap edges)
+- Or-opt (relocate)
+- Exchange moves
+:::
+
+::: {.column width="34%"}
+**Metaheuristics**
+
+Intelligent search strategies
+
+- Genetic algorithms
+- Simulated annealing
+- Tabu search
+:::
+
+::::
+
+## HGS-CVRP: State-of-the-Art
+
+In our case study we applied **Hybrid Genetic Search** for the CVRP (HGS-CVRP) by @Vidal_2022
+
+::: {.incremental}
+
+- Maintains **diverse population** of solutions
+- Applies **intensive local search** to improve offspring
+- Achieves near-optimal solutions in **seconds to minutes**
+
+:::
+
+. . .
+
+::: {.callout-tip}
+For real-world applications, also consider OR-Tools by Google, it is open-source and production-ready!
+:::
+
+## Case Study Results
+
+Using **HGS-CVRP** instead of exact optimization:
+
+::: {.incremental}
+
+- Solution found in **< 5 minutes** (vs. hours with MIP)
+- Total driving distance reduced by **~15%** compared to manual planning
+- CO₂ emissions reduced by approximately **8-12 tonnes/year**
+
+:::
+
+. . .
+
+::: {.callout-important}
+The heuristic solution is **better** than what the MIP solver found in 1 hour!
+:::
 
 ## Applications Beyond Libraries
 
@@ -1002,8 +1143,6 @@ Questions?
 
 ::: footer
 :::
-
----
 
 # [Literature]{.flow} {.title}
 
