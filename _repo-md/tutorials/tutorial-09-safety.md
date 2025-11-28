@@ -5,6 +5,12 @@ code-links:
   - text: Julia
     icon: hand-thumbs-up
     href: tutorial-09-safety.jl
+  - text: Pilgrims
+    icon: filetype-csv
+    href: data/pilgrims.csv
+  - text: Penalty
+    icon: filetype-csv
+    href: data/penalty.csv
 ---
 
 
@@ -52,7 +58,7 @@ Please illustrate possible simplifications in a few sentences in the cell below 
 
 # 2. Implementing the Model
 
-Now, implement and solve the problem defined in the previous task. This time, a draft is not available and you have to implement everything yourself. Note, that the number of pilgrims per group $s$ and the penalty value $f_{s,t}$ are provided as CSV files. You can find them in the `data` folder of this lectures folder in the Github repository.
+Now, implement and solve the problem defined in the previous task. This time, a draft is not available and you have to implement everything yourself. Note, that the number of pilgrims per group $s$ and the penalty value $f_{s,t}$ are provided as CSV files.
 
 ## Load the Data
 

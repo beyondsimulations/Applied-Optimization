@@ -5,6 +5,19 @@ code-links:
   - text: Julia
     icon: hand-thumbs-up
     href: tutorial-08-districting.jl
+  - text: Distances
+    icon: filetype-csv
+    href: data/euclidianDistances0510.csv
+  - text: Driving Times
+    icon: filetype-csv
+    href: data/drivingTimes0510.csv
+  - text: Incidents
+    icon: filetype-csv
+    href: data/incidentWeights0510.csv
+  - text: Shapefile 1
+    href: data/grid0510.shp
+  - text: Shapefile 2
+    href: data/grid0510.dbf
 ---
 
 
