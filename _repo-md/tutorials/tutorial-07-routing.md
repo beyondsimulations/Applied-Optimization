@@ -5,6 +5,12 @@ code-links:
   - text: Julia
     icon: hand-thumbs-up
     href: tutorial-07-routing.jl
+  - text: Demand
+    icon: filetype-csv
+    href: data/routing-demand.csv
+  - text: Coordinates
+    icon: filetype-csv
+    href: data/coord_x_y.csv
 ---
 
 
