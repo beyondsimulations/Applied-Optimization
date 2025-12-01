@@ -231,7 +231,7 @@ This is a **common problem** in many emergency services.
 
 ::: {.column width="55%"}
 
-> Aggregation of **small geographic areas**, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to **pre-defined planning criteria**[^zoltners].
+Aggregation of **small geographic areas**, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to **pre-defined planning criteria**[^zoltners].
 
 :::
 :::
@@ -261,7 +261,7 @@ Territory design is a [general framework]{.highlight} applicable to many domains
 In our police case: BAs are hexagonal cells, districts are service areas for police departments.
 :::
 
-## Common Territory Design Objectives
+## Common TD Objectives
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -276,8 +276,8 @@ In our police case: BAs are hexagonal cells, districts are service areas for pol
 ::: {.column width="50%"}
 **Geographic Criteria**:
 
-- [Contiguity]{.highlight}: No isolated areas
-- [Compactness]{.highlight}: Round shape
+- [Contiguity]{.highlight}: No isolated basic areas
+- [Compactness]{.highlight}: "Round"
 - Minimize travel distances
 - Respect boundaries
 :::
@@ -286,15 +286,15 @@ In our police case: BAs are hexagonal cells, districts are service areas for pol
 . . .
 
 ::: {.callout-important}
-These criteria often [conflict]{.highlight} with each other - optimization helps find the best trade-off!
+These criteria often [conflict]{.highlight} with each other... Optimization helps find the best trade-off!
 :::
 
-## Applications of Territory Design
+## Applications of TD
 
 [Question:]{.question} **Where else is this used?**
 
 ::: {.incremental}
-- **Sales force deployment**: Assign sales representatives to territories
+- **Sales force deployment**: Sales reps to territories
 - **Political districting**: Electoral boundaries
 - **School districts**: Student assignment zones
 - **Waste collection**: Service route planning
@@ -325,70 +325,6 @@ Same mathematical structure, different objectives and constraints!
 - Compact and contiguous territories to **improve patrol**
 - Prevention of **isolated departments**
 
-## From Geography to Graph
-
-::: {.columns}
-::: {.column width="25%"}
-![](https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg){width=85%}
-:::
-::: {.column width="75%"}
-[Question:]{.question} **How do we model this mathematically?**
-
-::: {.incremental}
-- Geographic areas → [Centroids]{.highlight} (center points)
-- Centroids → **Vertices** in a graph
-- Spatial relationships → **Edges** between vertices
-:::
-:::
-:::
-
-. . .
-
-::: {.callout-tip}
-This abstraction allows us to use [powerful optimization techniques]{.highlight} from graph theory and location science!
-:::
-
-## Mathematical Structure
-
-::: {.columns}
-::: {.column width="25%"}
-![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70%}
-:::
-::: {.column width="75%"}
-[Question:]{.question} **What sets do we need?**
-
-::: {.incremental}
-- $\mathcal{J}$ : Set of **all BAs** (basic areas), indexed by $j$
-- $\mathcal{I}$ : Set of **potential department locations** where $\mathcal{I} \subseteq \mathcal{J}$, indexed by $i$
-:::
-
-. . .
-
-::: {.callout-important}
-Note: Department locations are a [subset]{.highlight} of all BAs - not every BA can host a department!
-:::
-:::
-:::
-
-
-## Why Hexagons?
-
-::: {.columns}
-::: {.column width="25%"}
-![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70%}
-:::
-::: {.column width="75%"}
-[Question:]{.question} **Advantages of hexagons?**
-
-::: {.incremental}
-- [Equal distances]{.highlight} to all neighboring centroids
-- Reduces sampling bias from edge effects [@Wang2018a]
-- Special properties that help with the enforcement of **compactness**
-- Better representation of urban geography
-:::
-:::
-:::
-
 ## Response Time Components
 
 ::: {.columns}
@@ -411,8 +347,6 @@ We focus on **minimizing expected driving times** between departments and incide
 :::
 :::
 
-# [Model Formulation]{.flow} {.title}
-
 ## {.loud-slide}
 ::: {.r-fit-text}
 Let's build our model
@@ -422,6 +356,9 @@ step by step!
 
 ::: footer
 :::
+
+
+# [Model Formulation]{.flow} {.title}
 
 ## Key Model Components
 
@@ -438,17 +375,67 @@ step by step!
 
 [Question:]{.question} **Which are sets, parameters, and variables?**
 
-## Sets and Indices
+## From Geography to Graph
+
+::: {.columns}
+::: {.column width="20%"}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg){width=85%}
+:::
+::: {.column width="80%"}
+[Question:]{.question} **How do we model this mathematically?**
 
 ::: {.incremental}
-- $\mathcal{J}$ - Set of BAs, indexed by $j$
-- $\mathcal{I}$ - Set of potential district centres ($\mathcal{I} \subseteq \mathcal{J}$), indexed by $i$
+- Geographic areas → [Centroids]{.highlight}
+- Centroids → **Vertices** in a graph
+- Spatial relationships → **Edges** between **vertices**
+:::
+:::
 :::
 
 . . .
 
-::: {.callout-note}
-The depot locations are a [subset]{.highlight} of the basic areas!
+::: {.callout-tip}
+This abstraction allows us to use [optimization techniques]{.highlight} from graph theory and location science!
+:::
+
+## Mathematical Structure
+
+::: {.columns}
+::: {.column width="20%"}
+![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70%}
+:::
+::: {.column width="80%"}
+[Question:]{.question} **What sets do we need?**
+
+::: {.incremental}
+- $\mathcal{J}$ : Set of **all BAs** (basic areas), indexed by $j$
+- $\mathcal{I}$ : Set of **potential department locations** where $\mathcal{I} \subseteq \mathcal{J}$, indexed by $i$
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-important}
+Department locations are a [subset]{.highlight} of all BAs as not every BA can host a department!
+:::
+
+## Why Hexagons?
+
+::: {.columns}
+::: {.column width="20%"}
+![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70%}
+:::
+::: {.column width="80%"}
+[Question:]{.question} **Advantages of hexagons?**
+
+::: {.incremental}
+- [Equal distances]{.highlight} to all neighboring centroids
+- Reduces sampling bias from edge effects [@Wang2018a]
+- Special properties that help with the enforcement of **compactness**
+- Better representation of urban geography
+:::
+:::
 :::
 
 ## Parameters
@@ -696,7 +683,7 @@ This constraint creates a **logical connection between department locations and 
 
 ## Connection to Facility Location
 
-[Question:]{.question} **How does this relate to facility location problems?**
+[Question:]{.question} **How does this relate to these problems?**
 
 . . .
 
@@ -704,7 +691,7 @@ This constraint creates a **logical connection between department locations and 
 ::: {.column width="50%"}
 **p-Median Problem**:
 
-- Fixed number of facilities ($p$)
+- Fixed number of facilities (exactly $p$)
 - Minimize [total distance]{.highlight}
 - All customers served
 - No capacity constraints
@@ -715,7 +702,7 @@ This constraint creates a **logical connection between department locations and 
 
 - **UFLP**: Uncapacitated Facility Location
 - **p-Center**: Minimize [maximum]{.highlight} distance
-- **Capacitated**: Add capacity limits
+- **Capacitated**: Add limits
 :::
 :::
 
@@ -867,7 +854,7 @@ X_{i,j} &\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} && \forall i \in \mathcal{I}
 ::: {.callout-important}
 ## The idea
 
-At least **one department** has to be assigned to **two BAs** that are adjacent to BA $j$ and closer to department $i$!
+At least **one department** has to be assigned to **two BAs** that are adjacent to BA $j$ and closer to department $i$
 
 :::
 
@@ -952,7 +939,7 @@ Due to the constraints, there is **always a path back** to the department if a B
 . . .
 
 ::: {.invert-font}
-**Goal:** Redesign districts to improve response time.
+[Goal:]{.highlight} Redesign districts to improve response time.
 :::
 
 ::: {.footer}
@@ -977,7 +964,7 @@ Due to the constraints, there is **always a path back** to the department if a B
 . . .
 
 ::: {.invert-font}
-**Goal:** Optimize coverage with limited resources.
+[Goal:]{.highlight} Optimize coverage with limited resources.
 :::
 
 ::: {.footer}
@@ -990,7 +977,7 @@ Due to the constraints, there is **always a path back** to the department if a B
 
 ## [Simulation Framework]{.invert-font} {background-image="https://images.beyondsimulations.com/ao/ao_police-streets.svg"}
 
-[[Question:]{.question} **How did we validate the results?**]{.invert-font}
+[**How did we validate the results?**]{.invert-font}
 
 . . .
 
