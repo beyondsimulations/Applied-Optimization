@@ -49,7 +49,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-707dfb535249e6eca862c92c22a86177.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-72a221503053e09462a2934e70c7b2a0.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -423,9 +423,7 @@ Dr.&nbsp;Tobias Vlćek
 <div class="column" style="width:40%;">
 <p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:90.0%"></p>
 </div><div class="column" style="width:55%;">
-<blockquote>
 <p>Aggregation of <strong>small geographic areas</strong>, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to <strong>pre-defined planning criteria</strong><sup>1</sup>.</p>
-</blockquote>
 </div></div>
 <div class="fragment">
 <div class="callout callout-note callout-style-simple">
@@ -462,8 +460,8 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </section>
-<section id="common-territory-design-objectives" class="slide level2">
-<h2>Common Territory Design Objectives</h2>
+<section id="common-td-objectives" class="slide level2">
+<h2>Common TD Objectives</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p><strong>Balance Criteria</strong>:</p>
@@ -476,8 +474,8 @@ Dr.&nbsp;Tobias Vlćek
 </div><div class="column" style="width:50%;">
 <p><strong>Geographic Criteria</strong>:</p>
 <ul>
-<li><span class="highlight">Contiguity</span>: No isolated areas</li>
-<li><span class="highlight">Compactness</span>: Round shape</li>
+<li><span class="highlight">Contiguity</span>: No isolated basic areas</li>
+<li><span class="highlight">Compactness</span>: “Round”</li>
 <li>Minimize travel distances</li>
 <li>Respect boundaries</li>
 </ul>
@@ -489,17 +487,17 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>These criteria often <span class="highlight">conflict</span> with each other - optimization helps find the best trade-off!</p>
+<p>These criteria often <span class="highlight">conflict</span> with each other… Optimization helps find the best trade-off!</p>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="applications-of-territory-design" class="slide level2">
-<h2>Applications of Territory Design</h2>
+<section id="applications-of-td" class="slide level2">
+<h2>Applications of TD</h2>
 <p><span class="question">Question:</span> <strong>Where else is this used?</strong></p>
 <ul>
-<li class="fragment"><strong>Sales force deployment</strong>: Assign sales representatives to territories</li>
+<li class="fragment"><strong>Sales force deployment</strong>: Sales reps to territories</li>
 <li class="fragment"><strong>Political districting</strong>: Electoral boundaries</li>
 <li class="fragment"><strong>School districts</strong>: Student assignment zones</li>
 <li class="fragment"><strong>Waste collection</strong>: Service route planning</li>
@@ -537,71 +535,6 @@ Dr.&nbsp;Tobias Vlćek
 </ul>
 </div>
 </section>
-<section id="from-geography-to-graph" class="slide level2">
-<h2>From Geography to Graph</h2>
-<div class="columns">
-<div class="column" style="width:25%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg" style="width:85.0%"></p>
-</div><div class="column" style="width:75%;">
-<p><span class="question">Question:</span> <strong>How do we model this mathematically?</strong></p>
-<ul>
-<li class="fragment">Geographic areas → <span class="highlight">Centroids</span> (center points)</li>
-<li class="fragment">Centroids → <strong>Vertices</strong> in a graph</li>
-<li class="fragment">Spatial relationships → <strong>Edges</strong> between vertices</li>
-</ul>
-</div></div>
-<div class="fragment">
-<div class="callout callout-tip callout-style-simple">
-<div class="callout-body">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-content">
-<p>This abstraction allows us to use <span class="highlight">powerful optimization techniques</span> from graph theory and location science!</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="mathematical-structure" class="slide level2">
-<h2>Mathematical Structure</h2>
-<div class="columns">
-<div class="column" style="width:25%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg" style="width:70.0%"></p>
-</div><div class="column" style="width:75%;">
-<p><span class="question">Question:</span> <strong>What sets do we need?</strong></p>
-<ul>
-<li class="fragment"><span class="math inline">\(\mathcal{J}\)</span> : Set of <strong>all BAs</strong> (basic areas), indexed by <span class="math inline">\(j\)</span></li>
-<li class="fragment"><span class="math inline">\(\mathcal{I}\)</span> : Set of <strong>potential department locations</strong> where <span class="math inline">\(\mathcal{I} \subseteq \mathcal{J}\)</span>, indexed by <span class="math inline">\(i\)</span></li>
-</ul>
-<p>. . .</p>
-<div class="callout callout-important callout-style-simple">
-<div class="callout-body">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-content">
-<p>Note: Department locations are a <span class="highlight">subset</span> of all BAs - not every BA can host a department!</p>
-</div>
-</div>
-</div>
-</div></div>
-</section>
-<section id="why-hexagons" class="slide level2">
-<h2>Why Hexagons?</h2>
-<div class="columns">
-<div class="column" style="width:25%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg" style="width:70.0%"></p>
-</div><div class="column" style="width:75%;">
-<p><span class="question">Question:</span> <strong>Advantages of hexagons?</strong></p>
-<ul>
-<li class="fragment"><span class="highlight">Equal distances</span> to all neighboring centroids</li>
-<li class="fragment">Reduces sampling bias from edge effects <span class="citation" data-cites="Wang2018a">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Wang and Kwan 2018</a>)</span></li>
-<li class="fragment">Special properties that help with the enforcement of <strong>compactness</strong></li>
-<li class="fragment">Better representation of urban geography</li>
-</ul>
-</div></div>
-</section>
 <section id="response-time-components" class="slide level2">
 <h2>Response Time Components</h2>
 <div class="columns">
@@ -630,11 +563,6 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div></div>
-</section></section>
-<section>
-<section id="model-formulation" class="title-slide slide level1 title center">
-<h1><span class="flow">Model Formulation</span></h1>
-
 </section>
 <section id="section-1" class="slide level2 loud-slide">
 <h2></h2>
@@ -645,6 +573,11 @@ Dr.&nbsp;Tobias Vlćek
 <div class="footer">
 
 </div>
+</section></section>
+<section>
+<section id="model-formulation" class="title-slide slide level1 title center">
+<h1><span class="flow">Model Formulation</span></h1>
+
 </section>
 <section id="key-model-components" class="slide level2">
 <h2>Key Model Components</h2>
@@ -661,24 +594,71 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>Which are sets, parameters, and variables?</strong></p>
 </div>
 </section>
-<section id="sets-and-indices" class="slide level2">
-<h2>Sets and Indices</h2>
+<section id="from-geography-to-graph" class="slide level2">
+<h2>From Geography to Graph</h2>
+<div class="columns">
+<div class="column" style="width:20%;">
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg" style="width:85.0%"></p>
+</div><div class="column" style="width:80%;">
+<p><span class="question">Question:</span> <strong>How do we model this mathematically?</strong></p>
 <ul>
-<li class="fragment"><span class="math inline">\(\mathcal{J}\)</span> - Set of BAs, indexed by <span class="math inline">\(j\)</span></li>
-<li class="fragment"><span class="math inline">\(\mathcal{I}\)</span> - Set of potential district centres (<span class="math inline">\(\mathcal{I} \subseteq \mathcal{J}\)</span>), indexed by <span class="math inline">\(i\)</span></li>
+<li class="fragment">Geographic areas → <span class="highlight">Centroids</span></li>
+<li class="fragment">Centroids → <strong>Vertices</strong> in a graph</li>
+<li class="fragment">Spatial relationships → <strong>Edges</strong> between <strong>vertices</strong></li>
 </ul>
+</div></div>
 <div class="fragment">
-<div class="callout callout-note callout-style-simple">
+<div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>The depot locations are a <span class="highlight">subset</span> of the basic areas!</p>
+<p>This abstraction allows us to use <span class="highlight">optimization techniques</span> from graph theory and location science!</p>
 </div>
 </div>
 </div>
 </div>
+</section>
+<section id="mathematical-structure" class="slide level2">
+<h2>Mathematical Structure</h2>
+<div class="columns">
+<div class="column" style="width:20%;">
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg" style="width:70.0%"></p>
+</div><div class="column" style="width:80%;">
+<p><span class="question">Question:</span> <strong>What sets do we need?</strong></p>
+<ul>
+<li class="fragment"><span class="math inline">\(\mathcal{J}\)</span> : Set of <strong>all BAs</strong> (basic areas), indexed by <span class="math inline">\(j\)</span></li>
+<li class="fragment"><span class="math inline">\(\mathcal{I}\)</span> : Set of <strong>potential department locations</strong> where <span class="math inline">\(\mathcal{I} \subseteq \mathcal{J}\)</span>, indexed by <span class="math inline">\(i\)</span></li>
+</ul>
+</div></div>
+<div class="fragment">
+<div class="callout callout-important callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Department locations are a <span class="highlight">subset</span> of all BAs as not every BA can host a department!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="why-hexagons" class="slide level2">
+<h2>Why Hexagons?</h2>
+<div class="columns">
+<div class="column" style="width:20%;">
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg" style="width:70.0%"></p>
+</div><div class="column" style="width:80%;">
+<p><span class="question">Question:</span> <strong>Advantages of hexagons?</strong></p>
+<ul>
+<li class="fragment"><span class="highlight">Equal distances</span> to all neighboring centroids</li>
+<li class="fragment">Reduces sampling bias from edge effects <span class="citation" data-cites="Wang2018a">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Wang and Kwan 2018</a>)</span></li>
+<li class="fragment">Special properties that help with the enforcement of <strong>compactness</strong></li>
+<li class="fragment">Better representation of urban geography</li>
+</ul>
+</div></div>
 </section>
 <section id="parameters" class="slide level2">
 <h2>Parameters</h2>
@@ -1001,13 +981,13 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 </section>
 <section id="connection-to-facility-location" class="slide level2">
 <h2>Connection to Facility Location</h2>
-<p><span class="question">Question:</span> <strong>How does this relate to facility location problems?</strong></p>
+<p><span class="question">Question:</span> <strong>How does this relate to these problems?</strong></p>
 <div class="fragment">
 <div class="columns">
 <div class="column" style="width:50%;">
 <p><strong>p-Median Problem</strong>:</p>
 <ul>
-<li>Fixed number of facilities (<span class="math inline">\(p\)</span>)</li>
+<li>Fixed number of facilities (exactly <span class="math inline">\(p\)</span>)</li>
 <li>Minimize <span class="highlight">total distance</span></li>
 <li>All customers served</li>
 <li>No capacity constraints</li>
@@ -1017,7 +997,7 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <ul>
 <li><strong>UFLP</strong>: Uncapacitated Facility Location</li>
 <li><strong>p-Center</strong>: Minimize <span class="highlight">maximum</span> distance</li>
-<li><strong>Capacitated</strong>: Add capacity limits</li>
+<li><strong>Capacitated</strong>: Add limits</li>
 </ul>
 </div></div>
 </div>
@@ -1194,7 +1174,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <p><strong>The idea</strong></p>
 </div>
 <div class="callout-content">
-<p>At least <strong>one department</strong> has to be assigned to <strong>two BAs</strong> that are adjacent to BA <span class="math inline">\(j\)</span> and closer to department <span class="math inline">\(i\)</span>!</p>
+<p>At least <strong>one department</strong> has to be assigned to <strong>two BAs</strong> that are adjacent to BA <span class="math inline">\(j\)</span> and closer to department <span class="math inline">\(i\)</span></p>
 </div>
 </div>
 </div>
@@ -1299,7 +1279,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 </div>
 <div class="fragment">
 <div class="invert-font">
-<p><strong>Goal:</strong> Redesign districts to improve response time.</p>
+<p><span class="highlight">Goal:</span> Redesign districts to improve response time.</p>
 </div>
 <div class="footer">
 
@@ -1324,7 +1304,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 </div>
 <div class="fragment">
 <div class="invert-font">
-<p><strong>Goal:</strong> Optimize coverage with limited resources.</p>
+<p><span class="highlight">Goal:</span> Optimize coverage with limited resources.</p>
 </div>
 <div class="footer">
 
@@ -1337,7 +1317,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <img data-src="https://images.beyondsimulations.com/ao/ao_police-b2c3.svg" style="width:90.0%" class="r-stretch"></section>
 <section id="simulation-framework" class="slide level2" data-background-image="https://images.beyondsimulations.com/ao/ao_police-streets.svg">
 <h2><span class="invert-font">Simulation Framework</span></h2>
-<p><span class="invert-font"><span class="question">Question:</span> <strong>How did we validate the results?</strong></span></p>
+<p><span class="invert-font"><strong>How did we validate the results?</strong></span></p>
 <div class="fragment">
 <div class="invert-font">
 <ul>
