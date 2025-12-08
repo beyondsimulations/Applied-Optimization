@@ -13,7 +13,7 @@ format:
 ## [Islamic Pilgrimage]{.invert-font} {background-image="https://images.unsplash.com/photo-1677835238946-20fc43ab0533?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
 
 ::: {.fragment .invert-font}
-[Question:]{.question} **Have you ever heard of the Hajj?**
+[Question:]{.highlight} **Have you ever heard of the Hajj?**
 :::
 
 ::: {.footer}
@@ -103,8 +103,6 @@ Pilgrims throw pebbles against three pillars, which symbolize the temptations of
 
 [Question:]{.question} **What could we do to prevent this?**
 
----
-
 # [Pedestrian Traffic]{.flow} {.title}
 
 ## {.loud-slide}
@@ -167,8 +165,6 @@ traffic in cities?
 ## General idea
 Adhere to **one-way flow systems** and define path options for each camp under consideration of a unidirectional flow system.
 :::
-
----
 
 # [Problem Structure]{.flow} {.title}
 
@@ -241,8 +237,6 @@ These bottlenecks should not be overcrowded at any time during the Hajj.
 
 ![](https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg)
 
----
-
 ## {.loud-slide}
 ::: {.r-fit-text}
 How can we model
@@ -292,8 +286,6 @@ May be computed, i.e., down-sampled given a distribution of pilgrims over time.
 
 - Restrict the change of the utilization **between periods**
 
----
-
 ## Goals Summarized
 
 ::: {.incremental}
@@ -301,8 +293,6 @@ May be computed, i.e., down-sampled given a distribution of pilgrims over time.
 2. For the sake of **simplicity and safety**, pilgrims coming from one camp will always have to be assigned **the same path**.
 3. We need to keep track of the **relative utilization** of each resource **to restrict the fluctuations** between periods to ensure a safer event.
 :::
-
----
 
 # [Model Formulation]{.flow} {.title}
 
@@ -359,8 +349,6 @@ complicated...
 A smaller problem size **reduces the solution space** and **helps the solver** in finding the optimal solution faster!
 :::
 
----
-
 ## Parameters?
 
 [Question:]{.question} **What could be possible parameters?**
@@ -372,8 +360,6 @@ A smaller problem size **reduces the solution space** and **helps the solver** i
 - $a_{p,r}$ - Offset between stoning and utilization period of $r$ on $p$
 - $b_{r,t}$ - Capacity of resource $r$ in period $t$
 - $\sigma_r$ - max. relative utilization deviation between $t$ for $r$
-
----
 
 ## First Decision Variable?
 
@@ -408,8 +394,6 @@ Satisfy time preferences of the pilgrims as much as possible under the considera
 
 It's a **binary assignment** of a group to a time slot and a path.
 
----
-
 ## Second Decision Variable?
 
 ::: {.callout-important}
@@ -437,8 +421,6 @@ For the sake of **simplicity and safety**, pilgrims coming from one camp will al
 . . .
 
 [Question:]{.question} **Does anyone remember the third part?**
-
----
 
 ## Third Decision Variable?
 
@@ -482,8 +464,6 @@ objective function!
 
 ::: footer
 :::
-
----
 
 ## Objective Function?
 
@@ -540,8 +520,6 @@ $$
 - We can compute the **penalties in advance**
 - Do **not** depend on the decision variables
 
----
-
 # [Constraints]{.flow} {.title}
 
 ## Constraints needed?
@@ -559,8 +537,6 @@ $$
 4. Each resource must have [a capacity limit]{.highlight}
 5. Constraint the [relative utilization between periods]{.highlight}
 :::
-
----
 
 ## Assign Paths to Camps
 
@@ -585,8 +561,6 @@ Assign **one path to each camp** over the entire time horizon.
 $$
 \sum_{p \in \mathcal{P}_c} Y_{c,p} = 1 \quad \forall c \in \mathcal{C}
 $$
-
----
 
 ## Assign Time Slots to Groups?
 
@@ -626,8 +600,6 @@ $$
 - $\mathcal{P}_c$ - Feasible paths for camp $c$
 
 :::
-
----
 
 ## Relative Utilization and Capacities
 
@@ -695,8 +667,6 @@ this part?
 
 ![](https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg)
 
----
-
 ## Keep Fluctuations within Bounds?
 
 ::: {.callout-important}
@@ -736,8 +706,6 @@ $$
 - The first one limits the **increase**
 - The second one limits the **decrease**
 
----
-
 ## Scheduling Problem I
 
 
@@ -775,8 +743,6 @@ Restricting the **relative utilization** of each resource to a certain bound.
 ::: {.callout-note}
 All variables, except for $U_{r,t}$, are binary.
 :::
-
----
 
 # [Model Characteristics]{.flow} {.title}
 
@@ -825,8 +791,6 @@ applied?
 
 ![](https://images.beyondsimulations.com/ao/ao_pilgrim-solap-5.png)
 
----
-
 ## Implementation
 
 - Optimization **part of a bigger picture**
@@ -858,8 +822,6 @@ Questions?
 
 ::: footer
 :::
-
----
 
 # [Literature]{.flow} {.title}
 
