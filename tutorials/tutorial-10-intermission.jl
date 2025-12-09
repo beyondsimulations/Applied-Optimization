@@ -77,28 +77,8 @@
 # >
 # > Note that the problem does not have to be modeled yet!
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -113,28 +93,8 @@
 # > If you need additional sets, parameters or variables that are not yet
 # > defined, please define them as well.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -149,28 +109,8 @@
 # > If you need additional sets, parameters or variables that are not yet
 # > defined, please define them as well.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -181,28 +121,8 @@
 #
 # Please explain your answer briefly.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -226,28 +146,8 @@
 # >
 # > Note, that you only need to write down new and modified elements!
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -260,28 +160,8 @@
 # Please describe at least two assumptions with a 1-3 sentences and
 # explain briefly why they might not hold.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -301,28 +181,8 @@
 # -   Transportation Problem (Solar Panel Transport)
 # -   Split Order Minimization Problem (E-Commerce)
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -337,28 +197,8 @@
 # Please describe one approach to adress the problem and describe the
 # advantages and disadvantages of the approach in a few sentences.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -378,28 +218,8 @@
 # >
 # > You don’t need to write any code or mathematical model here!
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -410,28 +230,8 @@
 #
 # Please describe the answer in your own words in 2-3 sentences.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -448,28 +248,8 @@
 #
 # Specify the definition of the variable in correct Julia syntax.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -486,28 +266,8 @@
 #
 # Specify the definition of the constraint in correct Julia syntax.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -524,28 +284,8 @@
 # Please explain why the constraint is not correctly implemented and how
 # it can be fixed.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -556,28 +296,8 @@
 #
 # Please describe the difference in a 1-3 sentences.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -606,25 +326,5 @@ end
 # %% [markdown]
 # Please write down the output of the code.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
