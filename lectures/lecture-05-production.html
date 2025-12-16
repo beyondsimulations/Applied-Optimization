@@ -128,6 +128,8 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
+<script defer="" src="https://umi.byndsim.com/script.js" data-website-id="e230d76b-b0a6-477e-8c5d-19a7bd661e68"></script>
+
 <script defer="" data-domain="beyondsimulations.github.io" src="https://plb.byndsim.com/js/script.file-downloads.hash.outbound-links.js"></script>
 <script>
     window.plausible =
@@ -1167,18 +1169,18 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="variables-in-julia">Variables in Julia</h2>
 <p><span class="question">Question:</span> <strong>How could we formulate the variables in Julia?</strong></p>
 <p>. . .</p>
-<div id="b5c1eda7" class="cell" data-execution_count="2">
+<div id="6e7911c5" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>beer_types <span class="op">=</span> [<span class="st">"IPA"</span>, <span class="st">"Lager"</span>, <span class="st">"Stout"</span>] <span class="co"># Beer types</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>periods <span class="op">=</span> [<span class="st">"week_1"</span>, <span class="st">"week_2"</span>, <span class="st">"week_3"</span>] <span class="co"># Time periods</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>clsp_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>. . .</p>
-<div id="c367c29c" class="cell" data-output-location="fragment" data-execution_count="3">
+<div id="515f81d9" class="cell" data-output-location="fragment" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(clsp_model, Y[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods], Bin)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(clsp_model, X[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods] <span class="op">&gt;=</span> <span class="fl">0</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(clsp_model, W[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="74">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:
     Dimension 1, ["IPA", "Lager", "Stout"]
     Dimension 2, ["week_1", "week_2", "week_3"]
@@ -1193,12 +1195,12 @@ And data, a 3×3 Matrix{VariableRef}:
 <h2 class="anchored" data-anchor-id="objective-function-in-julia">Objective Function in Julia</h2>
 <p><span class="math display">\[\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
 <p>. . .</p>
-<div id="54142f52" class="cell" data-execution_count="4">
+<div id="c98842eb" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>) <span class="co"># Holding costs</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">5000</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">4000</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">6000</span>) <span class="co"># Setup costs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>. . .</p>
-<div id="2ce260af" class="cell" data-execution_count="5">
+<div id="1f6ff32d" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(clsp_model, Min,</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(c[i] <span class="op">*</span> W[i,t] <span class="op">+</span> f[i] <span class="op">*</span> Y[i,t]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods)</span>
