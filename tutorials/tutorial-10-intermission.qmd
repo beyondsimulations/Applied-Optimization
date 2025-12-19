@@ -25,7 +25,7 @@ As some of these tasks are difficult to answer on a computer, you can hand in yo
 
 As temperatures rise due to global warming, so does the demand for ice cream. The ice cream company was amazed by your transportation plan from the lecture and asked if you could help with their production plan.
 
-The company wants to optimize its production to keep up with the customer demand. To do so, they offer different flavors of ice cream that are made and stored in a warehouse. Each flavor has a unique production time per unit of ice cream and no setup time for the production. In the first period, the company has 100 units of each flavor in storage at the end of the period.
+The company wants to optimize its production to keep up with the customer demand. To do so, they offer different flavors of ice cream that are made and stored in a warehouse. Each flavor has a unique production time per unit of ice cream and no setup time for the production. In the first period, the company has 100 units of each flavor in storage at the start of the period.
 
 Furthermore, each setup of a different flavor costs a fixed amount of money identical for all flavors and periods, while the ice cream storage costs in the warehouse are different for each flavor but identical for all periods. These storage costs occur at the end of each period per unit of ice cream for all units not sold to cover the varying demand per flavor and period.
 
@@ -47,6 +47,8 @@ Note that the problem does not have to be modeled yet!
 - $f$ : fixed setup costs of all sorts (Parameter)
 - $c_i$ : storage costs per period of sort $i$ (Parameter)
 - $d_{i,t}$ : ice cream demand per period (Parameter)
+- $w^0_{i}$ : initial inventory at the start of period 1, equal to 100 for all flavors (Parameter)
+- $q$ : shift length in hours, identical for all periods (Parameter)
 - $W_{i,t}$ : quantity stored at end of period (Variable)
 - $X_{i,t}$ : production quantity per sort and period (Variable)
 - $Y_{i,t}$ : 1, if product is set up in period (Variable)
@@ -104,7 +106,7 @@ X_{i,t} + W_{i,t-1} -W_{i,t} = d_{i,t} \quad \forall i \in \mathcal{I},t \in \ma
 $$
 
 $$
-X_{i,t} -W_{i,t} = d_{i,t} \quad \forall i \in \mathcal{I},t \in \mathcal{T}: t = 1
+X_{i,t} + w^0_{i} -W_{i,t} = d_{i,t} \quad \forall i \in \mathcal{I},t \in \mathcal{T}: t = 1
 $$
 
 $$
@@ -112,11 +114,7 @@ X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall
 $$
 
 $$
-\sum_{i \in \mathcal{I}} p_i \times X_{i,t} \leq q \quad \forall i \in \mathcal{I},t \in \mathcal{T}
-$$
-
-$$
-W_{i,t} = 100 \quad \forall i \in \mathcal{I},t \in \mathcal{T}: t = 1
+\sum_{i \in \mathcal{I}} p_i \times X_{i,t} \leq q \quad \forall t \in \mathcal{T}
 $$
 
 $$
@@ -180,7 +178,6 @@ Note, that you only need to write down new and modified elements!
 **New Parameters**
 
 - $s$ : fixed costs per shift hour (Parameter)
-- $q$ : shift length (Parameter)
 
 **New Variables**
 
@@ -189,13 +186,13 @@ Note, that you only need to write down new and modified elements!
 **New objective function**
 
 $$
-\text{min} \quad \sum_{i \in \mathcal{I}}\sum_{t \in \mathcal{T}} (f \times Y_{i,t} + c_i \times W_{i,t}) + \sum_{t \in \mathcal{T}} (s \times q + 1.5 \times s \times q \times Z_t)
+\text{min} \quad \sum_{i \in \mathcal{I}}\sum_{t \in \mathcal{T}} (f \times Y_{i,t} + c_i \times W_{i,t}) + \sum_{t \in \mathcal{T}} (s \times q + 1.5 \times s \times Z_t)
 $$
 
 **New constraints**
 
 $$
-\sum_{i \in \mathcal{I}} p_i \times X_{i,t} \leq q + q \times Z_t \quad \forall i \in \mathcal{I},t \in \mathcal{T}
+\sum_{i \in \mathcal{I}} p_i \times X_{i,t} \leq q + Z_t \quad \forall t \in \mathcal{T}
 $$
 
 $$
