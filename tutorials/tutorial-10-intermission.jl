@@ -54,7 +54,7 @@
 # that are made and stored in a warehouse. Each flavor has a unique
 # production time per unit of ice cream and no setup time for the
 # production. In the first period, the company has 100 units of each
-# flavor in storage at the end of the period.
+# flavor in storage at the start of the period.
 #
 # Furthermore, each setup of a different flavor costs a fixed amount of
 # money identical for all flavors and periods, while the ice cream storage
