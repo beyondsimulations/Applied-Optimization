@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.8.24">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
-  <title>Applied Optimization with Julia – Lecture V - Production Planning in Breweries</title>
+  <title>Applied Optimization with Julia – Lecture V - Planning in Breweries</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -28,6 +28,72 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
     /* CSS for citations */
     div.csl-bib-body { }
     div.csl-entry {
@@ -49,7 +115,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-707dfb535249e6eca862c92c22a86177.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-72a221503053e09462a2934e70c7b2a0.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -147,7 +213,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Lecture V - Production Planning in Breweries</h1>
+  <h1 class="title">Lecture V - Planning in Breweries</h1>
   <p class="subtitle">Applied Optimization with Julia</p>
 
 <div class="quarto-title-authors">
@@ -221,9 +287,6 @@ Dr.&nbsp;Tobias Vlćek
 <div class="footer">
 
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="problem-structure" class="title-slide slide level1 title center">
@@ -275,7 +338,7 @@ Dr.&nbsp;Tobias Vlćek
 <li><span class="math inline">\(b_i\)</span> - Time used for bottling one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
 <li><span class="math inline">\(g_i\)</span> - Setup time for beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
 <li><span class="math inline">\(f_i\)</span> - Setup cost of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
-<li><span class="math inline">\(c_i\)</span> - Inventory holding cost for one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(c_i\)</span> - Inventory holding cost for unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
 <li><span class="math inline">\(d_{i,t}\)</span> - Demand of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
 </ul>
 </div>
@@ -324,9 +387,6 @@ Dr.&nbsp;Tobias Vlćek
 <li><span class="math inline">\(Y_{i,t}\)</span> - 1, if type <span class="math inline">\(i\in\mathcal{I}\)</span> is bottled in <span class="math inline">\(t\in\mathcal{T}\)</span>, 0 otherwise</li>
 <li><span class="math inline">\(X_{i,t}\)</span> - Batch size of type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span></li>
 </ul>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="model-formulation" class="title-slide slide level1 title center">
@@ -404,7 +464,7 @@ Dr.&nbsp;Tobias Vlćek
 <li>Transfer <strong>unused</strong> inventory</li>
 <li><strong>Fulfill</strong> the customer demand</li>
 <li><strong>Set up</strong> beer types</li>
-<li>Calculate the <strong>batch size</strong> per set-up</li>
+<li>Calculate <strong>batch size</strong> per set-up</li>
 <li>Compute <strong>remaining</strong> inventory</li>
 <li><strong>Limit</strong> the bottling plant</li>
 </ul>
@@ -631,9 +691,59 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
+</section></section>
+<section>
+<section id="julia-implementation" class="title-slide slide level1 title center">
+<h1><span class="flow">Julia Implementation</span></h1>
 
+</section>
+<section id="variables-in-julia" class="slide level2">
+<h2>Variables in Julia</h2>
+<p><span class="question">Question:</span> <strong>How could we formulate the variables in Julia?</strong></p>
+<div class="fragment">
+<div id="6e7911c5" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
+<span id="cb1-2"><a></a>beer_types <span class="op">=</span> [<span class="st">"IPA"</span>, <span class="st">"Lager"</span>, <span class="st">"Stout"</span>] <span class="co"># Beer types</span></span>
+<span id="cb1-3"><a></a>periods <span class="op">=</span> [<span class="st">"week_1"</span>, <span class="st">"week_2"</span>, <span class="st">"week_3"</span>] <span class="co"># Time periods</span></span>
+<span id="cb1-4"><a></a>clsp_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="fragment">
+<div id="515f81d9" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a></a><span class="pp">@variable</span>(clsp_model, Y[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods], Bin)</span>
+<span id="cb2-2"><a></a><span class="pp">@variable</span>(clsp_model, X[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods] <span class="op">&gt;=</span> <span class="fl">0</span>)</span>
+<span id="cb2-3"><a></a><span class="pp">@variable</span>(clsp_model, W[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:
+    Dimension 1, ["IPA", "Lager", "Stout"]
+    Dimension 2, ["week_1", "week_2", "week_3"]
+And data, a 3×3 Matrix{VariableRef}:
+ W[IPA,week_1]    W[IPA,week_2]    W[IPA,week_3]
+ W[Lager,week_1]  W[Lager,week_2]  W[Lager,week_3]
+ W[Stout,week_1]  W[Stout,week_2]  W[Stout,week_3]</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="objective-function-in-julia" class="slide level2">
+<h2>Objective Function in Julia</h2>
+<p><span class="math display">\[\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
+<div class="fragment">
+<div id="c98842eb" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a></a>c <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>) <span class="co"># Holding costs</span></span>
+<span id="cb4-2"><a></a>f <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">5000</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">4000</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">6000</span>) <span class="co"># Setup costs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="fragment">
+<div id="1f6ff32d" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a></a><span class="pp">@objective</span>(clsp_model, Min,</span>
+<span id="cb5-2"><a></a>    <span class="fu">sum</span>(c[i] <span class="op">*</span> W[i,t] <span class="op">+</span> f[i] <span class="op">*</span> Y[i,t]</span>
+<span id="cb5-3"><a></a>        <span class="cf">for</span> i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods)</span>
+<span id="cb5-4"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="model-characteristics" class="title-slide slide level1 title center">
@@ -681,9 +791,6 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment">What is the problem with the planning horizon?</li>
 <li class="fragment">Any idea how to solve it?</li>
 </ul>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="impact" class="title-slide slide level1 title center">
@@ -759,9 +866,6 @@ Dr.&nbsp;Tobias Vlćek
 <div class="footer">
 
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="literature" class="title-slide slide level1 title center">
@@ -786,7 +890,7 @@ Mickein, Markus, Matthes Koch, and Knut Haase. 2022. <span>“A Decision Support
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>Lecture V - Production Planning in Breweries | Dr.&nbsp;Tobias Vlćek | <a href="../lectures/lecture-05-production.html">Home</a></p>
+<p>Lecture V - Planning in Breweries | Dr.&nbsp;Tobias Vlćek | <a href="../lectures/lecture-05-production.html">Home</a></p>
 </div>
 </div></div>
 

@@ -44,10 +44,9 @@
 # # 1. Implementing the basic CVRP
 #
 # Implement the CVRP from the lecture without the constraints preventing
-# subtours and restricting the driving time and capacities.
-#
-# The demand per distribution center and the coordinates of the locations
-# are provided as CSV files.
+# subtours and restricting the driving time and capacities. The demand per
+# distribution center and the coordinates of the locations are provided as
+# CSV files.
 #
 # The number of vehicles is 6 and each vehicle can transport up to 50
 # parcels to the distribution centers. Note that capacity of each vehicle

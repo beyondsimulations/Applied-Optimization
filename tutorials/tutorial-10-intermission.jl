@@ -39,8 +39,6 @@
 # > As some of these tasks are difficult to answer on a computer, you can
 # > hand in your answer scanned or written digitally on an iPad or Laptop.
 #
-# ------------------------------------------------------------------------
-#
 # # Part I
 #
 # ## 1.a (6 Points)
@@ -81,8 +79,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 1.b (3 Points)
 #
 # Please define the objective function to model the described problem
@@ -97,8 +93,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 1.c (6 Points)
 #
 # Please define all necessary constraints and the variable ranges to model
@@ -113,8 +107,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 1.d (2 Points)
 #
 # Is the model formulation a nonlinear problem with continuous variables?
@@ -125,8 +117,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 1.e (9 Points)
 #
 # Due to the success of the companies, workers demand higher wages and a
@@ -150,8 +140,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 1.f (4 points)
 #
 # What assumptions are made in the model that might not hold in the real
@@ -164,8 +152,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # # Part II
 #
 # ## 2.a (6 Points)
@@ -185,8 +171,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 2.b (4 Points)
 #
 # You are trying to solve the capacitated vehicle routing problem with
@@ -201,8 +185,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 2.c (3 Points)
 #
 # Suppose you aim to improve the shifts of workers in a hospital. As the
@@ -222,8 +204,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 2.d (2 Points)
 #
 # What is the purpose of a solver used in Mathematical Programming?
@@ -234,8 +214,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # # Part III
 #
 # ## 3.a (3 Points)
@@ -252,8 +230,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 3.b (3 Points)
 #
 # Write JuMP code to implement the following constraint:
@@ -270,8 +246,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 3.c (2 Points)
 #
 # You are given the following JuMP code with a constraint that is not
@@ -288,8 +262,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 3.d (2 Points)
 #
 # What is the difference between a tuple and an array (vector) in Julia?
@@ -300,8 +272,6 @@
 # #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 3.e (5 Points)
 #
 # You are given the following code in Julia:
