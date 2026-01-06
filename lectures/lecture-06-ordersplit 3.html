@@ -8,7 +8,7 @@
 
 <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
 
-<title>Lecture VI - Minimizing Split Orders in E-Commerce – Applied Optimization with Julia</title>
+<title>Lecture VI - Minimizing Split Orders – Applied Optimization with Julia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -98,9 +98,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-46d4eb725d7d2b8695ccd307f5b3c105.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-22c5f25fcfc5fd5610dfced435a3b672.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-f088ff709e1277e0222aba4cda41ab4d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-22c5f25fcfc5fd5610dfced435a3b672.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d52245bb7ba9b6ab6a7d9ea1e3d6d73b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-5f96869ffd51bc4c837006638a84c664.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d52245bb7ba9b6ab6a7d9ea1e3d6d73b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -162,7 +162,7 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-sidebar floating slimcontent quarto-light">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -629,7 +629,6 @@ window.Quarto = {
   <li><a href="#reason-for-split-orders" id="toc-reason-for-split-orders" class="nav-link" data-scroll-target="#reason-for-split-orders">Reason for Split Orders</a></li>
   <li><a href="#impact-of-split-orders" id="toc-impact-of-split-orders" class="nav-link" data-scroll-target="#impact-of-split-orders">Impact of Split Orders</a></li>
   <li><a href="#mitigations" id="toc-mitigations" class="nav-link" data-scroll-target="#mitigations">Mitigations?</a></li>
-  <li><a href="#case-study" id="toc-case-study" class="nav-link" data-scroll-target="#case-study"><span class="invert-font">Case Study</span></a></li>
   </ul></li>
   <li><a href="#problem-structure---version-1" id="toc-problem-structure---version-1" class="nav-link" data-scroll-target="#problem-structure---version-1"><span class="flow">Problem Structure - Version 1</span></a>
   <ul class="collapse">
@@ -680,14 +679,27 @@ window.Quarto = {
   <li><a href="#characteristics" id="toc-characteristics" class="nav-link" data-scroll-target="#characteristics">Characteristics</a></li>
   <li><a href="#choosing-a-solver" id="toc-choosing-a-solver" class="nav-link" data-scroll-target="#choosing-a-solver">Choosing a solver</a></li>
   <li><a href="#global-vs-local-optimality" id="toc-global-vs-local-optimality" class="nav-link" data-scroll-target="#global-vs-local-optimality">Global vs Local Optimality</a></li>
+  <li><a href="#solver-comparisonsolvers" id="toc-solver-comparisonsolvers" class="nav-link" data-scroll-target="#solver-comparisonsolvers">Solver Comparison</a></li>
   <li><a href="#model-assumptions" id="toc-model-assumptions" class="nav-link" data-scroll-target="#model-assumptions">Model Assumptions</a></li>
+  <li><a href="#model-limitations" id="toc-model-limitations" class="nav-link" data-scroll-target="#model-limitations">Model Limitations</a></li>
+  <li><a href="#practical-limitations" id="toc-practical-limitations" class="nav-link" data-scroll-target="#practical-limitations">Practical Limitations</a></li>
   </ul></li>
   <li><a href="#impact" id="toc-impact" class="nav-link" data-scroll-target="#impact"><span class="flow">Impact</span></a>
   <ul class="collapse">
   <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1"></a></li>
   <li><a href="#problem-size-is-crucial" id="toc-problem-size-is-crucial" class="nav-link" data-scroll-target="#problem-size-is-crucial">Problem Size is Crucial</a></li>
-  <li><a href="#case-study-1" id="toc-case-study-1" class="nav-link" data-scroll-target="#case-study-1">Case Study</a></li>
-  <li><a href="#real-data-set" id="toc-real-data-set" class="nav-link" data-scroll-target="#real-data-set">Real Data Set</a></li>
+  </ul></li>
+  <li><a href="#chi-heuristic-1" id="toc-chi-heuristic-1" class="nav-link" data-scroll-target="#chi-heuristic-1"><span class="flow">CHI Heuristic</span></a>
+  <ul class="collapse">
+  <li><a href="#statistical-independence" id="toc-statistical-independence" class="nav-link" data-scroll-target="#statistical-independence">Statistical Independence</a></li>
+  <li><a href="#chi-square-test-intuition" id="toc-chi-square-test-intuition" class="nav-link" data-scroll-target="#chi-square-test-intuition">Chi-Square Test Intuition</a></li>
+  </ul></li>
+  <li><a href="#practical-implementation" id="toc-practical-implementation" class="nav-link" data-scroll-target="#practical-implementation"><span class="flow">Practical Implementation</span></a>
+  <ul class="collapse">
+  <li><a href="#real-world-challenges" id="toc-real-world-challenges" class="nav-link" data-scroll-target="#real-world-challenges">Real-World Challenges</a></li>
+  <li><a href="#rolling-horizon-approach" id="toc-rolling-horizon-approach" class="nav-link" data-scroll-target="#rolling-horizon-approach">Rolling Horizon Approach</a></li>
+  <li><a href="#case-study" id="toc-case-study" class="nav-link" data-scroll-target="#case-study">Case Study</a></li>
+  <li><a href="#implementation-results" id="toc-implementation-results" class="nav-link" data-scroll-target="#implementation-results">Implementation Results</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2"></a></li>
   </ul></li>
@@ -699,11 +711,11 @@ window.Quarto = {
 <div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/lectures/lecture-06-ordersplit.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lecture-06-ordersplit.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="lecture-06-presentation.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../lectures/lecture-06-ordersplit.html">06 Warehouse</a></li><li class="breadcrumb-item"><a href="../lectures/lecture-06-ordersplit.html">Lecture</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Lecture VI - Minimizing Split Orders in E-Commerce</h1>
+<h1 class="title">Lecture VI - Minimizing Split Orders</h1>
 <p class="subtitle lead">Applied Optimization with Julia</p>
 </div>
 
@@ -734,7 +746,7 @@ window.Quarto = {
 </header>
 
 
-<section id="introduction" class="level1 title page-columns page-full">
+<section id="introduction" class="level1 title">
 <h1 class="title"><span class="flow">Introduction</span></h1>
 <section id="e-commerce-trends" class="level2" data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1585144860131-245d551c77f6?q=80&amp;w=5404&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
 <h2 data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1585144860131-245d551c77f6?q=80&amp;w=5404&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center" class="anchored" data-anchor-id="e-commerce-trends"><span class="invert-font">E-Commerce Trends</span></h2>
@@ -756,23 +768,17 @@ window.Quarto = {
 </ul></li>
 </ul>
 </section>
-<section id="parcels-worldwide" class="level2 page-columns page-full">
+<section id="parcels-worldwide" class="level2">
 <h2 class="anchored" data-anchor-id="parcels-worldwide">Parcels Worldwide</h2>
 <ul>
 <li>The number of parcels is rising:
 <ul>
 <li><strong>2014</strong>: 44 billion parcels <span class="citation" data-cites="PitneyBowes2017">(<a href="#ref-PitneyBowes2017" role="doc-biblioref">Pitney Bowes Inc. 2017</a>)</span></li>
 <li><strong>2019</strong>: 103 billion parcels <span class="citation" data-cites="PitneyBowes2019">(<a href="#ref-PitneyBowes2019" role="doc-biblioref">Pitney Bowes Inc. 2019</a>)</span></li>
-<li><strong>2026</strong>: 220 – 262 billion parcels <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <span class="citation" data-cites="PitneyBowes2020">(<a href="#ref-PitneyBowes2020" role="doc-biblioref">Pitney Bowes Inc. 2020</a>)</span></li>
+<li><strong>2026</strong>: 220 – 262 billion<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <span class="citation" data-cites="PitneyBowes2020">(<a href="#ref-PitneyBowes2020" role="doc-biblioref">Pitney Bowes Inc. 2020</a>)</span></li>
 </ul></li>
 </ul>
-<div class="no-row-height column-margin column-container"><div id="ref-PitneyBowes2017" class="csl-entry" role="listitem">
-Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shipping Index Reveals 48 Percent Growth in Parcel Volume since 2014</span>.”</span> 2017. <a href="https://www.businesswire.com/news/home/20170830005628/en/Pitney-Bowes-Parcel-Shipping-Index-Reveals-48">https://www.businesswire.com/news/home/20170830005628/en/Pitney-Bowes-Parcel-Shipping-Index-Reveals-48</a>.
-</div><div id="ref-PitneyBowes2019" class="csl-entry" role="listitem">
-———. 2019. <span>“<span class="nocase">Pitney Bowes Parcel Shipping Index Reports Continued Growth Bolstered by China and Emerging Markets</span>.”</span> 2019. <a href="https://www.businesswire.com/news/home/20191010005148/en/">https://www.businesswire.com/news/home/20191010005148/en/</a>.
-</div><div id="fn1"><p><sup>1</sup>&nbsp;Forecast, not actual number</p></div><div id="ref-PitneyBowes2020" class="csl-entry" role="listitem">
-———. 2020. <span>“<span class="nocase">Pitney Bowes Parcel Shipping Index Reports Continued Growth as Global Parcel Volume Exceeds 100 billion for First Time Ever</span>.”</span> 2020. <a href="https://www.businesswire.com/news/home/20201012005150/en/">https://www.businesswire.com/news/home/20201012005150/en/</a>.
-</div></div></section>
+</section>
 <section id="pressure-on-infrastructure" class="level2">
 <h2 class="anchored" data-anchor-id="pressure-on-infrastructure">Pressure on infrastructure</h2>
 <div class="columns">
@@ -780,7 +786,7 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 <p><a href="https://unsplash.com/photos/person-holding-black-samsung-android-smartphone-hTUZW7E7krg" width="85%"><img src="https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?q=80&amp;w=2832&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid" style="width:90.0%"></a></p>
 </div><div class="column" style="width:60%;">
 <ul>
-<li>Consumers nowadays expect <span class="highlight">free and fast deliveries and returns</span></li>
+<li>Consumers nowadays expect <span class="highlight">free, fast deliveries and returns</span></li>
 <li>Existing warehouses have to store an <strong>increasing range of products</strong></li>
 <li>Better customer service requires <strong>faster deliveries</strong></li>
 <li>Incurred fulfillment costs <strong>depend on the number of parcels</strong></li>
@@ -801,7 +807,6 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 </ul>
 </div>
 </div>
-<hr>
 </section>
 </section>
 <section id="problem-structure" class="level1 title">
@@ -848,43 +853,25 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 <li><strong>Co-allocation</strong>: Predict <span class="highlight">co-appearance of products</span> and allocate them to the <span class="highlight">same warehouse</span></li>
 </ul>
 </section>
-<section id="case-study" class="level2" data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1672552226380-486fe900b322?q=80&amp;w=3540&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
-<h2 data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1672552226380-486fe900b322?q=80&amp;w=3540&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center" class="anchored" data-anchor-id="case-study"><span class="invert-font">Case Study</span></h2>
-<div class="invert-font fragment">
-<p><strong>Key information</strong> about the case:</p>
-<ul>
-<li>a large European e-commerce retailer</li>
-<li>the retailer has two warehouses</li>
-<li>product range cannot be stored in either warehouse</li>
-<li>product deliveries can be made to both warehouses</li>
-<li>products do not have to be stored exclusively</li>
-</ul>
-</div>
-<div class="footer">
-
-</div>
-<hr>
 </section>
-</section>
-<section id="problem-structure---version-1" class="level1 title page-columns page-full">
+<section id="problem-structure---version-1" class="level1 title">
 <h1 class="title"><span class="flow">Problem Structure - Version 1</span></h1>
-<section id="optimizing-co-allocation" class="level2 page-columns page-full">
+<section id="optimizing-co-allocation" class="level2">
 <h2 class="anchored" data-anchor-id="optimizing-co-allocation">Optimizing Co-allocation</h2>
-<div class="columns page-columns page-full">
+<div class="columns">
 <div class="column" style="width:40%;">
 <p><img src="https://images.beyondsimulations.com/ao/ao_split-suppliers.png" class="center img-fluid" style="width:90.0%"></p>
-</div><div class="column page-columns page-full" style="width:60%;">
+</div><div class="column" style="width:60%;">
 <p><span class="question"><strong>Question:</strong></span> <strong>What could be our objective?</strong></p>
-<div class="fragment page-columns page-full">
+<div class="fragment">
 <p>We aim to improve the <strong>SKU<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>-warehouse allocation</strong> to minimize the number of split parcels resulting from <strong>SKUs being stored in different warehouses</strong>.</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;SKU: Stock Keeping Unit</p></div></div></div>
+</div>
 </div>
 </div>
 </section>
 <section id="available-sets" class="level2">
 <h2 class="anchored" data-anchor-id="available-sets">Available Sets</h2>
 <p><span class="question">Question:</span> <strong>What could be the sets here?</strong></p>
-<p>. . .</p>
 <div class="incremental">
 <ul class="incremental">
 <li><span class="math inline">\(\mathcal{I}\)</span> - Set of products indexed by <span class="math inline">\(i \in \{1,2,...,|\mathcal{I}|\}\)</span></li>
@@ -896,7 +883,6 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 <section id="available-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="available-parameters">Available Parameters</h2>
 <p><span class="question">Question:</span> <strong>What are possible parameters?</strong></p>
-<p>. . .</p>
 <div class="incremental">
 <ul class="incremental">
 <li><span class="math inline">\(c_k\)</span> - Storage space of warehouse <span class="math inline">\(k \in \{1,\dots,|\mathcal{K}|\}\)</span></li>
@@ -908,7 +894,7 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 </section>
 <section id="transactional-data" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="transactional-data">Transactional Data</h2>
-<table class="table">
+<table class="caption-top table">
 <caption>Example of <span class="math inline">\(\boldsymbol{T}\)</span></caption>
 <thead>
 <tr class="header">
@@ -991,7 +977,6 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 </ul>
 <p>. . .</p>
 <p><span class="question">Question:</span> <strong>What is your opinion on the assumption?</strong></p>
-<hr>
 </section>
 <section id="split-order-minimization" class="level2">
 <h2 class="anchored" data-anchor-id="split-order-minimization">Split-Order Minimization</h2>
@@ -1020,14 +1005,14 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 <li><span class="math inline">\(Y_{m,i,k}\)</span> - 1, if SKU <span class="math inline">\(i\in\mathcal{I}\)</span> is shipped from warehouse <span class="math inline">\(k\in\mathcal{K}\)</span> for customer order <span class="math inline">\(m\in\mathcal{M}\)</span>, 0 otherwise</li>
 </ul>
 </section>
-<section id="integer-programming-model" class="level2 page-columns page-full">
+<section id="integer-programming-model" class="level2">
 <h2 class="anchored" data-anchor-id="integer-programming-model">Integer Programming Model</h2>
 <ul>
 <li><span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#ref-Catalan2012" role="doc-biblioref">2012</a>)</span> created an <strong>integer model</strong></li>
 <li>Number of SKUs of E-Commerce retailers can easily be <strong>between 10,000 - 100,000</strong></li>
 <li>Number of customer orders necessary for “stable” results have to be higher in the order of <strong>100,000 - 10,000,000</strong></li>
 </ul>
-<div class="no-row-height column-margin column-container"></div><p>. . .</p>
+<p>. . .</p>
 <p><span class="question">Question:</span> <strong>Anybody an idea what this could mean?</strong></p>
 </section>
 <section id="implementation-challenges" class="level2">
@@ -1048,10 +1033,9 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 <div class="footer">
 
 </div>
-<hr>
 </section>
 </section>
-<section id="problem-structure---version-2" class="level1 title page-columns page-full">
+<section id="problem-structure---version-2" class="level1 title">
 <h1 class="title"><span class="flow">Problem Structure - Version 2</span></h1>
 <section id="heuristic-approach" class="level2">
 <h2 class="anchored" data-anchor-id="heuristic-approach">Heuristic Approach</h2>
@@ -1088,7 +1072,7 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 </section>
 <section id="transaction-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="transaction-matrix">Transaction Matrix</h2>
-<div id="2ec428f0" class="cell" data-output-location="column-fragment" data-execution_count="2">
+<div id="fb1049c7" class="cell" data-output-location="column-fragment" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> [</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1</span> <span class="fl">1</span> <span class="fl">1</span> <span class="fl">0</span>;</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1</span> <span class="fl">1</span> <span class="fl">1</span> <span class="fl">0</span>;</span>
@@ -1116,7 +1100,7 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 </div>
 </div>
 </section>
-<section id="coappearance-matrix" class="level2 page-columns page-full">
+<section id="coappearance-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="coappearance-matrix">Coappearance Matrix</h2>
 <ul>
 <li><span class="math inline">\(\boldsymbol{Q}\)</span> is a <span class="highlight">symmetric matrix</span></li>
@@ -1124,17 +1108,16 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 <li><span class="math inline">\(\boldsymbol{Q} = (\boldsymbol{T}^T \cdot \boldsymbol{T})\)</span> where <span class="math inline">\(\boldsymbol{Q} = (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}\)</span></li>
 <li><span class="math inline">\(q_{ij}\)</span> shows how often <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> appear <strong>in the same order</strong></li>
 </ul>
-<div class="no-row-height column-margin column-container"></div><p>. . .</p>
+<p>. . .</p>
 <p><span class="question">Question:</span> <strong>What do the principal diagonal values tell us?</strong></p>
 <p>. . .</p>
 <ul>
 <li>How often each SKU appeared over all orders <strong>(binary!)</strong></li>
 </ul>
-<hr>
 </section>
-<section id="how-to-approach-the-problem" class="level2 page-columns page-full">
+<section id="how-to-approach-the-problem" class="level2">
 <h2 class="anchored" data-anchor-id="how-to-approach-the-problem">How to approach the problem?</h2>
-<div class="incremental page-columns page-full">
+<div class="incremental">
 <ul class="incremental">
 <li><strong>Greedy Heuristic</strong><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>: Allocation based on matrix</li>
 <li><strong>Mathematical Model</strong><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>: Maximizes coappearance</li>
@@ -1142,11 +1125,7 @@ Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shippi
 <li><span class="highlight">New</span>: Max. coappearance with non-linear solver</li>
 <li><span class="highlight">New</span>: Heuristic based on Chi-Square Tests</li>
 </ul>
-<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Simple and very fast, <span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#ref-Catalan2012" role="doc-biblioref">2012</a>)</span></p><div id="ref-Catalan2012" class="csl-entry" role="listitem">
-Catalán, Andrés, and Marshall Fisher. 2012. <span>“Assortment Allocation to Distribution Centers to Minimize Split Customer Orders.”</span> <em>SSRN Electronic Journal</em>. <a href="https://doi.org/10.2139/ssrn.2166687">https://doi.org/10.2139/ssrn.2166687</a>.
-</div></div><div id="fn4"><p><sup>4</sup>&nbsp;Computationally intensive with CPLEX, <span class="citation" data-cites="Zhu2021">Zhu et al. (<a href="#ref-Zhu2021" role="doc-biblioref">2021</a>)</span></p></div><div id="fn5"><p><sup>5</sup>&nbsp;Greedy Randomized Adaptive Search Procedure, <span class="citation" data-cites="Zhu2021">Zhu et al. (<a href="#ref-Zhu2021" role="doc-biblioref">2021</a>)</span></p><div id="ref-Zhu2021" class="csl-entry" role="listitem">
-Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. <span>“Optimization of Product Category Allocation in Multiple Warehouses to Minimize Splitting of Online Supermarket Customer Orders.”</span> <em>European Journal of Operational Research</em> 290 (2): 556–71. <a href="https://doi.org/10.1016/j.ejor.2020.08.024">https://doi.org/10.1016/j.ejor.2020.08.024</a>.
-</div></div></div></div>
+</div>
 </section>
 <section id="basic-setting" class="level2">
 <h2 class="anchored" data-anchor-id="basic-setting">Basic Setting</h2>
@@ -1174,7 +1153,6 @@ Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. <span>“Optimization o
 <p>We can focus on the SKUs and the warehouses, making the problem <strong>much smaller</strong>!</p>
 </div>
 </div>
-<hr>
 </section>
 <section id="available-parameters-1" class="level2">
 <h2 class="anchored" data-anchor-id="available-parameters-1">Available Parameters</h2>
@@ -1199,10 +1177,9 @@ Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. <span>“Optimization o
 <p>Instead of the transactional data, we just <strong>use the coappearance matrix</strong> in our model!</p>
 </div>
 </div>
-<hr>
 </section>
 </section>
-<section id="model-formulation" class="level1 title page-columns page-full">
+<section id="model-formulation" class="level1 title">
 <h1 class="title"><span class="flow">Model Formulation</span></h1>
 <section id="decision-variables" class="level2">
 <h2 class="anchored" data-anchor-id="decision-variables">Decision Variables?</h2>
@@ -1262,7 +1239,7 @@ Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. <span>“Optimization o
 <section id="decision-variable-in-julia" class="level2">
 <h2 class="anchored" data-anchor-id="decision-variable-in-julia">Decision Variable in Julia</h2>
 <p><span class="question">Question:</span> <strong>How could we formulate the variable in Julia?</strong></p>
-<div id="e786d82c" class="cell" data-execution_count="3">
+<div id="b9bd88b5" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg;</span> Pkg.add("SCIP")</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">SCIP</span> <span class="co"># SCIP is a non-commercial MIQCP solver</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1272,7 +1249,7 @@ Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. <span>“Optimization o
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>warehouse_model <span class="op">=</span> <span class="fu">Model</span>(SCIP.Optimizer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>. . .</p>
-<div id="d7c6605f" class="cell" data-output-location="fragment" data-execution_count="4">
+<div id="ed06e456" class="cell" data-output-location="fragment" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(warehouse_model, X[i <span class="kw">in</span> skus, k <span class="kw">in</span> warehouses], Bin)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:
@@ -1284,7 +1261,6 @@ And data, a 3×2 Matrix{VariableRef}:
  X[Charger,Hamburg]     X[Charger,Berlin]</code></pre>
 </div>
 </div>
-<hr>
 </section>
 <section id="objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="objective-function">Objective Function</h2>
@@ -1321,7 +1297,7 @@ And data, a 3×2 Matrix{VariableRef}:
 <p><span class="question">Question:</span> <strong>What could the objective function look like?</strong></p>
 <p>. . .</p>
 </section>
-<section id="quadratic-objective-function" class="level2 page-columns page-full">
+<section id="quadratic-objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="quadratic-objective-function">Quadratic Objective Function</h2>
 <p><span class="math display">\[\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}\]</span></p>
 <p>. . .</p>
@@ -1338,14 +1314,12 @@ And data, a 3×2 Matrix{VariableRef}:
 <p>The quadratic terms are <span class="math inline">\(X_{ik}\times X_{jk}\)</span>. This objective function is based on the <strong>Quadratic Multiple Knapsack Problem (QMKP)</strong>, formulated by <span class="citation" data-cites="Hiley2006">Hiley and Julstrom (<a href="#ref-Hiley2006" role="doc-biblioref">2006</a>)</span>.</p>
 </div>
 </div>
-<div class="no-row-height column-margin column-container"><div id="ref-Hiley2006" class="csl-entry" role="listitem">
-Hiley, Amanda, and Bryant A. Julstrom. 2006. <span>“The Quadratic Multiple Knapsack Problem and Three Heuristic Approaches to It.”</span> In <em>Proceedings of the 8th Annual Conference on Genetic and Evolutionary Computation</em>, edited by M. Keijzer, 547–52. New York, NY: Association for Computing Machinery. <a href="https://doi.org/10.1145/1143997.1144096">https://doi.org/10.1145/1143997.1144096</a>.
-</div></div></section>
+</section>
 <section id="objective-function-in-julia" class="level2">
 <h2 class="anchored" data-anchor-id="objective-function-in-julia">Objective Function in Julia</h2>
 <p><span class="question">Question:</span> <strong>How could we formulate this in Julia?</strong></p>
 <p>. . .</p>
-<div id="988f414a" class="cell" data-output-location="fragment" data-execution_count="5">
+<div id="97bc4282" class="cell" data-output-location="fragment" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> [<span class="fl">2</span> <span class="fl">1</span> <span class="fl">2</span>; <span class="fl">1</span> <span class="fl">2</span> <span class="fl">1</span>; <span class="fl">2</span> <span class="fl">1</span> <span class="fl">2</span>]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(warehouse_model,</span>
@@ -1361,7 +1335,6 @@ Hiley, Amanda, and Bryant A. Julstrom. 2006. <span>“The Quadratic Multiple Kna
 <p>$ X_{Socks,Hamburg}X_{Smartphone,Hamburg} + X_{Socks,Berlin}X_{Smartphone,Berlin} + 2 X_{Charger,Hamburg}X_{Smartphone,Hamburg} + 2 X_{Charger,Berlin}X_{Smartphone,Berlin} + X_{Charger,Hamburg}X_{Socks,Hamburg} + X_{Charger,Berlin}X_{Socks,Berlin} $</p>
 </div>
 </div>
-<hr>
 </section>
 </section>
 <section id="constraints" class="level1 title">
@@ -1382,7 +1355,6 @@ Hiley, Amanda, and Bryant A. Julstrom. 2006. <span>“The Quadratic Multiple Kna
 </div>
 </div>
 </div>
-<hr>
 </section>
 <section id="single-allocation-constraint" class="level2">
 <h2 class="anchored" data-anchor-id="single-allocation-constraint">Single Allocation Constraint?</h2>
@@ -1444,7 +1416,7 @@ Hiley, Amanda, and Bryant A. Julstrom. 2006. <span>“The Quadratic Multiple Kna
 </section>
 <section id="single-allocation-in-julia" class="level2">
 <h2 class="anchored" data-anchor-id="single-allocation-in-julia">Single Allocation in Julia</h2>
-<div id="cd2acb98" class="cell" data-output-location="fragment" data-execution_count="6">
+<div id="1ae9e825" class="cell" data-output-location="fragment" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(warehouse_model, single_allocation[i <span class="kw">in</span> skus],</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i, k] <span class="cf">for</span> k <span class="kw">in</span> warehouses) <span class="op">&gt;=</span> <span class="fl">1</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1457,7 +1429,6 @@ And data, a 3-element Vector{ConstraintRef{Model, MathOptInterface.ConstraintInd
  single_allocation[Charger] : X[Charger,Hamburg] + X[Charger,Berlin] ≥ 1</code></pre>
 </div>
 </div>
-<hr>
 </section>
 <section id="capacity-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="capacity-constraints">Capacity Constraints?</h2>
@@ -1504,7 +1475,7 @@ And data, a 3-element Vector{ConstraintRef{Model, MathOptInterface.ConstraintInd
 </section>
 <section id="capacity-constraints-in-julia" class="level2">
 <h2 class="anchored" data-anchor-id="capacity-constraints-in-julia">Capacity Constraints in Julia</h2>
-<div id="666b4ed0" class="cell" data-output-location="fragment" data-execution_count="7">
+<div id="31795dd8" class="cell" data-output-location="fragment" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>capacities <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"Hamburg"</span> <span class="op">=&gt;</span> <span class="fl">2</span>, <span class="st">"Berlin"</span> <span class="op">=&gt;</span> <span class="fl">1</span>) <span class="co"># Add capacities</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(warehouse_model, capacity[k <span class="kw">in</span> warehouses],</span>
@@ -1518,7 +1489,6 @@ And data, a 2-element Vector{ConstraintRef{Model, MathOptInterface.ConstraintInd
  capacity[Berlin] : X[Smartphone,Berlin] + X[Socks,Berlin] + X[Charger,Berlin] ≤ 1</code></pre>
 </div>
 </div>
-<hr>
 </section>
 <section id="qmk-model" class="level2">
 <h2 class="anchored" data-anchor-id="qmk-model">QMK Model</h2>
@@ -1534,7 +1504,7 @@ And data, a 2-element Vector{ConstraintRef{Model, MathOptInterface.ConstraintInd
 </section>
 <section id="qmk-model-in-julia" class="level2">
 <h2 class="anchored" data-anchor-id="qmk-model-in-julia">QMK Model in Julia</h2>
-<div id="f8ca96ca" class="cell" data-output-location="fragment" data-execution_count="8">
+<div id="2baf8602" class="cell" data-output-location="fragment" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_attribute</span>(warehouse_model, <span class="st">"display/verblevel"</span>, <span class="fl">0</span>) <span class="co"># Hide solver output</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize!</span>(warehouse_model)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1551,10 +1521,11 @@ And data, a 3×2 Matrix{Float64}:
   1.0  0.0</code></pre>
 </div>
 </div>
-<hr>
+<p>. . .</p>
+<p><span class="question">Question:</span> What does this value tell us?</p>
 </section>
 </section>
-<section id="model-characteristics" class="level1 title page-columns page-full">
+<section id="model-characteristics" class="level1 title">
 <h1 class="title"><span class="flow">Model Characteristics</span></h1>
 <section id="characteristics" class="level2">
 <h2 class="anchored" data-anchor-id="characteristics">Characteristics</h2>
@@ -1589,15 +1560,53 @@ And data, a 3×2 Matrix{Float64}:
 </div>
 </div>
 </section>
-<section id="global-vs-local-optimality" class="level2 page-columns page-full">
+<section id="global-vs-local-optimality" class="level2">
 <h2 class="anchored" data-anchor-id="global-vs-local-optimality">Global vs Local Optimality</h2>
-<div class="quarto-figure quarto-figure-center page-columns page-full">
-<figure class="figure page-columns page-full">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
 <p><a href="https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/"><img src="https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&amp;ssl=1" class="img-fluid figure-img" style="width:80.0%"></a></p>
-<figcaption class="margin-caption">Local vs Global Optimum by Christoph Roser</figcaption>
+<figcaption>Local vs Global Optimum by Christoph Roser</figcaption>
 </figure>
 </div>
-<hr>
+</section>
+<section id="solver-comparisonsolvers" class="level2">
+<h2 class="anchored" data-anchor-id="solver-comparisonsolvers">Solver Comparison<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>SKUs</th>
+<th>SCIP</th>
+<th>HiGHS</th>
+<th>Gurobi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>100</td>
+<td>118s</td>
+<td>X</td>
+<td>~400s</td>
+</tr>
+<tr class="even">
+<td>1,000</td>
+<td>1,011s (18%)</td>
+<td>X</td>
+<td>~200s (2%)</td>
+</tr>
+<tr class="odd">
+<td>10,000</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+<p>. . .</p>
+<ul>
+<li><span class="highlight">SCIP</span>: Best open-source for MIQCP, but limited scalability</li>
+<li><strong>Commercial solvers</strong>: Better but still fail on 10,000+ SKUs</li>
+<li><strong>Conclusion</strong>: Heuristics necessary for realistic problems!</li>
+</ul>
 </section>
 <section id="model-assumptions" class="level2">
 <h2 class="anchored" data-anchor-id="model-assumptions">Model Assumptions</h2>
@@ -1610,8 +1619,43 @@ And data, a 3×2 Matrix{Float64}:
 </ul>
 </div>
 </section>
+<section id="model-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="model-limitations">Model Limitations</h2>
+<div class="incremental">
+<ul class="incremental">
+<li><strong>Stock-outs</strong>: Model assumes <span class="highlight">perfect availability</span>
+<ul class="incremental">
+<li>Real stockouts create splits despite optimal allocation</li>
+</ul></li>
+<li><strong>Storage costs</strong>: No differentiation between costs</li>
+<li><strong>Demand dynamics</strong>: Weather, promotions, seasonality</li>
+<li><strong>SKU sizes</strong>: Uniform capacity assumption unrealistic</li>
+<li><strong>Shipping costs</strong>: No consideration of distance or weight</li>
+</ul>
+</div>
 </section>
-<section id="impact" class="level1 title page-columns page-full">
+<section id="practical-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="practical-limitations">Practical Limitations</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Allocation changes</strong>:</p>
+<ul>
+<li>Frequent reallocation <span class="highlight">disrupts operations</span></li>
+<li>Physical inventory movements costly</li>
+<li>Need for change minimization</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Workload imbalance</strong>:</p>
+<ul>
+<li>Optimal allocation may <span class="highlight">overload</span> some warehouses</li>
+<li>High-frequency SKUs cluster together</li>
+<li>Trade-off: splits vs.&nbsp;balance</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="impact" class="level1 title">
 <h1 class="title"><span class="flow">Impact</span></h1>
 <section id="section-1" class="level2 loud-slide">
 <h2 class="loud-slide anchored" data-anchor-id="section-1"></h2>
@@ -1626,8 +1670,8 @@ And data, a 3×2 Matrix{Float64}:
 <section id="problem-size-is-crucial" class="level2">
 <h2 class="anchored" data-anchor-id="problem-size-is-crucial">Problem Size is Crucial</h2>
 <ul>
-<li>Up to 10,000 SKUs → <strong>commercial solvers</strong></li>
-<li>More than 10,000 SKUs → <strong>heuristics</strong></li>
+<li>Up to 1,000 SKUs → <strong>commercial solvers</strong></li>
+<li>More than 1,000 SKUs → <strong>heuristics</strong></li>
 <li>For example, the <span class="highlight">CHI</span> heuristic</li>
 </ul>
 <p>. . .</p>
@@ -1644,25 +1688,119 @@ And data, a 3×2 Matrix{Float64}:
 <p>Detect dependencies between products and allocate them accordingly, as products within orders can have dependencies and products are bought with different frequencies!</p>
 </div>
 </div>
-<hr>
 </section>
-<section id="case-study-1" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="case-study-1">Case Study</h2>
+</section>
+<section id="chi-heuristic-1" class="level1 title">
+<h1 class="title"><span class="flow">CHI Heuristic</span></h1>
+<section id="statistical-independence" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-independence">Statistical Independence</h2>
+<p><span class="question">Question:</span> <strong>When are two SKUs independent?</strong></p>
+<p>. . .</p>
+<p>If purchasing one doesn’t affect purchasing the other:</p>
+<p><span class="math display">\[P(A \cap B) = P(A) \times P(B)\]</span></p>
+<p>. . .</p>
+<p><strong>Example</strong>: If <span class="math inline">\(A\)</span> appears in 10% of orders and <span class="math inline">\(B\)</span> in 20%:</p>
 <ul>
-<li>More than 100,000 SKUs and several millions of orders</li>
-<li>Comparison of <strong>different heuristics</strong><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>
-<ul>
-<li><strong>CHI</strong>: based on Chi-Square tests <span class="citation" data-cites="vlcek_optimizing_2024">Vlćek and Voigt (<a href="#ref-vlcek_optimizing_2024" role="doc-biblioref">2024</a>)</span></li>
-<li><strong>GP, GO, GS, BS</strong>: based on greedy algorithms <span class="citation" data-cites="Catalan2012">(<a href="#ref-Catalan2012" role="doc-biblioref">Catalán and Fisher 2012</a>)</span></li>
-<li><strong>RA</strong>: Random allocation of SKUs to warehouses</li>
-</ul></li>
+<li><strong>Independent</strong>: Appear together in <span class="math inline">\(0.10 \times 0.20 = 2\%\)</span> of orders</li>
+<li><strong>Dependent</strong>: Appear together in <span class="highlight">5% of orders</span> → customers buy them together!</li>
 </ul>
-<div class="no-row-height column-margin column-container"><div id="fn6"><p><sup>6</sup>&nbsp;QMKP is not applicable for instance in case study</p></div><div id="ref-vlcek_optimizing_2024" class="csl-entry" role="listitem">
-Vlćek, Tobias, and Guido Voigt. 2024. <span>“Optimizing <span>SKU</span>-<span>Warehouse</span> <span>Allocations</span> to Minimize <span>Split</span> <span>Parcels</span> in <span>E</span>-<span>Commerce</span> <span>Environments</span>.”</span> <em>To Be Submitted Soon</em>.
-</div></div></section>
-<section id="real-data-set" class="level2">
-<h2 class="anchored" data-anchor-id="real-data-set">Real Data Set</h2>
-<p><img src="https://images.beyondsimulations.com/ao/ao_split-case.png" class="img-fluid" style="width:80.0%"></p>
+</section>
+<section id="chi-square-test-intuition" class="level2">
+<h2 class="anchored" data-anchor-id="chi-square-test-intuition">Chi-Square Test Intuition</h2>
+<p>Use <strong>chi-square tests</strong> to detect if SKUs are dependent:</p>
+<div class="incremental">
+<ul class="incremental">
+<li>Calculate <span class="highlight">expected coappearances</span> under independence</li>
+<li>Compare with <strong>actual coappearances</strong></li>
+<li>If difference is significant → SKUs are <strong>dependent</strong></li>
+<li>Allocate dependent SKUs to <span class="highlight">same warehouse</span>!</li>
+</ul>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Two-Phase Approach
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Phase 1</strong>: Build allocation using dependencies<br>
+<strong>Phase 2</strong>: Refine with local search</p>
+</div>
+</div>
+<p>. . .</p>
+<p><span class="highlight">Result:</span> Works on large instances, 50,000 SKUs in 10 minutes!</p>
+</section>
+</section>
+<section id="practical-implementation" class="level1 title">
+<h1 class="title"><span class="flow">Practical Implementation</span></h1>
+<section id="real-world-challenges" class="level2">
+<h2 class="anchored" data-anchor-id="real-world-challenges">Real-World Challenges</h2>
+<p><span class="question">Question:</span> <strong>What challenges might arise in practice?</strong></p>
+<div class="incremental">
+<ul class="incremental">
+<li><strong>New products</strong>: Allocate SKUs without historical data?</li>
+<li><strong>Dynamic inventory</strong>: SKUs appear and disappear</li>
+<li><strong>Different sizes</strong>: SKUs consume varying storage space</li>
+<li><strong>Computational limits</strong>: Problems with 50,000+ SKUs</li>
+</ul>
+</div>
+</section>
+<section id="rolling-horizon-approach" class="level2">
+<h2 class="anchored" data-anchor-id="rolling-horizon-approach">Rolling Horizon Approach</h2>
+<ul>
+<li>Use <strong>5-week training window</strong> for allocation decisions</li>
+<li>Update allocations <strong>weekly</strong> based on recent patterns</li>
+<li>Balance <span class="highlight">stability</span> vs.&nbsp;<span class="highlight">responsiveness</span></li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Grouped SKUs by <strong>category-brand combinations</strong> to reduce problem size while maintaining allocation quality. New SKUs inherit allocation from their cluster!</p>
+</div>
+</div>
+</div>
+</section>
+<section id="case-study" class="level2">
+<h2 class="anchored" data-anchor-id="case-study">Case Study</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Problem characteristics</strong>:</p>
+<ul>
+<li>100,000+ SKUs</li>
+<li>Several million orders</li>
+<li>Multiple warehouses</li>
+<li>Storage capacity constraints</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Heuristics compared</strong><a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>:</p>
+<ul>
+<li><strong>CHI</strong>: Chi-Square tests <span class="citation" data-cites="vlcek_optimizing_2024">(<a href="#ref-vlcek_optimizing_2024" role="doc-biblioref">Vlćek and Voigt 2024</a>)</span></li>
+<li><strong>GP, GO, GS, BS</strong>: Greedy <span class="citation" data-cites="Catalan2012">(<a href="#ref-Catalan2012" role="doc-biblioref">Catalán and Fisher 2012</a>)</span></li>
+<li><strong>RA</strong>: Random allocation</li>
+</ul>
+</div>
+</div>
+<p>. . .</p>
+<p><img src="https://images.beyondsimulations.com/ao/ao_split-case.png" class="img-fluid" style="width:70.0%"></p>
+</section>
+<section id="implementation-results" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-results">Implementation Results</h2>
+<p><strong>Theoretical improvements</strong>:</p>
+<ul>
+<li>CHI: <strong>82.25%</strong> reduction</li>
+<li>BS: <strong>62.63%</strong> reduction<br>
+</li>
+<li>GS: <strong>59.16%</strong> reduction</li>
+<li>vs.&nbsp;retailer: <strong>6.95%</strong> split ratio</li>
+</ul>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
@@ -1672,6 +1810,7 @@ Vlćek, Tobias, and Guido Voigt. 2024. <span>“Optimizing <span>SKU</span>-<spa
 <li>Mathematical Optimisation of <strong>“full” problem not solvable</strong></li>
 <li><strong>CHI</strong> Heuristic close to mathematical optimisation</li>
 </ul>
+<p>. . .</p>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1709,7 +1848,40 @@ Vlćek, Tobias, and Guido Voigt. 2024. <span>“Optimizing <span>SKU</span>-<spa
 </section>
 
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Catalan2012" class="csl-entry" role="listitem">
+Catalán, Andrés, and Marshall Fisher. 2012. <span>“Assortment Allocation to Distribution Centers to Minimize Split Customer Orders.”</span> <em>SSRN Electronic Journal</em>. <a href="https://doi.org/10.2139/ssrn.2166687">https://doi.org/10.2139/ssrn.2166687</a>.
+</div>
+<div id="ref-Hiley2006" class="csl-entry" role="listitem">
+Hiley, Amanda, and Bryant A. Julstrom. 2006. <span>“The Quadratic Multiple Knapsack Problem and Three Heuristic Approaches to It.”</span> In <em>Proceedings of the 8th Annual Conference on Genetic and Evolutionary Computation</em>, edited by M. Keijzer, 547–52. New York, NY: Association for Computing Machinery. <a href="https://doi.org/10.1145/1143997.1144096">https://doi.org/10.1145/1143997.1144096</a>.
+</div>
+<div id="ref-PitneyBowes2017" class="csl-entry" role="listitem">
+Pitney Bowes Inc. 2017. <span>“<span class="nocase">Pitney Bowes Parcel Shipping Index Reveals 48 Percent Growth in Parcel Volume since 2014</span>.”</span> 2017. <a href="https://www.businesswire.com/news/home/20170830005628/en/Pitney-Bowes-Parcel-Shipping-Index-Reveals-48">https://www.businesswire.com/news/home/20170830005628/en/Pitney-Bowes-Parcel-Shipping-Index-Reveals-48</a>.
+</div>
+<div id="ref-PitneyBowes2019" class="csl-entry" role="listitem">
+———. 2019. <span>“<span class="nocase">Pitney Bowes Parcel Shipping Index Reports Continued Growth Bolstered by China and Emerging Markets</span>.”</span> 2019. <a href="https://www.businesswire.com/news/home/20191010005148/en/">https://www.businesswire.com/news/home/20191010005148/en/</a>.
+</div>
+<div id="ref-PitneyBowes2020" class="csl-entry" role="listitem">
+———. 2020. <span>“<span class="nocase">Pitney Bowes Parcel Shipping Index Reports Continued Growth as Global Parcel Volume Exceeds 100 billion for First Time Ever</span>.”</span> 2020. <a href="https://www.businesswire.com/news/home/20201012005150/en/">https://www.businesswire.com/news/home/20201012005150/en/</a>.
+</div>
+<div id="ref-vlcek_optimizing_2024" class="csl-entry" role="listitem">
+Vlćek, Tobias, and Guido Voigt. 2024. <span>“Optimizing <span>SKU</span>-<span>Warehouse</span> <span>Allocations</span> to Minimize <span>Split</span> <span>Parcels</span> in <span>E</span>-<span>Commerce</span> <span>Environments</span>.”</span> <em>To Be Submitted Soon</em>.
+</div>
+<div id="ref-Zhu2021" class="csl-entry" role="listitem">
+Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. <span>“Optimization of Product Category Allocation in Multiple Warehouses to Minimize Splitting of Online Supermarket Customer Orders.”</span> <em>European Journal of Operational Research</em> 290 (2): 556–71. <a href="https://doi.org/10.1016/j.ejor.2020.08.024">https://doi.org/10.1016/j.ejor.2020.08.024</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Forecast, not actual number<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>SKU: Stock Keeping Unit<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Simple and very fast, <span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#ref-Catalan2012" role="doc-biblioref">2012</a>)</span><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Computationally intensive with CPLEX, <span class="citation" data-cites="Zhu2021">Zhu et al. (<a href="#ref-Zhu2021" role="doc-biblioref">2021</a>)</span><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Greedy Randomized Adaptive Search Procedure, <span class="citation" data-cites="Zhu2021">Zhu et al. (<a href="#ref-Zhu2021" role="doc-biblioref">2021</a>)</span><a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Based on numerical experiments (QMK). The percentage in the table shows instances that could be solved within one hour and their average time (if solved).<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>QMKP is not applicable for instance in case study<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
