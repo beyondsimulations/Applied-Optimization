@@ -21,8 +21,6 @@ Consider the depicted 'Golden Line' on the left with 4 different stations A, B, 
 
 Your task is to **minimize the queues** without exceeding the available transport capacity of **max. 100 passengers per minute of each arc**. A safety buffer per arc is not needed. Each station layout is excellent, with sufficient stairs and escalators. Thus, the station itself is fully capable of handling any inflow that may result from the optimized restricted inflow. Nonetheless, queues are still necessary as the arcs cannot handle each input.
 
----
-
 # 1. Flow Analysis
 
 Suppose we are in minute 7 at the arc of (D,A). Which inflows from which stations are going to impact the flow into the arc in this minute?
@@ -66,8 +64,6 @@ YOUR ANSWER BELOW
 =#
 ```
 :::
-
----
 
 # 2. Inflow Control
 
@@ -118,8 +114,6 @@ metro_model = Model()
 ```
 :::
 
----
-
 # 3. Bidirectional Flow
 
 ![Bidirectional Metro Network](images/ao_metro-metro_tutorial_bidirect.svg)
@@ -150,8 +144,6 @@ In case we acknowledge, that the travel time on some paths is identical, we can 
 ```
 :::
 
----
-
 # 4. Capacity Analysis
 
 Although the system is two-directional now, the **overall number of trains of the metro provider has not changed**. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?
@@ -176,8 +168,6 @@ That does really depend on the actual demand for the different OD-pairs. Dependi
 =#
 ```
 :::
-
----
 
 # 5. Computing the Set $\mathcal{R}_{e,t}$
 
@@ -354,6 +344,67 @@ If you encounter any difficulties ad cannot solve the problem, please document y
 ```
 :::
 
----
+# 6. Bonus: Metro Flow Simulation (0.5 points)
+
+Now, you can earn up to 0.5 additional bonus points by building a simulation of passenger flows through a metro network. The network consists of two lines with a shared transfer station. Passengers enter at stations A, B, C, D and travel to various destinations.
+
+First, study the network data below to understand the structure and then implement a minute-by-minute simulation that tracks the queues at entry stations, passenger flows through arcs and arc utilization over time. Then, visualize the results with some plots and try to implement inflow regulation to achieve a feasible solution (no arc exceeds capacity).
+
+
+::: callout-tip
+Good luck! This is really a tough task.
+:::
+
+```{julia}
+#| eval: false
+
+# Stations and arcs
+stations = [:A, :B, :C, :D, :T, :E, :F]
+entry_stations = [:A, :B, :C, :D]
+arcs = [(:A, :B), (:B, :T), (:T, :E), (:C, :D), (:D, :T), (:T, :F)]
+
+# Network parameters
+travel_time = 1  # minutes per arc
+arc_capacity = 90  # passengers per minute
+n_minutes = 20  # total simulation time
+
+# Inflow regulation: single constant rate per station (passengers/minute)
+# Set to 1000 (no regulation) initially - experiment to find feasible values
+inflow_rates = Dict(:A => 1000, :B => 1000, :C => 1000, :D => 1000)
+
+# Paths for each OD pair
+paths = Dict(
+    (:A, :B) => [(:A, :B)],
+    (:A, :E) => [(:A, :B), (:B, :T), (:T, :E)],
+    (:A, :F) => [(:A, :B), (:B, :T), (:T, :F)],
+    (:B, :E) => [(:B, :T), (:T, :E)],
+    (:B, :F) => [(:B, :T), (:T, :F)],
+    (:C, :D) => [(:C, :D)],
+    (:C, :F) => [(:C, :D), (:D, :T), (:T, :F)],
+    (:C, :E) => [(:C, :D), (:D, :T), (:T, :E)],
+    (:D, :F) => [(:D, :T), (:T, :F)],
+    (:D, :E) => [(:D, :T), (:T, :E)]
+)
+
+# Demand data: demand[period][(origin, destination)] = passengers
+demand = Dict(
+    1 => Dict((:A,:B)=>7,  (:A,:E)=>12, (:A,:F)=>5,  (:B,:E)=>15, (:B,:F)=>10,
+              (:C,:D)=>5,  (:C,:F)=>10, (:C,:E)=>8,  (:D,:F)=>15, (:D,:E)=>12),
+    2 => Dict((:A,:B)=>8,  (:A,:E)=>15, (:A,:F)=>10, (:B,:E)=>18, (:B,:F)=>15,
+              (:C,:D)=>8,  (:C,:F)=>15, (:C,:E)=>10, (:D,:F)=>18, (:D,:E)=>15),
+    3 => Dict((:A,:B)=>12, (:A,:E)=>22, (:A,:F)=>18, (:B,:E)=>28, (:B,:F)=>22,
+              (:C,:D)=>12, (:C,:F)=>22, (:C,:E)=>15, (:D,:F)=>28, (:D,:E)=>18),
+    4 => Dict((:A,:B)=>15, (:A,:E)=>28, (:A,:F)=>22, (:B,:E)=>32, (:B,:F)=>28,
+              (:C,:D)=>15, (:C,:F)=>28, (:C,:E)=>27, (:D,:F)=>32, (:D,:E)=>22),
+    5 => Dict((:A,:B)=>15, (:A,:E)=>28, (:A,:F)=>22, (:B,:E)=>32, (:B,:F)=>28,
+              (:C,:D)=>15, (:C,:F)=>28, (:C,:E)=>18, (:D,:F)=>32, (:D,:E)=>22),
+    6 => Dict((:A,:B)=>12, (:A,:E)=>22, (:A,:F)=>18, (:B,:E)=>22, (:B,:F)=>18,
+              (:C,:D)=>12, (:C,:F)=>22, (:C,:E)=>15, (:D,:F)=>22, (:D,:E)=>21),
+    7 => Dict((:A,:B)=>8,  (:A,:E)=>15, (:A,:F)=>10, (:B,:E)=>18, (:B,:F)=>15,
+              (:C,:D)=>8,  (:C,:F)=>15, (:C,:E)=>10, (:D,:F)=>18, (:D,:E)=>15),
+    8 => Dict((:A,:B)=>5,  (:A,:E)=>10, (:A,:F)=>5,  (:B,:E)=>15, (:B,:F)=>10,
+              (:C,:D)=>5,  (:C,:F)=>10, (:C,:E)=>5,  (:D,:F)=>15, (:D,:E)=>10)
+)
+```
 
 {{< include ../include/tutorial_end.qmd >}}

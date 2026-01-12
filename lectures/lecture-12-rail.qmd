@@ -1,5 +1,5 @@
 ---
-title: "Lecture XII - Passenger Flow Control in Urban Rail"
+title: "Lecture XII - Metro Passenger Flow Control"
 subtitle: "Applied Optimization with Julia"
 author: "Dr. Tobias Vlćek"
 format:
@@ -7,6 +7,13 @@ format:
     footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-12-rail.qmd)"
     output-file: lecture-12-presentation.html
 ---
+
+## Quick Question
+
+```{=html}
+<iframe data-tally-src="https://tally.so/embed/Ekl5bL?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="323" frameborder="0" marginheight="0" marginwidth="0" title="Last Week's"></iframe>
+<script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+```
 
 # [Introduction]{.flow} {.title}
 
@@ -56,7 +63,7 @@ format:
 
 . . .
 
-- Red Line has twice the capacity of the Green and Gold Line
+- Red Line has twice the capacity of Green and Gold Line
 - People use the metro to get to the event venues
 
 . . .
@@ -90,8 +97,6 @@ format:
 This can lead to [overcrowding and potential crowd disasters!]{.highlight}
 :::
 
----
-
 ## General Issues
 
 [Question:]{.question} **What could also be an issue?**
@@ -99,7 +104,7 @@ This can lead to [overcrowding and potential crowd disasters!]{.highlight}
 . . .
 
 - Often unknown **how many people** exactly will participate
-- Gathering data is [extremely importand and difficult]{.highlight}
+- Gathering data is [extremely important and difficult]{.highlight}
 - Crowd behavior can be [unpredictable and dynamic]{.highlight}
 - Weather conditions may affect **transportation preferences**
 - Cultural factors influence **crowd movement patterns**
@@ -116,8 +121,6 @@ problem structure!
 
 ::: footer
 :::
-
----
 
 # [Problem Structure]{.flow} {.title}
 
@@ -228,10 +231,9 @@ of assumptions!
 
 . . .
 
-- Movement patterns have different origin-destination pairs
+- Patterns have different origin-destination pairs
 - Regulating the inflow does not affect the destination
 
----
 
 # [Model Formulation]{.flow} {.title}
 
@@ -305,8 +307,6 @@ $$
 - $I_p$ is the set of minutes $t$ that belong to period $p$
 - Minutes are **not overlapping**, but they are **continuous**
 
----
-
 ## Parameters?
 
 [Question:]{.question} **What could be possible parameters?**
@@ -319,8 +319,6 @@ $$
 - $c_{o}^{min}$ - Min. station entry rate $o$ per minute with $o \in \mathcal{O}$
 - $c_{o}^{max}$ - Max. station entry rate $o$ per minute with $o \in \mathcal{O}$
 - $\alpha$ - Maximal allowed arc utilization ($0 < \alpha < 1$)
-
----
 
 ## Metro Movement
 
@@ -375,8 +373,6 @@ $$\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \ma
 Based on the ratio of the different destinations $d$ to the total queue for each station $o \in \mathcal{O}$ in each period $p \in \mathcal{P}$.
 :::
 
----
-
 # [Variables and Objective]{.flow} {.title}
 
 ## Decision Variable?
@@ -404,8 +400,6 @@ There is **one queue for all passenger flow directions**, as managing multiple q
 . . .
 
 - $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
-
----
 
 ## Objective Function?
 
@@ -443,8 +437,6 @@ $$
 \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 $$
 
----
-
 # [Constraints]{.flow} {.title}
 
 ## Necessary Constraints
@@ -472,8 +464,6 @@ complicated now!
 
 ::: footer
 :::
-
----
 
 ## Central Question
 
@@ -543,8 +533,6 @@ different stations and periods.
 ::: footer
 :::
 
----
-
 ## Ensure Capacity Utilization?
 
 ::: {.callout-important}
@@ -580,13 +568,46 @@ $$
 Here, we combine the inflow at each station based on the o-d proportion and let the people spread through the network, checking that no arc is over-utilized at any minute.
 :::
 
----
+## Bound the Inflow Rate?
+
+::: {.callout-important}
+## The goal of this constraint is to:
+Ensure that the inflow rate at each station stays within operational bounds.
+:::
+
+. . .
+
+::: {.callout-note}
+## We need the following variables and parameters:
+
+- $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
+- $c_{o}^{min}$ - Min. station entry rate $o$ per minute
+- $c_{o}^{max}$ - Max. station entry rate $o$ per minute
+- $\alpha$ - Maximal allowed arc utilization ($0 < \alpha < 1$)
+
+:::
+
+## Bound the Inflow Rate
+
+[Question:]{.question} **What could be the constraint?**
+
+. . .
+
+$$
+c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
+$$
+
+. . .
+
+::: {.callout-note}
+This constraint bounds the inflow rate at each station between the **minimum and maximum** allowed entry rates, ensuring compliance with **operational capacity limits**.
+:::
 
 ## Dispatch Only Available People?
 
 ::: {.callout-important}
 ## The goal of this constraint is to:
-Ensure that we do not dispatch more people than are queued and less than the minimum allowed inflow, preventing over- and under-dispatching.
+Ensure that we do not dispatch more people than are queued.
 :::
 
 . . .
@@ -606,30 +627,15 @@ Ensure that we do not dispatch more people than are queued and less than the min
 
 . . .
 
-::: {.temp-math-size}
-```{=html}
-<style>
-.temp-math-size .math.display .MathJax  {
-  font-size: 85% !important;
-}
-</style>
-```
-
 $$
-\min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{\min}\} \leq X_{o,p} \leq \min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{\max}\} \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
+\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
 $$
-:::
 
 . . .
 
 ::: {.callout-note}
-We need this constraint for **two reasons**:
-
-1. We could also dispatch more people than there are as this would **minimize the objective value. **
-2. We also need to ensure that we can dispatch at **least the minimum allowed inflow** or less if the queue is smaller than the minimum allowed inflow.
+This constraint ensures **non-negative remaining queues**, preventing the solver from dispatching more passengers than available in the queue.
 :::
-
----
 
 ## Metro Inflow Model
 
@@ -648,12 +654,11 @@ We need this constraint for **two reasons**:
 subject to:
 \begin{align*}
 	&  \sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} && \forall e \in \mathcal{E}, t \in \mathcal{T} \\
-	& min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\} \leq X_{o,p} \leq min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\} && \forall o \in \mathcal{O}, p \in \mathcal{P}
+	& c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} && \forall o \in \mathcal{O}, p \in \mathcal{P} \\
+	& \sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 && \forall o \in \mathcal{O}, p \in \mathcal{P}
 \end{align*}
 
 :::
-
----
 
 # [Model Characteristics]{.flow} {.title}
 
@@ -677,15 +682,13 @@ subject to:
 - Are shortest paths a feasible assumption?
 :::
 
----
-
 # [Implementation and Impact]{.flow} {.title}
 
 ## [Metro Inflow Optimization]{.invert-font} {background-image="https://images.unsplash.com/photo-1658490505550-60191ee61ec6?q=80&w=4334&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
 
 . . .
 
-[[Question:]{.question} **Can this be applied?**]{.invert-font}
+[[Question:]{.task} **Can this be applied?**]{.invert-font}
 
 ::: {.footer}
 :::
@@ -700,7 +703,7 @@ subject to:
 
 [Question:]{.question} **Any ideas, how the current model could be improved or how it could be embedded into a heuristic?**
 
-## Heuristic: Step-Wise Optimization
+## Heuristic: Step-Wise
 
 - Solve the model for the time-horizon of a **few periods**
 - Fix the inflow in the **current first period**
@@ -717,6 +720,43 @@ subject to:
 
 ![](images/ao_metro-arcutil.svg){fig-align="center"}
 
+## Key Results
+
+- Model reduces capacity violations from [25,941 to just 4]{.highlight}
+- Maximum arc utilization drops from **316% to 109%**
+- [81% of passengers]{.highlight} accommodated safely
+- Computation time: **~1.4 seconds** per planning period
+
+. . .
+
+::: {.callout-note}
+### Note: Safety vs. Throughput Tradeoff
+The remaining 19% of passengers experience external queuing - this is the price for preventing dangerous overcrowding inside the system.
+:::
+
+## Scalability: Shanghai Metro
+
+- Validated on **302 stations** (11× larger)
+- [99% reduction]{.highlight} in capacity violations
+- Computation: **< 2 minutes** per period
+- Works for routine **peak-hour demand**
+
+. . .
+
+::: {.callout-tip}
+### Tip: Generalizable Approach
+The method scales from event-driven demand (Qatar World Cup) to routine metropolitan operations (Shanghai rush hour).
+:::
+
+##
+
+```{=html}
+<iframe src="images/ao_metro-shanghai_network.html" style="width:100%; height:85vh; border:none;" scrolling="yes"></iframe>
+```
+
+::: {.footer}
+:::
+
 ## Implementation
 
 - **Assumption of known destinations** based is strong
@@ -728,6 +768,22 @@ subject to:
 
 ::: {.callout-note}
 Few dangerous situations, especially at the FIFA Fan Fest, were **handled well** by the authorities.
+:::
+
+## Comparison with Others
+
+| Feature | Other Methods | Our Approach |
+|---------|--------------|--------------|
+| FIFO Enforcement | Rarely | [Yes]{.highlight} |
+| Single Queue | Often separate | [Yes]{.highlight} |
+| Real-Time Capable | Some | [Yes (~1-65s)]{.highlight} |
+| Network Scale | Up to 327 stations | **302+ stations** |
+
+. . .
+
+::: {.callout-note}
+### Note: State-of-the-Art
+First network-level approach combining FIFO enforcement, single-queue modeling, and real-time computational performance.
 :::
 
 ## Wrap Up
@@ -751,8 +807,6 @@ Questions?
 
 ::: footer
 :::
-
----
 
 # [Literature]{.flow} {.title}
 
