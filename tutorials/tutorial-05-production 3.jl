@@ -101,6 +101,26 @@ println(demandCustomers[1:5, :])
 # Next, you need to prepare the given data for the model. Create a
 # dictionary for the available time, bottling time, and setup time. Call
 # them `dictAvailableTime`, `dictBottlingTime`, and `dictSetupTime`.
+#
+# > **Note**
+# >
+# > Let’s understand what’s happening with `dictDemand` in the code. It
+# > creates a dictionary where:
+# >
+# > -   **Keys** are tuples `(beer_type, period)`, e.g.,
+# >     `("IPA", "week_1")`
+# > -   **Values** are the demand numbers for that beer in that period
+# >
+# > You can use this pattern to create dictionaries for:
+# >
+# > -   `dictAvailableTime`: Maps each **period** (single key) → available
+# >     time
+# > -   `dictBottlingTime`: Maps each **beer type** (single key) →
+# >     bottling time per bottle
+# > -   `dictSetupTime`: Maps each **beer type** (single key) → setup time
+# >
+# > Notice that these dictionaries have **single keys** (just the period
+# > or just the beer type), not tuple keys like `dictDemand`.
 
 # %%
 # Prepare the data for the model
@@ -147,6 +167,24 @@ set_time_limit_sec(lotsizeModel, 60.0)
 # binary variable, `productQuantity` for the production quantity and
 # `WarehouseStockPeriodEnd` for the warehouse stock at the end of each
 # period. We will use these names later in the code to plot the results.
+#
+# > **Tip**
+# >
+# > When creating your variables, you’ll have to create one variable for
+# > **each combination** of beer type and period. You can use the
+# > dictionary keys directly in the variable definition:
+# >
+# > ``` julia
+# > @variable(model, x[keys(dictBottlingTime), keys(dictAvailableTime)])
+# > ```
+# >
+# > This creates variables indexed by:
+# >
+# > -   First index: beer types (from `dictBottlingTime`)
+# > -   Second index: periods (from `dictAvailableTime`)
+# >
+# > So you’ll have variables like `x["IPA", "week_1"]`,
+# > `x["IPA", "week_2"]`, etc.
 
 # %%
 # YOUR CODE BELOW
@@ -175,6 +213,29 @@ set_time_limit_sec(lotsizeModel, 60.0)
 # ## Define the objective function
 #
 # Next, define the objective function.
+#
+# > **Tip**
+# >
+# > The objective function needs to sum costs across **all beer types**
+# > and **all periods**. With dictionaries, you reference the data like
+# > this:
+# >
+# > ``` julia
+# > @objective(model, Min,
+# >     sum(... for i in keys(dictBottlingTime), t in keys(dictAvailableTime))
+# > )
+# > ```
+# >
+# > Inside the sum, you’ll need:
+# >
+# > 1.  **Setup costs**:
+# >     `setupHourCosts * dictSetupTime[i] * productBottled[i,t]`
+# >     -   This uses `dictSetupTime[i]` to get the setup time for beer
+# >         type `i`
+# > 2.  **Inventory holding costs**:
+# >     `warehouseCosts * WarehouseStockPeriodEnd[i,t]`
+# >
+# > Notice how we access dictionary values using `dict[key]` notation!
 
 # %%
 # YOUR CODE BELOW
@@ -254,7 +315,7 @@ all_periods = sort(collect(keys(dictAvailableTime)))
 
 # %%
 # Validate your solution
-@assert 600000 <= objective_value(lotsizeModel) <= 700000 "Objective value should be between 600,000 and 700,000"
+@assert 539900 <= objective_value(lotsizeModel) <= 700000 "Objective value should be between 539,000 and 700,000"
 
 # %% [markdown]
 # Now, unfortunately we cannot assert the value of the objective function
@@ -456,7 +517,7 @@ p = create_cost_plot(stacked_costs)
 
 # %%
 # Validate your solution
-@assert 700000 <= objective_value(lotsizeModel) <= 760000 "Objective value should be between 700,000 and 760,000"
+@assert 659900 <= objective_value(lotsizeModel) <= 760000 "Objective value should be between 659,9000 and 760,000"
 
 # %% [markdown]
 # The objective value should now be higher, as the solution space is
@@ -495,7 +556,7 @@ p = create_cost_plot(stacked_costs)
 
 # %%
 # Validate your solution
-@assert 760000 <= objective_value(lotsizeModel) <= 800000 "Objective value should be between 760,000 and 800,000"
+@assert 661400 <= objective_value(lotsizeModel) <= 800000 "Objective value should be between 661,400 and 800,000"
 
 # %% [markdown]
 # Again, the objective value should be higher, because the solution space

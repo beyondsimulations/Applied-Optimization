@@ -601,6 +601,7 @@ window.Quarto = {
   <li><a href="#bidirectional-flow" id="toc-bidirectional-flow" class="nav-link" data-scroll-target="#bidirectional-flow">3. Bidirectional Flow</a></li>
   <li><a href="#capacity-analysis" id="toc-capacity-analysis" class="nav-link" data-scroll-target="#capacity-analysis">4. Capacity Analysis</a></li>
   <li><a href="#computing-the-set-mathcalr_et" id="toc-computing-the-set-mathcalr_et" class="nav-link" data-scroll-target="#computing-the-set-mathcalr_et">5. Computing the Set <span class="math inline">\(\mathcal{R}_{e,t}\)</span></a></li>
+  <li><a href="#bonus-metro-flow-simulation-0.5-points" id="toc-bonus-metro-flow-simulation-0.5-points" class="nav-link" data-scroll-target="#bonus-metro-flow-simulation-0.5-points">6. Bonus: Metro Flow Simulation (0.5 points)</a></li>
   <li><a href="#solutions-1" id="toc-solutions-1" class="nav-link" data-scroll-target="#solutions-1">Solutions</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/tutorials/tutorial-12-rail.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="tutorial-12-rail.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="tutorial-12-rail.ipynb" download="tutorial-12-rail.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div><div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="tutorial-12-rail.jl"><i class="bi bi-hand-thumbs-up"></i>Julia</a></li></ul></div></nav>
@@ -641,7 +642,6 @@ window.Quarto = {
 <section id="the-challenge" class="level1">
 <h1>The Challenge</h1>
 <p>Your task is to <strong>minimize the queues</strong> without exceeding the available transport capacity of <strong>max. 100 passengers per minute of each arc</strong>. A safety buffer per arc is not needed. Each station layout is excellent, with sufficient stairs and escalators. Thus, the station itself is fully capable of handling any inflow that may result from the optimized restricted inflow. Nonetheless, queues are still necessary as the arcs cannot handle each input.</p>
-<hr>
 </section>
 <section id="flow-analysis" class="level1">
 <h1>1. Flow Analysis</h1>
@@ -660,14 +660,13 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="cd6f45ed" class="cell" data-execution_count="3">
+<div id="42dc0d76" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">YOUR ANSWER BELOW</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<hr>
 </section>
 <section id="inflow-control" class="level1">
 <h1>2. Inflow Control</h1>
@@ -700,13 +699,12 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="e05b002c" class="cell" data-execution_count="5">
+<div id="bf0f2e2b" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>metro_model <span class="op">=</span> <span class="fu">Model</span>()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<hr>
 </section>
 <section id="bidirectional-flow" class="level1">
 <h1>3. Bidirectional Flow</h1>
@@ -718,25 +716,23 @@ window.Quarto = {
 </div>
 <p>The metro was improved and there is now the possibility to travel in both directions. How would this change the set <span class="math inline">\(\mathcal{R}_{(MD,MA),7}\)</span> from 1.?</p>
 <p>Write out the new set <span class="math inline">\(\mathcal{R}_{(D,A),7}\)</span> manually and shortly explain your answer.</p>
-<div id="a6ff3a31" class="cell" data-execution_count="7">
+<div id="635d5dc7" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWER BELOW</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<hr>
 </section>
 <section id="capacity-analysis" class="level1">
 <h1>4. Capacity Analysis</h1>
 <p>Although the system is two-directional now, the <strong>overall number of trains of the metro provider has not changed</strong>. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?</p>
 <p>Please explain your answer in a few sentences.</p>
-<div id="0e8c0e20" class="cell" data-execution_count="9">
+<div id="f3b71e2b" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWER BELOW</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<hr>
 </section>
 <section id="computing-the-set-mathcalr_et" class="level1">
 <h1>5. Computing the Set <span class="math inline">\(\mathcal{R}_{e,t}\)</span></h1>
@@ -751,18 +747,81 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="5df1ba58" class="cell" data-execution_count="12">
+<div id="1ccc8d7e" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>If you encounter any difficulties ad cannot solve the problem, please document your issues here:</p>
-<div id="aa42991c" class="cell" data-execution_count="13">
+<div id="f5dadc89" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<hr>
+</section>
+<section id="bonus-metro-flow-simulation-0.5-points" class="level1">
+<h1>6. Bonus: Metro Flow Simulation (0.5 points)</h1>
+<p>Now, you can earn up to 0.5 additional bonus points by building a simulation of passenger flows through a metro network. The network consists of two lines with a shared transfer station. Passengers enter at stations A, B, C, D and travel to various destinations.</p>
+<p>First, study the network data below to understand the structure and then implement a minute-by-minute simulation that tracks the queues at entry stations, passenger flows through arcs and arc utilization over time. Then, visualize the results with some plots and try to implement inflow regulation to achieve a feasible solution (no arc exceeds capacity).</p>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Good luck! This is really a tough task.</p>
+</div>
+</div>
+</div>
+<div id="58659fc3" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stations and arcs</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>stations <span class="op">=</span> [<span class="op">:</span>A, <span class="op">:</span>B, <span class="op">:</span>C, <span class="op">:</span>D, <span class="op">:</span>T, <span class="op">:</span>E, <span class="op">:</span>F]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>entry_stations <span class="op">=</span> [<span class="op">:</span>A, <span class="op">:</span>B, <span class="op">:</span>C, <span class="op">:</span>D]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>arcs <span class="op">=</span> [(<span class="op">:</span>A, <span class="op">:</span>B), (<span class="op">:</span>B, <span class="op">:</span>T), (<span class="op">:</span>T, <span class="op">:</span>E), (<span class="op">:</span>C, <span class="op">:</span>D), (<span class="op">:</span>D, <span class="op">:</span>T), (<span class="op">:</span>T, <span class="op">:</span>F)]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Network parameters</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>travel_time <span class="op">=</span> <span class="fl">1</span>  <span class="co"># minutes per arc</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>arc_capacity <span class="op">=</span> <span class="fl">90</span>  <span class="co"># passengers per minute</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>n_minutes <span class="op">=</span> <span class="fl">20</span>  <span class="co"># total simulation time</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Inflow regulation: single constant rate per station (passengers/minute)</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Set to 1000 (no regulation) initially - experiment to find feasible values</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>inflow_rates <span class="op">=</span> <span class="fu">Dict</span>(<span class="op">:</span>A <span class="op">=&gt;</span> <span class="fl">1000</span>, <span class="op">:</span>B <span class="op">=&gt;</span> <span class="fl">1000</span>, <span class="op">:</span>C <span class="op">=&gt;</span> <span class="fl">1000</span>, <span class="op">:</span>D <span class="op">=&gt;</span> <span class="fl">1000</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Paths for each OD pair</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> <span class="fu">Dict</span>(</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    (<span class="op">:</span>A, <span class="op">:</span>B) <span class="op">=&gt;</span> [(<span class="op">:</span>A, <span class="op">:</span>B)],</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    (<span class="op">:</span>A, <span class="op">:</span>E) <span class="op">=&gt;</span> [(<span class="op">:</span>A, <span class="op">:</span>B), (<span class="op">:</span>B, <span class="op">:</span>T), (<span class="op">:</span>T, <span class="op">:</span>E)],</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    (<span class="op">:</span>A, <span class="op">:</span>F) <span class="op">=&gt;</span> [(<span class="op">:</span>A, <span class="op">:</span>B), (<span class="op">:</span>B, <span class="op">:</span>T), (<span class="op">:</span>T, <span class="op">:</span>F)],</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    (<span class="op">:</span>B, <span class="op">:</span>E) <span class="op">=&gt;</span> [(<span class="op">:</span>B, <span class="op">:</span>T), (<span class="op">:</span>T, <span class="op">:</span>E)],</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    (<span class="op">:</span>B, <span class="op">:</span>F) <span class="op">=&gt;</span> [(<span class="op">:</span>B, <span class="op">:</span>T), (<span class="op">:</span>T, <span class="op">:</span>F)],</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    (<span class="op">:</span>C, <span class="op">:</span>D) <span class="op">=&gt;</span> [(<span class="op">:</span>C, <span class="op">:</span>D)],</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    (<span class="op">:</span>C, <span class="op">:</span>F) <span class="op">=&gt;</span> [(<span class="op">:</span>C, <span class="op">:</span>D), (<span class="op">:</span>D, <span class="op">:</span>T), (<span class="op">:</span>T, <span class="op">:</span>F)],</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    (<span class="op">:</span>C, <span class="op">:</span>E) <span class="op">=&gt;</span> [(<span class="op">:</span>C, <span class="op">:</span>D), (<span class="op">:</span>D, <span class="op">:</span>T), (<span class="op">:</span>T, <span class="op">:</span>E)],</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    (<span class="op">:</span>D, <span class="op">:</span>F) <span class="op">=&gt;</span> [(<span class="op">:</span>D, <span class="op">:</span>T), (<span class="op">:</span>T, <span class="op">:</span>F)],</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    (<span class="op">:</span>D, <span class="op">:</span>E) <span class="op">=&gt;</span> [(<span class="op">:</span>D, <span class="op">:</span>T), (<span class="op">:</span>T, <span class="op">:</span>E)]</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Demand data: demand[period][(origin, destination)] = passengers</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>demand <span class="op">=</span> <span class="fu">Dict</span>(</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>((<span class="op">:</span>A,<span class="op">:</span>B)<span class="op">=&gt;</span><span class="fl">7</span>,  (<span class="op">:</span>A,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">12</span>, (<span class="op">:</span>A,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">5</span>,  (<span class="op">:</span>B,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>B,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">10</span>,</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>              (<span class="op">:</span>C,<span class="op">:</span>D)<span class="op">=&gt;</span><span class="fl">5</span>,  (<span class="op">:</span>C,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">10</span>, (<span class="op">:</span>C,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">8</span>,  (<span class="op">:</span>D,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>D,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">12</span>),</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="fl">2</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>((<span class="op">:</span>A,<span class="op">:</span>B)<span class="op">=&gt;</span><span class="fl">8</span>,  (<span class="op">:</span>A,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>A,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">10</span>, (<span class="op">:</span>B,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">18</span>, (<span class="op">:</span>B,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">15</span>,</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>              (<span class="op">:</span>C,<span class="op">:</span>D)<span class="op">=&gt;</span><span class="fl">8</span>,  (<span class="op">:</span>C,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>C,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">10</span>, (<span class="op">:</span>D,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">18</span>, (<span class="op">:</span>D,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">15</span>),</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="fl">3</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>((<span class="op">:</span>A,<span class="op">:</span>B)<span class="op">=&gt;</span><span class="fl">12</span>, (<span class="op">:</span>A,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">22</span>, (<span class="op">:</span>A,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">18</span>, (<span class="op">:</span>B,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">28</span>, (<span class="op">:</span>B,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">22</span>,</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>              (<span class="op">:</span>C,<span class="op">:</span>D)<span class="op">=&gt;</span><span class="fl">12</span>, (<span class="op">:</span>C,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">22</span>, (<span class="op">:</span>C,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>D,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">28</span>, (<span class="op">:</span>D,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">18</span>),</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    <span class="fl">4</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>((<span class="op">:</span>A,<span class="op">:</span>B)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>A,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">28</span>, (<span class="op">:</span>A,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">22</span>, (<span class="op">:</span>B,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">32</span>, (<span class="op">:</span>B,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">28</span>,</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>              (<span class="op">:</span>C,<span class="op">:</span>D)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>C,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">28</span>, (<span class="op">:</span>C,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">27</span>, (<span class="op">:</span>D,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">32</span>, (<span class="op">:</span>D,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">22</span>),</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    <span class="fl">5</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>((<span class="op">:</span>A,<span class="op">:</span>B)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>A,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">28</span>, (<span class="op">:</span>A,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">22</span>, (<span class="op">:</span>B,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">32</span>, (<span class="op">:</span>B,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">28</span>,</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>              (<span class="op">:</span>C,<span class="op">:</span>D)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>C,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">28</span>, (<span class="op">:</span>C,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">18</span>, (<span class="op">:</span>D,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">32</span>, (<span class="op">:</span>D,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">22</span>),</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    <span class="fl">6</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>((<span class="op">:</span>A,<span class="op">:</span>B)<span class="op">=&gt;</span><span class="fl">12</span>, (<span class="op">:</span>A,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">22</span>, (<span class="op">:</span>A,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">18</span>, (<span class="op">:</span>B,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">22</span>, (<span class="op">:</span>B,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">18</span>,</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>              (<span class="op">:</span>C,<span class="op">:</span>D)<span class="op">=&gt;</span><span class="fl">12</span>, (<span class="op">:</span>C,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">22</span>, (<span class="op">:</span>C,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>D,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">22</span>, (<span class="op">:</span>D,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">21</span>),</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>    <span class="fl">7</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>((<span class="op">:</span>A,<span class="op">:</span>B)<span class="op">=&gt;</span><span class="fl">8</span>,  (<span class="op">:</span>A,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>A,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">10</span>, (<span class="op">:</span>B,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">18</span>, (<span class="op">:</span>B,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">15</span>,</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>              (<span class="op">:</span>C,<span class="op">:</span>D)<span class="op">=&gt;</span><span class="fl">8</span>,  (<span class="op">:</span>C,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>C,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">10</span>, (<span class="op">:</span>D,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">18</span>, (<span class="op">:</span>D,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">15</span>),</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    <span class="fl">8</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>((<span class="op">:</span>A,<span class="op">:</span>B)<span class="op">=&gt;</span><span class="fl">5</span>,  (<span class="op">:</span>A,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">10</span>, (<span class="op">:</span>A,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">5</span>,  (<span class="op">:</span>B,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>B,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">10</span>,</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>              (<span class="op">:</span>C,<span class="op">:</span>D)<span class="op">=&gt;</span><span class="fl">5</span>,  (<span class="op">:</span>C,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">10</span>, (<span class="op">:</span>C,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">5</span>,  (<span class="op">:</span>D,<span class="op">:</span>F)<span class="op">=&gt;</span><span class="fl">15</span>, (<span class="op">:</span>D,<span class="op">:</span>E)<span class="op">=&gt;</span><span class="fl">10</span>)</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="solutions-1" class="level1">
 <h1>Solutions</h1>

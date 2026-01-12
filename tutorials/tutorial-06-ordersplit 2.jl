@@ -200,11 +200,16 @@ T = [
 # via Pkg.add(“Juniper”) and Pkg.add(“Ipopt”) and Pkg.add(“HiGHS”).
 # Juniper is a solver for nonlinear problems, that can be used in
 # combination with Ipopt and HiGHS to solve mixed-integer quadratic
-# problems. If you want to use SCIP, you can also do this by adding JuMP
-# and SCIP and then change the solver in the model definition to
-# `warehouse_model = Model(SCIP.Optimizer())`. Note, that this does not
-# work automatically in Windows, as you will have to install the SCIP
-# binaries manually. On Mac and Linux, it should work out of the box.
+# problems.
+#
+# > **Note**
+# >
+# > If you want to use the solver SCIP, you can also do this by adding
+# > JuMP and SCIP and then change the solver in the model definition to
+# > `warehouse_model = Model(SCIP.Optimizer())`. Note, that this does not
+# > work automatically in Windows, as you will have to install the SCIP
+# > binaries manually. Hence, I recommend to stick with Juniper. On Mac
+# > and Linux, SCIP should work out of the box.
 #
 # First, we start by defining the model.
 
@@ -227,7 +232,7 @@ warehouse_model = Model(
 # ## Compute the coappearance matrix
 #
 # Next, compute the coappearance matrix based on the transactional data
-# provided in `T`.
+# provided in `T` and call it `Q`.
 
 # %%
 # YOUR CODE BELOW

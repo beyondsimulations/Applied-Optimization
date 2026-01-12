@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.8.24">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
-  <title>Applied Optimization with Julia – Lecture XII - Passenger Flow Control in Urban Rail</title>
+  <title>Applied Optimization with Julia – Lecture XII - Metro Passenger Flow Control</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -127,7 +127,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Lecture XII - Passenger Flow Control in Urban Rail</h1>
+  <h1 class="title">Lecture XII - Metro Passenger Flow Control</h1>
   <p class="subtitle">Applied Optimization with Julia</p>
 
 <div class="quarto-title-authors">
@@ -141,6 +141,11 @@ Dr.&nbsp;Tobias Vlćek
     </div>
 </div>
 
+</section>
+<section id="quick-question" class="slide level2">
+<h2>Quick Question</h2>
+<iframe data-tally-src="https://tally.so/embed/Ekl5bL?alignLeft=1&amp;hideTitle=1&amp;transparentBackground=1&amp;dynamicHeight=1" loading="lazy" width="100%" height="323" frameborder="0" marginheight="0" marginwidth="0" title="Last Week's"></iframe>
+<script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
 </section>
 <section>
 <section id="introduction" class="title-slide slide level1 title center">
@@ -194,7 +199,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could be a potential bottleneck?</strong></p>
 <div class="fragment">
 <ul>
-<li>Red Line has twice the capacity of the Green and Gold Line</li>
+<li>Red Line has twice the capacity of Green and Gold Line</li>
 <li>People use the metro to get to the event venues</li>
 </ul>
 </div>
@@ -245,7 +250,7 @@ Dr.&nbsp;Tobias Vlćek
 <div class="fragment">
 <ul>
 <li>Often unknown <strong>how many people</strong> exactly will participate</li>
-<li>Gathering data is <span class="highlight">extremely importand and difficult</span></li>
+<li>Gathering data is <span class="highlight">extremely important and difficult</span></li>
 <li>Crowd behavior can be <span class="highlight">unpredictable and dynamic</span></li>
 <li>Weather conditions may affect <strong>transportation preferences</strong></li>
 <li>Cultural factors influence <strong>crowd movement patterns</strong></li>
@@ -263,9 +268,6 @@ Dr.&nbsp;Tobias Vlćek
 <div class="footer">
 
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="problem-structure" class="title-slide slide level1 title center">
@@ -401,13 +403,10 @@ Dr.&nbsp;Tobias Vlćek
 
 <img data-src="images/ao_metro-inflow_impact.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="fragment">
 <ul>
-<li>Movement patterns have different origin-destination pairs</li>
+<li>Patterns have different origin-destination pairs</li>
 <li>Regulating the inflow does not affect the destination</li>
 </ul>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="model-formulation" class="title-slide slide level1 title center">
@@ -600,9 +599,6 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="variables-and-objective" class="title-slide slide level1 title center">
@@ -710,9 +706,6 @@ Dr.&nbsp;Tobias Vlćek
 \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 \]</span></p>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="constraints" class="title-slide slide level1 title center">
@@ -876,6 +869,63 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </section>
+<section id="bound-the-inflow-rate" class="slide level2">
+<h2>Bound the Inflow Rate?</h2>
+<div class="callout callout-important callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The goal of this constraint is to:</strong></p>
+</div>
+<div class="callout-content">
+<p>Ensure that the inflow rate at each station stays within operational bounds.</p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We need the following variables and parameters:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(c_{o}^{min}\)</span> - Min. station entry rate <span class="math inline">\(o\)</span> per minute</li>
+<li><span class="math inline">\(c_{o}^{max}\)</span> - Max. station entry rate <span class="math inline">\(o\)</span> per minute</li>
+<li><span class="math inline">\(\alpha\)</span> - Maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="bound-the-inflow-rate-1" class="slide level2">
+<h2>Bound the Inflow Rate</h2>
+<p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
+<div class="fragment">
+<p><span class="math display">\[
+c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
+\]</span></p>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>This constraint bounds the inflow rate at each station between the <strong>minimum and maximum</strong> allowed entry rates, ensuring compliance with <strong>operational capacity limits</strong>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
 <section id="dispatch-only-available-people" class="slide level2">
 <h2>Dispatch Only Available People?</h2>
 <div class="callout callout-important callout-titled callout-style-simple">
@@ -887,7 +937,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>The goal of this constraint is to:</strong></p>
 </div>
 <div class="callout-content">
-<p>Ensure that we do not dispatch more people than are queued and less than the minimum allowed inflow, preventing over- and under-dispatching.</p>
+<p>Ensure that we do not dispatch more people than are queued.</p>
 </div>
 </div>
 </div>
@@ -915,16 +965,9 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Dispatch Only Available People</h2>
 <p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
 <div class="fragment">
-<div class="temp-math-size">
-<style>
-.temp-math-size .math.display .MathJax  {
-  font-size: 85% !important;
-}
-</style>
 <p><span class="math display">\[
-\min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{\min}\} \leq X_{o,p} \leq \min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{\max}\} \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
+\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
 \]</span></p>
-</div>
 </div>
 <div class="fragment">
 <div class="callout callout-note callout-style-simple">
@@ -933,11 +976,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>We need this constraint for <strong>two reasons</strong>:</p>
-<ol type="1">
-<li>We could also dispatch more people than there are as this would <strong>minimize the objective value. </strong></li>
-<li>We also need to ensure that we can dispatch at <strong>least the minimum allowed inflow</strong> or less if the queue is smaller than the minimum allowed inflow.</li>
-</ol>
+<p>This constraint ensures <strong>non-negative remaining queues</strong>, preventing the solver from dispatching more passengers than available in the queue.</p>
 </div>
 </div>
 </div>
@@ -955,12 +994,10 @@ Dr.&nbsp;Tobias Vlćek
     \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 \end{align*}\]</span> subject to: <span class="math display">\[\begin{align*}
     &amp;  \sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} &amp;&amp; \forall e \in \mathcal{E}, t \in \mathcal{T} \\
-    &amp; min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\} \leq X_{o,p} \leq min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\} &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P}
+    &amp; c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P} \\
+    &amp; \sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P}
 \end{align*}\]</span></p>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="model-characteristics" class="title-slide slide level1 title center">
@@ -984,9 +1021,6 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment">Have we thought in detail about queues?</li>
 <li class="fragment">Are shortest paths a feasible assumption?</li>
 </ul>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="implementation-and-impact" class="title-slide slide level1 title center">
@@ -996,7 +1030,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="metro-inflow-optimization" class="slide level2" data-background-image="https://images.unsplash.com/photo-1658490505550-60191ee61ec6?q=80&amp;w=4334&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
 <h2><span class="invert-font">Metro Inflow Optimization</span></h2>
 <div class="fragment">
-<p><span class="invert-font"><span class="question">Question:</span> <strong>Can this be applied?</strong></span></p>
+<p><span class="invert-font"><span class="task">Question:</span> <strong>Can this be applied?</strong></span></p>
 <div class="footer">
 
 </div>
@@ -1013,8 +1047,8 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>Any ideas, how the current model could be improved or how it could be embedded into a heuristic?</strong></p>
 </div>
 </section>
-<section id="heuristic-step-wise-optimization" class="slide level2">
-<h2>Heuristic: Step-Wise Optimization</h2>
+<section id="heuristic-step-wise" class="slide level2">
+<h2>Heuristic: Step-Wise</h2>
 <ul>
 <li>Solve the model for the time-horizon of a <strong>few periods</strong></li>
 <li>Fix the inflow in the <strong>current first period</strong></li>
@@ -1032,6 +1066,61 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Utilization Analysis</h2>
 
 <img data-src="images/ao_metro-arcutil.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="key-results" class="slide level2">
+<h2>Key Results</h2>
+<ul>
+<li>Model reduces capacity violations from <span class="highlight">25,941 to just 4</span></li>
+<li>Maximum arc utilization drops from <strong>316% to 109%</strong></li>
+<li><span class="highlight">81% of passengers</span> accommodated safely</li>
+<li>Computation time: <strong>~1.4 seconds</strong> per planning period</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note: Safety vs.&nbsp;Throughput Tradeoff</strong></p>
+</div>
+<div class="callout-content">
+<p>The remaining 19% of passengers experience external queuing - this is the price for preventing dangerous overcrowding inside the system.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="scalability-shanghai-metro" class="slide level2">
+<h2>Scalability: Shanghai Metro</h2>
+<ul>
+<li>Validated on <strong>302 stations</strong> (11× larger)</li>
+<li><span class="highlight">99% reduction</span> in capacity violations</li>
+<li>Computation: <strong>&lt; 2 minutes</strong> per period</li>
+<li>Works for routine <strong>peak-hour demand</strong></li>
+</ul>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip: Generalizable Approach</strong></p>
+</div>
+<div class="callout-content">
+<p>The method scales from event-driven demand (Qatar World Cup) to routine metropolitan operations (Shanghai rush hour).</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="section-4" class="slide level2">
+<h2></h2>
+<iframe src="images/ao_metro-shanghai_network.html" style="width:100%; height:85vh; border:none;" scrolling="yes"></iframe>
+<div class="footer">
+
+</div>
+</section>
 <section id="implementation" class="slide level2">
 <h2>Implementation</h2>
 <ul>
@@ -1048,6 +1137,55 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="callout-content">
 <p>Few dangerous situations, especially at the FIFA Fan Fest, were <strong>handled well</strong> by the authorities.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="comparison-with-others" class="slide level2">
+<h2>Comparison with Others</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Other Methods</th>
+<th>Our Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FIFO Enforcement</td>
+<td>Rarely</td>
+<td><span class="highlight">Yes</span></td>
+</tr>
+<tr class="even">
+<td>Single Queue</td>
+<td>Often separate</td>
+<td><span class="highlight">Yes</span></td>
+</tr>
+<tr class="odd">
+<td>Real-Time Capable</td>
+<td>Some</td>
+<td><span class="highlight">Yes (~1-65s)</span></td>
+</tr>
+<tr class="even">
+<td>Network Scale</td>
+<td>Up to 327 stations</td>
+<td><strong>302+ stations</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note: State-of-the-Art</strong></p>
+</div>
+<div class="callout-content">
+<p>First network-level approach combining FIFO enforcement, single-queue modeling, and real-time computational performance.</p>
 </div>
 </div>
 </div>
@@ -1076,7 +1214,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </section>
-<section id="section-4" class="slide level2 loud-slide">
+<section id="section-5" class="slide level2 loud-slide">
 <h2></h2>
 <div class="r-fit-text">
 <p>Questions?</p>
@@ -1084,9 +1222,6 @@ Dr.&nbsp;Tobias Vlćek
 <div class="footer">
 
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="literature" class="title-slide slide level1 title center">
@@ -1102,7 +1237,7 @@ Dr.&nbsp;Tobias Vlćek
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>Lecture XII - Passenger Flow Control in Urban Rail | Dr.&nbsp;Tobias Vlćek | <a href="../lectures/lecture-12-rail.html">Home</a></p>
+<p>Lecture XII - Metro Passenger Flow Control | Dr.&nbsp;Tobias Vlćek | <a href="../lectures/lecture-12-rail.html">Home</a></p>
 </div>
 </div></div>
 

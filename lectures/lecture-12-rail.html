@@ -8,7 +8,7 @@
 
 <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
 
-<title>Lecture XII - Passenger Flow Control in Urban Rail – Applied Optimization with Julia</title>
+<title>Lecture XII - Metro Passenger Flow Control – Applied Optimization with Julia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -559,7 +559,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="flow">Introduction</span></a>
+  <li><a href="#quick-question" id="toc-quick-question" class="nav-link active" data-scroll-target="#quick-question">Quick Question</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="flow">Introduction</span></a>
   <ul class="collapse">
   <li><a href="#fifa-world-cup-2022-in-qatar" id="toc-fifa-world-cup-2022-in-qatar" class="nav-link" data-scroll-target="#fifa-world-cup-2022-in-qatar"><span class="invert-font">FIFA World Cup 2022 in Qatar</span></a></li>
   <li><a href="#public-transport" id="toc-public-transport" class="nav-link" data-scroll-target="#public-transport">Public transport</a></li>
@@ -614,6 +615,8 @@ window.Quarto = {
   <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3"></a></li>
   <li><a href="#ensure-capacity-utilization" id="toc-ensure-capacity-utilization" class="nav-link" data-scroll-target="#ensure-capacity-utilization">Ensure Capacity Utilization?</a></li>
   <li><a href="#ensure-capacity-utilization-1" id="toc-ensure-capacity-utilization-1" class="nav-link" data-scroll-target="#ensure-capacity-utilization-1">Ensure Capacity Utilization</a></li>
+  <li><a href="#bound-the-inflow-rate" id="toc-bound-the-inflow-rate" class="nav-link" data-scroll-target="#bound-the-inflow-rate">Bound the Inflow Rate?</a></li>
+  <li><a href="#bound-the-inflow-rate-1" id="toc-bound-the-inflow-rate-1" class="nav-link" data-scroll-target="#bound-the-inflow-rate-1">Bound the Inflow Rate</a></li>
   <li><a href="#dispatch-only-available-people" id="toc-dispatch-only-available-people" class="nav-link" data-scroll-target="#dispatch-only-available-people">Dispatch Only Available People?</a></li>
   <li><a href="#dispatch-only-available-people-1" id="toc-dispatch-only-available-people-1" class="nav-link" data-scroll-target="#dispatch-only-available-people-1">Dispatch Only Available People</a></li>
   <li><a href="#metro-inflow-model" id="toc-metro-inflow-model" class="nav-link" data-scroll-target="#metro-inflow-model">Metro Inflow Model</a></li>
@@ -627,12 +630,16 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#metro-inflow-optimization" id="toc-metro-inflow-optimization" class="nav-link" data-scroll-target="#metro-inflow-optimization"><span class="invert-font">Metro Inflow Optimization</span></a></li>
   <li><a href="#metro-inflow-problem" id="toc-metro-inflow-problem" class="nav-link" data-scroll-target="#metro-inflow-problem">Metro Inflow Problem</a></li>
-  <li><a href="#heuristic-step-wise-optimization" id="toc-heuristic-step-wise-optimization" class="nav-link" data-scroll-target="#heuristic-step-wise-optimization">Heuristic: Step-Wise Optimization</a></li>
+  <li><a href="#heuristic-step-wise" id="toc-heuristic-step-wise" class="nav-link" data-scroll-target="#heuristic-step-wise">Heuristic: Step-Wise</a></li>
   <li><a href="#transport-demand" id="toc-transport-demand" class="nav-link" data-scroll-target="#transport-demand">Transport Demand</a></li>
   <li><a href="#utilization-analysis" id="toc-utilization-analysis" class="nav-link" data-scroll-target="#utilization-analysis">Utilization Analysis</a></li>
-  <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a></li>
-  <li><a href="#wrap-up" id="toc-wrap-up" class="nav-link" data-scroll-target="#wrap-up">Wrap Up</a></li>
+  <li><a href="#key-results" id="toc-key-results" class="nav-link" data-scroll-target="#key-results">Key Results</a></li>
+  <li><a href="#scalability-shanghai-metro" id="toc-scalability-shanghai-metro" class="nav-link" data-scroll-target="#scalability-shanghai-metro">Scalability: Shanghai Metro</a></li>
   <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4"></a></li>
+  <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a></li>
+  <li><a href="#comparison-with-others" id="toc-comparison-with-others" class="nav-link" data-scroll-target="#comparison-with-others">Comparison with Others</a></li>
+  <li><a href="#wrap-up" id="toc-wrap-up" class="nav-link" data-scroll-target="#wrap-up">Wrap Up</a></li>
+  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5"></a></li>
   </ul></li>
   <li><a href="#literature" id="toc-literature" class="nav-link" data-scroll-target="#literature"><span class="flow">Literature</span></a>
   <ul class="collapse">
@@ -646,7 +653,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../lectures/lecture-12-rail.html">12 Metro</a></li><li class="breadcrumb-item"><a href="../lectures/lecture-12-rail.html">Lecture</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Lecture XII - Passenger Flow Control in Urban Rail</h1>
+<h1 class="title">Lecture XII - Metro Passenger Flow Control</h1>
 <p class="subtitle lead">Applied Optimization with Julia</p>
 </div>
 
@@ -677,6 +684,11 @@ window.Quarto = {
 </header>
 
 
+<section id="quick-question" class="level2">
+<h2 class="anchored" data-anchor-id="quick-question">Quick Question</h2>
+<iframe data-tally-src="https://tally.so/embed/Ekl5bL?alignLeft=1&amp;hideTitle=1&amp;transparentBackground=1&amp;dynamicHeight=1" loading="lazy" width="100%" height="323" frameborder="0" marginheight="0" marginwidth="0" title="Last Week's"></iframe>
+<script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+</section>
 <section id="introduction" class="level1 title">
 <h1 class="title"><span class="flow">Introduction</span></h1>
 <section id="fifa-world-cup-2022-in-qatar" class="level2" data-background-image="https://images.unsplash.com/photo-1658490505550-60191ee61ec6?q=80&amp;w=4334&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
@@ -729,7 +741,7 @@ window.Quarto = {
 <p><span class="question">Question:</span> <strong>What could be a potential bottleneck?</strong></p>
 <p>. . .</p>
 <ul>
-<li>Red Line has twice the capacity of the Green and Gold Line</li>
+<li>Red Line has twice the capacity of Green and Gold Line</li>
 <li>People use the metro to get to the event venues</li>
 </ul>
 <p>. . .</p>
@@ -778,7 +790,6 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<hr>
 </section>
 <section id="general-issues" class="level2">
 <h2 class="anchored" data-anchor-id="general-issues">General Issues</h2>
@@ -786,7 +797,7 @@ window.Quarto = {
 <p>. . .</p>
 <ul>
 <li>Often unknown <strong>how many people</strong> exactly will participate</li>
-<li>Gathering data is <span class="highlight">extremely importand and difficult</span></li>
+<li>Gathering data is <span class="highlight">extremely important and difficult</span></li>
 <li>Crowd behavior can be <span class="highlight">unpredictable and dynamic</span></li>
 <li>Weather conditions may affect <strong>transportation preferences</strong></li>
 <li>Cultural factors influence <strong>crowd movement patterns</strong></li>
@@ -803,7 +814,6 @@ window.Quarto = {
 <div class="footer">
 
 </div>
-<hr>
 </section>
 </section>
 <section id="problem-structure" class="level1 title">
@@ -937,10 +947,9 @@ window.Quarto = {
 </div>
 <p>. . .</p>
 <ul>
-<li>Movement patterns have different origin-destination pairs</li>
+<li>Patterns have different origin-destination pairs</li>
 <li>Regulating the inflow does not affect the destination</li>
 </ul>
-<hr>
 </section>
 </section>
 <section id="model-formulation" class="level1 title">
@@ -1040,7 +1049,6 @@ window.Quarto = {
 <li><span class="math inline">\(I_p\)</span> is the set of minutes <span class="math inline">\(t\)</span> that belong to period <span class="math inline">\(p\)</span></li>
 <li>Minutes are <strong>not overlapping</strong>, but they are <strong>continuous</strong></li>
 </ul>
-<hr>
 </section>
 <section id="parameters" class="level2">
 <h2 class="anchored" data-anchor-id="parameters">Parameters?</h2>
@@ -1054,7 +1062,6 @@ window.Quarto = {
 <li><span class="math inline">\(c_{o}^{max}\)</span> - Max. station entry rate <span class="math inline">\(o\)</span> per minute with <span class="math inline">\(o \in \mathcal{O}\)</span></li>
 <li><span class="math inline">\(\alpha\)</span> - Maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
 </ul>
-<hr>
 </section>
 <section id="metro-movement" class="level2">
 <h2 class="anchored" data-anchor-id="metro-movement">Metro Movement</h2>
@@ -1130,7 +1137,6 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<hr>
 </section>
 </section>
 <section id="variables-and-objective" class="level1 title">
@@ -1184,7 +1190,6 @@ window.Quarto = {
 <ul>
 <li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
 </ul>
-<hr>
 </section>
 <section id="objective-function" class="level2">
 <h2 class="anchored" data-anchor-id="objective-function">Objective Function?</h2>
@@ -1232,7 +1237,6 @@ window.Quarto = {
 <p><span class="math display">\[
 \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 \]</span></p>
-<hr>
 </section>
 </section>
 <section id="constraints" class="level1 title">
@@ -1262,7 +1266,6 @@ window.Quarto = {
 <div class="footer">
 
 </div>
-<hr>
 </section>
 <section id="central-question" class="level2">
 <h2 class="anchored" data-anchor-id="central-question">Central Question</h2>
@@ -1338,7 +1341,6 @@ window.Quarto = {
 <div class="footer">
 
 </div>
-<hr>
 </section>
 <section id="ensure-capacity-utilization" class="level2">
 <h2 class="anchored" data-anchor-id="ensure-capacity-utilization">Ensure Capacity Utilization?</h2>
@@ -1394,7 +1396,60 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<hr>
+</section>
+<section id="bound-the-inflow-rate" class="level2">
+<h2 class="anchored" data-anchor-id="bound-the-inflow-rate">Bound the Inflow Rate?</h2>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>The goal of this constraint is to:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ensure that the inflow rate at each station stays within operational bounds.</p>
+</div>
+</div>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>We need the following variables and parameters:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(c_{o}^{min}\)</span> - Min. station entry rate <span class="math inline">\(o\)</span> per minute</li>
+<li><span class="math inline">\(c_{o}^{max}\)</span> - Max. station entry rate <span class="math inline">\(o\)</span> per minute</li>
+<li><span class="math inline">\(\alpha\)</span> - Maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="bound-the-inflow-rate-1" class="level2">
+<h2 class="anchored" data-anchor-id="bound-the-inflow-rate-1">Bound the Inflow Rate</h2>
+<p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
+<p>. . .</p>
+<p><span class="math display">\[
+c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
+\]</span></p>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This constraint bounds the inflow rate at each station between the <strong>minimum and maximum</strong> allowed entry rates, ensuring compliance with <strong>operational capacity limits</strong>.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="dispatch-only-available-people" class="level2">
 <h2 class="anchored" data-anchor-id="dispatch-only-available-people">Dispatch Only Available People?</h2>
@@ -1408,7 +1463,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Ensure that we do not dispatch more people than are queued and less than the minimum allowed inflow, preventing over- and under-dispatching.</p>
+<p>Ensure that we do not dispatch more people than are queued.</p>
 </div>
 </div>
 <p>. . .</p>
@@ -1434,16 +1489,9 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="dispatch-only-available-people-1">Dispatch Only Available People</h2>
 <p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
 <p>. . .</p>
-<div class="temp-math-size">
-<style>
-.temp-math-size .math.display .MathJax  {
-  font-size: 85% !important;
-}
-</style>
 <p><span class="math display">\[
-\min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{\min}\} \leq X_{o,p} \leq \min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{\max}\} \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
+\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
 \]</span></p>
-</div>
 <p>. . .</p>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
@@ -1451,15 +1499,10 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>We need this constraint for <strong>two reasons</strong>:</p>
-<ol type="1">
-<li>We could also dispatch more people than there are as this would <strong>minimize the objective value. </strong></li>
-<li>We also need to ensure that we can dispatch at <strong>least the minimum allowed inflow</strong> or less if the queue is smaller than the minimum allowed inflow.</li>
-</ol>
+<p>This constraint ensures <strong>non-negative remaining queues</strong>, preventing the solver from dispatching more passengers than available in the queue.</p>
 </div>
 </div>
 </div>
-<hr>
 </section>
 <section id="metro-inflow-model" class="level2">
 <h2 class="anchored" data-anchor-id="metro-inflow-model">Metro Inflow Model</h2>
@@ -1473,10 +1516,10 @@ window.Quarto = {
     \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 \end{align*}\]</span> subject to: <span class="math display">\[\begin{align*}
     &amp;  \sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} &amp;&amp; \forall e \in \mathcal{E}, t \in \mathcal{T} \\
-    &amp; min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{min}\} \leq X_{o,p} \leq min\{\frac{\sum_{d \in \mathcal{O}} q_{o,d,p}}{m},c_{o}^{max}\} &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P}
+    &amp; c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P} \\
+    &amp; \sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P}
 \end{align*}\]</span></p>
 </div>
-<hr>
 </section>
 </section>
 <section id="model-characteristics" class="level1 title">
@@ -1502,7 +1545,6 @@ window.Quarto = {
 <li>Are shortest paths a feasible assumption?</li>
 </ul>
 </div>
-<hr>
 </section>
 </section>
 <section id="implementation-and-impact" class="level1 title">
@@ -1510,7 +1552,7 @@ window.Quarto = {
 <section id="metro-inflow-optimization" class="level2" data-background-image="https://images.unsplash.com/photo-1658490505550-60191ee61ec6?q=80&amp;w=4334&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
 <h2 data-background-image="https://images.unsplash.com/photo-1658490505550-60191ee61ec6?q=80&amp;w=4334&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center" class="anchored" data-anchor-id="metro-inflow-optimization"><span class="invert-font">Metro Inflow Optimization</span></h2>
 <p>. . .</p>
-<p><span class="invert-font"><span class="question">Question:</span> <strong>Can this be applied?</strong></span></p>
+<p><span class="invert-font"><span class="task">Question:</span> <strong>Can this be applied?</strong></span></p>
 <div class="footer">
 
 </div>
@@ -1525,8 +1567,8 @@ window.Quarto = {
 <p>. . .</p>
 <p><span class="question">Question:</span> <strong>Any ideas, how the current model could be improved or how it could be embedded into a heuristic?</strong></p>
 </section>
-<section id="heuristic-step-wise-optimization" class="level2">
-<h2 class="anchored" data-anchor-id="heuristic-step-wise-optimization">Heuristic: Step-Wise Optimization</h2>
+<section id="heuristic-step-wise" class="level2">
+<h2 class="anchored" data-anchor-id="heuristic-step-wise">Heuristic: Step-Wise</h2>
 <ul>
 <li>Solve the model for the time-horizon of a <strong>few periods</strong></li>
 <li>Fix the inflow in the <strong>current first period</strong></li>
@@ -1552,6 +1594,59 @@ window.Quarto = {
 </figure>
 </div>
 </section>
+<section id="key-results" class="level2">
+<h2 class="anchored" data-anchor-id="key-results">Key Results</h2>
+<ul>
+<li>Model reduces capacity violations from <span class="highlight">25,941 to just 4</span></li>
+<li>Maximum arc utilization drops from <strong>316% to 109%</strong></li>
+<li><span class="highlight">81% of passengers</span> accommodated safely</li>
+<li>Computation time: <strong>~1.4 seconds</strong> per planning period</li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Note: Safety vs.&nbsp;Throughput Tradeoff
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The remaining 19% of passengers experience external queuing - this is the price for preventing dangerous overcrowding inside the system.</p>
+</div>
+</div>
+</section>
+<section id="scalability-shanghai-metro" class="level2">
+<h2 class="anchored" data-anchor-id="scalability-shanghai-metro">Scalability: Shanghai Metro</h2>
+<ul>
+<li>Validated on <strong>302 stations</strong> (11× larger)</li>
+<li><span class="highlight">99% reduction</span> in capacity violations</li>
+<li>Computation: <strong>&lt; 2 minutes</strong> per period</li>
+<li>Works for routine <strong>peak-hour demand</strong></li>
+</ul>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Tip: Generalizable Approach
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The method scales from event-driven demand (Qatar World Cup) to routine metropolitan operations (Shanghai rush hour).</p>
+</div>
+</div>
+</section>
+<section id="section-4" class="level2">
+<h2 class="anchored" data-anchor-id="section-4"></h2>
+<iframe src="images/ao_metro-shanghai_network.html" style="width:100%; height:85vh; border:none;" scrolling="yes"></iframe>
+<div class="footer">
+
+</div>
+</section>
 <section id="implementation" class="level2">
 <h2 class="anchored" data-anchor-id="implementation">Implementation</h2>
 <ul>
@@ -1569,6 +1664,54 @@ window.Quarto = {
 <div class="callout-body-container">
 <p>Few dangerous situations, especially at the FIFA Fan Fest, were <strong>handled well</strong> by the authorities.</p>
 </div>
+</div>
+</div>
+</section>
+<section id="comparison-with-others" class="level2">
+<h2 class="anchored" data-anchor-id="comparison-with-others">Comparison with Others</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Other Methods</th>
+<th>Our Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FIFO Enforcement</td>
+<td>Rarely</td>
+<td><span class="highlight">Yes</span></td>
+</tr>
+<tr class="even">
+<td>Single Queue</td>
+<td>Often separate</td>
+<td><span class="highlight">Yes</span></td>
+</tr>
+<tr class="odd">
+<td>Real-Time Capable</td>
+<td>Some</td>
+<td><span class="highlight">Yes (~1-65s)</span></td>
+</tr>
+<tr class="even">
+<td>Network Scale</td>
+<td>Up to 327 stations</td>
+<td><strong>302+ stations</strong></td>
+</tr>
+</tbody>
+</table>
+<p>. . .</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Note: State-of-the-Art
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>First network-level approach combining FIFO enforcement, single-queue modeling, and real-time computational performance.</p>
 </div>
 </div>
 </section>
@@ -1594,15 +1737,14 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="section-4" class="level2 loud-slide">
-<h2 class="loud-slide anchored" data-anchor-id="section-4"></h2>
+<section id="section-5" class="level2 loud-slide">
+<h2 class="loud-slide anchored" data-anchor-id="section-5"></h2>
 <div class="r-fit-text">
 <p>Questions?</p>
 </div>
 <div class="footer">
 
 </div>
-<hr>
 </section>
 </section>
 <section id="literature" class="level1 title">

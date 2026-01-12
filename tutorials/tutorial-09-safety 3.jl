@@ -86,8 +86,7 @@
 # Now, implement and solve the problem defined in the previous task. This
 # time, a draft is not available and you have to implement everything
 # yourself. Note, that the number of pilgrims per group $s$ and the
-# penalty value $f_{s,t}$ are provided as CSV files. You can find them in
-# the `data` folder of this lectures folder in the Github repository.
+# penalty value $f_{s,t}$ are provided as CSV files.
 #
 # ## Load the Data
 #
