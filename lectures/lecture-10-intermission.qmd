@@ -311,7 +311,7 @@ Please compute the coappearance matrix that results from these transactions.
 $\begin{bmatrix}
     5 & 2 & 2 & 4 \\
     2 & 2 & 0 & 2 \\
-    2 & 0 & 2 & 2 \\
+    2 & 0 & 3 & 2 \\
     4 & 2 & 2 & 5
 \end{bmatrix}$
 
@@ -491,7 +491,7 @@ Assume that all required sets, variables, and parameters have already been defin
 **Solution**
 
 ```julia
-@constraint(model, newConstraint[g in G], sum(U[g,m] * T[m] for m in M) - sum(R[k] for k in K) <= D[g])
+@constraint(model, newConstraint[g in G], sum(7 * U[g,m] * T[m] for m in M) - sum(R[k] for k in K) <= D[g])
 ```
 
 \newpage
