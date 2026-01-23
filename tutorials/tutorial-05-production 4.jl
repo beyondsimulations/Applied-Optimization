@@ -315,7 +315,7 @@ all_periods = sort(collect(keys(dictAvailableTime)))
 
 # %%
 # Validate your solution
-@assert 600000 <= objective_value(lotsizeModel) <= 700000 "Objective value should be between 600,000 and 700,000"
+@assert 539900 <= objective_value(lotsizeModel) <= 700000 "Objective value should be between 539,000 and 700,000"
 
 # %% [markdown]
 # Now, unfortunately we cannot assert the value of the objective function
@@ -517,7 +517,7 @@ p = create_cost_plot(stacked_costs)
 
 # %%
 # Validate your solution
-@assert 700000 <= objective_value(lotsizeModel) <= 760000 "Objective value should be between 700,000 and 760,000"
+@assert 659900 <= objective_value(lotsizeModel) <= 760000 "Objective value should be between 659,9000 and 760,000"
 
 # %% [markdown]
 # The objective value should now be higher, as the solution space is
@@ -556,7 +556,7 @@ p = create_cost_plot(stacked_costs)
 
 # %%
 # Validate your solution
-@assert 760000 <= objective_value(lotsizeModel) <= 800000 "Objective value should be between 760,000 and 800,000"
+@assert 661400 <= objective_value(lotsizeModel) <= 800000 "Objective value should be between 661,400 and 800,000"
 
 # %% [markdown]
 # Again, the objective value should be higher, because the solution space

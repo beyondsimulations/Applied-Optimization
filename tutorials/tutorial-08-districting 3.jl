@@ -88,6 +88,9 @@ using Plots
 # mistakes!**
 
 # %%
+# Define a seed for reproducibility
+Random.seed!(42)
+
 # Load the data into scope
 file_directory = "$(@__DIR__)/data"
 euclidianDistances = readdlm("$file_directory/euclidianDistances0510.csv",'\t')

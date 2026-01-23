@@ -39,8 +39,6 @@
 # > As some of these tasks are difficult to answer on a computer, you can
 # > hand in your answer scanned or written digitally on an iPad or Laptop.
 #
-# ------------------------------------------------------------------------
-#
 # # Part I
 #
 # ## 1.a (6 Points)
@@ -54,7 +52,7 @@
 # that are made and stored in a warehouse. Each flavor has a unique
 # production time per unit of ice cream and no setup time for the
 # production. In the first period, the company has 100 units of each
-# flavor in storage at the end of the period.
+# flavor in storage at the start of the period.
 #
 # Furthermore, each setup of a different flavor costs a fixed amount of
 # money identical for all flavors and periods, while the ice cream storage
@@ -77,32 +75,10 @@
 # >
 # > Note that the problem does not have to be modeled yet!
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 1.b (3 Points)
 #
 # Please define the objective function to model the described problem
@@ -113,32 +89,10 @@
 # > If you need additional sets, parameters or variables that are not yet
 # > defined, please define them as well.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 1.c (6 Points)
 #
 # Please define all necessary constraints and the variable ranges to model
@@ -149,64 +103,20 @@
 # > If you need additional sets, parameters or variables that are not yet
 # > defined, please define them as well.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 1.d (2 Points)
 #
 # Is the model formulation a nonlinear problem with continuous variables?
 #
 # Please explain your answer briefly.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 1.e (9 Points)
 #
 # Due to the success of the companies, workers demand higher wages and a
@@ -226,32 +136,10 @@
 # >
 # > Note, that you only need to write down new and modified elements!
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 1.f (4 points)
 #
 # What assumptions are made in the model that might not hold in the real
@@ -260,32 +148,10 @@
 # Please describe at least two assumptions with a 1-3 sentences and
 # explain briefly why they might not hold.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # # Part II
 #
 # ## 2.a (6 Points)
@@ -301,32 +167,10 @@
 # -   Transportation Problem (Solar Panel Transport)
 # -   Split Order Minimization Problem (E-Commerce)
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 2.b (4 Points)
 #
 # You are trying to solve the capacitated vehicle routing problem with
@@ -337,32 +181,10 @@
 # Please describe one approach to adress the problem and describe the
 # advantages and disadvantages of the approach in a few sentences.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 2.c (3 Points)
 #
 # Suppose you aim to improve the shifts of workers in a hospital. As the
@@ -378,64 +200,20 @@
 # >
 # > You don’t need to write any code or mathematical model here!
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 2.d (2 Points)
 #
 # What is the purpose of a solver used in Mathematical Programming?
 #
 # Please describe the answer in your own words in 2-3 sentences.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # # Part III
 #
 # ## 3.a (3 Points)
@@ -448,32 +226,10 @@
 #
 # Specify the definition of the variable in correct Julia syntax.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 3.b (3 Points)
 #
 # Write JuMP code to implement the following constraint:
@@ -486,32 +242,10 @@
 #
 # Specify the definition of the constraint in correct Julia syntax.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 3.c (2 Points)
 #
 # You are given the following JuMP code with a constraint that is not
@@ -524,64 +258,20 @@
 # Please explain why the constraint is not correctly implemented and how
 # it can be fixed.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 3.d (2 Points)
 #
 # What is the difference between a tuple and an array (vector) in Julia?
 #
 # Please describe the difference in a 1-3 sentences.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
 
 # %% [markdown]
-# ------------------------------------------------------------------------
-#
 # ## 3.e (5 Points)
 #
 # You are given the following code in Julia:
@@ -606,25 +296,5 @@ end
 # %% [markdown]
 # Please write down the output of the code.
 
-# %% [raw] raw_mimetype="tex"
-# \vspace{0.1in}
-
-# %%
-# Your answer here
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-|
-
-# %% [raw] raw_mimetype="tex"
-# \newpage
+# %% [raw] raw_mimetype="typst"
+# #pagebreak()
