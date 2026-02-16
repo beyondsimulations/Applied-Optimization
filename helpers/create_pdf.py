@@ -14,12 +14,38 @@ Options:
     --height INT        Browser viewport height (default: 1080)
 """
 
+import argparse
 import os
 import sys
-import argparse
+import threading
+from functools import partial
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 
-from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
+from playwright.sync_api import TimeoutError as PlaywrightTimeout
+from playwright.sync_api import sync_playwright
+
+
+class _QuietHandler(SimpleHTTPRequestHandler):
+    """HTTP handler that suppresses per-request log output."""
+
+    def log_message(self, format, *args):
+        pass
+
+
+def _start_local_server(directory):
+    """Start a local HTTP server serving *directory* on a random free port.
+
+    Returns ``(server, base_url)`` where *base_url* is e.g.
+    ``http://127.0.0.1:8432``.  The server runs in a daemon thread and
+    should be shut down with ``server.shutdown()`` when no longer needed.
+    """
+    handler = partial(_QuietHandler, directory=str(directory))
+    server = HTTPServer(("127.0.0.1", 0), handler)
+    port = server.server_address[1]
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    return server, f"http://127.0.0.1:{port}"
 
 
 def is_revealjs_file(path):
@@ -168,8 +194,25 @@ async () => {
 """
 
 
-def render_pdf(browser, input_path, output_path, *, scale, timeout, width, height):
+def render_pdf(
+    browser,
+    input_path,
+    output_path,
+    *,
+    scale,
+    timeout,
+    width,
+    height,
+    base_url=None,
+    serve_root=None,
+):
     """Render a single Reveal.js HTML file to PDF using an existing browser.
+
+    When *base_url* and *serve_root* are provided the file is loaded via
+    the local HTTP server (``http://127.0.0.1:{port}/…``) instead of the
+    ``file://`` protocol.  This allows the in-page font-embedding script
+    to ``fetch()`` MathJax font files from the CDN — something Chromium
+    blocks under the ``file://`` origin.
 
     Returns True on success, False on failure (after printing the error).
     """
@@ -182,7 +225,11 @@ def render_pdf(browser, input_path, output_path, *, scale, timeout, width, heigh
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    url = f"file://{input_path}?print-pdf"
+    if base_url and serve_root:
+        rel = input_path.relative_to(Path(serve_root).resolve())
+        url = f"{base_url}/{rel.as_posix()}?print-pdf"
+    else:
+        url = f"file://{input_path}?print-pdf"
 
     try:
         page = browser.new_page(viewport={"width": width, "height": height})
@@ -236,7 +283,9 @@ def launch_browser(pw, width, height):
     Raises BrowserLaunchError with a helpful message if Chromium is missing.
     """
     try:
-        return pw.chromium.launch()
+        return pw.chromium.launch(
+            args=["--disable-web-security", "--allow-file-access-from-files"],
+        )
     except Exception as exc:
         msg = str(exc)
         if "Executable doesn't exist" in msg or "browserType.launch" in msg:
@@ -327,15 +376,37 @@ def main():
         if args.input is None or args.output is None:
             parser.error("Single-file mode requires both input and output arguments.")
 
+        input_path = Path(args.input).resolve()
+
+        # Determine a suitable directory to serve.  Walk up from the input
+        # file until we find a directory containing ``site_libs/`` (a Quarto
+        # marker) or fall back to the file's parent directory.
+        serve_root = input_path.parent
+        for parent in input_path.parents:
+            if (parent / "site_libs").is_dir():
+                serve_root = parent
+                break
+
+        server, base_url = _start_local_server(serve_root)
+
         print(f"Rendering {args.input} -> {args.output}")
         try:
             with sync_playwright() as pw:
                 browser = launch_browser(pw, args.width, args.height)
-                ok = render_pdf(browser, args.input, args.output, **render_opts)
+                ok = render_pdf(
+                    browser,
+                    args.input,
+                    args.output,
+                    **render_opts,
+                    base_url=base_url,
+                    serve_root=serve_root,
+                )
                 browser.close()
         except BrowserLaunchError as exc:
             print(f"Error: {exc}", file=sys.stderr)
             sys.exit(1)
+        finally:
+            server.shutdown()
         sys.exit(0 if ok else 1)
 
     # --- Batch mode ---
@@ -357,6 +428,9 @@ def main():
     print(f"Found {len(files)} Reveal.js file(s) in {base_dir}")
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    serve_root = base_dir.resolve()
+    server, base_url = _start_local_server(serve_root)
+
     try:
         with sync_playwright() as pw:
             browser = launch_browser(pw, args.width, args.height)
@@ -366,7 +440,14 @@ def main():
                 pdf_name = generate_output_name(html_file, base_dir)
                 pdf_path = out_dir / pdf_name
                 print(f"  {html_file} -> {pdf_path}")
-                if render_pdf(browser, html_file, pdf_path, **render_opts):
+                if render_pdf(
+                    browser,
+                    html_file,
+                    pdf_path,
+                    **render_opts,
+                    base_url=base_url,
+                    serve_root=serve_root,
+                ):
                     succeeded += 1
                 else:
                     failed += 1
@@ -375,6 +456,8 @@ def main():
     except BrowserLaunchError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
+    finally:
+        server.shutdown()
 
     print(f"\nDone: {succeeded} succeeded, {failed} failed out of {len(files)} files.")
     sys.exit(1 if failed else 0)
