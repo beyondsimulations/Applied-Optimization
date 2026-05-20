@@ -36,9 +36,9 @@
 #
 # Think of it this way:
 #
-# -   A dictionary is like a lookup table
-# -   Each entry has a unique key (like a student’s name)
-# -   And an associated value (like their ID number)
+# - A dictionary is like a lookup table
+# - Each entry has a unique key (like a student’s name)
+# - And an associated value (like their ID number)
 #
 # Let’s see some examples:
 

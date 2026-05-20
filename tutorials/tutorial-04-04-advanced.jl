@@ -74,12 +74,12 @@ println("Solver options set successfully!")
 # %% [markdown]
 # Let’s break this down:
 #
-# -   `set_time_limit_sec(model, 60)` tells the solver to stop after 60
-#     seconds if it hasn’t found a solution
-# -   `set_optimizer_attribute(model, "mip_rel_gap", 0.01)` sets how close
-#     to the best possible solution we need to be (within 1%)
-# -   `set_optimizer_attribute(model, "presolve", "on")` tells the solver
-#     to try simplifying the problem first
+# - `set_time_limit_sec(model, 60)` tells the solver to stop after 60
+#   seconds if it hasn’t found a solution
+# - `set_optimizer_attribute(model, "mip_rel_gap", 0.01)` sets how close
+#   to the best possible solution we need to be (within 1%)
+# - `set_optimizer_attribute(model, "presolve", "on")` tells the solver to
+#   try simplifying the problem first
 #
 # ## Exercise 1.1 - Set Solver Options
 #
@@ -186,15 +186,15 @@ println("Solve time: ", solve_time(model))
 # %% [markdown]
 # Let’s break this down:
 #
-# -   **Termination status**: Tells if the solver found an optimal
-#     solution, ran out of time, etc.
-# -   **Primal status**: Indicates if we have a valid solution for our
-#     original problem
-# -   **Dual status**: Relates to the mathematical properties of the
-#     solution (don’t worry too much about this)
-# -   **Objective value**: The value of our objective function (in this
-#     case, our profit)
-# -   **Solve time**: How long it took to solve the problem
+# - **Termination status**: Tells if the solver found an optimal solution,
+#   ran out of time, etc.
+# - **Primal status**: Indicates if we have a valid solution for our
+#   original problem
+# - **Dual status**: Relates to the mathematical properties of the
+#   solution (don’t worry too much about this)
+# - **Objective value**: The value of our objective function (in this
+#   case, our profit)
+# - **Solve time**: How long it took to solve the problem
 #
 # ------------------------------------------------------------------------
 #

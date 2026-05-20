@@ -74,8 +74,8 @@ Q = [
 # FitGear currently operates two warehouses - one in Hamburg and one in
 # Berlin. Each warehouse has limited storage capacity:
 #
-# -   Hamburg can store 3 different product types (SKUs)
-# -   Berlin can also store 3 different product types
+# - Hamburg can store 3 different product types (SKUs)
+# - Berlin can also store 3 different product types
 #
 # Based on the coappearance matrix you have determined in the previous
 # assignment, use the model from the lecture to maximise the coappearances
@@ -111,11 +111,11 @@ number_of_split_parcels =
 # As FitGear continues to grow, the operations team needs a solution that
 # can handle their full product catalog. They now have:
 #
-# -   12 popular fitness products
-# -   40 recent customer orders
-# -   Two warehouses with different capacities:
-#     -   Hamburg: 7 SKUs
-#     -   Berlin: 6 SKUs
+# - 12 popular fitness products
+# - 40 recent customer orders
+# - Two warehouses with different capacities:
+#   - Hamburg: 7 SKUs
+#   - Berlin: 6 SKUs
 #
 # Thus, we’ll now implement a scalable solution using Julia and JuMP that
 # can handle larger datasets.
@@ -416,13 +416,12 @@ println("Number of regular orders (random): ", regular_parcels_random)
 # FitGear’s operations team needs to understand the business implications
 # of this optimization:
 #
-# -   Which product categories tend to cluster together in the same
-#     warehouse? For example, do workout clothes tend to be stored
-#     together?
-# -   How many fewer split shipments would FitGear have compared to their
-#     current random allocation?
-# -   How might this new allocation affect warehouse operations and
-#     picking efficiency?
+# - Which product categories tend to cluster together in the same
+#   warehouse? For example, do workout clothes tend to be stored together?
+# - How many fewer split shipments would FitGear have compared to their
+#   current random allocation?
+# - How might this new allocation affect warehouse operations and picking
+#   efficiency?
 #
 # Your answer goes here, thinking from the business perspective. A few
 # sentences are fully sufficient!

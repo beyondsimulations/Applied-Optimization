@@ -159,13 +159,13 @@
 # Throughout the course, we covered several different optimization
 # problems. For one of the following two problems, briefly:
 #
-# -   Describe the main objective of the problem (2 points)
-# -   Describe two key assumptions of the model (2 points per assumption)
+# - Describe the main objective of the problem (2 points)
+# - Describe two key assumptions of the model (2 points per assumption)
 #
 # Choose from:
 #
-# -   Transportation Problem (Solar Panel Transport)
-# -   Split Order Minimization Problem (E-Commerce)
+# - Transportation Problem (Solar Panel Transport)
+# - Split Order Minimization Problem (E-Commerce)
 
 # %% [raw] raw_mimetype="typst"
 # #pagebreak()

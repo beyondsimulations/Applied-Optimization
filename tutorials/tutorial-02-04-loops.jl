@@ -209,9 +209,9 @@ println("Bucket is full!")
 # >
 # > Think of a `while` loop like these everyday situations:
 # >
-# > -   Keep studying WHILE you don’t understand the topic
-# > -   Keep adding ingredients WHILE the recipe isn’t complete
-# > -   Keep saving money WHILE you don’t have enough
+# > - Keep studying WHILE you don’t understand the topic
+# > - Keep adding ingredients WHILE the recipe isn’t complete
+# > - Keep saving money WHILE you don’t have enough
 #
 # ## Exercise 2.1 - Subtract from 10 in Increments of 1 Until the Result is Less Than 3
 #

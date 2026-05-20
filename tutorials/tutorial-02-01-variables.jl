@@ -143,10 +143,10 @@ println("Good, the variable 'hi' now states \"$hi\".")
 # refrigerators for food, etc.), variables in Julia have different types
 # depending on what they store:
 #
-# -   Integers (Int): Whole numbers like `1`, `42`, `-10`
-# -   Floats (Float64): Numbers with decimal points like `3.14`, `-0.5`
-# -   Booleans (Bool): True/false values like `true`, `false`
-# -   Strings (String): Text in quotes like `"Hello"`
+# - Integers (Int): Whole numbers like `1`, `42`, `-10`
+# - Floats (Float64): Numbers with decimal points like `3.14`, `-0.5`
+# - Booleans (Bool): True/false values like `true`, `false`
+# - Strings (String): Text in quotes like `"Hello"`
 #
 # You can check what type of “container” a variable is using `typeof()`.
 # Try this:

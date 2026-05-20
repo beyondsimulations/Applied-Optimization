@@ -49,25 +49,25 @@ using DataFrames, CSV
 #
 # The transportation problem involves:
 #
-# -   Suppliers (our warehouses)
-# -   Customers (solar farms)
-# -   Transportation costs between each supplier and customer
-# -   Supply available at each warehouse
-# -   Demand required by each solar farm
+# - Suppliers (our warehouses)
+# - Customers (solar farms)
+# - Transportation costs between each supplier and customer
+# - Supply available at each warehouse
+# - Demand required by each solar farm
 #
 # Our goal is to decide how many solar panels to ship from each warehouse
 # to each solar farm to minimize total cost.
 #
 # Let’s set up our problem:
 #
-# -   The revenue from each truckload of solar panels is 11000
-# -   The variable costs from each truckload of solar panels is 6300
-# -   The available panels at the supplier are given in the file
-#     `available-panels.csv`
-# -   The requested panels at the customer are given in the file
-#     `panel-demand.csv`
-# -   The transportation costs between suppliers and customers are given
-#     in the file `cost.csv`
+# - The revenue from each truckload of solar panels is 11000
+# - The variable costs from each truckload of solar panels is 6300
+# - The available panels at the supplier are given in the file
+#   `available-panels.csv`
+# - The requested panels at the customer are given in the file
+#   `panel-demand.csv`
+# - The transportation costs between suppliers and customers are given in
+#   the file `cost.csv`
 #
 # > **Note**
 # >

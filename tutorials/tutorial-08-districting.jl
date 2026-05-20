@@ -30,10 +30,10 @@
 #
 # Key Objectives:
 #
-# -   Minimize average response time to incidents
-# -   Ensure every area has adequate police coverage
-# -   Enable efficient backup support between districts
-# -   Account for real-world constraints like traffic patterns
+# - Minimize average response time to incidents
+# - Ensure every area has adequate police coverage
+# - Enable efficient backup support between districts
+# - Account for real-world constraints like traffic patterns
 #
 # Throughout this tutorial, you’ll build this solution step-by-step,
 # starting with a basic model and gradually adding real-world constraints
@@ -246,10 +246,10 @@ plot_area = visualize_departments(hexshape, X, p)
 #
 # Your challenge:
 #
-# -   Implement contiguity constraints to ensure each district is fully
-#     connected
-# -   Compare response times before and after adding these constraints
-# -   Visualize the impact of your changes on the district map
+# - Implement contiguity constraints to ensure each district is fully
+#   connected
+# - Compare response times before and after adding these constraints
+# - Visualize the impact of your changes on the district map
 #
 # ## Conditional Constraints
 #

@@ -79,10 +79,10 @@ display(line_plot)
 # %% [markdown]
 # Let’s break down what each part of this code does:
 #
-# -   `plot(x, y, ...)` creates the plot using our x and y data
-# -   `title=...` sets the title of the plot
-# -   `xlabel=...` and `ylabel=...` label the x and y axes
-# -   `legend=false` turns off the legend (we’ll use this later)
+# - `plot(x, y, ...)` creates the plot using our x and y data
+# - `title=...` sets the title of the plot
+# - `xlabel=...` and `ylabel=...` label the x and y axes
+# - `legend=false` turns off the legend (we’ll use this later)
 #
 # ## Exercise 1.1 - Create a Scatter Plot
 #

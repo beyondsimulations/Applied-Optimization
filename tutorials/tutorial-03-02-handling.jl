@@ -146,9 +146,9 @@ end
 # Just like apps on your phone, packages can be updated or removed when
 # you no longer need them.
 #
-# -   To update a package: `Pkg.update("PackageName")`
-# -   To update all packages: `Pkg.update()`
-# -   To remove a package: `Pkg.rm("PackageName")`
+# - To update a package: `Pkg.update("PackageName")`
+# - To update all packages: `Pkg.update()`
+# - To remove a package: `Pkg.rm("PackageName")`
 #
 # If you wanted to update DataFrames, you’d use
 # `Pkg.update("DataFrames")`. To remove it, you’d use

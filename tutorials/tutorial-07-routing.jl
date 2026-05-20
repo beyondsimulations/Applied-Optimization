@@ -58,8 +58,8 @@
 # you have the following files in the `data` directory that is located in
 # the same directory as this notebook:
 #
-# -   `routing-demand.csv`: Contains demand per distribution center
-# -   `coord_x_y.csv`: Contains location coordinates
+# - `routing-demand.csv`: Contains demand per distribution center
+# - `coord_x_y.csv`: Contains location coordinates
 
 # %%
 using DelimitedFiles
@@ -431,10 +431,10 @@ display(plot_capacity_usage(X, U, coord))
 # calculate the monthly operational costs based on the following
 # parameters:
 #
-# -   Cost per kilometer: 0.6 EUR (includes fuel, repairs, driver costs)
-# -   Service frequency: Monday to Friday (5 days per week)
-# -   Time period: 4 weeks
-# -   Vehicle lease cost: 450 EUR per vehicle per 4 weeks
+# - Cost per kilometer: 0.6 EUR (includes fuel, repairs, driver costs)
+# - Service frequency: Monday to Friday (5 days per week)
+# - Time period: 4 weeks
+# - Vehicle lease cost: 450 EUR per vehicle per 4 weeks
 #
 # Calculate the total monthly costs and store them in `monthly_costs`.
 
