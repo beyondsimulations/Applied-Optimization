@@ -20,9 +20,9 @@ Follow the instructions, write your code in the designated code blocks, and exec
 
 In everyday life, we make comparisons all the time:
 
--   Is this coffee too hot?
--   Do I have enough money for lunch?
--   Is my password correct?
+- Is this coffee too hot?
+- Do I have enough money for lunch?
+- Is my password correct?
 
 In Julia, we use special symbols to make these comparisons. Comparisons return a boolean value (true or false). You can use these directly or store them in a variable. For example:
 
@@ -129,10 +129,10 @@ println("Comparison2 is ", comparison2)
 
 Sometimes we need to combine multiple comparisons in our code, just like in real life decisions:
 
--   "Can I go to the party?" might depend on:
-    -   (Is it weekend?) AND (Have I finished my studies?)
--   "Should I take an umbrella?" might depend on:
-    -   (Is it raining?) OR (Is it likely to rain?)
+- "Can I go to the party?" might depend on:
+  - (Is it weekend?) AND (Have I finished my studies?)
+- "Should I take an umbrella?" might depend on:
+  - (Is it raining?) OR (Is it likely to rain?)
 
 Julia uses three main logical operators:
 
@@ -174,9 +174,9 @@ println("Should I wear a coat? $need_coat")
 >
 > Think of those logical operators as follows:
 >
-> -   `&&` (AND) as a strict condition - everything must be perfect
-> -   `||` (OR) as a lenient condition - any good reason is enough
-> -   `!` (NOT) as the opposite of something
+> - `&&` (AND) as a strict condition - everything must be perfect
+> - `||` (OR) as a lenient condition - any good reason is enough
+> - `!` (NOT) as the opposite of something
 
 ## Exercise 2.1 - Use the AND operator
 

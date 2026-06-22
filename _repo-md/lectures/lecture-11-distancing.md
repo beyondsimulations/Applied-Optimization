@@ -15,9 +15,9 @@ format:
 
 ## Challenges for Live Events
 
--   Overall number of participants at events **was restricted**
--   Certain **spacing between participants** had to be ensured
--   Larger events required **vaccination certificates** for all
+- Overall number of participants at events **was restricted**
+- Certain **spacing between participants** had to be ensured
+- Larger events required **vaccination certificates** for all
 
 . . .
 
@@ -25,20 +25,20 @@ format:
 
 ## Main Difficulties
 
--   Organization of larger events **is costly**
--   Even without a pandemic a **financial risk**
--   **Administrative Burden** for vaccination certificates
--   Reduced capacity is a **loss of revenue**
--   Implementing and enforcing **distancing rules**
--   Managing **different priorities** of groups
+- Organization of larger events **is costly**
+- Even without a pandemic a **financial risk**
+- **Administrative Burden** for vaccination certificates
+- Reduced capacity is a **loss of revenue**
+- Implementing and enforcing **distancing rules**
+- Managing **different priorities** of groups
 
 ## <span class="invert-font">Idea: Optimizing Seating Plans</span>
 
 ## Background
 
--   **Applications:** sport arenas, concert halls, movie theaters, lecture halls, etc.
--   People from the same group are **seated together**
--   Venues have **specific seating**, season tickets, VIPs, etc.
+- **Applications:** sport arenas, concert halls, movie theaters, lecture halls, etc.
+- People from the same group are **seated together**
+- Venues have **specific seating**, season tickets, VIPs, etc.
 
 . . .
 
@@ -72,8 +72,8 @@ format:
 
 ## Operational
 
--   **Short-term**, day-to-day decisions
--   Focused on <span class="highlight">immediate execution</span>
+- **Short-term**, day-to-day decisions
+- Focused on <span class="highlight">immediate execution</span>
 
 . . .
 
@@ -81,14 +81,14 @@ format:
 
 . . .
 
--   Given **tomorrow's demand** of differently sized groups
--   Score groups (importance, sponsors, VIP, season ticket,...)
--   Assigning specific seats for **tomorrow's event**
+- Given **tomorrow's demand** of differently sized groups
+- Score groups (importance, sponsors, VIP, season ticket,...)
+- Assigning specific seats for **tomorrow's event**
 
 ## Tactical
 
--   **Medium-term** planning (weeks to months)
--   Bridges operational and strategic levels
+- **Medium-term** planning (weeks to months)
+- Bridges operational and strategic levels
 
 . . .
 
@@ -96,14 +96,14 @@ format:
 
 . . .
 
--   Given distribution of **expected demand** for groups
--   Score groups (importance, sponsors, VIP, season ticket,...)
--   Plan seating arrangements for an **upcoming season**
+- Given distribution of **expected demand** for groups
+- Score groups (importance, sponsors, VIP, season ticket,...)
+- Plan seating arrangements for an **upcoming season**
 
 ## Strategic
 
--   Long-term planning (months to years)
--   Focus on overall goals and policies
+- Long-term planning (months to years)
+- Focus on overall goals and policies
 
 . . .
 
@@ -111,9 +111,9 @@ format:
 
 . . .
 
--   Designing flexible seating layouts that work for scenarios
--   Maximize the overall **space utilization**
--   Sell the resulting maximized seating pattern on **market**
+- Designing flexible seating layouts that work for scenarios
+- Maximize the overall **space utilization**
+- Sell the resulting maximized seating pattern on **market**
 
 ## <span class="invert-font">Main Question</span>
 
@@ -127,21 +127,21 @@ format:
 
 ![](https://images.byndsim.com/ao/ao_arena-knapsack.svg)
 
--   <span class="highlight">Standard model in Operations Research</span>
--   **Select items** from a pool under **capacity constraints**
+- <span class="highlight">Standard model in Operations Research</span>
+- **Select items** from a pool under **capacity constraints**
 
 ## Knapsack Problem in 2D
 
 ![](https://images.byndsim.com/ao/ao_arena-knapsack_2d.svg)
 
--   Now, Items block space in 2D, as illustrated here
+- Now, Items block space in 2D, as illustrated here
 
 ## Adaption to Seating
 
--   Horizontal dimension to place groups of participants
--   Vertical dimension to ensure enough spacing between rows
--   Maximize the "value" of the allocated groups
--   Value can be the number of seats or a score
+- Horizontal dimension to place groups of participants
+- Vertical dimension to ensure enough spacing between rows
+- Maximize the "value" of the allocated groups
+- Value can be the number of seats or a score
 
 . . .
 
@@ -170,11 +170,11 @@ format:
 
 ## Seating Constraints
 
--   1 empty seat **between** groups
--   1 empty seat **front-to-back**
--   1 empty seat **diagonally**
--   Only **2 groups per row** are allowed
--   Grey seats represent **obstacles**
+- 1 empty seat **between** groups
+- 1 empty seat **front-to-back**
+- 1 empty seat **diagonally**
+- Only **2 groups per row** are allowed
+- Grey seats represent **obstacles**
 
 . . .
 
@@ -190,10 +190,10 @@ You have 5 minutes to find a solution.
 
 . . .
 
--   $\mathcal{G}$ - Set of groups, indexed by $g$
--   $\mathcal{R}$ - Set of rows, indexed by $r$
--   $\mathcal{C}$ - Set of columns, indexed by $c$
--   $\mathcal{C}_{g,r}$ - Available seats of row $r$ for group $g$, indexed by $c$
+- $\mathcal{G}$ - Set of groups, indexed by $g$
+- $\mathcal{R}$ - Set of rows, indexed by $r$
+- $\mathcal{C}$ - Set of columns, indexed by $c$
+- $\mathcal{C}_{g,r}$ - Available seats of row $r$ for group $g$, indexed by $c$
 
 . . .
 
@@ -207,11 +207,11 @@ You have 5 minutes to find a solution.
 
 . . .
 
--   $p_r$ - Maximal number of groups allowed in one row $r$
--   $d_g$ - Required seats of a group $g$ in a row
--   $h$ - Safety distance between groups sitting next to each other
--   $b$ - Vertical safety distance between groups
--   $v_g$ - Value of an allocation of the group $g$
+- $p_r$ - Maximal number of groups allowed in one row $r$
+- $d_g$ - Required seats of a group $g$ in a row
+- $h$ - Safety distance between groups sitting next to each other
+- $b$ - Vertical safety distance between groups
+- $v_g$ - Value of an allocation of the group $g$
 
 # <span class="flow">Variables and Objective</span>
 
@@ -229,15 +229,15 @@ You have 5 minutes to find a solution.
 
 > **We need the following sets:**
 >
-> -   All the groups, $g \in \mathcal{G}$
-> -   All the rows, $r \in \mathcal{R}$
-> -   All the columns, $c \in \mathcal{C}$
+> - All the groups, $g \in \mathcal{G}$
+> - All the rows, $r \in \mathcal{R}$
+> - All the columns, $c \in \mathcal{C}$
 
 <span class="question">Question:</span> **What could be our decision variable?**
 
 . . .
 
--   $X_{g,r,c}$ - 1, if **first left seat** of $g$ is assigned to $r$ in $c$, else 0
+- $X_{g,r,c}$ - 1, if **first left seat** of $g$ is assigned to $r$ in $c$, else 0
 
 ## Objective Function?
 
@@ -251,14 +251,14 @@ You have 5 minutes to find a solution.
 
 . . .
 
--   By the allocation of the **first left seat** of a group to a row and column in the seating area
+- By the allocation of the **first left seat** of a group to a row and column in the seating area
 
 ## Objective Function
 
 > **We need the following parameters and variables:**
 >
-> -   $v_g$ - Value of an allocation of the group $g$
-> -   $X_{g,r,c}$ - 1, if **first left seat** of $g$ is assigned to $r$ in $c$, else 0
+> - $v_g$ - Value of an allocation of the group $g$
+> - $X_{g,r,c}$ - 1, if **first left seat** of $g$ is assigned to $r$ in $c$, else 0
 
 . . .
 
@@ -266,9 +266,7 @@ You have 5 minutes to find a solution.
 
 . . .
 
-$$
-\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}
-$$
+$$\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}$$
 
 # <span class="flow">Constraints</span>
 
@@ -278,10 +276,10 @@ $$
 
 . . .
 
--   Assign **each group only once**
--   Restrict the **number of groups in each row**
--   Ensure the **horizontal social distance**
--   Keep the **vertical social distance**
+- Assign **each group only once**
+- Restrict the **number of groups in each row**
+- Ensure the **horizontal social distance**
+- Keep the **vertical social distance**
 
 ## Assign Each Group Only Once?
 
@@ -293,10 +291,10 @@ $$
 
 > **We need the following:**
 >
-> -   $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
-> -   $\mathcal{G}$ - Set of groups, indexed by $g$
-> -   $\mathcal{R}$ - Set of rows, indexed by $r$
-> -   $\mathcal{C}_{g,r}$ - Set of columns of row $r$ for group $g$, indexed by $c$
+> - $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
+> - $\mathcal{G}$ - Set of groups, indexed by $g$
+> - $\mathcal{R}$ - Set of rows, indexed by $r$
+> - $\mathcal{C}_{g,r}$ - Set of columns of row $r$ for group $g$, indexed by $c$
 
 ## Assign Each Group Only Once
 
@@ -304,9 +302,7 @@ $$
 
 . . .
 
-$$
-\sum_{r \in \mathcal{R}} \sum_{c \in \mathcal{C}_{g,r}} X_{g,r,c} \leq 1 \quad \forall g \in \mathcal{G}
-$$
+$$\sum_{r \in \mathcal{R}} \sum_{c \in \mathcal{C}_{g,r}} X_{g,r,c} \leq 1 \quad \forall g \in \mathcal{G}$$
 
 . . .
 
@@ -324,8 +320,8 @@ $$
 
 > **We need the following:**
 >
-> -   $p_r$ - Maximal number of groups allowed in one row $r$
-> -   $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
+> - $p_r$ - Maximal number of groups allowed in one row $r$
+> - $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
 
 ## Restrict Groups Per Row
 
@@ -333,9 +329,7 @@ $$
 
 . . .
 
-$$
-\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_{r} \quad r \in \mathcal{R}
-$$
+$$\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_{r} \quad r \in \mathcal{R}$$
 
 . . .
 
@@ -377,9 +371,9 @@ somewhat tricky!
 
 > **We need the following:**
 >
-> -   $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
-> -   $d_g$ - Required seats of group $g$ in a row
-> -   $h$ - Safety distance between groups sitting next to each other
+> - $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
+> - $d_g$ - Required seats of group $g$ in a row
+> - $h$ - Safety distance between groups sitting next to each other
 
 ## Horizontal Social Distance
 
@@ -403,8 +397,8 @@ $$\tilde{\mathcal{C}}_{c,g} = \{\tilde{c}\in \mathcal{C}| c - d_g + 1 - h \leq \
 
 > **Remember:**
 >
-> -   $d_g$ - Required seats of group $g$ in a row
-> -   $h$ - Safety distance between groups sitting next to each other
+> - $d_g$ - Required seats of group $g$ in a row
+> - $h$ - Safety distance between groups sitting next to each other
 
 . . .
 
@@ -432,9 +426,8 @@ $$\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + 
 }
 </style>
 
-$$
-\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} + \underbrace{X_{3,2,\textbf{5}}+X_{3,2,\textbf{6}}+X_{3,2,\textbf{7}}+X_{3,2,\textbf{8}}}_{g=3} \leq 1 \quad (r=2,c=8)
-$$
+
+$$\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} + \underbrace{X_{3,2,\textbf{5}}+X_{3,2,\textbf{6}}+X_{3,2,\textbf{7}}+X_{3,2,\textbf{8}}}_{g=3} \leq 1 \quad (r=2,c=8)$$
 
 ## 
 
@@ -452,8 +445,8 @@ the pattern?
 
 > **We need the following:**
 >
-> -   $b$ - Vertical safety distance between groups
-> -   $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
+> - $b$ - Vertical safety distance between groups
+> - $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
 
 ## Vertical Social Distance
 
@@ -467,9 +460,7 @@ the pattern?
 
 . . .
 
-$$
-\sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \mathcal{R}_r} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{cg}} X_{g\tilde{r}\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}
-$$
+$$\sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \mathcal{R}_r} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{cg}} X_{g\tilde{r}\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}$$
 
 ## Vertical Distance Set
 
@@ -477,9 +468,7 @@ $$
 
 . . .
 
-$$
-\tilde{\mathcal{R}}_{r} = \{\tilde{r}\in \mathcal{R}| r-b \leq \tilde{r} \leq r \}
-$$
+$$\tilde{\mathcal{R}}_{r} = \{\tilde{r}\in \mathcal{R}| r-b \leq \tilde{r} \leq r \}$$
 
 . . .
 
@@ -487,8 +476,8 @@ $$
 >
 > Remember:
 >
-> -   $b$ - Vertical safety distance between groups
-> -   $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
+> - $b$ - Vertical safety distance between groups
+> - $X_{g,r,c}$ - 1, if first left seat of $g$ is assigned to $r$ in $c$, else 0
 
 . . .
 
@@ -498,8 +487,8 @@ Let's look at an <span class="highlight">example</span>.
 
 ![](https://images.beyondsimulations.com/ao/ao_arena-two_groups_vertical_b.png)
 
--   Yellow seats are **blocked by the group** in row 3 and column 8
--   Blue allocations are possible (if second group has **size 2**)
+- Yellow seats are **blocked by the group** in row 3 and column 8
+- Blue allocations are possible (if second group has **size 2**)
 
 ## Arena Seating Problem
 
@@ -509,18 +498,16 @@ Let's look at an <span class="highlight">example</span>.
 }
 </style>
 
-$$
-\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_r} v_g \times X_{g,r,c}
-$$
+
+$$\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_r} v_g \times X_{g,r,c}$$
 subject to:
-$$
-\begin{align*}
+
+$$\begin{align*}
 & \sum_{r \in \mathcal{R}}\sum_{c \in \mathcal{C}_r} X_{g,r,c} \leq 1 && \forall g \in \mathcal{G} \\
 & \sum_{g \in \mathcal{G}}\sum_{c\in \mathcal{C}_r} X_{g,r,c} \leq p_r && \forall r \in \mathcal{R} \\
 & \sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \tilde{\mathcal{R}}_{r}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{c,g}} X_{g,\tilde{r},\tilde{c}} \leq 1 && \forall r\in \mathcal{R}, c\in \mathcal{C} \\
 & X_{g,r,c} \in \{0,1\} && \forall g \in \mathcal{G}, \forall r\in \mathcal{R}, c\in \mathcal{C}_r
-\end{align*}
-$$
+\end{align*}$$
 
 # <span class="flow">Model Characteristics</span>
 
@@ -528,18 +515,18 @@ $$
 
 <span class="question">Questions:</span> **On model characteristics**
 
--   Is the model formulation linear/ non-linear?
--   What kind of variable domains do we have?
+- Is the model formulation linear/ non-linear?
+- What kind of variable domains do we have?
 
 ## Model Assumptions
 
 <span class="question">Questions:</span> **On model assumptions**
 
--   What assumptions have we made?
--   Is our approach strategic or tactical/operational?
--   Have we considered all social distancing constraints?
--   What about aisle seats?
--   Can you think of any other real-world constraints?
+- What assumptions have we made?
+- Is our approach strategic or tactical/operational?
+- Have we considered all social distancing constraints?
+- What about aisle seats?
+- Can you think of any other real-world constraints?
 
 # <span class="flow">Implementation and Impact</span>
 
@@ -547,10 +534,10 @@ $$
 
 ## Case study VfL Osnabrück
 
--   Relegation Return Match in 2021
--   241 additional seats allocated (+12 percent)
--   Compliance with all distancing requirements
--   Approval from authorities
+- Relegation Return Match in 2021
+- 241 additional seats allocated (+12 percent)
+- Compliance with all distancing requirements
+- Approval from authorities
 
 . . .
 
@@ -566,29 +553,29 @@ $$
 
 <span class="highlight">Similar studies</span> have been conducted globally:
 
--   US College-level venues, e.g. Football, Basketball, Hockey
--   Music Hall Eindhoven
--   Safe Seating Solutions platform
--   General 2D-Knapsack applications
+- US College-level venues, e.g. Football, Basketball, Hockey
+- Music Hall Eindhoven
+- Safe Seating Solutions platform
+- General 2D-Knapsack applications
 
 # <span class="flow">Conclusion</span>
 
 ## Optimization Benefits
 
--   Optimization enables **rapid generation and evaluation**
--   We can easily adapt to **various distancing requirements**:
-    -   Horizontal and vertical spacing between groups
-    -   Groups per row limits
-    -   Aisle seat restrictions
-    -   Group size constraints
-    -   Multi-row group allocation
+- Optimization enables **rapid generation and evaluation**
+- We can easily adapt to **various distancing requirements**:
+  - Horizontal and vertical spacing between groups
+  - Groups per row limits
+  - Aisle seat restrictions
+  - Group size constraints
+  - Multi-row group allocation
 
 ## Wrap Up
 
--   <span class="highlight">Revenue optimization</span> through applied optimization
--   **Increased participant capacity** vs basic approaches
--   Flexible adaptation to **various distancing requirements**
--   Can be adapted easily to **any seating requirements**
+- <span class="highlight">Revenue optimization</span> through applied optimization
+- **Increased participant capacity** vs basic approaches
+- Flexible adaptation to **various distancing requirements**
+- Can be adapted easily to **any seating requirements**
 
 . . .
 

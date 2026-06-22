@@ -17,36 +17,36 @@ format:
 
 ## E-Commerce Sales
 
--   E-Commerce sales <span class="highlight">are growing fast</span>:
-    -   Products are **no longer bound between borders**
-    -   Product variety is **rising**
-    -   Consumer shopping patterns are **shifting **
-    -   Brick-and-mortar stores **loose customers to the internet**
-    -   Covid-19 **accelerated this trend even more**
+- E-Commerce sales <span class="highlight">are growing fast</span>:
+  - Products are **no longer bound between borders**
+  - Product variety is **rising**
+  - Consumer shopping patterns are **shifting**
+  - Brick-and-mortar stores **loose customers to the internet**
+  - Covid-19 **accelerated this trend even more**
 
 ## Parcels Worldwide
 
--   The number of parcels is rising:
-    -   **2014**: 44 billion parcels (Pitney Bowes Inc. 2017)
-    -   **2019**: 103 billion parcels (Pitney Bowes Inc. 2019)
-    -   **2026**: 220 -- 262 billion[^1] (Pitney Bowes Inc. 2020)
+- The number of parcels is rising:
+  - **2014**: 44 billion parcels (Pitney Bowes Inc. 2017)
+  - **2019**: 103 billion parcels (Pitney Bowes Inc. 2019)
+  - **2026**: 220 -- 262 billion[^1] (Pitney Bowes Inc. 2020)
 
 ## Pressure on infrastructure
 
 <a href="https://unsplash.com/photos/person-holding-black-samsung-android-smartphone-hTUZW7E7krg" width="85%"><img src="https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?q=80&amp;w=2832&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" /></a>
 
--   Consumers nowadays expect <span class="highlight">free, fast deliveries and returns</span>
--   Existing warehouses have to store an **increasing range of products**
--   Better customer service requires **faster deliveries**
--   Incurred fulfillment costs **depend on the number of parcels**
+- Consumers nowadays expect <span class="highlight">free, fast deliveries and returns</span>
+- Existing warehouses have to store an **increasing range of products**
+- Better customer service requires **faster deliveries**
+- Incurred fulfillment costs **depend on the number of parcels**
 
 ## Pressure on the environment
 
 <a href="https://unsplash.com/photos/white-and-red-cars-parked-near-white-concrete-building-during-daytime-4jLpCkGqClE" width="85%"><img src="https://images.unsplash.com/photo-1606942298712-8bd250ff40f0?q=80&amp;w=2398&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" /></a>
 
--   **Each parcel packaging** consumes resources during production
--   Every dispatched parcel to the customer <span class="highlight">causes CO₂ emissions</span>
--   In case of returns, **more parcels cause more emissions**
+- **Each parcel packaging** consumes resources during production
+- Every dispatched parcel to the customer <span class="highlight">causes CO₂ emissions</span>
+- In case of returns, **more parcels cause more emissions**
 
 # <span class="flow">Problem Structure</span>
 
@@ -68,8 +68,8 @@ format:
 
 . . .
 
--   **Stock availability**: Some products are <span class="highlight">out of stock</span> at a warehouse and need to be fulfilled from another warehouse
--   **Capacity constraints**: Some products are stored at <span class="highlight">different warehouses</span> and need to be shipped from elsewhere
+- **Stock availability**: Some products are <span class="highlight">out of stock</span> at a warehouse and need to be fulfilled from another warehouse
+- **Capacity constraints**: Some products are stored at <span class="highlight">different warehouses</span> and need to be shipped from elsewhere
 
 ## Impact of Split Orders
 
@@ -77,11 +77,11 @@ format:
 
 . . .
 
--   **Higher** shipping costs
--   **Increased** packaging material
--   **More** CO₂ emissions
--   <span class="highlight">Higher operational complexity</span>
--   **Lower** customer satisfaction
+- **Higher** shipping costs
+- **Increased** packaging material
+- **More** CO₂ emissions
+- <span class="highlight">Higher operational complexity</span>
+- **Lower** customer satisfaction
 
 ## Mitigations?
 
@@ -89,10 +89,10 @@ format:
 
 . . .
 
--   **Consolidation**: Ship to a central warehouse before dispatch
--   **Cross-docking**: Ship directly from supplier to customer
--   **Transshipment**: Ship between warehouses before delivery
--   **Co-allocation**: Predict <span class="highlight">co-appearance of products</span> and allocate them to the <span class="highlight">same warehouse</span>
+- **Consolidation**: Ship to a central warehouse before dispatch
+- **Cross-docking**: Ship directly from supplier to customer
+- **Transshipment**: Ship between warehouses before delivery
+- **Co-allocation**: Predict <span class="highlight">co-appearance of products</span> and allocate them to the <span class="highlight">same warehouse</span>
 
 # <span class="flow">Problem Structure - Version 1</span>
 
@@ -108,16 +108,16 @@ We aim to improve the **SKU[^2]-warehouse allocation** to minimize the number of
 
 <span class="question">Question:</span> **What could be the sets here?**
 
--   $\mathcal{I}$ - Set of products indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
--   $\mathcal{K}$ - Set of warehouses indexed by $k \in \{1,\dots,|\mathcal{K}|\}$
--   $\mathcal{M}$ - Set of customer orders $m \in \{1,2,...,|\mathcal{M}|\}$
+- $\mathcal{I}$ - Set of products indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
+- $\mathcal{K}$ - Set of warehouses indexed by $k \in \{1,\dots,|\mathcal{K}|\}$
+- $\mathcal{M}$ - Set of customer orders $m \in \{1,2,...,|\mathcal{M}|\}$
 
 ## Available Parameters
 
 <span class="question">Question:</span> **What are possible parameters?**
 
--   $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$
--   $\boldsymbol{T}= (t_{m,i})$ - Past customer orders for SKUs
+- $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$
+- $\boldsymbol{T}= (t_{m,i})$ - Past customer orders for SKUs
 
 . . .
 
@@ -140,10 +140,10 @@ Example of $\boldsymbol{T}$
 
 ## Past vs. Future
 
--   The <span class="highlight">transactional data</span> $\boldsymbol{T}$ is based on **past orders**
--   It is a **binary matrix** of customer orders and SKUs
--   We use this data to **assume** future co-occurrence
-    -   <span class="highlight">Past co-occurrence predicts future co-occurrence</span>
+- The <span class="highlight">transactional data</span> $\boldsymbol{T}$ is based on **past orders**
+- It is a **binary matrix** of customer orders and SKUs
+- We use this data to **assume** future co-occurrence
+  - <span class="highlight">Past co-occurrence predicts future co-occurrence</span>
 
 . . .
 
@@ -157,20 +157,20 @@ Example of $\boldsymbol{T}$
 
 > **We have the following sets:**
 >
-> -   $\mathcal{I}$ - Set of products indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
-> -   $\mathcal{K}$ - Set of warehouses indexed by $k \in \{1,\dots,|\mathcal{K}|\}$
-> -   $\mathcal{M}$ - Set of customer orders $m \in \{1,2,...,|\mathcal{M}|\}$
+> - $\mathcal{I}$ - Set of products indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
+> - $\mathcal{K}$ - Set of warehouses indexed by $k \in \{1,\dots,|\mathcal{K}|\}$
+> - $\mathcal{M}$ - Set of customer orders $m \in \{1,2,...,|\mathcal{M}|\}$
 
 . . .
 
--   $X_{i,k}$ - 1, if $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
--   $Y_{m,i,k}$ - 1, if SKU $i\in\mathcal{I}$ is shipped from warehouse $k\in\mathcal{K}$ for customer order $m\in\mathcal{M}$, 0 otherwise
+- $X_{i,k}$ - 1, if $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
+- $Y_{m,i,k}$ - 1, if SKU $i\in\mathcal{I}$ is shipped from warehouse $k\in\mathcal{K}$ for customer order $m\in\mathcal{M}$, 0 otherwise
 
 ## Integer Programming Model
 
--   Catalán and Fisher (2012) created an **integer model**
--   Number of SKUs of E-Commerce retailers can easily be **between 10,000 - 100,000**
--   Number of customer orders necessary for "stable" results have to be higher in the order of **100,000 - 10,000,000**
+- Catalán and Fisher (2012) created an **integer model**
+- Number of SKUs of E-Commerce retailers can easily be **between 10,000 - 100,000**
+- Number of customer orders necessary for "stable" results have to be higher in the order of **100,000 - 10,000,000**
 
 . . .
 
@@ -178,10 +178,10 @@ Example of $\boldsymbol{T}$
 
 ## Implementation Challenges
 
--   Small instance with 10 SKUs and 1000 customer orders
--   **CPLEX 20.1.0** needs 3100 seconds to solve the problem
--   Computation times scales exponentially
--   $\rightarrow$ **Not applicable** in real world applications!
+- Small instance with 10 SKUs and 1000 customer orders
+- **CPLEX 20.1.0** needs 3100 seconds to solve the problem
+- Computation times scales exponentially
+- $\rightarrow$ **Not applicable** in real world applications!
 
 ## 
 
@@ -193,9 +193,9 @@ could be done?
 
 ## Heuristic Approach
 
--   **Heuristic**: Fast, but not necessarily optimal
--   **Approximation**: Not guaranteed to be optimal, but close
--   **Computational Effort**: Reasonable even for large instances
+- **Heuristic**: Fast, but not necessarily optimal
+- **Approximation**: Not guaranteed to be optimal, but close
+- **Computational Effort**: Reasonable even for large instances
 
 . . .
 
@@ -241,10 +241,10 @@ display(Q)
 
 ## Coappearance Matrix
 
--   $\boldsymbol{Q}$ is a <span class="highlight">symmetric matrix</span>
--   Proposed by Catalán and Fisher (2012)
--   $\boldsymbol{Q} = (\boldsymbol{T}^T \cdot \boldsymbol{T})$ where $\boldsymbol{Q} = (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}$
--   $q_{ij}$ shows how often $i$ and $j$ appear **in the same order**
+- $\boldsymbol{Q}$ is a <span class="highlight">symmetric matrix</span>
+- Proposed by Catalán and Fisher (2012)
+- $\boldsymbol{Q} = (\boldsymbol{T}^T \cdot \boldsymbol{T})$ where $\boldsymbol{Q} = (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}$
+- $q_{ij}$ shows how often $i$ and $j$ appear **in the same order**
 
 . . .
 
@@ -252,15 +252,15 @@ display(Q)
 
 . . .
 
--   How often each SKU appeared over all orders **(binary!)**
+- How often each SKU appeared over all orders **(binary!)**
 
 ## How to approach the problem?
 
--   **Greedy Heuristic**[^3]: Allocation based on matrix
--   **Mathematical Model**[^4]: Maximizes coappearance
--   **GRASP**[^5]: Good on small instances
--   <span class="highlight">New</span>: Max. coappearance with non-linear solver
--   <span class="highlight">New</span>: Heuristic based on Chi-Square Tests
+- **Greedy Heuristic**[^3]: Allocation based on matrix
+- **Mathematical Model**[^4]: Maximizes coappearance
+- **GRASP**[^5]: Good on small instances
+- <span class="highlight">New</span>: Max. coappearance with non-linear solver
+- <span class="highlight">New</span>: Heuristic based on Chi-Square Tests
 
 ## Basic Setting
 
@@ -272,8 +272,8 @@ display(Q)
 
 . . .
 
--   $\mathcal{I}$ - Set of products indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
--   $\mathcal{K}$ - Set of warehouses indexed by $k \in \{1,\dots,|\mathcal{K}|\}$
+- $\mathcal{I}$ - Set of products indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
+- $\mathcal{K}$ - Set of warehouses indexed by $k \in \{1,\dots,|\mathcal{K}|\}$
 
 . . .
 
@@ -285,8 +285,8 @@ display(Q)
 
 <span class="question">Question:</span> **What are possible parameters?**
 
--   $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$
--   $\boldsymbol{Q}= (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}$ - Coappearance matrix
+- $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$
+- $\boldsymbol{Q}= (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}$ - Coappearance matrix
 
 . . .
 
@@ -300,8 +300,8 @@ display(Q)
 
 > **We have the following sets:**
 >
-> -   $\mathcal{I}$ - Set of products indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
-> -   $\mathcal{K}$ - Set of warehouses indexed by $k \in \{1,\dots,|\mathcal{K}|\}$
+> - $\mathcal{I}$ - Set of products indexed by $i \in \{1,2,...,|\mathcal{I}|\}$
+> - $\mathcal{K}$ - Set of warehouses indexed by $k \in \{1,\dots,|\mathcal{K}|\}$
 
 . . .
 
@@ -315,7 +315,7 @@ display(Q)
 
 ## Decision Variables
 
--   $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
+- $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
 
 . . .
 
@@ -355,8 +355,8 @@ warehouse_model = Model(SCIP.Optimizer)
 
 > **We need the following:**
 >
-> -   $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
-> -   $q_{ij}$ - Coappearance of SKU $i\in\mathcal{I}$ and $j\in\mathcal{I}$
+> - $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
+> - $q_{ij}$ - Coappearance of SKU $i\in\mathcal{I}$ and $j\in\mathcal{I}$
 
 > **Our objective is to:**
 >
@@ -408,9 +408,9 @@ Q = [2 1 2; 1 2 1; 2 1 2]
 
 <span class="question">Question:</span> **What constraints?**
 
--   Allocate each SKU **at least once**
--   Warehouses have a **finite capacity**
--   Capacity is **not exceeded**
+- Allocate each SKU **at least once**
+- Warehouses have a **finite capacity**
+- Capacity is **not exceeded**
 
 ## Single Allocation Constraint?
 
@@ -422,7 +422,7 @@ Q = [2 1 2; 1 2 1; 2 1 2]
 
 > **We need the following variable:**
 >
-> -   $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
+> - $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
 
 . . .
 
@@ -436,7 +436,7 @@ $$\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}$$
 
 > **Remember, this is the variable:**
 >
-> -   $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
+> - $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
 
 . . .
 
@@ -471,8 +471,8 @@ $$\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}$$
 
 > **We need the following variables and parameters:**
 >
-> -   $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
-> -   $c_k$ - Storage space of warehouse $k\in\mathcal{K}$
+> - $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
+> - $c_k$ - Storage space of warehouse $k\in\mathcal{K}$
 
 . . .
 
@@ -512,13 +512,11 @@ $$\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \m
 
 subject to:
 
-$$
-\begin{align*}
+$$\begin{align*}
                 & \sum_{k \in \mathcal{K}} X_{ik} \geq 1 && \forall i \in \mathcal{I}\\
                 & \sum_{i \in \mathcal{I}} X_{ik} \leq c_{k} && \forall k \in \mathcal{K}\\
                 & X_{ik} \in \{0,1\}  && \forall i \in \mathcal{I}, \forall k \in \mathcal{K}
-\end{align*}
-$$
+\end{align*}$$
 
 ## QMK Model in Julia
 
@@ -547,16 +545,16 @@ println("The optimal solution is: ", value.(X))
 
 ## Characteristics
 
--   Is the model formulation **linear/ non-linear?**
--   What kind of **variable domain** do we have?
--   Do we know the **split-orders** based on the **objective value?**
--   Why **couldn't we use HiGHS** as solver?
+- Is the model formulation **linear/ non-linear?**
+- What kind of **variable domain** do we have?
+- Do we know the **split-orders** based on the **objective value?**
+- Why **couldn't we use HiGHS** as solver?
 
 ## Choosing a solver
 
--   Identify **problem structure**, e.g. LP, MIP, NLP, QCP, MIQCP, ...
--   What is the **size** of the problem?
--   Is a **commercial** solver needed?
+- Identify **problem structure**, e.g. LP, MIP, NLP, QCP, MIQCP, ...
+- What is the **size** of the problem?
+- Is a **commercial** solver needed?
 
 . . .
 
@@ -581,40 +579,40 @@ println("The optimal solution is: ", value.(X))
 
 . . .
 
--   <span class="highlight">SCIP</span>: Best open-source for MIQCP, but limited scalability
--   **Commercial solvers**: Better but still fail on 10,000+ SKUs
--   **Conclusion**: Heuristics necessary for realistic problems!
+- <span class="highlight">SCIP</span>: Best open-source for MIQCP, but limited scalability
+- **Commercial solvers**: Better but still fail on 10,000+ SKUs
+- **Conclusion**: Heuristics necessary for realistic problems!
 
 ## Model Assumptions
 
 <span class="question">Questions:</span> **On model assumptions**
 
--   What assumptions have we made?
--   Problem with allocating SKUs to multiple warehouses?
--   What else might pose a problem in the real world?
+- What assumptions have we made?
+- Problem with allocating SKUs to multiple warehouses?
+- What else might pose a problem in the real world?
 
 ## Model Limitations
 
--   **Stock-outs**: Model assumes <span class="highlight">perfect availability</span>
-    -   Real stockouts create splits despite optimal allocation
--   **Storage costs**: No differentiation between costs
--   **Demand dynamics**: Weather, promotions, seasonality
--   **SKU sizes**: Uniform capacity assumption unrealistic
--   **Shipping costs**: No consideration of distance or weight
+- **Stock-outs**: Model assumes <span class="highlight">perfect availability</span>
+  - Real stockouts create splits despite optimal allocation
+- **Storage costs**: No differentiation between costs
+- **Demand dynamics**: Weather, promotions, seasonality
+- **SKU sizes**: Uniform capacity assumption unrealistic
+- **Shipping costs**: No consideration of distance or weight
 
 ## Practical Limitations
 
 **Allocation changes**:
 
--   Frequent reallocation <span class="highlight">disrupts operations</span>
--   Physical inventory movements costly
--   Need for change minimization
+- Frequent reallocation <span class="highlight">disrupts operations</span>
+- Physical inventory movements costly
+- Need for change minimization
 
 **Workload imbalance**:
 
--   Optimal allocation may <span class="highlight">overload</span> some warehouses
--   High-frequency SKUs cluster together
--   Trade-off: splits vs. balance
+- Optimal allocation may <span class="highlight">overload</span> some warehouses
+- High-frequency SKUs cluster together
+- Trade-off: splits vs. balance
 
 # <span class="flow">Impact</span>
 
@@ -626,9 +624,9 @@ applied?
 
 ## Problem Size is Crucial
 
--   Up to 1,000 SKUs → **commercial solvers**
--   More than 1,000 SKUs → **heuristics**
--   For example, the <span class="highlight">CHI</span> heuristic
+- Up to 1,000 SKUs → **commercial solvers**
+- More than 1,000 SKUs → **heuristics**
+- For example, the <span class="highlight">CHI</span> heuristic
 
 . . .
 
@@ -652,17 +650,17 @@ $$P(A \cap B) = P(A) \times P(B)$$
 
 **Example**: If $A$ appears in 10% of orders and $B$ in 20%:
 
--   **Independent**: Appear together in $0.10 \times 0.20 = 2\%$ of orders
--   **Dependent**: Appear together in <span class="highlight">5% of orders</span> → customers buy them together!
+- **Independent**: Appear together in $0.10 \times 0.20 = 2\%$ of orders
+- **Dependent**: Appear together in <span class="highlight">5% of orders</span> → customers buy them together!
 
 ## Chi-Square Test Intuition
 
 Use **chi-square tests** to detect if SKUs are dependent:
 
--   Calculate <span class="highlight">expected coappearances</span> under independence
--   Compare with **actual coappearances**
--   If difference is significant → SKUs are **dependent**
--   Allocate dependent SKUs to <span class="highlight">same warehouse</span>!
+- Calculate <span class="highlight">expected coappearances</span> under independence
+- Compare with **actual coappearances**
+- If difference is significant → SKUs are **dependent**
+- Allocate dependent SKUs to <span class="highlight">same warehouse</span>!
 
 . . .
 
@@ -681,16 +679,16 @@ Use **chi-square tests** to detect if SKUs are dependent:
 
 <span class="question">Question:</span> **What challenges might arise in practice?**
 
--   **New products**: Allocate SKUs without historical data?
--   **Dynamic inventory**: SKUs appear and disappear
--   **Different sizes**: SKUs consume varying storage space
--   **Computational limits**: Problems with 50,000+ SKUs
+- **New products**: Allocate SKUs without historical data?
+- **Dynamic inventory**: SKUs appear and disappear
+- **Different sizes**: SKUs consume varying storage space
+- **Computational limits**: Problems with 50,000+ SKUs
 
 ## Rolling Horizon Approach
 
--   Use **5-week training window** for allocation decisions
--   Update allocations **weekly** based on recent patterns
--   Balance <span class="highlight">stability</span> vs. <span class="highlight">responsiveness</span>
+- Use **5-week training window** for allocation decisions
+- Update allocations **weekly** based on recent patterns
+- Balance <span class="highlight">stability</span> vs. <span class="highlight">responsiveness</span>
 
 . . .
 
@@ -702,16 +700,16 @@ Use **chi-square tests** to detect if SKUs are dependent:
 
 **Problem characteristics**:
 
--   100,000+ SKUs
--   Several million orders
--   Multiple warehouses
--   Storage capacity constraints
+- 100,000+ SKUs
+- Several million orders
+- Multiple warehouses
+- Storage capacity constraints
 
 **Heuristics compared**[^7]:
 
--   **CHI**: Chi-Square tests (Vlćek and Voigt 2024)
--   **GP, GO, GS, BS**: Greedy (Catalán and Fisher 2012)
--   **RA**: Random allocation
+- **CHI**: Chi-Square tests (Vlćek and Voigt 2024)
+- **GP, GO, GS, BS**: Greedy (Catalán and Fisher 2012)
+- **RA**: Random allocation
 
 . . .
 
@@ -721,17 +719,17 @@ Use **chi-square tests** to detect if SKUs are dependent:
 
 **Theoretical improvements**:
 
--   CHI: **82.25%** reduction
--   BS: **62.63%** reduction  
--   GS: **59.16%** reduction
--   vs. retailer: **6.95%** split ratio
+- CHI: **82.25%** reduction
+- BS: **62.63%** reduction  
+- GS: **59.16%** reduction
+- vs. retailer: **6.95%** split ratio
 
 ## Conclusion
 
--   Splits are **of no benefit**, except **faster customer deliveries**
--   <span class="highlight">Increase workload, packaging and shipping costs</span>
--   Mathematical Optimisation of **"full" problem not solvable**
--   **CHI** Heuristic close to mathematical optimisation
+- Splits are **of no benefit**, except **faster customer deliveries**
+- <span class="highlight">Increase workload, packaging and shipping costs</span>
+- Mathematical Optimisation of **"full" problem not solvable**
+- **CHI** Heuristic close to mathematical optimisation
 
 . . .
 
@@ -751,15 +749,15 @@ Questions?
 
 For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
 
-Catalán, Andrés, and Marshall Fisher. 2012. "Assortment Allocation to Distribution Centers to Minimize Split Customer Orders." *SSRN Electronic Journal*. <https://doi.org/10.2139/ssrn.2166687>.
+Catalán, Andrés, and Marshall Fisher. 2012. "Assortment Allocation to Distribution Centers to Minimize Split Customer Orders." *SSRN Electronic Journal*, ahead of print. <https://doi.org/10.2139/ssrn.2166687>.
 
-Hiley, Amanda, and Bryant A. Julstrom. 2006. "The Quadratic Multiple Knapsack Problem and Three Heuristic Approaches to It." In *Proceedings of the 8th Annual Conference on Genetic and Evolutionary Computation*, edited by M. Keijzer, 547--52. New York, NY: Association for Computing Machinery. <https://doi.org/10.1145/1143997.1144096>.
+Hiley, Amanda, and Bryant A. Julstrom. 2006. "The Quadratic Multiple Knapsack Problem and Three Heuristic Approaches to It." In *Proceedings of the 8th Annual Conference on Genetic and Evolutionary Computation*, edited by M. Keijzer. Association for Computing Machinery. <https://doi.org/10.1145/1143997.1144096>.
 
-Pitney Bowes Inc. 2017. "<span class="nocase">Pitney Bowes Parcel Shipping Index Reveals 48 Percent Growth in Parcel Volume since 2014</span>." 2017. <https://www.businesswire.com/news/home/20170830005628/en/Pitney-Bowes-Parcel-Shipping-Index-Reveals-48>.
+Pitney Bowes Inc. 2017. "<span class="nocase">Pitney Bowes Parcel Shipping Index Reveals 48 Percent Growth in Parcel Volume since 2014</span>." <https://www.businesswire.com/news/home/20170830005628/en/Pitney-Bowes-Parcel-Shipping-Index-Reveals-48>.
 
----------. 2019. "<span class="nocase">Pitney Bowes Parcel Shipping Index Reports Continued Growth Bolstered by China and Emerging Markets</span>." 2019. <https://www.businesswire.com/news/home/20191010005148/en/>.
+Pitney Bowes Inc. 2019. "<span class="nocase">Pitney Bowes Parcel Shipping Index Reports Continued Growth Bolstered by China and Emerging Markets</span>." <https://www.businesswire.com/news/home/20191010005148/en/>.
 
----------. 2020. "<span class="nocase">Pitney Bowes Parcel Shipping Index Reports Continued Growth as Global Parcel Volume Exceeds 100 billion for First Time Ever</span>." 2020. <https://www.businesswire.com/news/home/20201012005150/en/>.
+Pitney Bowes Inc. 2020. "<span class="nocase">Pitney Bowes Parcel Shipping Index Reports Continued Growth as Global Parcel Volume Exceeds 100 billion for First Time Ever</span>." <https://www.businesswire.com/news/home/20201012005150/en/>.
 
 Vlćek, Tobias, and Guido Voigt. 2024. "Optimizing SKU-Warehouse Allocations to Minimize Split Parcels in E-Commerce Environments." *To Be Submitted Soon*.
 

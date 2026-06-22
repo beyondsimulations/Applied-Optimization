@@ -21,12 +21,12 @@ Is our module hard? That's a subjective question. We would say it is exciting an
 
 Upon completion of the course, you ...
 
--   can implement solutions to complex optimization problems in Julia
--   know advanced concepts of optimization such as linear and nonlinear optimization
--   know basic concepts of programming and algorithms such as loops, functions
--   will be able to read and write code in Julia
--   will have experience working with Julia libraries such as JuMP and HiGHS
--   will know how to collaborate in a small team to find solutions for problems at hand
+- can implement solutions to complex optimization problems in Julia
+- know advanced concepts of optimization such as linear and nonlinear optimization
+- know basic concepts of programming and algorithms such as loops, functions
+- will be able to read and write code in Julia
+- will have experience working with Julia libraries such as JuMP and HiGHS
+- will know how to collaborate in a small team to find solutions for problems at hand
 
 Please note that this course is **specifically designed for business students**. That is, it is **not required to have any advanced knowledge or experience in programming** to attend this course. The teaching format will make it possible to account for different levels of programming skills such that every student can take the most out of the course.
 
@@ -46,10 +46,10 @@ The tutorials accompany the lectures. In the tutorials, you will apply the conce
 
 # How to see the slides
 
--   This course is based on [Quarto](https://quarto.org/)
--   It uses [revealjs](https://revealjs.com/) to render the slides
--   You find the slides for each lecture in the corresponding lecture
--   To see the slides, click on `RevealJS` in the top right side in the lecture
+- This course is based on [Quarto](https://quarto.org/)
+- It uses [revealjs](https://revealjs.com/) to render the slides
+- You find the slides for each lecture in the corresponding lecture
+- To see the slides, click on `RevealJS` in the top right side in the lecture
 
 # Questions
 

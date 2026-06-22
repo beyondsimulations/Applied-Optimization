@@ -33,17 +33,17 @@ HiGHS is an open-source solver that can find solutions to the optimization probl
 
 Let's break down our factory management problem:
 
--   You produce two products: Product A and Product B
--   Each product gives you a different profit:
-    -   Product A: 100 profit per unit
-    -   Product B: 150 profit per unit
--   You have two departments: Cutting and Finishing
--   Each product requires different amounts of time in each department:
-    -   Product A: 2 hours in Cutting, 4 hours in Finishing
-    -   Product B: 4 hours in Cutting, 3 hours in Finishing
--   You have limited time available in each department:
-    -   Cutting: 40 hours total
-    -   Finishing: 60 hours total
+- You produce two products: Product A and Product B
+- Each product gives you a different profit:
+  - Product A: 100 profit per unit
+  - Product B: 150 profit per unit
+- You have two departments: Cutting and Finishing
+- Each product requires different amounts of time in each department:
+  - Product A: 2 hours in Cutting, 4 hours in Finishing
+  - Product B: 4 hours in Cutting, 3 hours in Finishing
+- You have limited time available in each department:
+  - Cutting: 40 hours total
+  - Finishing: 60 hours total
 
 Your goal is to decide how many of each product to make to maximize your total profit, while not exceeding the available time in each department.
 
@@ -197,9 +197,9 @@ In JuMP, we use the `@variable` macro to define variables. Here's the general sy
 
 Where:
 
--   `model_name` is the name of your JuMP model
--   `variable_name` is what you want to call your variable
--   `[additional_properties]` can include bounds or variable types
+- `model_name` is the name of your JuMP model
+- `variable_name` is what you want to call your variable
+- `[additional_properties]` can include bounds or variable types
 
 For example, to create a continuous variable that's greater than or equal to 0:
 
@@ -251,9 +251,9 @@ The general syntax for adding a constraint is:
 
 Where:
 
--   `model_name` is the name of your JuMP model
--   `constraint_name` is a label you give to the constraint (optional, but useful for reference)
--   `constraint_expression` is the mathematical expression of the constraint
+- `model_name` is the name of your JuMP model
+- `constraint_name` is a label you give to the constraint (optional, but useful for reference)
+- `constraint_expression` is the mathematical expression of the constraint
 
 For example:
 
@@ -299,9 +299,9 @@ The general syntax for defining an objective function is:
 
 Where:
 
--   `model_name` is the name of your JuMP model
--   `optimization_direction` is either `Max` for maximization or `Min` for minimization
--   `objective_expression` is the mathematical expression of the objective function
+- `model_name` is the name of your JuMP model
+- `optimization_direction` is either `Max` for maximization or `Min` for minimization
+- `objective_expression` is the mathematical expression of the objective function
 
 For example:
 
@@ -374,10 +374,10 @@ println("Product B quantity: $(value(productB))")
 
 Let's break this down:
 
--   `optimize!(model)` tells JuMP to solve our model
--   `termination_status(model)` checks if we found an optimal solution
--   `objective_value(model)` gives us the maximum profit we can achieve
--   `value(productA)` and `value(productB)` tell us how many of each product we should produce
+- `optimize!(model)` tells JuMP to solve our model
+- `termination_status(model)` checks if we found an optimal solution
+- `objective_value(model)` gives us the maximum profit we can achieve
+- `value(productA)` and `value(productB)` tell us how many of each product we should produce
 
 > **Note**
 >

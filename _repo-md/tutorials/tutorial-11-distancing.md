@@ -38,16 +38,16 @@ Here's our event venue's seating arrangement, as we have used in the lecture:
 
 We have different types of groups wanting to attend the event:
 
--   Singles (Type 'a'): Solo attendees
--   Couples (Types 'b' and 'c'): Two people travelling together
--   Small families (Types 'd' and 'e'): Groups of four
--   Large families (Types 'f' and 'g'): Groups of six
+- Singles (Type 'a'): Solo attendees
+- Couples (Types 'b' and 'c'): Two people travelling together
+- Small families (Types 'd' and 'e'): Groups of four
+- Large families (Types 'f' and 'g'): Groups of six
 
 Each group type has:
 
--   A different ticket value (score)
--   Limited availability (how many such groups want tickets)
--   Space requirements (how many consecutive seats they need)
+- A different ticket value (score)
+- Limited availability (how many such groups want tickets)
+- Space requirements (how many consecutive seats they need)
 
 As we approach the end of the course, we'll remove some previous "guardrails" to give you more freedom in solving the problem.
 
@@ -67,11 +67,11 @@ First, define all necessary sets, parameters, and variables to model the problem
 
 The following distancing rules must be maintained:
 
--   Minimum one empty seat between groups
--   One empty seat between rows
--   One empty seat diagonally
--   Maximum two groups per row
--   Grey seats are obstacles and cannot be used
+- Minimum one empty seat between groups
+- One empty seat between rows
+- One empty seat diagonally
+- Maximum two groups per row
+- Grey seats are obstacles and cannot be used
 
 > **Common Pitfalls**
 >

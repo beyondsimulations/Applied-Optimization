@@ -39,8 +39,8 @@ The number of vehicles is 6 and each vehicle can transport up to 50 parcels to t
 
 First, we need to load the required packages and data files. Make sure you have the following files in the `data` directory that is located in the same directory as this notebook:
 
--   `routing-demand.csv`: Contains demand per distribution center
--   `coord_x_y.csv`: Contains location coordinates
+- `routing-demand.csv`: Contains demand per distribution center
+- `coord_x_y.csv`: Contains location coordinates
 
 ``` julia
 using DelimitedFiles
@@ -459,10 +459,10 @@ display(plot_capacity_usage(X, U, coord))
 
 FastDelivery wants to know the costs of the optimal solution. Let's calculate the monthly operational costs based on the following parameters:
 
--   Cost per kilometer: 0.6 EUR (includes fuel, repairs, driver costs)
--   Service frequency: Monday to Friday (5 days per week)
--   Time period: 4 weeks
--   Vehicle lease cost: 450 EUR per vehicle per 4 weeks
+- Cost per kilometer: 0.6 EUR (includes fuel, repairs, driver costs)
+- Service frequency: Monday to Friday (5 days per week)
+- Time period: 4 weeks
+- Vehicle lease cost: 450 EUR per vehicle per 4 weeks
 
 Calculate the total monthly costs and store them in `monthly_costs`.
 

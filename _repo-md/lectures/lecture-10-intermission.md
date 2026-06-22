@@ -13,16 +13,16 @@ format:
 
 ## Today's lecture
 
--   Today's lecture is a **little bit different**
--   Manage your expectations
--   Give you a **better idea** of what to expect from the exam
--   We will go through **some examples together!**
+- Today's lecture is a **little bit different**
+- Manage your expectations
+- Give you a **better idea** of what to expect from the exam
+- We will go through **some examples together!**
 
 ## Exam's structure
 
--   Exam consists of **three parts**
--   Free modelling, questions, Julia coding
--   Each point corresponds to <span class="highlight">approximately 1 minute of work</span>
+- Exam consists of **three parts**
+- Free modelling, questions, Julia coding
+- Each point corresponds to <span class="highlight">approximately 1 minute of work</span>
 
 . . .
 
@@ -34,11 +34,11 @@ format:
 
 > **Before starting the exam:**
 >
-> -   [ ] Review modeling notation conventions
-> -   [ ] Practice writing sets, parameters, and variables
-> -   [ ] Review common constraint patterns
-> -   [ ] Practice Julia syntax
-> -   [ ] Prepare your DIN A4 cheat sheet
+> - [ ] Review modeling notation conventions
+> - [ ] Practice writing sets, parameters, and variables
+> - [ ] Review common constraint patterns
+> - [ ] Practice Julia syntax
+> - [ ] Prepare your DIN A4 cheat sheet
 
 ## Feedback
 
@@ -148,11 +148,11 @@ Explain briefly in 2-3 sentences what so-called "Big-M" constraints can be used 
 
 > **Programming Tips**
 >
-> -   Pay attention to variable names and consistency
-> -   Check for proper package imports
-> -   Verify array indexing
-> -   Remember to use the correct comparison operators
-> -   Make sure to use proper JuMP syntax
+> - Pay attention to variable names and consistency
+> - Check for proper package imports
+> - Verify array indexing
+> - Remember to use the correct comparison operators
+> - Make sure to use proper JuMP syntax
 
 ## 3.a (7 Points)
 
@@ -198,9 +198,7 @@ start_optimization(transport_model)
 
 In an optimization model, the following equations are given:
 
-$$
-\sum_{m\in \mathcal{M}} 7 * U_{gm} * T_m - \sum_{k \in \mathcal{K}} R_k \leq D_g \quad \forall g \in \mathcal{G}
-$$
+$$\sum_{m\in \mathcal{M}} 7 * U_{gm} * T_m - \sum_{k \in \mathcal{K}} R_k \leq D_g \quad \forall g \in \mathcal{G}$$
 
 Please **define the equations in correct Julia syntax**.
 
@@ -226,11 +224,11 @@ What is the difference between a linear and a nonlinear problem? Please describe
 
 > **Remember**
 >
-> -   Time management is crucial
-> -   Read questions carefully
-> -   Describe your work clearly
-> -   Use your cheat sheet strategically
-> -   Double-check your answers if time permits
+> - Time management is crucial
+> - Read questions carefully
+> - Describe your work clearly
+> - Use your cheat sheet strategically
+> - Double-check your answers if time permits
 
 ## The end
 

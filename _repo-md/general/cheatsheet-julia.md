@@ -49,9 +49,9 @@ str_num = string(42)       # Number to String
 
 # Key Points
 
--   Variables are dynamic, types are not
--   Use `typeof()` to check variable type
--   String interpolation is powerful for formatted output
+- Variables are dynamic, types are not
+- Use `typeof()` to check variable type
+- String interpolation is powerful for formatted output
 
 ------------------------------------------------------------------------
 
@@ -107,9 +107,9 @@ age, city = person[2:3]    # Multiple assignment
 
 ## Key Differences
 
--   Vectors: Mutable, 1-dimensional, good for lists
--   Matrices: Mutable, 2-dimensional, good for linear algebra
--   Tuples: Immutable, fixed-size, good for grouping related constants
+- Vectors: Mutable, 1-dimensional, good for lists
+- Matrices: Mutable, 2-dimensional, good for linear algebra
+- Tuples: Immutable, fixed-size, good for grouping related constants
 
 ------------------------------------------------------------------------
 
@@ -161,11 +161,11 @@ work_hours = 9 <= current_hour < 17
 
 ## Key Points
 
--   Comparisons return boolean values (`true` or `false`)
--   `&&` requires all conditions to be true
--   `||` requires at least one condition to be true
--   `!` inverts a boolean value
--   Chained comparisons make range checks more readable
+- Comparisons return boolean values (`true` or `false`)
+- `&&` requires all conditions to be true
+- `||` requires at least one condition to be true
+- `!` inverts a boolean value
+- Chained comparisons make range checks more readable
 
 ------------------------------------------------------------------------
 
@@ -264,11 +264,11 @@ matrix = [i*j for i in 1:3, j in 1:3]    # 3x3 multiplication table
 
 ## Key Points
 
--   `for` loops are best when you know the number of iterations
--   `while` loops are useful for unknown iteration counts
--   Use `break` to exit loops early
--   List comprehensions offer concise array creation
--   Nested loops are useful for multi-dimensional iteration
+- `for` loops are best when you know the number of iterations
+- `while` loops are useful for unknown iteration counts
+- Use `break` to exit loops early
+- List comprehensions offer concise array creation
+- Nested loops are useful for multi-dimensional iteration
 
 ------------------------------------------------------------------------
 
@@ -328,11 +328,11 @@ copy(dict)             # Create shallow copy
 
 ## Key Points
 
--   Keys must be unique
--   Values can be of any type (including arrays)
--   Use `haskey()` to safely check for key existence
--   Dictionaries are mutable (can be changed)
--   Keys are accessed with square brackets `dict["key"]`
+- Keys must be unique
+- Values can be of any type (including arrays)
+- Use `haskey()` to safely check for key existence
+- Dictionaries are mutable (can be changed)
+- Keys are accessed with square brackets `dict["key"]`
 
 ------------------------------------------------------------------------
 
@@ -398,11 +398,11 @@ operation("Hi", 42)        # Uses generic operation
 
 ## Key Points
 
--   Functions can have explicit or implicit returns
--   Last expression is automatically returned if no `return` statement
--   Variables inside functions are local by default
--   Multiple dispatch allows different behavior based on argument types
--   Use `return` for early exits or conditional
+- Functions can have explicit or implicit returns
+- Last expression is automatically returned if no `return` statement
+- Variables inside functions are local by default
+- Multiple dispatch allows different behavior based on argument types
+- Use `return` for early exits or conditional
 
 ------------------------------------------------------------------------
 
@@ -452,11 +452,11 @@ Pkg.activate()                     # Activate default environment
 
 ## Key Points
 
--   Use `import` for namespace control, `using` for direct access
--   Always update packages regularly with `Pkg.update()`
--   Create separate environments for different projects
--   Project.toml and Manifest.toml track dependencies
--   Package manager commands typically run in REPL
+- Use `import` for namespace control, `using` for direct access
+- Always update packages regularly with `Pkg.update()`
+- Create separate environments for different projects
+- Project.toml and Manifest.toml track dependencies
+- Package manager commands typically run in REPL
 
 ------------------------------------------------------------------------
 
@@ -539,11 +539,11 @@ select(df, :Name)     # Select columns
 
 ## Key Points
 
--   Column access with dot notation (df.column)
--   Use eachrow() for row iteration
--   Boolean indexing for filtering
--   push! to add new rows
--   Broadcasting with dot operators (.\>, .+, etc.)
+- Column access with dot notation (df.column)
+- Use eachrow() for row iteration
+- Boolean indexing for filtering
+- push! to add new rows
+- Broadcasting with dot operators (.\>, .+, etc.)
 
 ------------------------------------------------------------------------
 
@@ -603,11 +603,11 @@ isfile(path)                         # Check if file exists
 
 ## Key Points
 
--   Use DelimitedFiles for simple matrix I/O
--   CSV package for advanced DataFrame I/O
--   Always use `@__DIR__` for relative paths
--   Check file existence before operations
--   Consider using try-catch for file operations
+- Use DelimitedFiles for simple matrix I/O
+- CSV package for advanced DataFrame I/O
+- Always use `@__DIR__` for relative paths
+- Check file existence before operations
+- Consider using try-catch for file operations
 
 ------------------------------------------------------------------------
 
@@ -698,8 +698,8 @@ plot(
 
 ## Key Points
 
--   Use plot() for new plots, plot!() to add to existing
--   Customize with named arguments
--   Save plots in various formats
--   StatsPlots extends plotting capabilities
--   Multiple series can share one plot
+- Use plot() for new plots, plot!() to add to existing
+- Customize with named arguments
+- Save plots in various formats
+- StatsPlots extends plotting capabilities
+- Multiple series can share one plot

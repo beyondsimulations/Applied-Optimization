@@ -15,11 +15,11 @@ format:
 
 ## Public transport
 
--   FIFA Worldcup 2022 took place in a <span class="highlight">small region</span>
--   The capacity of the metro system was **finite**
--   More than <span class="highlight">1 million tourists</span> where expected
--   Metro usage was **free for all ticket holders**
--   Transport methods were expected to be **overloaded**
+- FIFA Worldcup 2022 took place in a <span class="highlight">small region</span>
+- The capacity of the metro system was **finite**
+- More than <span class="highlight">1 million tourists</span> where expected
+- Metro usage was **free for all ticket holders**
+- Transport methods were expected to be **overloaded**
 
 . . .
 
@@ -33,11 +33,11 @@ format:
 
 . . .
 
--   At event venues and in waiting areas
--   At intersections of multiple pedestrian flows
--   In narrow passages and entrances
--   On crowded metro platforms and transfer stations
--   At ticket/turnstile bottlenecks and emergency exits
+- At event venues and in waiting areas
+- At intersections of multiple pedestrian flows
+- In narrow passages and entrances
+- On crowded metro platforms and transfer stations
+- At ticket/turnstile bottlenecks and emergency exits
 
 ------------------------------------------------------------------------
 
@@ -51,23 +51,23 @@ format:
 
 . . .
 
--   Red Line has twice the capacity of Green and Gold Line
--   People use the metro to get to the event venues
+- Red Line has twice the capacity of Green and Gold Line
+- People use the metro to get to the event venues
 
 . . .
 
 <span class="question">Question:</span> **What could be the issue?**
 
--   Imagine a match at a stadium along the Gold line
--   People from Red and Green line will try to get there
--   This will cause a <span class="highlight">massive crowd at transfer stations</span>
+- Imagine a match at a stadium along the Gold line
+- People from Red and Green line will try to get there
+- This will cause a <span class="highlight">massive crowd at transfer stations</span>
 
 ## Visualization
 
 <img src="images/ao_metro-overcrowded.svg" data-fig-align="center" />
 
--   10 people want to start per minute at **each station**
--   Everybody wants to get to **station D**
+- 10 people want to start per minute at **each station**
+- Everybody wants to get to **station D**
 
 ## Closer look at the Metro System
 
@@ -75,9 +75,9 @@ format:
 
 ## Capacities inside the stations
 
--   Capacities **inside the stations** are limited as well
--   These include the escalators, stairs, and elevators
--   But also the platforms and the ticket gates
+- Capacities **inside the stations** are limited as well
+- These include the escalators, stairs, and elevators
+- But also the platforms and the ticket gates
 
 . . .
 
@@ -91,12 +91,12 @@ format:
 
 . . .
 
--   Often unknown **how many people** exactly will participate
--   Gathering data is <span class="highlight">extremely important and difficult</span>
--   Crowd behavior can be <span class="highlight">unpredictable and dynamic</span>
--   Weather conditions may affect **transportation preferences**
--   Cultural factors influence **crowd movement patterns**
--   Emergency situations require **flexible contingency plans**
+- Often unknown **how many people** exactly will participate
+- Gathering data is <span class="highlight">extremely important and difficult</span>
+- Crowd behavior can be <span class="highlight">unpredictable and dynamic</span>
+- Weather conditions may affect **transportation preferences**
+- Cultural factors influence **crowd movement patterns**
+- Emergency situations require **flexible contingency plans**
 
 ## 
 
@@ -114,9 +114,9 @@ problem structure!
 
 . . .
 
--   A <span class="highlight">safe and successful event</span> as host country
--   Good <span class="highlight">publicity and a positive recognition</span> worldwide
--   <span class="highlight">Satisfied visitors</span> that enjoyed their time
+- A <span class="highlight">safe and successful event</span> as host country
+- Good <span class="highlight">publicity and a positive recognition</span> worldwide
+- <span class="highlight">Satisfied visitors</span> that enjoyed their time
 
 . . .
 
@@ -130,9 +130,9 @@ problem structure!
 
 . . .
 
--   First, we need to understand the **movement patterns**
--   Event is **unprecedented**, movement patterns are unknown
--   Multiple <span class="highlight">concurrent events</span> affect flow patterns
+- First, we need to understand the **movement patterns**
+- Event is **unprecedented**, movement patterns are unknown
+- Multiple <span class="highlight">concurrent events</span> affect flow patterns
 
 . . .
 
@@ -144,10 +144,10 @@ problem structure!
 
 ## Simulation
 
--   Based on <span class="highlight">publicly available data</span> from the area
--   Simulates **all individuals** participating at the event
--   Includes **all transportation infrastructure**
--   <span class="highlight">Individual mode choice</span> based on a choice model
+- Based on <span class="highlight">publicly available data</span> from the area
+- Simulates **all individuals** participating at the event
+- Includes **all transportation infrastructure**
+- <span class="highlight">Individual mode choice</span> based on a choice model
 
 . . .
 
@@ -159,9 +159,9 @@ problem structure!
 
 <img src="https://images.byndsim.com/ao/ao_metro-train_section.png" style="width:85.0%" />
 
--   Detailed movement patterns throughout the region
--   Potential sections at risk in the transport infrastructure
--   Potential capacity overloads at event locations
+- Detailed movement patterns throughout the region
+- Potential sections at risk in the transport infrastructure
+- Potential capacity overloads at event locations
 
 ## 
 
@@ -181,8 +181,8 @@ of assumptions!
 
 . . .
 
--   Regulate the **inflow** at each individual station
--   Ensure utilized capacity is <span class="highlight">always within bounds</span>
+- Regulate the **inflow** at each individual station
+- Ensure utilized capacity is <span class="highlight">always within bounds</span>
 
 . . .
 
@@ -190,9 +190,9 @@ of assumptions!
 
 . . .
 
--   <span class="highlight">Minimize the queues</span> outside of the metro stations
--   Based on the **allowed inflow** and origin-destination data
--   Adhering to the **capacity constraints**
+- <span class="highlight">Minimize the queues</span> outside of the metro stations
+- Based on the **allowed inflow** and origin-destination data
+- Adhering to the **capacity constraints**
 
 ## Difficulty
 
@@ -200,8 +200,8 @@ of assumptions!
 
 . . .
 
--   Patterns have different origin-destination pairs
--   Regulating the inflow does not affect the destination
+- Patterns have different origin-destination pairs
+- Regulating the inflow does not affect the destination
 
 # <span class="flow">Model Formulation</span>
 
@@ -213,9 +213,9 @@ of assumptions!
 
 ## Graph Sets?
 
--   $\mathcal{G}$ - Connected digraph of the metro network $\mathcal{G}=(\mathcal{O},\mathcal{E})$
--   $\mathcal{O}$ - Set of metro stations, indexed by $o$
--   $\mathcal{E}$ - Set of directed arcs between connected stations
+- $\mathcal{G}$ - Connected digraph of the metro network $\mathcal{G}=(\mathcal{O},\mathcal{E})$
+- $\mathcal{O}$ - Set of metro stations, indexed by $o$
+- $\mathcal{E}$ - Set of directed arcs between connected stations
 
 . . .
 
@@ -227,8 +227,8 @@ of assumptions!
 
 <span class="question">Question:</span> **What could be the time sets?**
 
--   $\mathcal{T}$ - Set of minutes in the time horizon, indexed by $t$
--   $\mathcal{P}$ - Set of periods in the observed time horizon, where $p \in \{1, 2, \dots,n\}$
+- $\mathcal{T}$ - Set of minutes in the time horizon, indexed by $t$
+- $\mathcal{P}$ - Set of periods in the observed time horizon, where $p \in \{1, 2, \dots,n\}$
 
 . . .
 
@@ -242,9 +242,9 @@ of assumptions!
 
 . . .
 
--   Staff needs **clear**, consistent instructions
--   Frequent changes in flow <span class="highlight">increase risk of errors</span>
--   **Easier** to manage and communicate for planners
+- Staff needs **clear**, consistent instructions
+- Frequent changes in flow <span class="highlight">increase risk of errors</span>
+- **Easier** to manage and communicate for planners
 
 . . .
 
@@ -254,12 +254,10 @@ of assumptions!
 
 ## Mapping Minutes to Periods
 
--   We can define an **additional set** with their relation
--   It specifies the relation of <span class="highlight">periods $p$ to minutes $t$.</span>
+- We can define an **additional set** with their relation
+- It specifies the relation of <span class="highlight">periods $p$ to minutes $t$.</span>
 
-$$
-    I_p =\{t \in \mathcal{T}|(p-1) \times m + 1 \leq t \leq p \times m\} \quad \forall p \in \mathcal{P}
-$$
+$$    I_p =\{t \in \mathcal{T}|(p-1) \times m + 1 \leq t \leq p \times m\} \quad \forall p \in \mathcal{P}$$
 
 . . .
 
@@ -267,8 +265,8 @@ $$
 
 . . .
 
--   $I_p$ is the set of minutes $t$ that belong to period $p$
--   Minutes are **not overlapping**, but they are **continuous**
+- $I_p$ is the set of minutes $t$ that belong to period $p$
+- Minutes are **not overlapping**, but they are **continuous**
 
 ## Parameters?
 
@@ -276,12 +274,12 @@ $$
 
 . . .
 
--   $q_{o,d,p}$ - Demand from station $o$ to $d$ with $o,d \in \mathcal{O}$ in $p$
--   $d_{e}$ - Travel time (min) of the arcs $e \in \mathcal{E}$
--   $c_e$ - Max. allowed arc entry rate $e$ per minute with $e \in \mathcal{E}$
--   $c_{o}^{min}$ - Min. station entry rate $o$ per minute with $o \in \mathcal{O}$
--   $c_{o}^{max}$ - Max. station entry rate $o$ per minute with $o \in \mathcal{O}$
--   $\alpha$ - Maximal allowed arc utilization ($0 < \alpha < 1$)
+- $q_{o,d,p}$ - Demand from station $o$ to $d$ with $o,d \in \mathcal{O}$ in $p$
+- $d_{e}$ - Travel time (min) of the arcs $e \in \mathcal{E}$
+- $c_e$ - Max. allowed arc entry rate $e$ per minute with $e \in \mathcal{E}$
+- $c_{o}^{min}$ - Min. station entry rate $o$ per minute with $o \in \mathcal{O}$
+- $c_{o}^{max}$ - Max. station entry rate $o$ per minute with $o \in \mathcal{O}$
+- $\alpha$ - Maximal allowed arc utilization ($0 < \alpha < 1$)
 
 ## Metro Movement
 
@@ -289,9 +287,9 @@ $$
 
 . . .
 
--   Simple network: assume people use the **shortest path**
--   Use <span class="highlight">Djikstra's algorithm</span> to compute it
--   From each station to all other stations
+- Simple network: assume people use the **shortest path**
+- Use <span class="highlight">Djikstra's algorithm</span> to compute it
+- From each station to all other stations
 
 . . .
 
@@ -301,7 +299,7 @@ $$
 
 ## Shortest Paths (SP)
 
--   $\mathcal{C}_{o,d}$ - Set of arcs $e \in \mathcal{E}$ on the SP from $o,d \in \mathcal{O}$
+- $\mathcal{C}_{o,d}$ - Set of arcs $e \in \mathcal{E}$ on the SP from $o,d \in \mathcal{O}$
 
 . . .
 
@@ -311,8 +309,8 @@ $$
 
 . . .
 
--   $d_{o,d}$ - travel time (min) on SP from $o \in \mathcal{O}$ to $d \in \mathcal{O}$
--   $d_{o,e}$ - travel time (min) on SP from $o \in \mathcal{O}$ to $e \in \mathcal{E}$
+- $d_{o,d}$ - travel time (min) on SP from $o \in \mathcal{O}$ to $d \in \mathcal{O}$
+- $d_{o,e}$ - travel time (min) on SP from $o \in \mathcal{O}$ to $e \in \mathcal{E}$
 
 ## People Spreading
 
@@ -322,8 +320,8 @@ $$
 
 ## Ratio of Origin-Destination
 
--   We **cannot control** the destination of the passengers
--   Thus we assume that people spread <span class="highlight">based on destination</span>
+- We **cannot control** the destination of the passengers
+- Thus we assume that people spread <span class="highlight">based on destination</span>
 
 . . .
 
@@ -351,14 +349,14 @@ $$\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \ma
 
 > **We need the following sets:**
 >
-> -   All the metro stations, $o \in \mathcal{O}$
-> -   All periods under observation, $p \in \mathcal{P}$
+> - All the metro stations, $o \in \mathcal{O}$
+> - All periods under observation, $p \in \mathcal{P}$
 
 <span class="question">Question:</span> **What could be our decision variable?**
 
 . . .
 
--   $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
+- $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
 
 ## Objective Function?
 
@@ -372,14 +370,14 @@ $$\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \ma
 
 . . .
 
--   By the allowed inflow $X_{o,p}$ subtracted from the queue
+- By the allowed inflow $X_{o,p}$ subtracted from the queue
 
 ## Objective Function
 
 > **We need the following parameters and variables:**
 >
-> -   $q_{o,d,p}$ - People queued to travel from station $o$ to $d$ with $o,d \in \mathcal{O}$ in period $p$
-> -   $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
+> - $q_{o,d,p}$ - People queued to travel from station $o$ to $d$ with $o,d \in \mathcal{O}$ in period $p$
+> - $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
 
 . . .
 
@@ -387,9 +385,7 @@ $$\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \ma
 
 . . .
 
-$$
-\text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
-$$
+$$\text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})$$
 
 # <span class="flow">Constraints</span>
 
@@ -401,9 +397,9 @@ $$
 
 . . .
 
--   The capacity of each arc is **not exceeded**
--   Do not dispatch more people than are queued
--   Do not dispatch less than the minimum allowed inflow
+- The capacity of each arc is **not exceeded**
+- Do not dispatch more people than are queued
+- Do not dispatch less than the minimum allowed inflow
 
 ## 
 
@@ -419,9 +415,9 @@ complicated now!
 
 . . .
 
--   People enter metro station at $o$ with destination $d$
--   They will lead to a usage of an arc $e$ on their SP
--   This usage depends on their path and the travel times
+- People enter metro station at $o$ with destination $d$
+- They will lead to a usage of an arc $e$ on their SP
+- This usage depends on their path and the travel times
 
 . . .
 
@@ -431,8 +427,7 @@ complicated now!
 
 ## Set of Time-Delays
 
-$$
-\mathcal{R}_{e,t} = \{(o,d,p) \mid
+$$\mathcal{R}_{e,t} = \{(o,d,p) \mid
     \begin{array}{l}
     (o,d) | o,d \in \mathcal{O}, \\
     q_{o,d,p} > 0, \\
@@ -440,8 +435,7 @@ $$
     t-d_{o,e} \in I_p, \\
     p \in \mathcal{P}\}
     \end{array}
-    \quad \forall e \in \mathcal{E}, t \in \mathcal{T}
-$$
+    \quad \forall e \in \mathcal{E}, t \in \mathcal{T}$$
 
 . . .
 
@@ -485,11 +479,11 @@ different stations and periods.
 
 > **We need the following variable, parameter and set:**
 >
-> -   $q_{o,d,p}$ - people waiting to travel from station $o \in \mathcal{O}$ to station $d \in \mathcal{O}$ in $p$
-> -   $c_e$ - people max. allowed to enter arc $e$ per minute with $e \in \mathcal{E}$
-> -   $\mathcal{R}_{e,t}$ - mapping of station entries to arc $e$ in time $t$ with $e \in \mathcal{E}$ and $t \in \mathcal{T}$
-> -   $\alpha$ - maximal allowed arc utilization ($0 < \alpha < 1$)
-> -   $X_{o,p}$ - the allowed inflow per minute at metro station $o$ in the period $p$
+> - $q_{o,d,p}$ - people waiting to travel from station $o \in \mathcal{O}$ to station $d \in \mathcal{O}$ in $p$
+> - $c_e$ - people max. allowed to enter arc $e$ per minute with $e \in \mathcal{E}$
+> - $\mathcal{R}_{e,t}$ - mapping of station entries to arc $e$ in time $t$ with $e \in \mathcal{E}$ and $t \in \mathcal{T}$
+> - $\alpha$ - maximal allowed arc utilization ($0 < \alpha < 1$)
+> - $X_{o,p}$ - the allowed inflow per minute at metro station $o$ in the period $p$
 
 ## Ensure Capacity Utilization
 
@@ -497,9 +491,7 @@ different stations and periods.
 
 . . .
 
-$$
-\sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} \quad \forall e \in \mathcal{E}, t \in \mathcal{T}
-$$
+$$\sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} \quad \forall e \in \mathcal{E}, t \in \mathcal{T}$$
 
 . . .
 
@@ -517,10 +509,10 @@ $$
 
 > **We need the following variables and parameters:**
 >
-> -   $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
-> -   $c_{o}^{min}$ - Min. station entry rate $o$ per minute
-> -   $c_{o}^{max}$ - Max. station entry rate $o$ per minute
-> -   $\alpha$ - Maximal allowed arc utilization ($0 < \alpha < 1$)
+> - $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
+> - $c_{o}^{min}$ - Min. station entry rate $o$ per minute
+> - $c_{o}^{max}$ - Max. station entry rate $o$ per minute
+> - $\alpha$ - Maximal allowed arc utilization ($0 < \alpha < 1$)
 
 ## Bound the Inflow Rate
 
@@ -528,9 +520,7 @@ $$
 
 . . .
 
-$$
-c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
-$$
+$$c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mathcal{O}, p \in \mathcal{P}$$
 
 . . .
 
@@ -548,9 +538,9 @@ $$
 
 > **We need the following variables and parameters:**
 >
-> -   $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
-> -   $q_{o,d,p}$ - People queued to travel from station $o$ to $d$ with $o,d \in \mathcal{O}$ in $p$
-> -   $m$ - period length in minutes
+> - $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
+> - $q_{o,d,p}$ - People queued to travel from station $o$ to $d$ with $o,d \in \mathcal{O}$ in $p$
+> - $m$ - period length in minutes
 
 ## Dispatch Only Available People
 
@@ -558,9 +548,7 @@ $$
 
 . . .
 
-$$
-\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 \quad \forall o \in \mathcal{O}, p \in \mathcal{P}
-$$
+$$\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 \quad \forall o \in \mathcal{O}, p \in \mathcal{P}$$
 
 . . .
 
@@ -584,17 +572,17 @@ subject to:
 
 <span class="question">Questions:</span> **On model characteristics**
 
--   Is the model formulation linear/ non-linear?
--   What kind of variable domains do we have?
+- Is the model formulation linear/ non-linear?
+- What kind of variable domains do we have?
 
 ## Model Assumptions
 
 <span class="question">Questions:</span> **On model assumptions**
 
--   What assumptions have we made?
--   What are likely issues that can arise if applied?
--   Have we thought in detail about queues?
--   Are shortest paths a feasible assumption?
+- What assumptions have we made?
+- What are likely issues that can arise if applied?
+- Have we thought in detail about queues?
+- Are shortest paths a feasible assumption?
 
 # <span class="flow">Implementation and Impact</span>
 
@@ -606,9 +594,9 @@ subject to:
 
 ## Metro Inflow Problem
 
--   Solved very fast <span class="highlight">within seconds</span> for realistic problem sizes
--   **But** we cannot plan or control the metro inflow
--   Queues are **too simplified** with passengers disappearing
+- Solved very fast <span class="highlight">within seconds</span> for realistic problem sizes
+- **But** we cannot plan or control the metro inflow
+- Queues are **too simplified** with passengers disappearing
 
 . . .
 
@@ -616,12 +604,12 @@ subject to:
 
 ## Heuristic: Step-Wise
 
--   Solve the model for the time-horizon of a **few periods**
--   Fix the inflow in the **current first period**
--   Decrease capacity in the network **based on the inflow**
--   Transfer **remaining queues** into the subsequent period
--   <span class="highlight">Solve the model again</span>
--   **Repeat**, until the inflow is computed for all periods
+- Solve the model for the time-horizon of a **few periods**
+- Fix the inflow in the **current first period**
+- Decrease capacity in the network **based on the inflow**
+- Transfer **remaining queues** into the subsequent period
+- <span class="highlight">Solve the model again</span>
+- **Repeat**, until the inflow is computed for all periods
 
 ## Transport Demand
 
@@ -633,10 +621,10 @@ subject to:
 
 ## Key Results
 
--   Model reduces capacity violations from <span class="highlight">25,941 to just 4</span>
--   Maximum arc utilization drops from **316% to 109%**
--   <span class="highlight">81% of passengers</span> accommodated safely
--   Computation time: **~1.4 seconds** per planning period
+- Model reduces capacity violations from <span class="highlight">25,941 to just 4</span>
+- Maximum arc utilization drops from **316% to 109%**
+- <span class="highlight">81% of passengers</span> accommodated safely
+- Computation time: **~1.4 seconds** per planning period
 
 . . .
 
@@ -646,10 +634,10 @@ subject to:
 
 ## Scalability: Shanghai Metro
 
--   Validated on **302 stations** (11× larger)
--   <span class="highlight">99% reduction</span> in capacity violations
--   Computation: **\< 2 minutes** per period
--   Works for routine **peak-hour demand**
+- Validated on **302 stations** (11× larger)
+- <span class="highlight">99% reduction</span> in capacity violations
+- Computation: **\< 2 minutes** per period
+- Works for routine **peak-hour demand**
 
 . . .
 
@@ -663,10 +651,10 @@ subject to:
 
 ## Implementation
 
--   **Assumption of known destinations** based is strong
--   Movements **seemed to follow our forecasts**
--   We did achieve our goal of **metro inflow control**
--   Simulation was used to **estimate the inflows**
+- **Assumption of known destinations** based is strong
+- Movements **seemed to follow our forecasts**
+- We did achieve our goal of **metro inflow control**
+- Simulation was used to **estimate the inflows**
 
 . . .
 
@@ -691,9 +679,9 @@ subject to:
 
 ## Wrap Up
 
--   Model can help to achieve a <span class="highlight">good balance</span>
--   Can be adapted easily to **any metro system worldwide **
--   Especially interesting for **larger Asian cities**
+- Model can help to achieve a <span class="highlight">good balance</span>
+- Can be adapted easily to **any metro system worldwide**
+- Especially interesting for **larger Asian cities**
 
 . . .
 

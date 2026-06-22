@@ -19,11 +19,11 @@ Vlćek et al. (2024)
 
 <span class="question">Question:</span> **What makes the work of emergency services complex?**
 
--   Dynamic urban development
--   Changing population patterns
--   Resource constraints
--   Need for rapid response
--   Multiple stakeholder interests
+- Dynamic urban development
+- Changing population patterns
+- Resource constraints
+- Need for rapid response
+- Multiple stakeholder interests
 
 ## Emergency Services
 
@@ -31,24 +31,24 @@ Vlćek et al. (2024)
 
 Emergency services address the needs of <span class="highlight">three interest groups</span>:
 
--   Citizens
--   Service personnel
--   Administrators
+- Citizens
+- Service personnel
+- Administrators
 
 <span class="question">Question:</span> **What could be the objectives of these groups?**
 
 ## Stakeholder Objectives
 
 1.  **Citizens**
-    -   Fast response times
-    -   Reliable service coverage
+    - Fast response times
+    - Reliable service coverage
 2.  **Service Personnel**
-    -   Manageable workloads
-    -   Safe working conditions
+    - Manageable workloads
+    - Safe working conditions
 
 1.  **Administrators**
-    -   Cost efficiency
-    -   Resource optimization
+    - Cost efficiency
+    - Resource optimization
 
 > **Note**
 >
@@ -60,9 +60,9 @@ Emergency services address the needs of <span class="highlight">three interest g
 
 <span class="question">Question:</span> **Why might current district layouts be suboptimal?**
 
--   Many layouts <span class="highlight">date back several decades</span>
--   Often designed along highways and regions (Bruce 2009)
--   Extensive data **not used** for data-driven improvement
+- Many layouts <span class="highlight">date back several decades</span>
+- Often designed along highways and regions (Bruce 2009)
+- Extensive data **not used** for data-driven improvement
 
 ## 
 
@@ -74,10 +74,10 @@ this situation?
 
 <span class="question">Question:</span> **What data can help improve emergency services?**
 
--   Historical incident patterns
--   Response time analysis
--   Resource utilization metrics
--   Population densities and traffic patterns
+- Historical incident patterns
+- Response time analysis
+- Resource utilization metrics
+- Population densities and traffic patterns
 
 . . .
 
@@ -87,11 +87,11 @@ this situation?
 
 ## Optimization
 
--   <span class="highlight">Operations research (OR)</span> models can help!
--   Based on **incident records** and **geographical information**
--   Improve the **response of emergency services**
--   Help administrators in making **strategic decisions**
--   Locate <span class="highlight">new departments</span> or <span class="highlight">close departments</span> (Liberatore, Camacho-Collados, and Vitoriano 2020)
+- <span class="highlight">Operations research (OR)</span> models can help!
+- Based on **incident records** and **geographical information**
+- Improve the **response of emergency services**
+- Help administrators in making **strategic decisions**
+- Locate <span class="highlight">new departments</span> or <span class="highlight">close departments</span> (Liberatore et al. 2020)
 
 # <span class="flow">Case Studies</span>
 
@@ -101,21 +101,21 @@ this situation?
 
 ## Service Priority Extremes
 
--   **High Priority**
-    -   Life-threatening situations
-    -   Active crimes in progress
-    -   Multiple unit response needed
--   **Low Priority**
-    -   Minor incidents
-    -   Administrative tasks
+- **High Priority**
+  - Life-threatening situations
+  - Active crimes in progress
+  - Multiple unit response needed
+- **Low Priority**
+  - Minor incidents
+  - Administrative tasks
 
 ## Case Studies
 
--   <span class="highlight">Different urban contexts</span>
--   Study of jurisdictions in
-    -   Germany: Large metropolitan area
-    -   Belgium: Large rural area
--   Focus on <span class="highlight">response time optimization</span>
+- <span class="highlight">Different urban contexts</span>
+- Study of jurisdictions in
+  - Germany: Large metropolitan area
+  - Belgium: Large rural area
+- Focus on <span class="highlight">response time optimization</span>
 
 . . .
 
@@ -125,9 +125,9 @@ this situation?
 
 ## Dispatching
 
--   Dispatchers assign all CFS to vehicles from the <span class="highlight">corresponding districts and patrol areas</span>
--   Officers are **familiar with the area** and are thus better prepared to respond appropriately (Bodily 1978)
--   To cope with high demands, dispatchers can **assign vehicles from nearby districts or beats**
+- Dispatchers assign all CFS to vehicles from the <span class="highlight">corresponding districts and patrol areas</span>
+- Officers are **familiar with the area** and are thus better prepared to respond appropriately (Bodily 1978)
+- To cope with high demands, dispatchers can **assign vehicles from nearby districts or beats**
 
 ## Potential Problem
 
@@ -135,17 +135,17 @@ this situation?
 
 . . .
 
--   This can lead to a <span class="highlight">domino effect</span>
--   Transferring vehicles from other districts or beats **reduces coverage in those locations** (Mayer 2009)
--   This makes them vulnerable to missing resources when **they need assistance themselves**
+- This can lead to a <span class="highlight">domino effect</span>
+- Transferring vehicles from other districts or beats **reduces coverage in those locations** (Mayer 2009)
+- This makes them vulnerable to missing resources when **they need assistance themselves**
 
 ## Overloaded Systems
 
--   This can lead to <span class="highlight">overloaded systems!</span>
--   Long dispatching delays due to **staff shortages**
--   Preventive patrol hardly possible (Miller and Knoppers 1972)
--   Dispatchers **constantly** draw on patrol resources
--   Reduces the **response time** of emergency services
+- This can lead to <span class="highlight">overloaded systems!</span>
+- Long dispatching delays due to **staff shortages**
+- Preventive patrol hardly possible (Miller and Knoppers 1972)
+- Dispatchers **constantly** draw on patrol resources
+- Reduces the **response time** of emergency services
 
 . . .
 
@@ -157,20 +157,20 @@ this situation?
 
 <img src="https://images.beyondsimulations.com/ao/ao_police-responsetime.svg" style="width:55.0%" />
 
--   Central criterion to measure the <span class="highlight">effectiveness of emergency services</span> is the response time
--   Time between a **call for aid** and the arrival at the **incident location**
--   Low response time increases the likelihood of helping and improves confidence (Bodily 1978)
+- Central criterion to measure the <span class="highlight">effectiveness of emergency services</span> is the response time
+- Time between a **call for aid** and the arrival at the **incident location**
+- Low response time increases the likelihood of helping and improves confidence (Bodily 1978)
 
 ## Response Time Influencers
 
 <span class="question">Question:</span> **What affects response time?**
 
--   Initial contact
--   Information gathering
--   Unit assignment
--   Resource coordination
--   Route to location
--   Traffic conditions
+- Initial contact
+- Information gathering
+- Unit assignment
+- Resource coordination
+- Route to location
+- Traffic conditions
 
 # <span class="flow">Territory Design Problem</span>
 
@@ -190,10 +190,10 @@ Aggregation of **small geographic areas**, called basic areas (BAs), into geogra
 
 <span class="question">Question:</span> **What are the key components?**
 
--   **Basic Areas (BAs)**: Smallest indivisible geographic units
--   **Districts/Territories**: Aggregation of BAs
--   **Planning Criteria**: Rules and objectives for grouping
--   **Decision**: Which BAs belong to which district?
+- **Basic Areas (BAs)**: Smallest indivisible geographic units
+- **Districts/Territories**: Aggregation of BAs
+- **Planning Criteria**: Rules and objectives for grouping
+- **Decision**: Which BAs belong to which district?
 
 . . .
 
@@ -205,17 +205,17 @@ Aggregation of **small geographic areas**, called basic areas (BAs), into geogra
 
 **Balance Criteria**:
 
--   Equal <span class="highlight">workload</span> distribution
--   Equal sales potential
--   Equal population coverage
--   Resource balance
+- Equal <span class="highlight">workload</span> distribution
+- Equal sales potential
+- Equal population coverage
+- Resource balance
 
 **Geographic Criteria**:
 
--   <span class="highlight">Contiguity</span>: No isolated basic areas
--   <span class="highlight">Compactness</span>: "Round"
--   Minimize travel distances
--   Respect boundaries
+- <span class="highlight">Contiguity</span>: No isolated basic areas
+- <span class="highlight">Compactness</span>: "Round"
+- Minimize travel distances
+- Respect boundaries
 
 . . .
 
@@ -227,11 +227,11 @@ Aggregation of **small geographic areas**, called basic areas (BAs), into geogra
 
 <span class="question">Question:</span> **Where else is this used?**
 
--   **Sales force deployment**: Sales reps to territories
--   **Political districting**: Electoral boundaries
--   **School districts**: Student assignment zones
--   **Waste collection**: Service route planning
--   **Healthcare**: Hospital catchment areas
+- **Sales force deployment**: Sales reps to territories
+- **Political districting**: Electoral boundaries
+- **School districts**: Student assignment zones
+- **Waste collection**: Service route planning
+- **Healthcare**: Hospital catchment areas
 
 . . .
 
@@ -245,7 +245,7 @@ Aggregation of **small geographic areas**, called basic areas (BAs), into geogra
 
 . . .
 
--   <span class="highlight">Minimize the response time</span> to help citizens faster while **increasing the confidence in the service**
+- <span class="highlight">Minimize the response time</span> to help citizens faster while **increasing the confidence in the service**
 
 . . .
 
@@ -253,9 +253,9 @@ Aggregation of **small geographic areas**, called basic areas (BAs), into geogra
 
 . . .
 
--   Reallocate **only part** of the police department's
--   Compact and contiguous territories to **improve patrol**
--   Prevention of **isolated departments**
+- Reallocate **only part** of the police department's
+- Compact and contiguous territories to **improve patrol**
+- Prevention of **isolated departments**
 
 ## Response Time Components
 
@@ -263,9 +263,9 @@ Aggregation of **small geographic areas**, called basic areas (BAs), into geogra
 
 <span class="question">Question:</span> **How can we model response time?**
 
--   Call length is <span class="highlight">independent</span> of territory
--   Dispatch time is **difficult to model**
--   Driving time can be **minimized directly**
+- Call length is <span class="highlight">independent</span> of territory
+- Dispatch time is **difficult to model**
+- Driving time can be **minimized directly**
 
 > **Conclusion**
 >
@@ -285,10 +285,10 @@ step by step!
 
 . . .
 
--   Basic areas (BAs) and potential department locations
--   Driving times between basic areas
--   Forecasted incident data
--   Assignment decisions
+- Basic areas (BAs) and potential department locations
+- Driving times between basic areas
+- Forecasted incident data
+- Assignment decisions
 
 . . .
 
@@ -300,9 +300,9 @@ step by step!
 
 <span class="question">Question:</span> **How do we model this mathematically?**
 
--   Geographic areas → <span class="highlight">Centroids</span>
--   Centroids → **Vertices** in a graph
--   Spatial relationships → **Edges** between **vertices**
+- Geographic areas → <span class="highlight">Centroids</span>
+- Centroids → **Vertices** in a graph
+- Spatial relationships → **Edges** between **vertices**
 
 . . .
 
@@ -316,8 +316,8 @@ step by step!
 
 <span class="question">Question:</span> **What sets do we need?**
 
--   $\mathcal{J}$ : Set of **all BAs** (basic areas), indexed by $j$
--   $\mathcal{I}$ : Set of **potential department locations** where $\mathcal{I} \subseteq \mathcal{J}$, indexed by $i$
+- $\mathcal{J}$ : Set of **all BAs** (basic areas), indexed by $j$
+- $\mathcal{I}$ : Set of **potential department locations** where $\mathcal{I} \subseteq \mathcal{J}$, indexed by $i$
 
 . . .
 
@@ -331,17 +331,17 @@ step by step!
 
 <span class="question">Question:</span> **Advantages of hexagons?**
 
--   <span class="highlight">Equal distances</span> to all neighboring centroids
--   Reduces sampling bias from edge effects (Wang and Kwan 2018)
--   Special properties that help with the enforcement of **compactness**
--   Better representation of urban geography
+- <span class="highlight">Equal distances</span> to all neighboring centroids
+- Reduces sampling bias from edge effects (Wang and Kwan 2018)
+- Special properties that help with the enforcement of **compactness**
+- Better representation of urban geography
 
 ## Parameters
 
 <span class="question">Question:</span> **What parameters do we need?**
 
--   $p$ - Number of district centres (departments)
--   $t_{i,j}$ - Expected driving times between $i$ and $j$
+- $p$ - Number of district centres (departments)
+- $t_{i,j}$ - Expected driving times between $i$ and $j$
 
 . . .
 
@@ -353,8 +353,8 @@ step by step!
 
 > **We have the following sets:**
 >
-> -   BAs, indexed by $j \in \mathcal{J}$
-> -   Potential department locations, indexed by $i \in \mathcal{I}$
+> - BAs, indexed by $j \in \mathcal{J}$
+> - Potential department locations, indexed by $i \in \mathcal{I}$
 
 . . .
 
@@ -368,7 +368,7 @@ step by step!
 
 ## Decision variable/s
 
--   $X_{i,j}$: 1 if BA $j$ assigned to department $i$, 0 otherwise
+- $X_{i,j}$: 1 if BA $j$ assigned to department $i$, 0 otherwise
 
 . . .
 
@@ -376,7 +376,7 @@ step by step!
 
 . . .
 
--   $X_{i,j} \in \{0,1\} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}$
+- $X_{i,j} \in \{0,1\} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}$
 
 ## 
 
@@ -394,9 +394,9 @@ objective function!
 
 <span class="question">Question:</span> **How do we minimize response time?**
 
--   We want to minimize **total driving time**
--   Consider frequency of incidents in each BA
--   Don't include fixed costs (handled by constraints)
+- We want to minimize **total driving time**
+- Consider frequency of incidents in each BA
+- Don't include fixed costs (handled by constraints)
 
 ## Objective Function
 
@@ -404,17 +404,15 @@ objective function!
 
 . . .
 
-$$
-\text{minimize} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} t_{i,j} \times X_{i,j}
-$$
+$$\text{minimize} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} t_{i,j} \times X_{i,j}$$
 
 . . .
 
 > **Expected Driving Time**
 >
-> -   Total driving time **across all assignments**
-> -   Weighted by **incident frequency**
-> -   Considers **all possible BA-department pairs**
+> - Total driving time **across all assignments**
+> - Weighted by **incident frequency**
+> - Considers **all possible BA-department pairs**
 
 # <span class="flow">Constraints</span>
 
@@ -436,15 +434,15 @@ $$
 
 . . .
 
--   Each BA must be assigned to <span class="highlight">exactly one</span> department
--   Prevents **overlapping** jurisdictions
--   Ensures **complete coverage**
+- Each BA must be assigned to <span class="highlight">exactly one</span> department
+- Prevents **overlapping** jurisdictions
+- Ensures **complete coverage**
 
 . . .
 
 > **We need the following variables:**
 >
-> -   $X_{i,j}$ - 1 if BA $j$ assigned to department $i$, 0 otherwise
+> - $X_{i,j}$ - 1 if BA $j$ assigned to department $i$, 0 otherwise
 
 ## Single Assignment Constraint?
 
@@ -452,9 +450,7 @@ $$
 
 . . .
 
-$$
-\sum_{i \in \mathcal{I}} X_{i,j} = 1 \quad \forall j \in \mathcal{J}
-$$
+$$\sum_{i \in \mathcal{I}} X_{i,j} = 1 \quad \forall j \in \mathcal{J}$$
 
 . . .
 
@@ -472,10 +468,10 @@ $$
 
 > **We need the following sets and variables:**
 >
-> -   $\mathcal{I}$ - Set of potential department locations, indexed by $i$
-> -   $\mathcal{J}$ - Set of BAs, indexed by $j$
-> -   $X_{i,j}$ - 1, if BA $j$ assigned to department $i$, 0 otherwise
-> -   $p$ - Number of departments
+> - $\mathcal{I}$ - Set of potential department locations, indexed by $i$
+> - $\mathcal{J}$ - Set of BAs, indexed by $j$
+> - $X_{i,j}$ - 1, if BA $j$ assigned to department $i$, 0 otherwise
+> - $p$ - Number of departments
 
 ## Department Count Constraint
 
@@ -483,9 +479,7 @@ $$
 
 . . .
 
-$$
-\sum_{i \in \mathcal{I}} X_{i,i} = p
-$$
+$$\sum_{i \in \mathcal{I}} X_{i,i} = p$$
 
 . . .
 
@@ -493,8 +487,8 @@ $$
 
 . . .
 
--   We **can't open more departments** than there are locations
--   The model **will be infeasible**
+- We **can't open more departments** than there are locations
+- The model **will be infeasible**
 
 ## Active Department Constraint?
 
@@ -506,15 +500,13 @@ $$
 
 > **We need the following sets and variables:**
 >
-> -   $X_{i,j}$ - 1, if BA $j$ assigned to department $i$, 0 otherwise
+> - $X_{i,j}$ - 1, if BA $j$ assigned to department $i$, 0 otherwise
 
 <span class="question">Question:</span> **How do we ensure assignments only to active departments?**
 
 ## Active Department Constraint
 
-$$
-X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
-$$
+$$X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}$$
 
 . . .
 
@@ -532,16 +524,16 @@ $$
 
 **p-Median Problem**:
 
--   Fixed number of facilities (exactly $p$)
--   Minimize <span class="highlight">total distance</span>
--   All customers served
--   No capacity constraints
+- Fixed number of facilities (exactly $p$)
+- Minimize <span class="highlight">total distance</span>
+- All customers served
+- No capacity constraints
 
 **Similar problems**:
 
--   **UFLP**: Uncapacitated Facility Location
--   **p-Center**: Minimize <span class="highlight">maximum</span> distance
--   **Capacitated**: Add limits
+- **UFLP**: Uncapacitated Facility Location
+- **p-Center**: Minimize <span class="highlight">maximum</span> distance
+- **Capacitated**: Add limits
 
 . . .
 
@@ -557,9 +549,9 @@ $$
 
 <span class="question">Question:</span> **Why is contiguity important?**
 
--   Prevents **isolated areas**
--   Ensures **contiguous patrol routes**
--   Maintains **operational coherence**
+- Prevents **isolated areas**
+- Ensures **contiguous patrol routes**
+- Maintains **operational coherence**
 
 ## What is compactness?
 
@@ -573,7 +565,7 @@ $$
 
 > **Compactness**
 >
-> Compactness has **no univocal definition**; a district is commonly declared compact if it is 'somehow round-shaped and undistorted' (Kalcsics, Nickel, and Schröder 2005).
+> Compactness has **no univocal definition**; a district is commonly declared compact if it is 'somehow round-shaped and undistorted' (Kalcsics et al. 2005).
 
 ## Contiguity and Compactness
 
@@ -581,32 +573,30 @@ $$
 
 <span class="question">Question:</span> **Are our resulting districts based on the model contiguous and compact?**
 
--   This depends on $t_{i,j}$
--   **If Euclidean distance**
-    -   Districts will be contiguous
-    -   Likely of compact shape
+- This depends on $t_{i,j}$
+- **If Euclidean distance**
+  - Districts will be contiguous
+  - Likely of compact shape
 
 ## <span class="invert-font">Compactness p-Median</span>
 
 <span class="invert-font fragment">**Question:** Is this likely for police service districting?</span>
 
--   No, as we minimize the driving time within a city
--   Highways, Tunnels, etc.
--   Multiplied by the differing number of requested cars
--   This can contribute to distorted district shapes
+- No, as we minimize the driving time within a city
+- Highways, Tunnels, etc.
+- Multiplied by the differing number of requested cars
+- This can contribute to distorted district shapes
 
 ## Contiguity Sets
 
 <span class="highlight">Additional Set and Parameter</span>
 
--   $e_{i,j}$ - Euclidean distance between centroids
--   $\mathcal{A}_j$ - Sets of BAs adjacent to BA $j$
+- $e_{i,j}$ - Euclidean distance between centroids
+- $\mathcal{A}_j$ - Sets of BAs adjacent to BA $j$
 
 . . .
 
-$$
-\mathcal{N}_{i,j}=\{v \in \mathcal{A}_j | e_{i,v} < e_{i,j}\} \quad \forall i\in \mathcal{I}, \forall j\in \mathcal{J}
-$$
+$$\mathcal{N}_{i,j}=\{v \in \mathcal{A}_j | e_{i,v} < e_{i,j}\} \quad \forall i\in \mathcal{I}, \forall j\in \mathcal{J}$$
 
 . . .
 
@@ -634,9 +624,7 @@ $$
 
 **All districts have to be contiguous**
 
-$$
-X_{i,j} \leq \sum_{v \in \mathcal{N}_{i,j}} X_{i,v} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i: i \neq j
-$$
+$$X_{i,j} \leq \sum_{v \in \mathcal{N}_{i,j}} X_{i,v} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i: i \neq j$$
 
 . . .
 
@@ -683,18 +671,18 @@ $$
 
 <span class="question">Questions:</span> **On model characteristics**
 
--   Is the model formulation linear/ non-linear?
--   What kind of variable domains do we have?
--   What do you think, can the model be solved quickly?
--   Have we prevented isolated districts?
+- Is the model formulation linear/ non-linear?
+- What kind of variable domains do we have?
+- What do you think, can the model be solved quickly?
+- Have we prevented isolated districts?
 
 ## Model Assumptions
 
 <span class="question">Questions:</span> **On model assumptions**
 
--   What assumptions have we made?
--   Use Euclidean distances to approximate driving time?
--   Can we rely on incident data collected by the police?
+- What assumptions have we made?
+- Use Euclidean distances to approximate driving time?
+- Can we rely on incident data collected by the police?
 
 # <span class="flow">Implementation and Impact</span>
 
@@ -702,20 +690,20 @@ $$
 
 <span class="question">Question:</span> **Where did we apply our model?**
 
--   Two distinct environments:
-    1.  Large metropolitan area (Germany)
-    2.  Rural region (Belgium)
--   Different challenges and requirements
--   Focus on <span class="highlight">response time optimization</span>
+- Two distinct environments:
+  1.  Large metropolitan area (Germany)
+  2.  Rural region (Belgium)
+- Different challenges and requirements
+- Focus on <span class="highlight">response time optimization</span>
 
 ## <span class="invert-font">German Metropolitan Case</span>
 
 . . .
 
--   1.8 mio incidents (2015-2019)
--   ~20 department locations
--   1,596 basic areas
--   Dense urban environment
+- 1.8 mio incidents (2015-2019)
+- ~20 department locations
+- 1,596 basic areas
+- Dense urban environment
 
 . . .
 
@@ -729,10 +717,10 @@ $$
 
 . . .
 
--   50,000 incidents (2019-2020)
--   2 existing + 1 planned location
--   1,233 basic areas
--   Dispersed rural setting
+- 50,000 incidents (2019-2020)
+- 2 existing + 1 planned location
+- 1,233 basic areas
+- Dispersed rural setting
 
 . . .
 
@@ -748,19 +736,19 @@ $$
 
 . . .
 
--   Spatial and temporal patterns
--   Shift schedules
--   Priority handling
--   Rush hours
--   Inter-district support
--   Variable driving times
+- Spatial and temporal patterns
+- Shift schedules
+- Priority handling
+- Rush hours
+- Inter-district support
+- Variable driving times
 
 ## Results
 
--   Response time <span class="highlight">reduction up to 14.52%</span>
--   Better **workload distribution**
--   Improved **coverage equity**
--   More efficient **resource utilization**
+- Response time <span class="highlight">reduction up to 14.52%</span>
+- Better **workload distribution**
+- Improved **coverage equity**
+- More efficient **resource utilization**
 
 . . .
 
@@ -785,10 +773,10 @@ $$
 
 <span class="question">Question:</span> **Where else could this approach be useful?**
 
--   Other emergency services
--   Different urban contexts
--   Resource allocation problems
--   Service territory design
+- Other emergency services
+- Different urban contexts
+- Resource allocation problems
+- Service territory design
 
 . . .
 
@@ -822,13 +810,13 @@ D'Amico, Steven J., Shoou-Jiun Wang, Rajan Batta, and Christopher M. Rump. 2002.
 
 Kalcsics, Jörg, Stefan Nickel, and Michael Schröder. 2005. "Towards a Unified Territorial Design Approach --- Applications, Algorithms and GIS Integration." *Top* 13 (1): 1--56. <https://doi.org/10.1007/BF02578982>.
 
-Liberatore, Federico, Miguel Camacho-Collados, and Begoña Vitoriano. 2020. "Police Districting Problem: Literature Review and Annotated Bibliography." In *International Series in Operations Research & Management Science: Optimal Districting and Territory Design*, edited by Roger Z. Ríos-Mercado, 9--29. Cham: Springer International Publishing. <https://doi.org/10.1007/978-3-030-34312-5_2>.
+Liberatore, Federico, Miguel Camacho-Collados, and Begoña Vitoriano. 2020. "Police Districting Problem: Literature Review and Annotated Bibliography." In *International Series in Operations Research & Management Science: Optimal Districting and Territory Design*, edited by Roger Z. Ríos-Mercado. Springer International Publishing. <https://doi.org/10.1007/978-3-030-34312-5_2>.
 
 Mayer, Allison. 2009. "[Geospatial Technology Helps East Orange Crack down on Crime]()." *A Quarterly Bulletin of Applied Geography for the Study of Crime & Public Safety* 1 (4): 8--10.
 
-Miller, Herbert F., and Bastiaan A. Knoppers. 1972. "[Computer Simulation of Police Dispatching and Patrol Functions]()." In *International Symposium on Criminal Justice Information and Statistics Systems Proceedings*, edited by Gary Cooper, 167--79. National Institute of Justice.
+Miller, Herbert F., and Bastiaan A. Knoppers. 1972. "[Computer Simulation of Police Dispatching and Patrol Functions]()." In *International Symposium on Criminal Justice Information and Statistics Systems Proceedings*, edited by Gary Cooper. National Institute of Justice.
 
-Vlćek, Tobias, Knut Haase, Malte Fliedner, and Tobias Cors. 2024. "Police Service District Planning." *OR Spectrum*, February. <https://doi.org/10.1007/s00291-024-00745-3>.
+Vlćek, Tobias, Knut Haase, Malte Fliedner, and Tobias Cors. 2024. "Police Service District Planning." *OR Spectrum*, ahead of print, February. <https://doi.org/10.1007/s00291-024-00745-3>.
 
 Wang, Jue, and Mei-Po Kwan. 2018. "Hexagon-Based Adaptive Crystal Growth Voronoi Diagrams Based on Weighted Planes for Service Area Delimitation." *ISPRS International Journal of Geo-Information* 7: 257. <https://doi.org/10.3390/ijgi7070257>.
 

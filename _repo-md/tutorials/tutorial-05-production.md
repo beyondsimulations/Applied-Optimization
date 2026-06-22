@@ -188,14 +188,14 @@ Next, you need to prepare the given data for the model. Create a dictionary for 
 >
 > Let's understand what's happening with `dictDemand` in the code. It creates a dictionary where:
 >
-> -   **Keys** are tuples `(beer_type, period)`, e.g., `("IPA", "week_1")`
-> -   **Values** are the demand numbers for that beer in that period
+> - **Keys** are tuples `(beer_type, period)`, e.g., `("IPA", "week_1")`
+> - **Values** are the demand numbers for that beer in that period
 >
 > You can use this pattern to create dictionaries for:
 >
-> -   `dictAvailableTime`: Maps each **period** (single key) → available time
-> -   `dictBottlingTime`: Maps each **beer type** (single key) → bottling time per bottle
-> -   `dictSetupTime`: Maps each **beer type** (single key) → setup time
+> - `dictAvailableTime`: Maps each **period** (single key) → available time
+> - `dictBottlingTime`: Maps each **beer type** (single key) → bottling time per bottle
+> - `dictSetupTime`: Maps each **beer type** (single key) → setup time
 >
 > Notice that these dictionaries have **single keys** (just the period or just the beer type), not tuple keys like `dictDemand`.
 
@@ -257,8 +257,8 @@ Now, create your variables. Please name them `productBottled` for the binary var
 >
 > This creates variables indexed by:
 >
-> -   First index: beer types (from `dictBottlingTime`)
-> -   Second index: periods (from `dictAvailableTime`)
+> - First index: beer types (from `dictBottlingTime`)
+> - Second index: periods (from `dictAvailableTime`)
 >
 > So you'll have variables like `x["IPA", "week_1"]`, `x["IPA", "week_2"]`, etc.
 
@@ -308,7 +308,7 @@ Next, define the objective function.
 > Inside the sum, you'll need:
 >
 > 1.  **Setup costs**: `setupHourCosts * dictSetupTime[i] * productBottled[i,t]`
->     -   This uses `dictSetupTime[i]` to get the setup time for beer type `i`
+>     - This uses `dictSetupTime[i]` to get the setup time for beer type `i`
 > 2.  **Inventory holding costs**: `warehouseCosts * WarehouseStockPeriodEnd[i,t]`
 >
 > Notice how we access dictionary values using `dict[key]` notation!

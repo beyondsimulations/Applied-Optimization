@@ -151,6 +151,8 @@ website:
         href: https://tobiasvlcek.com/lectures/
       - icon: shield-check
         href: general/privacy.qmd
+      - icon: info-circle
+        href: general/imprint.qmd
 
 format:
   html:
@@ -172,13 +174,15 @@ format:
       - general/header.html
     include-after-body:
       text: |
-        <script src="https://agents.byndsim.com/static/floating-chat.js"></script>
+        <script defer src="https://oshu.eu/widget.js"></script>
         <script>
-        new UniversalChatWidget({
-          "apiEndpoint": "https://chat.byndsim.com/chat",
-          "model": "applied-optimization",
-          "configUrl": "https://agents.byndsim.com/api/widget-config/applied-optimization"
-        });
+          document.addEventListener('DOMContentLoaded', function () {
+            ChatWidget.init({
+              tenant: "platform",
+              agent: "applied-optimization",
+              layoutMode: "sidebar",
+            });
+          });
         </script>
 
   hugo-md: default

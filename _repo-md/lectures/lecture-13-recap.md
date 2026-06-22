@@ -45,10 +45,10 @@ past lectures?
 
 ## What have we learned?
 
--   How to **identify and abstract** real-world problems
--   How to **start programming** in Julia
--   How to **model and solve** optimization problems
--   How to **question** model assumptions
+- How to **identify and abstract** real-world problems
+- How to **start programming** in Julia
+- How to **model and solve** optimization problems
+- How to **question** model assumptions
 
 . . .
 
@@ -62,10 +62,10 @@ past lectures?
 
 ## How to continue after the lecture?
 
--   The best way is to <span class="highlight">keep programming and modeling</span>
--   We are offering **seminars and master thesis**
--   Try to find a way to **apply programming in your work**
--   There are **many interesting topics** to explore!
+- The best way is to <span class="highlight">keep programming and modeling</span>
+- We are offering **seminars and master thesis**
+- Try to find a way to **apply programming in your work**
+- There are **many interesting topics** to explore!
 
 . . .
 
@@ -75,10 +75,10 @@ past lectures?
 
 ## Concrete Next Steps
 
--   Join online communities on Julia and Optimization
--   Contribute to open-source projects if you can
--   Follow key researchers and practitioners
--   Start a small personal project using the tools learned
+- Join online communities on Julia and Optimization
+- Contribute to open-source projects if you can
+- Follow key researchers and practitioners
+- Start a small personal project using the tools learned
 
 . . .
 
@@ -88,9 +88,9 @@ past lectures?
 
 ## Start Pair Programming with AI
 
--   First, try to <span class="highlight">be confident with the basics</span> of a language
--   Always try to <span class="highlight">understand the code you use</span>
--   If you want to try **AI pair programming**, use Cursor as IDE
+- First, try to <span class="highlight">be confident with the basics</span> of a language
+- Always try to <span class="highlight">understand the code you use</span>
+- If you want to try **AI pair programming**, use Cursor as IDE
 
 . . .
 
@@ -104,10 +104,10 @@ past lectures?
 
 ## That's it for the Lecture Series!
 
--   I hope you **enjoyed** the lecture and found it **helpful**
--   On Friday, we will have a <span class="highlight">discussion session</span>
--   You can earn the **last half-bonus point** for the exam
--   I wish you **all the best for your studies and your career!**
+- I hope you **enjoyed** the lecture and found it **helpful**
+- On Friday, we will have a <span class="highlight">discussion session</span>
+- You can earn the **last half-bonus point** for the exam
+- I wish you **all the best for your studies and your career!**
 
 . . .
 

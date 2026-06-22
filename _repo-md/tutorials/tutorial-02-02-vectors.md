@@ -12,9 +12,9 @@ code-links:
 
 This interactive Julia script introduces the basics of vectors, matrices, and tuples.
 
--   A vector is like a single row in a spreadsheet or a shopping list - it stores items in a line
--   A matrix is like a spreadsheet - it has rows and columns
--   A tuple is like a sealed package containing different types of items
+- A vector is like a single row in a spreadsheet or a shopping list - it stores items in a line
+- A matrix is like a spreadsheet - it has rows and columns
+- A tuple is like a sealed package containing different types of items
 
 Understanding these data structures and how to manipulate them is crucial in Julia. Follow the instructions, write your code in the designated code blocks, and execute the corresponding code cell.
 
@@ -52,11 +52,11 @@ students = ["Mike", "Yola", "Elio"]
 
 Vectors are mutable, and you can:
 
--   Add items to the end (like adding to a shopping list): `push!(grades, 82)`
--   Remove the last item (like crossing off the last item): `pop!(grades)`
--   Remove the first item (like crossing off the first item): `popfirst!(grades)`
--   Look at specific items using their position number: `grades[1]` gives you the first grade
--   Access a range of items: `grades[1:3]` gives you the first three grades
+- Add items to the end (like adding to a shopping list): `push!(grades, 82)`
+- Remove the last item (like crossing off the last item): `pop!(grades)`
+- Remove the first item (like crossing off the first item): `popfirst!(grades)`
+- Look at specific items using their position number: `grades[1]` gives you the first grade
+- Access a range of items: `grades[1:3]` gives you the first three grades
 
 > **Tip**
 >

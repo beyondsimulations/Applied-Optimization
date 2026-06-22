@@ -13,11 +13,11 @@ format:
 
 ## About me
 
--   **Field:** Optimizing and simulating complex systems
--   **Languages of choice:** Julia, Python and Rust
--   **Interest:** Modelling, Simulations, Machine Learning
--   **Teaching:** OR, Algorithms, and Programming
--   **Contact:** <tobias.vlcek@uni-hamburg.de>
+- **Field:** Optimizing and simulating complex systems
+- **Languages of choice:** Julia, Python and Rust
+- **Interest:** Modelling, Simulations, Machine Learning
+- **Teaching:** OR, Algorithms, and Programming
+- **Contact:** <tobias.vlcek@uni-hamburg.de>
 
 . . .
 
@@ -29,25 +29,25 @@ format:
 
 ## Lectures
 
--   Every Tuesday between 10.15 AM and 11.45 AM
--   First four lectures repeat modelling and programming
--   Later lectures discuss practical problems and implementation
--   Lectures are interactive → We discuss approaches!
--   Communication takes place via OpenOlat and E-Mail
+- Every Tuesday between 10.15 AM and 11.45 AM
+- First four lectures repeat modelling and programming
+- Later lectures discuss practical problems and implementation
+- Lectures are interactive → We discuss approaches!
+- Communication takes place via OpenOlat and E-Mail
 
 ## Tutorials
 
--   Tutorials every Friday between 8.15 AM and 9.45 AM
--   In these tutorials we are working on assignments
--   Please bring a laptop with Windows, macOS, or Linux!
--   This Friday there is **no tutorial**!
+- Tutorials every Friday between 8.15 AM and 9.45 AM
+- In these tutorials we are working on assignments
+- Please bring a laptop with Windows, macOS, or Linux!
+- This Friday there is **no tutorial**!
 
 ## Assignments
 
--   Based on applied problems of the lecture
--   Up to 3 students can solve assignments together
--   Submitted solutions earn bonus points for the exam
--   Max. 0.5 point per tutorial
+- Based on applied problems of the lecture
+- Up to 3 students can solve assignments together
+- Submitted solutions earn bonus points for the exam
+- Max. 0.5 point per tutorial
 
 . . .
 
@@ -59,17 +59,17 @@ format:
 
 ## Applied Optimization
 
--   Real-world problems can be addressed with models
--   Our objective is to foster your interest in the topic
--   Enable you to recognize and solve problem structures
--   Includes problem understanding and implementation
+- Real-world problems can be addressed with models
+- Our objective is to foster your interest in the topic
+- Enable you to recognize and solve problem structures
+- Includes problem understanding and implementation
 
 ## Research in Operations Research
 
--   Part of the University of Hamburg Business School
--   Aiming to solve real-world problems
--   Or improving our theoretical understanding
--   Publication in journals and conferences
+- Part of the University of Hamburg Business School
+- Aiming to solve real-world problems
+- Or improving our theoretical understanding
+- Publication in journals and conferences
 
 . . .
 
@@ -79,18 +79,18 @@ format:
 
 ## National and international journals
 
--   European Journal of OR
--   Journal of the Operational Research Society
--   Journal on Applied Analytics
--   Management Science
--   Operations Research
--   OR Spectrum
+- European Journal of OR
+- Journal of the Operational Research Society
+- Journal on Applied Analytics
+- Management Science
+- Operations Research
+- OR Spectrum
 
 # <span class="flow">Real-World Applications</span>
 
 ## <span class="invert-font">Brewery Production Planning</span>
 
-Mickein, Koch, and Haase (2022)
+Mickein et al. (2022)
 
 ## <span class="invert-font">Police Service District Planning</span>
 
@@ -149,10 +149,10 @@ Haase et al. (2016)
 
 ## Why Julia?
 
--   **Designed to be:**
-    -   as general as Python
-    -   as statistics-friendly as R
-    -   as fast as C++!
+- **Designed to be:**
+  - as general as Python
+  - as statistics-friendly as R
+  - as fast as C++!
 
 . . .
 
@@ -162,17 +162,17 @@ Haase et al. (2016)
 
 ## Syntax
 
--   Dynamically-typed syntax just like Python
--   Similar to R, Matlab and Python - **not like C++**
--   In comparison, accessible and easy to learn!
--   **No need to worry about memory management!**
+- Dynamically-typed syntax just like Python
+- Similar to R, Matlab and Python - **not like C++**
+- In comparison, accessible and easy to learn!
+- **No need to worry about memory management!**
 
 ## JuMP
 
--   Package for **algebraic modeling** in Julia
--   Simplifies solving complex optimization problems
--   Provides a high-level, user-friendly interface
--   Useful for operations research and data science
+- Package for **algebraic modeling** in Julia
+- Simplifies solving complex optimization problems
+- Provides a high-level, user-friendly interface
+- Useful for operations research and data science
 
 . . .
 
@@ -182,10 +182,10 @@ Haase et al. (2016)
 
 ## Must it be a new language?
 
--   Yes, but no need to worry!
--   Julia is quite similar to Python and R
--   We will learn the syntax together in the first part
--   It is helpful to switch languages from time to time
+- Yes, but no need to worry!
+- Julia is quite similar to Python and R
+- We will learn the syntax together in the first part
+- It is helpful to switch languages from time to time
 
 # <span class="flow">Algebraic Modeling</span>
 
@@ -199,9 +199,9 @@ algebraic modeling?
 
 ## What is algebraic modeling?
 
--   A "mathematical language" for optimization problems
--   Allows for describing complex systems and constraints
--   Based on linear algebra (Equations and Inequalities)
+- A "mathematical language" for optimization problems
+- Allows for describing complex systems and constraints
+- Based on linear algebra (Equations and Inequalities)
 
 . . .
 
@@ -210,19 +210,19 @@ algebraic modeling?
 
 ## How to learn algebraic modeling?
 
--   **Practice, practice, and practice!**
--   Understand standard models and their approach
--   Develop an understanding of constraints
--   Understand the structure of a models solution space
--   Use an available algorithms to determine solutions
+- **Practice, practice, and practice!**
+- Understand standard models and their approach
+- Develop an understanding of constraints
+- Understand the structure of a models solution space
+- Use an available algorithms to determine solutions
 
 ## Central Questions
 
--   What is to be decided?
--   What is relevant to the decision?
--   What information is given and relevant?
--   What parameters (data) are needed?
--   Which variables and of which type are needed?
+- What is to be decided?
+- What is relevant to the decision?
+- What information is given and relevant?
+- What parameters (data) are needed?
+- Which variables and of which type are needed?
 
 . . .
 
@@ -246,25 +246,20 @@ algebraic modeling?
 
 #### Basic Model Formulation
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 &\text{maximize} \quad F = \sum_{j\in \mathcal{J}} c_j \times X_j
-\end{aligned}
-$$
+\end{aligned}$$
 
 subject to
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 &\sum_{j\in \mathcal{J}} a_{i,j} \times X_j  \le b_i && \forall i \in \mathcal{I} \\
 &X_j \ge 0 &&  \forall  j \in \mathcal{J}
-\end{aligned}
-$$
+\end{aligned}$$
 
 #### Model Components
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 \mathcal{I} &: \text{set of $i \in \mathcal{I}$,}\\
 \mathcal{J} &: \text{set of $j \in \mathcal{J}$,}\\
 F   &: \text{Objective function variable,}\\
@@ -272,8 +267,7 @@ X_{j}   &: \text{decision variables,}\\
 c_{j}   &: \text{objective function coefficients,}\\
 a_{i,j} &: \text{parameters,}\\
 b_{i}   &: \text{parameters}
-\end{aligned}
-$$
+\end{aligned}$$
 
 . . .
 
@@ -281,21 +275,21 @@ $$
 
 ## What is this good for?
 
--   <span class="highlight">Good Question!</span> A lot of things:
-    -   Modeling real-world problems
-    -   Solving complex systems
-    -   Optimizing resource allocation
-    -   Decision-making under constraints
-    -   Simulation and prediction
+- <span class="highlight">Good Question!</span> A lot of things:
+  - Modeling real-world problems
+  - Solving complex systems
+  - Optimizing resource allocation
+  - Decision-making under constraints
+  - Simulation and prediction
 
 ## From Abstract to Concrete
 
 <span class="highlight">We've just seen the general structure:</span>
 
--   Sets ($\mathcal{I}$, $\mathcal{J}$)
--   Parameters ($c_j$, $a_{i,j}$, $b_i$)
--   Decision variables ($X_j$)
--   Objective function and constraints
+- Sets ($\mathcal{I}$, $\mathcal{J}$)
+- Parameters ($c_j$, $a_{i,j}$, $b_i$)
+- Decision variables ($X_j$)
+- Objective function and constraints
 
 . . .
 
@@ -357,12 +351,10 @@ Remember, sets are <span class="highlight">collections of elements</span>
 
 . . .
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 \mathcal{I} &: \text{Set of production sites, indexed by } i \text{ with } i \in \{1, \ldots, |\mathcal{I}|\}, \\
 \mathcal{J} &: \text{Set of customers, indexed by } j \text{ with } j \in \{1, \ldots, |\mathcal{J}|\}.
-\end{aligned}
-$$
+\end{aligned}$$
 
 . . .
 
@@ -380,13 +372,11 @@ Parameters are <span class="highlight">fixed values that are given.</span>
 
 . . .
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 c_{i,j} &: \text{Costs per truck load for transport from } i \text{ to } j, \\
 a_i &: \text{Available truck loads at } i, \\
 b_j &: \text{Customer demands at } j.
-\end{aligned}
-$$
+\end{aligned}$$
 
 . . .
 
@@ -396,8 +386,8 @@ $$
 
 ## Decision Variable
 
--   Decision variables are the values we are trying to find
--   Here, our objective is to minimize the transport costs
+- Decision variables are the values we are trying to find
+- Here, our objective is to minimize the transport costs
 
 . . .
 
@@ -405,9 +395,7 @@ $$
 
 . . .
 
-$$
-X_{i,j} \text{Trucks that deliver panels from site } i \text{ to customer } j.
-$$
+$$X_{i,j} \text{Trucks that deliver panels from site } i \text{ to customer } j.$$
 
 . . .
 
@@ -423,8 +411,8 @@ building blocks!
 
 ## Objective Function
 
--   The objective function is the value we are trying to minimize (or maximize)
--   Formalized as a sum of decision variables and parameters
+- The objective function is the value we are trying to minimize (or maximize)
+- Formalized as a sum of decision variables and parameters
 
 . . .
 
@@ -440,21 +428,19 @@ building blocks!
 
 . . .
 
-$$
-\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{i,j}
-$$
+$$\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{i,j}$$
 
 ## Constraints
 
--   Constraints are <span class="highlight">conditions that must be met</span>
--   They limit the solution space!
+- Constraints are <span class="highlight">conditions that must be met</span>
+- They limit the solution space!
 
 <span class="question">Question:</span> Objective value without any constraints?
 
 . . .
 
--   The value is <span class="highlight">zero</span>
--   We can transport any number of panels
+- The value is <span class="highlight">zero</span>
+- We can transport any number of panels
 
 . . .
 
@@ -470,9 +456,7 @@ Ensure that the number of panels transported from a location **does not exceed**
 
 . . .
 
-$$
-\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad \forall i \in \mathcal{I}
-$$
+$$\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad \forall i \in \mathcal{I}$$
 
 ## Demand Constraints
 
@@ -484,9 +468,7 @@ Ensure that the demand of each customer **is covered.**
 
 . . .
 
-$$
-\sum_{i \in \mathcal{I}} X_{i,j} = b_j \quad \forall j \in \mathcal{J}
-$$
+$$\sum_{i \in \mathcal{I}} X_{i,j} = b_j \quad \forall j \in \mathcal{J}$$
 
 ## Non-negativity Constraints
 
@@ -498,23 +480,19 @@ Ensure **no negative number of truckloads** are transported.
 
 . . .
 
-$$
-X_{i,j} \geq 0 \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
-$$
+$$X_{i,j} \geq 0 \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}$$
 
 ## Transport Problem
 
 The complete model can then be written as:
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 \text{Minimize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{ij} \\
 \text{subject to:} \quad
 &\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &&\forall i \in \mathcal{I} \\
 &\sum_{i \in \mathcal{I}} X_{i,j} = b_j \quad &&\forall j \in \mathcal{J} \\
 &X_{i,j} \geq 0 \quad &&\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
-\end{aligned}
-$$
+\end{aligned}$$
 
 ## Inequality Constraints
 
@@ -522,9 +500,9 @@ $$
 
 . . .
 
--   Yes, we could!
--   We could deliver more than the demand
--   But this would not happen here
+- Yes, we could!
+- We could deliver more than the demand
+- But this would not happen here
 
 . . .
 
@@ -532,7 +510,7 @@ $$
 
 . . .
 
--   Due to the associated costs!
+- Due to the associated costs!
 
 ## 
 
@@ -556,9 +534,9 @@ In the new contract, the company wants to <span class="highlight">maximize its p
 
 . . .
 
--   We need to change the objective function
--   We need to change some parameters
--   We need to adjust some constraints
+- We need to change the objective function
+- We need to change some parameters
+- We need to adjust some constraints
 
 . . .
 
@@ -566,16 +544,14 @@ In the new contract, the company wants to <span class="highlight">maximize its p
 
 . . .
 
--   No, we still transport truckloads of solar panels
+- No, we still transport truckloads of solar panels
 
 ## New Parameters
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 r &: \text{Revenue per truckload of solar panels,} \\
 c &: \text{Production costs per truckload of solar panels.}
-\end{aligned}
-$$
+\end{aligned}$$
 
 . . .
 
@@ -583,21 +559,17 @@ $$
 
 . . .
 
-$$
-p = r - c
-$$
+$$p = r - c$$
 
 ## Former Model
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 \text{Minimize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{i,j} \\
 \text{subject to:} \quad
 &\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &&\forall i \in \mathcal{I} \\
 &\sum_{i \in \mathcal{I}} X_{i,j} \geq b_j \quad &&\forall j \in \mathcal{J} \\
 &X_{i,j} \geq 0 \quad &&\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
-\end{aligned}
-$$
+\end{aligned}$$
 
 . . .
 
@@ -605,15 +577,13 @@ $$
 
 ## New Model
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 \text{Maximize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} (p-c_{i,j}) \times X_{i,j} \\
 \text{subject to:} \quad
 &\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &&\forall i \in \mathcal{I} \\
 &\sum_{i \in \mathcal{I}} X_{i,j} \leq b_j \quad &&\forall j \in \mathcal{J} \\
 &X_{i,j} \geq 0 \quad &&\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
-\end{aligned}
-$$
+\end{aligned}$$
 
 ## Model Reflection
 
@@ -633,47 +603,47 @@ Each represents a shipping route from a production site to a customer.
 
 The number of variables grows as $|\mathcal{I}| \times |\mathcal{J}|$
 
--   5 sites × 10 customers = 50 variables
--   10 sites × 20 customers = 200 variables
--   The model structure stays the same, but computational complexity increases!
+- 5 sites × 10 customers = 50 variables
+- 10 sites × 20 customers = 200 variables
+- The model structure stays the same, but computational complexity increases!
 
 ### Assumptions
 
 **What real-world factors are we ignoring?**
 
--   Vehicle capacity limits per route
--   Time windows for delivery
--   Driver working hours and breaks
--   Traffic conditions and travel time
--   Fuel costs vs. distance relationship
--   Possibility of multi-stop routes
+- Vehicle capacity limits per route
+- Time windows for delivery
+- Driver working hours and breaks
+- Traffic conditions and travel time
+- Fuel costs vs. distance relationship
+- Possibility of multi-stop routes
 
 ### Variations
 
 **How would the model change for different scenarios?**
 
--   Air transport: Higher costs, faster delivery, weight limits
--   Multiple vehicle types: Different capacities and costs
--   Time-sensitive deliveries: Add scheduling constraints
--   Partial shipments: Allow fractional truckloads
+- Air transport: Higher costs, faster delivery, weight limits
+- Multiple vehicle types: Different capacities and costs
+- Time-sensitive deliveries: Add scheduling constraints
+- Partial shipments: Allow fractional truckloads
 
 ## What Did We Learn?
 
 <span class="highlight">Modeling Process:</span>
 
--   Define the problem clearly
--   Identify decision variables
--   Formulate obj. function
--   Add necessary constraints
--   Verify completeness
+- Define the problem clearly
+- Identify decision variables
+- Formulate obj. function
+- Add necessary constraints
+- Verify completeness
 
 <span class="highlight">Key Insights:</span>
 
--   Sets organize our indices
--   Parameters hold data
--   Variables = decisions
--   Constraints limit feasibility
--   Obj. drives optimization
+- Sets organize our indices
+- Parameters hold data
+- Variables = decisions
+- Constraints limit feasibility
+- Obj. drives optimization
 
 . . .
 
@@ -699,9 +669,9 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 
 <img src="https://images.beyondsimulations.com/ao/ao_julia2.png" data-max-width="400px" />
 
--   Head to [julialang.org](https://julialang.org) and follow the instructions.
--   The easiest way to install Julia is via the shell/terminal
--   Later, you can then manage Julia with `juliaup`
+- Head to [julialang.org](https://julialang.org) and follow the instructions.
+- The easiest way to install Julia is via the shell/terminal
+- Later, you can then manage Julia with `juliaup`
 
 . . .
 
@@ -713,16 +683,16 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 
 <img src="https://images.beyondsimulations.com/ao/ao_codium_cnl.png" data-max-width="400px" />
 
--   Next, we are going to install VS Code
--   Head to the website [code.visualstudio.com](https://code.visualstudio.com)
--   Download and install the latest release
+- Next, we are going to install VS Code
+- Head to the website [code.visualstudio.com](https://code.visualstudio.com)
+- Download and install the latest release
 
 ## Verify the Installation
 
--   Start the IDE and take a look around
--   Search for the field "Extensions" on the left sidebar
--   Click it and search for "Julia"
--   Download and install "Julia (Julia Language Support)"
+- Start the IDE and take a look around
+- Search for the field "Extensions" on the left sidebar
+- Click it and search for "Julia"
+- Download and install "Julia (Julia Language Support)"
 
 . . .
 
@@ -732,9 +702,9 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 
 ## Create a new file
 
--   Create a new file with a ".jl" ending
--   Save it somewhere on your computer
--   e.g., in a folder that you will use in the course
+- Create a new file with a ".jl" ending
+- Save it somewhere on your computer
+- e.g., in a folder that you will use in the course
 
 ``` julia
 print("Hello World!")
@@ -744,15 +714,15 @@ print("Hello World!")
 
 . . .
 
--   Run the file by clicking "run" in the upper right corner
--   OR by pressing "Control+Enter" or "STRG+Enter"
+- Run the file by clicking "run" in the upper right corner
+- OR by pressing "Control+Enter" or "STRG+Enter"
 
 ## Everything working?
 
--   If the terminal opens with a `Hello World!` → perfect!
--   If not, the IDE likely <span class="highlight">cannot find the path</span> to Julia
--   Try to determine the path and save it to VS Code
--   After saving it, try to run the file again
+- If the terminal opens with a `Hello World!` → perfect!
+- If not, the IDE likely <span class="highlight">cannot find the path</span> to Julia
+- Try to determine the path and save it to VS Code
+- After saving it, try to run the file again
 
 . . .
 
@@ -764,11 +734,11 @@ print("Hello World!")
 
 Before the next lecture, try to ensure you can:
 
--   [ ] Open VS Code
--   [ ] See Julia extension in the extensions panel
--   [ ] Create a new `.jl` file
--   [ ] See syntax highlighting in your Julia file
--   [ ] Run code and see output in the terminal
+- [ ] Open VS Code
+- [ ] See Julia extension in the extensions panel
+- [ ] Create a new `.jl` file
+- [ ] See syntax highlighting in your Julia file
+- [ ] Run code and see output in the terminal
 
 . . .
 
@@ -780,10 +750,10 @@ Before the next lecture, try to ensure you can:
 
 ## How to get started?
 
--   Learning a new programming language is a daunting task
--   It is best to start with some small, interactive problems
--   Then, slowly increase the scope of the tasks
--   We will do this <span class="highlight">together in class</span>!
+- Learning a new programming language is a daunting task
+- It is best to start with some small, interactive problems
+- Then, slowly increase the scope of the tasks
+- We will do this <span class="highlight">together in class</span>!
 
 . . .
 
@@ -804,11 +774,11 @@ For interesting literature to learn more about Julia, take a look at the [litera
 
 ## Literature II
 
-Haase, Knut, Habib Zain Al Abideen, Salim Al-Bosta, Mathias Kasper, Matthes Koch, Sven Müller, and Dirk Helbing. 2016. "Improving Pilgrim Safety During the Hajj: An Analytical and Operational Research Approach." *Interfaces* 46 (1): 74--90.
+Haase, Knut, Habib Zain Al Abideen, Salim Al-Bosta, et al. 2016. "Improving Pilgrim Safety During the Hajj: An Analytical and Operational Research Approach." *Interfaces* 46 (1): 74--90.
 
 Mickein, Markus, Matthes Koch, and Knut Haase. 2022. "A Decision Support System for Brewery Production Planning at Feldschlösschen." *INFORMS Journal on Applied Analytics* 52 (2): 158--72.
 
-Vlćek, Tobias, Knut Haase, Malte Fliedner, and Tobias Cors. 2024. "Police Service District Planning." *OR Spectrum*, February. <https://doi.org/10.1007/s00291-024-00745-3>.
+Vlćek, Tobias, Knut Haase, Malte Fliedner, and Tobias Cors. 2024. "Police Service District Planning." *OR Spectrum*, ahead of print, February. <https://doi.org/10.1007/s00291-024-00745-3>.
 
 Vlćek, Tobias, Knut Haase, Matthes Koch, Lena Dolz, Anneke Weygandt, and Jan Pape. 2024. "Controlling Passenger Flows into Metro Systems to Mitigate Overcrowding During Large-Scale Events." *Submitted to Transportation Research: Part B*.
 

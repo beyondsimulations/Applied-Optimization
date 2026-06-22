@@ -120,9 +120,9 @@ indices = ["A", "B", "C"]
 
 ## Key Points for Constraints
 
--   Use semicolon (;) to separate indices from conditions
--   Conditions can use any valid Julia boolean expression
--   Multiple conditions can be combined with && (and) or \|\| (or)
+- Use semicolon (;) to separate indices from conditions
+- Conditions can use any valid Julia boolean expression
+- Multiple conditions can be combined with && (and) or \|\| (or)
 
 ------------------------------------------------------------------------
 
@@ -154,9 +154,9 @@ weights = [1, 2, 3, 4, 5]
 
 ## Key Points
 
--   Objective functions can be linear or nonlinear
--   Containers are useful for weighted objectives
--   Can reference external data (parameters)
+- Objective functions can be linear or nonlinear
+- Containers are useful for weighted objectives
+- Can reference external data (parameters)
 
 ------------------------------------------------------------------------
 
@@ -229,8 +229,8 @@ end
 
 ## Key Points
 
--   Always check solution status before using results
--   Set appropriate time limits for large problems
--   Use gap tolerances to balance precision and speed
--   Monitor solve time for performance optimization
--   Consider presolve for complex problems
+- Always check solution status before using results
+- Set appropriate time limits for large problems
+- Use gap tolerances to balance precision and speed
+- Monitor solve time for performance optimization
+- Consider presolve for complex problems

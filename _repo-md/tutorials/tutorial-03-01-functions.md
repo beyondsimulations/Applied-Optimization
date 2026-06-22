@@ -71,10 +71,10 @@ println("The result of do_something(5, 10) is $(do_something(5, 10))")
 >
 > Functions are like teaching a robot new skills:
 >
-> -   The function name is like the skill name (e.g., "make_sandwich")
-> -   Parameters are things the robot needs to do the job (e.g., bread, filling)
-> -   The code inside are the steps to follow
-> -   The return value is the finished product
+> - The function name is like the skill name (e.g., "make_sandwich")
+> - Parameters are things the robot needs to do the job (e.g., bread, filling)
+> - The code inside are the steps to follow
+> - The return value is the finished product
 
 ## Exercise 1.1 - Define and Test a Simple Addition Function
 
