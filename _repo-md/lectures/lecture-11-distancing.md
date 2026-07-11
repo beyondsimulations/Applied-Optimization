@@ -46,19 +46,22 @@ format:
 >
 > Optimizing seating plans can help to **maximize revenue** while ensuring distancing rules and other constraints are met.
 
+## Learning Goals
+
+After this lecture, you will be able to:
+
+- **Formulate** the arena seating problem as a binary program
+- **Model** group placements with one binary variable per starting seat
+- **Enforce** distancing rules with rectangle covering constraints
+- **Distinguish** operational, tactical, and strategic seating decisions
+
 # <span class="flow">Problem Structure</span>
 
 ## Example: Two different plans
 
-<figure>
-<img src="https://images.byndsim.com/ao/ao_arena-layout_starr.png" alt="Fixed double-seat layout" />
-<figcaption aria-hidden="true">Fixed double-seat layout</figcaption>
-</figure>
+<img src="https://images.beyondsimulations.com/ao/ao_arena-layout_starr.png" data-fig-alt="Fixed double-seat layout" />
 
-<figure>
-<img src="https://images.byndsim.com/ao/ao_arena-layout_flex.png" alt="Flexible group-value layout" />
-<figcaption aria-hidden="true">Flexible group-value layout</figcaption>
-</figure>
+<img src="https://images.beyondsimulations.com/ao/ao_arena-layout_flex.png" data-fig-alt="Flexible group-value layout" />
 
 ## Different Approaches Possible
 
@@ -77,7 +80,7 @@ format:
 
 . . .
 
-<span class="question">Question:</span> **What is an example for this approach?**
+<span class="question">Question:</span> **What is an example of this approach?**
 
 . . .
 
@@ -92,7 +95,7 @@ format:
 
 . . .
 
-<span class="question">Question:</span> **What is an example for this approach?**
+<span class="question">Question:</span> **What is an example of this approach?**
 
 . . .
 
@@ -107,36 +110,36 @@ format:
 
 . . .
 
-<span class="question">Question:</span> **What is an example for this approach?**
+<span class="question">Question:</span> **What is an example of this approach?**
 
 . . .
 
-- Designing flexible seating layouts that work for scenarios
+- Design one **fixed layout** that works well across different demand scenarios
 - Maximize the overall **space utilization**
-- Sell the resulting maximized seating pattern on **market**
+- Sell the resulting layout as a <span class="highlight">standard product</span> on the market
 
 ## <span class="invert-font">Main Question</span>
 
 <span class="invert-font"><span class="task">Task:</span> **Fill the seating area given distancing regulations and venue-specific constraints.**</span>
 
-<span class="fragment invert-font"><span class="task">Question:</span> **Any ideas on how to approach this?**</span>
+<span class="fragment invert-font"><span class="question">Question:</span> **Any ideas on how to approach this?**</span>
 
 # <span class="flow">Knapsack</span>
 
 ## Knapsack Problem
 
-![](https://images.byndsim.com/ao/ao_arena-knapsack.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_arena-knapsack.svg" data-fig-alt="Illustration of the knapsack problem: several items of different sizes and values next to a knapsack with limited capacity" />
 
 - <span class="highlight">Standard model in Operations Research</span>
 - **Select items** from a pool under **capacity constraints**
 
 ## Knapsack Problem in 2D
 
-![](https://images.byndsim.com/ao/ao_arena-knapsack_2d.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_arena-knapsack_2d.svg" data-fig-alt="Illustration of a two-dimensional knapsack problem where rectangular items are packed into a bounded area" />
 
-- Now, Items block space in 2D, as illustrated here
+- Now, items block space in 2D, as illustrated here
 
-## Adaption to Seating
+## Adaptation to Seating
 
 - Horizontal dimension to place groups of participants
 - Vertical dimension to ensure enough spacing between rows
@@ -153,7 +156,7 @@ format:
 
 <span class="task">Task:</span> **Allocate as many high-value groups as possible.**
 
-![](images/ao_arena-empty_exercise.svg)
+<img src="images/ao_arena-empty_exercise.svg" data-fig-alt="Seating grid with ten rows and ten columns of squares where grey squares mark blocked seats" />
 
 ## Available Groups
 
@@ -182,6 +185,38 @@ You have 5 minutes to find a solution.
 
 <span class="question">Question:</span> **What is your total score?**
 
+## Which Groups Did You Pick First?
+
+<span class="question">Question:</span> **How valuable is each group per seat?**
+
+. . .
+
+- Groups c and g yield <span class="highlight">2 points per seat</span>
+- Group e yields 1.25 points, all other groups exactly 1
+- Grabbing the "densest" groups first is a **greedy strategy**
+
+. . .
+
+> **Note**
+>
+> Placing all groups would require 53 seats and yield 67 points --- but the blocked seats and the distancing rules make this impossible.
+
+## How Good Is Your Plan?
+
+<span class="question">Question:</span> **What is the best possible score?**
+
+. . .
+
+- The optimal seating plan reaches <span class="highlight">52 points</span>
+- Manual plans usually fall a few points short
+- Greedy choices are a good start, but **combining** them optimally is hard
+
+. . .
+
+> **Tip**
+>
+> In the tutorial, we will model exactly this seating area and let the solver find the optimal plan **within seconds**.
+
 # <span class="flow">Model Formulation</span>
 
 ## Sets?
@@ -199,7 +234,7 @@ You have 5 minutes to find a solution.
 
 > **Note**
 >
-> $\mathcal{C}_r$ ensures that we only consider unblocked seats in each row.
+> $\mathcal{C}_{g,r}$ contains only **feasible starting seats**: a seat $c$ belongs to it only if the entire group $g$ fits into row $r$ from seat $c$ onward without crossing a blocked seat or the end of the row. This is why the set depends on both $g$ and $r$.
 
 ## Parameters?
 
@@ -223,7 +258,7 @@ You have 5 minutes to find a solution.
 
 > **Tip**
 >
-> Each group is represented by **one binary variable**. We don't need to block each seat explicitly with a binary variable!
+> Each group is represented by **one binary variable**. We don't need to block each seat explicitly with a binary variable! The sets $\mathcal{C}_{g,r}$ make this possible, as variables only exist where the **whole group** actually fits.
 
 ## Decision Variable
 
@@ -266,7 +301,7 @@ You have 5 minutes to find a solution.
 
 . . .
 
-$$\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}$$
+$$\text{Maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}$$
 
 # <span class="flow">Constraints</span>
 
@@ -329,13 +364,13 @@ $$\sum_{r \in \mathcal{R}} \sum_{c \in \mathcal{C}_{g,r}} X_{g,r,c} \leq 1 \quad
 
 . . .
 
-$$\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_{r} \quad r \in \mathcal{R}$$
+$$\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_{r} \quad \forall r \in \mathcal{R}$$
 
 . . .
 
 > **Note**
 >
-> We want to place as **many highly scoring groups as possible**, but people need to move to buy drinks or use restroom. Depending on the venue, they should **not cross other groups** in the **same row**.
+> We want to place as **many highly scoring groups as possible**, but people need to move to buy drinks or use the restroom. Depending on the venue, they should **not cross other groups** in the **same row**.
 
 ## 
 
@@ -349,7 +384,7 @@ somewhat tricky!
 
 ## Central Idea
 
-![](https://images.beyondsimulations.com/ao/ao_arena-two_groups.png)
+<img src="https://images.beyondsimulations.com/ao/ao_arena-two_groups.png" data-fig-alt="A row of seats in which a group of two occupies seats 8 and 9, illustrating which starting seats are blocked for a second group" />
 
 . . .
 
@@ -377,21 +412,21 @@ somewhat tricky!
 
 ## Horizontal Social Distance
 
-As the constraint is based on a rather complex set, you don't have to find it by yourself.
+As the constraint is based on a rather complex set, you don't have to find it on your own.
 
 . . .
 
-$$\sum_{g \in \mathcal{G}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{c,g}} X_{g,r,\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}$$
+$$\sum_{g \in \mathcal{G}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{g,c}} X_{g,r,\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}$$
 
 . . .
 
 > **Note**
 >
-> At first glance, this constraint <span class="highlight">looks rather easy</span>, but it is not - it is based on the set $\mathcal{C}_{c,g}$ not defined yet in the lecture.
+> At first glance, this constraint <span class="highlight">looks rather easy</span>, but it is not - it is based on the set $\tilde{\mathcal{C}}_{g,c}$, a set not yet defined in the lecture.
 
 ## The Social Distancing Set
 
-$$\tilde{\mathcal{C}}_{c,g} = \{\tilde{c}\in \mathcal{C}| c - d_g + 1 - h \leq \tilde{c} \leq c \}$$
+$$\tilde{\mathcal{C}}_{g,c} = \{\tilde{c}\in \mathcal{C}_{g,r}| c - d_g + 1 - h \leq \tilde{c} \leq c \}$$
 
 . . .
 
@@ -399,6 +434,7 @@ $$\tilde{\mathcal{C}}_{c,g} = \{\tilde{c}\in \mathcal{C}| c - d_g + 1 - h \leq \
 >
 > - $d_g$ - Required seats of group $g$ in a row
 > - $h$ - Safety distance between groups sitting next to each other
+> - $\mathcal{C}_{g,r}$ - Feasible starting seats, as variables only exist for these seats (the row $r$ follows from the constraint)
 
 . . .
 
@@ -406,19 +442,19 @@ $$\tilde{\mathcal{C}}_{c,g} = \{\tilde{c}\in \mathcal{C}| c - d_g + 1 - h \leq \
 
 ## Example: Two Groups
 
-![](https://images.beyondsimulations.com/ao/ao_arena-two_groups.png)
+<img src="https://images.beyondsimulations.com/ao/ao_arena-two_groups.png" data-fig-alt="A row of seats in which a group of two occupies seats 8 and 9, with the blocked starting seats 6 to 8 for a second group of two" />
 
 $$\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} \leq 1 \quad (r=2,c=8)$$
 
 ## Example: Different Group Sizes
 
-![](https://images.beyondsimulations.com/ao/ao_arena-two_groups_b.png)
+<img src="https://images.beyondsimulations.com/ao/ao_arena-two_groups_b.png" data-fig-alt="A row of seats comparing the blocked starting seats for a group of two and a larger group of three" />
 
 $$\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{5}}+X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} \leq 1 \quad (r=2,c=8)$$
 
 ## Example: Three Groups
 
-![](https://images.beyondsimulations.com/ao/ao_arena-three_groups.png)
+<img src="https://images.beyondsimulations.com/ao/ao_arena-three_groups.png" data-fig-alt="A row of seats showing the blocked starting seats for three groups of sizes two, two, and three" />
 
 <style>
 .temp-math-size .math.display .MathJax  {
@@ -460,7 +496,7 @@ the pattern?
 
 . . .
 
-$$\sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \mathcal{R}_r} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{cg}} X_{g\tilde{r}\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}$$
+$$\sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \tilde{\mathcal{R}}_r} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{g,c}} X_{g,\tilde{r},\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}$$
 
 ## Vertical Distance Set
 
@@ -485,7 +521,7 @@ Let's look at an <span class="highlight">example</span>.
 
 ## Example: Two Groups
 
-![](https://images.beyondsimulations.com/ao/ao_arena-two_groups_vertical_b.png)
+<img src="https://images.beyondsimulations.com/ao/ao_arena-two_groups_vertical_b.png" data-fig-alt="Seating grid where a group of two starting in row 3, column 8 blocks the yellow seats around it, while blue seats mark feasible starting positions for a second group of two" />
 
 - Yellow seats are **blocked by the group** in row 3 and column 8
 - Blue allocations are possible (if second group has **size 2**)
@@ -499,15 +535,30 @@ Let's look at an <span class="highlight">example</span>.
 </style>
 
 
-$$\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_r} v_g \times X_{g,r,c}$$
+$$\text{Maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}$$
 subject to:
 
 $$\begin{align*}
-& \sum_{r \in \mathcal{R}}\sum_{c \in \mathcal{C}_r} X_{g,r,c} \leq 1 && \forall g \in \mathcal{G} \\
-& \sum_{g \in \mathcal{G}}\sum_{c\in \mathcal{C}_r} X_{g,r,c} \leq p_r && \forall r \in \mathcal{R} \\
-& \sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \tilde{\mathcal{R}}_{r}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{c,g}} X_{g,\tilde{r},\tilde{c}} \leq 1 && \forall r\in \mathcal{R}, c\in \mathcal{C} \\
-& X_{g,r,c} \in \{0,1\} && \forall g \in \mathcal{G}, \forall r\in \mathcal{R}, c\in \mathcal{C}_r
+& \sum_{r \in \mathcal{R}}\sum_{c \in \mathcal{C}_{g,r}} X_{g,r,c} \leq 1 && \forall g \in \mathcal{G} \\
+& \sum_{g \in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_r && \forall r \in \mathcal{R} \\
+& \sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \tilde{\mathcal{R}}_{r}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{g,c}} X_{g,\tilde{r},\tilde{c}} \leq 1 && \forall r\in \mathcal{R}, c\in \mathcal{C} \\
+& X_{g,r,c} \in \{0,1\} && \forall g \in \mathcal{G}, r\in \mathcal{R}, c\in \mathcal{C}_{g,r}
 \end{align*}$$
+
+## Where Did the Horizontal Constraint Go?
+
+<span class="question">Question:</span> **Why does the model contain only three constraints?**
+
+. . .
+
+- The vertical set $\tilde{\mathcal{R}}_r$ also contains $\tilde{r} = r$, the **row itself**
+- For $\tilde{r} = r$, the rectangle constraint is **exactly** the horizontal one
+
+. . .
+
+> **Note**
+>
+> The rectangle constraint **subsumes** the horizontal social distance constraint. We can thus drop the horizontal constraint without losing anything.
 
 # <span class="flow">Model Characteristics</span>
 
@@ -517,6 +568,12 @@ $$\begin{align*}
 
 - Is the model formulation linear/ non-linear?
 - What kind of variable domains do we have?
+
+. . .
+
+> **Note**
+>
+> The model is **linear**, as the objective and all constraints are weighted sums of the variables. All variables are **binary**, making it a pure binary program.
 
 ## Model Assumptions
 
@@ -547,14 +604,18 @@ $$\begin{align*}
 
 ## Seating Plan
 
-![](https://images.beyondsimulations.com/ao/ao_arena-vfl_rechnung.png)
+<img src="https://images.beyondsimulations.com/ao/ao_arena-vfl_rechnung.png" data-fig-alt="Optimized seating plan of the VfL Osnabrück stadium grandstand with the allocated groups marked in the layout" />
 
 ## Related Work
 
+- The model of this lecture is published in Dkaidik and Koch (2025)
+
+. . .
+
 <span class="highlight">Similar studies</span> have been conducted globally:
 
+- Music Hall Eindhoven: Blom et al. (2022)
 - US College-level venues, e.g. Football, Basketball, Hockey
-- Music Hall Eindhoven
 - Safe Seating Solutions platform
 - General 2D-Knapsack applications
 
@@ -579,7 +640,7 @@ $$\begin{align*}
 
 . . .
 
-> **And that's it for todays lecture!**
+> **And that's it for today's lecture!**
 >
 > We now have covered the arena seating problem based on a real-world application and are ready to start solving the corresponding tasks in the upcoming tutorial.
 
@@ -589,6 +650,12 @@ Questions?
 
 # <span class="flow">Literature</span>
 
-## Literature I
+## Literature
+
+- Press coverage of the VfL Osnabrück case: [University of Hamburg newsroom](https://www.uni-hamburg.de/newsroom/forschung/2021/0611-stadionberechnungen.html) (in German)
 
 For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
+
+Blom, Danny, Rudi Pendavingh, and Frits Spieksma. 2022. "Filling a Theater During the COVID-19 Pandemic." *INFORMS Journal on Applied Analytics* 52 (6): 473--84. <https://doi.org/10.1287/inte.2021.1104>.
+
+Dkaidik, Usama, and Matthes Koch. 2025. "Arena Seat Planning Under Distancing Rules." In *Operations Research Proceedings 2024*. Springer. <https://doi.org/10.1007/978-3-031-92575-7_12>.

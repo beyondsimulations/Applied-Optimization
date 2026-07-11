@@ -25,8 +25,8 @@ format:
 - E-Commerce sales [are growing fast]{.highlight}:
     - Products are **no longer bound between borders**
     - Product variety is **rising**
-    - Consumer shopping patterns are **shifting **
-    - Brick-and-mortar stores **loose customers to the internet**
+    - Consumer shopping patterns are **shifting**
+    - Brick-and-mortar stores **lose customers to the internet**
     - Covid-19 **accelerated this trend even more**
 
 ## Parcels Worldwide
@@ -34,15 +34,15 @@ format:
 - The number of parcels is rising:
     - **2014**: 44 billion parcels [@PitneyBowes2017]
     - **2019**: 103 billion parcels [@PitneyBowes2019]
-    - **2026**: 220 – 262 billion[^0] [@PitneyBowes2020]
+    - **2026**: forecast of 220 – 262 billion[^0] [@PitneyBowes2020]
 
-[^0]: Forecast, not actual number
+[^0]: Forecast made in 2020, not an actual number
 
 ## Pressure on infrastructure
 
 ::: {.columns}
 ::: {.column width="40%"}
-[![](https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width="90%"}](https://unsplash.com/photos/person-holding-black-samsung-android-smartphone-hTUZW7E7krg){width="85%"}
+[![](https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width="90%" fig-alt="Person holding a smartphone while shopping online"}](https://unsplash.com/photos/person-holding-black-samsung-android-smartphone-hTUZW7E7krg){width="85%"}
 :::
 
 ::: {.column width="60%"}
@@ -57,7 +57,7 @@ format:
 
 ::: {.columns}
 ::: {.column width="40%"}
-[![](https://images.unsplash.com/photo-1606942298712-8bd250ff40f0?q=80&w=2398&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width="90%"}](https://unsplash.com/photos/white-and-red-cars-parked-near-white-concrete-building-during-daytime-4jLpCkGqClE){width="85%"}
+[![](https://images.unsplash.com/photo-1606942298712-8bd250ff40f0?q=80&w=2398&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width="90%" fig-alt="Delivery vehicles parked in front of a building"}](https://unsplash.com/photos/white-and-red-cars-parked-near-white-concrete-building-during-daytime-4jLpCkGqClE){width="85%"}
 :::
 
 ::: {.column width="60%"}
@@ -65,6 +65,19 @@ format:
 - Every dispatched parcel to the customer [causes CO₂ emissions]{.highlight}
 - In case of returns, **more parcels cause more emissions**
 :::
+:::
+
+## Learning Objectives
+
+After this lecture, you will be able to:
+
+::: {.incremental}
+
+- **Explain** split orders and why they matter in e-commerce
+- **Build** a coappearance matrix from transactional data
+- **Formulate and solve** the Quadratic Multiple Knapsack Problem (QMKP) in JuMP
+- **Judge** when exact solvers reach their limits and heuristics are needed
+
 :::
 
 # [Problem Structure]{.flow} {.title}
@@ -75,12 +88,12 @@ format:
 
 . . .
 
-![](https://images.beyondsimulations.com/ao/ao_split-unoptimized.png){width="75%" .center}
+![](https://images.beyondsimulations.com/ao/ao_split-unoptimized.png){width="75%" .center fig-alt="One customer order shipped in two parcels from two different warehouses"}
 
 
 ## No Split Order
 
-![](https://images.beyondsimulations.com/ao/ao_split-optimized.png){width="75%" .center}
+![](https://images.beyondsimulations.com/ao/ao_split-optimized.png){width="75%" .center fig-alt="The same customer order shipped in one parcel from a single warehouse"}
 
 ## Reason for Split Orders
 
@@ -110,9 +123,9 @@ format:
 . . .
 
 - **Consolidation**: Ship to a central warehouse before dispatch
-- **Cross-docking**: Ship directly from supplier to customer
+- **Cross-docking**: Transfer goods from inbound to outbound transport with little or no storage in between
 - **Transshipment**: Ship between warehouses before delivery
-- **Co-allocation**: Predict [co-appearance of products]{.highlight} and allocate them to the [same warehouse]{.highlight}
+- **Co-allocation**: Predict [coappearance of products]{.highlight} and allocate them to the [same warehouse]{.highlight}
 
 # [Problem Structure - Version 1]{.flow} {.title}
 
@@ -120,7 +133,7 @@ format:
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](https://images.beyondsimulations.com/ao/ao_split-suppliers.png){width="90%" .center}
+![](https://images.beyondsimulations.com/ao/ao_split-suppliers.png){width="90%" .center fig-alt="Two warehouses shipping parcels to customers"}
 :::
 
 ::: {.column width="60%"}
@@ -151,7 +164,7 @@ We aim to improve the **SKU[^1]-warehouse allocation** to minimize the number of
 [Question:]{.question} **What are possible parameters?**
 
 ::: {.incremental}
-- $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$
+- $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$, measured in number of SKUs
 - $\boldsymbol{T}= (t_{m,i})$ - Past customer orders for SKUs
 :::
 
@@ -209,17 +222,30 @@ We aim to improve the **SKU[^1]-warehouse allocation** to minimize the number of
 
 - @Catalan2012 created an **integer model**
 - Number of SKUs of E-Commerce retailers can easily be **between 10,000 - 100,000**
-- Number of customer orders necessary for "stable" results have to be higher in the order of **100,000 - 10,000,000**
+- The number of customer orders needed for "stable" results is one order of magnitude higher: **100,000 - 10,000,000**
 
 . . .
 
-[Question:]{.question} **Anybody an idea what this could mean?**
+[Question:]{.question} **Does anyone have an idea what this could mean?**
+
+## Why is Version 1 so hard?
+
+- Objective: **minimize the number of warehouses** that ship parcels for each customer order
+- Requires $Y_{m,i,k}$: one variable per order, SKU **and** warehouse
+- $\rightarrow |\mathcal{M}| \times |\mathcal{I}| \times |\mathcal{K}|$ binary variables
+
+. . .
+
+::: {.callout-important}
+## Variables explode with the instance size
+10,000 SKUs, 1,000,000 orders and 2 warehouses already lead to $2 \times 10^{10}$ binary variables $Y_{m,i,k}$!
+:::
 
 ## Implementation Challenges
 
 - Small instance with 10 SKUs and 1000 customer orders
 - **CPLEX 20.1.0** needs 3100 seconds to solve the problem
-- Computation times scales exponentially
+- Computation time scales exponentially
 - $\rightarrow$ **Not applicable** in real world applications!
 
 ## {.loud-slide}
@@ -244,7 +270,7 @@ could be done?
 
 ::: {.callout-tip}
 ## Different view on the problem
-Focus on the warehouses and the co-appearance of SKUs! Discard the exact information about the customer orders.
+Focus on the warehouses and the coappearance of SKUs! Discard the exact information about the customer orders.
 :::
 
 ## Objective
@@ -252,7 +278,7 @@ Focus on the warehouses and the co-appearance of SKUs! Discard the exact informa
 ::: {.columns}
 ::: {.column width="40%"}
 
-![](https://images.beyondsimulations.com/ao/ao_split-suppliers.png){width="75%"}
+![](https://images.beyondsimulations.com/ao/ao_split-suppliers.png){width="75%" fig-alt="Two warehouses shipping parcels to customers"}
 
 :::
 
@@ -290,8 +316,8 @@ display(Q)
 
 - $\boldsymbol{Q}$ is a [symmetric matrix]{.highlight}
 - Proposed by @Catalan2012
-- $\boldsymbol{Q} = (\boldsymbol{T}^T \cdot \boldsymbol{T})$ where $\boldsymbol{Q} = (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}$
-- $q_{ij}$ shows how often $i$ and $j$ appear **in the same order**
+- $\boldsymbol{Q} = \boldsymbol{T}^\top \boldsymbol{T}$ where $\boldsymbol{Q} = (q_{i,j})_{i,j \in \{1,\dots,|\mathcal{I}|\}}$
+- $q_{i,j}$ shows how often $i$ and $j$ appear **in the same order**
 
 . . .
 
@@ -299,25 +325,26 @@ display(Q)
 
 . . .
 
-- How often each SKU appeared over all orders **(binary!)**
+- In how many **orders** each SKU appeared
+- As $t_{m,i}$ is binary, $q_{i,i}$ counts orders, **not units sold**
 
 ## How to approach the problem?
 
 ::: {.incremental}
 - **Greedy Heuristic**[^catalan2012]: Allocation based on matrix
 - **Mathematical Model**[^zhu2021]: Maximizes coappearance
-- **GRASP**[^graps]: Good on small instances
+- **GRASP**[^grasp]: Good on small instances
 - [New]{.highlight}: Max. coappearance with non-linear solver
 - [New]{.highlight}: Heuristic based on Chi-Square Tests
 :::
 
 [^catalan2012]: Simple and very fast, @Catalan2012
 [^zhu2021]: Computationally intensive with CPLEX, @Zhu2021
-[^graps]: Greedy Randomized Adaptive Search Procedure, @Zhu2021
+[^grasp]: Greedy Randomized Adaptive Search Procedure, @Zhu2021
 
 ## Basic Setting
 
-![](https://images.beyondsimulations.com/ao/ao_split-warehouse.png){width="75%"}
+![](https://images.beyondsimulations.com/ao/ao_split-warehouse.png){width="75%" fig-alt="SKUs allocated to two warehouses with limited storage space"}
 
 ## Available Data (Version 2)
 
@@ -340,8 +367,8 @@ We can focus on the SKUs and the warehouses, making the problem **much smaller**
 [Question:]{.question} **What are possible parameters?**
 
 ::: {.incremental}
-- $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$
-- $\boldsymbol{Q}= (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}$ - Coappearance matrix
+- $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$, measured in number of SKUs
+- $\boldsymbol{Q}= (q_{i,j})_{i,j \in \{1,\dots,|\mathcal{I}|\}}$ - Coappearance matrix
 :::
 
 . . .
@@ -391,11 +418,10 @@ As we don't need the customer order information, we only need to make a decision
 ```{julia}
 #| eval: true
 #| output: false
-import Pkg; Pkg.add("SCIP")
-using JuMP, SCIP # SCIP is a non-commercial MIQCP solver
+using JuMP, SCIP # SCIP is a non-commercial solver for quadratic models
 
 warehouses = ["Hamburg", "Berlin"] # Add warehouses as a vector
-skus = ["Smartphone", "Socks", "Charger"] # Add SKUs as a vector
+skus = ["A", "B", "C", "D"] # The four SKUs from our transactional data
 
 warehouse_model = Model(SCIP.Optimizer)
 ```
@@ -414,7 +440,7 @@ warehouse_model = Model(SCIP.Optimizer)
 ::: {.callout-note}
 ## We need the following:
 - $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in  $k\in\mathcal{K}$, 0 otherwise
-- $q_{ij}$ - Coappearance of SKU $i\in\mathcal{I}$ and $j\in\mathcal{I}$
+- $q_{i,j}$ - Coappearance of SKU $i\in\mathcal{I}$ and $j\in\mathcal{I}$
 :::
 
 ::: {.callout-important}
@@ -430,13 +456,13 @@ Maximize the sum of all unique pair-wise values $q_{i,j}$ of all SKUs stored in 
 
 ## Quadratic Objective Function
 
-$$\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}$$
+$$\text{Maximize} \quad \sum_{i=2}^{|\mathcal{I}|} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{i,k}\times X_{j,k} \times q_{i,j}$$
 
 . . .
 
 ::: {.callout-note}
 ## This is a **quadratic objective function**!
-The quadratic terms are $X_{ik}\times X_{jk}$. This objective function is based on the **Quadratic Multiple Knapsack Problem (QMKP)**, formulated by @Hiley2006.
+The quadratic terms are $X_{i,k}\times X_{j,k}$. This objective function is based on the **Quadratic Multiple Knapsack Problem (QMKP)**, formulated by @Hiley2006.
 :::
 
 ## Objective Function in Julia
@@ -448,7 +474,7 @@ The quadratic terms are $X_{ik}\times X_{jk}$. This objective function is based 
 ```{julia}
 #| eval: true
 #| output-location: fragment
-Q = [2 1 2; 1 2 1; 2 1 2]
+# We reuse the matrix Q = T' * T computed from our transactional data
 
 @objective(warehouse_model,
     Max,
@@ -468,7 +494,7 @@ Q = [2 1 2; 1 2 1; 2 1 2]
 ::: {.columns}
 ::: {.column width="40%"}
 
-![](https://images.beyondsimulations.com/ao/ao_split-warehouse.png){width="90%"}
+![](https://images.beyondsimulations.com/ao/ao_split-warehouse.png){width="90%" fig-alt="SKUs allocated to two warehouses with limited storage space"}
 
 :::
 
@@ -505,7 +531,7 @@ Ensure that each SKU is allocated at least once.
 
 ## Single Allocation Constraint
 
-$$\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}$$
+$$\sum_{k \in \mathcal{K}} X_{i,k} \geq 1 \quad \forall i \in \mathcal{I}$$
 
 . . .
 
@@ -557,7 +583,7 @@ Ensure that the capacity of each warehouse is not exceeded.
 
 ## Capacity Constraints
 
-$$\sum_{i \in \mathcal{I}} X_{ik} \leq c_k \quad \forall k \in \mathcal{K}$$
+$$\sum_{i \in \mathcal{I}} X_{i,k} \leq c_k \quad \forall k \in \mathcal{K}$$
 
 . . .
 
@@ -572,7 +598,7 @@ $$\sum_{i \in \mathcal{I}} X_{ik} \leq c_k \quad \forall k \in \mathcal{K}$$
 ```{julia}
 #| eval: true
 #| output-location: fragment
-capacities = Dict("Hamburg" => 2, "Berlin" => 1) # Add capacities
+capacities = Dict("Hamburg" => 2, "Berlin" => 2) # Add capacities
 
 @constraint(warehouse_model, capacity[k in warehouses],
     sum(X[i, k] for i in skus) <= capacities[k]
@@ -581,16 +607,16 @@ capacities = Dict("Hamburg" => 2, "Berlin" => 1) # Add capacities
 
 ## QMK Model
 
-$$\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}$$
+$$\text{Maximize} \quad \sum_{i=2}^{|\mathcal{I}|} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{i,k}\times X_{j,k} \times q_{i,j}$$
 
 
 subject to:
 
 $$
 \begin{align*}
-				& \sum_{k \in \mathcal{K}} X_{ik} \geq 1 && \forall i \in \mathcal{I}\\
-				& \sum_{i \in \mathcal{I}} X_{ik} \leq c_{k} && \forall k \in \mathcal{K}\\
-				& X_{ik} \in \{0,1\}  && \forall i \in \mathcal{I}, \forall k \in \mathcal{K}
+				& \sum_{k \in \mathcal{K}} X_{i,k} \geq 1 && \forall i \in \mathcal{I}\\
+				& \sum_{i \in \mathcal{I}} X_{i,k} \leq c_{k} && \forall k \in \mathcal{K}\\
+				& X_{i,k} \in \{0,1\}  && \forall i \in \mathcal{I}, k \in \mathcal{K}
 \end{align*}
 $$
 
@@ -608,7 +634,20 @@ println("The optimal solution is: ", value.(X))
 
 . . .
 
-[Question:]{.question} What does this value tell us?
+[Question:]{.question} **What does this value tell us?**
+
+## Interpreting the Solution
+
+- Total capacity ($2+2$) **equals** the number of SKUs
+- Hence, each SKU is stored **exactly once**
+- Optimal: **A and D** share a warehouse, so do **B and C**
+
+. . .
+
+::: {.callout-note}
+## The objective value is 6
+It sums the coappearances of SKUs sharing a warehouse: $q_{A,D} + q_{B,C} = 4 + 2 = 6$. It does **not** directly count the avoided split orders!
+:::
 
 # [Model Characteristics]{.flow} {.title}
 
@@ -624,7 +663,7 @@ println("The optimal solution is: ", value.(X))
 
 ## Choosing a solver
 
-- Identify **problem structure**, e.g. LP, MIP, NLP, QCP, MIQCP, ...
+- Identify **problem structure**, e.g. LP, MIP, NLP, MIQP, MIQCP, ...
 - What is the **size** of the problem?
 - Is a **commercial** solver needed?
 
@@ -632,12 +671,25 @@ println("The optimal solution is: ", value.(X))
 
 ::: {.callout-note}
 ## Commercial Solvers
-Commercial solvers are **faster** and **more robust** as open source solvers but also **more expensive**. During your studies, you can use most of them for free though! Nonetheless, we will only use open source solvers in this course.
+Commercial solvers are **faster** and **more robust** than open source solvers but also **more expensive**. During your studies, you can use most of them for free though! Nonetheless, we will only use open source solvers in this course.
+:::
+
+## Our Problem Class
+
+- Objective: **quadratic** terms $X_{i,k} \times X_{j,k}$
+- Constraints: all **linear**
+- Variables: all **binary**
+
+. . .
+
+::: {.callout-note}
+## Mixed-Integer Quadratic Program (MIQP)
+Our model is a **MIQP**, as only the objective is quadratic. It is not a MIQCP, which would also allow quadratic **constraints**. MIQCP solvers, e.g. SCIP, subsume MIQPs and can thus solve our model.
 :::
 
 ## Global vs Local Optimality
 
-[![Local vs Global Optimum by Christoph Roser](https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&ssl=1){width="80%"}](https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/)
+[![](https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&ssl=1){width="80%" fig-alt="Local vs Global Optimum by Christoph Roser"}](https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/)
 
 ## Solver Comparison[^solvers]
 
@@ -647,13 +699,13 @@ Commercial solvers are **faster** and **more robust** as open source solvers but
 | 1,000| 1,011s (18%)| X   | ~200s (2%)   |
 | 10,000| X        | X    | X           |
 
-. . .
+[^solvers]: Based on numerical experiments with QMK instances. Times are averages over the instances solved to optimality; the percentage shows the share of instances solved within one hour, X = none solved within one hour.
 
-- [SCIP]{.highlight}: Best open-source for MIQCP, but limited scalability
+## Solver Comparison: Takeaways
+
+- [SCIP]{.highlight}: Best open-source for MIQP/MIQCP, limited scalability
 - **Commercial solvers**: Better but still fail on 10,000+ SKUs
 - **Conclusion**: Heuristics necessary for realistic problems!
-
-[^solvers]: Based on numerical experiments (QMK). The percentage in the table shows instances that could be solved within one hour and their average time (if solved).
 
 ## Model Assumptions
 
@@ -663,6 +715,13 @@ Commercial solvers are **faster** and **more robust** as open source solvers but
 - What assumptions have we made?
 - Problem with allocating SKUs to multiple warehouses?
 - What else might pose a problem in the real world?
+:::
+
+. . .
+
+::: {.callout-note}
+## Duplicates can inflate the objective
+With slack capacity, the model may store one SKU in **several warehouses**. A shared pair then counts **once per warehouse**, raising the objective without avoiding any further splits.
 :::
 
 ## Model Limitations
@@ -754,7 +813,7 @@ Use **chi-square tests** to detect if SKUs are dependent:
 - Allocate dependent SKUs to [same warehouse]{.highlight}!
 :::
 
-. . .
+## From Tests to Allocations
 
 ::: {.callout-tip}
 ## Two-Phase Approach
@@ -781,14 +840,16 @@ Use **chi-square tests** to detect if SKUs are dependent:
 
 ## Rolling Horizon Approach
 
-- Use **5-week training window** for allocation decisions
-- Update allocations **weekly** based on recent patterns
-- Balance [stability]{.highlight} vs. [responsiveness]{.highlight}
+In the following case study [@vlcek_optimizing_2024], we:
+
+- used a **5-week training window** for allocation decisions
+- updated allocations **weekly** based on recent patterns
+- balanced [stability]{.highlight} vs. [responsiveness]{.highlight}
 
 . . .
 
 ::: {.callout-tip}
-Grouped SKUs by **category-brand combinations** to reduce problem size while maintaining allocation quality. New SKUs inherit allocation from their cluster!
+In the case study, SKUs were grouped by **category-brand combinations** to reduce the problem size while maintaining allocation quality. New SKUs inherit the allocation of their cluster!
 :::
 
 ## Case Study
@@ -814,30 +875,29 @@ Grouped SKUs by **category-brand combinations** to reduce problem size while mai
 
 [^opt_not]:QMKP is not applicable for instance in case study
 
-. . .
-
-![](https://images.beyondsimulations.com/ao/ao_split-case.png){width="70%"}
-
 ## Implementation Results
 
-**Theoretical improvements**:
+**Retailer's status quo**: 6.95% of all orders were split
+
+. . .
+
+**Theoretical reduction of these splits**:
 
 - CHI: **82.25%** reduction
-- BS: **62.63%** reduction  
+- BS: **62.63%** reduction
 - GS: **59.16%** reduction
-- vs. retailer: **6.95%** split ratio
 
 ## Conclusion
 
 - Splits are **of no benefit**, except **faster customer deliveries**
 - [Increase workload, packaging and shipping costs]{.highlight}
-- Mathematical Optimisation of **"full" problem not solvable**
-- **CHI** Heuristic close to mathematical optimisation
+- Mathematical Optimization of **"full" problem not solvable**
+- **CHI** Heuristic close to mathematical optimization
 
 . . .
 
 ::: {.callout-note}
-## And that's it for todays lecture!
+## And that's it for today's lecture!
 
 We now have covered the Quadratic Multiple Knapsack Problem and are ready to start solving some tasks in the upcoming tutorial.
 :::
@@ -855,5 +915,14 @@ Questions?
 # [Literature]{.flow} {.title}
 
 ## Literature I
+
+References for this lecture:
+
+- @Catalan2012: Integer model and greedy heuristics
+- @Hiley2006: The Quadratic Multiple Knapsack Problem
+- @Zhu2021: Mathematical model and GRASP
+- @vlcek_optimizing_2024: CHI heuristic and case study
+
+## Literature II
 
 For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.

@@ -21,7 +21,7 @@ format:
   - Products are **no longer bound between borders**
   - Product variety is **rising**
   - Consumer shopping patterns are **shifting**
-  - Brick-and-mortar stores **loose customers to the internet**
+  - Brick-and-mortar stores **lose customers to the internet**
   - Covid-19 **accelerated this trend even more**
 
 ## Parcels Worldwide
@@ -29,11 +29,11 @@ format:
 - The number of parcels is rising:
   - **2014**: 44 billion parcels (Pitney Bowes Inc. 2017)
   - **2019**: 103 billion parcels (Pitney Bowes Inc. 2019)
-  - **2026**: 220 -- 262 billion[^1] (Pitney Bowes Inc. 2020)
+  - **2026**: forecast of 220 -- 262 billion[^1] (Pitney Bowes Inc. 2020)
 
 ## Pressure on infrastructure
 
-<a href="https://unsplash.com/photos/person-holding-black-samsung-android-smartphone-hTUZW7E7krg" width="85%"><img src="https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?q=80&amp;w=2832&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" /></a>
+<a href="https://unsplash.com/photos/person-holding-black-samsung-android-smartphone-hTUZW7E7krg" width="85%"><img src="https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?q=80&amp;w=2832&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" data-fig-alt="Person holding a smartphone while shopping online" /></a>
 
 - Consumers nowadays expect <span class="highlight">free, fast deliveries and returns</span>
 - Existing warehouses have to store an **increasing range of products**
@@ -42,11 +42,20 @@ format:
 
 ## Pressure on the environment
 
-<a href="https://unsplash.com/photos/white-and-red-cars-parked-near-white-concrete-building-during-daytime-4jLpCkGqClE" width="85%"><img src="https://images.unsplash.com/photo-1606942298712-8bd250ff40f0?q=80&amp;w=2398&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" /></a>
+<a href="https://unsplash.com/photos/white-and-red-cars-parked-near-white-concrete-building-during-daytime-4jLpCkGqClE" width="85%"><img src="https://images.unsplash.com/photo-1606942298712-8bd250ff40f0?q=80&amp;w=2398&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" data-fig-alt="Delivery vehicles parked in front of a building" /></a>
 
 - **Each parcel packaging** consumes resources during production
 - Every dispatched parcel to the customer <span class="highlight">causes CO₂ emissions</span>
 - In case of returns, **more parcels cause more emissions**
+
+## Learning Objectives
+
+After this lecture, you will be able to:
+
+- **Explain** split orders and why they matter in e-commerce
+- **Build** a coappearance matrix from transactional data
+- **Formulate and solve** the Quadratic Multiple Knapsack Problem (QMKP) in JuMP
+- **Judge** when exact solvers reach their limits and heuristics are needed
 
 # <span class="flow">Problem Structure</span>
 
@@ -56,11 +65,11 @@ format:
 
 . . .
 
-<img src="https://images.beyondsimulations.com/ao/ao_split-unoptimized.png" class="center" style="width:75.0%" />
+<img src="https://images.beyondsimulations.com/ao/ao_split-unoptimized.png" class="center" style="width:75.0%" data-fig-alt="One customer order shipped in two parcels from two different warehouses" />
 
 ## No Split Order
 
-<img src="https://images.beyondsimulations.com/ao/ao_split-optimized.png" class="center" style="width:75.0%" />
+<img src="https://images.beyondsimulations.com/ao/ao_split-optimized.png" class="center" style="width:75.0%" data-fig-alt="The same customer order shipped in one parcel from a single warehouse" />
 
 ## Reason for Split Orders
 
@@ -90,15 +99,15 @@ format:
 . . .
 
 - **Consolidation**: Ship to a central warehouse before dispatch
-- **Cross-docking**: Ship directly from supplier to customer
+- **Cross-docking**: Transfer goods from inbound to outbound transport with little or no storage in between
 - **Transshipment**: Ship between warehouses before delivery
-- **Co-allocation**: Predict <span class="highlight">co-appearance of products</span> and allocate them to the <span class="highlight">same warehouse</span>
+- **Co-allocation**: Predict <span class="highlight">coappearance of products</span> and allocate them to the <span class="highlight">same warehouse</span>
 
 # <span class="flow">Problem Structure - Version 1</span>
 
 ## Optimizing Co-allocation
 
-<img src="https://images.beyondsimulations.com/ao/ao_split-suppliers.png" class="center" style="width:90.0%" />
+<img src="https://images.beyondsimulations.com/ao/ao_split-suppliers.png" class="center" style="width:90.0%" data-fig-alt="Two warehouses shipping parcels to customers" />
 
 <span class="question">**Question:**</span> **What could be our objective?**
 
@@ -116,7 +125,7 @@ We aim to improve the **SKU[^2]-warehouse allocation** to minimize the number of
 
 <span class="question">Question:</span> **What are possible parameters?**
 
-- $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$
+- $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$, measured in number of SKUs
 - $\boldsymbol{T}= (t_{m,i})$ - Past customer orders for SKUs
 
 . . .
@@ -170,17 +179,29 @@ Example of $\boldsymbol{T}$
 
 - Catalán and Fisher (2012) created an **integer model**
 - Number of SKUs of E-Commerce retailers can easily be **between 10,000 - 100,000**
-- Number of customer orders necessary for "stable" results have to be higher in the order of **100,000 - 10,000,000**
+- The number of customer orders needed for "stable" results is one order of magnitude higher: **100,000 - 10,000,000**
 
 . . .
 
-<span class="question">Question:</span> **Anybody an idea what this could mean?**
+<span class="question">Question:</span> **Does anyone have an idea what this could mean?**
+
+## Why is Version 1 so hard?
+
+- Objective: **minimize the number of warehouses** that ship parcels for each customer order
+- Requires $Y_{m,i,k}$: one variable per order, SKU **and** warehouse
+- $\rightarrow |\mathcal{M}| \times |\mathcal{I}| \times |\mathcal{K}|$ binary variables
+
+. . .
+
+> **Variables explode with the instance size**
+>
+> 10,000 SKUs, 1,000,000 orders and 2 warehouses already lead to $2 \times 10^{10}$ binary variables $Y_{m,i,k}$!
 
 ## Implementation Challenges
 
 - Small instance with 10 SKUs and 1000 customer orders
 - **CPLEX 20.1.0** needs 3100 seconds to solve the problem
-- Computation times scales exponentially
+- Computation time scales exponentially
 - $\rightarrow$ **Not applicable** in real world applications!
 
 ## 
@@ -201,11 +222,11 @@ could be done?
 
 > **Different view on the problem**
 >
-> Focus on the warehouses and the co-appearance of SKUs! Discard the exact information about the customer orders.
+> Focus on the warehouses and the coappearance of SKUs! Discard the exact information about the customer orders.
 
 ## Objective
 
-<img src="https://images.beyondsimulations.com/ao/ao_split-suppliers.png" style="width:75.0%" />
+<img src="https://images.beyondsimulations.com/ao/ao_split-suppliers.png" style="width:75.0%" data-fig-alt="Two warehouses shipping parcels to customers" />
 
 <span class="question">Question:</span> **What could be the objective?**
 
@@ -243,8 +264,8 @@ display(Q)
 
 - $\boldsymbol{Q}$ is a <span class="highlight">symmetric matrix</span>
 - Proposed by Catalán and Fisher (2012)
-- $\boldsymbol{Q} = (\boldsymbol{T}^T \cdot \boldsymbol{T})$ where $\boldsymbol{Q} = (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}$
-- $q_{ij}$ shows how often $i$ and $j$ appear **in the same order**
+- $\boldsymbol{Q} = \boldsymbol{T}^\top \boldsymbol{T}$ where $\boldsymbol{Q} = (q_{i,j})_{i,j \in \{1,\dots,|\mathcal{I}|\}}$
+- $q_{i,j}$ shows how often $i$ and $j$ appear **in the same order**
 
 . . .
 
@@ -252,7 +273,8 @@ display(Q)
 
 . . .
 
-- How often each SKU appeared over all orders **(binary!)**
+- In how many **orders** each SKU appeared
+- As $t_{m,i}$ is binary, $q_{i,i}$ counts orders, **not units sold**
 
 ## How to approach the problem?
 
@@ -264,7 +286,7 @@ display(Q)
 
 ## Basic Setting
 
-<img src="https://images.beyondsimulations.com/ao/ao_split-warehouse.png" style="width:75.0%" />
+<img src="https://images.beyondsimulations.com/ao/ao_split-warehouse.png" style="width:75.0%" data-fig-alt="SKUs allocated to two warehouses with limited storage space" />
 
 ## Available Data (Version 2)
 
@@ -285,8 +307,8 @@ display(Q)
 
 <span class="question">Question:</span> **What are possible parameters?**
 
-- $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$
-- $\boldsymbol{Q}= (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}$ - Coappearance matrix
+- $c_k$ - Storage space of warehouse $k \in \{1,\dots,|\mathcal{K}|\}$, measured in number of SKUs
+- $\boldsymbol{Q}= (q_{i,j})_{i,j \in \{1,\dots,|\mathcal{I}|\}}$ - Coappearance matrix
 
 . . .
 
@@ -328,11 +350,10 @@ display(Q)
 <span class="question">Question:</span> **How could we formulate the variable in Julia?**
 
 ``` julia
-import Pkg; Pkg.add("SCIP")
-using JuMP, SCIP # SCIP is a non-commercial MIQCP solver
+using JuMP, SCIP # SCIP is a non-commercial solver for quadratic models
 
 warehouses = ["Hamburg", "Berlin"] # Add warehouses as a vector
-skus = ["Smartphone", "Socks", "Charger"] # Add SKUs as a vector
+skus = ["A", "B", "C", "D"] # The four SKUs from our transactional data
 
 warehouse_model = Model(SCIP.Optimizer)
 ```
@@ -343,20 +364,21 @@ warehouse_model = Model(SCIP.Optimizer)
 @variable(warehouse_model, X[i in skus, k in warehouses], Bin)
 ```
 
-    2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:
-        Dimension 1, ["Smartphone", "Socks", "Charger"]
+    2-dimensional DenseAxisArray{JuMP.VariableRef,2,...} with index sets:
+        Dimension 1, ["A", "B", "C", "D"]
         Dimension 2, ["Hamburg", "Berlin"]
-    And data, a 3×2 Matrix{VariableRef}:
-     X[Smartphone,Hamburg]  X[Smartphone,Berlin]
-     X[Socks,Hamburg]       X[Socks,Berlin]
-     X[Charger,Hamburg]     X[Charger,Berlin]
+    And data, a 4×2 Matrix{JuMP.VariableRef}:
+     X[A,Hamburg]  X[A,Berlin]
+     X[B,Hamburg]  X[B,Berlin]
+     X[C,Hamburg]  X[C,Berlin]
+     X[D,Hamburg]  X[D,Berlin]
 
 ## Objective Function
 
 > **We need the following:**
 >
 > - $X_{i,k}$ - 1, if SKU $i\in\mathcal{I}$ is stored in $k\in\mathcal{K}$, 0 otherwise
-> - $q_{ij}$ - Coappearance of SKU $i\in\mathcal{I}$ and $j\in\mathcal{I}$
+> - $q_{i,j}$ - Coappearance of SKU $i\in\mathcal{I}$ and $j\in\mathcal{I}$
 
 > **Our objective is to:**
 >
@@ -370,13 +392,13 @@ warehouse_model = Model(SCIP.Optimizer)
 
 ## Quadratic Objective Function
 
-$$\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}$$
+$$\text{Maximize} \quad \sum_{i=2}^{|\mathcal{I}|} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{i,k}\times X_{j,k} \times q_{i,j}$$
 
 . . .
 
 > **This is a **quadratic objective function**!**
 >
-> The quadratic terms are $X_{ik}\times X_{jk}$. This objective function is based on the **Quadratic Multiple Knapsack Problem (QMKP)**, formulated by Hiley and Julstrom (2006).
+> The quadratic terms are $X_{i,k}\times X_{j,k}$. This objective function is based on the **Quadratic Multiple Knapsack Problem (QMKP)**, formulated by Hiley and Julstrom (2006).
 
 ## Objective Function in Julia
 
@@ -385,7 +407,7 @@ $$\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \m
 . . .
 
 ``` julia
-Q = [2 1 2; 1 2 1; 2 1 2]
+# We reuse the matrix Q = T' * T computed from our transactional data
 
 @objective(warehouse_model,
     Max,
@@ -398,13 +420,13 @@ Q = [2 1 2; 1 2 1; 2 1 2]
 )
 ```
 
-\$ X\_{Socks,Hamburg}X\_{Smartphone,Hamburg} + X\_{Socks,Berlin}X\_{Smartphone,Berlin} + 2 X\_{Charger,Hamburg}X\_{Smartphone,Hamburg} + 2 X\_{Charger,Berlin}X\_{Smartphone,Berlin} + X\_{Charger,Hamburg}X\_{Socks,Hamburg} + X\_{Charger,Berlin}X\_{Socks,Berlin} \$
+    3 X[B,Hamburg]*X[A,Hamburg] + 3 X[B,Berlin]*X[A,Berlin] + 2 X[C,Hamburg]*X[A,Hamburg] + 2 X[C,Berlin]*X[A,Berlin] + 2 X[C,Hamburg]*X[B,Hamburg] + 2 X[C,Berlin]*X[B,Berlin] + 4 X[D,Hamburg]*X[A,Hamburg] + 4 X[D,Berlin]*X[A,Berlin] + X[D,Hamburg]*X[C,Hamburg] + X[D,Berlin]*X[C,Berlin]
 
 # <span class="flow">Constraints</span>
 
 ## What constraints?
 
-<img src="https://images.beyondsimulations.com/ao/ao_split-warehouse.png" style="width:90.0%" />
+<img src="https://images.beyondsimulations.com/ao/ao_split-warehouse.png" style="width:90.0%" data-fig-alt="SKUs allocated to two warehouses with limited storage space" />
 
 <span class="question">Question:</span> **What constraints?**
 
@@ -430,7 +452,7 @@ Q = [2 1 2; 1 2 1; 2 1 2]
 
 ## Single Allocation Constraint
 
-$$\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}$$
+$$\sum_{k \in \mathcal{K}} X_{i,k} \geq 1 \quad \forall i \in \mathcal{I}$$
 
 . . .
 
@@ -454,12 +476,13 @@ $$\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}$$
 )
 ```
 
-    1-dimensional DenseAxisArray{ConstraintRef{Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.GreaterThan{Float64}}, ScalarShape},1,...} with index sets:
-        Dimension 1, ["Smartphone", "Socks", "Charger"]
-    And data, a 3-element Vector{ConstraintRef{Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.GreaterThan{Float64}}, ScalarShape}}:
-     single_allocation[Smartphone] : X[Smartphone,Hamburg] + X[Smartphone,Berlin] ≥ 1
-     single_allocation[Socks] : X[Socks,Hamburg] + X[Socks,Berlin] ≥ 1
-     single_allocation[Charger] : X[Charger,Hamburg] + X[Charger,Berlin] ≥ 1
+    1-dimensional DenseAxisArray{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.GreaterThan{Float64}}, JuMP.ScalarShape},1,...} with index sets:
+        Dimension 1, ["A", "B", "C", "D"]
+    And data, a 4-element Vector{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.GreaterThan{Float64}}, JuMP.ScalarShape}}:
+     single_allocation[A] : X[A,Hamburg] + X[A,Berlin] ≥ 1
+     single_allocation[B] : X[B,Hamburg] + X[B,Berlin] ≥ 1
+     single_allocation[C] : X[C,Hamburg] + X[C,Berlin] ≥ 1
+     single_allocation[D] : X[D,Hamburg] + X[D,Berlin] ≥ 1
 
 ## Capacity Constraints?
 
@@ -480,7 +503,7 @@ $$\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}$$
 
 ## Capacity Constraints
 
-$$\sum_{i \in \mathcal{I}} X_{ik} \leq c_k \quad \forall k \in \mathcal{K}$$
+$$\sum_{i \in \mathcal{I}} X_{i,k} \leq c_k \quad \forall k \in \mathcal{K}$$
 
 . . .
 
@@ -493,29 +516,29 @@ $$\sum_{i \in \mathcal{I}} X_{ik} \leq c_k \quad \forall k \in \mathcal{K}$$
 ## Capacity Constraints in Julia
 
 ``` julia
-capacities = Dict("Hamburg" => 2, "Berlin" => 1) # Add capacities
+capacities = Dict("Hamburg" => 2, "Berlin" => 2) # Add capacities
 
 @constraint(warehouse_model, capacity[k in warehouses],
     sum(X[i, k] for i in skus) <= capacities[k]
 )
 ```
 
-    1-dimensional DenseAxisArray{ConstraintRef{Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.LessThan{Float64}}, ScalarShape},1,...} with index sets:
+    1-dimensional DenseAxisArray{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.LessThan{Float64}}, JuMP.ScalarShape},1,...} with index sets:
         Dimension 1, ["Hamburg", "Berlin"]
-    And data, a 2-element Vector{ConstraintRef{Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.LessThan{Float64}}, ScalarShape}}:
-     capacity[Hamburg] : X[Smartphone,Hamburg] + X[Socks,Hamburg] + X[Charger,Hamburg] ≤ 2
-     capacity[Berlin] : X[Smartphone,Berlin] + X[Socks,Berlin] + X[Charger,Berlin] ≤ 1
+    And data, a 2-element Vector{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.LessThan{Float64}}, JuMP.ScalarShape}}:
+     capacity[Hamburg] : X[A,Hamburg] + X[B,Hamburg] + X[C,Hamburg] + X[D,Hamburg] ≤ 2
+     capacity[Berlin] : X[A,Berlin] + X[B,Berlin] + X[C,Berlin] + X[D,Berlin] ≤ 2
 
 ## QMK Model
 
-$$\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}$$
+$$\text{Maximize} \quad \sum_{i=2}^{|\mathcal{I}|} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{i,k}\times X_{j,k} \times q_{i,j}$$
 
 subject to:
 
 $$\begin{align*}
-                & \sum_{k \in \mathcal{K}} X_{ik} \geq 1 && \forall i \in \mathcal{I}\\
-                & \sum_{i \in \mathcal{I}} X_{ik} \leq c_{k} && \forall k \in \mathcal{K}\\
-                & X_{ik} \in \{0,1\}  && \forall i \in \mathcal{I}, \forall k \in \mathcal{K}
+                & \sum_{k \in \mathcal{K}} X_{i,k} \geq 1 && \forall i \in \mathcal{I}\\
+                & \sum_{i \in \mathcal{I}} X_{i,k} \leq c_{k} && \forall k \in \mathcal{K}\\
+                & X_{i,k} \in \{0,1\}  && \forall i \in \mathcal{I}, k \in \mathcal{K}
 \end{align*}$$
 
 ## QMK Model in Julia
@@ -528,18 +551,31 @@ println("The optimal objective value is: ", objective_value(warehouse_model))
 println("The optimal solution is: ", value.(X))
 ```
 
-    The optimal objective value is: 2.0
+    The optimal objective value is: 6.0
     The optimal solution is: 2-dimensional DenseAxisArray{Float64,2,...} with index sets:
-        Dimension 1, ["Smartphone", "Socks", "Charger"]
+        Dimension 1, ["A", "B", "C", "D"]
         Dimension 2, ["Hamburg", "Berlin"]
-    And data, a 3×2 Matrix{Float64}:
-      1.0  0.0
-     -0.0  1.0
-      1.0  0.0
+    And data, a 4×2 Matrix{Float64}:
+     1.0  0.0
+     0.0  1.0
+     0.0  1.0
+     1.0  0.0
 
 . . .
 
-<span class="question">Question:</span> What does this value tell us?
+<span class="question">Question:</span> **What does this value tell us?**
+
+## Interpreting the Solution
+
+- Total capacity ($2+2$) **equals** the number of SKUs
+- Hence, each SKU is stored **exactly once**
+- Optimal: **A and D** share a warehouse, so do **B and C**
+
+. . .
+
+> **The objective value is 6**
+>
+> It sums the coappearances of SKUs sharing a warehouse: $q_{A,D} + q_{B,C} = 4 + 2 = 6$. It does **not** directly count the avoided split orders!
 
 # <span class="flow">Model Characteristics</span>
 
@@ -552,7 +588,7 @@ println("The optimal solution is: ", value.(X))
 
 ## Choosing a solver
 
-- Identify **problem structure**, e.g. LP, MIP, NLP, QCP, MIQCP, ...
+- Identify **problem structure**, e.g. LP, MIP, NLP, MIQP, MIQCP, ...
 - What is the **size** of the problem?
 - Is a **commercial** solver needed?
 
@@ -560,14 +596,23 @@ println("The optimal solution is: ", value.(X))
 
 > **Commercial Solvers**
 >
-> Commercial solvers are **faster** and **more robust** as open source solvers but also **more expensive**. During your studies, you can use most of them for free though! Nonetheless, we will only use open source solvers in this course.
+> Commercial solvers are **faster** and **more robust** than open source solvers but also **more expensive**. During your studies, you can use most of them for free though! Nonetheless, we will only use open source solvers in this course.
+
+## Our Problem Class
+
+- Objective: **quadratic** terms $X_{i,k} \times X_{j,k}$
+- Constraints: all **linear**
+- Variables: all **binary**
+
+. . .
+
+> **Mixed-Integer Quadratic Program (MIQP)**
+>
+> Our model is a **MIQP**, as only the objective is quadratic. It is not a MIQCP, which would also allow quadratic **constraints**. MIQCP solvers, e.g. SCIP, subsume MIQPs and can thus solve our model.
 
 ## Global vs Local Optimality
 
-<figure>
-<a href="https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/"><img src="https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&amp;ssl=1" style="width:80.0%" /></a>
-<figcaption>Local vs Global Optimum by Christoph Roser</figcaption>
-</figure>
+[<img src="https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&amp;ssl=1" style="width:80.0%" data-fig-alt="Local vs Global Optimum by Christoph Roser" />](https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/)
 
 ## Solver Comparison[^6]
 
@@ -577,9 +622,9 @@ println("The optimal solution is: ", value.(X))
 | 1,000  | 1,011s (18%) | X     | ~200s (2%) |
 | 10,000 | X            | X     | X          |
 
-. . .
+## Solver Comparison: Takeaways
 
-- <span class="highlight">SCIP</span>: Best open-source for MIQCP, but limited scalability
+- <span class="highlight">SCIP</span>: Best open-source for MIQP/MIQCP, limited scalability
 - **Commercial solvers**: Better but still fail on 10,000+ SKUs
 - **Conclusion**: Heuristics necessary for realistic problems!
 
@@ -590,6 +635,12 @@ println("The optimal solution is: ", value.(X))
 - What assumptions have we made?
 - Problem with allocating SKUs to multiple warehouses?
 - What else might pose a problem in the real world?
+
+. . .
+
+> **Duplicates can inflate the objective**
+>
+> With slack capacity, the model may store one SKU in **several warehouses**. A shared pair then counts **once per warehouse**, raising the objective without avoiding any further splits.
 
 ## Model Limitations
 
@@ -662,7 +713,7 @@ Use **chi-square tests** to detect if SKUs are dependent:
 - If difference is significant → SKUs are **dependent**
 - Allocate dependent SKUs to <span class="highlight">same warehouse</span>!
 
-. . .
+## From Tests to Allocations
 
 > **Two-Phase Approach**
 >
@@ -686,15 +737,17 @@ Use **chi-square tests** to detect if SKUs are dependent:
 
 ## Rolling Horizon Approach
 
-- Use **5-week training window** for allocation decisions
-- Update allocations **weekly** based on recent patterns
-- Balance <span class="highlight">stability</span> vs. <span class="highlight">responsiveness</span>
+In the following case study (Vlćek and Voigt 2024), we:
+
+- used a **5-week training window** for allocation decisions
+- updated allocations **weekly** based on recent patterns
+- balanced <span class="highlight">stability</span> vs. <span class="highlight">responsiveness</span>
 
 . . .
 
 > **Tip**
 >
-> Grouped SKUs by **category-brand combinations** to reduce problem size while maintaining allocation quality. New SKUs inherit allocation from their cluster!
+> In the case study, SKUs were grouped by **category-brand combinations** to reduce the problem size while maintaining allocation quality. New SKUs inherit the allocation of their cluster!
 
 ## Case Study
 
@@ -711,29 +764,28 @@ Use **chi-square tests** to detect if SKUs are dependent:
 - **GP, GO, GS, BS**: Greedy (Catalán and Fisher 2012)
 - **RA**: Random allocation
 
-. . .
-
-<img src="https://images.beyondsimulations.com/ao/ao_split-case.png" style="width:70.0%" />
-
 ## Implementation Results
 
-**Theoretical improvements**:
+**Retailer's status quo**: 6.95% of all orders were split
+
+. . .
+
+**Theoretical reduction of these splits**:
 
 - CHI: **82.25%** reduction
-- BS: **62.63%** reduction  
+- BS: **62.63%** reduction
 - GS: **59.16%** reduction
-- vs. retailer: **6.95%** split ratio
 
 ## Conclusion
 
 - Splits are **of no benefit**, except **faster customer deliveries**
 - <span class="highlight">Increase workload, packaging and shipping costs</span>
-- Mathematical Optimisation of **"full" problem not solvable**
-- **CHI** Heuristic close to mathematical optimisation
+- Mathematical Optimization of **"full" problem not solvable**
+- **CHI** Heuristic close to mathematical optimization
 
 . . .
 
-> **And that's it for todays lecture!**
+> **And that's it for today's lecture!**
 >
 > We now have covered the Quadratic Multiple Knapsack Problem and are ready to start solving some tasks in the upcoming tutorial.
 
@@ -746,6 +798,15 @@ Questions?
 # <span class="flow">Literature</span>
 
 ## Literature I
+
+References for this lecture:
+
+- Catalán and Fisher (2012): Integer model and greedy heuristics
+- Hiley and Julstrom (2006): The Quadratic Multiple Knapsack Problem
+- Zhu et al. (2021): Mathematical model and GRASP
+- Vlćek and Voigt (2024): CHI heuristic and case study
+
+## Literature II
 
 For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
 
@@ -763,7 +824,7 @@ Vlćek, Tobias, and Guido Voigt. 2024. "Optimizing SKU-Warehouse Allocations to 
 
 Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. "Optimization of Product Category Allocation in Multiple Warehouses to Minimize Splitting of Online Supermarket Customer Orders." *European Journal of Operational Research* 290 (2): 556--71. <https://doi.org/10.1016/j.ejor.2020.08.024>.
 
-[^1]: Forecast, not actual number
+[^1]: Forecast made in 2020, not an actual number
 
 [^2]: SKU: Stock Keeping Unit
 
@@ -773,6 +834,6 @@ Zhu, Shan, Xiangpei Hu, Kai Huang, and Yufei Yuan. 2021. "Optimization of Produc
 
 [^5]: Greedy Randomized Adaptive Search Procedure, Zhu et al. (2021)
 
-[^6]: Based on numerical experiments (QMK). The percentage in the table shows instances that could be solved within one hour and their average time (if solved).
+[^6]: Based on numerical experiments with QMK instances. Times are averages over the instances solved to optimality; the percentage shows the share of instances solved within one hour, X = none solved within one hour.
 
 [^7]: QMKP is not applicable for instance in case study

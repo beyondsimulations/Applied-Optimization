@@ -12,7 +12,7 @@ code-links:
 
 This interactive Julia script introduces the basics of vectors, matrices, and tuples.
 
-- A vector is like a single row in a spreadsheet or a shopping list - it stores items in a line
+- A vector is like a single column in a spreadsheet or a shopping list - it stores items one after another
 - A matrix is like a spreadsheet - it has rows and columns
 - A tuple is like a sealed package containing different types of items
 
@@ -22,11 +22,15 @@ Understanding these data structures and how to manipulate them is crucial in Jul
 >
 > If a cell is marked with `YOUR CODE BELOW`, you are expected to write your code in that cell.
 
+> **Tip**
+>
+> The exercises in this tutorial build on each other: later exercises use variables created in earlier ones. If an assert suddenly fails or you see an `UndefVarError`, re-run the previous exercises from the top.
+
 ------------------------------------------------------------------------
 
 # Section 1 - Vectors
 
-Vectors in Julia are one-dimensional arrays used to store sequences of elements. They're powerful for numerical operations and data handling. A vector is the simplest way to store a list of items. Think of it as a row of boxes, where each box can hold a number or other type of data. Create vectors with square brackets, separate elements with commas.
+Vectors in Julia are one-dimensional arrays used to store sequences of elements. They're powerful for numerical operations and data handling. A vector is the simplest way to store a list of items. Think of it as a line of boxes, where each box can hold a number or other type of data. Create vectors with square brackets, separate elements with commas.
 
 ``` julia
 # Creating a simple vector (list) of numbers
@@ -50,6 +54,10 @@ students = ["Mike", "Yola", "Elio"]
      "Yola"
      "Elio"
 
+> **Warning**
+>
+> Commas and spaces mean different things in Julia! `[1, 2, 3]` with commas creates a vector, which Julia treats as a *column* of numbers. `[1 2 3]` with spaces creates a 1x3 matrix, a single *row*. You can see the difference yourself: `typeof([1, 2, 3])` shows `Vector{Int64}`, while `typeof([1 2 3])` shows `Matrix{Int64}`. The two are different objects, so `[1, 2, 3] == [1 2 3]` is `false`. In this course, use commas unless you really want a row of a matrix.
+
 Vectors are mutable, and you can:
 
 - Add items to the end (like adding to a shopping list): `push!(grades, 82)`
@@ -62,7 +70,7 @@ Vectors are mutable, and you can:
 >
 > In Julia, we start counting positions from 1, not 0. So `grades[1]` gives you the first grade!
 
-Use '?' in the REPL for function details.
+Type `?push!` (or `?` followed by any other function name) in the REPL to read a function's documentation.
 
 ## Exercise 1.1 - Create a Vector
 
@@ -134,7 +142,7 @@ Access and save the first three elements of `fib`, to `first_three_elements`.
 
 ``` julia
 # Test your answer
-@assert first_three_elements == fib[1:3]
+@assert first_three_elements == [1, 2, 3]
 println("The first three elements of the 'fib' vector: ", first_three_elements)
 ```
 
@@ -144,7 +152,7 @@ println("The first three elements of the 'fib' vector: ", first_three_elements)
 
 # Section 2 - Matrices
 
-A matrix in Julia is a 2D array, great for linear algebra and data representation. Create matrices with square brackets, separate elements with spaces, rows with semicolons. Access elements with square brackets (e.g., `matrix[2,2]`). You can add or substract matrices of the same dimensions element-wise if you add or substract them.
+A matrix in Julia is a 2D array, great for linear algebra and data representation. Create matrices with square brackets, separate elements with spaces, rows with semicolons. Access elements with square brackets in the order `matrix[row, column]` - for example, `matrix[2, 3]` is the element in the 2nd row and 3rd column. You can add or subtract matrices of the same dimensions; these operations work element-wise.
 
 For example:
 
@@ -167,7 +175,7 @@ println("matrix3 is $matrix3.")
 
     matrix3 is [8 12; 12 18].
 
-But we can change this by using broadcasting!
+Here, `*` computes the matrix product from linear algebra: each entry is a row of the first matrix multiplied with a column of the second. You will meet this operation again later in the course. If we want to apply an operation element-wise instead, we use broadcasting!
 
 > **Tip**
 >
@@ -215,6 +223,7 @@ Change the 3rd column of the 2nd row to `17` by accessing and changing the eleme
 
 ``` julia
 # YOUR CODE BELOW
+
 ```
 
 <details class="code-fold">
@@ -269,7 +278,7 @@ println("Result of adding 10 to each element in 'added_matrices':\n", added_matr
 
 ------------------------------------------------------------------------
 
-# Section 3: Tuples
+# Section 3 - Tuples
 
 A tuple is like a sealed package - once you create it, you can't change what's inside. That's why we call it "immutable". It's perfect for grouping related items that shouldn't change. For example:
 
@@ -301,6 +310,10 @@ println("The 'my_tuple': ", my_tuple)
 ```
 
 </details>
+
+> **Note**
+>
+> Wait - didn't we say tuples can't change? The tuple's *slots* are sealed: you cannot replace `my_tuple[2]` with a different object. But the matrix stored in that slot is still a mutable object, so something like `my_tuple[2][1, 1] = 99` would change the matrix itself. The package is sealed, but a box inside it can still be opened.
 
 ## Exercise 3.2 - Access the Second Element
 

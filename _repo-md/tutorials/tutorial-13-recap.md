@@ -8,16 +8,48 @@ subtitle: Applied Optimization with Julia
 
 This will (hopefully) be the easiest tutorial of the entire course. Essentially, we will just use today's tutorial as a last chance for you to ask questions and discuss the content of the course.
 
+# Recap
+
+To structure the discussion (and your exam preparation), here is a compact overview of the problems we have modeled and the key modeling idea each one introduced:
+
+| Topic | Original Problem | Key Modeling Idea |
+|-------------------------------|---------------------|---------------------|
+| [Solar Panel Transport](../lectures/lecture-04-jump.qmd) | Classic Transport Problem | Sets, parameters and continuous variables |
+| [Beer Production](../lectures/lecture-05-production.qmd) | Capacitated Lot-Sizing Problem (CLSP) | Binary setup variables and Big-M constraints |
+| [Split Order Minimization](../lectures/lecture-06-ordersplit.qmd) | Quadratic Multiple Knapsack Problem (QMKP) | Quadratic objective with binary variables |
+| [Library Routing](../lectures/lecture-07-routing.qmd) | Capacitated Vehicle Routing Problem (CVRP) | Subtour elimination and heuristics |
+| [Police Service Districting](../lectures/lecture-08-districting.qmd) | p-Median Problem | Contiguity and compactness constraints |
+| [Safety Planning for the Hajj Pilgrimage](../lectures/lecture-09-safety.qmd) | Scheduling Problem | Time-indexed scheduling with penalties |
+| [Arena Seating](../lectures/lecture-11-distancing.qmd) | 2D-Knapsack Problem | One binary variable per seating group |
+| [Passenger Flow Control](../lectures/lecture-12-rail.qmd) | Dynamic Network Flow Problem | Queue dynamics over time periods |
+
+For the Julia and JuMP syntax, take a look at the [Julia cheatsheet](../general/cheatsheet-julia.qmd) and the [JuMP cheatsheet](../general/cheatsheet-jump.qmd).
+
+Some questions to test yourself with and to discuss in the session:
+
+- Which of our problems needed binary variables, and why?
+- Where did we use Big-M constraints, and what is the role of the "M"?
+- Why do subtours appear in the routing model, and how did we prevent them?
+- Which models were solvable exactly, and where did we need heuristics?
+- If you had to simplify a real-world problem into a model, which assumptions would you question first?
+
+> **Note**
+>
+> Exam logistics in short: you can bring **one DIN A4 sheet** with notes on both sides, and your bonus points count if your mark is at least 4.0. See the [FAQ](../general/faq.qmd) for the details.
+
 # Feedback on the lecture series
 
-To receive half a bonus point, you will just need to complete a short feedback form on the lecture series before the exam. It is not from the university, but from me, and I would be truly grateful for your honest opinion and feedback. Your feedback is important to me and has absolutely no influence on your grade! In total I think it will take you about 15 - 20 minutes to complete the form - that's not too bad given that you will receive half a bonus point for it, right?
+To receive half a bonus point, you will just need to complete a short feedback form on the lecture series before the exam. It is not from the university, but from me, and I would be truly grateful for your honest opinion and feedback. Your feedback is important to me and has absolutely no influence on your grade! The half point counts toward your exam bonus points, just like the tutorial submissions. In total I think it will take you about 15--20 minutes to complete the form - that's not too bad given that you will receive half a bonus point for it, right?
 
-In all honesty, I know this is much to ask of you - especially given that the exams are coming up. However, I think it is very important for me to get your honest opinion and feedback. I will use it to improve the course for future students, as well as for my future teaching.
+In all honesty, I know this is a lot to ask of you - especially given that the exams are coming up. However, I think it is very important for me to get your honest opinion and feedback. I will use it to improve the course for future students, as well as for my future teaching.
 
-<iframe data-tally-src="https://tally.so/embed/Ekl9gN?alignLeft=1&amp;hideTitle=1&amp;transparentBackground=1&amp;dynamicHeight=1" loading="lazy" width="100%" height="347" frameborder="0" marginheight="0" marginwidth="0" title="Feedback: Applied Optimization 25/26">
+<!-- NOTE: The Tally form ID below is semester-specific. Create a new form and update both links each semester. -->
+<iframe data-tally-src="https://tally.so/embed/Ekl9gN?alignLeft=1&amp;hideTitle=1&amp;transparentBackground=1&amp;dynamicHeight=1" loading="lazy" width="100%" height="347" frameborder="0" marginheight="0" marginwidth="0" title="Feedback: Applied Optimization">
 </iframe>
 <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
 
+If the form does not load, you can open it directly: <https://tally.so/r/Ekl9gN>. Note that the form is provided by [Tally](https://tally.so), a third-party service that processes your responses.
+
 # Wrap-up
 
-Thank's for your participation! I wish you all the best for your exam and I hope you enjoyed the course! If you have any questions, please feel free to ask me or send me an email. We offer seminars each summer semester where you can explore different topics in more depth. In case you are interested in writing your thesis with me, please let me know and we can discuss potential topics.
+Thanks for your participation! I wish you all the best for your exam and I hope you enjoyed the course! If you have any questions, please feel free to ask me or send me an email. We offer seminars each summer semester where you can explore different topics in more depth. In case you are interested in writing your thesis with me, please let me know and we can discuss potential topics.

@@ -10,11 +10,24 @@ format:
 
 # [Introduction]{.flow} {.title}
 
+## Learning Objectives
+
+By the end of this lecture, you will be able to:
+
+::: {.incremental}
+
+- **Formulate** a vehicle routing problem as a mathematical model
+- **Explain** how subtours arise and how to prevent them
+- **Assess** why large instances are hard to solve exactly
+- **Choose** between exact methods and heuristics in practice
+
+:::
+
 ## [Central Libraries]{.invert-font} {background-color="#000000" background-image="https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
 
 . . .
 
-[**Question:** Anybody an idea what a central library is?]{.invert-font .fragment}
+[**Question:** Does anyone have an idea what a central library is?]{.invert-font .fragment}
 
 :::{.footer}
 :::
@@ -32,7 +45,7 @@ format:
 
 ## Structure of the Deliveries
 
-- For delivery, central has [several employees and cars]{.highlight}
+- For delivery, the central library has [several employees and cars]{.highlight}
 - Local libraries differ in size, some receive **more items**
 - Items are **collected as well** during the tours[^tour-duration]
 - They are **transported back** to the central library
@@ -134,22 +147,22 @@ the problem!
 
 ## Basic Problem Setting
 
-![](https://images.beyondsimulations.com/ao/ao_routing-basic-01.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-01.svg){width="99%" fig-alt="Map with a central depot and several customer nodes scattered around it"}
 
 
 ## Basic Setting with Arcs
 
-![](https://images.beyondsimulations.com/ao/ao_routing-basic-02.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-02.svg){width="99%" fig-alt="Depot and customer nodes with arcs connecting the nodes to each other"}
 
 
 ## Setting with Vehicles
 
-![](https://images.beyondsimulations.com/ao/ao_routing-basic-03.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-03.svg){width="99%" fig-alt="Depot and customer nodes with two vehicles positioned at the depot"}
 
 
 ## Basic Setting with Tours
 
-![](https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg){width="99%" fig-alt="Two vehicle tours starting and ending at the depot, each visiting a group of customers"}
 
 
 # [Problem Structure]{.flow} {.title}
@@ -219,7 +232,7 @@ $X_{i,j,k}$ is a **binary variable**, as it can only take values 0 or 1. But mos
 
 . . .
 
-[Question:]{.question} **Why this might make the problem difficult?**
+[Question:]{.question} **Why might this make the problem difficult?**
 
 ## Decision Variable/s (again)?
 
@@ -288,7 +301,7 @@ Minimization of the travel time (or driving distance), while supplying all custo
 
 . . .
 
-$$\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}$$
+$$\text{Minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}$$
 
 . . .
 
@@ -314,18 +327,50 @@ c = Dict(("depot","A") => 10, ("depot","B") => 15, ("depot","C") => 20,
 
 model = Model(HiGHS.Optimizer)
 @variable(model, X[arcs], Bin)
-@objective(model, Min, sum(c[i,j] * X[(i,j)] for (i,j) in arcs))
+@objective(model, Min, sum(c[(i,j)] * X[(i,j)] for (i,j) in arcs))
 ```
 
 . . .
 
 ::: {.callout-note}
-The JuMP syntax `sum(c[i,j] * X[(i,j)] for (i,j) in arcs)` directly mirrors our mathematical notation $\sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}$!
+The JuMP syntax `sum(c[(i,j)] * X[(i,j)] for (i,j) in arcs)` directly mirrors our mathematical notation $\sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}$!
 :::
+
+## Solving the Small Example
+
+Let's add constraints and solve the example with **one vehicle**:
+
+```{julia}
+#| eval: true
+#| echo: true
+# Each node has to be entered and left exactly once
+for n in nodes
+    @constraint(model, sum(X[(i,j)] for (i,j) in arcs if j == n) == 1)
+    @constraint(model, sum(X[(i,j)] for (i,j) in arcs if i == n) == 1)
+end
+set_silent(model)
+optimize!(model)
+println("Arcs: ", [a for a in arcs if value(X[a]) > 0.5])
+println("Cost: ", objective_value(model))
+```
+
+## A Valid Solution?
+
+The solver chose the arcs depot ↔ A and B ↔ C with a cost of 30.
+
+. . .
+
+[Question:]{.question} **Is this a valid tour for one vehicle?**
+
+. . .
+
+- No! The loop B ↔ C **never visits the depot**
+- Our model is still [missing constraints]{.highlight}
+- We will fix this in the following sections!
 
 ## Problem Constraints
 
-![](https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg){width="99%" fig-alt="Two vehicle tours starting and ending at the depot, each visiting a group of customers"}
 
 ## Constraints?
 
@@ -357,7 +402,7 @@ subtour?
 
 ## Subtours
 
-![](https://images.beyondsimulations.com/ao/ao_routing-basic-05.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-basic-05.svg){width="99%" fig-alt="Routing solution where some customers form a small loop that is disconnected from the depot"}
 
 # [Constraints]{.flow} {.title}
 
@@ -385,11 +430,11 @@ Ensure that each customer is visited exactly once. Essentially, we could also sa
 . . .
 
 $$
-\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
+\sum_{i \in \mathcal{V}, i \neq j} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}
 $$
 
 $$
-\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
+\sum_{j \in \mathcal{V}, j \neq i} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}
 $$
 
 . . .
@@ -400,7 +445,7 @@ $$
 
 The depot is the **only node** that is [visited multiple times!]{.highlight}
 
-## Depot Entry/ Exit Constraints?
+## Depot Entry/Exit Constraints?
 
 ::: {.callout-important}
 ## The goal of these constraints is to:
@@ -422,7 +467,7 @@ Ensure that each vehicle enters and leaves the depot exactly $|\mathcal{K}|$ tim
 
 [Question:]{.question} **What could the constraint look like?**
 
-## Depot Entry/ Exit Constraints
+## Depot Entry/Exit Constraints
 
 $$
 \sum_{i \in \mathcal{V} \setminus \{0\}} X_{i,0} = |\mathcal{K}|
@@ -438,6 +483,16 @@ $$
 ## Are all constraints necessary?
 No, theoretically we could also say that we only have to leave **or** enter the depot exactly $|\mathcal{K}|$ times, as the other constraint is already enforced by the "visit each customer once constraint".
 :::
+
+## Exactly $|\mathcal{K}|$ Tours?
+
+[Question:]{.question} **What if 3 vehicles would suffice, but we own 5?**
+
+. . .
+
+- The constraints **force** all $|\mathcal{K}|$ vehicles to be used
+- With generous capacity, this can lead to [more tours than needed]{.highlight} and thus longer total travel times
+- Replacing $=$ with $\leq$ would allow the solver to **leave vehicles unused**
 
 # [Capacity and Subtour Elimination]{.flow} {.title}
 
@@ -458,12 +513,16 @@ a little bit tricky.
 
 
 ::: {.incremental}
-- **Miller-Tucker-Zemlin (MTZ)** Constraints
-- Formulation by @KARA2004793
+- **Miller-Tucker-Zemlin (MTZ)** Constraints from 1960
+- Here, in the CVRP form of @KARA2004793
 - Prevent subtours and **track routes** and **capacity utilization**
 - First, we need [an additional variable!]{.highlight}
-- $U_{i}$ - Capacity utilization at $i$ of vehicle on its tour with $i \in \mathcal{I}$
 :::
+
+## The MTZ Variable
+
+- $U_{i}$ - Capacity utilization at $i$ of vehicle on its tour with $i \in \mathcal{V} \setminus \{0\}$
+- Note that $U_i$ is a **continuous** variable, not a binary one!
 
 . . .
 
@@ -480,7 +539,7 @@ You don't need to guess these constraints, as they are quite tricky!
 
 - $\mathcal{V}$ - Set of all nodes, index $i \in \{0,1,2,...,n\}$
 - $X_{i,j}$ - 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise
-- $U_{i}$ - Capacity utilization at $i$ of vehicle on its tour with $i \in \mathcal{I}$
+- $U_{i}$ - Capacity utilization at $i$ of vehicle on its tour with $i \in \mathcal{V} \setminus \{0\}$
 - $b$ - Capacity per vehicle (all are identical!)
 - $d_i$ - Demand at node $i$
 
@@ -516,14 +575,14 @@ complicated?
 ::: {.columns}
 
 ::: {.column width="50%"}
-![](https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg){width="99%" fig-alt="Example network with a depot and several customer nodes, each customer with a demand of one"}
 :::
 
 ::: {.column width="50%" .incremental}
 - Let's [break it down!]{.highlight}
 - $d_i$ for **all customers** is 1
 - Capacity $b$ **per vehicle** is 5
-- $U_i$ is the current **capacity utilization** at node $i \in \mathcal{I}$
+- $U_i$ is the current **capacity utilization** at node $i \in \mathcal{V} \setminus \{0\}$
 :::
 
 :::
@@ -533,11 +592,11 @@ complicated?
 ::: {.columns}
 
 ::: {.column width="50%"}
-![](https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg){width="99%" fig-alt="Example network with a depot and several customer nodes, each customer with a demand of one"}
 :::
 
 ::: {.column width="50%" .incremental}
-- In case $X_{ij} = 0$:
+- In case $X_{i,j} = 0$:
   - $U_i - U_j \leq b - d_j$
   - **Non-binding** for relation between two nodes
 - Following is [perfectly fine]{.highlight}:
@@ -551,11 +610,11 @@ complicated?
 ::: {.columns}
 
 ::: {.column width="50%"}
-![](https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg){width="99%" fig-alt="Example network with a depot and several customer nodes, each customer with a demand of one"}
 :::
 
 ::: {.column width="50%" .incremental}
-- In case $X_{ij} = 1$:
+- In case $X_{i,j} = 1$:
   - $$U_i - U_j + b \leq b - d_j$$
   - **Binding** for relation between two nodes
 - [Can be summarized to]{.highlight}:
@@ -571,8 +630,8 @@ complicated?
 
 . . .
 
-- Binding as $U_j$ has to be **at least as large** as $d_i + U_i$
-- Hence, fullfiled if the demand of $i$ is [added to the vehicle]{.highlight}
+- Binding as $U_j$ has to be **at least as large** as $d_j + U_i$
+- Hence, fulfilled if the demand of $j$ is [added to the vehicle]{.highlight}
 
 . . .
 
@@ -580,15 +639,15 @@ complicated?
 
 . . .
 
-- If $X_{ij} = 1$, then $U_j$ has to be **at least as large** as $d_i + U_i$
-- If $X_{ij} = 0$, then $U_i \leq b$ and $U_j \geq d_j$
+- If $X_{i,j} = 1$, then $U_j$ has to be **at least as large** as $d_j + U_i$
+- If $X_{i,j} = 0$, then $U_i \leq b$ and $U_j \geq d_j$
 
 ## Tour from the Depot
 
 ::: {.columns}
 
 ::: {.column width="50%"}
-![](https://images.beyondsimulations.com/ao/ao_routing-subtours-03.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-03.svg){width="99%" fig-alt="A feasible tour of vehicle A that starts and ends at the depot"}
 :::
 
 ::: {.column width="50%" .incremental}
@@ -606,14 +665,15 @@ complicated?
 ::: {.columns}
 
 ::: {.column width="50%"}
-![](https://images.beyondsimulations.com/ao/ao_routing-subtours-04.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-04.svg){width="99%" fig-alt="A subtour that connects the nodes H and C without the depot"}
 :::
 
 ::: {.column width="50%" .incremental}
 
-- Let's start at node $H$
-- We drive to node $C$
-- $U_C$ = 1
+- Assume a subtour $H \to C \to I \to H$
+- Each arc on it has $X_{i,j} = 1$
+- From $H$ to $C$:
+- $U_C \geq U_H + 1$
 :::
 
 :::
@@ -623,13 +683,14 @@ complicated?
 ::: {.columns}
 
 ::: {.column width="50%"}
-![](https://images.beyondsimulations.com/ao/ao_routing-subtours-05.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-05.svg){width="99%" fig-alt="The subtour continues from node C to node I, still without the depot"}
 :::
 
 ::: {.column width="50%" .incremental}
 
-- We continue to node $I$
-- $U_I$ = 2
+- From $C$ to $I$:
+- $U_I \geq U_C + 1$
+- $U$ has to **increase** along every arc of the subtour
 
 :::
 
@@ -640,16 +701,16 @@ complicated?
 ::: {.columns}
 
 ::: {.column width="50%"}
-![](https://images.beyondsimulations.com/ao/ao_routing-subtours-06.svg){width="99%"}
+![](https://images.beyondsimulations.com/ao/ao_routing-subtours-06.svg){width="99%" fig-alt="The subtour closes the cycle from node I back to node H"}
 :::
 
 ::: {.column width="50%" .incremental}
 
-- We continue to node $H$
-- $U_H$ = 3
-- Connection from $H$ to $C$
-- $U_H$ is **greater** than $U_C$!
-- [Infeasible solution!]{.highlight}
+- From $I$ back to $H$:
+- $U_H \geq U_I + 1$
+- Now, add up all three constraints
+- All $U$ cancel out: $0 \geq 3$
+- [Impossible!]{.highlight} No feasible values for $U$ exist!
 
 :::
 
@@ -657,8 +718,8 @@ complicated?
 
 ## Subtour Elimination
 
-- Connection in the other direction wouldn't work as well
-- **Only depot as "reset" **, as constraints are not applied here
+- The same argument holds for **any** subtour without the depot
+- **Only depot as "reset"**, as constraints are not applied here
 
 [Question:]{.question} **What about the capacity?**
 
@@ -671,13 +732,14 @@ complicated?
 
 ## Ensure time limit?
 
-[Question:]{.question} **Anybody an idea?**
+[Question:]{.question} **Does anyone have an idea?**
 
 . . .
 
 - Constraints basically **follow the same idea**!
 - First, we again need an additional variable
-- $T_{i}$ - Time spent on tour at node $i$ of a vehicle with $i \in \mathcal{I}$
+- $T_{i}$ - Time spent on tour at node $i$ of a vehicle with $i \in \mathcal{V} \setminus \{0\}$
+- $T_i$ is a **continuous** variable, just like $U_i$
 
 ## Ensure time limit
 
@@ -686,7 +748,7 @@ complicated?
 
 - $\mathcal{V}$ - Set of all nodes, index $i \in \{0,1,2,...,n\}$
 - $X_{i,j}$ - 1, if the arc between $i$ and $j$ is part of a tour, 0 otherwise
-- $T_{i}$ - Time spent on tour at the node $i$ of a vehicle with $i \in \mathcal{I}$
+- $T_{i}$ - Time spent on tour at the node $i$ of a vehicle with $i \in \mathcal{V} \setminus \{0\}$
 - $t$ - Maximal duration of a tour
 - $c_{i,j}$ - Travel time on an arc from $i$ to $j$
 
@@ -701,9 +763,18 @@ $$
 . . .
 
 $$
-0 \leq T_{i} \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+c_{0,i} \leq T_{i} \leq t - c_{i,0} \quad \forall i \in \mathcal{V} \setminus \{0\}
 $$
 
+## Time limit and the depot
+
+[Question:]{.question} **Why do we need the tightened domain of $T_i$?**
+
+. . .
+
+- $T_i \geq c_{0,i}$: the drive [from the depot]{.highlight} to the first customer counts
+- $T_i \leq t - c_{i,0}$: time to [return to the depot]{.highlight} is reserved
+- With just $0 \leq T_i \leq t$, a tour could **exceed the limit** by the two depot legs!
 
 ## {.loud-slide}
 
@@ -721,7 +792,7 @@ Any questions?
 ## Objective
 
 $$
-\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}
+\text{Minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}
 $$
 
 ::: {.callout-important}
@@ -734,11 +805,11 @@ Minimize the total travel distance.
 ## Each customer is visited once
 
 $$
-\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
+\sum_{i \in \mathcal{V}, i \neq j} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}
 $$
 
 $$
-\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
+\sum_{j \in \mathcal{V}, j \neq i} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}
 $$
 
 ::: {.callout-important}
@@ -765,7 +836,7 @@ The depot is visited by exactly $|\mathcal{K}|$ vehicles. Note, that we could re
 
 :::
 
-## Capacity/ subtour elimination
+## Capacity/subtour elimination
 
 $$
 U_i - U_j + b \times X_{i,j} \leq b - d_j \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
@@ -789,20 +860,20 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 $$
 
 $$
-0 \leq T_i \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+c_{0,i} \leq T_i \leq t - c_{i,0} \quad \forall i \in \mathcal{V} \setminus \{0\}
 $$
 
 ::: {.callout-important}
 ## Our constraints ensure:
 
-The time limit is respected (and subtours are eliminated).
+The time limit is respected (and subtours are eliminated). The domain of $T_i$ accounts for the travel from and back to the depot.
 
 :::
 
 ## Variables
 
 $$
-X_{i,j} \in \{0,1\} \quad \forall i,j \in \mathcal{V}
+X_{i,j} \in \{0,1\} \quad \forall (i,j) \in \mathcal{A}
 $$
 
 $$
@@ -810,13 +881,13 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 $$
 
 $$
-0 \leq T_i \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+c_{0,i} \leq T_i \leq t - c_{i,0} \quad \forall i \in \mathcal{V} \setminus \{0\}
 $$
 
 ::: {.callout-important}
 ## The variable domains make sure that:
 
-The binary setup variable is either 0 or 1 and the new variables are below the time and capacity limit.
+The binary setup variable is either 0 or 1 and the continuous variables $U_i$ and $T_i$ stay within the capacity and time limits.
 
 :::
 
@@ -882,15 +953,13 @@ Our formulation makes [several simplifying assumptions]{.highlight}:
 - Multi-day horizons
 :::
 
-::::
+:::
 
 . . .
 
 ::: {.callout-tip}
 These complications often require **extensions** of the basic CVRP model or **robust optimization** approaches!
 :::
-
----
 
 ## Extensions of the CVRP
 
@@ -958,7 +1027,7 @@ with 40%-45%.
 
 ## Problem is NP-hard
 
-- We have already seen that a problem **can be NP-hard**
+- We have already encountered **NP-hard problems** in this course
 - Likely, that there are **no polynomial-time algorithms**
 - [Doesn't mean that it can't be solved!]{.highlight}
 
@@ -989,11 +1058,19 @@ The solution space grows **explosively** with problem size:
 
 - The **optimality gap** measures: 
     $$\frac{\text{Best Solution} - \text{Lower Bound}}{\text{Lower Bound}} \times 100\%$$
-- A 40% gap means our solution **could be** up to 40% worse than optimal
-- For 165 libraries, even **state-of-the-art solvers** struggle
-- [This is why we need heuristics!]{.highlight}
+- A 40% gap means our solution **could be** up to 40% worse than optimal[^gap-def]
 
 :::
+
+[^gap-def]: Note that most solvers (including HiGHS) report the gap relative to the best solution, $\frac{\text{Best Solution} - \text{Lower Bound}}{\text{Best Solution}}$, so the numbers in the solver log differ slightly from our definition.
+
+## Consequences of the Gap
+
+- For 165 libraries, even **state-of-the-art solvers** struggle
+
+. . .
+
+- [This is why we need heuristics!]{.highlight}
 
 ## {.loud-slide}
 
@@ -1055,7 +1132,7 @@ Intelligent search strategies
 - Tabu search
 :::
 
-::::
+:::
 
 . . .
 
@@ -1083,7 +1160,7 @@ For real-world applications, also consider OR-Tools by Google, it is open-source
 
 ## Case Study Results
 
-Using **HGS-CVRP** instead of exact optimization:
+In our project, using **HGS-CVRP** instead of exact optimization:
 
 ::: {.incremental}
 
@@ -1101,7 +1178,7 @@ The heuristic solution is **better** than what the MIP solver found in 1 hour!
 
 ## Applications Beyond Libraries
 
-:::: {.columns}
+::: {.columns}
 
 ::: {.column width="50%"}
 **Logistics & Delivery**
@@ -1121,7 +1198,7 @@ The heuristic solution is **better** than what the MIP solver found in 1 hour!
 - School bus routing
 :::
 
-::::
+:::
 
 . . .
 
@@ -1137,7 +1214,7 @@ The heuristic solution is **better** than what the MIP solver found in 1 hour!
 . . .
 
 ::: {.callout-note}
-## And that's it for todays lecture!
+## And that's it for today's lecture!
 
 We now have covered the Capacitated Vehicle Routing Problem and are ready to start solving some tasks in the upcoming tutorial.
 :::
@@ -1156,5 +1233,3 @@ Questions?
 ## Literature I
 
 For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
-
-## Literature II

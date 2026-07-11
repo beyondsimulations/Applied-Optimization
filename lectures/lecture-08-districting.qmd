@@ -16,6 +16,18 @@ format:
 @vlcek_police_2024
 :::
 
+## Learning Objectives
+
+After this lecture, you can:
+
+::: {.incremental}
+- Explain the [territory design problem]{.highlight} and its applications
+- Model districting as a **p-median problem**
+- Explain the difference between **contiguity** and **compactness**
+- Enforce both with [additional constraints]{.highlight}
+- Discuss the assumptions and limitations of the model
+:::
+
 ## Challenges
 
 {{< include ../include/activate_environment.qmd >}}
@@ -34,7 +46,7 @@ format:
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](https://images.unsplash.com/photo-1532555705039-f04fd833eb21?q=80&w=3264&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width=85%}
+![](https://images.unsplash.com/photo-1532555705039-f04fd833eb21?q=80&w=3264&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width=85% fig-alt="Police car with flashing lights at night"}
 :::
 ::: {.column width="55%"}
 Emergency services address the needs of [three interest groups]{.highlight}:
@@ -78,7 +90,7 @@ Aligning the objectives of the three interest groups is challenging.
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](https://images.unsplash.com/photo-1689783101576-627f2fbdb8d5?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width=85%}
+![](https://images.unsplash.com/photo-1689783101576-627f2fbdb8d5?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width=85% fig-alt="Aerial view of a city with a dense street network"}
 :::
 ::: {.column width="55%"}
 [Question:]{.question} **Why might current district layouts be suboptimal?**
@@ -164,7 +176,7 @@ Part of the force patrols the streets, another part is **stationed at the depart
 
 ## Dispatching
 
-- Dispatchers assign all CFS to vehicles from the [corresponding districts and patrol areas]{.highlight}
+- Dispatchers assign all calls for service (CFS) to vehicles from the [corresponding districts and patrol areas]{.highlight}
 - Officers are **familiar with the area** and are thus better prepared to respond appropriately [@Bodily1978]
 - To cope with high demands, dispatchers can **assign vehicles from nearby districts or beats**
 
@@ -197,7 +209,7 @@ This is a **common problem** in many emergency services.
 
 ::: {.columns}
 ::: {.column width="35%"}
-![](https://images.beyondsimulations.com/ao/ao_police-responsetime.svg){width=55%}
+![](https://images.beyondsimulations.com/ao/ao_police-responsetime.svg){width=55% fig-alt="Timeline of a response: call, dispatch, driving, arrival"}
 :::
 ::: {.column width="65%"}
 - Central criterion to measure the [effectiveness of emergency services]{.highlight} is the response time
@@ -226,7 +238,7 @@ This is a **common problem** in many emergency services.
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](https://images.beyondsimulations.com/ao/ao_police-hex_1.svg){width=90%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_1.svg){width=90% fig-alt="Hexagonal grid divided into three colored districts with marked department cells"}
 :::
 
 ::: {.column width="55%"}
@@ -277,7 +289,7 @@ In our police case: BAs are hexagonal cells, districts are service areas for pol
 **Geographic Criteria**:
 
 - [Contiguity]{.highlight}: No isolated basic areas
-- [Compactness]{.highlight}: "Round"
+- [Compactness]{.highlight}: "Round", undistorted shapes
 - Minimize travel distances
 - Respect boundaries
 :::
@@ -321,7 +333,7 @@ Same mathematical structure, different objectives and constraints!
 
 . . .
 
-- Reallocate **only part** of the police department's
+- Reallocate **only part** of the police department's resources
 - Compact and contiguous territories to **improve patrol**
 - Prevention of **isolated departments**
 
@@ -329,7 +341,7 @@ Same mathematical structure, different objectives and constraints!
 
 ::: {.columns}
 ::: {.column width="25%"}
-![](https://images.beyondsimulations.com/ao/ao_police-responsetime.svg){width=80%}
+![](https://images.beyondsimulations.com/ao/ao_police-responsetime.svg){width=80% fig-alt="Timeline of a response: call, dispatch, driving, arrival"}
 :::
 ::: {.column width="75%"}
 [Question:]{.question} **How can we model response time?**
@@ -367,7 +379,7 @@ step by step!
 . . .
 
 - Basic areas (BAs) and potential department locations
-- Driving times between basic areas
+- Driving times between department locations and BAs
 - Forecasted incident data
 - Assignment decisions
 
@@ -379,7 +391,7 @@ step by step!
 
 ::: {.columns}
 ::: {.column width="20%"}
-![](https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg){width=85%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg){width=85% fig-alt="Hexagonal cell reduced to its centroid point"}
 :::
 ::: {.column width="80%"}
 [Question:]{.question} **How do we model this mathematically?**
@@ -402,7 +414,7 @@ This abstraction allows us to use [optimization techniques]{.highlight} from gra
 
 ::: {.columns}
 ::: {.column width="20%"}
-![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70%}
+![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70% fig-alt="Hexagon centroids as vertices of a graph connected by edges"}
 :::
 ::: {.column width="80%"}
 [Question:]{.question} **What sets do we need?**
@@ -424,7 +436,7 @@ Department locations are a [subset]{.highlight} of all BAs as not every BA can h
 
 ::: {.columns}
 ::: {.column width="20%"}
-![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70%}
+![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70% fig-alt="Hexagon centroids as vertices of a graph connected by edges"}
 :::
 ::: {.column width="80%"}
 [Question:]{.question} **Advantages of hexagons?**
@@ -444,8 +456,9 @@ Department locations are a [subset]{.highlight} of all BAs as not every BA can h
 
 ::: {.incremental}
 
-- $p$ - Number of district centres (departments)
-- $t_{i,j}$ - Expected driving times between $i$ and $j$
+- $p$ - Number of departments to be located
+- $t_{i,j}$ - Expected driving time from department location $i$ to BA $j$
+- $w_j$ - Forecasted number of incidents in BA $j$
 
 :::
 
@@ -486,7 +499,7 @@ Parameters should be carefully calibrated with real-world data!
 
 . . .
 
-- $X_{i,j} \in \{0,1\} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}$
+- $X_{i,j} \in \{0,1\} \quad \forall i \in \mathcal{I}, j \in \mathcal{J}$
 
 
 ## {.loud-slide}
@@ -513,8 +526,8 @@ objective function!
 
 ::: {.incremental}
 - We want to minimize **total driving time**
-- Consider frequency of incidents in each BA
-- Don't include fixed costs (handled by constraints)
+- Weight each BA by its [forecasted incidents]{.highlight} $w_j$
+- No fixed opening costs: the **number** of departments is fixed to $p$ anyway
 
 :::
 
@@ -525,7 +538,7 @@ objective function!
 . . .
 
 $$
-\text{minimize} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} t_{i,j} \times X_{i,j}
+\text{Minimize} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} w_j \times t_{i,j} \times X_{i,j}
 $$
 
 . . .
@@ -534,7 +547,7 @@ $$
 ## Expected Driving Time
 
 - Total driving time **across all assignments**
-- Weighted by **incident frequency**
+- Weighted by the **incident frequency** $w_j$ of each BA
 - Considers **all possible BA-department pairs**
 
 :::
@@ -546,7 +559,7 @@ $$
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](https://images.beyondsimulations.com/ao/ao_police-hex_2.svg){width=90%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_2.svg){width=90% fig-alt="Hexagonal grid divided into three compact colored districts"}
 :::
 
 ::: {.column width="55%"}
@@ -613,13 +626,28 @@ Ensure that exactly $p$ departments are opened.
 . . .
 
 ::: {.callout-note}
-## We need the following sets and variables:
+## We need the following sets, parameters and variables:
 
 - $\mathcal{I}$ - Set of potential department locations, indexed by $i$
-- $\mathcal{J}$ - Set of BAs, indexed by $j$
 - $X_{i,j}$ - 1, if BA $j$ assigned to department $i$, 0 otherwise
 - $p$ - Number of departments
 
+:::
+
+## The Self-Assignment Trick
+
+[Question:]{.question} **What does the variable $X_{i,i}$ stand for?**
+
+. . .
+
+- BA $i$ is assigned to the department in **the same BA** $i$
+- An open department **always serves its own BA**
+- Hence: $X_{i,i} = 1$ exactly if department $i$ is [open]{.highlight}
+
+. . .
+
+::: {.callout-note}
+Many textbooks use a separate variable $Y_i$ to model opening a facility. Using the "diagonal" $X_{i,i}$ instead saves these extra variables — both formulations are equivalent here.
 :::
 
 ## Department Count Constraint
@@ -661,7 +689,7 @@ Ensure that each BA is assigned to an active department, e.g. a department that 
 ## Active Department Constraint
 
 $$
-X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
+X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, j \in \mathcal{J}
 $$
 
 . . .
@@ -674,11 +702,11 @@ This constraint creates a **logical connection between department locations and 
 ## p-Median Problem
 
 \begin{align}
-\text{minimize} \quad & \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} t_{i,j} \times X_{i,j} \\
+\text{Minimize} \quad & \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} w_j \times t_{i,j} \times X_{i,j} \\
 \text{subject to:} \quad & \sum_{i \in \mathcal{I}} X_{i,j}= 1 && \forall j \in \mathcal{J} \\
 & \sum_{i \in \mathcal{I}} X_{i,i} = p &&  \\
-& X_{i,j} \leq X_{i,i} &&  \forall i \in \mathcal{I}, \forall j \in \mathcal{J}  \\
-& X_{i,j} \in \{0,1\}  && \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
+& X_{i,j} \leq X_{i,i} &&  \forall i \in \mathcal{I}, j \in \mathcal{J}  \\
+& X_{i,j} \in \{0,1\}  && \forall i \in \mathcal{I}, j \in \mathcal{J}
 \end{align}
 
 ## Connection to Facility Location
@@ -718,7 +746,7 @@ Our police districting is a **p-Median variant** with additional geographic cons
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](https://images.beyondsimulations.com/ao/ao_police-hex_1.svg){width=85%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_1.svg){width=85% fig-alt="Hexagonal grid divided into three colored districts with marked department cells"}
 :::
 ::: {.column width="55%"}
 [Question:]{.question} **Why is contiguity important?**
@@ -735,13 +763,13 @@ Our police districting is a **p-Median variant** with additional geographic cons
 
 ::: {.columns}
 ::: {.column width="33%"}
-![](https://images.beyondsimulations.com/ao/ao_police-hex_1.svg){width=100%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_1.svg){width=100% fig-alt="Districting with a distorted district snaking to the corner"}
 :::
 ::: {.column width="34%"}
-![](https://images.beyondsimulations.com/ao/ao_police-hex_2.svg){width=100%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_2.svg){width=100% fig-alt="Districting with three compact districts"}
 :::
 ::: {.column width="33%"}
-![](https://images.beyondsimulations.com/ao/ao_police-hex_3.svg){width=100%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_3.svg){width=100% fig-alt="Alternative districting with three compact districts"}
 :::
 :::
 
@@ -756,7 +784,7 @@ Compactness has **no univocal definition**; a district is commonly declared comp
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](https://images.beyondsimulations.com/ao/ao_police-hex_2.svg){width=100%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_2.svg){width=100% fig-alt="Districting with three compact districts"}
 :::
 ::: {.column width="60%"}
 
@@ -790,44 +818,64 @@ Compactness has **no univocal definition**; a district is commonly declared comp
 [Additional Set and Parameter]{.highlight}
 
 - $e_{i,j}$ - Euclidean distance between centroids
-- $\mathcal{A}_j$ - Sets of BAs adjacent to BA $j$
+- $\mathcal{A}_j$ - Set of BAs adjacent to BA $j$
 
 . . .
 
 $$
-\mathcal{N}_{i,j}=\{v \in \mathcal{A}_j | e_{i,v} < e_{i,j}\} \quad \forall i\in \mathcal{I}, \forall j\in \mathcal{J}
+\mathcal{N}_{i,j}=\{v \in \mathcal{A}_j | e_{i,v} < e_{i,j}\} \quad \forall i\in \mathcal{I}, j\in \mathcal{J}
 $$
 
 . . .
 
 :::{.callout-note}
 ## The idea
-BAs **closer to department** $i$ than BA $j$ on euclidian distance and **adjacent to** $j$!
+BAs **closer to department** $i$ than BA $j$ in Euclidean distance and **adjacent to** $j$!
 
+:::
+
+## Careful with Ties!
+
+- If all adjacent BAs are *exactly* as far from $i$ as $j$, the strict inequality leaves $\mathcal{N}_{i,j}$ empty
+- Then the assignment of $j$ to $i$ is **forbidden**
+- Implementations should break ties, e.g. with $e_{i,v} \leq e_{i,j}$ and $v \neq j$
+
+. . .
+
+::: {.callout-note}
+On a complete hexagonal grid, this cannot happen: one neighbor of $j$ is always strictly closer to $i$. But real-world maps with holes, concave boundaries, or irregular BAs can produce ties!
 :::
 
 ## Example A {auto-animate="true"}
 
-![](https://images.beyondsimulations.com/ao/ao_police-contigous-1.svg)
+![](https://images.beyondsimulations.com/ao/ao_police-contigous-1.svg){width=65% fig-alt="Hexagonal grid with department i on the left and BA j to its right in the same row"}
+
+Department $i$ and BA $j$: which neighbors of $j$ are **closer to** $i$?
 
 ## Example A {auto-animate="true"}
 
-![](https://images.beyondsimulations.com/ao/ao_police-contigous-2.svg)
+![](https://images.beyondsimulations.com/ao/ao_police-contigous-2.svg){width=65% fig-alt="Same grid with the three neighbors of BA j that are closer to department i highlighted in green"}
+
+All three highlighted BAs $v$ are adjacent to $j$ **and** closer to $i$: $|\mathcal{N}_{i,j}| = 3$.
 
 ## Example B {auto-animate="true"}
 
-![](https://images.beyondsimulations.com/ao/ao_police-contigous-3.svg)
+![](https://images.beyondsimulations.com/ao/ao_police-contigous-3.svg){width=65% fig-alt="Hexagonal grid with department i on the left and BA j at the upper edge of the grid"}
+
+Same department $i$, but BA $j$ now lies at the **edge** of the grid.
 
 ## Example B {auto-animate="true"}
 
-![](https://images.beyondsimulations.com/ao/ao_police-contigous-4.svg)
+![](https://images.beyondsimulations.com/ao/ao_police-contigous-4.svg){width=65% fig-alt="Same grid with only two neighbors of BA j highlighted in green as closer to department i"}
+
+Here, only two neighbors of $j$ are closer to $i$: $|\mathcal{N}_{i,j}| = 2$.
 
 ## Enforcing Contiguity
 
 **All districts have to be contiguous**
 
 $$
-X_{i,j} \leq \sum_{v \in \mathcal{N}_{i,j}} X_{i,v} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i: i \neq j
+X_{i,j} \leq \sum_{v \in \mathcal{N}_{i,j}} X_{i,v} \quad \forall i \in \mathcal{I}, j \in \mathcal{J} \setminus \mathcal{A}_i: i \neq j
 $$
 
 . . .
@@ -835,7 +883,7 @@ $$
 ::: {.callout-important}
 ## The idea
 
-At least **one department** has to be assigned to a BA that is adjacent to BA $j$ and closer to department $i$!
+If BA $j$ is assigned to department $i$, then at least **one BA** that is adjacent to $j$ and closer to $i$ must **also** be assigned to department $i$!
 
 :::
 
@@ -845,8 +893,8 @@ At least **one department** has to be assigned to a BA that is adjacent to BA $j
 **All districts have to be contiguous and compact**
 
 \begin{align*}
-X_{i,j} &\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} && \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i:|\mathcal{N}_{i,j}|= 1 \wedge i \neq j \\
-2X_{i,j} &\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} && \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i:|\mathcal{N}_{i,j}|> 1 \wedge i \neq j
+X_{i,j} &\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} && \forall i \in \mathcal{I}, j \in \mathcal{J} \setminus \mathcal{A}_i:|\mathcal{N}_{i,j}|= 1 \wedge i \neq j \\
+2X_{i,j} &\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} && \forall i \in \mathcal{I}, j \in \mathcal{J} \setminus \mathcal{A}_i:|\mathcal{N}_{i,j}|> 1 \wedge i \neq j
 \end{align*}
 
 . . .
@@ -854,7 +902,7 @@ X_{i,j} &\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} && \forall i \in \mathcal{I}
 ::: {.callout-important}
 ## The idea
 
-At least **one department** has to be assigned to **two BAs** that are adjacent to BA $j$ and closer to department $i$
+If BA $j$ is assigned to department $i$, then at least **two BAs** that are adjacent to $j$ and closer to $i$ must **also** be assigned to department $i$ — if $|\mathcal{N}_{i,j}| > 1$!
 
 :::
 
@@ -862,13 +910,13 @@ At least **one department** has to be assigned to **two BAs** that are adjacent 
 
 ::: {.columns}
 ::: {.column width="33%"}
-![One department](https://images.beyondsimulations.com/ao/ao_police-hex_1.svg){width=100%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_1.svg){width=100% fig-alt="Districting where the red district snakes to the upper right corner"}
 :::
 ::: {.column width="34%"}
-![Two departments](https://images.beyondsimulations.com/ao/ao_police-hex_2.svg){width=100%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_2.svg){width=100% fig-alt="Districting with three compact, round-shaped districts"}
 :::
 ::: {.column width="33%"}
-![Up to three departments](https://images.beyondsimulations.com/ao/ao_police-hex_3.svg){width=100%}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_3.svg){width=100% fig-alt="Alternative districting with three compact, round-shaped districts"}
 :::
 :::
 
@@ -876,24 +924,46 @@ At least **one department** has to be assigned to **two BAs** that are adjacent 
 
 ::: {.callout-note}
 ## Why does this work?
-Due to the constraints, there is **always a path back** to the department if a BA is assigned to a department!
+Due to the constraints, there is **always a path back** to the department if a BA is assigned to a department! Contiguity alone still allows the "snake" on the left; the compactness constraint cuts off such shapes (middle, right).
 :::
 
 
 # [Model Characteristics]{.flow} {.title}
 
-## Characteristics
+## Characteristics I
 
-[Questions:]{.question} **On model characteristics**
+[Question:]{.question} **Is the model formulation linear or non-linear?**
 
-::: {.incremental}
+. . .
 
-- Is the model formulation linear/ non-linear?
-- What kind of variable domains do we have?
-- What do you think, can the model be solved quickly?
-- Have we prevented isolated districts?
+- Objective and all constraints are **linear**
+- With binary variables → [mixed-integer problem (MIP)]{.highlight}
 
-:::
+. . .
+
+[Question:]{.question} **What kind of variable domains do we have?**
+
+. . .
+
+- $X_{i,j}$ is **binary**: $|\mathcal{I}| \times |\mathcal{J}|$ variables in total
+
+## Characteristics II
+
+[Question:]{.question} **Can the model be solved quickly?**
+
+. . .
+
+- For instances of **moderate size**: yes, with modern solvers
+- The contiguity constraints add many rows → [longer runtimes]{.highlight}
+
+. . .
+
+[Question:]{.question} **Have we prevented isolated districts?**
+
+. . .
+
+- The plain p-median does **not** prevent them
+- That is exactly why we added the [contiguity constraints]{.highlight}!
 
 ## Model Assumptions
 
@@ -930,7 +1000,7 @@ Due to the constraints, there is **always a path back** to the department if a B
 
 ::: {.invert-font}
 
-- 1.8 mio incidents (2015-2019)
+- 1.8 million incidents (2015-2019)
 - ~20 department locations
 - 1,596 basic areas
 - Dense urban environment
@@ -947,7 +1017,7 @@ Due to the constraints, there is **always a path back** to the department if a B
 
 ## German Metropolitan Results
 
-![](https://images.beyondsimulations.com/ao/ao_police-g3c3_small.svg){width=90%}
+![](https://images.beyondsimulations.com/ao/ao_police-g3c3_small.svg){width=90% fig-alt="Map of optimized police districts in the German metropolitan case study"}
 
 ## [Belgian Rural Case]{.invert-font} {background-color="#000000" background-image="https://images.unsplash.com/photo-1527531993849-70fc64556621?q=80&w=3675&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
 
@@ -972,7 +1042,7 @@ Due to the constraints, there is **always a path back** to the department if a B
 
 ## Belgian Rural Results
 
-![](https://images.beyondsimulations.com/ao/ao_police-b2c3.svg){width=90%}
+![](https://images.beyondsimulations.com/ao/ao_police-b2c3.svg){width=90% fig-alt="Map of optimized police districts in the Belgian rural case study"}
 
 
 ## [Simulation Framework]{.invert-font} {background-image="https://images.beyondsimulations.com/ao/ao_police-streets.svg"}
@@ -1001,6 +1071,22 @@ Due to the constraints, there is **always a path back** to the department if a B
 
 ::: {.callout-important}
 All improvements are **without additional staff**!
+:::
+
+## What About Workload Balance?
+
+[Question:]{.question} **Our model only minimizes driving time. Where does the better workload distribution come from?**
+
+. . .
+
+- The model does **not** balance workload directly — the effect is [emergent]{.highlight}
+- Compact districts around well-placed departments also **spread the expected workload** more evenly
+- This was measured in the **simulation**, not enforced by a constraint
+
+. . .
+
+::: {.callout-tip}
+Think about it: how could you add an explicit workload balancing constraint with our parameters $w_j$ and $t_{i,j}$?
 :::
 
 ## Conclusions
@@ -1037,7 +1123,7 @@ The methodology is adaptable to various public service optimization scenarios.
 ## Wrap Up
 
 ::: {.callout-note}
-## And that's it for todays lecture!
+## And that's it for today's lecture!
 
 We now have covered districting problems and are ready to start solving some tasks in the upcoming tutorial.
 :::
@@ -1057,5 +1143,3 @@ Questions?
 ## Literature I
 
 For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
-
-## Literature II

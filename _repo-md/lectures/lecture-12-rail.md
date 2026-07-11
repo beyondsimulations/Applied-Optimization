@@ -13,11 +13,20 @@ format:
 
 ## <span class="invert-font">FIFA World Cup 2022 in Qatar</span>
 
+## Learning Objectives
+
+After this lecture, you will be able to:
+
+- **Model** time-expanded passenger flows with precomputed delays
+- **Translate** a safety goal into inflow control constraints
+- **Explain** how the set $\mathcal{R}_{e,t}$ connects periods and minutes
+- **Embed** an optimization model into a rolling-horizon heuristic
+
 ## Public transport
 
-- FIFA Worldcup 2022 took place in a <span class="highlight">small region</span>
+- FIFA World Cup 2022 took place in a <span class="highlight">small region</span>
 - The capacity of the metro system was **finite**
-- More than <span class="highlight">1 million tourists</span> where expected
+- More than <span class="highlight">1 million tourists</span> were expected
 - Metro usage was **free for all ticket holders**
 - Transport methods were expected to be **overloaded**
 
@@ -43,7 +52,11 @@ format:
 
 ## Metrosystem of Doha
 
-<img src="images/ao_metro-metro.svg" data-fig-align="center" />
+<img src="images/ao_metro-metro.svg" data-fig-align="center" data-fig-alt="Schematic map of the Doha metro network with the Red, Green, and Gold lines, the stadium locations, and the expanded transfer stations Al Bidda and Msheireb." />
+
+## Closer look at the Metro System
+
+<img src="images/ao_metro-zoom.svg" data-fig-align="center" data-fig-alt="Zoom on the expanded transfer stations Al Bidda and Msheireb, showing the platform nodes of the Green, Red, and Gold lines and the internal walking arcs connecting them." />
 
 ## Main Bottleneck
 
@@ -64,14 +77,10 @@ format:
 
 ## Visualization
 
-<img src="images/ao_metro-overcrowded.svg" data-fig-align="center" />
+<img src="images/ao_metro-overcrowded.svg" data-fig-align="center" data-fig-alt="Example network where stations A and B on one line and station C on another feed into transfer station T, which connects to destination D. Each arc allows at most 10 passengers per minute and each station sends 10 passengers per minute towards D." />
 
 - 10 people want to start per minute at **each station**
 - Everybody wants to get to **station D**
-
-## Closer look at the Metro System
-
-<img src="images/ao_metro-zoom.svg" data-fig-align="center" />
 
 ## Capacities inside the stations
 
@@ -153,11 +162,11 @@ problem structure!
 
 > **Tip: Julia is a great tool for this!**
 >
-> Simulations was build in Julia. With 1,000,000 individuals walking,using cars, busses, and the metro, a day took **less than 5 minutes**.
+> The simulation was built in Julia. With 1,000,000 individuals walking, using cars, buses, and the metro, simulating a day took **less than 5 minutes**.
 
 ## Results of the Simulation
 
-<img src="https://images.byndsim.com/ao/ao_metro-train_section.png" style="width:85.0%" />
+<img src="https://images.byndsim.com/ao/ao_metro-train_section.png" style="width:85.0%" data-fig-alt="Simulated occupancy of a metro train section, visualizing individual passengers inside the car." />
 
 - Detailed movement patterns throughout the region
 - Potential sections at risk in the transport infrastructure
@@ -196,7 +205,7 @@ of assumptions!
 
 ## Difficulty
 
-<img src="images/ao_metro-inflow_impact.svg" data-fig-align="center" />
+<img src="images/ao_metro-inflow_impact.svg" data-fig-align="center" data-fig-alt="Station A with a total demand of 1000 passengers and an allowed entry of 200 per period. The admitted inflow spreads over four destinations in proportion to the demand: 400 becomes 80, 300 becomes 60, 200 becomes 40, and 100 becomes 20." />
 
 . . .
 
@@ -209,7 +218,7 @@ of assumptions!
 
 <span class="question">Question:</span> **What could be the sets for the graph?**
 
-<img src="images/ao_metro-overcrowded.svg" data-fig-align="center" />
+<img src="images/ao_metro-overcrowded.svg" data-fig-align="center" data-fig-alt="Example network with stations A, B, C, transfer station T, and destination D, connected by directed arcs with capacities of 10 passengers per minute." />
 
 ## Graph Sets?
 
@@ -274,12 +283,12 @@ $$    I_p =\{t \in \mathcal{T}|(p-1) \times m + 1 \leq t \leq p \times m\} \quad
 
 . . .
 
-- $q_{o,d,p}$ - Demand from station $o$ to $d$ with $o,d \in \mathcal{O}$ in $p$
-- $d_{e}$ - Travel time (min) of the arcs $e \in \mathcal{E}$
+- $q_{o,d,p}$ - Queued passengers from station $o$ to $d$ with $o,d \in \mathcal{O}$ in $p$
+- $\tau_{e}$ - Travel time (min) of the arcs $e \in \mathcal{E}$
 - $c_e$ - Max. allowed arc entry rate $e$ per minute with $e \in \mathcal{E}$
 - $c_{o}^{min}$ - Min. station entry rate $o$ per minute with $o \in \mathcal{O}$
 - $c_{o}^{max}$ - Max. station entry rate $o$ per minute with $o \in \mathcal{O}$
-- $\alpha$ - Maximal allowed arc utilization ($0 < \alpha < 1$)
+- $\alpha$ - Safety factor applied to all capacities ($0 < \alpha < 1$)
 
 ## Metro Movement
 
@@ -288,7 +297,7 @@ $$    I_p =\{t \in \mathcal{T}|(p-1) \times m + 1 \leq t \leq p \times m\} \quad
 . . .
 
 - Simple network: assume people use the **shortest path**
-- Use <span class="highlight">Djikstra's algorithm</span> to compute it
+- Use <span class="highlight">Dijkstra's algorithm</span> to compute it
 - From each station to all other stations
 
 . . .
@@ -299,24 +308,23 @@ $$    I_p =\{t \in \mathcal{T}|(p-1) \times m + 1 \leq t \leq p \times m\} \quad
 
 ## Shortest Paths (SP)
 
-- $\mathcal{C}_{o,d}$ - Set of arcs $e \in \mathcal{E}$ on the SP from $o,d \in \mathcal{O}$
+- $\mathcal{C}_{o,d}$ - Set of arcs $e \in \mathcal{E}$ on the SP from $o$ to $d$ with $o,d \in \mathcal{O}$
 
 . . .
 
 > **Note**
 >
-> Now we compute the **travel time on the shortest paths.** One parameter for the SP from **station to station** and one for the SP from **station to arc**.
+> The arc travel times $\tau_e$ are only the **input** to Dijkstra's algorithm. From the resulting paths we compute the travel time parameter the model actually uses:
 
 . . .
 
-- $d_{o,d}$ - travel time (min) on SP from $o \in \mathcal{O}$ to $d \in \mathcal{O}$
-- $d_{o,e}$ - travel time (min) on SP from $o \in \mathcal{O}$ to $e \in \mathcal{E}$
+- $\tau_{o,e}$ - Travel time (min) on the SP from station $o \in \mathcal{O}$ to arc $e \in \mathcal{E}$
 
 ## People Spreading
 
 <span class="question">Question:</span> **How do people spread?**
 
-<img src="images/ao_metro-inflow_impact.svg" data-fig-align="center" />
+<img src="images/ao_metro-inflow_impact.svg" data-fig-align="center" data-fig-alt="Station A with a total demand of 1000 passengers and an allowed entry of 200 per period, spreading the admitted inflow over four destinations in proportion to the demand." />
 
 ## Ratio of Origin-Destination
 
@@ -325,13 +333,13 @@ $$    I_p =\{t \in \mathcal{T}|(p-1) \times m + 1 \leq t \leq p \times m\} \quad
 
 . . .
 
-$$\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \mathcal{O}, p\in \mathcal{P}$$
+$$\frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \quad \forall o,d \in \mathcal{O}, p\in \mathcal{P}$$
 
 . . .
 
 > **Note**
 >
-> Based on the ratio of the different destinations $d$ to the total queue for each station $o \in \mathcal{O}$ in each period $p \in \mathcal{P}$.
+> Based on the ratio of the different destinations $d$ to the total queue for each station $o \in \mathcal{O}$ in each period $p \in \mathcal{P}$. Note that the summation needs its **own index** $f$ over all destinations, as $d$ is already taken by the ratio's destination.
 
 # <span class="flow">Variables and Objective</span>
 
@@ -385,7 +393,22 @@ $$\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \ma
 
 . . .
 
-$$\text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})$$
+$$\text{Minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})$$
+
+## Objective Function Revisited
+
+<span class="question">Question:</span> **What does the solver really maximize here?**
+
+. . .
+
+- The queued passengers $q_{o,d,p}$ are <span class="highlight">parameters</span>, not variables
+- Their sum is a **constant** --- the solver cannot change it
+
+. . .
+
+> **Note: Minimizing queues = maximizing admissions**
+>
+> Minimizing the objective is exactly the same as **maximizing the total admitted passengers** $\sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} m \times X_{o,p}$. This is also why the model gets away without explicit queue dynamics.
 
 # <span class="flow">Constraints</span>
 
@@ -393,7 +416,7 @@ $$\text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_
 
 <span class="question">Question:</span> **What constraints do we need?**
 
-<img src="images/ao_metro-overcrowded.svg" style="width:80.0%" data-fig-align="center" />
+<img src="images/ao_metro-overcrowded.svg" style="width:80.0%" data-fig-align="center" data-fig-alt="Example network with stations A, B, C, transfer station T, and destination D, where all arcs are limited to 10 passengers per minute." />
 
 . . .
 
@@ -427,15 +450,10 @@ complicated now!
 
 ## Set of Time-Delays
 
-$$\mathcal{R}_{e,t} = \{(o,d,p) \mid
-    \begin{array}{l}
-    (o,d) | o,d \in \mathcal{O}, \\
-    q_{o,d,p} > 0, \\
-    e \in \mathcal{C}_{o,d}, \\
-    t-d_{o,e} \in I_p, \\
-    p \in \mathcal{P}\}
-    \end{array}
-    \quad \forall e \in \mathcal{E}, t \in \mathcal{T}$$
+$$\begin{align*}
+\mathcal{R}_{e,t} = \{(o,d,p) \mid \; & o,d \in \mathcal{O}, p \in \mathcal{P}, q_{o,d,p} > 0, \\
+& e \in \mathcal{C}_{o,d}, t-\tau_{o,e} \in I_p\} \quad \forall e \in \mathcal{E}, t \in \mathcal{T}
+\end{align*}$$
 
 . . .
 
@@ -443,19 +461,19 @@ $$\mathcal{R}_{e,t} = \{(o,d,p) \mid
 
 . . .
 
-The set $\mathcal{R}_{e,t}$ contains **all combinations** $(o,d,p)$ which trigger a **capacity utilization** of arc $e$ in period $t$.
+The set $\mathcal{R}_{e,t}$ contains **all combinations** $(o,d,p)$ which trigger a **capacity utilization** of arc $e$ in minute $t$.
 
 ## Small Example
 
-<img src="images/ao_metro-set_r.svg" data-fig-align="center" />
+<img src="images/ao_metro-set_r.svg" data-fig-align="center" data-fig-alt="Line network from A over B and C to D with a branch from E to C. Arc travel times: A to B 5 minutes, B to C 12 minutes, E to C 5 minutes, C to D 8 minutes. Dotted arrows mark the departure times whose passengers enter arc (C,D) at minute 22." />
 
 . . .
 
 > **Tip**
 >
-> The set contains all possible o-d pairs and periods, that result in passengers starting at arc $(C,D)$ at minute $22$. For m=2, it would be:
+> The set contains all o-d pairs and periods that result in passengers entering arc $(C,D)$ at minute $22$. With $m=2$, it is $\{(A,D,3),(B,D,5),(C,D,11),(E,D,9)\}$.
 >
-> $\{((A,D),3),((B,D),5),((C,D),11),((E,D),9)\}$.
+> Check it yourself, e.g. from $A$: $\tau_{A,(C,D)} = 5 + 12 = 17$ and $22-17 = 5 \in I_3 = \{5,6\}$.
 
 ## 
 
@@ -479,10 +497,10 @@ different stations and periods.
 
 > **We need the following variable, parameter and set:**
 >
-> - $q_{o,d,p}$ - people waiting to travel from station $o \in \mathcal{O}$ to station $d \in \mathcal{O}$ in $p$
+> - $q_{o,d,p}$ - people queued to travel from station $o \in \mathcal{O}$ to station $d \in \mathcal{O}$ in $p$
 > - $c_e$ - people max. allowed to enter arc $e$ per minute with $e \in \mathcal{E}$
-> - $\mathcal{R}_{e,t}$ - mapping of station entries to arc $e$ in time $t$ with $e \in \mathcal{E}$ and $t \in \mathcal{T}$
-> - $\alpha$ - maximal allowed arc utilization ($0 < \alpha < 1$)
+> - $\mathcal{R}_{e,t}$ - mapping of station entries to arc $e$ in minute $t$ with $e \in \mathcal{E}$ and $t \in \mathcal{T}$
+> - $\alpha$ - safety factor applied to all capacities ($0 < \alpha < 1$)
 > - $X_{o,p}$ - the allowed inflow per minute at metro station $o$ in the period $p$
 
 ## Ensure Capacity Utilization
@@ -512,7 +530,7 @@ $$\sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \
 > - $X_{o,p}$ - Allowed inflow (per minute) at station $o$ in period $p$
 > - $c_{o}^{min}$ - Min. station entry rate $o$ per minute
 > - $c_{o}^{max}$ - Max. station entry rate $o$ per minute
-> - $\alpha$ - Maximal allowed arc utilization ($0 < \alpha < 1$)
+> - $\alpha$ - Safety factor applied to all capacities ($0 < \alpha < 1$)
 
 ## Bound the Inflow Rate
 
@@ -556,6 +574,25 @@ $$\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 \quad \forall o \
 >
 > This constraint ensures **non-negative remaining queues**, preventing the solver from dispatching more passengers than available in the queue.
 
+## A Hidden Pitfall
+
+<span class="question">Question:</span> **What if a queue is smaller than $m \times c_o^{min}$?**
+
+. . .
+
+- The lower bound forces $m \times X_{o,p} \geq m \times c_o^{min}$
+- But we may only dispatch up to $\sum_{d \in \mathcal{O}} q_{o,d,p}$ people
+- Example: $c_o^{min} = 2$, $m = 15$, but only 20 people queued
+- A quiet station late at night makes the model <span class="highlight">infeasible</span>!
+
+. . .
+
+<span class="question">Question:</span> **How could we fix this?**
+
+. . .
+
+- Set $c_o^{min} = 0$, cap the bound at the queue, or soften the constraint
+
 ## Metro Inflow Model
 
 <style>
@@ -574,6 +611,12 @@ subject to:
 
 - Is the model formulation linear/ non-linear?
 - What kind of variable domains do we have?
+
+. . .
+
+> **Note: The answers**
+>
+> It is a <span class="highlight">linear program</span>, as objective and constraints are linear. The variable $X_{o,p} \geq 0$ is **continuous** --- fractional inflow rates per minute are perfectly acceptable here.
 
 ## Model Assumptions
 
@@ -613,11 +656,11 @@ subject to:
 
 ## Transport Demand
 
-<img src="images/ao_metro-transportdemand.svg" data-fig-align="center" />
+<img src="images/ao_metro-transportdemand.svg" data-fig-align="center" data-fig-alt="Line chart of transport demand over three consecutive days, fluctuating between roughly 10,000 and 40,000 passengers with pronounced afternoon and late-evening peaks." />
 
 ## Utilization Analysis
 
-<img src="images/ao_metro-arcutil.svg" data-fig-align="center" />
+<img src="images/ao_metro-arcutil.svg" data-fig-align="center" data-fig-alt="Line chart of maximal arc utilization over time for three days. The baseline without inflow control peaks above 300 percent, while the optimized inflow control keeps utilization close to or below 100 percent." />
 
 ## Key Results
 
@@ -632,9 +675,19 @@ subject to:
 >
 > The remaining 19% of passengers experience external queuing - this is the price for preventing dangerous overcrowding inside the system.
 
+## Didn't We Bound the Utilization?
+
+<span class="question">Question:</span> **Our constraint enforces $\alpha \times c_e$ with $\alpha < 1$. How can utilization still reach 109%?**
+
+. . .
+
+- The constraint binds the model for the <span class="highlight">forecast</span> demand
+- The 109% occurs in the **rolling-horizon simulation** with realized demand
+- Realized flows can deviate from the forecast --- but far less than **316%**
+
 ## Scalability: Shanghai Metro
 
-- Validated on **302 stations** (11× larger)
+- Validated on **302 stations** (~8× more than Doha's 37)
 - <span class="highlight">99% reduction</span> in capacity violations
 - Computation: **\< 2 minutes** per period
 - Works for routine **peak-hour demand**
@@ -647,11 +700,12 @@ subject to:
 
 ## 
 
-<iframe src="images/ao_metro-shanghai_network.html" style="width:100%; height:85vh; border:none;" scrolling="yes"></iframe>
+<iframe src="images/ao_metro-shanghai_network.html" title="Interactive visualization of the Shanghai metro network" style="width:100%; height:80vh; border:none;" scrolling="yes"></iframe>
+<p style="font-size:0.5em;"><a href="images/ao_metro-shanghai_network.html" target="_blank">Open the Shanghai network visualization in a new tab</a></p>
 
 ## Implementation
 
-- **Assumption of known destinations** based is strong
+- **Assumption of known destinations** is strong
 - Movements **seemed to follow our forecasts**
 - We did achieve our goal of **metro inflow control**
 - Simulation was used to **estimate the inflows**
@@ -668,8 +722,8 @@ subject to:
 |----|----|----|
 | FIFO Enforcement | Rarely | <span class="highlight">Yes</span> |
 | Single Queue | Often separate | <span class="highlight">Yes</span> |
-| Real-Time Capable | Some | <span class="highlight">Yes (~1-65s)</span> |
-| Network Scale | Up to 327 stations | **302+ stations** |
+| Real-Time Capable | Some | <span class="highlight">Yes (seconds to minutes)</span> |
+| Network Scale | Up to 327 stations | Comparable (302 stations) |
 
 . . .
 
@@ -685,7 +739,7 @@ subject to:
 
 . . .
 
-> **And that's it for todays lecture!**
+> **And that's it for today's lecture!**
 >
 > We now have covered a metro inflow control problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial.
 

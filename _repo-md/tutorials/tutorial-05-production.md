@@ -20,6 +20,8 @@ code-links:
 ---
 
 
+After this tutorial, you will be able to implement the Capacitated Lot-Sizing Problem (CLSP) from the lecture in JuMP, work with periods that are stored as strings, and diagnose a model that looks fine at first glance but ignores part of the demand.
+
 # 1. Modelling the CLSP
 
 ## Load the necessary packages and data
@@ -29,17 +31,15 @@ Implement the CLSP from the lecture in Julia. Before we start, let's load the ne
 ``` julia
 using JuMP, HiGHS
 using CSV
-using DelimitedFiles
 using DataFrames
 using Plots
 using StatsPlots
-import Pkg; Pkg.add("PlotlyKaleido")
 plotly() # This will create interactive plots later on
 ```
 
 > **Tip**
 >
-> If you haven't installed the packages yet, you can do so by running `using Pkg` first and then `Pkg.add("JuMP")`, `Pkg.add("HiGHS")`, `Pkg.add("DataFrames")`, `Pkg.add("Plots")`, and `Pkg.add("StatsPlots")`.
+> If you haven't installed the packages yet, you can do so by running `using Pkg` first and then `Pkg.add(["JuMP", "HiGHS", "CSV", "DataFrames", "Plots", "StatsPlots"])`.
 
 ------------------------------------------------------------------------
 
@@ -59,27 +59,21 @@ println(availableTime[1:5, :])
 ```
 
 <pre>Number of periods: 27
-
 First 5 rows of available time per period:
-
 <span class="ansi-bold">5×2 DataFrame</span>
-
 <span class="ansi-bold"> Row </span>│<span class="ansi-bold"> period  </span><span class="ansi-bold"> available_capacity </span>
-
-     │<span class="ansi-bright-black-fg"> String7 </span><span class="ansi-bright-black-fg"> Int64              </span>
-
+<span class="ansi-bold">     </span>│<span class="ansi-bright-black-fg"> String7 </span><span class="ansi-bright-black-fg"> Int64              </span>
 ─────┼─────────────────────────────
-
    1 │ week_01                 168
-
    2 │ week_02                 168
-
    3 │ week_03                 168
-
    4 │ week_04                 168
-
    5 │ week_05                  48
 </pre>
+
+> **Note**
+>
+> Take a closer look at `availabletime.csv`: in `week_05`, the plant only has 48 hours available instead of the usual 168. Bottling the demand of that week alone would take roughly 102 hours of pure bottling time. What does that mean for the weeks before `week_05`, and what do you expect to see in the warehouse plot later on?
 
 ``` julia
 # Load the data about the bottling time for each beer
@@ -90,27 +84,16 @@ println(bottlingTime)
 ```
 
 <pre>Number of beers: 6
-
 Bottling time per beer:
-
 <span class="ansi-bold">6×2 DataFrame</span>
-
 <span class="ansi-bold"> Row </span>│<span class="ansi-bold"> beer_type  </span><span class="ansi-bold"> bottling_time </span>
-
-     │<span class="ansi-bright-black-fg"> String15   </span><span class="ansi-bright-black-fg"> Float64       </span>
-
+<span class="ansi-bold">     </span>│<span class="ansi-bright-black-fg"> String15   </span><span class="ansi-bright-black-fg"> Float64       </span>
 ─────┼───────────────────────────
-
    1 │ Pilsener          0.00222
-
    2 │ Blonde_Ale        0.00111
-
    3 │ Amber_Ale         0.00139
-
    4 │ Brown_Ale         0.00222
-
    5 │ Porter            0.00167
-
    6 │ Stout             0.00111
 </pre>
 
@@ -122,25 +105,15 @@ println(setupTime)
 ```
 
 <pre>Setup time per beer:
-
 <span class="ansi-bold">6×2 DataFrame</span>
-
 <span class="ansi-bold"> Row </span>│<span class="ansi-bold"> beer_type  </span><span class="ansi-bold"> setup_time </span>
-
-     │<span class="ansi-bright-black-fg"> String15   </span><span class="ansi-bright-black-fg"> Int64      </span>
-
+<span class="ansi-bold">     </span>│<span class="ansi-bright-black-fg"> String15   </span><span class="ansi-bright-black-fg"> Int64      </span>
 ─────┼────────────────────────
-
    1 │ Pilsener            10
-
    2 │ Blonde_Ale          11
-
    3 │ Amber_Ale            8
-
    4 │ Brown_Ale            8
-
    5 │ Porter              11
-
    6 │ Stout                9
 </pre>
 
@@ -152,23 +125,14 @@ println(demandCustomers[1:5, :])
 ```
 
 <pre>First 5 rows of demand per beer:
-
 <span class="ansi-bold">5×3 DataFrame</span>
-
 <span class="ansi-bold"> Row </span>│<span class="ansi-bold"> beer_type  </span><span class="ansi-bold"> period  </span><span class="ansi-bold"> demand </span>
-
-     │<span class="ansi-bright-black-fg"> String15   </span><span class="ansi-bright-black-fg"> String7 </span><span class="ansi-bright-black-fg"> Int64  </span>
-
+<span class="ansi-bold">     </span>│<span class="ansi-bright-black-fg"> String15   </span><span class="ansi-bright-black-fg"> String7 </span><span class="ansi-bright-black-fg"> Int64  </span>
 ─────┼─────────────────────────────
-
    1 │ Pilsener    week_01    3853
-
    2 │ Blonde_Ale  week_01    8372
-
    3 │ Amber_Ale   week_01   16822
-
    4 │ Brown_Ale   week_01   13880
-
    5 │ Porter      week_01   10642
 </pre>
 
@@ -182,13 +146,26 @@ Consider in your implementation, that **each hour of setup** is associated with 
 # YOUR CODE BELOW
 ```
 
+<details class="code-fold">
+<summary>Code</summary>
+
+``` julia
+# Validate your solution
+@assert setupHourCosts > 0 "Setup hour costs must be positive"
+@assert warehouseCosts > 0 "Warehouse costs must be positive"
+@assert setupHourCosts == 1000 "Setup hour costs must be 1000 euros"
+@assert warehouseCosts == 0.1 "Warehouse costs must be 0.1 euros per bottle"
+```
+
+</details>
+
 Next, you need to prepare the given data for the model. Create a dictionary for the available time, bottling time, and setup time. Call them `dictAvailableTime`, `dictBottlingTime`, and `dictSetupTime`.
 
 > **Note**
 >
 > Let's understand what's happening with `dictDemand` in the code. It creates a dictionary where:
 >
-> - **Keys** are tuples `(beer_type, period)`, e.g., `("IPA", "week_1")`
+> - **Keys** are tuples `(beer_type, period)`, e.g., `("Pilsener", "week_01")`
 > - **Values** are the demand numbers for that beer in that period
 >
 > You can use this pattern to create dictionaries for:
@@ -204,6 +181,7 @@ Next, you need to prepare the given data for the model. Create a dictionary for 
 dictDemand = Dict((row.beer_type,row.period) => row.demand for row in eachrow(demandCustomers))
 
 # YOUR CODE BELOW
+
 ```
 
 <details class="code-fold">
@@ -245,14 +223,16 @@ set_time_limit_sec(lotsizeModel, 60.0)
 
 ## Define the variables
 
-Now, create your variables. Please name them `productBottled` for the binary variable, `productQuantity` for the production quantity and `WarehouseStockPeriodEnd` for the warehouse stock at the end of each period. We will use these names later in the code to plot the results.
+Now, create your variables. Please name them `productBottled` for the binary setup variable (it is 1 if a beer type is bottled in a period, and 0 otherwise), `productQuantity` for the production quantity and `WarehouseStockPeriodEnd` for the warehouse stock at the end of each period. We will use these names later in the code to plot the results.
+
+Note that we model the production quantity and the warehouse stock as continuous variables, although you cannot bottle half a bottle. With quantities this large, the error from allowing fractional bottles is negligible and the model is much easier to solve.
 
 > **Tip**
 >
 > When creating your variables, you'll have to create one variable for **each combination** of beer type and period. You can use the dictionary keys directly in the variable definition:
 >
 > ``` julia
-> @variable(model, x[keys(dictBottlingTime), keys(dictAvailableTime)])
+> @variable(model, x[keys(dictBottlingTime), keys(dictAvailableTime)] >= 0)
 > ```
 >
 > This creates variables indexed by:
@@ -260,10 +240,13 @@ Now, create your variables. Please name them `productBottled` for the binary var
 > - First index: beer types (from `dictBottlingTime`)
 > - Second index: periods (from `dictAvailableTime`)
 >
-> So you'll have variables like `x["IPA", "week_1"]`, `x["IPA", "week_2"]`, etc.
+> So you'll have variables like `x["Pilsener", "week_01"]`, `x["Pilsener", "week_02"]`, etc.
+>
+> Don't forget the variable domains: `productBottled` needs `Bin`, while `productQuantity` and `WarehouseStockPeriodEnd` need the lower bound `>= 0`. Without the lower bounds, the solver could store a *negative* number of bottles, which makes the model unbounded.
 
 ``` julia
 # YOUR CODE BELOW
+
 ```
 
 <details class="code-fold">
@@ -281,10 +264,12 @@ Now, create your variables. Please name them `productBottled` for the binary var
 @assert length(productQuantity) == length(dictBottlingTime) * length(dictAvailableTime) "Incorrect dimensions for productQuantity"
 @assert length(WarehouseStockPeriodEnd) == length(dictBottlingTime) * length(dictAvailableTime) "Incorrect dimensions for WarehouseStockPeriodEnd"
 
-# Check variable types
+# Check variable types and domains
 @assert all(is_binary, productBottled) "productBottled must be binary variables"
-@assert all(is_integer, productQuantity) == false "productQuantity must be continuous variables"
-@assert all(is_integer, WarehouseStockPeriodEnd) == false "WarehouseStockPeriodEnd must be continuous variables"
+@assert !any(is_integer, productQuantity) "productQuantity must be continuous variables"
+@assert !any(is_integer, WarehouseStockPeriodEnd) "WarehouseStockPeriodEnd must be continuous variables"
+@assert all(v -> has_lower_bound(v) && lower_bound(v) == 0, productQuantity) "productQuantity needs the lower bound >= 0"
+@assert all(v -> has_lower_bound(v) && lower_bound(v) == 0, WarehouseStockPeriodEnd) "WarehouseStockPeriodEnd needs the lower bound >= 0"
 ```
 
 </details>
@@ -345,6 +330,8 @@ Now, we need to define all necessary constraints for the model. Start with the d
 > **Tip**
 >
 > The first period is special, as it does not have a previous period. Furthermore, we are working with strings as variable references, thus we cannot use `t-1` directly as in the lecture. To address this, we could collect and sort all keys and then use their indices to address the previous period. For example, `all_periods[t-1]` would then be the previous period, if we index t just as a range from `2:length(all_periods)`.
+>
+> Note that sorting the period strings only works here because the period names are zero-padded (`week_01`, ..., `week_27`). Without the padding, `week_10` would be sorted right after `week_1`!
 
 ``` julia
 # Get the first period and all periods
@@ -362,17 +349,46 @@ With these, we can now define the demand/inventory balance constraint. As this i
     )
 ```
 
-Next, we need to ensure that we setup the production for a beer type only if we bottle the type at least once.
+Next, we need to ensure that a beer type can only be bottled in a period if the plant is set up for it in that period. This is the "Big-M" constraint from the lecture:
+
+$$X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i \in \mathcal{I}, t \in \mathcal{T}$$
 
 ``` julia
 # YOUR CODE BELOW
 ```
 
-Last, we need to define the constraint that limits the production quantity to the number of bottles that can be bottled within the available time.
+<details class="code-fold">
+<summary>Code</summary>
+
+``` julia
+# Validate your solution
+@assert num_constraints(lotsizeModel, AffExpr, MOI.LessThan{Float64}) == length(dictBottlingTime) * length(dictAvailableTime) "You need one setup constraint for each combination of beer type and period"
+```
+
+</details>
+
+Last, we need to limit the time used at the bottling plant. In each period, the total bottling time **plus the setup time** of all bottled beer types must not exceed the available time:
+
+$$\sum_{i \in \mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t \in \mathcal{T}$$
 
 ``` julia
 # YOUR CODE BELOW
 ```
+
+<details class="code-fold">
+<summary>Code</summary>
+
+``` julia
+# Validate your solution
+@assert num_constraints(lotsizeModel, AffExpr, MOI.LessThan{Float64}) == length(dictBottlingTime) * length(dictAvailableTime) + length(dictAvailableTime) "You need one capacity constraint for each period (in addition to the setup constraints)"
+
+# Each capacity constraint has to contain the quantity and the setup of every beer type
+all_lt_constraints = all_constraints(lotsizeModel, AffExpr, MOI.LessThan{Float64})
+number_capacity_constraints = count(c -> length(constraint_object(c).func.terms) == 2 * length(dictBottlingTime), all_lt_constraints)
+@assert number_capacity_constraints == length(dictAvailableTime) "Each capacity constraint must include the bottling time AND the setup time of every beer type"
+```
+
+</details>
 
 ------------------------------------------------------------------------
 
@@ -389,12 +405,13 @@ Finally, implement the solve statement for your model instance.
 
 ``` julia
 # Validate your solution
-@assert 539900 <= objective_value(lotsizeModel) <= 700000 "Objective value should be between 539,000 and 700,000"
+@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit — check your model and re-run the cell"
+@assert 360000 <= objective_value(lotsizeModel) <= 900000 "Objective value should be between 360,000 and 900,000"
 ```
 
 </details>
 
-Now, unfortunately we cannot assert the value of the objective function perfectly here as we have to abort the computation due to the time limit and everybody is likely getting different results. The solution for the first task will likely be in the <span class="highlight">range of 600,000 to 700,000</span>. If your model is solved within seconds, your formulation is not correct.
+Now, unfortunately we cannot assert the value of the objective function perfectly here, as the model is hard to solve and we abort the computation at the time limit of 60 seconds. The solver then returns the best solution found so far, so everybody is likely getting slightly different results. The solution for the first task will likely be in the <span class="highlight">range of 550,000 to 700,000</span>, and the validation above is deliberately generous to allow for this variation. Don't worry if the solver reports a large remaining gap --- the best solution found is good enough for our purposes.
 
 ------------------------------------------------------------------------
 
@@ -404,7 +421,7 @@ The following code creates production and warehouse plots for you. Use it to ver
 
 > **Note**
 >
-> The creation of the dataframes and the plots is implemented inside of a function, as we will need to use it multiple times in the following tasks.
+> The creation of the dataframes and the plots is implemented inside a function, as we will need to use it multiple times in the following tasks.
 
 ``` julia
 # Create the production results
@@ -425,9 +442,9 @@ function create_production_results()
                 productionResults,(
                 period = t,
                 product = i,
-                productBottled = value(productBottled[i,t])>0.5 ? true : false,
-                productQuantity = ceil(Int,value(productQuantity[i,t])),
-                WarehouseStockPeriodEnd = ceil(Int,value(WarehouseStockPeriodEnd[i,t])),
+                productBottled = value(productBottled[i,t]) > 0.5,
+                productQuantity = round(Int,value(productQuantity[i,t])),
+                WarehouseStockPeriodEnd = round(Int,value(WarehouseStockPeriodEnd[i,t])),
                 )
             )
         end
@@ -478,6 +495,7 @@ function create_warehouse_plot(productionResults)
     )
     return p
 end
+
 ```
 
 The following code creates the production plot.
@@ -487,10 +505,9 @@ productionResults = create_production_results()
 p = create_production_plot(productionResults)
 ```
 
-The following code creates the warehouse stock plot.
+The following code creates the warehouse stock plot. Note that we can reuse the `productionResults` DataFrame from the previous cell.
 
 ``` julia
-productionResults = create_production_results()
 p = create_warehouse_plot(productionResults)
 ```
 
@@ -511,8 +528,9 @@ function create_cost_results()
 
     for t in sort(collect(keys(dictAvailableTime)))
         # Calculate setup costs for this period
+        # We round the binary values, as the solver only guarantees them up to a small tolerance
         period_setup_costs = sum(
-            setupHourCosts * dictSetupTime[i] * value(productBottled[i,t])
+            setupHourCosts * dictSetupTime[i] * round(value(productBottled[i,t]))
             for i in keys(dictBottlingTime)
         )
 
@@ -568,9 +586,13 @@ p = create_cost_plot(stacked_costs)
 
 # 2. Initial Warehouse Stock
 
-The model currently sets the initial warehouse stock levels without any restrictions. Modify your model to incorporate an initial stock for **all types of beer of zero** at the beginning of the **initial planning period**.
+Take a closer look at your production plot: most likely, nothing is bottled in `week_01` at all! Our model so far has no inventory balance constraint for the first period. The solver can therefore "invent" free starting stock `WarehouseStockPeriodEnd[i, "week_01"]` out of nothing, and the demand of the first week is never enforced.
 
-To solve this task, you can simply extend the previous model by these additional constraints in the cell below. Afterwards, you can re-run the optimization.
+Fix this by adding the **inventory balance for the first period**, assuming that the warehouse starts empty. As in the lecture, we set the initial stock $W_{i,0} = 0$, so the balance for the first period becomes:
+
+$$X_{i,1} - W_{i,1} = d_{i,1} \quad \forall i \in \mathcal{I}$$
+
+To solve this task, you can simply extend the previous model by these additional constraints in the cell below. The variable `first_period`, which we defined earlier, is exactly what you need here. Afterwards, re-run the optimization.
 
 ``` julia
 # YOUR CODE BELOW
@@ -581,12 +603,17 @@ To solve this task, you can simply extend the previous model by these additional
 
 ``` julia
 # Validate your solution
-@assert 659900 <= objective_value(lotsizeModel) <= 760000 "Objective value should be between 659,9000 and 760,000"
+# A balance constraint links at least two variables — fixing a single variable to zero is not enough
+balance_constraints = all_constraints(lotsizeModel, AffExpr, MOI.EqualTo{Float64})
+number_balance_constraints = count(c -> length(constraint_object(c).func.terms) >= 2, balance_constraints)
+@assert number_balance_constraints == length(dictBottlingTime) * length(dictAvailableTime) "You need one inventory balance constraint for each combination of beer type and period — did you add the balance for the first period?"
+@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit — check your model and re-run the cell"
+@assert 500000 <= objective_value(lotsizeModel) <= 950000 "Objective value should be between 500,000 and 950,000"
 ```
 
 </details>
 
-The objective value should now be higher, as the solution space is smaller than before and the initial stock is zero for all beer types. You can check the plots for the production and warehouse stock to verify this.
+The objective value should now be higher, likely in the <span class="highlight">range of 700,000 to 800,000</span>. The solution space is smaller than before: the model can no longer invent starting stock, but has to bottle the demand of the first week itself. You can check the plots for the production and warehouse stock to verify this.
 
 ``` julia
 productionResults = create_production_results()
@@ -594,7 +621,6 @@ p = create_production_plot(productionResults)
 ```
 
 ``` julia
-productionResults = create_production_results()
 p = create_warehouse_plot(productionResults)
 ```
 
@@ -613,6 +639,7 @@ Again, to solve this task, you can simply extend the previous model by these add
 
 ``` julia
 # YOUR CODE BELOW
+
 ```
 
 <details class="code-fold">
@@ -620,12 +647,14 @@ Again, to solve this task, you can simply extend the previous model by these add
 
 ``` julia
 # Validate your solution
-@assert 661400 <= objective_value(lotsizeModel) <= 800000 "Objective value should be between 661,400 and 800,000"
+@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit — check your model and re-run the cell"
+@assert 520000 <= objective_value(lotsizeModel) <= 950000 "Objective value should be between 520,000 and 950,000"
+@assert all(value(productQuantity[i,t]) <= 1e-6 for i in keys(dictBottlingTime), t in ["week_10", "week_11"]) "No production is allowed in week_10 and week_11"
 ```
 
 </details>
 
-Again, the objective value should be higher, because the solution space is smaller. You can check the plots for the production and warehouse stock to verify whether the production is zero in the maintenance periods.
+Again, the solution space is smaller, so the true optimal objective value can only increase. Because we stop the solver at the time limit, the value you see can still be a bit lower than before --- in that case, the solver simply found a better solution for the restricted model than it previously did for the unrestricted one. You can check the plots for the production and warehouse stock to verify whether the production is zero in the maintenance periods.
 
 ``` julia
 productionResults = create_production_results()
@@ -633,7 +662,6 @@ p = create_production_plot(productionResults)
 ```
 
 ``` julia
-productionResults = create_production_results()
 p = create_warehouse_plot(productionResults)
 ```
 
@@ -646,9 +674,9 @@ p = create_cost_plot(stacked_costs)
 
 # 4. Production Schedule Analysis
 
-Analyze the production schedule outlined in section 2 of this tutorial. Is the workload **distributed evenly** across all time periods? Provide a rationale for your assessment.
+Analyze the production schedule of your current model, which includes the constraints from sections 2 and 3. Is the workload **distributed evenly** across all time periods? Provide a rationale for your assessment.
 
-Please answer in the following cell. Note, that `#=` and `=#` are a comment delimiter for multiline comments. You can write whatever you want between them and the code will not be executed.
+Please answer in the following cell. Note that `#=` and `=#` are comment delimiters for multiline comments. You can write whatever you want between them and the code will not be executed.
 
 ``` julia
 # YOUR REASONING BELOW
@@ -667,13 +695,11 @@ Based on the production data from the final period, **calculate the ending inven
 
 ------------------------------------------------------------------------
 
-# 5. Biannual Bottling Strategy
+# 5. Semiannual Bottling Strategy
 
-Reflecting on a scenario where the company schedules its bottling operations **biannually** using the current method: identify and discuss potential pitfalls of this strategy.
+Reflecting on a scenario where the company schedules its bottling operations **semiannually (every six months)** using the current method: identify and discuss potential pitfalls of this strategy.
 
 Offer at least one actionable suggestion for enhancing the efficiency or effectiveness of the production planning process.
-
-Your answer goes here.
 
 ``` julia
 # YOUR ANSWER BELOW

@@ -9,7 +9,7 @@ execute:
 
 {{< include ../include/activate_environment.qmd >}}
 
-This tutorial is another short intermission to give you an idea of the structure of the exam. You can hand in your answers at the end to receive half a **bonus point**, if at least 75 % of the answers are correct and you describe your work clearly. If you have any questions or suggestions on how to improve the structure of the exam, please ask them.
+This tutorial is another short intermission to give you an idea of the structure of the exam. The mock exam sums to **60 points** and each point corresponds to approximately one minute of work — so plan for roughly 60 minutes. You can hand in your answers at the end to receive half a **bonus point**, if at least 75% of the answers are correct and you describe your work clearly. If you have any questions or suggestions on how to improve the structure of the exam, feel free to ask.
 
 The exam is just meant to be a **tool** to check your understanding of the material and to give you a chance to show your skills. It is not meant to be a stressful event or a punishment. If you have followed the course and put in the effort, you should be able to pass the exam with a good grade.
 
@@ -27,7 +27,7 @@ The company wants to optimize its production to keep up with the customer demand
 
 Furthermore, each setup of a different flavor costs a fixed amount of money identical for all flavors and periods, while the ice cream storage costs in the warehouse are different for each flavor but identical for all periods. These storage costs occur at the end of each period per unit of ice cream for all units not sold to cover the varying demand per flavor and period.
 
-Each period matches a shift length of a certain number of hours, identical for all periods. The objective is to minimize the total cost of production and storage while satisfying all demands and production capacities.
+Each period matches a shift length of a certain number of hours, identical for all periods. The objective is to minimize the total cost of setups and storage while satisfying all demands and production capacities.
 
 Define all sets, parameters and variables required to model the problem described above. Select a suitable notation of your choice. Make sure to explicitly state in your notation which elements are sets, parameters and variables.
 
@@ -41,15 +41,15 @@ Note that the problem does not have to be modeled yet!
 
 - $i \in \mathcal{I}$ : flavors of ice cream (Set)
 - $t \in \mathcal{T}$ : different periods under consideration (Set)
-- $p_{i}$ : production time of sort $i$ (Parameter)
-- $f$ : fixed setup costs of all sorts (Parameter)
-- $c_i$ : storage costs per period of sort $i$ (Parameter)
-- $d_{i,t}$ : ice cream demand per period (Parameter)
-- $w^0_{i}$ : initial inventory at the start of period 1, equal to 100 for all flavors (Parameter)
+- $p_{i}$ : production time per unit of flavor $i$ (Parameter)
+- $f$ : fixed setup costs, identical for all flavors (Parameter)
+- $c_i$ : storage costs per unit of flavor $i$ per period (Parameter)
+- $d_{i,t}$ : demand for flavor $i$ in period $t$ (Parameter)
+- $w^0_{i}$ : initial inventory of flavor $i$ at the start of period 1, equal to 100 for all flavors (Parameter)
 - $q$ : shift length in hours, identical for all periods (Parameter)
-- $W_{i,t}$ : quantity stored at end of period (Variable)
-- $X_{i,t}$ : production quantity per sort and period (Variable)
-- $Y_{i,t}$ : 1, if product is set up in period (Variable)
+- $W_{i,t}$ : quantity of flavor $i$ stored at the end of period $t$ (Variable)
+- $X_{i,t}$ : production quantity of flavor $i$ in period $t$ (Variable)
+- $Y_{i,t}$ : 1, if flavor $i$ is set up in period $t$, 0 otherwise (Variable)
 \newpage
 :::
 
@@ -107,6 +107,8 @@ $$
 X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i \in \mathcal{I},t \in \mathcal{T}
 $$
 
+Note that $\sum_{\tau \in \mathcal{T}} d_{i,\tau}$ acts as a Big-M in this linking constraint: any valid upper bound on the production quantity works, but tighter bounds, e.g. $\min(q/p_i, \sum_{\tau \in \mathcal{T}} d_{i,\tau})$, are better for the solver.
+
 $$
 \sum_{i \in \mathcal{I}} p_i \times X_{i,t} \leq q \quad \forall t \in \mathcal{T}
 $$
@@ -141,7 +143,7 @@ Please explain your answer briefly.
 
 **Solution**
 
-No, the solution is not a nonlinear problem with continuous variables. The objective function is linear and the constraints are linear as well. Furthermore, we also have binary variables.
+No, the model is not a nonlinear problem with continuous variables. The objective function and all constraints are linear, and next to the continuous variables $X_{i,t}$ and $W_{i,t}$ the model also contains the binary variables $Y_{i,t}$ — it is a mixed-integer linear program. Thus, the answer is "no" on both counts of the question.
 \newpage
 :::
 
@@ -153,12 +155,12 @@ No, the solution is not a nonlinear problem with continuous variables. The objec
 
 ## 1.e (9 Points)
 
-Due to the success of the companies, workers demand higher wages and a compensation for working overtime. Your task is to extend the model to reflect this new situation. In the future, each worked hour in a period has a fixed cost per shift hour, identical for all periods. If the production time in one period exceeds the shift-length, workers have to work overtime. For each hour working overtime, the fixed costs per hour are 50% higher than usual. Furthermore, more than an additional time of a half a shift length is not allowed due to legal reasons.
+Due to the company's success, workers demand higher wages and a compensation for working overtime. Your task is to extend the model to reflect this new situation. In the future, each shift hour costs a fixed wage, identical for all periods, and workers are paid for the full shift regardless of how much is produced. If the production time in one period exceeds the shift length, workers have to work overtime. Each hour of overtime costs 50% more than a regular shift hour. Furthermore, overtime of more than half a shift length per period is not allowed due to legal reasons.
 
 How can you expand your model to reflect this new situation? Write down all additional or modified sets, parameters, variables, constraints and the objective function while describing each with a few words.
 
 ::: {.callout-tip}
-Note, that you only need to write down new and modified elements!
+Note that you only need to write down new and modified elements!
 :::
 
 ::: {.content-visible when-profile="solutions"}
@@ -171,15 +173,17 @@ Note, that you only need to write down new and modified elements!
 
 **New Variables**
 
-- $Z_t$ : number of additional working hours in period (Variable)
+- $Z_t$ : number of overtime hours in period $t$ (Variable)
 
-**New objective function**
+**Modified objective function**
 
 $$
 \text{min} \quad \sum_{i \in \mathcal{I}}\sum_{t \in \mathcal{T}} (f \times Y_{i,t} + c_i \times W_{i,t}) + \sum_{t \in \mathcal{T}} (s \times q + 1.5 \times s \times Z_t)
 $$
 
-**New constraints**
+Note that $\sum_{t \in \mathcal{T}} s \times q = |\mathcal{T}| \times s \times q$ is a constant: we include it to capture the full labor costs, but it cannot influence the optimal solution.
+
+**New and modified constraints**
 
 $$
 \sum_{i \in \mathcal{I}} p_i \times X_{i,t} \leq q + Z_t \quad \forall t \in \mathcal{T}
@@ -197,11 +201,11 @@ $$
 ```
 :::
 
-## 1.f (4 points)
+## 1.f (4 Points)
 
 What assumptions are made in the model that might not hold in the real world?
 
-Please describe at least two assumptions with a 1-3 sentences and explain briefly why they might not hold.
+Please describe at least two assumptions in 1-3 sentences and explain briefly why they might not hold.
 
 ::: {.content-visible when-profile="solutions"}
 
@@ -261,7 +265,7 @@ Choose from:
 
 You are trying to solve the capacitated vehicle routing problem with more than 500 customers and 10 vehicles. Unfortunately, your computer is not able to handle the problem. What could you try to solve the problem instead?
 
-Please describe one approach to adress the problem and describe the advantages and disadvantages of the approach in a few sentences.
+Please describe one approach to address the problem and describe the advantages and disadvantages of the approach in a few sentences.
 
 ::: {.content-visible when-profile="solutions"}
 
@@ -271,7 +275,7 @@ One approach would be to use a heuristic to solve the problem.
 
 Advantages of a heuristic:
 
-- Breaks down the large problem into manageable problems that can be solved
+- Constructs good solutions quickly without exploring the entire solution space
 - Significantly reduces computational complexity
 - Can still produce good quality solutions
 
@@ -436,12 +440,15 @@ Please explain why the constraint is not correctly implemented and how it can be
 #| output: false
 #| echo: false
 
+using JuMP
+model = Model()
 @variable(model, X[i in 1:10, j in 1:5], Bin)
 ```
 
 The constraint is missing the model parameter in the `@constraint` macro. The correct syntax should be:
 
 ```{julia}
+#| eval: true
 #| output: false
 @constraint(model, sum(X[i,j] for i in 1:10, j in 1:5) == 10)
 ```
@@ -451,6 +458,7 @@ Additionally, when using `@constraint`, it's generally good practice to give the
 A fully improved version would be:
 
 ```{julia}
+#| eval: true
 #| output: false
 @constraint(model, sum_constraint, sum(X[i,j] for i in 1:10, j in 1:5) == 10)
 ```
@@ -535,6 +543,9 @@ for i in mySet
     end
 end
 ```
+
+Why? For $i = 1,2$ the first branch prints `vectorA[i]` ("Hello", "World"). For $i = 3,4$ the second branch prints `vectorA[i-2]` — the index shift makes "Hello" and "World" appear again. For $i = 5,6$ no condition matches ($i > 6$ and $i == 9$ are both false), so the `else` branch prints "Hi 5" and "Hi 6". For $i = 7,8$ the third branch prints "This is 7" and "This is 8". The `i == 9` branch with the `break` is never reached, as the loop only runs from 1 to 8 — it is dead code.
+\newpage
 :::
 
 ::: {.content-visible unless-profile="solutions"}

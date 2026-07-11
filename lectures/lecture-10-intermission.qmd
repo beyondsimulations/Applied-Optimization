@@ -12,18 +12,17 @@ format:
 
 ## Today's lecture
 
-{{< include ../include/activate_environment.qmd >}}
-
 - Today's lecture is a **little bit different**
 - Manage your expectations
 - Give you a **better idea** of what to expect from the exam
 - We will go through **some examples together!**
 
-## Exam's structure
+## Exam structure
 
 - Exam consists of **three parts**
 - Free modelling, questions, Julia coding
 - Each point corresponds to [approximately 1 minute of work]{.highlight}
+- This mock exam has [60 points, so plan for 60 minutes]{.highlight}
 
 . . .
 
@@ -45,9 +44,11 @@ You can take a **handwritten** DIN A4 sheet of paper with you!
 
 ## Feedback
 
+<!-- NOTE: Update the evaluation link, password, and QR code each semester! -->
+
 Please take a few minutes before we start to fill out the evaluation for this course. You can use the following QR code to access the evaluation form or [this link](https://evasys-online.uni-hamburg.de/evasys/online.php?pswd=NL6UD).
 
-![QR Code for the evaluation form](images/QRCode_NL6UD.png)
+![](images/QRCode_NL6UD.png){fig-alt="QR Code for the evaluation form"}
 
 # [Part I]{.flow} {.title}
 
@@ -55,9 +56,9 @@ Please take a few minutes before we start to fill out the evaluation for this co
 
 A company that ships ice cream wants to maximize their profit. It can do that by transporting its different sorts of ice cream daily from their only production facility to several supermarkets.
 
-Each delivered sort of ice cream makes the ice cream company a different profit per unit and supermarket. The transportation costs per truckload are totally negligible as is the routing, as all supermarkets are located very close to each other. The company should maximally deliver the agreed number of units of each ice cream sort to each individual supermarket.
+Each delivered sort of ice cream makes the ice cream company a different profit per unit and supermarket. The transportation costs are negligible, as is the routing, since all supermarkets are located very close to each other. The company should deliver at most the agreed number of units of each ice cream sort to each individual supermarket.
 
-To do so, the company owns one truck which has a fixed total capacity for a number of units of ice cream and they can only use the truck once each day. Note, that each unit of ice cream consumes a different amount of space in the truck! The required space for each unit of ice cream is given for each sort. The daily optimal number of units from each sort to ship to each supermarket should be computed by the model.
+To do so, the company owns one truck which has a fixed total capacity for a number of units of ice cream and they can only use the truck once each day. Note that each unit of ice cream consumes a different amount of space in the truck! The required space for each unit of ice cream is given for each sort. The daily optimal number of units from each sort to ship to each supermarket should be computed by the model.
 
 Define all sets, parameters and variables required to model the problem described above. Select a suitable notation of your choice. Make sure to explicitly state in your notation which elements are sets, parameters and variables.
 
@@ -71,11 +72,11 @@ Note that the problem does not have to be modeled yet!
 
 - $i \in \mathcal{I}$ : Different sorts of ice cream (Set)
 - $j \in \mathcal{J}$ : Different supermarkets (Set)
-- $e_{i,j}$ : profit of each delivered sort $i$ to $j$ (Parameter)
-- $b_{i,j}$ : truckloads of sort $i$ demanded by $j$ (Parameter)
-- $u_i$ : capacity consumed by sort $i$ (Parameter)
-- $k$ : capacity per truck (Parameter)
-- $X_{i,j}$ : number of shipped truckloads from $i$ to $j$ (Variable)
+- $e_{i,j}$ : profit per unit of sort $i$ delivered to supermarket $j$ (Parameter)
+- $b_{i,j}$ : units of sort $i$ demanded by supermarket $j$ (Parameter)
+- $u_i$ : truck space consumed per unit of sort $i$ (Parameter)
+- $k$ : total capacity of the truck (Parameter)
+- $X_{i,j}$ : units of sort $i$ shipped to supermarket $j$ (Variable)
 
 \newpage
 :::
@@ -128,7 +129,7 @@ If you need additional sets, parameters or variables that are not yet defined, p
 **Solution**
 
 $$
-\text{u.t.c} \quad X_{i,j} \leq b_{i,j} \quad \forall i \in \mathcal{I},j \in \mathcal{J}
+\text{subject to} \quad X_{i,j} \leq b_{i,j} \quad \forall i \in \mathcal{I},j \in \mathcal{J}
 $$
 
 $$
@@ -162,7 +163,7 @@ Please explain your answer briefly.
 
 **Solution**
 
-Yes, the model formulation is a linear problem but it does not have binary variables, but continuous variables.
+No — the model formulation is a linear problem, but it has continuous rather than binary variables. Note that units of ice cream are actually discrete: declaring $X_{i,j}$ as a non-negative integer variable would also be a valid answer, but the continuous formulation keeps the model easier to solve and is an acceptable simplification here.
 \newpage
 :::
 
@@ -176,22 +177,22 @@ Yes, the model formulation is a linear problem but it does not have binary varia
 
 ## 1.e (8 Points) {.scrollable}
 
-The supermarkets are furious because the company doesn't always deliver the agreed truckloads of ice cream. Therefore, they want to penalize the company in the future, if it delivers less than the agreed amount. For each demand of a supermarket that could not be fulfilled, the company will have to pay a one-time fee for the ice-cream sort.
+The supermarkets are furious because the company doesn't always deliver the agreed units of ice cream. Therefore, they want to penalize the company in the future, if it delivers less than the agreed amount. For each ice cream sort and supermarket where the agreed demand is not fully delivered, the company will have to pay a one-time fee that depends on the sort.
 
 How can you expand your model to reflect this new situation? Write down all additional or modified sets, parameters, variables, constraints and the objective function while describing each with a few words.
 
 ::: {.callout-tip}
-Note, that you only need to write down new and modified elements!
+Note that you only need to write down new and modified elements!
 :::
 
 ::: {.content-visible when-profile="solutions"}
 
 **Solution**
 
-- $p_i$ : One-time fee per unfulfilled demand (Parameter)
-- $Y_{i,j}$ : 1, if demand $b_{i,j}$ is unfulfilled (Variable)
+- $p_i$ : One-time fee per unfulfilled demand of sort $i$ (Parameter)
+- $Y_{i,j}$ : 1, if demand $b_{i,j}$ is unfulfilled, 0 otherwise (Variable)
 
-**New objective function**
+**Modified objective function**
 
 $$
 \text{max} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} (e_{i,j} \times X_{i,j} -  p_i \times Y_{i,j})
@@ -202,6 +203,12 @@ $$
 $$
 b_{i,j} - X_{i,j} \leq Y_{i,j} \times b_{i,j} \quad \forall i \in \mathcal{I},j \in \mathcal{J}
 $$
+
+$$
+Y_{i,j} \in \{0,1\} \quad \forall i \in \mathcal{I},j \in \mathcal{J}
+$$
+
+Why does $Y_{i,j}$ stay 0 when demand is met? If $X_{i,j} = b_{i,j}$, the left-hand side is 0 and the constraint also holds for $Y_{i,j} = 0$. As the fee $p_i \times Y_{i,j}$ reduces the objective value, the solver keeps $Y_{i,j}$ at 0. Only a partially unfulfilled demand forces $Y_{i,j} = 1$.
 
 \newpage
 :::
@@ -221,23 +228,23 @@ Next to the production facility of the ice cream company sits a company that sel
 How can you expand your model to reflect this new situation? Write down all additional or modified Sets, parameters, variables, constraints and the objective function while describing each with a few words.
 
 ::: {.callout-tip}
-Note, that you only need to write down new and modified elements! If you haven't solved the previous task, work with the model defined before.
+Note that you only need to write down new and modified elements! If you haven't solved the previous task, work with the model defined before.
 :::
 
 ::: {.content-visible when-profile="solutions"}
 
 **Solution**
 
-- $r$ : Price for rented trucks (Parameter)
-- $Z$ : Number of rented trucks with Z as \textbf{integer variable} (Variable)
+- $r$ : Price for renting one truck (Parameter)
+- $Z$ : Number of rented trucks, with $Z \in \mathbb{Z}_{\geq 0}$ (Variable)
 
-**New objective function**
+**Modified objective function**
 
 $$
 \text{max} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} (e_{i,j} \times X_{i,j} -  p_i \times Y_{i,j}) - r \times Z
 $$
 
-**New constraint**
+**Modified constraint**
 
 $$
 \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} u_i \times X_{i,j} \leq k + 2k \times Z
@@ -266,7 +273,9 @@ Please answer in 2-3 sentences.
 
 **Solution**
 
-The goal of the Territory Design Problem (Districting Problem) is to aggregate smaller areas, often called basic areas, into clusters, called districts or territories, according to predefined goals. Those could for example  include:
+The goal of the Territory Design Problem (Districting Problem) is to aggregate smaller areas, often called basic areas, into clusters, called districts or territories, according to predefined goals. Those could for example include equal workload or contiguity.
+
+*Background beyond the expected 2-3 sentence answer:*
 
 - Equal Workload: Territories should be designed to ensure that the workload (e.g., number of customers, sales potential, travel time) is distributed as evenly as possible across them. This promotes fairness and efficiency.
 - Contiguity: Territories should consist of basic units (e.g., neighborhoods, zip codes) that are connected without gaps or isolated sections. This is essential for many applications, like political districting or service area divisions.
@@ -334,7 +343,7 @@ Briefly explain in 2-3 sentences what a global optimum in an optimization proble
 
 **Solution**
 
-In Operations Research (OR), a global optimum is the absolute best solution to an optimization problem. This solution has the most favorable objective function value (either the lowest cost or highest profit, depending on how the problem is defined) compared to any other possible solution within the entire feasible region. In contrast, a local optimum is only the best solution within a smaller neighborhood of solutions. If the problem is linear, the global optimum is the same as the local optimum.
+In Operations Research (OR), a global optimum is the absolute best solution to an optimization problem. This solution has the most favorable objective function value (either the lowest cost or highest profit, depending on how the problem is defined) compared to any other possible solution within the entire feasible region. In contrast, a local optimum is only the best solution within a smaller neighborhood of solutions. If the problem is linear, every local optimum is also a global optimum.
 
 \newpage
 :::
@@ -380,7 +389,7 @@ Explain briefly in 2-3 sentences what so-called "Big-M" constraints can be used 
 
 **Solution**
 
-Big-M constraints are used in mathematical modeling to handle logical relationships, especially when working with binary variables (0 or 1).  By assigning a very large positive value (M) to one side of the constraint, it effectively forces the binary variable to "turn on" that constraint when needed and leave it inactive when not. This allows incorporating logical rules into mathematical models for optimization problems.
+Big-M constraints are used in mathematical modeling to handle logical relationships, especially when working with binary variables (0 or 1). By adding a very large positive value $M$ multiplied by a binary variable (or its complement) to one side of a constraint, e.g. $M \times (1-Y)$, the constraint becomes non-binding when the binary variable takes one value and has to hold when it takes the other. This allows incorporating logical rules into mathematical models for optimization problems.
 
 \newpage
 :::
@@ -414,7 +423,7 @@ Big-M constraints are used in mathematical modeling to handle logical relationsh
 The following Julia code contains seven errors. Highlight the errors in the code and briefly describe what would need to be done to correct them.
 
 ::: {.callout-note}
-Assume that all variables containing data are loaded correctly, e.g. availablePanels and requestedPanels are already defined.
+Assume that all variables containing data are loaded correctly, e.g. `availablePanels`, `requestedPanels` and `travelCosts` are already defined.
 :::
 
 ```julia
@@ -439,11 +448,11 @@ transport = Model(HiGHS.Optimizer)
 # Define the constraints
 @constraint(transport_model,
     restrictAvailable[i=1:nrSuppliers],
-    sum(X[i,j] for j in 1:nrCustomers) <= available[i]
+    sum(X[i,j] for j in 1:nrCustomers) <= availablePanels[i]
     )
 @constraint(transport_model,
     restrictDemand[j=1:nrCustomers],
-    sum(X[i,j] for i in 1:nrSuppliers) === requested[j]
+    sum(X[i,j] for i in 1:nrSuppliers) === requestedPanels[j]
     )
 # Start optimization
 start_optimization(transport_model)
@@ -453,9 +462,9 @@ start_optimization(transport_model)
 
 **Solution**
 
-1. Model is called 'transport' instead of 'transportModel'
+1. The model is created as 'transport', but the macros use 'transport\_model' — one consistent name must be used
 2. 'i = nrSuppliers' should be replaced by 'i = 1:nrSuppliers'
-3. The variable should not be binary, but '.>= 0'
+3. The variable should not be binary, but continuous and non-negative: 'X[i,j] >= 0' instead of 'Bin'
 4. We should minimize costs instead of maximizing them
 5. 'X[i]' is missing the 'j' dimension
 6. '===' should be replaced by '=='
@@ -474,13 +483,13 @@ start_optimization(transport_model)
 
 ## 3.b (4 Points)  {.scrollable}
 
-In an optimization model, the following equations are given:
+In an optimization model, the following constraint is given, where $U$ and $R$ are variables and $t$ is a parameter:
 
 $$
-\sum_{m\in \mathcal{M}} 7 * U_{gm} * T_m - \sum_{k \in \mathcal{K}} R_k \leq D_g \quad \forall g \in \mathcal{G}
+\sum_{m\in \mathcal{M}} 7 \times U_{g,m} \times t_m - \sum_{k \in \mathcal{K}} R_k \leq D_g \quad \forall g \in \mathcal{G}
 $$
 
-Please **define the equations in correct Julia syntax**.
+Please **define the constraint in correct Julia syntax**.
 
 ::: {.callout-note}
 Assume that all required sets, variables, and parameters have already been defined.
@@ -491,7 +500,7 @@ Assume that all required sets, variables, and parameters have already been defin
 **Solution**
 
 ```julia
-@constraint(model, newConstraint[g in G], sum(7 * U[g,m] * T[m] for m in M) - sum(R[k] for k in K) <= D[g])
+@constraint(model, newConstraint[g in G], sum(7 * U[g,m] * t[m] for m in M) - sum(R[k] for k in K) <= D[g])
 ```
 
 \newpage
@@ -570,9 +579,9 @@ A linear problem has both a linear objective function and linear constraints, me
 ## The end
 
 ::: {.callout-note}
-## And that's it for todays lecture!
+## And that's it for today's lecture!
 
-We now have covered the structure of the exam and you have a better idea of what to expect from the exam. In our upcoming tuorial, we will go through some additional examples and practice tasks.
+We now have covered the structure of the exam and you have a better idea of what to expect from the exam. In our upcoming tutorial, we will go through some additional examples and practice tasks.
 :::
 
 ## {.loud-slide}

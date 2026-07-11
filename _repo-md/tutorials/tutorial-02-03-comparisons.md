@@ -10,7 +10,7 @@ code-links:
 
 # Introduction
 
-Imagine you're teaching a computer to make decisions. Just like we compare things in everyday life ("Is it raining?", "Do I have enough money?"), computers need ways to compare values and make choices. This tutorial will show you how to help computers make these comparisons!
+Imagine you're teaching a computer to make decisions. Just like we compare things in everyday life ("Is it raining?", "Do I have enough money?"), computers need ways to compare values and make choices. This tutorial will show you how to help computers make these comparisons! In the next tutorial, you will then use the results of these comparisons in `if` statements to let your programs actually act on them.
 
 Follow the instructions, write your code in the designated code blocks, and execute the corresponding code cell.
 
@@ -36,9 +36,12 @@ password_correct = (user_input == "secret123")
 ``` julia
 coffee_temp = 75
 temperature_safe = (coffee_temp <= 70)
+println("Is the coffee safe to drink? $temperature_safe")
 ```
 
-    false
+    Is the coffee safe to drink? false
+
+Here the comparison returns `false`: at 75 degrees, the coffee is still too hot to drink safely.
 
 The following are potential real-world examples:
 
@@ -53,14 +56,14 @@ same_name = (name == "Elio")
 
 Here are all the comparison operators:
 
-| Symbol | Meaning                  | Real-world Example              |
-|--------|--------------------------|---------------------------------|
-| `==`   | Equal to                 | Is my password correct?         |
-| `!=`   | Not equal to             | Is this a different person?     |
-| `<`    | Less than                | Is it colder than freezing?     |
-| `>`    | Greater than             | Do I have more than \$10?       |
-| `<=`   | Less than or equal to    | Can this ride fit in my garage? |
-| `>=`   | Greater than or equal to | Am I old enough to vote?        |
+| Symbol | Meaning                  | Real-world Example                     |
+|--------|--------------------------|----------------------------------------|
+| `==`   | Equal to                 | Is my password correct?                |
+| `!=`   | Not equal to             | Is this a different person?            |
+| `<`    | Less than                | Is it colder than freezing?            |
+| `>`    | Greater than             | Do I have more than \$10?              |
+| `<=`   | Less than or equal to    | Is my luggage within the weight limit? |
+| `>=`   | Greater than or equal to | Am I old enough to vote?               |
 
 Let's try some examples:
 
@@ -180,7 +183,7 @@ println("Should I wear a coat? $need_coat")
 
 ## Exercise 2.1 - Use the AND operator
 
-Use the `AND` operator to check if `10` is greater than `5` and `hello` is equal to `hello`. Store the result in `logic1`.
+Use the `AND` operator to check if `10` is greater than `5` and the string `"hello"` is equal to `"hello"`. Store the result in `logic1`.
 
 ``` julia
 # YOUR CODE BELOW
@@ -199,7 +202,7 @@ println("logic1 is ", logic1)
 
 ## Exercise 2.2 - Use the OR operator
 
-Use the `OR` operator to check if `10` is less than `5` or `hello` is equal to `hello`. Store the result in `logic2`.
+Use the `OR` operator to check if `10` is less than `5` or the string `"hello"` is equal to `"hello"`. Store the result in `logic2`.
 
 ``` julia
 # YOUR CODE BELOW
@@ -220,6 +223,17 @@ println("logic2 is ", logic2)
 >
 > Julia uses short-circuit evaluation for `&&` and `||` operators. This means that the second operand is only evaluated if necessary.
 
+Let's see short-circuiting in action:
+
+``` julia
+x = 0
+(x != 0) && (1/x > 1)
+```
+
+    false
+
+Because `x != 0` is already `false`, the whole `&&` expression must be `false` - so Julia never computes `1/x` and no division by zero happens. You will often see this pattern in real Julia code, for example `condition && error("Something went wrong")`.
+
 ## Exercise 2.3 - Use the NOT operator
 
 Check whether `10` is greater than `5` and store the result in `logic3`. Then, use the `NOT` operator to invert `logic3`. Store the result in `logic4`.
@@ -235,12 +249,14 @@ Check whether `10` is greater than `5` and store the result in `logic3`. Then, u
 # Test your answer
 @assert logic3 == true
 @assert logic4 == false
-println("logic3 is ", logic3," and logic4 is", logic4)
+println("logic3 is ", logic3, " and logic4 is ", logic4)
 ```
 
 </details>
 
-## Exercise 2.4 - Chaining Comparisons
+------------------------------------------------------------------------
+
+# Section 3 - Chaining Comparisons
 
 Julia has a neat feature that lets you write comparisons the way you think about them:
 
@@ -262,10 +278,12 @@ normal_temperature = (36.5 <= body_temp <= 37.5)
 working_hours = (9 <= current_hour < 17)
 ```
 
-Check if `x` is between `1` and `10` (exclusive) using a chained comparison. Store the result in `chained_comparison`.
+## Exercise 3.1 - Chain a Comparison
+
+Check if `x` is strictly between `1` and `10` - excluding both boundaries, so use `<` instead of `<=` - using a chained comparison. Store the result in `chained_comparison`. As `x` is `10` here, the correct result is `false`, because `10` is not strictly smaller than `10`.
 
 ``` julia
-x = 5
+x = 10
 # YOUR CODE BELOW
 ```
 
@@ -274,7 +292,7 @@ x = 5
 
 ``` julia
 # Test your answer
-@assert chained_comparison == true
+@assert chained_comparison == false "Remember: strictly between means using < instead of <=. As x is 10, the result should be false."
 println("chained_comparison is ", chained_comparison)
 ```
 
@@ -284,7 +302,7 @@ println("chained_comparison is ", chained_comparison)
 
 # Conclusion
 
-Excellent work! You've completed the tutorial on Comparisons and logical operators in Julia. You've learned to compare values and use logical operators to combine or invert boolean values. Experiment with the code, try different operations, and understand how Julia handles logic. Continue to the next file to learn more.
+Excellent work! You've completed the tutorial on comparisons and logical operators in Julia. You've learned to compare values and use logical operators to combine or invert boolean values. Experiment with the code, try different operations, and understand how Julia handles logic. Continue to the next file to learn more.
 
 # Solutions
 

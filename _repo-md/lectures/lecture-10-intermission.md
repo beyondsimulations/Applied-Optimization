@@ -18,11 +18,12 @@ format:
 - Give you a **better idea** of what to expect from the exam
 - We will go through **some examples together!**
 
-## Exam's structure
+## Exam structure
 
 - Exam consists of **three parts**
 - Free modelling, questions, Julia coding
 - Each point corresponds to <span class="highlight">approximately 1 minute of work</span>
+- This mock exam has <span class="highlight">60 points, so plan for 60 minutes</span>
 
 . . .
 
@@ -42,12 +43,11 @@ format:
 
 ## Feedback
 
+<!-- NOTE: Update the evaluation link, password, and QR code each semester! -->
+
 Please take a few minutes before we start to fill out the evaluation for this course. You can use the following QR code to access the evaluation form or [this link](https://evasys-online.uni-hamburg.de/evasys/online.php?pswd=NL6UD).
 
-<figure>
-<img src="images/QRCode_NL6UD.png" alt="QR Code for the evaluation form" />
-<figcaption aria-hidden="true">QR Code for the evaluation form</figcaption>
-</figure>
+<img src="images/QRCode_NL6UD.png" data-fig-alt="QR Code for the evaluation form" />
 
 # <span class="flow">Part I</span>
 
@@ -55,9 +55,9 @@ Please take a few minutes before we start to fill out the evaluation for this co
 
 A company that ships ice cream wants to maximize their profit. It can do that by transporting its different sorts of ice cream daily from their only production facility to several supermarkets.
 
-Each delivered sort of ice cream makes the ice cream company a different profit per unit and supermarket. The transportation costs per truckload are totally negligible as is the routing, as all supermarkets are located very close to each other. The company should maximally deliver the agreed number of units of each ice cream sort to each individual supermarket.
+Each delivered sort of ice cream makes the ice cream company a different profit per unit and supermarket. The transportation costs are negligible, as is the routing, since all supermarkets are located very close to each other. The company should deliver at most the agreed number of units of each ice cream sort to each individual supermarket.
 
-To do so, the company owns one truck which has a fixed total capacity for a number of units of ice cream and they can only use the truck once each day. Note, that each unit of ice cream consumes a different amount of space in the truck! The required space for each unit of ice cream is given for each sort. The daily optimal number of units from each sort to ship to each supermarket should be computed by the model.
+To do so, the company owns one truck which has a fixed total capacity for a number of units of ice cream and they can only use the truck once each day. Note that each unit of ice cream consumes a different amount of space in the truck! The required space for each unit of ice cream is given for each sort. The daily optimal number of units from each sort to ship to each supermarket should be computed by the model.
 
 Define all sets, parameters and variables required to model the problem described above. Select a suitable notation of your choice. Make sure to explicitly state in your notation which elements are sets, parameters and variables.
 
@@ -89,13 +89,13 @@ Please explain your answer briefly.
 
 ## 1.e (8 Points)
 
-The supermarkets are furious because the company doesn't always deliver the agreed truckloads of ice cream. Therefore, they want to penalize the company in the future, if it delivers less than the agreed amount. For each demand of a supermarket that could not be fulfilled, the company will have to pay a one-time fee for the ice-cream sort.
+The supermarkets are furious because the company doesn't always deliver the agreed units of ice cream. Therefore, they want to penalize the company in the future, if it delivers less than the agreed amount. For each ice cream sort and supermarket where the agreed demand is not fully delivered, the company will have to pay a one-time fee that depends on the sort.
 
 How can you expand your model to reflect this new situation? Write down all additional or modified sets, parameters, variables, constraints and the objective function while describing each with a few words.
 
 > **Tip**
 >
-> Note, that you only need to write down new and modified elements!
+> Note that you only need to write down new and modified elements!
 
 ## 1.f (8 Points)
 
@@ -105,7 +105,7 @@ How can you expand your model to reflect this new situation? Write down all addi
 
 > **Tip**
 >
-> Note, that you only need to write down new and modified elements! If you haven't solved the previous task, work with the model defined before.
+> Note that you only need to write down new and modified elements! If you haven't solved the previous task, work with the model defined before.
 
 # <span class="flow">Part II</span>
 
@@ -160,7 +160,7 @@ The following Julia code contains seven errors. Highlight the errors in the code
 
 > **Note**
 >
-> Assume that all variables containing data are loaded correctly, e.g. availablePanels and requestedPanels are already defined.
+> Assume that all variables containing data are loaded correctly, e.g. `availablePanels`, `requestedPanels` and `travelCosts` are already defined.
 
 ``` julia
 # Load the necessary packages
@@ -184,11 +184,11 @@ transport = Model(HiGHS.Optimizer)
 # Define the constraints
 @constraint(transport_model,
     restrictAvailable[i=1:nrSuppliers],
-    sum(X[i,j] for j in 1:nrCustomers) <= available[i]
+    sum(X[i,j] for j in 1:nrCustomers) <= availablePanels[i]
     )
 @constraint(transport_model,
     restrictDemand[j=1:nrCustomers],
-    sum(X[i,j] for i in 1:nrSuppliers) === requested[j]
+    sum(X[i,j] for i in 1:nrSuppliers) === requestedPanels[j]
     )
 # Start optimization
 start_optimization(transport_model)
@@ -196,11 +196,11 @@ start_optimization(transport_model)
 
 ## 3.b (4 Points)
 
-In an optimization model, the following equations are given:
+In an optimization model, the following constraint is given, where $U$ and $R$ are variables and $t$ is a parameter:
 
-$$\sum_{m\in \mathcal{M}} 7 * U_{gm} * T_m - \sum_{k \in \mathcal{K}} R_k \leq D_g \quad \forall g \in \mathcal{G}$$
+$$\sum_{m\in \mathcal{M}} 7 \times U_{g,m} \times t_m - \sum_{k \in \mathcal{K}} R_k \leq D_g \quad \forall g \in \mathcal{G}$$
 
-Please **define the equations in correct Julia syntax**.
+Please **define the constraint in correct Julia syntax**.
 
 > **Note**
 >
@@ -232,9 +232,9 @@ What is the difference between a linear and a nonlinear problem? Please describe
 
 ## The end
 
-> **And that's it for todays lecture!**
+> **And that's it for today's lecture!**
 >
-> We now have covered the structure of the exam and you have a better idea of what to expect from the exam. In our upcoming tuorial, we will go through some additional examples and practice tasks.
+> We now have covered the structure of the exam and you have a better idea of what to expect from the exam. In our upcoming tutorial, we will go through some additional examples and practice tasks.
 
 ## 
 

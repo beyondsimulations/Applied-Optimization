@@ -10,25 +10,29 @@ code-links:
 
 # Introduction
 
-# Solutions
+<img src="images/ao_metro-metro_tutorial.svg" data-fig-alt="Circular unidirectional metro line with four stations A, B, C, D. Travel times: A to B 4 minutes, B to C 2 minutes, C to D 1 minute, D to A 1 minute." />
 
-You will likely find solutions to most exercises online. However, I strongly encourage you to work on these exercises independently without searching explicitly for the exact answers to the exercises. Understanding someone else's solution is very different from developing your own. Use the lecture notes and try to solve the exercises on your own. This approach will significantly enhance your learning and problem-solving skills.
-
-Remember, the goal is not just to complete the exercises, but to understand the concepts and improve your programming abilities. If you encounter difficulties, review the lecture materials, experiment with different approaches, and don't hesitate to ask for clarification during class discussions.
-
-![](images/ao_metro-metro_tutorial.svg)
-
-Consider the depicted 'Golden Line' on the left with 4 different stations A, B, C, D. For an upcoming timeframe of **10 minutes divided into 10 periods**, the transportation demand is going to exceed the available capacity of the network and each origin-destination pair will be requested by at least 1 passenger. **To handle the inflow, queues will be put in place at each metro station.**
+Consider the depicted 'Golden Line' with 4 different stations A, B, C, D. For an upcoming timeframe of **10 minutes divided into 10 periods**, the transportation demand is going to exceed the available capacity of the network and each origin-destination pair will be requested by at least 1 passenger in every minute. **To handle the inflow, queues will be put in place at each metro station.**
 
 # The Challenge
 
-Your task is to **minimize the queues** without exceeding the available transport capacity of **max. 100 passengers per minute of each arc**. A safety buffer per arc is not needed. Each station layout is excellent, with sufficient stairs and escalators. Thus, the station itself is fully capable of handling any inflow that may result from the optimized restricted inflow. Nonetheless, queues are still necessary as the arcs cannot handle each input.
+Your task is to **minimize the queues** without exceeding the available transport capacity of **max. 100 passengers per minute on each arc**. A safety buffer per arc is not needed. Each station layout is excellent, with sufficient stairs and escalators. Thus, the station itself is fully capable of handling any inflow that may result from the optimized restricted inflow. Nonetheless, queues are still necessary as the arcs cannot handle the full inflow.
+
+# Recap: The Set $\mathcal{R}_{e,t}$
+
+Recall the set from the lecture that maps station inflows to arc utilizations:
+
+$$\mathcal{R}_{e,t} = \{(o,d,p) \mid o,d \in \mathcal{O}, p \in \mathcal{P}, q_{o,d,p} > 0, e \in \mathcal{C}_{o,d}, t-\tau_{o,e} \in I_p\}$$
+
+It contains all combinations $(o,d,p)$ of origin $o$, destination $d$, and period $p$ whose passengers enter arc $e$ in minute $t$. Here, $\mathcal{C}_{o,d}$ is the set of arcs on the shortest path from $o$ to $d$, and $\tau_{o,e}$ is the travel time from station $o$ to the entry of arc $e$ along that path. In this tutorial, the period length is $m = 1$: each period is exactly one minute, so the last condition simplifies to $p = t - \tau_{o,e}$.
+
+For example, a passenger entering station B in period 4 with destination A travels over B→C (2 min) and C→D (1 min) and thus enters arc (D,A) in minute $4 + 3 = 7$. Hence, $(B,A,4) \in \mathcal{R}_{(D,A),7}$.
 
 # 1. Flow Analysis
 
 Suppose we are in minute 7 at the arc of (D,A). Which inflows from which stations are going to impact the flow into the arc in this minute?
 
-Write out the set $\mathcal{R}_{(D,A),7}$ and **shortly explain** your answer. You can write out the set in a comment, for example like this:
+Write out the set $\mathcal{R}_{(D,A),7}$ and **briefly explain** your answer. You can write out the set in a comment, for example like this:
 
 ``` julia
 #=
@@ -50,41 +54,33 @@ YOUR ANSWER BELOW
 
 # 2. Inflow Control
 
-<figure>
-<img src="images/ao_metro-inflow_var.png" alt="Example: Fluctuations" />
-<figcaption aria-hidden="true">Example: Fluctuations</figcaption>
-</figure>
+<img src="images/ao_metro-inflow_var.png" data-fig-alt="Bar chart of allowed inflow per period with large jumps between consecutive periods." />
 
-<figure>
-<img src="images/ao_metro-inflow_smooth.png" alt="Example: Smoothed" />
-<figcaption aria-hidden="true">Example: Smoothed</figcaption>
-</figure>
+<img src="images/ao_metro-inflow_smooth.png" data-fig-alt="Bar chart of allowed inflow per period where the level changes only gradually between consecutive periods." />
 
-As there is a rather large fluctuation of allowed inflow between periods, you are asked to introduce new constraints for the model. In the first period, the inflow at each station is supposed to be unrestricted. Thereafter, it is maximally allowed to change by 20 persons in both directions per period at each station.
+As there is a rather large fluctuation of allowed inflow between periods, you are asked to introduce new constraints for the model. In the first period, the inflow at each station is supposed to be unrestricted. Thereafter, it is allowed to change by at most 20 persons up or down per period at each station.
 
 Can you write out the decision variables and the additional constraints for the model as JuMP constraints?
 
 > **Tip**
 >
-> You don't need to solve the model or define the objective function. You just need to constraint the fluctuations and add the appropriate variables.
+> You don't need to solve the model or define the objective function. You just need to constrain the fluctuations and add the appropriate variables.
 
 ``` julia
 using JuMP
 metro_model = Model()
 
 # YOUR CODE BELOW
+
 ```
 
 # 3. Bidirectional Flow
 
-<figure>
-<img src="images/ao_metro-metro_tutorial_bidirect.svg" alt="Bidirectional Metro Network" />
-<figcaption aria-hidden="true">Bidirectional Metro Network</figcaption>
-</figure>
+<img src="images/ao_metro-metro_tutorial_bidirect.svg" data-fig-alt="Circular bidirectional metro network with four stations A, B, C, D. Travel times per direction: A and B 4 minutes, B and C 2 minutes, C and D 1 minute, D and A 1 minute." />
 
-The metro was improved and there is now the possibility to travel in both directions. How would this change the set $\mathcal{R}_{(MD,MA),7}$ from 1.?
+The metro was improved and there is now the possibility to travel in both directions. How would this change the set $\mathcal{R}_{(D,A),7}$ from 1.?
 
-Write out the new set $\mathcal{R}_{(D,A),7}$ manually and shortly explain your answer.
+Write out the new set $\mathcal{R}_{(D,A),7}$ manually and briefly explain your answer.
 
 ``` julia
 #=
@@ -95,7 +91,7 @@ Write out the new set $\mathcal{R}_{(D,A),7}$ manually and shortly explain your 
 
 # 4. Capacity Analysis
 
-Although the system is two-directional now, the **overall number of trains of the metro provider has not changed**. Would the change from a one-directional metro system to a two-directional metro system decrease the likelihood of crowd-accidents due to insufficient arc-capacities?
+Although the system is bidirectional now, the **overall number of trains of the metro provider has not changed**. Would the change from a unidirectional metro system to a bidirectional metro system decrease the likelihood of crowd accidents due to insufficient arc-capacities?
 
 Please explain your answer in a few sentences.
 
@@ -108,17 +104,18 @@ Please explain your answer in a few sentences.
 
 # 5. Computing the Set $\mathcal{R}_{e,t}$
 
-Can you compute the set $\mathcal{R}_{e,t}$ for the one-directional flow? Generate a dictionary $R$ that contains $e \times t$ entries. Each entry $r_{e,t}$ should contain a vector with all origin-destination pairs and the corresponding time period saved as a tuple. Use the results to check your answer from the first task.
+Can you compute the set $\mathcal{R}_{e,t}$ for the unidirectional flow? Generate a dictionary $R$ that contains $|\mathcal{E}| \times |\mathcal{T}| = 4 \times 10 = 40$ entries. Each entry $\mathcal{R}_{e,t}$ should contain a vector with all origin-destination pairs and the corresponding time period saved as a tuple. Use the results to check your answer from the first task.
 
 > **Note**
 >
-> This task can be a bit tricky, as it is a bit of a challenge. But as it is the last tutorial, I figured a small challenge is fine.
+> This task is a bit of a challenge. But as it is the last tutorial, I figured that's fine.
 
 ``` julia
 # YOUR CODE BELOW
+
 ```
 
-If you encounter any difficulties ad cannot solve the problem, please document your issues here:
+If you encounter any difficulties and cannot solve the problem, please document your issues here:
 
 ``` julia
 #=
@@ -128,9 +125,17 @@ If you encounter any difficulties ad cannot solve the problem, please document y
 =#
 ```
 
+> **From the set to the model**
+>
+> The dictionary `R` is exactly what the lecture's arc-capacity constraint iterates over:
+>
+> $$\sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq c_e \quad \forall e \in \mathcal{E}, t \in \mathcal{T}$$
+>
+> With `R` computed and $c_e = 100$, adding this constraint and the queue-minimizing objective from the lecture completes the model behind "The Challenge". As no safety buffer is needed here, the factor $\alpha$ is left out.
+
 # 6. Bonus: Metro Flow Simulation (0.5 points)
 
-Now, you can earn up to 0.5 additional bonus points by building a simulation of passenger flows through a metro network. The network consists of two lines with a shared transfer station. Passengers enter at stations A, B, C, D and travel to various destinations.
+Now, you can earn up to 0.5 additional bonus points by building a simulation of passenger flows through a metro network. The network consists of two lines with a shared transfer station T: line 1 runs A → B → T → E and line 2 runs C → D → T → F (see the `paths` dictionary below). Passengers enter at stations A, B, C, D and travel to various destinations.
 
 First, study the network data below to understand the structure and then implement a minute-by-minute simulation that tracks the queues at entry stations, passenger flows through arcs and arc utilization over time. Then, visualize the results with some plots and try to implement inflow regulation to achieve a feasible solution (no arc exceeds capacity).
 

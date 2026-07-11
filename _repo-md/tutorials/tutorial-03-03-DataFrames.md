@@ -37,7 +37,7 @@ A DataFrame in Julia is akin to a table in SQL or a spreadsheet - each column ca
 ``` julia
 students = DataFrame(
     Name = ["Elio", "Bob", "Yola"],
-    Age = [18, 25,29],
+    Age = [18, 25, 29],
 )
 ```
 
@@ -54,7 +54,7 @@ students = DataFrame(
 
 ## Exercise 1.1 - Create a DataFrame
 
-Create and Test a DataFrame. Create a DataFrame named `employees` with the columns `Name`, `Age`, and `Salary`, and populate it with the specified data: John is `28` years old and earns `50000`, Mike is `23` years old and earns `62000`. Frank is `37` years old and earns `90000`.
+Create and Test a DataFrame. Create a DataFrame named `employees` with the columns `Name`, `Age`, and `Salary`, and populate it with the specified data: John is `28` years old and earns `50000`. Mike is `23` years old and earns `62000`. Frank is `37` years old and earns `90000`.
 
 ``` julia
 # YOUR CODE BELOW
@@ -69,7 +69,7 @@ Create and Test a DataFrame. Create a DataFrame named `employees` with the colum
     Name = ["John", "Mike", "Frank"],
     Age = [28, 23, 37],
     Salary = [50000, 62000, 90000]
-)
+) "Check the column names, their order, and the values - they should be Name, Age and Salary with the data from the task."
 println("DataFrame created successfully!")
 println(employees)
 ```
@@ -84,7 +84,7 @@ println(employees)
 
 # Section 2 - Accessing and Modifying Data
 
-Accessing columns in a DataFrame can be done using the dot syntax, while rows can be accessed via indexing. Modification of data is straightforward; just assign a new value to the desired cell. To access the column 'name' in our DataFrame with `employees`, we could do:
+Accessing columns in a DataFrame can be done using the dot syntax, while rows can be accessed via indexing. Modification of data is straightforward; just assign a new value to the desired cell. To access the column `Name` in our DataFrame `employees`, we could do:
 
 ``` julia
 employees.Name
@@ -146,10 +146,10 @@ println(employees)
 
 # Section 3 - Filtering Data
 
-Logical indexing can be used to filter rows in a DataFrame based on conditions. To filter the DataFrame to include only employees names "Frank" we could do:
+Logical indexing can be used to filter rows in a DataFrame based on conditions. To filter the DataFrame to include only employees named "Frank" we could do:
 
 ``` julia
-allFranks = employees[employees.Name .== "Frank", :]
+all_franks = employees[employees.Name .== "Frank", :]
 ```
 
 <div><div style = "float: left;"><span>1×3 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
@@ -165,7 +165,7 @@ Alternatively, the filter function provides a powerful tool to extract subsets o
 data based on a condition:
 
 ``` julia
-allFranks = filter(row -> row.Name == "Frank", employees)
+all_franks = filter(row -> row.Name == "Frank", employees)
 ```
 
 <div><div style = "float: left;"><span>1×3 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;">
@@ -201,7 +201,7 @@ println(high_earners)
 
 # Section 4 - Basic Data Manipulation
 
-Julia provides functions for basic data manipulation tasks, including sorting, grouping, and joining DataFrames. The `sort` function can be used to order the rows in a DataFrame based on the values in one or more columns. To see how to use the function, type `?` into the REPL (terminal) and type `sort`.
+Julia provides functions for basic data manipulation tasks, such as sorting DataFrames. The `sort` function can be used to order the rows in a DataFrame based on the values in one or more columns. To see how to use the function, type `?` into the REPL (terminal) and type `sort`. DataFrames can also be grouped (with `groupby` and `combine`) and joined - you will meet these functions later in the course when we prepare data for optimization models.
 
 ## Exercise 4.1 - Sort the DataFrame
 
@@ -223,10 +223,6 @@ println(sorted_df)
 
 </details>
 
-> **Tip**
->
-> If you have more complicated data structures, take a look at JSON files which can be used to work with all kind of differently structured data sets.
-
 ------------------------------------------------------------------------
 
 # Section 5 - Loop over DataFrames
@@ -244,10 +240,10 @@ end
     Mike earns more than 60000
     Frank earns more than 60000
 
-Here, the `row` holds all the values of the row as a `NamedTuple`. We can access the values of a column then by using the dot syntax. To create a new column, we can use the `push!` function. For example, to create a new column called `VacationDays` in the `employees` DataFrame, we can do one of the following:
+Here, `row` is a `DataFrameRow` - a view into the DataFrame. This means that if you change a value through `row`, the change is written back to the `employees` DataFrame. We can access the values of a column by using the dot syntax. To create a new column, assign a vector (or broadcast a single value with `.=`) to a new column name. For example, to create a new column called `VacationDays` in the `employees` DataFrame, we can do one of the following:
 
 ``` julia
-employees.VacationDays = [0 for row in eachrow(employees)]
+employees.VacationDays = zeros(Int, nrow(employees))
 employees.VacationDays .= 0
 ```
 
@@ -256,9 +252,15 @@ employees.VacationDays .= 0
      0
      0
 
+Here, `nrow` returns the number of rows in a DataFrame and `zeros(Int, n)` creates a vector of `n` zeros.
+
 ## Exercise 5.1 - Loop over DataFrame
 
 Create a new column called `Bonus` in the `employees` DataFrame. The bonus should be calculated as 10% of the salary for employees over 30, and 5% for those 30 and under. Use a loop to iterate over the rows and calculate the bonus.
+
+> **Important**
+>
+> This exercise assumes that you updated John's salary to `59000` in Exercise 2.2. If you skipped that exercise, go back and complete it first - otherwise the test below will fail.
 
 ``` julia
 # YOUR CODE BELOW
@@ -290,7 +292,7 @@ println("Great job! All the bonuses are correct!")
 
 # Section 6 - Filling a new DataFrame with values
 
-Do you remember the `push!` function? We can use it to fill a new DataFrame with values. For example, we can create a new DataFrame called `WorkingHours` and fill it with the values from the `employees` DataFrame. Imagine that the company has a policy, where employees above 30 work 30 hours a week, and employees under 30 work 40 hours a week:
+Do you remember the `push!` function? We can use it to fill a new DataFrame with values row by row. This pattern is worth remembering: later in the course, you will use it to collect the results of your optimization models in a DataFrame. For example, we can create a new DataFrame called `WorkingHours` and fill it with the values from the `employees` DataFrame. Imagine that the company has a policy, where employees above 30 work 30 hours a week, and employees under 30 work 40 hours a week:
 
 ``` julia
 # Create a new DataFrame
@@ -316,19 +318,34 @@ println(WorkingHours)
 ```
 
 <pre><span class="ansi-bold">3×2 DataFrame</span>
-
 <span class="ansi-bold"> Row </span>│<span class="ansi-bold"> Name   </span><span class="ansi-bold"> Hours </span>
-
-     │<span class="ansi-bright-black-fg"> String </span><span class="ansi-bright-black-fg"> Int64 </span>
-
+<span class="ansi-bold">     </span>│<span class="ansi-bright-black-fg"> String </span><span class="ansi-bright-black-fg"> Int64 </span>
 ─────┼───────────────
-
    1 │ John       40
-
    2 │ Mike       40
-
    3 │ Frank      30
 </pre>
+
+## Exercise 6.1 - Fill a new DataFrame with `push!`
+
+Now practice this pattern yourself. Create a new DataFrame called `Overtime` with the columns `Name` (a `String` column) and `ExtraHours` (an `Int` column). Then, loop over the rows of the `employees` DataFrame with `eachrow` and `push!` one row per employee: employees with a salary above `60000` get `5` extra hours, all others get `10`.
+
+``` julia
+# YOUR CODE BELOW
+```
+
+<details class="code-fold">
+<summary>Code</summary>
+
+``` julia
+# Test your answer
+@assert nrow(Overtime) == 3 "Overtime should have one row per employee, thus 3 rows."
+@assert Overtime.Name == ["John", "Mike", "Frank"] "The names should appear in the same order as in employees."
+@assert Overtime.ExtraHours == [10, 5, 5] "John should have 10 extra hours, Mike and Frank 5 each."
+println("Perfect, you filled a new DataFrame row by row!")
+```
+
+</details>
 
 ------------------------------------------------------------------------
 

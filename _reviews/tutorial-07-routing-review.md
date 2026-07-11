@@ -1,0 +1,41 @@
+# Review: tutorial-07-routing.qmd
+
+**Reviewed:** 2026-07-07
+**Scope:** Pedagogy, model formulation, math notation, code, content robustness, writing polish
+
+## Summary
+
+A well-scaffolded tutorial: the assertion-based tests give immediate feedback, the progression (basic CVRP → observe subtours → MTZ → costing → open-ended fleet sizing) is genuinely good, and the honest "correctness is not tested here" notes set expectations well. The two main weaknesses are (a) hidden tests that force implementations *inconsistent with the lecture formulation* — students who faithfully translate the lecture's math (arc set without self-loops, `U` only for non-depot nodes) will fail the provided asserts — and (b) leftover "library" framing from an older version of the story (title, plot labels, "task b", "central library") that clashes with the FastDelivery narrative.
+
+## 1. High-impact teaching improvements
+
+- **Give Task 5 a quantitative hook (line ~462).** The trade-off is fully computable and would turn "try something" into reasoning: one leased vehicle costs 450 EUR / 4 weeks, and driving costs 0.6 × 5 × 4 = 12 EUR per km of *daily* route length — so dropping a vehicle pays off unless the daily tours grow by more than 450/12 = 37.5 km. Also, total demand is 86 parcels against a capacity of 50 per vehicle, so at least ⌈86/50⌉ = 2 vehicles are needed. Adding a guiding question ("How much extra daily distance is one vehicle worth? What is the minimum feasible fleet size?") teaches the fixed-vs-variable-cost reasoning the task is really about.
+- **The driving-time constraint is promised but never practiced.** The introduction lists "driving distances" as a constraint (line ~24) and Task 1 says to omit the constraints "restricting the driving time and capacities" (line ~30) — implying they come later. Capacity arrives via MTZ in Section 2, but the lecture's time-tracking constraints (`T_i`, lecture-07 lines ~697–704) are never implemented anywhere. Either add an (optional) task — it is a near-copy of the MTZ pattern, so excellent reinforcement — or drop the promise from the intro and Task 1.
+- **Caveat the capacity-usage plot (line ~379).** `plot_capacity_usage` displays `U[i]` at the last stop before the depot as "Capacity Usage (parcels)". But MTZ only *lower*-bounds `U` (nothing pushes it down toward the true accumulated load), so the bars can legitimately show values larger than the parcels actually carried. One sentence ("`U` is an upper estimate — why?") would prevent confusion and is itself a nice comprehension question about the MTZ constraints.
+- **No learning objectives.** A short "In this tutorial you will…" list (implement degree/depot constraints, diagnose subtours visually, add MTZ, translate a solution into money) would frame the session, matching the checklist style used elsewhere in the course.
+
+## 2. Model & notation issues
+
+- **The `U` test forces the depot into the variable, contradicting the lecture (line ~340).** The asserts iterate `for i in demand.location`, which *includes* `"central"` (first row of `routing-demand.csv`). The lecture defines `U_i` only for `i ∈ V ∖ {0}` (lecture-07 lines ~492–498). A student who follows the lecture and defines `U` over the 14 non-central locations gets a `KeyError` from the test itself. Either exclude `"central"` in the assert or tell students explicitly to include the depot (harmless, since `d_central = 0`).
+- **The `X` test forces a dense 15×15 variable including the diagonal (line ~144), unlike the lecture's arc set.** The lecture builds `X` over arcs with `i != j` (lecture-07 line ~309). With diagonal variables present, note that *nothing forbids self-loops*: the degree constraints exclude `i == j` (as instructed, line ~174) and the MTZ constraints hold only for `i ≠ j`, so `X[j,j] = 1` is feasible at zero cost. Consequences: the solver may return degenerate solutions with self-loops, and `plot_capacity_usage` loops over *all* locations (line ~382) — if `X["central","central"]` happens to be 1, a spurious bar with an arbitrary `U["central"]` value appears. Fix by having students (or a provided cell) fix the diagonal to zero, e.g. `fix.(diag(...))` or a constraint, or by excluding `i == j` from the variable definition and adjusting the size test.
+- **Distance-dictionary test contradicts its own hint (lines ~91, ~101).** The hint says "You need the distance from each location to all other locations!", but the assert requires `nrow(coord)^2 = 225` entries — i.e., *including* the 15 self-pairs. A student who literally excludes `i == j` (210 entries) fails. Say explicitly that `(i,i)` pairs with distance 0 should be included (or relax the test).
+- **Bound-based test is brittle (line ~340).** `has_lower_bound`/`has_upper_bound` are only true for bounds set in `@variable` (or `set_lower_bound`); a student who encodes `d_i ≤ U_i ≤ b` via `@constraint` — mathematically identical — fails. Fine if intentional, but then the task text (line ~329) should say "define the bounds directly in the variable declaration."
+- **Units are never pinned down.** Task 3 charges 0.6 EUR *per kilometer* (line ~423), and the plot labels axes "Distance (km)" (lines ~299–300), but the tutorial never states that the coordinates are in km. One sentence when loading the data would make the cost calculation well-defined.
+- **Capacity unit inconsistency:** the introduction says capacity is "measured in standard shipping containers" (line ~24), but everywhere else it is 50 *parcels* (lines ~32, ~398). Pick one.
+
+## 3. Content & robustness
+
+- **Stale cross-reference "task b" (line ~484):** sections are numbered 1–5; there is no task b. Presumably means Section 3's cost of ~14,168 EUR.
+- **Story leftovers from the library version:** the title "Periodic Library Routing" (line ~2 — nothing in the tutorial is periodic, and the story is parcel logistics), plot legend labels "Central Library" and "Libraries" (lines ~284, ~293), and "how many vehicles does the central library need?" (line ~484). Rename to match FastDelivery ("Warehouse", "Distribution centers").
+- **Expected-cost assert (line ~438):** 14,168 EUR with 6 leased vehicles implies an optimal daily distance of (14168 − 2700)/12 ≈ 955.7 km — plausible for these coordinates, but not verifiable statically; worth re-checking once against the rendered solution whenever the data files change, since the assert is `atol=10`.
+- **Debug leftover:** `println(vehicle_routes)` inside `plot_capacity_usage` (line ~388) prints raw tuples above the plot — remove.
+- **Unused dependency:** `DelimitedFiles` is `Pkg.add`-ed and `using`-ed (lines ~45, ~53) but never used; only `CSV` reads the files. Drop it.
+- **Dead code in a test:** `demand_dict` is built in the `U` test cell (line ~339) but not used by any assert in that cell.
+
+## 4. Pedagogy & polish
+
+- **Confusing `findall` in provided code (line ~264):** `findall(Routes -> !iszero(Routes), Routes .>= 0.5)` — the lambda argument shadows the `Routes` matrix, and the matrix is already `Bool`, so it double-thresholds. `findall(Routes)` does the same thing and is far less confusing in code students are told to read.
+- **Duplicated hint:** the dictionary tip appears both in the callout (line ~325) and again in the task sentence "Note, that a dictionary might be useful here." (line ~329) — keep one.
+- **Bar chart x-axis (line ~397):** xlabel "Vehicle" over bars that were just sorted by usage — the tick numbers are meaningless as vehicle IDs. Either drop the xlabel or label bars by the last-visited location.
+- **Typos/grammar:** "Note that capacity of each vehicle is identical" → "the capacity" (line ~32); "the two set of constraints" → "two sets of constraints" (line ~174); "Have you have any mistakes" → "Have you made any mistakes" (line ~238); "I recommend to first think" → "I recommend first thinking" (line ~466); "your new models variable names" → "your new model's variable names" (line ~477); recurring German-style "Note, that" → "Note that" (lines ~329, ~477).
+- **Cross-file note for the lecture:** while checking correspondence, lecture-07-routing.qmd line ~574 says "U_j has to be at least as large as d_i + U_i" — should be d_j + U_i (the constraint adds the demand of the *destination*); the tutorial's MTZ task inherits its intuition from that slide.

@@ -25,6 +25,15 @@ format:
 >
 > I really appreciate active participation and interaction!
 
+## Learning Objectives
+
+After today, you will be able to:
+
+- [ ] Name the components of an optimization model
+- [ ] Formulate a small transport problem as a linear model
+- [ ] Adapt a model to a new objective
+- [ ] Install Julia and VS Code on your computer
+
 # <span class="flow">Course Structure</span>
 
 ## Lectures
@@ -33,7 +42,7 @@ format:
 - First four lectures repeat modelling and programming
 - Later lectures discuss practical problems and implementation
 - Lectures are interactive → We discuss approaches!
-- Communication takes place via OpenOlat and E-Mail
+- Communication takes place via Moodle and E-Mail
 
 ## Tutorials
 
@@ -53,7 +62,7 @@ format:
 
 > **Note**
 >
-> Bonus points only count if the mark is at least 4.0!
+> Bonus points only count if the exam is passed (4.0 or better)!
 
 # <span class="flow">Course Objective</span>
 
@@ -98,7 +107,7 @@ Vlćek, Haase, Fliedner, et al. (2024)
 
 ## <span class="invert-font">Venue Seating under COVID-19</span>
 
-Usama Dkaidik and Matthes Koch; Current research with a likely paper submission in 2024
+Usama Dkaidik and Matthes Koch; current research
 
 ## <span class="invert-font">Metro Inflow Management</span>
 
@@ -135,13 +144,12 @@ Haase et al. (2016)
 3.  Arena Seat Planning under Distancing Rules
 4.  Passenger Flow Control in Urban Rail
 5.  Recap and Discussion
-6.  ????
 
 # <span class="flow">Julia Programming Language</span>
 
 ## Choice of Programming Language
 
-<img src="https://images.beyondsimulations.com/ao/ao_julia-programming-language.png" class="r-stretch" data-max-width="400px" />
+<img src="https://images.beyondsimulations.com/ao/ao_julia-programming-language.png" class="r-stretch" data-max-width="400px" data-fig-alt="The logo of the Julia programming language" />
 
 . . .
 
@@ -213,8 +221,8 @@ algebraic modeling?
 - **Practice, practice, and practice!**
 - Understand standard models and their approach
 - Develop an understanding of constraints
-- Understand the structure of a models solution space
-- Use an available algorithms to determine solutions
+- Understand the structure of a model's solution space
+- Use available algorithms to determine solutions
 
 ## Central Questions
 
@@ -232,9 +240,11 @@ algebraic modeling?
 
 ## Model Components
 
-1.  Objective function
-2.  Constraints
-3.  Variables
+1.  Sets
+2.  Parameters
+3.  Decision variables
+4.  Objective function
+5.  Constraints
 
 . . .
 
@@ -247,7 +257,7 @@ algebraic modeling?
 #### Basic Model Formulation
 
 $$\begin{aligned}
-&\text{maximize} \quad F = \sum_{j\in \mathcal{J}} c_j \times X_j
+&\text{Maximize} \quad F = \sum_{j\in \mathcal{J}} c_j \times X_j
 \end{aligned}$$
 
 subject to
@@ -260,8 +270,8 @@ $$\begin{aligned}
 #### Model Components
 
 $$\begin{aligned}
-\mathcal{I} &: \text{set of $i \in \mathcal{I}$,}\\
-\mathcal{J} &: \text{set of $j \in \mathcal{J}$,}\\
+\mathcal{I} &: \text{set of resources, indexed by } i,\\
+\mathcal{J} &: \text{set of activities, indexed by } j,\\
 F   &: \text{Objective function variable,}\\
 X_{j}   &: \text{decision variables,}\\
 c_{j}   &: \text{objective function coefficients,}\\
@@ -317,11 +327,11 @@ A company is producing **solar panels** in Dresden and Laupheim and has to trans
 | Laupheim           | 7120    | 1710   | 6430   | 41        |
 | Demand             | 21      | 17     | 29     |           |
 
-<span class="highlight">Example</span>: A truckload from Dresden $i=1$ to Munich $j=2$ costs $c_{12}=4640$ Euro. Moreover, it is necessary to **fulfil all customer demands**, as the contract has been signed.
+<span class="highlight">Example</span>: A truckload from Dresden $i=1$ to Munich $j=2$ costs $c_{1,2}=4640$ Euro. Moreover, it is necessary to **fulfil all customer demands**, as the contract has been signed.
 
 ## Graphical Illustration
 
-![](https://images.beyondsimulations.com/ao/ao_transport.png)
+<img src="https://images.beyondsimulations.com/ao/ao_transport.png" data-fig-alt="Illustration of the transport problem: the production sites Dresden and Laupheim are connected by transport routes to the customers in Hamburg, Munich, and Berlin" />
 
 # <span class="flow">Understanding the Problem</span>
 
@@ -333,7 +343,7 @@ First, we always need to understand the objectives.
 
 <span class="question">Question:</span> What are our possible objectives?
 
-<span class="fragment">Minimizing the <span class="highlight">transport costs</span> over all truckloads while <span class="highlight">meeting the demand</span> based on the <span class="highlight">available solar panels</span> adhering to the available panels.</span>
+<span class="fragment">Minimizing the <span class="highlight">transport costs</span> over all truckloads while <span class="highlight">meeting the demand</span> within the <span class="highlight">available supply</span>.</span>
 
 ## 
 
@@ -360,7 +370,7 @@ $$\begin{aligned}
 
 > **Tip**
 >
-> We often use **plural** names for sets and a caligraphic letter, e.g., $\mathcal{I}$ and $\mathcal{J}$.
+> We often use **plural** names for sets and a calligraphic letter, e.g., $\mathcal{I}$ and $\mathcal{J}$.
 
 ## Parameters
 
@@ -395,7 +405,7 @@ b_j &: \text{Customer demands at } j.
 
 . . .
 
-$$X_{i,j} \text{Trucks that deliver panels from site } i \text{ to customer } j.$$
+$$X_{i,j} : \text{Trucks that deliver panels from site } i \text{ to customer } j.$$
 
 . . .
 
@@ -435,12 +445,12 @@ $$\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j
 - Constraints are <span class="highlight">conditions that must be met</span>
 - They limit the solution space!
 
-<span class="question">Question:</span> Objective value without any constraints?
+<span class="question">Question:</span> Objective value without the supply and demand constraints?
 
 . . .
 
 - The value is <span class="highlight">zero</span>
-- We can transport any number of panels
+- Cheapest option: we simply transport nothing at all!
 
 . . .
 
@@ -476,7 +486,7 @@ Ensure **no negative number of truckloads** are transported.
 
 . . .
 
-<span class="question">Question:</span> Has anyone an idea how to write this down?
+<span class="question">Question:</span> Does anyone have an idea how to write this down?
 
 . . .
 
@@ -487,7 +497,7 @@ $$X_{i,j} \geq 0 \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}$$
 The complete model can then be written as:
 
 $$\begin{aligned}
-\text{Minimize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{ij} \\
+\text{Minimize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{i,j} \\
 \text{subject to:} \quad
 &\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &&\forall i \in \mathcal{I} \\
 &\sum_{i \in \mathcal{I}} X_{i,j} = b_j \quad &&\forall j \in \mathcal{J} \\
@@ -512,6 +522,23 @@ $$\begin{aligned}
 
 - Due to the associated costs!
 
+## The Optimal Solution
+
+| Route              | Truckloads |    Cost |
+|--------------------|-----------:|--------:|
+| Dresden → Hamburg  |          5 |  25,050 |
+| Dresden → Berlin   |         29 |  57,420 |
+| Laupheim → Hamburg |         16 | 113,920 |
+| Laupheim → Munich  |         17 |  29,070 |
+
+The minimal total cost is <span class="highlight">225,460 Euro</span>.
+
+. . .
+
+> **Tip**
+>
+> In a few weeks, you will compute this solution yourself --- with just a few lines of Julia code!
+
 ## 
 
 Any
@@ -522,7 +549,7 @@ questions?
 
 ## Description
 
-Unfortunately, the margins on solar panels are low. After the previous contract has been fulfilled, the company produced the <span class="highlight">same number of panels</span> as before. In addition, all three customers want to order the <span class="highlight">same number of truckloads</span> with solar panels again. The revenue per truckload of panels is 11,000 Euros. The complete production of a truckload of solar panels, including materials, costs 6,300 Euros.
+Unfortunately, the margins on solar panels are low. After the previous contract has been fulfilled, the company will produce the <span class="highlight">same number of panels</span> as before. In addition, all three customers want to order the <span class="highlight">same number of truckloads</span> with solar panels again. The revenue per truckload of panels is 11,000 Euros. The complete production of a truckload of solar panels, including materials, costs 6,300 Euros.
 
 ## New Objective
 
@@ -550,8 +577,14 @@ In the new contract, the company wants to <span class="highlight">maximize its p
 
 $$\begin{aligned}
 r &: \text{Revenue per truckload of solar panels,} \\
-c &: \text{Production costs per truckload of solar panels.}
+k &: \text{Production costs per truckload of solar panels.}
 \end{aligned}$$
+
+. . .
+
+> **Tip**
+>
+> We use $k$ here, as $c_{i,j}$ already stands for the transport costs!
 
 . . .
 
@@ -559,7 +592,7 @@ c &: \text{Production costs per truckload of solar panels.}
 
 . . .
 
-$$p = r - c$$
+$$p = r - k$$
 
 ## Former Model
 
@@ -567,7 +600,7 @@ $$\begin{aligned}
 \text{Minimize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{i,j} \\
 \text{subject to:} \quad
 &\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &&\forall i \in \mathcal{I} \\
-&\sum_{i \in \mathcal{I}} X_{i,j} \geq b_j \quad &&\forall j \in \mathcal{J} \\
+&\sum_{i \in \mathcal{I}} X_{i,j} = b_j \quad &&\forall j \in \mathcal{J} \\
 &X_{i,j} \geq 0 \quad &&\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 \end{aligned}$$
 
@@ -584,6 +617,37 @@ $$\begin{aligned}
 &\sum_{i \in \mathcal{I}} X_{i,j} \leq b_j \quad &&\forall j \in \mathcal{J} \\
 &X_{i,j} \geq 0 \quad &&\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 \end{aligned}$$
+
+## Who Receives No Panels?
+
+<span class="question">Question:</span> **One customer will not receive a single panel. Who and why?**
+
+. . .
+
+- The profit per truckload is $p = 11000 - 6300 = 4700$ Euro
+- Dresden → Hamburg: $4700 - 5010 = -310$ Euro
+- Laupheim → Hamburg: $4700 - 7120 = -2420$ Euro
+
+. . .
+
+- Serving <span class="highlight">Hamburg</span> loses money on both routes!
+- This is exactly why the demand constraint had to become $\leq$
+
+## The Optimal Profit Plan
+
+| Route             | Truckloads | Profit |
+|-------------------|-----------:|-------:|
+| Dresden → Berlin  |         29 | 78,880 |
+| Laupheim → Munich |         17 | 50,830 |
+| → Hamburg         |          0 |      0 |
+
+The maximal profit is <span class="highlight">129,710 Euro</span>.
+
+. . .
+
+> **Note**
+>
+> With the former $=$ demand constraint, the model would be **forced** into the unprofitable deliveries to Hamburg!
 
 ## Model Reflection
 
@@ -625,7 +689,14 @@ The number of variables grows as $|\mathcal{I}| \times |\mathcal{J}|$
 - Air transport: Higher costs, faster delivery, weight limits
 - Multiple vehicle types: Different capacities and costs
 - Time-sensitive deliveries: Add scheduling constraints
-- Partial shipments: Allow fractional truckloads
+
+### Integrality
+
+**$X_{i,j} \geq 0$ also allows fractional truckloads. Is that a problem?**
+
+- Not here: with whole-numbered supplies and demands, this transport problem always has an optimal solution in **whole truckloads**
+- This is a special property --- most models need extra integrality constraints, e.g., $X_{i,j} \in \mathbb{Z}_{\geq 0}$
+- More on this later in the course!
 
 ## What Did We Learn?
 
@@ -661,13 +732,13 @@ any questions?
 
 ## Download and Install Julia
 
-![](https://images.beyondsimulations.com/ao/ao_julia-programming-language.png)
+<img src="https://images.beyondsimulations.com/ao/ao_julia-programming-language.png" data-fig-alt="The logo of the Julia programming language" />
 
 To prepare for the upcoming lectures, we start by installing the Julia Programming Language and an Integrated Development Environment (IDE) to work with Julia.
 
-## Installating Julia
+## Installing Julia
 
-<img src="https://images.beyondsimulations.com/ao/ao_julia2.png" data-max-width="400px" />
+<img src="https://images.beyondsimulations.com/ao/ao_julia2.png" data-max-width="400px" data-fig-alt="Screenshot of the Julia download page at julialang.org" />
 
 - Head to [julialang.org](https://julialang.org) and follow the instructions.
 - The easiest way to install Julia is via the shell/terminal
@@ -681,7 +752,7 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 
 ## VS Code
 
-<img src="https://images.beyondsimulations.com/ao/ao_codium_cnl.png" data-max-width="400px" />
+<img src="https://images.beyondsimulations.com/ao/ao_codium_cnl.png" data-max-width="400px" data-fig-alt="Screenshot of the VS Code editor" />
 
 - Next, we are going to install VS Code
 - Head to the website [code.visualstudio.com](https://code.visualstudio.com)
@@ -759,7 +830,7 @@ Before the next lecture, try to ensure you can:
 
 > **Note**
 >
-> **And that's it for todays lecture!**  
+> **And that's it for today's lecture!**  
 > We now have covered a first introduction and are ready to start solving some problems in the upcoming lectures.
 
 ## 
@@ -768,11 +839,9 @@ Questions?
 
 # <span class="flow">Literature</span>
 
-## Literature I
+## Literature
 
 For interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
-
-## Literature II
 
 Haase, Knut, Habib Zain Al Abideen, Salim Al-Bosta, et al. 2016. "Improving Pilgrim Safety During the Hajj: An Analytical and Operational Research Approach." *Interfaces* 46 (1): 74--90.
 

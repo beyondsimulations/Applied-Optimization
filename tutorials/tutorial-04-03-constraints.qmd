@@ -1,5 +1,5 @@
 ---
-title: "Tutorial IV.III - Constraints in JuMP"
+title: "Tutorial IV.III - Objectives and Constraints in JuMP"
 subtitle: "Applied Optimization with Julia"
 code-links:
   - text: Julia
@@ -11,10 +11,11 @@ code-links:
 
 {{< include ../include/activate_environment.qmd >}}
 
-Welcome to this tutorial on constraints in JuMP! In this lesson, we'll explore how to add rules (constraints) to our optimization problems.
+Welcome to this tutorial on objective functions and constraints in JuMP! In this lesson, we'll explore how to define objectives and add rules (constraints) to our optimization problems.
 
 By the end of this tutorial, you'll be able to:
-1. Create simple constraints for your optimization problems
+
+1. Define objective functions with variables in containers
 2. Use containers (like arrays) to manage multiple similar constraints
 3. Create more complex constraints based on conditions
 
@@ -23,7 +24,7 @@ Let's start by loading the necessary packages:
 #| eval: true
 #| output: false
 #| echo: false
-Pkg.add(["JuMP", "HiGHS"])
+Pkg.add(["JuMP", "HiGHS", "Plots"])
 ```
 
 ```{julia}
@@ -33,7 +34,6 @@ using JuMP, HiGHS
 Now, let's create a model that we'll use throughout this tutorial:
 
 ```{julia}
-#| eval: false
 another_model = Model(HiGHS.Optimizer)
 println("Great! We've created a new optimization model.")
 ```
@@ -54,11 +54,22 @@ Now, we can define an objective function with the container. For example:
 @objective(modelName, Max, sum(variableName[i] for i in 1:3))
 ```
 
+Here, every variable counts the same in the objective. If each variable contributes a different amount, we can multiply each variable by its coefficient:
+
+```julia
+coefficients = [2, 4, 3]
+@objective(modelName, Max, sum(coefficients[i] * variableName[i] for i in 1:3))
+```
+
 ## Exercise 1.1 - Define arrays
 
-Scenario: Imagine you're optimizing the production of 8 different products in a factory. Each product has a different profit margin, and you want to maximize total profit.
+Scenario: Imagine you're optimizing the production of 8 different products in a factory. Each product has a different profit margin per unit, and you want to maximize total profit. The profit margins are given as:
 
-Define an array of variables and an objective function for `another_model`. The variables should be called `profits` and have a range from `1:8`. It has a lower bound of `0`. The objective should be a Maximization of the sum of all `profits`.
+```{julia}
+margin = [3, 2, 4, 5, 3, 6, 2, 4]
+```
+
+Define an array of variables and an objective function for `another_model`. The variables should be called `production` and have a range from `1:8`, as they describe how many units of each product to make. They have a lower bound of `0`. The objective should be a Maximization of the total profit, which is the sum of `margin[i] * production[i]` over all products.
 
 ```{julia}
 #| eval: false
@@ -69,8 +80,10 @@ Define an array of variables and an objective function for `another_model`. The 
 #| eval: false
 #| code-fold: true
 # Test your answer
-@assert length(profits) == 8 && all(lower_bound(profits[i]) == 0 for i in 1:8)
+@assert length(production) == 8 && all(lower_bound(production[i]) == 0 for i in 1:8)
 @assert typeof(objective_function(another_model)) == AffExpr
+@assert all(coefficient(objective_function(another_model), production[i]) == margin[i]
+    for i in 1:8) "Check your objective: each variable should be multiplied by its margin."
 println("Objective function with container variables defined successfully!")
 ```
 
@@ -89,11 +102,15 @@ Defining constraints within containers allows for structured and easily manageab
 
 This would create a constraint called `constraintName` for each `i` - thus `1`,`2`, and `3` - where `variableName[1]`, `variableName[2]`, and `variableName[3]` are restricted to be maximally `100`.
 
-# Exercise 2.1 - Define constraints
+::: {.callout-warning}
+Right now, our factory model has an objective but no constraints. If you called `optimize!(another_model)` at this point, HiGHS would report the problem as unbounded: the production quantities could grow without limit, and so could the profit. The constraints you add next fix that.
+:::
 
-Continuing our factory scenario: Each product has a maximum daily production capacity due to machine limitations.
+## Exercise 2.1 - Define constraints
 
-Define constraints called `maxProfit` using an array of variables. The logic: Each profit defined in the previous task should be less than or equal to `12`.
+Continuing our factory scenario: Each product has a maximum daily production capacity of `12` units due to machine limitations.
+
+Define constraints called `maxCapacity` using an array of variables. The logic: Each production quantity defined in the previous task should be less than or equal to `12`.
 
 ```{julia}
 #| eval: false
@@ -104,7 +121,7 @@ Define constraints called `maxProfit` using an array of variables. The logic: Ea
 #| eval: false
 #| code-fold: true
 # Test your answer
-@assert all(is_valid(another_model, maxProfit[i]) for i in 1:8)
+@assert all(is_valid(another_model, maxCapacity[i]) for i in 1:8)
 println("Constraints within containers defined successfully!")
 ```
 
@@ -121,13 +138,13 @@ Conditional constraints are added to the model based on certain conditions, allo
 )
 ```
 
-This would create a constraint called `constraintName` for each `i` - thus `1`,`2`, and `3` - where `variableName[1]`, `variableName[2]` are restricted to be maximally `50` and `variableName[3]` was not restricted.
+This would create a constraint called `constraintName` for each `i` - thus `1`,`2`, and `3` - where `variableName[1]`, `variableName[2]` are restricted to be maximally `50` and `variableName[3]` is not restricted.
 
-## Exercise 3.1 - Add a conditional constraints
+## Exercise 3.1 - Add a conditional constraint
 
 Scenario extension: The first 4 products are new and have limited market demand.
 
-Add a conditional constraint `smallProfit` to the previous model. Condition: Only the first 4 variables profit have to be lower or equalthan 5.
+Add a conditional constraint `limitedDemand` to the previous model. Condition: Only the first 4 production quantities have to be lower than or equal to `5`. Use the conditional syntax with `;` from the example above.
 
 ```{julia}
 #| eval: false
@@ -138,14 +155,17 @@ Add a conditional constraint `smallProfit` to the previous model. Condition: Onl
 #| eval: false
 #| code-fold: true
 # Test your answer
-@assert all(is_valid(another_model, smallProfit[i]) for i in 1:4)
+@assert limitedDemand isa Containers.SparseAxisArray "Please use the conditional
+    syntax `[i in 1:8; condition]` from this section to create the constraint."
+@assert length(limitedDemand) == 4 "The constraint should only cover the first 4 products."
+@assert all(is_valid(another_model, limitedDemand[i]) for i in 1:4)
 println("Conditional constraint implemented successfully!")
 println("Checking successful implementation.")
 optimize!(another_model)
 status = termination_status(another_model)
 @assert status == MOI.OPTIMAL "Sorry, something didn't work out as the model status is $status"
-@assert objective_value(another_model) ≈ 68 atol=1e-4 "Although you have an optimal solution,
-    the should be 68 not $(objective_value(another_model)). Is the model correct?"
+@assert objective_value(another_model) ≈ 250 atol=1e-4 "Although you have an optimal solution,
+    the objective should be 250 not $(objective_value(another_model)). Is the model correct?"
 println("Model components validated successfully!")
 ```
 
@@ -157,14 +177,16 @@ Let's visualize our optimal solution:
 #| eval: false
 using Plots
 # Assuming the model has been solved!!!
-optimal_profits = value.(profits)
+optimal_production = value.(production)
 
-bar(1:8, optimal_profits,
+bar(1:8, optimal_production,
     title="Optimal Production Levels",
     xlabel="Product",
-    ylabel="Profit",
+    ylabel="Production Quantity",
     legend=false)
 ```
+
+Take a close look at the chart: the bars show exactly two levels. Products 1 to 4 are produced at their demand limit of 5, and products 5 to 8 at their capacity limit of 12. Every variable sits at its tightest upper bound - what does that tell you about the constraints in this model?
 
 ---
 

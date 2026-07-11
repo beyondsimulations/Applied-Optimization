@@ -49,116 +49,13 @@ Your goal is to decide how many of each product to make to maximize your total p
 
 ## Setting Up
 
-First, we need to install and load the necessary packages. If you haven't already installed JuMP and HiGHS, run the following code:
-
-``` julia
-import Pkg
-Pkg.activate("applied-optimization")
-Pkg.add(["JuMP","HiGHS"])
-```
+First, we need to install and load the necessary packages. If you haven't already installed JuMP and HiGHS, you can do so by running `import Pkg` and then `Pkg.add(["JuMP","HiGHS"])`.
 
 Now, let's load these packages:
 
 ``` julia
 using JuMP, HiGHS
 ```
-
-<pre><span class="ansi-bright-red-fg ansi-bold">┌ </span><span class="ansi-bright-red-fg ansi-bold">Error: </span>Error during loading of extension SpecialFunctionsExt of ColorVectorSpace, use `Base.retry_load_extensions()` to retry.
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>  exception =
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   1-element ExceptionStack:
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   ArgumentError: Package SpecialFunctionsExt [997ecda8-951a-5f50-90ea-61382e97704b] is required but does not seem to be installed:
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    - Run `Pkg.instantiate()` to install all recorded dependencies.
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   Stacktrace:
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [1] <span class="ansi-bold">__require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::Nothing<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2587</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [2] <span class="ansi-bold">_require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">uuidkey</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::Nothing<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2465</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [3] <span class="ansi-bold">_require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">uuidkey</span>::Base.PkgId<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2459</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [4] <span class="ansi-bold">run_extension_callbacks</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">extid</span>::Base.ExtensionId<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1579</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [5] <span class="ansi-bold">run_extension_callbacks</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkgid</span>::Base.PkgId<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1616</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [6] <span class="ansi-bold">run_package_callbacks</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">modkey</span>::Base.PkgId<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1432</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [7] <span class="ansi-bold">_require_search_from_serialized</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">sourcepath</span>::String, <span class="ansi-bright-black-fg">build_id</span>::UInt128, <span class="ansi-bright-black-fg">stalecheck</span>::Bool; <span class="ansi-bright-black-fg">reasons</span>::Dict<span class="ansi-bright-black-fg">{String, Int64}</span>, <span class="ansi-bright-black-fg">DEPOT_PATH</span>::Vector<span class="ansi-bright-black-fg">{String}</span><span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2106</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [8] <span class="ansi-bold">_require_search_from_serialized</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:1981</span><span class="ansi-bright-black-fg"> [inlined]</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>     [9] <span class="ansi-bold">__require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">pkg</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::String<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2599</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [10] <span class="ansi-bold">_require_prelocked</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">uuidkey</span>::Base.PkgId, <span class="ansi-bright-black-fg">env</span>::String<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2465</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [11] <span class="ansi-bold">macro expansion</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2393</span><span class="ansi-bright-black-fg"> [inlined]</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [12] <span class="ansi-bold">macro expansion</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lock.jl:376</span><span class="ansi-bright-black-fg"> [inlined]</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [13] <span class="ansi-bold">__require</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">into</span>::Module, <span class="ansi-bright-black-fg">mod</span>::Symbol<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2358</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [14] <span class="ansi-bold">require</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">into</span>::Module, <span class="ansi-bright-black-fg">mod</span>::Symbol<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2334</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [15] <span class="ansi-bold">eval</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::Module, <span class="ansi-bright-black-fg">e</span>::Any<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Core</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">boot.jl:489</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [16] <span class="ansi-bold">include_string</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">mapexpr</span>::typeof(REPL.softscope), <span class="ansi-bright-black-fg">mod</span>::Module, <span class="ansi-bright-black-fg">code</span>::String, <span class="ansi-bright-black-fg">filename</span>::String<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">loading.jl:2843</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [17] <span class="ansi-bold">softscope_include_string</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::Module, <span class="ansi-bright-black-fg">code</span>::String, <span class="ansi-bright-black-fg">filename</span>::String<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-magenta-fg">SoftGlobalScope</span> <span class="ansi-bright-black-fg">~/.julia/packages/SoftGlobalScope/u4UzH/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">SoftGlobalScope.jl:65</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [18] <span class="ansi-bold">execute_request</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">socket</span>::ZMQ.Socket, <span class="ansi-bright-black-fg">msg</span>::IJulia.Msg<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">execute_request.jl:81</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [19] <span class="ansi-bold">eventloop</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">socket</span>::ZMQ.Socket<span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">eventloop.jl:14</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>    [20] <span class="ansi-bold">(::IJulia.var"#waitloop##2#waitloop##3")</span><span class="ansi-bold">(</span><span class="ansi-bold">)</span>
-
-<span class="ansi-bright-red-fg ansi-bold">│ </span>   <span class="ansi-bright-black-fg">    @</span> <span class="ansi-cyan-fg">IJulia</span> <span class="ansi-bright-black-fg">~/.julia/packages/IJulia/eenvU/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">eventloop.jl:58</span>
-
-<span class="ansi-bright-red-fg ansi-bold">└ </span><span class="ansi-bright-black-fg">@ Base loading.jl:1589</span>
-</pre>
 
 Great! We're now ready to start building our optimization model.
 
@@ -207,7 +104,7 @@ For example, to create a continuous variable that's greater than or equal to 0:
 @variable(model_name, variable_name >= 0)
 ```
 
-This defines a continuous variable that's equal to or larger than 0.
+Here, `>= 0` sets the lower bound of the variable to zero, while no upper bound is given.
 
 ## Exercise 2.1 - Create Variables
 
@@ -227,7 +124,7 @@ Now it's your turn! Create two continuous variables equal to or larger than 0 ca
 @assert has_upper_bound(productA) == false
 @assert has_lower_bound(productA) == true
 @assert lower_bound(productA) == 0
-@assert @isdefined productA
+@assert @isdefined productB
 @assert typeof(productB) == VariableRef
 @assert has_upper_bound(productB) == false
 @assert has_lower_bound(productB) == true
@@ -236,6 +133,10 @@ println("Variables added to the model successfully!")
 ```
 
 </details>
+
+> **Note**
+>
+> Our variables count units produced, but we declared them as continuous variables. That is fine here, as the optimal solution of this problem happens to be whole numbers anyway. The next tutorial shows how to declare integer variables.
 
 ------------------------------------------------------------------------
 
@@ -258,14 +159,14 @@ Where:
 For example:
 
 ``` julia
-constraint(model_name, constraint_name, 4 * variable_name <= 100)
+@constraint(model_name, constraint_name, 4 * variable_name <= 100)
 ```
 
-This defines a constraint that ensures, that the variable `variable_name` can maximally be 25. Note, that you will have to change `model_name`, `constraint_name` and `variable_name` according to your instance.
+This defines a constraint that ensures that the variable `variable_name` can be at most 25. Note that you will have to change `model_name`, `constraint_name` and `variable_name` according to your instance.
 
 ## Exercise 3.1 - Create Constraints
 
-Create two constraints based on the on the Cutting and Finishing department hours of the problem description in this tutorial. Call the first constraint `cutting_constraint` and the second constraint `finishing_constraint`.
+Create two constraints based on the Cutting and Finishing department hours of the problem description in this tutorial. Call the first constraint `cutting_constraint` and the second constraint `finishing_constraint`.
 
 ``` julia
 # YOUR CODE BELOW
@@ -279,8 +180,8 @@ Create two constraints based on the on the Cutting and Finishing department hour
 @assert is_valid(model, cutting_constraint)
 @assert is_valid(model, finishing_constraint)
 println("Constraints added to the model successfully!")
-println("Note, that only the existence of these constraints was checked!")
-println("The optimization later will show, whether the formulation was correct.")
+println("Note that only the existence of these constraints was checked!")
+println("The optimization later will show whether the formulation was correct.")
 ```
 
 </details>
@@ -326,7 +227,7 @@ Create the objective function based on the problem description of this tutorial.
 # Test your answer
 @assert typeof(objective_function(model)) == AffExpr
 println("An objective function defined successfully!")
-println("The optimization later will show, whether the formulation was correct.")
+println("The optimization later will show whether the formulation was correct.")
 ```
 
 </details>
@@ -379,20 +280,27 @@ Let's break this down:
 - `objective_value(model)` gives us the maximum profit we can achieve
 - `value(productA)` and `value(productB)` tell us how many of each product we should produce
 
+The following code block tests whether the solution is correct or whether you have made a mistake in the formulation of the problem.
+
 > **Note**
 >
-> The values might be slightly off due to the nature of floating-point numbers in computers.
-
-The following code block tests whether the solution is correct or whether you have made a mistake in the formulation of the problem.
+> The values might be slightly off due to the nature of floating-point numbers in computers. That's why the tests below use `isapprox` (approximately equal) with a small tolerance `atol` instead of `==`.
 
 ``` julia
 # Test your answer
-@assert termination_status(model) == MOI.OPTIMAL "Sorry, something didn't work out as the model status is $termination_status(model)".
-println("Solution: Product A = ", val_productA, ", Product B = ", val_productB)
-@assert value(productA) ≈ 12 atol=1e-4 "Although you have a solution, val_productA should be 12 not $val_productA"
-@assert value(productB) ≈ 4 atol=1e-4 "Although you have a solution, val_productB should be 4 not $val_productB"
+@assert termination_status(model) == OPTIMAL "Sorry, something didn't work out as the model status is $(termination_status(model))"
+println("Solution: Product A = ", value(productA), ", Product B = ", value(productB))
+@assert isapprox(value(productA), 12; atol=1e-4) "Although you have a solution, productA should be 12 not $(value(productA))"
+@assert isapprox(value(productB), 4; atol=1e-4) "Although you have a solution, productB should be 4 not $(value(productB))"
+@assert isapprox(objective_value(model), 1800; atol=1e-4) "The quantities are correct, but the objective value should be 1800 not $(objective_value(model))"
 println("You have solved the model correctly!")
 ```
+
+If everything worked, you found the optimal production plan: 12 units of Product A and 4 units of Product B, for a maximum profit of $100 \cdot 12 + 150 \cdot 4 = 1800$. Note that both departments are fully used: Cutting takes $2 \cdot 12 + 4 \cdot 4 = 40$ of the 40 available hours and Finishing takes $4 \cdot 12 + 3 \cdot 4 = 60$ of the 60 available hours.
+
+> **Question: Why don't we produce only Product B?**
+>
+> Product B earns 150 per unit and Product A only 100, so producing only Product B sounds tempting. But Product B also uses up the Cutting hours twice as fast as Product A. With only Product B, the Cutting department limits us to $40 / 4 = 10$ units, for a profit of $10 \cdot 150 = 1500$. Mixing both products uses the hours of both departments fully and earns more: $1800$.
 
 ------------------------------------------------------------------------
 

@@ -15,9 +15,10 @@ Welcome to this tutorial on advanced solver options in JuMP using the HiGHS solv
 Imagine you're using a GPS app to find the best route to a new restaurant. Just like how you can adjust settings in your GPS (like avoiding toll roads or preferring highways), we can adjust settings in our optimization solver to help it find solutions more efficiently or to meet specific requirements.
 
 By the end of this tutorial, you'll be able to:
-1. Understand what solver options are and why they're useful
-2. Set basic solver options like time limits and solution tolerances
-3. Interpret solver output to understand how well your problem was solved
+
+1.  Understand what solver options are and why they're useful
+2.  Set basic solver options like time limits and solution tolerances
+3.  Interpret solver output to understand how well your problem was solved
 
 Let's start by loading the necessary packages:
 
@@ -27,7 +28,7 @@ using JuMP, HiGHS
 
 ------------------------------------------------------------------------
 
-# Section 1: Understanding Solver Options
+# Section 1 - Understanding Solver Options
 
 Solver options are like the "advanced settings" of our optimization tool. They allow us to control how the solver approaches our problem. Here are a few common options:
 
@@ -56,16 +57,17 @@ println("Solver options set successfully!")
 
 Let's break this down:
 
-- `set_time_limit_sec(model, 60)` tells the solver to stop after 60 seconds if it hasn't found a solution
-- `set_optimizer_attribute(model, "mip_rel_gap", 0.01)` sets how close to the best possible solution we need to be (within 1%)
+- `set_time_limit_sec(model, 60)` tells the solver to stop after 60 seconds and return the best solution it has found so far, if any
+- `set_optimizer_attribute(model, "mip_rel_gap", 0.01)` sets how close to the best possible solution we need to be (within 1%). This means the solver is allowed to stop as soon as it can prove that its best solution is at most 1% worse than the true optimum - even if it is not the exact optimum. We will see this in action in the next section.
 - `set_optimizer_attribute(model, "presolve", "on")` tells the solver to try simplifying the problem first
 
 ## Exercise 1.1 - Set Solver Options
 
 Now it's your turn! Set the following solver options:
-1. A time limit of 120 seconds
-2. A MIP gap tolerance of 0.5%
-3. Turn off presolve
+
+1.  A time limit of 120 seconds
+2.  A MIP gap tolerance of 0.5%
+3.  Turn off presolve
 
 ``` julia
 # YOUR CODE BELOW
@@ -87,7 +89,7 @@ println("Great job! You've successfully set advanced solver options.")
 
 ------------------------------------------------------------------------
 
-# Section 2: Creating and Solving a Sample Problem
+# Section 2 - Creating and Solving a Sample Problem
 
 To see how these options affect solving, let's create a simple optimization problem. We'll use a basic production planning scenario.
 
@@ -99,6 +101,7 @@ Imagine you're managing a small factory that produces two types of products: wid
 @variable(model, gadgets >= 0, Int)
 
 # Define constraints
+# We have 240 minutes of production time available
 @constraint(model,
     production_time,
     2*widgets + 3*gadgets <= 240
@@ -118,6 +121,10 @@ Imagine you're managing a small factory that produces two types of products: wid
     25*widgets + 30*gadgets
 )
 
+# The solver options from Section 1 still belong to this model!
+# We tighten the MIP gap to 0, so the solver proves the exact optimum
+set_optimizer_attribute(model, "mip_rel_gap", 0.0)
+
 # Solve the problem
 optimize!(model)
 
@@ -128,63 +135,66 @@ println("Widgets to produce: ", value(widgets))
 println("Gadgets to produce: ", value(gadgets))
 ```
 
-    Running HiGHS 1.11.0 (git hash: 364c83a51e): Copyright (c) 2025 HiGHS under MIT licence terms
-    MIP  has 3 rows; 2 cols; 4 nonzeros; 2 integer variables (0 binary)
+    Running HiGHS 1.12.0 (git hash: 755a8e027): Copyright (c) 2025 HiGHS under MIT licence terms
+    MIP has 3 rows; 2 cols; 4 nonzeros; 2 integer variables (0 binary)
     Coefficient ranges:
-      Matrix [1e+00, 3e+00]
-      Cost   [2e+01, 3e+01]
-      Bound  [0e+00, 0e+00]
-      RHS    [6e+01, 2e+02]
+      Matrix  [1e+00, 3e+00]
+      Cost    [2e+01, 3e+01]
+      Bound   [0e+00, 0e+00]
+      RHS     [6e+01, 2e+02]
     Presolving model
     1 rows, 2 cols, 2 nonzeros  0s
     1 rows, 2 cols, 2 nonzeros  0s
+    Presolve reductions: rows 1(-2); columns 2(-0); nonzeros 2(-2) 
     Objective function is integral with scale 0.2
 
     Solving MIP model with:
-       1 rows
+       1 row
        2 cols (0 binary, 2 integer, 0 implied int., 0 continuous, 0 domain fixed)
        2 nonzeros
 
-    Src: B => Branching; C => Central rounding; F => Feasibility pump; J => Feasibility jump;
-         H => Heuristic; L => Sub-MIP; P => Empty MIP; R => Randomized rounding; Z => ZI Round;
-         I => Shifting; S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution;
-         z => Trivial zero; l => Trivial lower; u => Trivial upper; p => Trivial point
+    Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+         I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+         S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+         Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
 
             Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
     Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
 
-     J       0       0         0   0.00%   inf             2000               Large        0      0      0         0     0.0s
-     S       0       0         0   0.00%   3800            2780              36.69%        0      0      0         0     0.0s
-             1       0         1 100.00%   2800            2780               0.72%        0      0      0         1     0.0s
+     l       0       0         0   0.00%   inf             1530               Large        0      0      0         0     0.0s
+     J       0       0         0   0.00%   inf             2780               Large        0      0      0         0     0.0s
+     S       0       0         0   0.00%   2815            2785               1.08%        0      0      0         0     0.0s
+     T       0       0         0   0.00%   2795            2790               0.18%        0      0      1         0     0.0s
+             1       0         1 100.00%   2790            2790               0.00%        0      0      1         0     0.0s
 
     Solving report
       Status            Optimal
-      Primal bound      2780
-      Dual bound        2800
-      Gap               0.719% (tolerance: 1%)
-      P-D integral      0.000308777486048
+      Primal bound      2790
+      Dual bound        2790
+      Gap               0%
+      P-D integral      2.05923446733e-06
       Solution status   feasible
-                        2780 (objective)
+                        2790 (objective)
                         0 (bound viol.)
                         0 (int. viol.)
                         0 (row viol.)
-      Timing            0.01 (total)
-                        0.00 (presolve)
-                        0.00 (solve)
-                        0.00 (postsolve)
+      Timing            0.01
       Max sub-MIP depth 0
       Nodes             1
-      Repair LPs        0 (0 feasible; 0 iterations)
-      LP iterations     1 (total)
-                        0 (strong br.)
-                        0 (separation)
-                        0 (heuristics)
+      Repair LPs        0
+      LP iterations     0
     Optimization status: OPTIMAL
-    Objective value: 2780.0
-    Widgets to produce: 80.0
-    Gadgets to produce: 26.0
+    Objective value: 2790.0
+    Widgets to produce: 78.0
+    Gadgets to produce: 28.0
 
-This problem determines how many widgets and gadgets to produce to maximize profit, given time constraints and maximum demand.
+This problem determines how many widgets and gadgets to produce to maximize profit, given the available production time in minutes and the maximum demand for each product.
+
+Take a close look at the results. The best plan is 78 widgets and 28 gadgets, with a profit of 2790. Notice that the solver does not simply max out widgets, even though widgets earn the most profit per minute. The "greedy" plan - produce 80 widgets first, then fill the remaining time with 26 gadgets - earns only 2780. If we allowed fractional production, the best plan would be 80 widgets and 26.67 gadgets with a profit of 2800, but we cannot sell two-thirds of a gadget, and simply rounding down loses money. Finding the best whole-number plan is exactly what makes integer programming powerful - and hard!
+
+> **Note**
+>
+> Why did we tighten the MIP gap to 0 before solving? With the 1% gap from Section 1 still active, the solver is allowed to stop at any plan it can prove to be within 1% of the best. When we tried it, HiGHS stopped at 79 widgets and 27 gadgets with a profit of 2785 - "good enough" by the rule we gave it, but not the true optimum. Keep this in mind whenever you combine gap tolerances with tests that expect exact values.
 
 ## Exercise 2.1 - Modify and Solve the Problem
 
@@ -193,6 +203,10 @@ Now it's your turn! Modify the problem above by:
 1.  Changing the production time constraint to 300 minutes
 2.  Increasing the profit for widgets to 30
 3.  Solving the modified problem and printing the results
+
+> **Tip**
+>
+> Re-initializing with `Model(HiGHS.Optimizer)` gives you a completely fresh model. Remember from Section 1 that solver options belong to the model - the time limit, MIP gap, and presolve settings you set earlier are gone, and you would have to set them again if you need them.
 
 ``` julia
 # YOUR CODE BELOW
@@ -207,18 +221,20 @@ model = Model(HiGHS.Optimizer) # Don't forget to re-initialize the model
 # Test your answer
 @assert termination_status(model) == MOI.OPTIMAL "The termination status should be OPTIMAL but is $(termination_status(model))"
 @assert isapprox(objective_value(model), 3780, atol=1e-6) "The objective value should be 3780 but is $(objective_value(model))"
-@assert isapprox(value(widgets), 80, atol=1e-6) "The number of widgets to produce should be 80 but is $(value(widgets))"
-@assert isapprox(value(gadgets), 46, atol=1e-6) "The number of gadgets to produce should be 46 but is $(value(gadgets))"
 println("Excellent work! You've successfully modified and solved the optimization problem.")
 ```
 
 </details>
 
+> **Note**
+>
+> Why does the test only check the profit and not the number of widgets and gadgets? Because the modified problem has several optimal plans: 80 widgets and 46 gadgets, 79 and 47, and 78 and 48 all respect the time limit and earn exactly 3780. Both products now bring in the same profit per unit, so the solver is free to return any of these plans - which one you get depends on the solver's internal path. Whenever a problem can have several optimal solutions, test the objective value, not the variable values.
+
 ------------------------------------------------------------------------
 
-# Section 3: Interpreting Solver Output
+# Section 3 - Interpreting Solver Output
 
-When we solve an optimization problem, the solver gives us information about how it went. Let's look at some key pieces of information:
+When we solve an optimization problem, the solver gives us information about how it went. Let's look at some key pieces of information for the problem we solved in Section 2:
 
 ``` julia
 println("Termination status: ", termination_status(model))
@@ -228,11 +244,17 @@ println("Objective value: ", objective_value(model))
 println("Solve time: ", solve_time(model))
 ```
 
+    Termination status: OPTIMAL
+    Primal status: FEASIBLE_POINT
+    Dual status: NO_SOLUTION
+    Objective value: 2790.0
+    Solve time: 0.008187833009287715
+
 Let's break this down:
 
 - **Termination status**: Tells if the solver found an optimal solution, ran out of time, etc.
 - **Primal status**: Indicates if we have a valid solution for our original problem
-- **Dual status**: Relates to the mathematical properties of the solution (don't worry too much about this)
+- **Dual status**: Relates to the mathematical properties of the solution; it becomes important for sensitivity analysis later in the course. For integer problems like ours there is no dual solution, which is why it shows `NO_SOLUTION` here.
 - **Objective value**: The value of our objective function (in this case, our profit)
 - **Solve time**: How long it took to solve the problem
 

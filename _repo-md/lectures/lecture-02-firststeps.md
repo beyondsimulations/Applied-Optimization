@@ -11,15 +11,24 @@ format:
 
 # <span class="flow">Quick Recap on the Technical Setup</span>
 
+## Goals for Today
+
+After this lecture, you will have:
+
+- A <span class="highlight">working Julia and VS Code setup</span> on your computer
+- Made your first Git commit
+- Learned how to submit assignments and earn bonus points
+- Started with the first tutorials
+
 ## Download and Install Julia
 
-![](https://images.beyondsimulations.com/ao/ao_julia-programming-language.png)
+<img src="https://images.beyondsimulations.com/ao/ao_julia-programming-language.png" data-fig-alt="The Julia programming language logo" />
 
 To prepare for the upcoming lectures, we start by installing the Julia Programming Language and an Integrated Development Environment (IDE) to work with Julia.
 
 ## Installing Julia
 
-<img src="https://images.beyondsimulations.com/ao/ao_julia2.png" data-max-width="400px" />
+<img src="https://images.beyondsimulations.com/ao/ao_julia2.png" data-fig-alt="Screenshot of the Julia download page" width="400" />
 
 - Head to [julialang.org](https://julialang.org) and follow the instructions.
 
@@ -31,16 +40,16 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 
 ## VS Code
 
-<img src="https://images.beyondsimulations.com/ao/ao_codium_cnl.png" data-max-width="400px" />
+<img src="https://images.beyondsimulations.com/ao/ao_codium_cnl.png" data-fig-alt="The VS Codium logo" width="400" />
 
 - Next, we are going to install VS Code
 - Alternatively, you can install VS Codium
-- It is essentially VS Code but without any tracking by MS
+- It is essentially VS Code but without any tracking by Microsoft
 
 ## Installing VS Code
 
 - Head to the website [code.visualstudio.com](https://code.visualstudio.com)
-- OR to the webside [vscodium.com](https://vscodium.com)
+- OR to the website [vscodium.com](https://vscodium.com)
 - Download and install the latest release
 
 ## Verify the Installation
@@ -50,22 +59,25 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 - Click it and search for "Julia"
 - Download and install "Julia (Julia Language Support)"
 
-## Create a new file
+## Create a New File
 
 - Create a new file with a ".jl" ending
 - Save it somewhere on your computer
 - e.g., in a folder that you will use in the course
 
 ``` julia
-print("Hello World!")
+println("Hello World!")
 ```
 
     Hello World!
 
-- Run the file by clicking "run" in the upper right corner
-- OR by pressing "Control+Enter" or "STRG+Enter"
+## Run the File
 
-## Everything working?
+- Run the file by clicking "run" in the upper right corner
+- OR by pressing `Ctrl+Enter` --- labelled `Strg` on German keyboards
+- On macOS it is `Ctrl+Enter` or `Cmd+Enter`, depending on your keybindings[^1]
+
+## Everything Working?
 
 - If the terminal opens with a `Hello World!` → perfect!
 - If not, it is likely that the IDE <span class="highlight">cannot find the path</span> to Julia
@@ -80,18 +92,37 @@ print("Hello World!")
 
 ## Julia as a Programming Language
 
-- Following three lectures are dedicated to learning the basics
+- The following three lectures are dedicated to learning the basics
 - Start with the very basics and gradually move on
 - Focus in the first two lectures on the programming language
 - Third lecture dedicated to <span class="highlight">Mathematical Optimization</span>
+
+## A First Taste of Julia
+
+<span class="question">Question:</span> **What will your savings be worth in 10 years?**
+
+. . .
+
+``` julia
+savings = 1000       # Euros in your account
+interest_rate = 0.03 # 3% interest per year
+value = savings * (1 + interest_rate)^10
+println("Value after 10 years: ", round(value; digits=2))
+```
+
+    Value after 10 years: 1343.92
+
+. . .
+
+- Don't worry if this looks new --- you will be able to <span class="highlight">read and write</span> code like this after the tutorials!
 
 # <span class="flow">Working with VS Code and Julia</span>
 
 ## Notebooks in VS Code
 
-- The easiest way is by using VS Code
-- For the detailed instructions, just open the first tutorial.
-- It explains step-by-step how to use `.jl` or `.ipynb` files as notebook
+- The easiest way to work on the tutorials is by using VS Code
+- For detailed instructions, just open the [first tutorial](../tutorials/tutorial-02-01-variables.qmd)
+- It explains step-by-step how to use `.jl` or `.ipynb` files as notebooks
 
 . . .
 
@@ -105,10 +136,10 @@ print("Hello World!")
 - On each page, you will find a button `Julia` on the right
 - Click it to download the `jl` file and save it
 - If `.jl` files do not work for you, you can also click on `Jupyter`
-- This will download a `.ipynb`file which you can use directly as notebook
+- This will download an `.ipynb` file which you can use directly as notebook
 - I'd really recommend storing the files <span class="highlight">in a separate directory for this course</span>
 
-## Learning by doing
+## Learning by Doing
 
 - The best way to learn a programming language is <span class="highlight">by doing</span>
 - We will therefore solve problems the coming weeks
@@ -145,7 +176,7 @@ print("Hello World!")
 
 > **Tip**
 >
-> You don't need to use Git, but once you get used to it it becomes invaluable, especially if you are working with a lot of code!
+> Git is not required for the course, but strongly recommended: once you get used to it, it becomes invaluable, especially if you are working with a lot of code!
 
 ## Initialize a Repository
 
@@ -181,12 +212,12 @@ print("Hello World!")
 >
 > Start using Git from day one! Even for small projects, it's a good habit to develop.
 
-# <span class="flow">Submission of Assignments</span>
+# <span class="flow">Assignments & Grading</span>
 
 ## Submission of Assignments
 
 - You can work in groups of up to three people
-- Submit the assignment via OpenOlat
+- Submit the assignment via Moodle
 - You will submit your assignment by uploading a notebook
 - The assignment is due <span class="highlight">the day before the next tutorial</span>
 
@@ -194,7 +225,7 @@ print("Hello World!")
 
 > **Tip**
 >
-> Don't forget to save your notebook before uploading it to OpenOlat!
+> Don't forget to save your notebook before uploading it to Moodle!
 
 ## Grading of Assignments
 
@@ -217,13 +248,19 @@ print("Hello World!")
 - **Vectors**: Learn how to create and manipulate vectors
 - **Comparisons**: Learn how to compare values
 - **Loops**: Learn how to use loops to repeat code
-- **Scope**: Learn about the scope of variables
+- **Dictionaries**: Learn how to store and look up key-value pairs
 
-## Get started with the tutorials
+. . .
+
+> **Note**
+>
+> Dictionaries will become important later: they are how we will store and look up the data of our optimization models.
+
+## Get Started with the Tutorials
 
 - Download the first notebook and open it
 - Start with the <span class="highlight">first problem and solve it step by step</span>
-- You can find the tutorials here on the website
+- You can find the [tutorials](../tutorials/tutorial-02-01-variables.qmd) here on the website
 - <span class="highlight">You can ask questions anytime!</span>
 
 . . .
@@ -231,8 +268,6 @@ print("Hello World!")
 > **And that's it for this lecture!**
 >
 > The remaining time we will already start working on the first problems.
-
-------------------------------------------------------------------------
 
 # <span class="flow">Literature</span>
 
@@ -243,3 +278,5 @@ print("Hello World!")
 - [Julia Documentation](https://docs.julialang.org/)
 
 For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
+
+[^1]: Strictly speaking, this executes the current line or cell. For longer files, use the command "Julia: Execute active File in REPL".

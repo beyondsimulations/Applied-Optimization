@@ -20,27 +20,36 @@ format:
 - **The great Islamic pilgrimage towards Mecca**
 - The holy city is the **religious center** of the Islamic religion
 - Located in the **Kingdom of Saudi Arabia**
-- Each physically able Muslim should **perform Hajj once**
+- Each Muslim who is able should **perform Hajj once**
 - <span class="highlight">Confined spaces</span> around the holy sites
-- Only **few million** people are annually allowed
+- Only **a few million** people are allowed annually
+
+## Learning Goals
+
+After this lecture, you will be able to:
+
+- Structure a real-world **scheduling problem**
+- Use **subsets** to keep large models small
+- Model time preferences with <span class="highlight">precomputed penalties</span>
+- Limit **fluctuations** between consecutive periods
 
 ## Mina Tent City
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-mecca01.png)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-mecca01.png" data-fig-alt="Aerial view of the Mina tent city near Mecca with thousands of white tents" />
 
 ## Mina Tent City
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-mecca03.png)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-mecca03.png" data-fig-alt="Aerial close-up of white tents arranged in dense blocks in Mina" />
 
 ## The scope of the Hajj
 
 - Pilgrimage is actually a <span class="highlight">multi-day journey</span>
 - Involves a number of **different rituals at several ritual sites**
-- Our efforts focused on the **Rhamy-Al-Jamarat ritual**
+- Our efforts focused on the **Ramy al-Jamarat ritual**
 
 . . .
 
-> **Rhamy-Al-Jamarat ritual**
+> **Ramy al-Jamarat ritual**
 >
 > Pilgrims throw pebbles against three pillars, which symbolize the temptations of the devil. They repeat this ritual with small variations on four consecutive days.
 
@@ -48,7 +57,7 @@ format:
 
 - 1.5--2 million people reside in the tent city
 - Pilgrims repeatedly access the holy site
-- Perform the Rhamy-Al-Jamarat ritual
+- Perform the Ramy al-Jamarat ritual
 - Walk through a network of streets and pathways
 - Later proceed to the Kaaba or return to the camp
 
@@ -103,14 +112,14 @@ traffic in cities?
 
 ## Pedestrian Traffic
 
-<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-pedtraf-1.png" style="width:100.0%" />
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-pedtraf-1.png" style="width:100.0%" data-fig-alt="Urban street with individual pedestrians walking in many different directions" />
 
 - Individuals and groups
 - Multitude of destinations
 - Mixing and formation
 - Distractions
 
-<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-pedtraf-2.jpg" style="width:100.0%" />
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-pedtraf-2.jpg" style="width:100.0%" data-fig-alt="Dense crowd of pilgrims moving together in the same direction" />
 
 - Homogeneous groups
 - Shared destination
@@ -119,9 +128,9 @@ traffic in cities?
 
 ## Types of Pedestrian Flow
 
-<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-unidirectional_flow.png" style="width:30.0%" alt="1." />
-<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-bidirectional_crossing_flow.png" style="width:30.0%" alt="2." />
-<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-multidirectional_crossing_flow.png" style="width:30.0%" alt="3." />
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-unidirectional_flow.png" style="width:30.0%" data-fig-alt="Diagram of a unidirectional pedestrian flow, everyone moving one way" />
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-bidirectional_crossing_flow.png" style="width:30.0%" data-fig-alt="Diagram of two pedestrian flows crossing in opposite directions" />
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-multidirectional_crossing_flow.png" style="width:30.0%" data-fig-alt="Diagram of multiple pedestrian flows crossing in several directions" />
 
 . . .
 
@@ -135,7 +144,7 @@ traffic in cities?
 
 ## Pilgrim Flows
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-jamarat_flow.png)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-jamarat_flow.png" data-fig-alt="Map of one-way pilgrim flows around the Jamarat bridge" />
 
 > **General idea**
 >
@@ -170,7 +179,7 @@ traffic in cities?
 
 ## Goal Conflict
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-goalconflict.png)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-goalconflict.png" data-fig-alt="Diagram of the goal conflict between time preferences, safety, and simple plans" />
 
 ## Basic Structure
 
@@ -184,31 +193,31 @@ traffic in cities?
 
 Each camp has a set of feasible one-way paths that include the stoning ritual.
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-m_a.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_a.svg" data-fig-alt="Schematic of a camp with several feasible one-way paths towards the stoning site" />
 
 ## Pilgrim Routes
 
-Path may contain one or more bottlenecks, regarded as resources subject to a capacity.
+A path may contain one or more bottlenecks, regarded as resources subject to a capacity.
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-m_b.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_b.svg" data-fig-alt="Schematic of the paths with bottleneck resources marked along the way" />
 
 ## Pilgrim Routes
 
-Pilgrims departure from a camp at a time $x$ and pass through the bottleneck later.
+Pilgrims depart from a camp at a time $t$ and pass through the bottleneck later.
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-m_c.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_c.svg" data-fig-alt="Schematic of a group departing the camp and reaching a bottleneck in a later period" />
 
 ## Pilgrim Routes
 
 Our model should assign one of the feasible paths to a camp on all four ritual days.
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-m_d.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_d.svg" data-fig-alt="Schematic of one feasible path being assigned to a camp" />
 
 ## Pilgrim Routes
 
 These bottlenecks should not be overcrowded at any time during the Hajj.
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg" data-fig-alt="Schematic combining camps, assigned paths, bottlenecks, and time periods" />
 
 ## 
 
@@ -218,7 +227,7 @@ time preferences?
 
 ## Time Preferences
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-solap-1.png)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-1.png" data-fig-alt="Histogram of clustered pilgrim time preferences over the course of a day" />
 
 ## Time preference satisfaction
 
@@ -235,7 +244,7 @@ time preferences?
 
 ## Penalty Functions
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-satisfaction.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-satisfaction.svg" data-fig-alt="Different penalty functions around the preferred time, for example linear and quadratic" />
 
 ## Fluctuations
 
@@ -244,7 +253,7 @@ time preferences?
 . . .
 
 - If allowed demand between periods **varies strongly**, accidents are **more likely to happen!**
-- We need keep the <span class="highlight">changes between periods within bounds</span>
+- We need to keep the <span class="highlight">changes between periods within bounds</span>
 
 . . .
 
@@ -266,7 +275,7 @@ time preferences?
 
 <span class="question">Question:</span> **What could be the sets here?**
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg" data-fig-alt="Schematic combining camps, assigned paths, bottlenecks, and time periods" />
 
 ## Sets
 
@@ -275,6 +284,12 @@ time preferences?
 - $\mathcal{C}$ - Pilgrim camps, indexed by $c$
 - $\mathcal{P}$ - Paths that include the stoning, indexed by $p$
 - $\mathcal{S}$ - Scheduling groups, indexed by $s$
+
+. . .
+
+> **Note**
+>
+> A **scheduling group** is a group of pilgrims from one camp on **one specific ritual day**. One model thus covers all four days at once.
 
 . . .
 
@@ -287,7 +302,7 @@ time preferences?
 - $\mathcal{P}_c$ - Feasible paths for camp $c$
 - $\mathcal{P}_s$ - Feasible paths for group $s$
 - $\mathcal{P}_r$ - Paths that contain the resource $r$
-- $\mathcal{T}_s$ - Available stoning periods for scheduling group $s$
+- $\mathcal{T}_s$ - Available stoning periods for group $s$ on its ritual day
 
 ## 
 
@@ -321,7 +336,7 @@ complicated...
 - $f_{s,t}$ - Penalty value of assigning period $t$ to group $s$
 - $a_{p,r}$ - Offset between stoning and utilization period of $r$ on $p$
 - $b_{r,t}$ - Capacity of resource $r$ in period $t$
-- $\sigma_r$ - max. relative utilization deviation between $t$ for $r$
+- $\sigma_r$ - max. change in relative utilization of $r$ between periods
 
 ## First Decision Variable?
 
@@ -397,7 +412,7 @@ It's a **binary assignment** of a group to a time slot and a path.
 
 ## Third Decision Variable
 
-- $U_{r,t}$ - Relative utilization of $r$ in $t$ with $0 \leq U_{rt} \leq 1$
+- $U_{r,t}$ - Relative utilization of $r$ in $t$ with $0 \leq U_{r,t} \leq 1$
 
 . . .
 
@@ -440,7 +455,11 @@ objective function!
 
 . . .
 
-$$\text{minimize} \quad \sum_{s \in \mathcal{S}}\sum_{t \in \mathcal{T}}\sum_{p \in \mathcal{P}} f_{s,t} \times X_{s,t,p}$$
+$$\text{Minimize} \quad \sum_{s \in \mathcal{S}}\sum_{t \in \mathcal{T}_s}\sum_{p \in \mathcal{P}_s} f_{s,t} \times X_{s,t,p}$$
+
+. . .
+
+Note how we use the subsets $\mathcal{T}_s$ and $\mathcal{P}_s$ <span class="highlight">to keep the model small</span>.
 
 ## Objective Function Characteristics
 
@@ -453,7 +472,7 @@ $$\text{minimize} \quad \sum_{s \in \mathcal{S}}\sum_{t \in \mathcal{T}}\sum_{p 
 
 . . .
 
-<span class="question">Question:</span> **Anybody an idea why?**
+<span class="question">Question:</span> **Any idea why?**
 
 . . .
 
@@ -464,7 +483,7 @@ $$\text{minimize} \quad \sum_{s \in \mathcal{S}}\sum_{t \in \mathcal{T}}\sum_{p 
 
 ## Constraints needed?
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg" data-fig-alt="Diagram of groups, paths, and bottlenecks with the time shift between stoning and utilization" />
 
 ## Key Constraints
 
@@ -474,7 +493,7 @@ $$\text{minimize} \quad \sum_{s \in \mathcal{S}}\sum_{t \in \mathcal{T}}\sum_{p 
 2.  Each camp must have <span class="highlight">one path assigned</span>
 3.  Each group must have <span class="highlight">one time slot assigned</span>
 4.  Each resource must have <span class="highlight">a capacity limit</span>
-5.  Constraint the <span class="highlight">relative utilization between periods</span>
+5.  Constrain the <span class="highlight">relative utilization between periods</span>
 
 ## Assign Paths to Camps
 
@@ -523,6 +542,23 @@ $$\sum_{t \in \mathcal{T}_s} X_{s,t,p}  = Y_{c,p} \quad  \forall c \in \mathcal{
 > - $\mathcal{S}_c$ - Scheduling groups in camp $c$
 > - $\mathcal{T}_s$ - Available stoning periods for scheduling group $s$
 > - $\mathcal{P}_c$ - Feasible paths for camp $c$
+>
+> Each group can use all feasible paths of its camp: $\mathcal{P}_s = \mathcal{P}_c$ for all $s \in \mathcal{S}_c$.
+
+## One Path and Slot per Group?
+
+<span class="question">Question:</span> **We wanted one path and one time slot per group. Where are these two constraints?**
+
+. . .
+
+Sum the last constraint over all paths of a camp:
+
+$$\sum_{p \in \mathcal{P}_c} \sum_{t \in \mathcal{T}_s} X_{s,t,p} = \sum_{p \in \mathcal{P}_c} Y_{c,p} = 1 \quad \forall c \in \mathcal{C}, s \in \mathcal{S}_c$$
+
+. . .
+
+- Each group thus gets exactly <span class="highlight">one period and one path</span>
+- Some constraints can **imply** other constraints!
 
 ## Relative Utilization and Capacities
 
@@ -553,17 +589,29 @@ $$\sum_{t \in \mathcal{T}_s} X_{s,t,p}  = Y_{c,p} \quad  \forall c \in \mathcal{
 
 ## Compute Relative Utilization
 
-$$\sum_{p \in \mathcal{P}_r}\sum_{s \in S_p} n_s \times X_{s,t-a_{p,r},p}  = b_{r,t}\times U_{r,t} \quad \forall r \in \mathcal{R}, t \in \mathcal{T}$$
+$$\sum_{p \in \mathcal{P}_r}\sum_{s \in \mathcal{S}_p} n_s \times X_{s,t-a_{p,r},p}  = b_{r,t}\times U_{r,t} \quad \forall r \in \mathcal{R}, t \in \mathcal{T}$$
 
 . . .
 
-> **We use the following:**
+> **Convention**
 >
-> - $n_s$ - Number of pilgrims in scheduling group $s$
-> - $a_{p,r}$ - Period offset between stoning period and utilization period of $r$ on $p$
-> - $b_{r,t}$ - Capacity of resource $r$ in period $t$ in number of pilgrims
-> - $X_{s,t,p}$ - 1, if $s$ is scheduled to perform stoning in $t$ and to use $p$, 0 else
-> - $U_{r,t}$ - Relative utilization of resource $r$ in period $t$ with $0 \leq U_{r,t} \leq 1$
+> Terms where the shifted period $t - a_{p,r}$ lies outside of $\mathcal{T}_s$ are simply dropped, as no group can be scheduled for stoning there.
+
+## Where is the Capacity Limit?
+
+<span class="question">Question:</span> **We promised a capacity limit, but there is no "$\leq$ capacity" constraint. Why does it still hold?**
+
+. . .
+
+- It is <span class="highlight">hidden in the variable bound</span> $U_{r,t} \leq 1$
+- The equality forces the flow to equal $b_{r,t} \times U_{r,t}$
+- Hence, the flow on $r$ can never exceed the capacity $b_{r,t}$
+
+. . .
+
+> **Tip**
+>
+> A variable domain and a constraint can **combine** into a constraint that is never written down explicitly.
 
 ## 
 
@@ -575,9 +623,9 @@ this part?
 
 ## How does the shift work?
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg" data-fig-alt="Diagram of groups, paths, and bottlenecks with the time shift between stoning and utilization" />
 
-## Keep Fluctuations within Bounds?
+## Fluctuation Bounds?
 
 > **The goal of this constraint is to:**
 >
@@ -587,26 +635,31 @@ this part?
 
 > **We need the following:**
 >
-> - $\sigma_r$ - max. relative utilization deviation between $t$ for $r$
-> - $U_{r,t}$ - Relative utilization of resource $r$ in period $t$ with $0 \leq U_{rt} \leq 1$
+> - $\sigma_r$ - max. change in relative utilization of $r$ between periods
+> - $U_{r,t}$ - Relative utilization of resource $r$ in period $t$ with $0 \leq U_{r,t} \leq 1$
 
 . . .
 
 <span class="question">Question:</span> **What could be the constraint?**
 
-## Keep Fluctuations within Bounds
+## Fluctuation Bounds
 
-$$U_{r,t} - U_{r,t-1} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\times \mathcal{T}\right|$$
+$$U_{r,t} - U_{r,t-1} \leq \sigma_r \quad \forall r \in \mathcal{R}, t \in \mathcal{T}: t > 1$$
 
-$$U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\times \mathcal{T}\right|$$
+$$U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall r \in \mathcal{R}, t \in \mathcal{T}: t > 1$$
 
 . . .
 
+## Why Does This Work?
+
 <span class="question">Question:</span> **Can somebody explain why this works?**
+
+. . .
 
 - Each constraint limits the **change**
 - The first one limits the **increase**
 - The second one limits the **decrease**
+- We start at $t > 1$, as no period exists before the first one
 
 ## Scheduling Problem I
 
@@ -643,9 +696,15 @@ subject to:
 - How can we measure flow capacities?
 - Are all pilgrims equally fast?
 
+. . .
+
+> **Important**
+>
+> Capacities are **hard limits**: if demand exceeds them, the model becomes <span class="highlight">infeasible</span> and refuses to produce an unsafe plan. This is a feature, not a bug!
+
 ## Capacity Buffers
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-capacitybuffers.png)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-capacitybuffers.png" data-fig-alt="Chart of capacity buffers kept between planned utilization and the full capacity" />
 
 # <span class="flow">Implementation and Impact</span>
 
@@ -657,11 +716,11 @@ applied?
 
 ## 
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-solap-1.png)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-1.png" data-fig-alt="Histogram of clustered pilgrim time preferences over the course of a day" />
 
 ## 
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-solap-5.png)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-5.png" data-fig-alt="Comparison of preferred and scheduled departure times after optimization, with peaks flattened" />
 
 ## Implementation
 
@@ -677,11 +736,11 @@ applied?
 
 ## 
 
-![](https://images.beyondsimulations.com/ao/ao_pilgrim-media_coverage.png)
+<img src="https://images.beyondsimulations.com/ao/ao_pilgrim-media_coverage.png" data-fig-alt="Collage of newspaper articles covering the Hajj scheduling project" />
 
 ## Wrap Up
 
-> **And that's it for todays lecture!**
+> **And that's it for today's lecture!**
 >
 > We now have covered a scheduling problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial.
 
@@ -693,8 +752,6 @@ Questions?
 
 ## Literature I
 
-For more interesting literature to learn more about Julia, take a look at the [literature list](../general/literature.qmd) of this course.
-
-## Literature II
+To learn more about the project and crowd management during the Hajj, take a look at Haase et al. (2016) and the [literature list](../general/literature.qmd) of this course.
 
 Haase, Knut, Habib Zain Al Abideen, Salim Al-Bosta, et al. 2016. "Improving Pilgrim Safety During the Hajj: An Analytical and Operational Research Approach." *Interfaces* 46 (1): 74--90.

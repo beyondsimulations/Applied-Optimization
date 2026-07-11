@@ -42,23 +42,23 @@ message = say_hello("Elio")
     "Hello, Elio!"
 
 ``` julia
-function multiply(a,b)
-   a * b
+function multiply(a, b)
+    a * b
 end
-multiply(10, 5)
+println("multiply(10, 5) = $(multiply(10, 5))")
 ```
 
-    50
+    multiply(10, 5) = 50
 
-The second function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the `return` keyword optional. If you explicitly use the `return` keyword in the function, it will return the value immediately once the function encounters the keyword and stops the further execution of the function. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition. For example:
+The second function takes two parameters, multiplies them, and returns the result implicitly. In Julia, the last expression is automatically returned, making the `return` keyword optional. If you explicitly use the `return` keyword in the function, it returns the value immediately when it is encountered. Execution of the rest of the function stops. That way, you can also use the keyword in conditional statements and use it to return a value based on a condition. For example:
 
 ``` julia
-function do_something(a,b)
-   if a > b
-      return a * b
-   else
-      return a + b
-   end
+function do_something(a, b)
+    if a > b
+        return a * b
+    else
+        return a + b
+    end
 end
 println("The result of do_something(10, 5) is $(do_something(10, 5))")
 println("The result of do_something(5, 10) is $(do_something(5, 10))")
@@ -73,7 +73,7 @@ println("The result of do_something(5, 10) is $(do_something(5, 10))")
 >
 > - The function name is like the skill name (e.g., "make_sandwich")
 > - Parameters are things the robot needs to do the job (e.g., bread, filling)
-> - The code inside are the steps to follow
+> - The code inside describes the steps to follow
 > - The return value is the finished product
 
 ## Exercise 1.1 - Define and Test a Simple Addition Function
@@ -116,11 +116,11 @@ bake_cake()  # This works fine
 println(secret_ingredient)
 ```
 
-If you want to access the variable outside of the function, you have to explicitly return it. You can do this by passing `return` in front of the variable you want to return from the function.
+If you want to access the variable outside of the function, you have to explicitly return it. You can do this by writing `return` in front of the variable you want to return from the function.
 
 ## Exercise 2.1 - Return a Local Variable
 
-Try to execute the following block of code. The objective is to understand how to return the `local_variable_one` from the function `scope_test`. Your task is to change the function, to return the value of `local_variable_one`.
+Run the block below and then the test underneath it. The block itself executes without an error - it is the test that fails. Before fixing anything, think about why the function returns 20 and not nothing. (Hint: Section 1, implicit return - the last expression is `local_variable_two = 20`.) Your task is to change the function so that it returns the value of `local_variable_one`.
 
 ``` julia
 # YOUR CHANGES BELOW
@@ -133,8 +133,8 @@ end
 
 ``` julia
 # Test your function
-@assert scope_test() == 10 "The value exported is $(scope_test())."
-println("The value exported is $(scope_test()), you solved it!")
+@assert scope_test() == 10 "The value returned is $(scope_test()) but should be 10."
+println("The value returned is $(scope_test()), you solved it!")
 ```
 
 ## Exercise 2.2 - Define an Implicit Return Function
@@ -187,19 +187,40 @@ println(result3)
 
 ## Exercise 3.1 - Match Results to Assertions
 
-Match the results from the previous example to the correct assertions:
+The variable names in the assertions below are mixed up. Swap the variable names so that each check passes and matches its message - after your fix, both the checks and their messages should be correct:
 
 ``` julia
 # YOUR CHANGES BELOW
 @assert result2 == 30 "result1 should be the sum of two numbers"
 @assert result3 == "Hello, World!" "result2 should be the concatenation of two strings"
 @assert result1 == "Generic operation for objects of type String and Int64" "result3 should use the generic operation"
+# YOUR CHANGES ABOVE
 println("You solved it, the assertions are now correct!")
 ```
 
 > **Tip**
 >
 > **Hint**: Look at the types of arguments used in each `operation` call and match them to the appropriate method.
+
+## Exercise 3.2 - Add Your Own Method
+
+Now, add a method to the generic function `operation` yourself. Define `operation` for two `Bool` arguments so that it returns `true` only if both arguments are `true` (you can use `a && b` for this). This is exactly how you extend an existing function with a new method in Julia.
+
+``` julia
+# YOUR CODE BELOW
+```
+
+<details class="code-fold">
+<summary>Code</summary>
+
+``` julia
+# Test your answer
+@assert operation(true, true) == true "operation(true, true) should be true"
+@assert operation(true, false) == false "operation(true, false) should be false"
+println("Great, your new method for Bool arguments works!")
+```
+
+</details>
 
 ------------------------------------------------------------------------
 
