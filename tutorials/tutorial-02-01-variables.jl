@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -52,7 +53,6 @@
 #
 #     ``` julia
 #     using Pkg
-#     Pkg.instantiate()  # Initialize the project
 #     Pkg.add("IJulia")  # Add IJulia to the environment
 #     ```
 #
@@ -68,26 +68,29 @@
 # 6.  Type `exit()` or press Ctrl+D to exit the Julia REPL.
 #
 # 7.  Download the first `.ipynb` notebook from the course website and
-#     save it in your course folder. You can do so by clicking on Jupyter
-#     on the course website.
+#     save it in your course folder. You can do so by clicking on the
+#     “Jupyter” link under “Other Formats” on the tutorial page.
 #
-# 8.  Now, just open the`.ipynb` file and you are good to go.
+# 8.  Now, just open the `.ipynb` file and you are good to go.
 #
 # 9.  Click the kernel selector (top-right corner) and choose “Applied
-#     Optimization” from the list.
+#     Optimization” from the list - that is the kernel you just installed.
+#     If VS Code suggests a kernel with a different name, pick “Applied
+#     Optimization” anyway.
 #
 # > **Warning**
 # >
-# > Sorry, that this start is rather complicated. But in following this,
-# > we have a clean environment we can work in and you basically cannot
-# > break anything with the installation of packages.
+# > Sorry that the start is rather complicated. But by following these
+# > steps, you get a clean environment to work in and you basically cannot
+# > break anything by installing packages.
 #
 # > **Note**
 # >
-# > These steps ensure you’re working in the correct Julia environment
-# > with all course dependencies. The `--project=.` flag tells Julia to
-# > use the `Project.toml` file in the current directory, keeping all
-# > packages organized and avoiding conflicts.
+# > These steps ensure you’re working in a clean Julia environment for the
+# > course. The `--project=applied-optimization` flag tells Julia to
+# > create (or later reuse) an environment in a subfolder called
+# > `applied-optimization`, keeping all course packages organized in one
+# > place and avoiding conflicts with other projects.
 #
 # ------------------------------------------------------------------------
 #
@@ -111,6 +114,7 @@ name = "Tobias"  # A box labeled "name" containing the text "Tobias"
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert x == 1 "Check again, the value of x should be 1. Remember to assign the value directly to x."
@@ -131,7 +135,7 @@ println("Great, you have correctly assigned the value $x to the variable 'x'.")
 
 # %%
 # Test your answer
-@assert hi == "Hello, Optimization!" "Make sure the variable 'hi' contains the exact string \"Hello, Optimization\"!"
+@assert hi == "Hello, Optimization!" "Make sure the variable 'hi' contains the exact string \"Hello, Optimization!\" - including the exclamation mark."
 println("Good, the variable 'hi' now states \"$hi\".")
 
 # %% [markdown]
@@ -167,9 +171,10 @@ typeof(price)   # Will show Float64 (decimal number type)
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
-@assert answerUniverse == 42 "The variable 'answerUniverse' should hold 42."
+@assert answerUniverse == 42 && answerUniverse isa Int "The variable 'answerUniverse' should hold the Integer 42. Note that 42.0 would be a Float, not an Integer - you can check with typeof(answerUniverse)."
 println("Great, the answer to all questions on the universe is $answerUniverse now.")
 
 # %% [markdown]
@@ -180,10 +185,11 @@ println("Great, the answer to all questions on the universe is $answerUniverse n
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
-@assert money == 1.35 "The variable 'money' should hold the Float64 1.35."
-println("Perfect, the you have stored $money in the variable 'money'.")
+@assert money == 1.35 && money isa Float64 "The variable 'money' should hold the Float64 1.35. Remember the decimal point - you can check the type with typeof(money)."
+println("Perfect, you have stored $money in the variable 'money'.")
 
 # %% [markdown]
 # ## Exercise 2.3 - Create a Boolean Variable
@@ -193,9 +199,10 @@ println("Perfect, the you have stored $money in the variable 'money'.")
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
-@assert isStudent == true "The variable 'isStudent' should be set to true."
+@assert isStudent isa Bool && isStudent == true "The variable 'isStudent' should be the Boolean value true - not the number 1."
 println("Correct, you are a student now.")
 
 # %% [markdown]
@@ -204,13 +211,16 @@ println("Correct, you are a student now.")
 # # Section 3 - Type Annotations and Inference
 #
 # Sometimes we want to specify exactly what kind of “container” we want to
-# use. In Julia, we can do this using type annotations:
+# use. In Julia, we can do this using type annotations. Why should you
+# care? Later in the course, JuMP will insist on the right kinds of
+# numbers for your optimization models, and telling Julia the exact type
+# also helps it run your code fast.
 
 # %%
-temperature::Float64 = 98.6    # Specifically saying we want a decimal number
+temperature::Float64 = 37.0    # Specifically saying we want a decimal number
 
 # %%
-count::Int64 = 100            # Specifically saying we want a whole number
+n_items::Int64 = 100           # Specifically saying we want a whole number
 
 # %% [markdown]
 # ## Exercise 3.1 - Type Annotation
@@ -220,6 +230,7 @@ count::Int64 = 100            # Specifically saying we want a whole number
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
@@ -248,9 +259,9 @@ message = "My name is $name and I am $age years old"
 
 # %% [markdown]
 # It’s like having a template where Julia automatically fills in the
-# values for you! If you have paid attention to the previous excercise,
-# you have already seen this in action. The following example illustrates
-# this again:
+# values for you! If you have paid attention to the previous exercise, you
+# have already seen this in action. The following example illustrates this
+# again:
 
 # %%
 language = "Julia"
@@ -260,10 +271,12 @@ println("I'm learning $language")
 # ## Exercise 4.1 - String Interpolation
 #
 # Create a string `message` that says `"y is [value of y]"` using string
-# interpolation.
+# interpolation. This uses the variable `y` you created in Exercise 3.1 -
+# if you get an `UndefVarError`, run that exercise again first.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer

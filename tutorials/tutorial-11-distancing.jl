@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -20,22 +21,6 @@
 # Applied Optimization with Julia
 #
 # # Introduction
-#
-# # Solutions
-#
-# You will likely find solutions to most exercises online. However, I
-# strongly encourage you to work on these exercises independently without
-# searching explicitly for the exact answers to the exercises.
-# Understanding someone else’s solution is very different from developing
-# your own. Use the lecture notes and try to solve the exercises on your
-# own. This approach will significantly enhance your learning and
-# problem-solving skills.
-#
-# Remember, the goal is not just to complete the exercises, but to
-# understand the concepts and improve your programming abilities. If you
-# encounter difficulties, review the lecture materials, experiment with
-# different approaches, and don’t hesitate to ask for clarification during
-# class discussions.
 #
 # Imagine you’re tasked with optimizing seating arrangements for a major
 # event venue during a pandemic. You need to balance safety with
@@ -51,22 +36,17 @@
 #
 # ## The Venue Layout
 #
-# Here’s our event venue’s seating arrangement, as we have used in the
+# Here is the venue’s seating arrangement - the same one we used in the
 # lecture:
 #
-# <figure>
-# <img src="attachment:images/ao_arena-empty_exercise.svg"
-# alt="Each white square represents an available seat, while grey squares are blocked" />
-# <figcaption aria-hidden="true">Each white square represents an available
-# seat, while grey squares are blocked</figcaption>
-# </figure>
+# ![](attachment:images/ao_arena-empty_exercise.svg)
 #
 # ## Group Types and Their Characteristics
 #
 # We have different types of groups wanting to attend the event:
 #
 # - Singles (Type ‘a’): Solo attendees
-# - Couples (Types ‘b’ and ‘c’): Two people travelling together
+# - Couples (Types ‘b’ and ‘c’): Two people traveling together
 # - Small families (Types ‘d’ and ‘e’): Groups of four
 # - Large families (Types ‘f’ and ‘g’): Groups of six
 #
@@ -81,7 +61,7 @@
 #
 # > **Tip**
 # >
-# > Don’t worry, if you cannot solve everything by yourself. Try your best
+# > Don’t worry if you cannot solve everything by yourself. Try your best
 # > and ask for help if you need it!
 #
 # ------------------------------------------------------------------------
@@ -93,9 +73,9 @@
 #
 # ![](attachment:images/ao_arena-empty_exercise.svg)
 #
-# ## Distance Requirements
+# ## Seating Constraints
 #
-# The following distancing rules must be maintained:
+# The following constraints must be maintained:
 #
 # - Minimum one empty seat between groups
 # - One empty seat between rows
@@ -106,7 +86,9 @@
 # > **Common Pitfalls**
 # >
 # > Watch out for the edge cases when implementing distancing
-# > constraints - especially around blocked seats!
+# > constraints - especially around blocked seats! Also make sure that a
+# > group cannot start so far to the right that it would stick out beyond
+# > the last column - fix these variables to zero.
 #
 # ------------------------------------------------------------------------
 #
@@ -181,6 +163,7 @@ blocked_seats = [
 # 3. Add constraints
 # 4. Solve the model
 
+
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
@@ -188,31 +171,39 @@ blocked_seats = [
 #
 # To test your solution, visualize it with a plot in Julia. The
 # visualization is a great tool to <span class="highlight">check if your
-# solution is correct</span>. We figure it is likely, that you **won’t
-# have an applicable solution** after the first round, even if your model
-# is working correctly. <span class="highlight">If everything works from
-# the start, great!</span>
+# solution is correct</span>. Your first model will likely run without
+# errors and yet still violate some seating rule - the plot makes such
+# violations easy to spot, as they are marked with a
+# <span class="highlight">red cross</span>. <span class="highlight">If
+# everything works from the start, great!</span>
 
 # %%
 using Plots
 
 # Create visualization of the solution
 function visualize_seating(model)
-    # Get solution values
-    solution_matrix = fill("", 10, 10)
-
-    # Fill matrix with group assignments
-    for r in 1:10, c in 1:10
-        for g in groups
-            if value(model[:x][g,r,c]) > 0.5  # Using 0.5 to handle floating point
-                solution_matrix[r,c] = g
+    # Determine which group covers each seat
+    seat_owner = fill("", length(row_set), length(col_set))
+    violations = Tuple{Int,Int}[]
+    for g in groups, r in row_set, c in col_set
+        if value(model[:x][g,r,c]) > 0.5  # Using 0.5 to handle floating point
+            for cc in c:(c+req_seats[g]-1)
+                if cc > maximum(col_set)
+                    # Group sticks out beyond the last column
+                    push!(violations, (r, maximum(col_set)))
+                    break
+                elseif (r,cc) in blocked_seats || seat_owner[r,cc] != ""
+                    # Group covers a blocked seat or overlaps another group
+                    push!(violations, (r, cc))
+                else
+                    seat_owner[r,cc] = g
+                end
             end
         end
     end
 
     # Create color mapping for groups
     color_map = Dict(
-        "" => :white,  # Empty seats
         "a" => :blue,
         "b" => :green,
         "c" => :red,
@@ -222,13 +213,8 @@ function visualize_seating(model)
         "g" => :pink
     )
 
-    # Mark blocked seats
-    for (r,c) in blocked_seats
-        solution_matrix[r,c] = ""  # Empty string for blocked seats
-    end
-
     # Create plot
-    p = plot(
+    plt = plot(
         aspect_ratio=:equal,
         xlims=(0.5,10.5),
         ylims=(0.5,10.5),
@@ -236,48 +222,54 @@ function visualize_seating(model)
         legend=:outerright
     )
 
-    # Plot seats
-    for r in 1:10, c in 1:10
-        group = solution_matrix[r,c]
-        if group != ""
-            group_length = req_seats[group]
-            for i in 1:group_length
-                if c+i-1 <= 10
-                    println("Group $group in $r,$(c+i-1)")
-                    scatter!([c+i-1], [r],
-                            color=color_map[group],
-                            label=nothing,
-                            markersize=10,
-                            markershape=:square)
-                end
-            end
-        else
-            # Plot empty or blocked seats
+    # Plot empty and blocked seats
+    for r in row_set, c in col_set
+        if seat_owner[r,c] == ""
             is_blocked = (r,c) in blocked_seats
-            if is_blocked
-                println("Blocked seat in $r,$c")
-                scatter!([c], [r],
-                        color=is_blocked ? :gray : :white,
-                        markersize=10,
-                        markershape=:square,
-                        label= nothing)
-            end
+            scatter!(plt, [c], [r],
+                    color=is_blocked ? :gray : :white,
+                    markersize=10,
+                    markershape=:square,
+                    label=nothing)
         end
     end
 
-    title!("Arena Seating Layout")
-    xlabel!("Column")
-    ylabel!("Row")
+    # Plot occupied seats with one legend entry per group type
+    shown_groups = String[]
+    for r in row_set, c in col_set
+        g = seat_owner[r,c]
+        if g != ""
+            scatter!(plt, [c], [r],
+                    color=color_map[g],
+                    markersize=10,
+                    markershape=:square,
+                    label=g in shown_groups ? nothing : g)
+            push!(shown_groups, g)
+        end
+    end
 
-    return p
+    # Mark constraint violations in a loud color instead of hiding them
+    for (r,c) in violations
+        scatter!(plt, [c], [r],
+                color=:red,
+                markersize=8,
+                markershape=:x,
+                label=nothing)
+    end
+
+    title!(plt, "Arena Seating Layout")
+    xlabel!(plt, "Column")
+    ylabel!(plt, "Row")
+
+    return plt
 end
 
 # Display the visualization
-p = visualize_seating(arena_model)
-display(p)
+plt = visualize_seating(arena_model)
+display(plt)
 
 # %% [markdown]
-# If you encounter any difficulties ad cannot solve the problem, please
+# If you encounter any difficulties and cannot solve the problem, please
 # document your issues here:
 
 # %%
@@ -302,21 +294,38 @@ display(p)
 # > Think about how this changes your objective function. What matters now
 # > is not the score per group, but how many seats each group occupies!
 #
+# Which group types do you expect to gain or lose seats under the new
+# objective? Compare the values per seat of the different group types
+# before you solve the model!
+#
+# > **Warning**
+# >
+# > Store the number of occupied seats from the first task in a variable
+# > **before** you change the objective. Once you re-optimize
+# > `arena_model`, the first solution is gone!
+#
 # Try implementing this new objective while keeping all the safety
 # constraints in place.
 
 # %%
 # YOUR CODE BELOW
 
+
 # %% [markdown]
 # Check if your solution is correct by visualizing it with the
 # `visualize_seating` function below.
-#
-# How many seats more are in use when compared to the previous solution?
+
+# %%
+# YOUR CODE BELOW
+
+
+# %% [markdown]
+# How many more seats are in use when compared to the previous solution?
 # Write a short code that calculates and prints the difference.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %% [markdown]
 # ------------------------------------------------------------------------

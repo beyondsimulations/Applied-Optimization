@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -27,8 +28,11 @@
 #
 # Imagine you’re running a solar panel distribution company. You have
 # several warehouses (suppliers) and need to ship solar panels to various
-# solar farms (customers). Your goal is to minimize the total cost of
-# transportation while meeting all customer demands.
+# solar farms (customers). Each delivered truckload earns revenue, but it
+# also causes variable costs and transportation costs. Your goal is to
+# plan the shipments that maximize your total profit. This is the profit
+# maximization model from the end of the first lecture - but this time
+# with real data.
 #
 # By the end of this tutorial, you’ll be able to:
 #
@@ -55,13 +59,20 @@ using DataFrames, CSV
 # - Supply available at each warehouse
 # - Demand required by each solar farm
 #
-# Our goal is to decide how many solar panels to ship from each warehouse
-# to each solar farm to minimize total cost.
+# Our goal is to decide how many truckloads of solar panels to ship from
+# each warehouse to each solar farm to maximize the total profit. Note
+# that the demand of a solar farm is an upper limit, not an obligation: if
+# delivering to a farm would lose money, we are allowed to deliver less
+# than requested - or nothing at all. Remember the discussion from the
+# first lecture, where we changed the demand constraint from “meet the
+# demand exactly” to “deliver at most the demand” for exactly this reason.
 #
 # Let’s set up our problem:
 #
-# - The revenue from each truckload of solar panels is 11000
-# - The variable costs from each truckload of solar panels is 6300
+# - The revenue for each truckload of solar panels is 11000
+# - The variable costs for each truckload of solar panels are 6300
+# - Each delivered truckload thus earns a margin of 11000 - 6300 = 4700,
+#   before we pay for the transport
 # - The available panels at the supplier are given in the file
 #   `available-panels.csv`
 # - The requested panels at the customer are given in the file
@@ -73,16 +84,16 @@ using DataFrames, CSV
 # >
 # > We can use the `CSV.read` function to load the data from a CSV file
 # > into a DataFrame. If we want to access the directory of the current
-# > file, we can again use the convinient `@__DIR__` macro.
+# > file, we can again use the convenient `@__DIR__` macro.
 #
 # > **Tip**
 # >
-# > Ensure you download the datasets from the website (located below the
-# > notebook) and save them in a folder named `data` within the same
-# > directory as your current script. To download the data, simply
-# > right-click the CSV icon for the desired dataset and choose
-# > `Download linked file`. No preprocessing is required as this tutorial
-# > will focus solely on the modeling process.
+# > Ensure you download the three datasets (Panels, Demand, Costs) that
+# > are linked on this tutorial page and save them in a folder named
+# > `data` within the same directory as your current script. To download a
+# > dataset, right-click the corresponding link and choose
+# > `Download linked file`. No preprocessing is required, as this tutorial
+# > focuses solely on the modeling process.
 
 # %%
 # Fixed parameters
@@ -126,6 +137,7 @@ first(travelCosts,5)
 # %%
 # YOUR ANSWERS BELOW
 # Hint: Use the `nrow()` function to count rows
+
 
 # %%
 # Test your understanding
@@ -178,6 +190,10 @@ println("Available panels:")
 first(available_dict,5)
 
 # %%
+println("Requested panels:")
+first(requested_dict,5)
+
+# %%
 println("Travel costs:")
 first(travelCosts_dict,5)
 
@@ -192,7 +208,7 @@ print("Value associated with supplier 'a_1': ")
 available_dict["a_1"]
 
 # %% [markdown]
-# Our travel costs dictionary is a bit more complex, as it is dictionary
+# Our travel costs dictionary is a bit more complex, as it is a dictionary
 # with tuples as keys. We can access the value associated with a specific
 # supplier and customer by using two keys inside square brackets. For
 # example: `travelCosts_dict[("a_1","b_1")]` will return the value
@@ -234,6 +250,7 @@ first(values(travelCosts_dict),5)
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert typeof(transport_model) == JuMP.Model
@@ -244,11 +261,40 @@ println("Model instance created successfully!")
 #
 # # Section 4 - Defining the model
 #
+# Before we write any code, let’s look at the model we want to build. It
+# is the profit maximization model from the end of the first lecture:
+#
+# $$\begin{aligned}
+# \text{Maximize} \quad F &= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} (r - c - c_{i,j}) \times X_{i,j} \\
+# \text{subject to:} \quad
+# &\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &&\forall i \in \mathcal{I} \\
+# &\sum_{i \in \mathcal{I}} X_{i,j} \leq b_j \quad &&\forall j \in \mathcal{J} \\
+# &X_{i,j} \geq 0 \quad &&\forall i \in \mathcal{I}, j \in \mathcal{J}
+# \end{aligned}$$
+#
+# Here, $\mathcal{I}$ is the set of warehouses indexed by $i$ and
+# $\mathcal{J}$ is the set of solar farms indexed by $j$. The parameters
+# are the revenue $r$ per truckload, the variable costs $c$ per truckload,
+# the transportation costs $c_{i,j}$ per truckload from warehouse $i$ to
+# solar farm $j$, the available truckloads $a_i$ at warehouse $i$, and the
+# requested truckloads $b_j$ at solar farm $j$. The variable $X_{i,j}$ is
+# the number of truckloads shipped from warehouse $i$ to solar farm $j$.
+#
+# > **Note**
+# >
+# > Could this model become infeasible? No! Both constraints are $\leq$
+# > constraints, so shipping nothing at all ($X_{i,j} = 0$ everywhere)
+# > always satisfies them - even though total supply (30,321 truckloads)
+# > and total demand (28,014 truckloads) do not match. And as no warehouse
+# > can ship more than it has available, the profit cannot grow without
+# > bound either. The solver will therefore always find an optimal
+# > solution for this model.
+#
 # ## Define the variables
 #
 # We can now define the variables of our model. We need to define a
-# variable for each supplier and customer pair. As before, we can use the
-# `@variable` macro to define the variables. The syntax is
+# variable for each warehouse and solar farm pair. As before, we can use
+# the `@variable` macro to define the variables. The syntax is
 # `@variable(model, varname[index1,index2] >= 0)`, where `model` is the
 # model instance, `varname` is the name of the variable, and `index1` and
 # `index2` are the indices of the variable. We can use vectors as input
@@ -264,52 +310,97 @@ println("Model instance created successfully!")
 )
 
 # %% [markdown]
-# ## Define the objective
+# > **Warning**
+# >
+# > Mixing indexing styles like this only works because
+# > `available.supplier` and `keys(available_dict)` contain exactly the
+# > same names - just as `requested.solar_farm` and `keys(requested_dict)`
+# > do. If one of them were a filtered DataFrame or an outdated
+# > dictionary, we would get a `KeyError` - or worse, a silently smaller
+# > model without any error message. In your own models, it is safer to
+# > pick one style and stick to it.
 #
-# Next, we can define the objective of our model. We want to maximize the
-# profit, which is the revenue minus the variable costs and the
-# transportation costs. As before, we can use the `@objective` macro to
-# define the objective. The syntax is
-# `@objective(model, Max, expression)`, where `model` is the model
-# instance, `Max` indicates that we want to maximize the expression, and
-# `expression` is the expression we want to maximize.
+# ## Exercise 4.1 - Define the objective
+#
+# Now it is your turn to define the objective! We want to maximize the
+# total profit: each truckload shipped from warehouse `i` to solar farm
+# `j` earns the margin of 4700 (revenue minus variable costs) and costs
+# the transportation costs of that route. As before, we can use the
+# `@objective` macro. The syntax is `@objective(model, Max, expression)`,
+# where `model` is the model instance, `Max` indicates that we want to
+# maximize the expression, and `expression` is the expression we want to
+# maximize.
 
 # %%
-@objective(transport_model, Max,
-    sum((revenue-varCosts-travelCosts_dict[(i,j)]) * X[i,j]
-    for i in keys(available_dict), j in keys(requested_dict))
-)
+# YOUR CODE BELOW
+# Hint: Sum over all pairs, e.g. with
+# for i in keys(available_dict), j in keys(requested_dict)
+# and look up the transportation costs with travelCosts_dict[(i,j)]
+
+
+# %%
+# Test your answer
+@assert objective_sense(transport_model) == MOI.MAX_SENSE "The objective should be maximized, not minimized."
+@assert isapprox(
+    coefficient(objective_function(transport_model), X["a_1","b_1"]),
+    revenue - varCosts - travelCosts_dict[("a_1","b_1")];
+    atol = 1e-6
+) "The profit for each truckload from a_1 to b_1 should be the revenue minus the variable costs minus the transportation costs of that route."
+println("Objective defined successfully!")
 
 # %% [markdown]
-# ## Define the constraints
+# ## Exercise 4.2 - Restrict the available truckloads
 #
-# We can now define the constraints of our model. We need to ensure that
-# the supply from each supplier is enough to cover the demand of each
-# customer. We can use the `@constraint` macro to define the constraints.
-# The syntax is `@constraint(model, expression)`, where `model` is the
-# model instance and `expression` is the expression we want to constrain.
-#
-# To illustrate the use of dictionaries, we will again use the keys of the
-# dictionaries to define the constraints in the following code block.
+# Next, we define the constraints with the `@constraint` macro. The first
+# constraint ensures that each warehouse ships at most the number of
+# truckloads it has available. Create it and name it `restrictAvailable`.
+# The syntax is `@constraint(model, name[index], expression)`, where
+# `model` is the model instance, `name[index]` creates one constraint for
+# each element of the index set, and `expression` is the expression we
+# want to constrain. To practice the use of dictionaries, use the keys of
+# the dictionaries for the indices here.
 
 # %%
-@constraint(transport_model,
-    restrictAvailable[i in keys(available_dict)],
-    sum(X[i,j] for j in keys(requested_dict)) <= available_dict[i]
-)
+# YOUR CODE BELOW
+# Hint: For each warehouse i, the sum of X[i,j] over all solar farms j
+# has to be lower than or equal to available_dict[i]
+
+
+# %%
+# Test your answer
+@assert all(
+    is_valid(transport_model, restrictAvailable[i]) for i in keys(available_dict)
+) "The model should contain one constraint restrictAvailable for each warehouse."
+@assert normalized_rhs(restrictAvailable["a_1"]) == available_dict["a_1"] "The right-hand side of the constraint for warehouse a_1 should be its available truckloads, $(available_dict["a_1"])."
+println("Supply constraint defined successfully!")
 
 # %% [markdown]
-# Naturally, we could also use the vectors with the names from the
-# DataFrames to define the constraints or we could also just work with
-# ranges from the beginning, e.g. `1:length(available.supplier)` and
-# `1:length(requested.solar_farm)`. Working with names is often more
-# convenient, though.
+# ## Exercise 4.3 - Restrict the requested truckloads
+#
+# The second constraint ensures that each solar farm receives at most the
+# number of truckloads it requested. Create it and name it
+# `restrictDemand`. Note the `<=` here: the demand is an upper limit, not
+# an obligation. If a delivery would lose money, the model is allowed to
+# deliver less than requested. Naturally, you could again use the keys of
+# the dictionaries, but you could also use the vectors with the names from
+# the DataFrames, e.g. `requested.solar_farm` and `available.supplier`, as
+# both contain exactly the same names. You could even work with ranges
+# from the beginning, e.g. `1:length(available.supplier)` - but working
+# with names is often more convenient.
 
 # %%
-@constraint(transport_model,
-    restrictDemand[j in requested.solar_farm],
-    sum(X[i,j] for i in available.supplier) <= requested_dict[j]
-)
+# YOUR CODE BELOW
+# Hint: For each solar farm j, the sum of X[i,j] over all warehouses i
+# has to be lower than or equal to requested_dict[j]
+
+
+# %%
+# Test your answer
+@assert all(
+    is_valid(transport_model, restrictDemand[j]) for j in requested.solar_farm
+) "The model should contain one constraint restrictDemand for each solar farm."
+@assert normalized_rhs(restrictDemand["b_1"]) == requested_dict["b_1"] "The right-hand side of the constraint for solar farm b_1 should be its requested truckloads, $(requested_dict["b_1"])."
+println("Demand constraint defined successfully!")
 
 # %% [markdown]
 # And that’s it! We have now defined the model and can start optimizing.
@@ -326,17 +417,19 @@ println("Model instance created successfully!")
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
-@assert termination_status(transport_model) == MOI.OPTIMAL
-println("Model optimized successfully!")
+@assert termination_status(transport_model) == MOI.OPTIMAL "The termination status should be OPTIMAL but is $(termination_status(transport_model))"
+@assert isapprox(objective_value(transport_model), 100373406; atol = 1e-4) "The optimal profit should be 100373406 but is $(objective_value(transport_model)). Check the objective and the constraints of your model."
+println("Model optimized successfully! The maximal profit is ", objective_value(transport_model), ".")
 
 # %% [markdown]
 # Now, we can access the values of the variables at the optimal solution.
 # But remember, we defined the variables with the keys of the
-# dictionaries, so we need to convert the result back to a DataFrame.
-# Calling the variable itself will just show the structure of the
-# variable, not the values.
+# dictionaries, so we need to convert the result back to a DataFrame. If
+# we just look at parts of the variable container, we only see the
+# variables themselves, not their optimal values.
 
 # %%
 first(X,5)
@@ -350,18 +443,18 @@ transport_values = value.(X)
 
 # %% [markdown]
 # The result is a `DenseAxisArray{Float64,2,...}` with index sets. To
-# convert it to a DataFrame, we just need to iterate over the keys
+# convert it to a DataFrame, we just need to iterate over the keys of the
 # dictionaries and store the values in a new DataFrame. As we are not
 # interested in values which are zero, we can skip those.
 #
 # First, we need to initialize an empty DataFrame with the correct column
-# names.
+# names and column types.
 
 # %%
 transport_df = DataFrame(
-    supplier = [],
-    solar_farm = [],
-    truckloads = []
+    supplier = String[],
+    solar_farm = String[],
+    truckloads = Float64[]
 )
 
 # %% [markdown]
@@ -387,7 +480,7 @@ end
 # check if it looks correct.
 
 # %%
-println("Begining of the transportation plan:")
+println("Beginning of the transportation plan:")
 first(transport_df,5)
 
 # %% [markdown]
@@ -399,15 +492,74 @@ first(transport_df,5)
 # > as we often want to convert the result of an optimization problem into
 # > a more convenient format for reporting or further processing.
 #
+# > **Tip**
+# >
+# > We defined $X_{i,j}$ as a continuous variable, so fractional
+# > truckloads would be allowed in the plan. If you look at the results,
+# > you will see whole truckloads everywhere anyway - a well-known
+# > property of transportation problems with whole-numbered supply and
+# > demand. In other problems, you might have to decide whether fractional
+# > values are acceptable or whether you need integer variables.
+#
+# ------------------------------------------------------------------------
+#
+# # Section 6 - Interpreting the solution
+#
+# Remember the margin of 4700 per truckload from Section 1? A route is
+# only worth using if its transportation costs are below this margin -
+# otherwise, every truckload on that route loses money. Let’s check how
+# many routes that rules out:
+
+# %%
+margin = revenue - varCosts
+unprofitable_routes = count(travelCosts.costs .> margin)
+println("Unprofitable routes: ", unprofitable_routes, " of ", nrow(travelCosts))
+
+# %% [markdown]
+# Two thirds of all routes are unprofitable! The optimal plan simply
+# avoids them: if you check `nrow(transport_df)`, you will see that only
+# 1,075 of the 100,000 possible routes are used at all. This is exactly
+# why our demand constraint uses $\leq$ instead of $=$. With $=$, the
+# model would be forced to serve every solar farm from whatever routes are
+# needed - even at a loss.
+#
+# ## Exercise 6.1 - Check the delivered truckloads
+#
+# Does that mean some solar farms receive less than they requested? Find
+# out yourself: compute the total number of truckloads delivered in the
+# optimal plan and save it in a variable called `total_delivered`.
+
+# %%
+# YOUR CODE BELOW
+# Hint: Use sum() on the truckloads column of transport_df
+
+
+# %%
+# Test your answer
+@assert isapprox(total_delivered, sum(requested.truckload_demand); atol = 1e-4) "total_delivered should be $(sum(requested.truckload_demand)) but is $(total_delivered). Did you sum the truckloads column of transport_df?"
+println("Correct! All ", sum(requested.truckload_demand), " requested truckloads are delivered.")
+
+# %% [markdown]
+# Surprised? Although two thirds of all routes are unprofitable, every
+# solar farm still receives everything it requested. Two properties of our
+# data explain this: every solar farm has at least one route with costs
+# below the margin (the cheapest route to any farm costs at most 1,932),
+# and the total supply of 30,321 truckloads exceeds the total demand of
+# 28,014. Keep in mind that this is a property of this particular data
+# set, not a guarantee of the model. If the margin were smaller - say, the
+# variable costs rose above 10,000 - some farms would no longer have any
+# profitable route, and the model would leave their demand unmet.
+#
 # ------------------------------------------------------------------------
 #
 # # Conclusion
 #
-# In this tutorial, we have learned how to model and solve the
-# transportation problem using JuMP. We have also learned how to use
-# dictionaries to store and access the data, which will be useful for more
-# complex models. If you have any questions, feel free to ask me via
-# email!
+# In this tutorial, we have modelled and solved a transportation problem
+# with real data using JuMP. We have learned how to use dictionaries to
+# store and access the data, which will be useful for more complex models.
+# We have also seen why the model maximizes profit with demand as an upper
+# limit instead of forcing every delivery: most routes are simply not
+# worth using. If you have any questions, feel free to ask me via email!
 #
 # # Solutions
 #

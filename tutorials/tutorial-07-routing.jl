@@ -7,15 +7,16 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
-# # Tutorial VII - Periodic Library Routing
+# # Tutorial VII - Parcel Delivery Routing
 #
 # Applied Optimization with Julia
 #
@@ -35,22 +36,30 @@
 #
 # In this case study, we’ll help FastDelivery optimize their delivery
 # routes using the Capacitated Vehicle Routing Problem (CVRP) approach.
-# We’ll consider several real-world constraints like vehicle capacity
-# (measured in standard shipping containers), driving distances, and
-# operational costs to find the best possible delivery strategy.
+# We’ll consider several real-world aspects like vehicle capacity
+# (measured in parcels), driving distances, and operational costs to find
+# the best possible delivery strategy. The driving time restriction from
+# the lecture is not part of this tutorial.
+#
+# In this tutorial, you will:
+#
+# 1.  Implement the basic CVRP model with degree and depot constraints
+# 2.  Diagnose subtours visually in a plotted solution
+# 3.  Add MTZ constraints to eliminate subtours and respect capacities
+# 4.  Translate a solution into monthly operational costs
+# 5.  Optimize the fleet size based on costs
 #
 # ------------------------------------------------------------------------
 #
 # # 1. Implementing the basic CVRP
 #
 # Implement the CVRP from the lecture without the constraints preventing
-# subtours and restricting the driving time and capacities. The demand per
-# distribution center and the coordinates of the locations are provided as
-# CSV files.
+# subtours and restricting the capacities. The demand per distribution
+# center and the coordinates of the locations are provided as CSV files.
 #
 # The number of vehicles is 6 and each vehicle can transport up to 50
-# parcels to the distribution centers. Note that capacity of each vehicle
-# is identical.
+# parcels to the distribution centers. Note that the capacity of each
+# vehicle is identical.
 #
 # ## Loading the data
 #
@@ -62,7 +71,6 @@
 # - `coord_x_y.csv`: Contains location coordinates
 
 # %%
-using DelimitedFiles
 using CSV
 using DataFrames
 using JuMP
@@ -80,6 +88,9 @@ coord = CSV.read("$(file_directory)/coord_x_y.csv", DataFrame)
 # > Make sure that you have downloaded the data in the `data` folder that
 # > is located in the same directory as this notebook.
 #
+# The coordinates are given in kilometers, so the Euclidean distance
+# between two locations is the driving distance in kilometers.
+#
 # ------------------------------------------------------------------------
 #
 # ## Define the parameters
@@ -89,6 +100,7 @@ coord = CSV.read("$(file_directory)/coord_x_y.csv", DataFrame)
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your code
@@ -102,10 +114,13 @@ println("Variables defined, great job!")
 # distance matrix for all locations and store it in a dictionary called
 # `distance`. Access each location by the tuple `(i,j)` where `i` is the
 # origin and `j` is the destination. **Hint: You need the distance from
-# each location to all other locations!**
+# each location to all other locations! Also include the pairs `(i,i)`
+# with a distance of 0, so the dictionary has an entry for every
+# combination.**
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your code
@@ -150,10 +165,25 @@ println(demand.location)
 # %%
 # YOUR CODE BELOW
 
+
+# %% [markdown]
+# In the lecture, `X` was only defined for real arcs with `i != j`. Our
+# matrix variable also contains the “self-loops” `X[i,i]` and nothing in
+# the later constraints forbids the solver from setting them to 1 at zero
+# cost. To rule this out, the following provided code fixes all diagonal
+# entries to zero:
+
+# %%
+# Self-loops are not part of any tour, thus we fix them to zero
+for i in demand.location
+    fix(X[i,i], 0; force=true)
+end
+
 # %%
 # Test your code
 @assert size(X) == (15,15) "Have you defined the decision variable X?"
 @assert all(is_binary(x) for x in X) "The decision variable X should be binary"
+@assert all(is_fixed(X[i,i]) for i in demand.location) "The self-loops X[i,i] should be fixed to zero - run the provided cell above!"
 println("Decision variable X test passed successfully, great job!")
 
 # %% [markdown]
@@ -168,20 +198,21 @@ println("Decision variable X test passed successfully, great job!")
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your code
 obj = objective_function(cvrp_model)
 @assert typeof(obj) <: GenericAffExpr "Objective should be a linear expression"
 @assert length(obj.terms) > 0 "Objective should not be empty"
 println("Objective function defined successfully, great job!")
-println("Note, that it is not tested whether the objective function is correct!")
+println("Note that it is not tested whether the objective function is correct!")
 
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
 # ## Define the constraints
 #
-# Create the two set of constraints that ensure that each location is
+# Create the two sets of constraints that ensure that each location is
 # visited exactly once. **Note that the central location is indexed as
 # `"central"`!** We don’t need to consider the central location for the
 # constraints and we have to ensure during summing that we don’t include
@@ -189,6 +220,7 @@ println("Note, that it is not tested whether the objective function is correct!"
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your code
@@ -206,6 +238,7 @@ println("Constraints for the inflow and outflow defined, great job!")
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your code
@@ -227,6 +260,7 @@ println("Constraints for the inflow and outflow defined, great job!")
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # This defines a function that prints the status of the model
 function print_model_status(model)
@@ -245,9 +279,10 @@ function print_model_status(model)
 end
 
 # Test your code
-@assert termination_status(cvrp_model) == OPTIMAL "The model should be optimal. Have you have any mistakes in the model formulation?"
+@assert termination_status(cvrp_model) == OPTIMAL "The model should be optimal. Have you made any mistakes in the model formulation?"
 print_model_status(cvrp_model)
 println("Model solved successfully, great job!")
+
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -271,7 +306,7 @@ function plot_routes(X, coord)
         dpi=300
     )
 
-    connections = findall(Routes -> !iszero(Routes), Routes .>= 0.5)
+    connections = findall(Routes)
 
     for conn in connections
         xx = [coord[conn[1],:x]; coord[conn[2],:x]]
@@ -291,7 +326,7 @@ function plot_routes(X, coord)
         marker=:star5,
         color=:black,
         markersize=15,
-        label="Central Library",
+        label="Warehouse",
         markerstrokewidth=1
     )
     scatter!(
@@ -299,7 +334,7 @@ function plot_routes(X, coord)
         marker=:circle,
         color=:steelblue,
         markersize=8,
-        label="Libraries",
+        label="Distribution Centers",
         markerstrokewidth=1
     )
 
@@ -339,18 +374,20 @@ display(plot_routes(X,coord))
 # > dictionary, so we can access the demand for each location directly by
 # > the location name for the variable definition and the constraints.
 #
-# Create the variable `U` and ensure that the capacity usage at each
-# location is between the demand and the capacity. Note, that a dictionary
-# might be useful here.
+# Create the variable `U` for all locations **except** `"central"`, as in
+# the lecture. Define its bounds directly in the variable declaration: the
+# capacity usage at each location has to be between the demand and the
+# capacity.
 
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your code
-demand_dict = Dict(demand.location .=> demand.demand)
-@assert all(has_lower_bound(U[i]) == true for i in demand.location) "The variable U should have a lower bound"
-@assert all(has_upper_bound(U[i]) == true for i in demand.location) "The variable U should have an upper bound"
+customers = [i for i in demand.location if i != "central"]
+@assert all(has_lower_bound(U[i]) for i in customers) "The variable U should have a lower bound for each distribution center"
+@assert all(has_upper_bound(U[i]) for i in customers) "The variable U should have an upper bound for each distribution center"
 println("Variable U defined successfully, great job!")
 
 # %% [markdown]
@@ -358,6 +395,7 @@ println("Variable U defined successfully, great job!")
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your code
@@ -370,6 +408,7 @@ println("It is not tested whether the constraints are correct, so please check t
 # %%
 # YOUR CODE BELOW
 
+
 # %% [markdown]
 # The following code prints the model status and visualizes the routes. If
 # your implementation is correct, the routes should be free of subtours
@@ -381,20 +420,27 @@ print_model_status(cvrp_model)
 display(plot_routes(X,coord))
 
 # %% [markdown]
-# The following code plots the capacity usage per vehicle.
+# The following code plots the capacity usage per vehicle. Each bar shows
+# the value of `U` at the last stop before the vehicle returns to the
+# warehouse.
+#
+# > **Note**
+# >
+# > The bars are an **upper estimate** of the parcels actually carried:
+# > the MTZ constraints only force `U` to be *at least* as large as the
+# > accumulated demand, nothing pushes it down to the exact load. Can you
+# > see why from the constraints?
 
 # %%
 # Plot the capacity usage
 function plot_capacity_usage(X, U, coord)
-    # Find which locations are visited by each vehicle from central
+    # Find which locations are visited last by each vehicle before central
     vehicle_routes = []
     for i in coord.location
-        if value(X[i, "central"]) > 0.5
+        if i != "central" && value(X[i, "central"]) > 0.5
             push!(vehicle_routes, (i, value(U[i])))
         end
     end
-
-    println(vehicle_routes)
 
     # Sort by capacity usage for better visualization
     sort!(vehicle_routes, by = x -> x[2])
@@ -402,8 +448,9 @@ function plot_capacity_usage(X, U, coord)
     # Create bar plot
     fig = bar(
         [u[2] for u in vehicle_routes],
+        xticks=(1:length(vehicle_routes), [u[1] for u in vehicle_routes]),
         title="Capacity Usage per Vehicle",
-        xlabel="Vehicle",
+        xlabel="Last stop before returning to the warehouse",
         ylabel="Capacity Usage (parcels)",
         label="",
         color=:steelblue,
@@ -440,6 +487,7 @@ display(plot_capacity_usage(X, U, coord))
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your code
@@ -480,11 +528,21 @@ println("Costs calculated as $(monthly_costs) EUR successfully, great job!")
 # thus tasked to find the optimal number of vehicles and the best tour
 # plan to minimize the costs **(not the distance!)**.
 #
+# Two questions worth answering before you start modelling:
+#
+# 1.  **How much extra daily distance is one vehicle “worth”?** One leased
+#     vehicle costs 450 EUR per 4 weeks, while each kilometer of daily
+#     route length costs 0.6 × 5 × 4 = 12 EUR per 4 weeks. Dropping a
+#     vehicle thus pays off unless the daily tours grow by more than
+#     450/12 = 37.5 km.
+# 2.  **What is the minimum feasible fleet size?** The total demand is 86
+#     parcels and each vehicle can carry at most 50.
+#
 # > **Tip**
 # >
-# > There are multiple ways to tackle this task, but I recommend to first
-# > think about how to model the fixed costs for the vehicles and how to
-# > add the costs for the driving distance. If you need to adjust the
+# > There are multiple ways to tackle this task, but I recommend first
+# > thinking about how to model the fixed costs for the vehicles and how
+# > to add the costs for the driving distance. If you need to adjust the
 # > model, feel free to do so. The easiest way then would be the
 # > definition of a new model (e.g. `cvrp_model_flex`) and then to copy
 # > and adjust all relevant constraints and variables.
@@ -497,9 +555,10 @@ println("Costs calculated as $(monthly_costs) EUR successfully, great job!")
 # %%
 # YOUR CODE BELOW
 
+
 # %% [markdown]
-# The code below again visualizes the results. Note, that you might need
-# to replace the `X` and `U` with your new models variable names, if you
+# The code below again visualizes the results. Note that you might need to
+# replace the `X` and `U` with your new model’s variable names, if you
 # have renamed them.
 
 # %%
@@ -508,8 +567,9 @@ print_model_status(cvrp_model_flex)
 display(plot_routes(X,coord))
 
 # %% [markdown]
-# Based on your results, what are the expected costs savings when compared
-# to task b, and how many vehicles does the central library need?
+# Based on your results, what are the expected cost savings compared to
+# the monthly costs from Section 3, and how many vehicles does
+# FastDelivery need?
 #
 # Please answer this question in the cell below.
 

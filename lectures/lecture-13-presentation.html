@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture XIII - Recap and Discussion</title>
@@ -32,7 +33,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -139,7 +140,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -162,6 +163,22 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="topics-covered" class="slide level2 smaller">
 <h2>Topics Covered</h2>
+<p><span class="question">Question:</span> <strong>Can you recall the problem structure behind each topic?</strong></p>
+<div class="fragment">
+<ul>
+<li>Solar Panel Transport</li>
+<li>Beer Production</li>
+<li>Split Order Minimization</li>
+<li>Library Routing</li>
+<li>Police Service Districting</li>
+<li>Safety Planning for the Hajj Pilgrimage</li>
+<li>Arena Seating</li>
+<li>Passenger Flow Control</li>
+</ul>
+</div>
+</section>
+<section id="underlying-problem-structures" class="slide level2 smaller">
+<h2>Underlying Problem Structures</h2>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -171,50 +188,104 @@ Dr.&nbsp;Tobias Vlćek
 </thead>
 <tbody>
 <tr class="odd">
-<td>Solar Panel Transport</td>
+<td><a href="../lectures/lecture-04-jump.html">Solar Panel Transport</a></td>
 <td>Classic Transport Problem</td>
 </tr>
 <tr class="even">
-<td>Beer Production</td>
-<td>Capacitated Lot Sizing Problem</td>
+<td><a href="../lectures/lecture-05-production.html">Beer Production</a></td>
+<td>Capacitated Lot-Sizing Problem (CLSP)</td>
 </tr>
 <tr class="odd">
-<td>Split Delivery Minimization</td>
-<td>Multiple-Quadratic-Knapsack Problem</td>
+<td><a href="../lectures/lecture-06-ordersplit.html">Split Order Minimization</a></td>
+<td>Quadratic Multiple Knapsack Problem (QMKP)</td>
 </tr>
 <tr class="even">
-<td>Library Routing</td>
-<td>Capacitated Vehicle Routing Problem</td>
+<td><a href="../lectures/lecture-07-routing.html">Library Routing</a></td>
+<td>Capacitated Vehicle Routing Problem (CVRP)</td>
 </tr>
 <tr class="odd">
-<td>Police Service Districting</td>
-<td>P-Median Problem</td>
+<td><a href="../lectures/lecture-08-districting.html">Police Service Districting</a></td>
+<td>p-Median Problem</td>
 </tr>
 <tr class="even">
-<td>Safety Planning Hajj Pilgrimage</td>
+<td><a href="../lectures/lecture-09-safety.html">Safety Planning for the Hajj Pilgrimage</a></td>
 <td>Scheduling Problem</td>
 </tr>
 <tr class="odd">
-<td>Arena Seating</td>
-<td>2-D Knapsack Problem</td>
+<td><a href="../lectures/lecture-11-distancing.html">Arena Seating</a></td>
+<td>2D-Knapsack Problem</td>
 </tr>
 <tr class="even">
-<td>Passenger Flow Control</td>
-<td>Network Flow Problem</td>
+<td><a href="../lectures/lecture-12-rail.html">Passenger Flow Control</a></td>
+<td>Dynamic Network Flow Problem</td>
 </tr>
 </tbody>
 </table>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>Original problem structure we <span class="highlight">used/extended/exploited</span> to address the topic.</p></li></ol></aside></section>
-<section id="section" class="slide level2 loud-slide">
-<h2></h2>
-<div class="r-fit-text">
-<p>Any questions</p>
-<p>regarding the</p>
-<p>past lectures?</p>
+<section id="modeling-techniques" class="slide level2 smaller">
+<h2>Modeling Techniques</h2>
+<p><span class="question">Question:</span> <strong>And do you remember the key modeling ideas?</strong></p>
+<div class="fragment">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Topic</th>
+<th>Key Modeling Idea</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Solar Panel Transport</td>
+<td>Sets, parameters and continuous variables</td>
+</tr>
+<tr class="even">
+<td>Beer Production</td>
+<td>Binary setup variables and Big-M constraints</td>
+</tr>
+<tr class="odd">
+<td>Split Order Minimization</td>
+<td>Quadratic objective with binary variables</td>
+</tr>
+<tr class="even">
+<td>Library Routing</td>
+<td>Subtour elimination and heuristics</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="footer">
-
-</div>
+</section>
+<section id="modeling-techniques-ii" class="slide level2 smaller">
+<h2>Modeling Techniques II</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 60%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Topic</th>
+<th>Key Modeling Idea</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Police Service Districting</td>
+<td>Contiguity and compactness constraints</td>
+</tr>
+<tr class="even">
+<td>Safety Planning for the Hajj Pilgrimage</td>
+<td>Time-indexed scheduling with penalties</td>
+</tr>
+<tr class="odd">
+<td>Arena Seating</td>
+<td>One binary variable per seating group</td>
+</tr>
+<tr class="even">
+<td>Passenger Flow Control</td>
+<td>Queue dynamics over time periods</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="what-have-we-learned" class="slide level2">
 <h2>What have we learned?</h2>
@@ -237,6 +308,41 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </section>
+<section id="check-yourself" class="slide level2 smaller">
+<h2>Check Yourself</h2>
+<p>Before the exam, you should be able to answer the following:</p>
+<ul>
+<li>Can you <strong>define sets, parameters, and variables</strong> for a new problem?</li>
+<li>Can you <strong>choose the right variable domain</strong> (continuous, integer, binary)?</li>
+<li>Can you <strong>formulate objective functions and constraints</strong> in JuMP?</li>
+<li>Do you know <strong>when a model needs Big-M constraints</strong>?</li>
+<li>Can you <strong>explain what subtours are</strong> and how to prevent them?</li>
+<li>Do you know the <strong>difference between LP, MIP, and NLP</strong>?</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-tip callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>If some points feel shaky, revisit the linked lectures and take a look at the cheatsheets on the course website.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="section" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Any questions</p>
+<p>regarding the</p>
+<p>past lectures?</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
 <section class="slide level2">
 
 </section></section>
@@ -249,7 +355,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>How to continue after the lecture?</h2>
 <ul>
 <li>The best way is to <span class="highlight">keep programming and modeling</span></li>
-<li>We are offering <strong>seminars and master thesis</strong></li>
+<li>We offer <strong>seminar places and master thesis supervision</strong></li>
 <li>Try to find a way to <strong>apply programming in your work</strong></li>
 <li>There are <strong>many interesting topics</strong> to explore!</li>
 </ul>
@@ -260,7 +366,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>Getting your supervisors on board is the hardest part! But note, that it is often worth it and the tools we have used are all free and open-source.</p>
+<p>Getting your managers on board is the hardest part! But note that it is often worth it. The tools we have used are all free and open-source.</p>
 </div>
 </div>
 </div>
@@ -269,10 +375,10 @@ Dr.&nbsp;Tobias Vlćek
 <section id="concrete-next-steps" class="slide level2">
 <h2>Concrete Next Steps</h2>
 <ul>
-<li>Join online communities on Julia and Optimization</li>
-<li>Contribute to open-source projects if you can</li>
-<li>Follow key researchers and practitioners</li>
-<li>Start a small personal project using the tools learned</li>
+<li>Ask questions on the <a href="https://discourse.julialang.org">Julia Discourse forum</a></li>
+<li>Explore the <strong>JuMP community</strong> at <a href="https://jump.dev">jump.dev</a></li>
+<li>Contribute to open-source, e.g.&nbsp;<strong>“good first issues”</strong> of JuMP</li>
+<li>Start a <strong>small personal project</strong> using the tools learned</li>
 </ul>
 <div class="fragment">
 <div class="callout callout-tip callout-style-simple">
@@ -281,7 +387,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>If you want to start a small personal project, try to find a problem that you are interested in and that you can solve using the tools we have learned.</p>
+<p>Project ideas at the right scale: a schedule for your sports league, a weekly meal plan on a budget, or a shift roster for a student job.</p>
 </div>
 </div>
 </div>
@@ -292,7 +398,7 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li>First, try to <span class="highlight">be confident with the basics</span> of a language</li>
 <li>Always try to <span class="highlight">understand the code you use</span></li>
-<li>If you want to try <strong>AI pair programming</strong>, use Cursor as IDE</li>
+<li>Then, try an <strong>AI-assisted IDE or coding agent</strong></li>
 </ul>
 <div class="fragment">
 <div class="callout callout-tip callout-style-simple">
@@ -301,7 +407,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>Cursor is a great IDE for AI pair programming, although it is not completely free. It has Claude and ChatGPT integrated and makes work much easier when compared to copying and pasting code.</p>
+<p>The tools change fast; popular options are, for example, Cursor, GitHub Copilot, and Claude Code. They make work much easier compared to copying and pasting code between a chat and your editor.</p>
 </div>
 </div>
 </div>
@@ -319,8 +425,8 @@ Dr.&nbsp;Tobias Vlćek
 <h2>That’s it for the Lecture Series!</h2>
 <ul>
 <li>I hope you <strong>enjoyed</strong> the lecture and found it <strong>helpful</strong></li>
-<li>On Friday, we will have a <span class="highlight">discussion session</span></li>
-<li>You can earn the <strong>last half-bonus point</strong> for the exam</li>
+<li>In the last tutorial, we will have a final <span class="highlight">discussion session</span></li>
+<li>There, you can earn the <strong>last half-bonus point</strong> for the exam</li>
 <li>I wish you <strong>all the best for your studies and your career!</strong></li>
 </ul>
 <div class="fragment">
@@ -342,12 +448,13 @@ Dr.&nbsp;Tobias Vlćek
 <p>Questions?</p>
 </div>
 </section>
-<section id="section-2" class="slide level2" data-background-color="#000000">
-<h2></h2>
+<section id="thank-you" class="slide level2">
+<h2>Thank You!</h2>
 <center>
 <iframe src="https://giphy.com/embed/YVg3fCdaBpLEc" width="480" height="355" style="" frameborder="0" class="giphy-embed" allowfullscreen="">
 </iframe>
 </center>
+<p>Thank you for participating in the course — good luck with the exam!</p>
 
 
 </section></section>

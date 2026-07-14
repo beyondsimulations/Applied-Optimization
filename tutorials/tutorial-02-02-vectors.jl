@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -24,8 +25,8 @@
 # This interactive Julia script introduces the basics of vectors,
 # matrices, and tuples.
 #
-# - A vector is like a single row in a spreadsheet or a shopping list - it
-#   stores items in a line
+# - A vector is like a single column in a spreadsheet or a shopping list -
+#   it stores items one after another
 # - A matrix is like a spreadsheet - it has rows and columns
 # - A tuple is like a sealed package containing different types of items
 #
@@ -38,6 +39,13 @@
 # > If a cell is marked with `YOUR CODE BELOW`, you are expected to write
 # > your code in that cell.
 #
+# > **Tip**
+# >
+# > The exercises in this tutorial build on each other: later exercises
+# > use variables created in earlier ones. If an assert suddenly fails or
+# > you see an `UndefVarError`, re-run the previous exercises from the
+# > top.
+#
 # ------------------------------------------------------------------------
 #
 # # Section 1 - Vectors
@@ -45,7 +53,7 @@
 # Vectors in Julia are one-dimensional arrays used to store sequences of
 # elements. They’re powerful for numerical operations and data handling. A
 # vector is the simplest way to store a list of items. Think of it as a
-# row of boxes, where each box can hold a number or other type of data.
+# line of boxes, where each box can hold a number or other type of data.
 # Create vectors with square brackets, separate elements with commas.
 
 # %%
@@ -57,6 +65,16 @@ grades = [95, 87, 91, 78, 88]
 students = ["Mike", "Yola", "Elio"]
 
 # %% [markdown]
+# > **Warning**
+# >
+# > Commas and spaces mean different things in Julia! `[1, 2, 3]` with
+# > commas creates a vector, which Julia treats as a *column* of numbers.
+# > `[1 2 3]` with spaces creates a 1x3 matrix, a single *row*. You can
+# > see the difference yourself: `typeof([1, 2, 3])` shows
+# > `Vector{Int64}`, while `typeof([1 2 3])` shows `Matrix{Int64}`. The
+# > two are different objects, so `[1, 2, 3] == [1 2 3]` is `false`. In
+# > this course, use commas unless you really want a row of a matrix.
+#
 # Vectors are mutable, and you can:
 #
 # - Add items to the end (like adding to a shopping list):
@@ -74,7 +92,8 @@ students = ["Mike", "Yola", "Elio"]
 # > In Julia, we start counting positions from 1, not 0. So `grades[1]`
 # > gives you the first grade!
 #
-# Use ‘?’ in the REPL for function details.
+# Type `?push!` (or `?` followed by any other function name) in the REPL
+# to read a function’s documentation.
 #
 # ## Exercise 1.1 - Create a Vector
 #
@@ -83,6 +102,7 @@ students = ["Mike", "Yola", "Elio"]
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
@@ -97,6 +117,7 @@ println("The 'fib' vector: ", fib)
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert fib == [1, 1, 2, 3, 5, 8]
@@ -109,6 +130,7 @@ println("The 'fib' vector after appending 8: ", fib)
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
@@ -124,9 +146,10 @@ println("The 'fib' vector after removing the first element: ", fib)
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
-@assert first_three_elements == fib[1:3]
+@assert first_three_elements == [1, 2, 3]
 println("The first three elements of the 'fib' vector: ", first_three_elements)
 
 # %% [markdown]
@@ -137,8 +160,9 @@ println("The first three elements of the 'fib' vector: ", first_three_elements)
 # A matrix in Julia is a 2D array, great for linear algebra and data
 # representation. Create matrices with square brackets, separate elements
 # with spaces, rows with semicolons. Access elements with square brackets
-# (e.g., `matrix[2,2]`). You can add or substract matrices of the same
-# dimensions element-wise if you add or substract them.
+# in the order `matrix[row, column]` - for example, `matrix[2, 3]` is the
+# element in the 2nd row and 3rd column. You can add or subtract matrices
+# of the same dimensions; these operations work element-wise.
 #
 # For example:
 
@@ -157,7 +181,10 @@ matrix3 = [2 2; 3 3] * [1 2; 3 4]   # Not element-wise
 println("matrix3 is $matrix3.")
 
 # %% [markdown]
-# But we can change this by using broadcasting!
+# Here, `*` computes the matrix product from linear algebra: each entry is
+# a row of the first matrix multiplied with a column of the second. You
+# will meet this operation again later in the course. If we want to apply
+# an operation element-wise instead, we use broadcasting!
 #
 # > **Tip**
 # >
@@ -188,6 +215,7 @@ println("matrix5 is $matrix5.")
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert my_matrix == [1 2 3; 4 5 6]
@@ -201,6 +229,7 @@ println("The 'my_matrix':\n", my_matrix)
 
 # %%
 # YOUR CODE BELOW
+
 
 
 # %%
@@ -218,6 +247,7 @@ println("The 'my_matrix' after modification:\n", my_matrix)
 another_matrix = [10 20 30; 40 50 60]
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert added_matrices == [11 22 33; 44 55 77]
@@ -231,6 +261,7 @@ println("Result of adding 'my_matrix' and 'another_matrix':\n", added_matrices)
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert added_matrices == [21 32 43; 54 65 87]
@@ -239,7 +270,7 @@ println("Result of adding 10 to each element in 'added_matrices':\n", added_matr
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# # Section 3: Tuples
+# # Section 3 - Tuples
 #
 # A tuple is like a sealed package - once you create it, you can’t change
 # what’s inside. That’s why we call it “immutable”. It’s perfect for
@@ -265,18 +296,28 @@ println("Result of adding 10 to each element in 'added_matrices':\n", added_matr
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert my_tuple == (4.0, added_matrices, "Hi there!")
 println("The 'my_tuple': ", my_tuple)
 
 # %% [markdown]
+# > **Note**
+# >
+# > Wait - didn’t we say tuples can’t change? The tuple’s *slots* are
+# > sealed: you cannot replace `my_tuple[2]` with a different object. But
+# > the matrix stored in that slot is still a mutable object, so something
+# > like `my_tuple[2][1, 1] = 99` would change the matrix itself. The
+# > package is sealed, but a box inside it can still be opened.
+#
 # ## Exercise 3.2 - Access the Second Element
 #
 # Access the second element of `my_tuple`, store it in `second_element`.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer

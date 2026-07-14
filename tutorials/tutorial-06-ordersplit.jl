@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -37,22 +38,22 @@
 #
 # First, we need to understand which products are frequently purchased
 # together. We’ll use a coappearance matrix. It shows how frequently items
-# appear together in customer orders. For each pair of items (i,j), the
-# matrix element Q\[i,j\] represents the number of orders containing both
-# items i and j. Let’s start with a small sample of FitGear’s historical
-# order data and determine the coappearance matrix of the transactional
-# data set **manually by hand**.
+# appear together in customer orders. For each pair of items $i$ and $j$,
+# the matrix element $q_{i,j}$ represents the number of orders containing
+# both items $i$ and $j$. Let’s start with a small sample of FitGear’s
+# historical order data and determine the coappearance matrix of the
+# transactional data set **by hand**.
 #
-# | $t_{mi}$ | A   | B   | C   | D   |
-# |----------|-----|-----|-----|-----|
-# | 1        | 1   | 1   | 1   | 0   |
-# | 2        | 1   | 1   | 1   | 0   |
-# | 3        | 1   | 1   | 0   | 0   |
-# | 4        | 1   | 0   | 0   | 1   |
-# | 5        | 1   | 0   | 0   | 1   |
-# | 6        | 1   | 0   | 0   | 1   |
-# | 7        | 1   | 0   | 0   | 1   |
-# | 8        | 0   | 0   | 1   | 1   |
+# | $t_{m,i}$ | A   | B   | C   | D   |
+# |-----------|-----|-----|-----|-----|
+# | 1         | 1   | 1   | 1   | 0   |
+# | 2         | 1   | 1   | 1   | 0   |
+# | 3         | 1   | 1   | 0   | 0   |
+# | 4         | 1   | 0   | 0   | 1   |
+# | 5         | 1   | 0   | 0   | 1   |
+# | 6         | 1   | 0   | 0   | 1   |
+# | 7         | 1   | 0   | 0   | 1   |
+# | 8         | 0   | 0   | 1   | 1   |
 #
 # What is the resulting **coappearance matrix** from the transactional
 # data set? Please provide it in the following cell as matrix by changing
@@ -78,8 +79,10 @@ Q = [
 # - Berlin can also store 3 different product types
 #
 # Based on the coappearance matrix you have determined in the previous
-# assignment, use the model from the lecture to maximise the coappearances
-# **manually by hand**. What is the resulting objective function value of
+# assignment, use the model from the lecture to maximize the coappearances
+# **by hand**. Note one difference to the lecture: assume that each SKU
+# may only be stored in **one** warehouse, i.e. the allocation constraint
+# holds with equality. What is the resulting objective function value of
 # the assignment? Please provide it in the following cell.
 
 # %%
@@ -88,21 +91,30 @@ objective_value_by_hand =
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# ## 3. Counting Split Parcels
+# ## 3. Counting Split Orders
 #
-# Based on the output of the optimisation, we don’t know the number of
-# split orders yet. Calculate the **number of split orders manually** from
-# your previous solution.
+# The objective value alone does not tell us the number of split orders.
+# Calculate the **number of split orders by hand** from your previous
+# solution.
 
 # %%
-number_of_split_parcels =
+number_of_split_orders =
 
 # %% [markdown]
+# > **Multiple Optimal Solutions**
+# >
+# > Several different allocations reach the same optimal objective value
+# > here. Depending on which one you found, your number of split orders
+# > can differ! If possible, compare your count with a neighbor: did you
+# > get the same objective value but a different number of split orders?
+# > Keep this in mind for the bonus question.
+#
 # > **Bonus Question**
 # >
-# > Is the solution of the QMKP the optimal solution for the underlying
-# > split parcel minimisation problem? Try to come up with another
-# > solution that has less split or the same number of split parcels.
+# > Is the solution of the Quadratic Multiple Knapsack Problem (QMKP) the
+# > optimal solution for the underlying split order minimization problem?
+# > Try to find another allocation with fewer (or the same number of)
+# > split orders.
 #
 # ------------------------------------------------------------------------
 #
@@ -162,6 +174,7 @@ T = [
     1 0 0 0 0 1 0 0 0 1 0 0;  # shoes + bag + tracker
     0 0 0 0 1 0 0 1 1 0 0 0;  # workout outfit + bands
     0 0 0 1 0 0 0 0 0 0 1 0;  # yoga mat + foam roller
+    # Second set of transactions (21-40)
     1 1 0 0 0 0 0 1 1 0 0 0;  # shoes + socks + workout clothes
     1 1 0 0 0 1 0 0 0 1 0 0;  # shoes + socks + bag + tracker
     0 0 0 1 1 0 0 0 0 0 1 1;  # yoga mat + bands + foam roller + gloves
@@ -194,11 +207,11 @@ T = [
 #
 # ------------------------------------------------------------------------
 #
-# ## Use the Juniper solver
+# ### Use the Juniper solver
 #
-# If you don’t have Juniper, Ipopt and/or HiGHS installed, add the solver
-# via Pkg.add(“Juniper”) and Pkg.add(“Ipopt”) and Pkg.add(“HiGHS”).
-# Juniper is a solver for nonlinear problems, that can be used in
+# If you don’t have Juniper, Ipopt and/or HiGHS installed, add the solvers
+# via `Pkg.add("Juniper")`, `Pkg.add("Ipopt")` and `Pkg.add("HiGHS")`.
+# Juniper is a solver for nonlinear problems that can be used in
 # combination with Ipopt and HiGHS to solve mixed-integer quadratic
 # problems.
 #
@@ -206,9 +219,9 @@ T = [
 # >
 # > If you want to use the solver SCIP, you can also do this by adding
 # > JuMP and SCIP and then change the solver in the model definition to
-# > `warehouse_model = Model(SCIP.Optimizer())`. Note, that this does not
+# > `warehouse_model = Model(SCIP.Optimizer)`. Note that this does not
 # > work automatically in Windows, as you will have to install the SCIP
-# > binaries manually. Hence, I recommend to stick with Juniper. On Mac
+# > binaries manually. Hence, I recommend sticking with Juniper. On Mac
 # > and Linux, SCIP should work out of the box.
 #
 # First, we start by defining the model.
@@ -229,13 +242,14 @@ warehouse_model = Model(
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# ## Compute the coappearance matrix
+# ### Compute the coappearance matrix
 #
 # Next, compute the coappearance matrix based on the transactional data
 # provided in `T` and call it `Q`.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Assert whether the coappearance matrix is correct.
@@ -246,13 +260,14 @@ println("Great! The coappearance matrix is correct.")
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# ## Define the decision variable
+# ### Define the decision variable
 #
 # Now, define the decision variable for the SKU allocation. Please name
 # the variable `X`.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Assert whether the decision variable is correct.
@@ -264,12 +279,20 @@ println("Great! The decision variable is correctly defined as a binary variable 
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# ## Define the objective function
+# ### Define the objective function
 #
 # Then, define the objective function to maximize the coappearance.
+#
+# > **Mixing names and indices**
+# >
+# > If you followed the pattern from the lecture, `X` is indexed by the
+# > SKU and warehouse *names*, while `Q` uses *integer* indices. In the
+# > objective function, you can combine both by looking up the names,
+# > e.g. `X[skus[i], warehouses[k]]` together with `Q[i,j]`.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Assert whether the objective function is correct.
@@ -279,7 +302,7 @@ println("Great! The objective function is correctly defined.")
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# ## Define the constraints
+# ### Define the constraints
 #
 # To ensure that each SKU is allocated to one warehouse, add the first
 # constraint.
@@ -287,9 +310,10 @@ println("Great! The objective function is correctly defined.")
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Assert whether the single allocation constraint is correct.
-@assert num_constraints(warehouse_model, AffExpr, MOI.EqualTo{Float64}) == length(skus) "The single allocation constraint should have one constraint for each SKU"
+@assert num_constraints(warehouse_model, AffExpr, MOI.EqualTo{Float64}) == length(skus) "The single allocation constraint should have one constraint for each SKU. Did you use >= as in the lecture instead of ==? Here, each SKU must be allocated to exactly one warehouse."
 println("Great! The single allocation constraint is correctly defined.")
 
 # %% [markdown]
@@ -299,6 +323,7 @@ println("Great! The single allocation constraint is correctly defined.")
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Assert whether the capacity constraint is correct.
 @assert num_constraints(warehouse_model, AffExpr, MOI.LessThan{Float64}) == length(warehouses) "The capacity constraint should have one constraint for each warehouse"
@@ -307,23 +332,32 @@ println("Great! The capacity constraint is correctly defined.")
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# ## Solve the model
+# ### Solve the model
 #
 # Finally, solve the model with a solve statement.
+#
+# > **Juniper only guarantees local optimality**
+# >
+# > Juniper is a *local* solver for this kind of problem, so the status
+# > `LOCALLY_SOLVED` does not guarantee the best possible solution. The
+# > optimal objective value is 141. If your model reports a lower value,
+# > your code can still be correct: re-run the solve statement or try the
+# > SCIP solver, which proves global optimality.
 
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Assert whether the model is solved correctly.
 @assert termination_status(warehouse_model) == MOI.OPTIMAL || termination_status(warehouse_model) == MOI.LOCALLY_SOLVED "The model should either be solved with an optimal solution or with a locally optimal solution"
-@assert isapprox(objective_value(warehouse_model), 141) "The objective value should approximaly be 141. Have you correctly implemented the objective function?"
+@assert isapprox(objective_value(warehouse_model), 141) "The objective value should approximately be 141. If it is lower and the status is LOCALLY_SOLVED, see the warning above. Otherwise, have you correctly implemented the objective function?"
 println("Great! The model is correctly solved.")
 
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# ## Print the results
+# ### Print the results
 #
 # The following code prints the objective value, the SKU allocation and
 # the warehouse capacities based on your optimal solution.
@@ -334,81 +368,96 @@ println()
 println("SKU Allocation:")
 for i in skus
     for k in warehouses
-        if value(X[i,k]) > 0.1
+        if value(X[i,k]) > 0.5
             println("SKU: ", i, " Allocation: ", k)
         end
     end
 end
 println()
 println("Warehouse Capacities:")
-for k in 1:length(warehouses)
-    println("Warehouse: ", warehouses[k], " Capacity: ", capacity[k], " Used: ", sum(value.(X[i,warehouses[k]]) for i in skus))
+for k in eachindex(warehouses)
+    println("Warehouse: ", warehouses[k], " Capacity: ", capacity[k], " Used: ", sum(value(X[i,warehouses[k]]) for i in skus))
 end
 
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# ## Count the number of split orders
+# ### Count the number of split orders
 #
-# Based on the output of the optimisation, we still don’t know the number
-# of split orders. The following code calculates the number of split
-# orders from the SKU allocation for the optimal solution.
+# The objective value alone still does not tell us the number of split
+# orders. The following code calculates the number of split orders from
+# the SKU allocation for the optimal solution. To judge how good this is,
+# it also computes the average number of split orders over 100 random
+# allocations. Note that the random allocations are still *feasible*: each
+# SKU is stored in exactly one warehouse and no capacity is exceeded —
+# otherwise, the comparison would not be fair.
 
 # %%
 # Binary matrix indicating whether a SKU is allocated to a warehouse.
-X_values = [value(X[i,j]) > 0 ? true : false for i in skus, j in warehouses]
+X_values = [value(X[i,k]) > 0.5 for i in skus, k in warehouses]
 
-# Function to count the number of split and regular parcels.
+# Function to count the number of split and regular orders.
 function count_split_orders(X_input, transactional_data)
-    # Initialize the counters for split and regular parcels.
-    split_parcels = 0
-    regular_parcels = 0
+    # Initialize the counters for split and regular orders.
+    split_orders = 0
+    regular_orders = 0
 
     # Iterate over each transaction in the transactional data set.
     for t in 1:size(transactional_data,1)
 
-        # Check if the first warehouse can fulfill the transaction.
-        if all(X_input[:,1] .>= transactional_data[t,:])
-            regular_parcels += 1
+        # Check whether any warehouse can fulfill the transaction alone.
+        if any(all(X_input[:,k] .>= transactional_data[t,:]) for k in axes(X_input,2))
+            regular_orders += 1
 
-        # Check if the second warehouse can fulfill the transaction.
-        elseif all(X_input[:,2] .>= transactional_data[t,:])
-            regular_parcels += 1
-
-        # If neither warehouse can fulfill the transaction, it is a split.
+        # If no warehouse can fulfill the transaction alone, it is a split.
         else
-            split_parcels += 1
-            regular_parcels += 1
+            split_orders += 1
         end
     end
-    return split_parcels, regular_parcels
+    return split_orders, regular_orders
 end
 
-# Count the number of split and regular parcels for the optimal solution.
-split_parcels, regular_parcels = count_split_orders(X_values, T)
+# Count the number of split and regular orders for the optimal solution.
+split_orders, regular_orders = count_split_orders(X_values, T)
 
-# Count the number of split and regular parcels for 100 random solutions.
-split_parcels_random = []
-regular_parcels_random = []
+# Count the split and regular orders for 100 random feasible allocations.
+using Random
+split_orders_random = []
+regular_orders_random = []
 for trial in 1:100
-    X_random = [rand(Bool) for i in 1:length(skus), j in 1:length(warehouses)]
-    split_parcels_random_trial, regular_parcels_random_trial = count_split_orders(X_random, T)
-    push!(split_parcels_random, split_parcels_random_trial)
-    push!(regular_parcels_random, regular_parcels_random_trial)
+    # Shuffle the SKUs, then fill up Hamburg first and Berlin afterwards.
+    shuffled_skus = shuffle(1:length(skus))
+    X_random = zeros(Bool, length(skus), length(warehouses))
+    for (position, i) in enumerate(shuffled_skus)
+        if position <= capacity[1]
+            X_random[i,1] = true
+        else
+            X_random[i,2] = true
+        end
+    end
+    split_random_trial, regular_random_trial = count_split_orders(X_random, T)
+    push!(split_orders_random, split_random_trial)
+    push!(regular_orders_random, regular_random_trial)
 end
-split_parcels_random = sum(split_parcels_random)/100
-regular_parcels_random = sum(regular_parcels_random)/100
+split_orders_random = sum(split_orders_random)/100
+regular_orders_random = sum(regular_orders_random)/100
 
-# Print the number of split and regular parcels.
-println("Number of split orders (optimal): ", split_parcels)
-println("Number of regular orders (optimal): ", regular_parcels)
+# Print the number of split and regular orders.
+println("Number of split orders (optimal): ", split_orders)
+println("Number of regular orders (optimal): ", regular_orders)
 println()
 
-# Print the number of split and regular parcels for the random solution.
-println("Number of split orders (random): ", split_parcels_random)
-println("Number of regular orders (random): ", regular_parcels_random)
+# Print the number of split and regular orders for the random allocations.
+println("Number of split orders (random): ", split_orders_random)
+println("Number of regular orders (random): ", regular_orders_random)
 
 # %% [markdown]
+# > **Split orders and split parcels**
+# >
+# > With two warehouses, each split order causes exactly one extra parcel.
+# > With more warehouses, a single split order could require several extra
+# > parcels, so the two numbers would no longer coincide.
+#
 # ------------------------------------------------------------------------
 #
 # ## 5. Analyzing the Results

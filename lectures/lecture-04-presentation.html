@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture IV - Modelling with JuMP</title>
@@ -31,8 +32,74 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -139,7 +206,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -150,6 +217,16 @@ Dr.&nbsp;Tobias Vlćek
 <h1><span class="flow">Quick Recap from last Week</span></h1>
 
 </section>
+<section id="goals-for-today" class="slide level2">
+<h2>Goals for Today</h2>
+<p>After this lecture, you will:</p>
+<ul>
+<li>Have <span class="highlight">refreshed</span> functions, packages, DataFrames, IO, and plots</li>
+<li>Know the difference between a <span class="highlight">model and a solver</span></li>
+<li>Have seen the transport problem from the first lecture <span class="highlight">solved in JuMP</span></li>
+<li>Be ready to build your first own models in the tutorials</li>
+</ul>
+</section>
 <section id="functions" class="slide level2">
 <h2>Functions</h2>
 <ul>
@@ -157,6 +234,7 @@ Dr.&nbsp;Tobias Vlćek
 <li>Define functions using the <code>function</code> keyword</li>
 <li>Functions can take arguments and return values</li>
 <li>Use <code>return</code> to specify the output of a function</li>
+<li><span class="highlight">This week</span>: functions help you to structure your models</li>
 </ul>
 <div class="fragment">
 <div class="callout callout-tip callout-style-simple">
@@ -177,7 +255,9 @@ Dr.&nbsp;Tobias Vlćek
 <li>Packages extend Julia’s functionality</li>
 <li>Use <code>using Pkg</code> to access package management</li>
 <li>Install packages with <code>Pkg.add("PackageName")</code></li>
+<li>Or press <code>]</code> in the REPL to enter package mode and type <code>add PackageName</code></li>
 <li>Import packages with <code>using PackageName</code> or <code>import PackageName</code></li>
+<li><span class="highlight">This week</span>: you will install two new packages, <code>JuMP</code> and <code>HiGHS</code></li>
 </ul>
 </section>
 <section id="dataframes" class="slide level2">
@@ -187,6 +267,7 @@ Dr.&nbsp;Tobias Vlćek
 <li>Create DataFrames using the <code>DataFrame</code> constructor</li>
 <li>Access columns using dot notation or square brackets</li>
 <li>Perform operations on columns and rows</li>
+<li><span class="highlight">This week</span>: DataFrames can hold the data of your models</li>
 </ul>
 <div class="fragment">
 <div class="callout callout-tip callout-style-simple">
@@ -206,9 +287,22 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li>IO operations allow reading from and writing to files</li>
 <li>Reading and writing CSV files can be done with the <code>CSV</code> package</li>
-<li>Use <code>CSV.read()</code> to read a CSV file into a DataFrame</li>
+<li>Use <code>CSV.read("file.csv", DataFrame)</code> to read a CSV file into a DataFrame</li>
 <li>Use <code>CSV.write()</code> to write a DataFrame to a CSV file</li>
+<li><span class="highlight">This week</span>: this is how you load model data from files</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>The <code>DataFrame</code> is a <strong>required</strong> second argument of <code>CSV.read()</code> — it tells the function into which structure to read the file.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="plots" class="slide level2">
 <h2>Plots</h2>
@@ -216,6 +310,7 @@ Dr.&nbsp;Tobias Vlćek
 <li>Plotting in Julia is done through packages like Plots.jl</li>
 <li>Create basic plots with functions like <code>plot()</code>, <code>scatter()</code>, <code>bar()</code></li>
 <li>Customize plots with attributes like <code>title</code>, <code>xlabel</code>, <code>ylabel</code></li>
+<li><span class="highlight">This week</span>: plots help you to inspect data and results</li>
 </ul>
 <div class="fragment">
 <div class="callout callout-tip callout-style-simple">
@@ -224,7 +319,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>Explore different plot types and in the long term even backends for various output formats and interactivity.</p>
+<p>Explore different plot types; later, different backends offer other output formats and interactivity.</p>
 </div>
 </div>
 </div>
@@ -233,9 +328,9 @@ Dr.&nbsp;Tobias Vlćek
 <section id="solutions-from-last-week" class="slide level2">
 <h2>Solutions from last Week</h2>
 <ul>
-<li>The tutorials from last week will again be <span class="highlight">available on Friday</span></li>
-<li>You can access them in the project folder on Github</li>
-<li>Click on the little cat icon on the bottom right</li>
+<li>The solutions to the tutorials are made <span class="highlight">available at the end of each week</span></li>
+<li>You can access them in the project folder on GitHub</li>
+<li>Click on the GitHub icon (the Octocat) at the bottom right of the page</li>
 </ul>
 <div class="fragment">
 <div class="callout callout-tip callout-style-simple">
@@ -249,9 +344,107 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
+</section></section>
+<section>
+<section id="modelling-with-jump" class="title-slide slide level1 title center">
+<h1><span class="flow">Modelling with JuMP</span></h1>
 
+</section>
+<section id="what-is-jump" class="slide level2">
+<h2>What is JuMP?</h2>
+<p><span class="question">Question:</span> <strong>How do we get a model from paper into the computer?</strong></p>
+<div class="fragment">
+<ul>
+<li><span class="highlight">JuMP</span> is a package for modelling optimization problems</li>
+<li>We write variables, objective, and constraints <span class="highlight">almost like the math</span></li>
+<li>JuMP itself does not solve the model — it hands it to a <span class="highlight">solver</span></li>
+<li>Ours is <span class="highlight">HiGHS</span>, a free and open-source solver</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Model and solver are separate: JuMP describes <strong>what</strong> to optimize, HiGHS figures out <strong>how</strong> to solve it.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="remember-the-solar-panels" class="slide level2">
+<h2>Remember the Solar Panels?</h2>
+<p>In the first lecture, we formulated the transport problem:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Minimize} \quad F &amp;= \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} c_{i,j} \times X_{i,j} \\
+\text{subject to:} \quad
+&amp;\sum_{j \in \mathcal{J}} X_{i,j} \leq a_i \quad &amp;&amp;\forall i \in \mathcal{I} \\
+&amp;\sum_{i \in \mathcal{I}} X_{i,j} = b_j \quad &amp;&amp;\forall j \in \mathcal{J} \\
+&amp;X_{i,j} \geq 0 \quad &amp;&amp;\forall i \in \mathcal{I}, \forall j \in \mathcal{J}
+\end{aligned}
+\]</span></p>
+<p>Let’s now solve it — <span class="highlight">live in JuMP</span>!</p>
+</section>
+<section id="step-1-data-model-and-variables" class="slide level2">
+<h2>Step 1: Data, Model, and Variables</h2>
+<div id="4" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
+<span id="cb1-2"><a></a>c <span class="op">=</span> [<span class="fl">5010</span> <span class="fl">4640</span> <span class="fl">1980</span>; <span class="fl">7120</span> <span class="fl">1710</span> <span class="fl">6430</span>] <span class="co"># costs per truckload</span></span>
+<span id="cb1-3"><a></a>a <span class="op">=</span> [<span class="fl">34</span>, <span class="fl">41</span>]                         <span class="co"># available supply</span></span>
+<span id="cb1-4"><a></a>b <span class="op">=</span> [<span class="fl">21</span>, <span class="fl">17</span>, <span class="fl">29</span>]                     <span class="co"># customer demand</span></span>
+<span id="cb1-5"><a></a>transport <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
+<span id="cb1-6"><a></a><span class="fu">set_silent</span>(transport)                <span class="co"># hide the solver log</span></span>
+<span id="cb1-7"><a></a><span class="pp">@variable</span>(transport, X[<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>] <span class="op">&gt;=</span> <span class="fl">0</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>First the data, then the model with its solver, then the variables <span class="math inline">\(X_{i,j} \geq 0\)</span></li>
+</ul>
+</section>
+<section id="step-2-objective-and-constraints" class="slide level2">
+<h2>Step 2: Objective and Constraints</h2>
+<div id="6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a></a><span class="pp">@objective</span>(transport, Min,</span>
+<span id="cb2-2"><a></a>    <span class="fu">sum</span>(c[i,j] <span class="op">*</span> X[i,j] <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>))</span>
+<span id="cb2-3"><a></a><span class="pp">@constraint</span>(transport, [i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>],</span>
+<span id="cb2-4"><a></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>) <span class="op">&lt;=</span> a[i])</span>
+<span id="cb2-5"><a></a><span class="pp">@constraint</span>(transport, [j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>],</span>
+<span id="cb2-6"><a></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>) <span class="op">==</span> b[j]);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Compare this with the mathematical model: each line of math becomes <span class="highlight">one block of code</span></li>
+</ul>
+</section>
+<section id="step-3-solve-the-model" class="slide level2">
+<h2>Step 3: Solve the Model</h2>
+<div id="8" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a></a><span class="fu">optimize!</span>(transport)</span>
+<span id="cb3-2"><a></a><span class="fu">println</span>(<span class="st">"Minimal costs: "</span>, <span class="fu">objective_value</span>(transport), <span class="st">" Euro"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>Minimal costs: 225460.0 Euro</code></pre>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Exactly the optimal solution from the first lecture!</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Don’t worry if not every line is clear yet — this week’s tutorials build up this pattern step by step.</p>
+</div>
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="five-tutorials-for-this-week" class="title-slide slide level1 title center">
@@ -263,15 +456,15 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li><strong>JuMP</strong>: Learn how to use JuMP to define optimization problems</li>
 <li><strong>Variable Bounds</strong>: Learn how to set variable bounds</li>
-<li><strong>Constrains</strong>: Learn how to add constraints to your model</li>
+<li><strong>Constraints</strong>: Learn how to add constraints to your model</li>
 <li><strong>Advanced Modeling</strong>: Learn how to model more complex problems</li>
-<li><strong>Transport Problem</strong>: Learn how to solve a transportation problem</li>
+<li><strong>Transport Problem</strong>: Learn how to solve the transport problem from the first lecture</li>
 </ul>
 </section>
 <section id="get-started-with-the-tutorials" class="slide level2">
-<h2>Get started with the tutorials</h2>
+<h2>Get Started with the Tutorials</h2>
 <ul>
-<li>Download this weeks tutorials and start with the first one</li>
+<li>Download this week’s tutorials and start with the first one</li>
 <li><span class="highlight">Remember, you can ask questions anytime!</span></li>
 </ul>
 <div class="fragment">
@@ -284,14 +477,11 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>And that’s it for this lecture!</strong></p>
 </div>
 <div class="callout-content">
-<p>The remaining time we will already start working on the problems of the fourth lecture. From next week, we will start with different optimizations problems and topics, that we address together in the course.</p>
+<p>The remaining time we will already start working on this week’s tutorials. From next week on, we will work on different optimization problems and topics that we will address together in the course.</p>
 </div>
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="literature" class="title-slide slide level1 title center">
@@ -302,7 +492,9 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Literature</h2>
 <ul>
 <li><p>Lauwens, B., &amp; Downey, A. B. (2019). Think Julia: How to think like a computer scientist (First edition). O’Reilly®. <a href="https://benlauwens.github.io/ThinkJulia.jl/latest/book.html">Link to the free book website</a>.</p></li>
+<li><p>Kwon, C. (2019). Julia Programming for Operations Research (Second edition). <a href="https://www.chkwon.net/julia/">Link to the book website</a>.</p></li>
 <li><p><a href="https://docs.julialang.org/">Julia Documentation</a></p></li>
+<li><p><a href="https://jump.dev/JuMP.jl/stable/">JuMP Documentation</a></p></li>
 </ul>
 <p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
 

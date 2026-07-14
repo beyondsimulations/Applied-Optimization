@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -61,11 +62,15 @@
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
+# Note: This test passes as soon as Pkg is loaded in the current session,
+# even if an earlier cell imported it. To really test your own line,
+# restart the kernel first.
 try
-    Pkg.update()
-    println("Pkg module imported successfully and packages were updated!")
+    Pkg.status()
+    println("Pkg module imported successfully!")
 catch e
     @error "The Pkg module was not imported yet! Have you used the correct syntax?"
 end
@@ -81,28 +86,34 @@ end
 # conflicts between package versions. Activate a new environment with
 # `Pkg.activate("new_environment")` and add packages to it with
 # `Pkg.add("PackageName")`. This ensures that each of your projects has a
-# clean, dedicated set of dependencies. When you create a new environment,
-# Julia generates two important files:
+# clean, dedicated set of dependencies. Once you add the first package to
+# a new environment, Julia generates two important files:
 #
 # 1.  `Project.toml`: Lists direct dependencies of your project.
 # 2.  `Manifest.toml`: Contains a complete dependency graph of your
 #     project.
 #
 # These files help ensure reproducibility and should be version controlled
-# with your project. Remember what we did at the start of the lecture? We
-# activated `Pkg.activate("applied-optimization")` together, which means
-# we are already working in an environment!
-#
-# Before installing new packages, we should always activate this
-# environment again. This ensures that the packages are **installed in the
-# environment** and not globally.
-#
-# Remember how we did this at the start?
+# with your project. Remember what we did at the start of the tutorial? We
+# activated the course environment together, which means we are already
+# working in an environment:
 
 # %%
-Pkg.activate("applied-optimization")
+Pkg.activate("../applied-optimization")
 
 # %% [markdown]
+# Here, `"../applied-optimization"` is the path to the folder with the
+# course’s `Project.toml`, relative to the folder of this tutorial. Before
+# installing new packages, we should always activate this environment
+# again. This ensures that the packages are **installed in the
+# environment** and not globally.
+#
+# > **Caution**
+# >
+# > Check the path carefully: if it does not point to an existing
+# > environment, `Pkg.activate` silently creates a new, empty environment
+# > at that location, and your packages end up in the wrong place.
+#
 # > **Tip**
 # >
 # > Our environment is linked to the Jupyter kernel. It is the thing in
@@ -117,7 +128,7 @@ Pkg.activate("applied-optimization")
 # > `Manifest.toml`, a simple `Pkg.activate()` is faster and enough to
 # > load the environment in the working folder!
 #
-# Adding packages in Julia is afterwards straightforward using the
+# Afterwards, adding packages is straightforward using the
 # `Pkg.add("PackageName")` function. Replace `PackageName` with the actual
 # package name you wish to add.
 #
@@ -128,6 +139,7 @@ Pkg.activate("applied-optimization")
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
@@ -150,11 +162,35 @@ end
 # - To update all packages: `Pkg.update()`
 # - To remove a package: `Pkg.rm("PackageName")`
 #
-# If you wanted to update DataFrames, you’d use
-# `Pkg.update("DataFrames")`. To remove it, you’d use
-# `Pkg.rm("DataFrames")`.
+# > **Example**
+# >
+# > If you wanted to update DataFrames, you’d use
+# > `Pkg.update("DataFrames")`. To remove it, you’d use
+# > `Pkg.rm("DataFrames")`.
 #
-# ## Conclusion
+# Note that `Pkg.rm` only removes a package from the current environment.
+# The package itself stays in a shared folder on your computer (called the
+# depot, usually `~/.julia`), so other environments can still use it and
+# adding it again later is fast.
+#
+# ## Exercise 3.1 - Which Command?
+#
+# Imagine you no longer need DataFrames in the current environment. Which
+# function removes it? Assign the name of the function as a string to the
+# variable `remove_command`: `"add"`, `"update"`, or `"rm"`.
+
+# %%
+# YOUR CODE BELOW
+remove_command = ""
+
+# %%
+# Test your answer
+@assert remove_command in ["add", "update", "rm"] "Please assign one of the strings \"add\", \"update\" or \"rm\" to remove_command."
+@assert remove_command == "rm" "Not quite! Have another look at the list above: which function removes a package from the environment?"
+println("Correct! Pkg.rm(\"DataFrames\") removes the package from the current environment, but it stays in the depot on your computer.")
+
+# %% [markdown]
+# # Conclusion
 #
 # Congratulations! You’ve completed the tutorial on packages and package
 # management in Julia. These skills are important for effectively managing

@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture VII - Library Routing Optimization</title>
@@ -117,7 +118,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -224,7 +225,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -235,10 +236,20 @@ Dr.&nbsp;Tobias Vlćek
 <h1><span class="flow">Introduction</span></h1>
 
 </section>
+<section id="learning-objectives" class="slide level2">
+<h2>Learning Objectives</h2>
+<p>By the end of this lecture, you will be able to:</p>
+<ul>
+<li class="fragment"><strong>Formulate</strong> a vehicle routing problem as a mathematical model</li>
+<li class="fragment"><strong>Explain</strong> how subtours arise and how to prevent them</li>
+<li class="fragment"><strong>Assess</strong> why large instances are hard to solve exactly</li>
+<li class="fragment"><strong>Choose</strong> between exact methods and heuristics in practice</li>
+</ul>
+</section>
 <section id="central-libraries" class="slide level2" data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?q=80&amp;w=3540&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
 <h2><span class="invert-font">Central Libraries</span></h2>
 <div class="fragment">
-<p><span class="invert-font fragment"><strong>Question:</strong> Anybody an idea what a central library is?</span></p>
+<p><span class="invert-font fragment"><strong>Question:</strong> Does anyone have an idea what a central library is?</span></p>
 <div class="footer">
 
 </div>
@@ -257,7 +268,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="structure-of-the-deliveries" class="slide level2">
 <h2>Structure of the Deliveries</h2>
 <ul>
-<li>For delivery, central has <span class="highlight">several employees and cars</span></li>
+<li>For delivery, the central library has <span class="highlight">several employees and cars</span></li>
 <li>Local libraries differ in size, some receive <strong>more items</strong></li>
 <li>Items are <strong>collected as well</strong> during the tours<sup>1</sup></li>
 <li>They are <strong>transported back</strong> to the central library</li>
@@ -369,19 +380,19 @@ Dr.&nbsp;Tobias Vlćek
 <section id="basic-problem-setting" class="slide level2">
 <h2>Basic Problem Setting</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-01.svg" style="width:99.0%" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-01.svg" style="width:99.0%" alt="Map with a central depot and several customer nodes scattered around it" class="r-stretch"></section>
 <section id="basic-setting-with-arcs" class="slide level2">
 <h2>Basic Setting with Arcs</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-02.svg" style="width:99.0%" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-02.svg" style="width:99.0%" alt="Depot and customer nodes with arcs connecting the nodes to each other" class="r-stretch"></section>
 <section id="setting-with-vehicles" class="slide level2">
 <h2>Setting with Vehicles</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-03.svg" style="width:99.0%" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-03.svg" style="width:99.0%" alt="Depot and customer nodes with two vehicles positioned at the depot" class="r-stretch"></section>
 <section id="basic-setting-with-tours" class="slide level2">
 <h2>Basic Setting with Tours</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg" style="width:99.0%" class="r-stretch"></section></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg" style="width:99.0%" alt="Two vehicle tours starting and ending at the depot, each visiting a group of customers" class="r-stretch"></section></section>
 <section>
 <section id="problem-structure-1" class="title-slide slide level1 title center">
 <h1><span class="flow">Problem Structure</span></h1>
@@ -482,7 +493,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>Why this might make the problem difficult?</strong></p>
+<p><span class="question">Question:</span> <strong>Why might this make the problem difficult?</strong></p>
 </div>
 </section>
 <section id="decision-variables-again" class="slide level2">
@@ -603,7 +614,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 <div class="fragment">
-<p><span class="math display">\[\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}\]</span></p>
+<p><span class="math display">\[\text{Minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}\]</span></p>
 </div>
 <div class="fragment">
 <p><span class="question">Question:</span> <strong>What does <span class="math inline">\((i,j) \in \mathcal{A}\)</span> under the sum mean?</strong></p>
@@ -612,7 +623,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="from-math-to-code" class="slide level2">
 <h2>From Math to Code</h2>
 <p>The objective function in <strong>JuMP</strong> looks very similar:</p>
-<div id="7596e727" class="cell" data-execution_count="2">
+<div id="4" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
 <span id="cb1-2"><a></a></span>
 <span id="cb1-3"><a></a><span class="co"># Simple example with 4 nodes</span></span>
@@ -625,7 +636,7 @@ Dr.&nbsp;Tobias Vlćek
 <span id="cb1-10"><a></a></span>
 <span id="cb1-11"><a></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
 <span id="cb1-12"><a></a><span class="pp">@variable</span>(model, X[arcs], Bin)</span>
-<span id="cb1-13"><a></a><span class="pp">@objective</span>(model, Min, <span class="fu">sum</span>(c[i,j] <span class="op">*</span> X[(i,j)] <span class="cf">for</span> (i,j) <span class="kw">in</span> arcs))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-13"><a></a><span class="pp">@objective</span>(model, Min, <span class="fu">sum</span>(c[(i,j)] <span class="op">*</span> X[(i,j)] <span class="cf">for</span> (i,j) <span class="kw">in</span> arcs))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <div class="callout callout-note callout-style-simple">
@@ -634,16 +645,49 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>The JuMP syntax <code>sum(c[i,j] * X[(i,j)] for (i,j) in arcs)</code> directly mirrors our mathematical notation <span class="math inline">\(\sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}\)</span>!</p>
+<p>The JuMP syntax <code>sum(c[(i,j)] * X[(i,j)] for (i,j) in arcs)</code> directly mirrors our mathematical notation <span class="math inline">\(\sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}\)</span>!</p>
 </div>
 </div>
 </div>
 </div>
 </section>
+<section id="solving-the-small-example" class="slide level2">
+<h2>Solving the Small Example</h2>
+<p>Let’s add constraints and solve the example with <strong>one vehicle</strong>:</p>
+<div id="6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a></a><span class="co"># Each node has to be entered and left exactly once</span></span>
+<span id="cb2-2"><a></a><span class="cf">for</span> n <span class="kw">in</span> nodes</span>
+<span id="cb2-3"><a></a>    <span class="pp">@constraint</span>(model, <span class="fu">sum</span>(X[(i,j)] <span class="cf">for</span> (i,j) <span class="kw">in</span> arcs <span class="cf">if</span> j <span class="op">==</span> n) <span class="op">==</span> <span class="fl">1</span>)</span>
+<span id="cb2-4"><a></a>    <span class="pp">@constraint</span>(model, <span class="fu">sum</span>(X[(i,j)] <span class="cf">for</span> (i,j) <span class="kw">in</span> arcs <span class="cf">if</span> i <span class="op">==</span> n) <span class="op">==</span> <span class="fl">1</span>)</span>
+<span id="cb2-5"><a></a><span class="cf">end</span></span>
+<span id="cb2-6"><a></a><span class="fu">set_silent</span>(model)</span>
+<span id="cb2-7"><a></a><span class="fu">optimize!</span>(model)</span>
+<span id="cb2-8"><a></a><span class="fu">println</span>(<span class="st">"Arcs: "</span>, [a for a <span class="kw">in</span> arcs if <span class="fu">value</span>(X[a]) <span class="op">&gt;</span> <span class="fl">0.5</span>])</span>
+<span id="cb2-9"><a></a><span class="fu">println</span>(<span class="st">"Cost: "</span>, <span class="fu">objective_value</span>(model))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Arcs: [("A", "depot"), ("depot", "A"), ("C", "B"), ("B", "C")]
+Cost: 30.0</code></pre>
+</div>
+</div>
+</section>
+<section id="a-valid-solution" class="slide level2">
+<h2>A Valid Solution?</h2>
+<p>The solver chose the arcs depot ↔︎ A and B ↔︎ C with a cost of 30.</p>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>Is this a valid tour for one vehicle?</strong></p>
+</div>
+<div class="fragment">
+<ul>
+<li>No! The loop B ↔︎ C <strong>never visits the depot</strong></li>
+<li>Our model is still <span class="highlight">missing constraints</span></li>
+<li>We will fix this in the following sections!</li>
+</ul>
+</div>
+</section>
 <section id="problem-constraints" class="slide level2">
 <h2>Problem Constraints</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg" style="width:99.0%" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-04.svg" style="width:99.0%" alt="Two vehicle tours starting and ending at the depot, each visiting a group of customers" class="r-stretch"></section>
 <section id="constraints" class="slide level2">
 <h2>Constraints?</h2>
 <p><span class="question">Question:</span> <strong>What constraints do we need?</strong></p>
@@ -684,7 +728,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="subtours-1" class="slide level2">
 <h2>Subtours</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-05.svg" style="width:99.0%" class="r-stretch"></section></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_routing-basic-05.svg" style="width:99.0%" alt="Routing solution where some customers form a small loop that is disconnected from the depot" class="r-stretch"></section></section>
 <section>
 <section id="constraints-1" class="title-slide slide level1 title center">
 <h1><span class="flow">Constraints</span></h1>
@@ -729,10 +773,10 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could the constraint look like?</strong></p>
 <div class="fragment">
 <p><span class="math display">\[
-\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
+\sum_{i \in \mathcal{V}, i \neq j} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}
 \]</span></p>
 <p><span class="math display">\[
-\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
+\sum_{j \in \mathcal{V}, j \neq i} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}
 \]</span></p>
 </div>
 <div class="fragment">
@@ -742,8 +786,8 @@ Dr.&nbsp;Tobias Vlćek
 <p>The depot is the <strong>only node</strong> that is <span class="highlight">visited multiple times!</span></p>
 </div>
 </section>
-<section id="depot-entry-exit-constraints" class="slide level2">
-<h2>Depot Entry/ Exit Constraints?</h2>
+<section id="depot-entryexit-constraints" class="slide level2">
+<h2>Depot Entry/Exit Constraints?</h2>
 <div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
@@ -780,8 +824,8 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could the constraint look like?</strong></p>
 </div>
 </section>
-<section id="depot-entry-exit-constraints-1" class="slide level2">
-<h2>Depot Entry/ Exit Constraints</h2>
+<section id="depot-entryexit-constraints-1" class="slide level2">
+<h2>Depot Entry/Exit Constraints</h2>
 <p><span class="math display">\[
 \sum_{i \in \mathcal{V} \setminus \{0\}} X_{i,0} = |\mathcal{K}|
 \]</span></p>
@@ -803,6 +847,17 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
+</section>
+<section id="exactly-mathcalk-tours" class="slide level2">
+<h2>Exactly <span class="math inline">\(|\mathcal{K}|\)</span> Tours?</h2>
+<p><span class="question">Question:</span> <strong>What if 3 vehicles would suffice, but we own 5?</strong></p>
+<div class="fragment">
+<ul>
+<li>The constraints <strong>force</strong> all <span class="math inline">\(|\mathcal{K}|\)</span> vehicles to be used</li>
+<li>With generous capacity, this can lead to <span class="highlight">more tours than needed</span> and thus longer total travel times</li>
+<li>Replacing <span class="math inline">\(=\)</span> with <span class="math inline">\(\leq\)</span> would allow the solver to <strong>leave vehicles unused</strong></li>
+</ul>
+</div>
 </section></section>
 <section>
 <section id="capacity-and-subtour-elimination" class="title-slide slide level1 title center">
@@ -822,11 +877,17 @@ Dr.&nbsp;Tobias Vlćek
 <section id="mtz-formulation" class="slide level2">
 <h2>MTZ Formulation</h2>
 <ul>
-<li class="fragment"><strong>Miller-Tucker-Zemlin (MTZ)</strong> Constraints</li>
-<li class="fragment">Formulation by <span class="citation" data-cites="KARA2004793">Kara et al. (<a href="#/literature-ii" role="doc-biblioref" onclick="">2004</a>)</span></li>
+<li class="fragment"><strong>Miller-Tucker-Zemlin (MTZ)</strong> Constraints from 1960</li>
+<li class="fragment">Here, in the CVRP form of <span class="citation" data-cites="KARA2004793">Kara et al. (<a href="#/literature-i" role="doc-biblioref" onclick="">2004</a>)</span></li>
 <li class="fragment">Prevent subtours and <strong>track routes</strong> and <strong>capacity utilization</strong></li>
 <li class="fragment">First, we need <span class="highlight">an additional variable!</span></li>
-<li class="fragment"><span class="math inline">\(U_{i}\)</span> - Capacity utilization at <span class="math inline">\(i\)</span> of vehicle on its tour with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+</ul>
+</section>
+<section id="the-mtz-variable" class="slide level2">
+<h2>The MTZ Variable</h2>
+<ul>
+<li><span class="math inline">\(U_{i}\)</span> - Capacity utilization at <span class="math inline">\(i\)</span> of vehicle on its tour with <span class="math inline">\(i \in \mathcal{V} \setminus \{0\}\)</span></li>
+<li>Note that <span class="math inline">\(U_i\)</span> is a <strong>continuous</strong> variable, not a binary one!</li>
 </ul>
 <div class="fragment">
 <div class="callout callout-note callout-style-simple">
@@ -855,7 +916,7 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li><span class="math inline">\(\mathcal{V}\)</span> - Set of all nodes, index <span class="math inline">\(i \in \{0,1,2,...,n\}\)</span></li>
 <li><span class="math inline">\(X_{i,j}\)</span> - 1, if the arc between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is part of a tour, 0 otherwise</li>
-<li><span class="math inline">\(U_{i}\)</span> - Capacity utilization at <span class="math inline">\(i\)</span> of vehicle on its tour with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+<li><span class="math inline">\(U_{i}\)</span> - Capacity utilization at <span class="math inline">\(i\)</span> of vehicle on its tour with <span class="math inline">\(i \in \mathcal{V} \setminus \{0\}\)</span></li>
 <li><span class="math inline">\(b\)</span> - Capacity per vehicle (all are identical!)</li>
 <li><span class="math inline">\(d_i\)</span> - Demand at node <span class="math inline">\(i\)</span></li>
 </ul>
@@ -887,13 +948,13 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <h2>Don’t worry!</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg" style="width:99.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg" style="width:99.0%" alt="Example network with a depot and several customer nodes, each customer with a demand of one"></p>
 </div><div class="column" style="width:50%;">
 <ul>
 <li class="fragment">Let’s <span class="highlight">break it down!</span></li>
 <li class="fragment"><span class="math inline">\(d_i\)</span> for <strong>all customers</strong> is 1</li>
 <li class="fragment">Capacity <span class="math inline">\(b\)</span> <strong>per vehicle</strong> is 5</li>
-<li class="fragment"><span class="math inline">\(U_i\)</span> is the current <strong>capacity utilization</strong> at node <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+<li class="fragment"><span class="math inline">\(U_i\)</span> is the current <strong>capacity utilization</strong> at node <span class="math inline">\(i \in \mathcal{V} \setminus \{0\}\)</span></li>
 </ul>
 </div></div>
 </section>
@@ -901,10 +962,10 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <h2>No connection between nodes</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg" style="width:99.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg" style="width:99.0%" alt="Example network with a depot and several customer nodes, each customer with a demand of one"></p>
 </div><div class="column" style="width:50%;">
 <ul>
-<li class="fragment">In case <span class="math inline">\(X_{ij} = 0\)</span>:
+<li class="fragment">In case <span class="math inline">\(X_{i,j} = 0\)</span>:
 <ul>
 <li class="fragment"><span class="math inline">\(U_i - U_j \leq b - d_j\)</span></li>
 <li class="fragment"><strong>Non-binding</strong> for relation between two nodes</li>
@@ -920,10 +981,10 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <h2>Connection between two nodes</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg" style="width:99.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-01.svg" style="width:99.0%" alt="Example network with a depot and several customer nodes, each customer with a demand of one"></p>
 </div><div class="column" style="width:50%;">
 <ul>
-<li class="fragment">In case <span class="math inline">\(X_{ij} = 1\)</span>:
+<li class="fragment">In case <span class="math inline">\(X_{i,j} = 1\)</span>:
 <ul>
 <li class="fragment"><span class="math display">\[U_i - U_j + b \leq b - d_j\]</span></li>
 <li class="fragment"><strong>Binding</strong> for relation between two nodes</li>
@@ -940,8 +1001,8 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <p><span class="question">Question:</span> <strong>Why is it binding?</strong></p>
 <div class="fragment">
 <ul>
-<li>Binding as <span class="math inline">\(U_j\)</span> has to be <strong>at least as large</strong> as <span class="math inline">\(d_i + U_i\)</span></li>
-<li>Hence, fullfiled if the demand of <span class="math inline">\(i\)</span> is <span class="highlight">added to the vehicle</span></li>
+<li>Binding as <span class="math inline">\(U_j\)</span> has to be <strong>at least as large</strong> as <span class="math inline">\(d_j + U_i\)</span></li>
+<li>Hence, fulfilled if the demand of <span class="math inline">\(j\)</span> is <span class="highlight">added to the vehicle</span></li>
 </ul>
 </div>
 <div class="fragment">
@@ -949,8 +1010,8 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 </div>
 <div class="fragment">
 <ul>
-<li>If <span class="math inline">\(X_{ij} = 1\)</span>, then <span class="math inline">\(U_j\)</span> has to be <strong>at least as large</strong> as <span class="math inline">\(d_i + U_i\)</span></li>
-<li>If <span class="math inline">\(X_{ij} = 0\)</span>, then <span class="math inline">\(U_i \leq b\)</span> and <span class="math inline">\(U_j \geq d_j\)</span></li>
+<li>If <span class="math inline">\(X_{i,j} = 1\)</span>, then <span class="math inline">\(U_j\)</span> has to be <strong>at least as large</strong> as <span class="math inline">\(d_j + U_i\)</span></li>
+<li>If <span class="math inline">\(X_{i,j} = 0\)</span>, then <span class="math inline">\(U_i \leq b\)</span> and <span class="math inline">\(U_j \geq d_j\)</span></li>
 </ul>
 </div>
 </section>
@@ -958,7 +1019,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <h2>Tour from the Depot</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-03.svg" style="width:99.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-03.svg" style="width:99.0%" alt="A feasible tour of vehicle A that starts and ends at the depot"></p>
 </div><div class="column" style="width:50%;">
 <ul>
 <li class="fragment">Tour of vehicle A ok</li>
@@ -971,12 +1032,13 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <h2>Tour on its Own</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-04.svg" style="width:99.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-04.svg" style="width:99.0%" alt="A subtour that connects the nodes H and C without the depot"></p>
 </div><div class="column" style="width:50%;">
 <ul>
-<li class="fragment">Let’s start at node <span class="math inline">\(H\)</span></li>
-<li class="fragment">We drive to node <span class="math inline">\(C\)</span></li>
-<li class="fragment"><span class="math inline">\(U_C\)</span> = 1</li>
+<li class="fragment">Assume a subtour <span class="math inline">\(H \to C \to I \to H\)</span></li>
+<li class="fragment">Each arc on it has <span class="math inline">\(X_{i,j} = 1\)</span></li>
+<li class="fragment">From <span class="math inline">\(H\)</span> to <span class="math inline">\(C\)</span>:</li>
+<li class="fragment"><span class="math inline">\(U_C \geq U_H + 1\)</span></li>
 </ul>
 </div></div>
 </section>
@@ -984,11 +1046,12 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <h2>Tour on its Own II</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-05.svg" style="width:99.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-05.svg" style="width:99.0%" alt="The subtour continues from node C to node I, still without the depot"></p>
 </div><div class="column" style="width:50%;">
 <ul>
-<li class="fragment">We continue to node <span class="math inline">\(I\)</span></li>
-<li class="fragment"><span class="math inline">\(U_I\)</span> = 2</li>
+<li class="fragment">From <span class="math inline">\(C\)</span> to <span class="math inline">\(I\)</span>:</li>
+<li class="fragment"><span class="math inline">\(U_I \geq U_C + 1\)</span></li>
+<li class="fragment"><span class="math inline">\(U\)</span> has to <strong>increase</strong> along every arc of the subtour</li>
 </ul>
 </div></div>
 </section>
@@ -996,22 +1059,22 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <h2>Tour on its Own III</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-06.svg" style="width:99.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_routing-subtours-06.svg" style="width:99.0%" alt="The subtour closes the cycle from node I back to node H"></p>
 </div><div class="column" style="width:50%;">
 <ul>
-<li class="fragment">We continue to node <span class="math inline">\(H\)</span></li>
-<li class="fragment"><span class="math inline">\(U_H\)</span> = 3</li>
-<li class="fragment">Connection from <span class="math inline">\(H\)</span> to <span class="math inline">\(C\)</span></li>
-<li class="fragment"><span class="math inline">\(U_H\)</span> is <strong>greater</strong> than <span class="math inline">\(U_C\)</span>!</li>
-<li class="fragment"><span class="highlight">Infeasible solution!</span></li>
+<li class="fragment">From <span class="math inline">\(I\)</span> back to <span class="math inline">\(H\)</span>:</li>
+<li class="fragment"><span class="math inline">\(U_H \geq U_I + 1\)</span></li>
+<li class="fragment">Now, add up all three constraints</li>
+<li class="fragment">All <span class="math inline">\(U\)</span> cancel out: <span class="math inline">\(0 \geq 3\)</span></li>
+<li class="fragment"><span class="highlight">Impossible!</span> No feasible values for <span class="math inline">\(U\)</span> exist!</li>
 </ul>
 </div></div>
 </section>
 <section id="subtour-elimination" class="slide level2">
 <h2>Subtour Elimination</h2>
 <ul>
-<li>Connection in the other direction wouldn’t work as well</li>
-<li><strong>Only depot as “reset” </strong>, as constraints are not applied here</li>
+<li>The same argument holds for <strong>any</strong> subtour without the depot</li>
+<li><strong>Only depot as “reset”</strong>, as constraints are not applied here</li>
 </ul>
 <p><span class="question">Question:</span> <strong>What about the capacity?</strong></p>
 <div class="fragment">
@@ -1028,12 +1091,13 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 </section>
 <section id="ensure-time-limit" class="slide level2">
 <h2>Ensure time limit?</h2>
-<p><span class="question">Question:</span> <strong>Anybody an idea?</strong></p>
+<p><span class="question">Question:</span> <strong>Does anyone have an idea?</strong></p>
 <div class="fragment">
 <ul>
 <li>Constraints basically <strong>follow the same idea</strong>!</li>
 <li>First, we again need an additional variable</li>
-<li><span class="math inline">\(T_{i}\)</span> - Time spent on tour at node <span class="math inline">\(i\)</span> of a vehicle with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+<li><span class="math inline">\(T_{i}\)</span> - Time spent on tour at node <span class="math inline">\(i\)</span> of a vehicle with <span class="math inline">\(i \in \mathcal{V} \setminus \{0\}\)</span></li>
+<li><span class="math inline">\(T_i\)</span> is a <strong>continuous</strong> variable, just like <span class="math inline">\(U_i\)</span></li>
 </ul>
 </div>
 </section>
@@ -1051,7 +1115,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <ul>
 <li><span class="math inline">\(\mathcal{V}\)</span> - Set of all nodes, index <span class="math inline">\(i \in \{0,1,2,...,n\}\)</span></li>
 <li><span class="math inline">\(X_{i,j}\)</span> - 1, if the arc between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is part of a tour, 0 otherwise</li>
-<li><span class="math inline">\(T_{i}\)</span> - Time spent on tour at the node <span class="math inline">\(i\)</span> of a vehicle with <span class="math inline">\(i \in \mathcal{I}\)</span></li>
+<li><span class="math inline">\(T_{i}\)</span> - Time spent on tour at the node <span class="math inline">\(i\)</span> of a vehicle with <span class="math inline">\(i \in \mathcal{V} \setminus \{0\}\)</span></li>
 <li><span class="math inline">\(t\)</span> - Maximal duration of a tour</li>
 <li><span class="math inline">\(c_{i,j}\)</span> - Travel time on an arc from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span></li>
 </ul>
@@ -1065,8 +1129,19 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 </div>
 <div class="fragment">
 <p><span class="math display">\[
-0 \leq T_{i} \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+c_{0,i} \leq T_{i} \leq t - c_{i,0} \quad \forall i \in \mathcal{V} \setminus \{0\}
 \]</span></p>
+</div>
+</section>
+<section id="time-limit-and-the-depot" class="slide level2">
+<h2>Time limit and the depot</h2>
+<p><span class="question">Question:</span> <strong>Why do we need the tightened domain of <span class="math inline">\(T_i\)</span>?</strong></p>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(T_i \geq c_{0,i}\)</span>: the drive <span class="highlight">from the depot</span> to the first customer counts</li>
+<li><span class="math inline">\(T_i \leq t - c_{i,0}\)</span>: time to <span class="highlight">return to the depot</span> is reserved</li>
+<li>With just <span class="math inline">\(0 \leq T_i \leq t\)</span>, a tour could <strong>exceed the limit</strong> by the two depot legs!</li>
+</ul>
 </div>
 </section>
 <section id="section-6" class="slide level2 loud-slide">
@@ -1086,7 +1161,7 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 <section id="objective-1" class="slide level2">
 <h2>Objective</h2>
 <p><span class="math display">\[
-\text{minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}
+\text{Minimize} \quad \sum_{(i,j) \in \mathcal{A}} c_{i,j} \times X_{i,j}
 \]</span></p>
 <div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
@@ -1105,10 +1180,10 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 <section id="each-customer-is-visited-once" class="slide level2">
 <h2>Each customer is visited once</h2>
 <p><span class="math display">\[
-\sum_{i \in \mathcal{V}} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}, i \neq j
+\sum_{i \in \mathcal{V}, i \neq j} X_{i,j} = 1 \quad \forall j \in \mathcal{V} \setminus \{0\}
 \]</span></p>
 <p><span class="math display">\[
-\sum_{j \in \mathcal{V}} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}, i \neq j
+\sum_{j \in \mathcal{V}, j \neq i} X_{i,j} = 1 \quad \forall i \in \mathcal{V} \setminus \{0\}
 \]</span></p>
 <div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
@@ -1146,8 +1221,8 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 </div>
 </div>
 </section>
-<section id="capacity-subtour-elimination" class="slide level2">
-<h2>Capacity/ subtour elimination</h2>
+<section id="capacitysubtour-elimination" class="slide level2">
+<h2>Capacity/subtour elimination</h2>
 <p><span class="math display">\[
 U_i - U_j + b \times X_{i,j} \leq b - d_j \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
@@ -1174,7 +1249,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} \setminus \{0\}, i \neq j
 \]</span></p>
 <p><span class="math display">\[
-0 \leq T_i \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+c_{0,i} \leq T_i \leq t - c_{i,0} \quad \forall i \in \mathcal{V} \setminus \{0\}
 \]</span></p>
 <div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
@@ -1185,7 +1260,7 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 <p><strong>Our constraints ensure:</strong></p>
 </div>
 <div class="callout-content">
-<p>The time limit is respected (and subtours are eliminated).</p>
+<p>The time limit is respected (and subtours are eliminated). The domain of <span class="math inline">\(T_i\)</span> accounts for the travel from and back to the depot.</p>
 </div>
 </div>
 </div>
@@ -1193,13 +1268,13 @@ T_i - T_j + t \times X_{i,j} \leq t - c_{i,j} \quad \forall i,j \in \mathcal{V} 
 <section id="variables" class="slide level2">
 <h2>Variables</h2>
 <p><span class="math display">\[
-X_{i,j} \in \{0,1\} \quad \forall i,j \in \mathcal{V}
+X_{i,j} \in \{0,1\} \quad \forall (i,j) \in \mathcal{A}
 \]</span></p>
 <p><span class="math display">\[
 d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 \]</span></p>
 <p><span class="math display">\[
-0 \leq T_i \leq t \quad \forall i \in \mathcal{V} \setminus \{0\}
+c_{0,i} \leq T_i \leq t - c_{i,0} \quad \forall i \in \mathcal{V} \setminus \{0\}
 \]</span></p>
 <div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
@@ -1210,7 +1285,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <p><strong>The variable domains make sure that:</strong></p>
 </div>
 <div class="callout-content">
-<p>The binary setup variable is either 0 or 1 and the new variables are below the time and capacity limit.</p>
+<p>The binary setup variable is either 0 or 1 and the continuous variables <span class="math inline">\(U_i\)</span> and <span class="math inline">\(T_i\)</span> stay within the capacity and time limits.</p>
 </div>
 </div>
 </div>
@@ -1342,7 +1417,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <section id="problem-is-np-hard" class="slide level2">
 <h2>Problem is NP-hard</h2>
 <ul>
-<li>We have already seen that a problem <strong>can be NP-hard</strong></li>
+<li>We have already encountered <strong>NP-hard problems</strong> in this course</li>
 <li>Likely, that there are <strong>no polynomial-time algorithms</strong></li>
 <li><span class="highlight">Doesn’t mean that it can’t be solved!</span></li>
 </ul>
@@ -1401,10 +1476,19 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <h2>Understanding Optimality Gap</h2>
 <ul>
 <li class="fragment">The <strong>optimality gap</strong> measures: <span class="math display">\[\frac{\text{Best Solution} - \text{Lower Bound}}{\text{Lower Bound}} \times 100\%\]</span></li>
-<li class="fragment">A 40% gap means our solution <strong>could be</strong> up to 40% worse than optimal</li>
-<li class="fragment">For 165 libraries, even <strong>state-of-the-art solvers</strong> struggle</li>
-<li class="fragment"><span class="highlight">This is why we need heuristics!</span></li>
+<li class="fragment">A 40% gap means our solution <strong>could be</strong> up to 40% worse than optimal<sup>1</sup></li>
 </ul>
+<aside><ol class="aside-footnotes"><li id="fn2"><p>Note that most solvers (including HiGHS) report the gap relative to the best solution, <span class="math inline">\(\frac{\text{Best Solution} - \text{Lower Bound}}{\text{Best Solution}}\)</span>, so the numbers in the solver log differ slightly from our definition.</p></li></ol></aside></section>
+<section id="consequences-of-the-gap" class="slide level2">
+<h2>Consequences of the Gap</h2>
+<ul>
+<li>For 165 libraries, even <strong>state-of-the-art solvers</strong> struggle</li>
+</ul>
+<div class="fragment">
+<ul>
+<li><span class="highlight">This is why we need heuristics!</span></li>
+</ul>
+</div>
 </section>
 <section id="section-9" class="slide level2 loud-slide">
 <h2></h2>
@@ -1479,7 +1563,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 </section>
 <section id="hgs-cvrp-state-of-the-art" class="slide level2">
 <h2>HGS-CVRP: State-of-the-Art</h2>
-<p>In our case study we applied <strong>Hybrid Genetic Search</strong> for the CVRP (HGS-CVRP) by <span class="citation" data-cites="Vidal_2022">Vidal (<a href="#/literature-ii" role="doc-biblioref" onclick="">2022</a>)</span></p>
+<p>In our case study we applied <strong>Hybrid Genetic Search</strong> for the CVRP (HGS-CVRP) by <span class="citation" data-cites="Vidal_2022">Vidal (<a href="#/literature-i" role="doc-biblioref" onclick="">2022</a>)</span></p>
 <ul>
 <li class="fragment">Maintains <strong>diverse population</strong> of solutions</li>
 <li class="fragment">Applies <strong>intensive local search</strong> to improve offspring</li>
@@ -1500,7 +1584,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 </section>
 <section id="case-study-results" class="slide level2">
 <h2>Case Study Results</h2>
-<p>Using <strong>HGS-CVRP</strong> instead of exact optimization:</p>
+<p>In our project, using <strong>HGS-CVRP</strong> instead of exact optimization:</p>
 <ul>
 <li class="fragment">Solution found in <strong>&lt; 5 minutes</strong> (vs.&nbsp;hours with MIP)</li>
 <li class="fragment">Total driving distance reduced by <strong>~20%</strong> compared to manual planning</li>
@@ -1558,7 +1642,7 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>And that’s it for todays lecture!</strong></p>
+<p><strong>And that’s it for today’s lecture!</strong></p>
 </div>
 <div class="callout-content">
 <p>We now have covered the Capacitated Vehicle Routing Problem and are ready to start solving some tasks in the upcoming tutorial.</p>
@@ -1581,12 +1665,9 @@ d_i \leq U_i \leq b \quad \forall i \in \mathcal{V} \setminus \{0\}
 <h1><span class="flow">Literature</span></h1>
 
 </section>
-<section id="literature-i" class="slide level2">
+<section id="literature-i" class="slide level2 smaller scrollable">
 <h2>Literature I</h2>
 <p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
-</section>
-<section id="literature-ii" class="slide level2 smaller scrollable">
-<h2>Literature II</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">

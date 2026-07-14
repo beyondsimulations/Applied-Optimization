@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture XI - Arena Seat Planning under Distancing Rules</title>
@@ -31,8 +32,27 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -139,7 +159,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -203,6 +223,16 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
+</section>
+<section id="learning-goals" class="slide level2">
+<h2>Learning Goals</h2>
+<p>After this lecture, you will be able to:</p>
+<ul>
+<li class="fragment"><strong>Formulate</strong> the arena seating problem as a binary program</li>
+<li class="fragment"><strong>Model</strong> group placements with one binary variable per starting seat</li>
+<li class="fragment"><strong>Enforce</strong> distancing rules with rectangle covering constraints</li>
+<li class="fragment"><strong>Distinguish</strong> operational, tactical, and strategic seating decisions</li>
+</ul>
 </section></section>
 <section>
 <section id="problem-structure" class="title-slide slide level1 title center">
@@ -213,21 +243,11 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Example: Two different plans</h2>
 <div class="columns">
 <div class="column" style="width:45%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="https://images.byndsim.com/ao/ao_arena-layout_starr.png"></p>
-<figcaption>Fixed double-seat layout</figcaption>
-</figure>
-</div>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_arena-layout_starr.png" alt="Fixed double-seat layout"></p>
 </div><div class="column" style="width:10%;">
 
 </div><div class="column" style="width:45%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="https://images.byndsim.com/ao/ao_arena-layout_flex.png"></p>
-<figcaption>Flexible group-value layout</figcaption>
-</figure>
-</div>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_arena-layout_flex.png" alt="Flexible group-value layout"></p>
 </div></div>
 </section>
 <section id="different-approaches-possible" class="slide level2">
@@ -248,7 +268,7 @@ Dr.&nbsp;Tobias Vlćek
 <li>Focused on <span class="highlight">immediate execution</span></li>
 </ul>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>What is an example for this approach?</strong></p>
+<p><span class="question">Question:</span> <strong>What is an example of this approach?</strong></p>
 </div>
 <div class="fragment">
 <ul>
@@ -265,7 +285,7 @@ Dr.&nbsp;Tobias Vlćek
 <li>Bridges operational and strategic levels</li>
 </ul>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>What is an example for this approach?</strong></p>
+<p><span class="question">Question:</span> <strong>What is an example of this approach?</strong></p>
 </div>
 <div class="fragment">
 <ul>
@@ -282,20 +302,20 @@ Dr.&nbsp;Tobias Vlćek
 <li>Focus on overall goals and policies</li>
 </ul>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>What is an example for this approach?</strong></p>
+<p><span class="question">Question:</span> <strong>What is an example of this approach?</strong></p>
 </div>
 <div class="fragment">
 <ul>
-<li>Designing flexible seating layouts that work for scenarios</li>
+<li>Design one <strong>fixed layout</strong> that works well across different demand scenarios</li>
 <li>Maximize the overall <strong>space utilization</strong></li>
-<li>Sell the resulting maximized seating pattern on <strong>market</strong></li>
+<li>Sell the resulting layout as a <span class="highlight">standard product</span> on the market</li>
 </ul>
 </div>
 </section>
 <section id="main-question" class="slide level2" data-background-image="https://images.unsplash.com/photo-1604975701397-6365ccbd028a?q=80&amp;w=2670&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
 <h2><span class="invert-font">Main Question</span></h2>
 <p><span class="invert-font"><span class="task">Task:</span> <strong>Fill the seating area given distancing regulations and venue-specific constraints.</strong></span></p>
-<p><span class="fragment invert-font"><span class="task">Question:</span> <strong>Any ideas on how to approach this?</strong></span></p>
+<p><span class="fragment invert-font"><span class="question">Question:</span> <strong>Any ideas on how to approach this?</strong></span></p>
 <div class="footer">
 
 </div>
@@ -308,7 +328,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="knapsack-problem" class="slide level2">
 <h2>Knapsack Problem</h2>
 
-<img data-src="https://images.byndsim.com/ao/ao_arena-knapsack.svg" class="r-stretch"><ul>
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-knapsack.svg" alt="Illustration of the knapsack problem: several items of different sizes and values next to a knapsack with limited capacity" class="r-stretch"><ul>
 <li><span class="highlight">Standard model in Operations Research</span></li>
 <li><strong>Select items</strong> from a pool under <strong>capacity constraints</strong></li>
 </ul>
@@ -316,12 +336,12 @@ Dr.&nbsp;Tobias Vlćek
 <section id="knapsack-problem-in-2d" class="slide level2">
 <h2>Knapsack Problem in 2D</h2>
 
-<img data-src="https://images.byndsim.com/ao/ao_arena-knapsack_2d.svg" class="r-stretch"><ul>
-<li>Now, Items block space in 2D, as illustrated here</li>
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-knapsack_2d.svg" alt="Illustration of a two-dimensional knapsack problem where rectangular items are packed into a bounded area" class="r-stretch"><ul>
+<li>Now, items block space in 2D, as illustrated here</li>
 </ul>
 </section>
-<section id="adaption-to-seating" class="slide level2">
-<h2>Adaption to Seating</h2>
+<section id="adaptation-to-seating" class="slide level2">
+<h2>Adaptation to Seating</h2>
 <ul>
 <li>Horizontal dimension to place groups of participants</li>
 <li>Vertical dimension to ensure enough spacing between rows</li>
@@ -345,7 +365,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Hands-on Exercise</h2>
 <p><span class="task">Task:</span> <strong>Allocate as many high-value groups as possible.</strong></p>
 
-<img data-src="images/ao_arena-empty_exercise.svg" class="r-stretch"></section>
+<img data-src="images/ao_arena-empty_exercise.svg" alt="Seating grid with ten rows and ten columns of squares where grey squares mark blocked seats" class="r-stretch"></section>
 <section id="available-groups" class="slide level2 smaller">
 <h2>Available Groups</h2>
 <table class="caption-top">
@@ -440,6 +460,52 @@ Dr.&nbsp;Tobias Vlćek
 <p>You have 5 minutes to find a solution.</p>
 <p><span class="question">Question:</span> <strong>What is your total score?</strong></p>
 </div>
+</section>
+<section id="which-groups-did-you-pick-first" class="slide level2">
+<h2>Which Groups Did You Pick First?</h2>
+<p><span class="question">Question:</span> <strong>How valuable is each group per seat?</strong></p>
+<div class="fragment">
+<ul>
+<li>Groups c and g yield <span class="highlight">2 points per seat</span></li>
+<li>Group e yields 1.25 points, all other groups exactly 1</li>
+<li>Grabbing the “densest” groups first is a <strong>greedy strategy</strong></li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Placing all groups would require 53 seats and yield 67 points — but the blocked seats and the distancing rules make this impossible.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="how-good-is-your-plan" class="slide level2">
+<h2>How Good Is Your Plan?</h2>
+<p><span class="question">Question:</span> <strong>What is the best possible score?</strong></p>
+<div class="fragment">
+<ul>
+<li>The optimal seating plan reaches <span class="highlight">52 points</span></li>
+<li>Manual plans usually fall a few points short</li>
+<li>Greedy choices are a good start, but <strong>combining</strong> them optimally is hard</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>In the tutorial, we will model exactly this seating area and let the solver find the optimal plan <strong>within seconds</strong>.</p>
+</div>
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="model-formulation" class="title-slide slide level1 title center">
@@ -464,7 +530,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p><span class="math inline">\(\mathcal{C}_r\)</span> ensures that we only consider unblocked seats in each row.</p>
+<p><span class="math inline">\(\mathcal{C}_{g,r}\)</span> contains only <strong>feasible starting seats</strong>: a seat <span class="math inline">\(c\)</span> belongs to it only if the entire group <span class="math inline">\(g\)</span> fits into row <span class="math inline">\(r\)</span> from seat <span class="math inline">\(c\)</span> onward without crossing a blocked seat or the end of the row. This is why the set depends on both <span class="math inline">\(g\)</span> and <span class="math inline">\(r\)</span>.</p>
 </div>
 </div>
 </div>
@@ -509,7 +575,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>Each group is represented by <strong>one binary variable</strong>. We don’t need to block each seat explicitly with a binary variable!</p>
+<p>Each group is represented by <strong>one binary variable</strong>. We don’t need to block each seat explicitly with a binary variable! The sets <span class="math inline">\(\mathcal{C}_{g,r}\)</span> make this possible, as variables only exist where the <strong>whole group</strong> actually fits.</p>
 </div>
 </div>
 </div>
@@ -587,7 +653,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="fragment">
 <p><span class="math display">\[
-\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}
+\text{Maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}
 \]</span></p>
 </div>
 </section></section>
@@ -704,7 +770,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
 <div class="fragment">
 <p><span class="math display">\[
-\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_{r} \quad r \in \mathcal{R}
+\sum_{g\in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_{r} \quad \forall r \in \mathcal{R}
 \]</span></p>
 </div>
 <div class="fragment">
@@ -714,7 +780,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>We want to place as <strong>many highly scoring groups as possible</strong>, but people need to move to buy drinks or use restroom. Depending on the venue, they should <strong>not cross other groups</strong> in the <strong>same row</strong>.</p>
+<p>We want to place as <strong>many highly scoring groups as possible</strong>, but people need to move to buy drinks or use the restroom. Depending on the venue, they should <strong>not cross other groups</strong> in the <strong>same row</strong>.</p>
 </div>
 </div>
 </div>
@@ -739,7 +805,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="central-idea" class="slide level2">
 <h2>Central Idea</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups.png" class="r-stretch"><div class="fragment">
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups.png" alt="A row of seats in which a group of two occupies seats 8 and 9, illustrating which starting seats are blocked for a second group" class="r-stretch"><div class="fragment">
 <div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
 <div class="callout-icon-container">
@@ -792,9 +858,9 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="horizontal-social-distance-1" class="slide level2">
 <h2>Horizontal Social Distance</h2>
-<p>As the constraint is based on a rather complex set, you don’t have to find it by yourself.</p>
+<p>As the constraint is based on a rather complex set, you don’t have to find it on your own.</p>
 <div class="fragment">
-<p><span class="math display">\[\sum_{g \in \mathcal{G}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{c,g}} X_{g,r,\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}\]</span></p>
+<p><span class="math display">\[\sum_{g \in \mathcal{G}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{g,c}} X_{g,r,\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}\]</span></p>
 </div>
 <div class="fragment">
 <div class="callout callout-note callout-style-simple">
@@ -803,7 +869,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>At first glance, this constraint <span class="highlight">looks rather easy</span>, but it is not - it is based on the set <span class="math inline">\(\mathcal{C}_{c,g}\)</span> not defined yet in the lecture.</p>
+<p>At first glance, this constraint <span class="highlight">looks rather easy</span>, but it is not - it is based on the set <span class="math inline">\(\tilde{\mathcal{C}}_{g,c}\)</span>, a set not yet defined in the lecture.</p>
 </div>
 </div>
 </div>
@@ -811,7 +877,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="the-social-distancing-set" class="slide level2">
 <h2>The Social Distancing Set</h2>
-<p><span class="math display">\[\tilde{\mathcal{C}}_{c,g} = \{\tilde{c}\in \mathcal{C}| c - d_g + 1 - h \leq \tilde{c} \leq c \}\]</span></p>
+<p><span class="math display">\[\tilde{\mathcal{C}}_{g,c} = \{\tilde{c}\in \mathcal{C}_{g,r}| c - d_g + 1 - h \leq \tilde{c} \leq c \}\]</span></p>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
@@ -825,6 +891,7 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li><span class="math inline">\(d_g\)</span> - Required seats of group <span class="math inline">\(g\)</span> in a row</li>
 <li><span class="math inline">\(h\)</span> - Safety distance between groups sitting next to each other</li>
+<li><span class="math inline">\(\mathcal{C}_{g,r}\)</span> - Feasible starting seats, as variables only exist for these seats (the row <span class="math inline">\(r\)</span> follows from the constraint)</li>
 </ul>
 </div>
 </div>
@@ -837,17 +904,17 @@ Dr.&nbsp;Tobias Vlćek
 <section id="example-two-groups" class="slide level2 smaller">
 <h2>Example: Two Groups</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups.png" class="r-stretch"><p><span class="math display">\[\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} \leq 1 \quad (r=2,c=8)\]</span></p>
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups.png" alt="A row of seats in which a group of two occupies seats 8 and 9, with the blocked starting seats 6 to 8 for a second group of two" class="r-stretch"><p><span class="math display">\[\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} \leq 1 \quad (r=2,c=8)\]</span></p>
 </section>
 <section id="example-different-group-sizes" class="slide level2 smaller">
 <h2>Example: Different Group Sizes</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups_b.png" class="r-stretch"><p><span class="math display">\[\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{5}}+X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} \leq 1 \quad (r=2,c=8)\]</span></p>
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups_b.png" alt="A row of seats comparing the blocked starting seats for a group of two and a larger group of three" class="r-stretch"><p><span class="math display">\[\underbrace{X_{1,2,\textbf{6}}+X_{1,2,\textbf{7}}+X_{1,2,\textbf{8}}}_{g=1} + \underbrace{X_{2,2,\textbf{5}}+X_{2,2,\textbf{6}}+X_{2,2,\textbf{7}}+X_{2,2,\textbf{8}}}_{g=2} \leq 1 \quad (r=2,c=8)\]</span></p>
 </section>
 <section id="example-three-groups" class="slide level2 smaller">
 <h2>Example: Three Groups</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_arena-three_groups.png" class="r-stretch"><div class="temp-math-size">
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-three_groups.png" alt="A row of seats showing the blocked starting seats for three groups of sizes two, two, and three" class="r-stretch"><div class="temp-math-size">
 <style>
 .temp-math-size .math.display .MathJax  {
   font-size: 85% !important;
@@ -919,7 +986,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="fragment">
 <p><span class="math display">\[
-\sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \mathcal{R}_r} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{cg}} X_{g\tilde{r}\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}
+\sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \tilde{\mathcal{R}}_r} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{g,c}} X_{g,\tilde{r},\tilde{c}} \leq 1 \quad \forall r\in \mathcal{R}, c\in \mathcal{C}
 \]</span></p>
 </div>
 </section>
@@ -954,7 +1021,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="example-two-groups-1" class="slide level2">
 <h2>Example: Two Groups</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups_vertical_b.png" class="r-stretch"><ul>
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-two_groups_vertical_b.png" alt="Seating grid where a group of two starting in row 3, column 8 blocks the yellow seats around it, while blue seats mark feasible starting positions for a second group of two" class="r-stretch"><ul>
 <li>Yellow seats are <strong>blocked by the group</strong> in row 3 and column 8</li>
 <li>Blue allocations are possible (if second group has <strong>size 2</strong>)</li>
 </ul>
@@ -968,15 +1035,37 @@ Dr.&nbsp;Tobias Vlćek
 }
 </style>
 <p><span class="math display">\[
-\text{maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_r} v_g \times X_{g,r,c}
+\text{Maximize} \quad \sum_{g \in \mathcal{G}} \sum_{r \in \mathcal{R}} \sum_{c\in \mathcal{C}_{g,r}} v_g \times X_{g,r,c}
 \]</span> subject to: <span class="math display">\[
 \begin{align*}
-&amp; \sum_{r \in \mathcal{R}}\sum_{c \in \mathcal{C}_r} X_{g,r,c} \leq 1 &amp;&amp; \forall g \in \mathcal{G} \\
-&amp; \sum_{g \in \mathcal{G}}\sum_{c\in \mathcal{C}_r} X_{g,r,c} \leq p_r &amp;&amp; \forall r \in \mathcal{R} \\
-&amp; \sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \tilde{\mathcal{R}}_{r}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{c,g}} X_{g,\tilde{r},\tilde{c}} \leq 1 &amp;&amp; \forall r\in \mathcal{R}, c\in \mathcal{C} \\
-&amp; X_{g,r,c} \in \{0,1\} &amp;&amp; \forall g \in \mathcal{G}, \forall r\in \mathcal{R}, c\in \mathcal{C}_r
+&amp; \sum_{r \in \mathcal{R}}\sum_{c \in \mathcal{C}_{g,r}} X_{g,r,c} \leq 1 &amp;&amp; \forall g \in \mathcal{G} \\
+&amp; \sum_{g \in \mathcal{G}}\sum_{c\in \mathcal{C}_{g,r}} X_{g,r,c} \leq p_r &amp;&amp; \forall r \in \mathcal{R} \\
+&amp; \sum_{g \in \mathcal{G}} \sum_{\tilde{r} \in \tilde{\mathcal{R}}_{r}} \sum_{\tilde{c} \in \tilde{\mathcal{C}}_{g,c}} X_{g,\tilde{r},\tilde{c}} \leq 1 &amp;&amp; \forall r\in \mathcal{R}, c\in \mathcal{C} \\
+&amp; X_{g,r,c} \in \{0,1\} &amp;&amp; \forall g \in \mathcal{G}, r\in \mathcal{R}, c\in \mathcal{C}_{g,r}
 \end{align*}
 \]</span></p>
+</div>
+</section>
+<section id="where-did-the-horizontal-constraint-go" class="slide level2">
+<h2>Where Did the Horizontal Constraint Go?</h2>
+<p><span class="question">Question:</span> <strong>Why does the model contain only three constraints?</strong></p>
+<div class="fragment">
+<ul>
+<li>The vertical set <span class="math inline">\(\tilde{\mathcal{R}}_r\)</span> also contains <span class="math inline">\(\tilde{r} = r\)</span>, the <strong>row itself</strong></li>
+<li>For <span class="math inline">\(\tilde{r} = r\)</span>, the rectangle constraint is <strong>exactly</strong> the horizontal one</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>The rectangle constraint <strong>subsumes</strong> the horizontal social distance constraint. We can thus drop the horizontal constraint without losing anything.</p>
+</div>
+</div>
+</div>
 </div>
 </section></section>
 <section>
@@ -991,6 +1080,18 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment">Is the model formulation linear/ non-linear?</li>
 <li class="fragment">What kind of variable domains do we have?</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>The model is <strong>linear</strong>, as the objective and all constraints are weighted sums of the variables. All variables are <strong>binary</strong>, making it a pure binary program.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="model-assumptions" class="slide level2">
 <h2>Model Assumptions</h2>
@@ -1038,16 +1139,21 @@ Dr.&nbsp;Tobias Vlćek
 <section id="seating-plan" class="slide level2">
 <h2>Seating Plan</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_arena-vfl_rechnung.png" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_arena-vfl_rechnung.png" alt="Optimized seating plan of the VfL Osnabrück stadium grandstand with the allocated groups marked in the layout" class="r-stretch"></section>
 <section id="related-work" class="slide level2">
 <h2>Related Work</h2>
+<ul>
+<li>The model of this lecture is published in <span class="citation" data-cites="dkaidik_arena_2025">Dkaidik and Koch (<a href="#/literature-1" role="doc-biblioref" onclick="">2025</a>)</span></li>
+</ul>
+<div class="fragment">
 <p><span class="highlight">Similar studies</span> have been conducted globally:</p>
 <ul>
+<li>Music Hall Eindhoven: <span class="citation" data-cites="blom_filling_2022">Blom et al. (<a href="#/literature-1" role="doc-biblioref" onclick="">2022</a>)</span></li>
 <li>US College-level venues, e.g.&nbsp;Football, Basketball, Hockey</li>
-<li>Music Hall Eindhoven</li>
 <li>Safe Seating Solutions platform</li>
 <li>General 2D-Knapsack applications</li>
 </ul>
+</div>
 </section></section>
 <section>
 <section id="conclusion" class="title-slide slide level1 title center">
@@ -1083,7 +1189,7 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>And that’s it for todays lecture!</strong></p>
+<p><strong>And that’s it for today’s lecture!</strong></p>
 </div>
 <div class="callout-content">
 <p>We now have covered the arena seating problem based on a real-world application and are ready to start solving the corresponding tasks in the upcoming tutorial.</p>
@@ -1106,11 +1212,22 @@ Dr.&nbsp;Tobias Vlćek
 <h1><span class="flow">Literature</span></h1>
 
 </section>
-<section id="literature-i" class="slide level2">
-<h2>Literature I</h2>
+<section id="literature-1" class="slide level2 smaller scrollable">
+<h2>Literature</h2>
+<ul>
+<li>Press coverage of the VfL Osnabrück case: <a href="https://www.uni-hamburg.de/newsroom/forschung/2021/0611-stadionberechnungen.html">University of Hamburg newsroom</a> (in German)</li>
+</ul>
 <p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-blom_filling_2022" class="csl-entry" role="listitem">
+Blom, Danny, Rudi Pendavingh, and Frits Spieksma. 2022. <span>“Filling a <span>Theater</span> <span>During</span> the <span>COVID</span>-19 <span>Pandemic</span>.”</span> <em>INFORMS Journal on Applied Analytics</em> 52 (6): 473–84. <a href="https://doi.org/10.1287/inte.2021.1104">https://doi.org/10.1287/inte.2021.1104</a>.
+</div>
+<div id="ref-dkaidik_arena_2025" class="csl-entry" role="listitem">
+Dkaidik, Usama, and Matthes Koch. 2025. <span>“Arena <span>Seat</span> <span>Planning</span> <span>Under</span> <span>Distancing</span> <span>Rules</span>.”</span> In <em>Operations <span>Research</span> <span>Proceedings</span> 2024</em>. Springer. <a href="https://doi.org/10.1007/978-3-031-92575-7_12">https://doi.org/10.1007/978-3-031-92575-7_12</a>.
+</div>
+</div>
 </section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">

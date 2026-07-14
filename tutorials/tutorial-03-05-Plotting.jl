@@ -7,15 +7,16 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
-# # Tutorial III.III - DataFrames in Julia
+# # Tutorial III.V - Plotting in Julia
 #
 # Applied Optimization with Julia
 #
@@ -36,11 +37,12 @@
 #
 # Before we begin, let’s make sure you have the necessary packages
 # installed. If you’ve been following the course, you’ll need to install
-# the Plots and StatsPlots packages:
+# the Plots and StatsPlots packages (StatsPlots adds statistical plot
+# recipes like `boxplot`, which we will use at the end of this tutorial):
 
 # %%
 import Pkg
-Pkg.activate("applied-optimization")
+Pkg.activate("../applied-optimization")
 Pkg.add(["Plots","StatsPlots"])
 
 # %% [markdown]
@@ -83,6 +85,16 @@ display(line_plot)
 # - `title=...` sets the title of the plot
 # - `xlabel=...` and `ylabel=...` label the x and y axes
 # - `legend=false` turns off the legend (we’ll use this later)
+# - `display(line_plot)` shows the plot. In a notebook, the last
+#   expression of a cell is displayed automatically, so this line is
+#   optional here - but you will need `display` when you create plots
+#   inside loops or functions later in the course.
+#
+# > **Note**
+# >
+# > We use random numbers in this tutorial, so your plots will look
+# > different from the ones shown here. That is expected and not a
+# > mistake!
 #
 # ## Exercise 1.1 - Create a Scatter Plot
 #
@@ -94,9 +106,11 @@ display(line_plot)
 # YOUR CODE BELOW
 # Hint: Use x = 1:20 and y = rand(20)
 
+
 # %%
 # Test your answer
 @assert @isdefined scatter_plot
+@assert scatter_plot isa Plots.Plot "scatter_plot should be a plot object"
 println("Great job! You've created your first scatter plot.")
 
 # %% [markdown]
@@ -134,9 +148,11 @@ display(custom_plot)
 # YOUR CODE BELOW
 # Hint: Try different line styles (:dash, :dot), colors (:blue, :green), and markers (:star, :diamond)
 
+
 # %%
 # Test your answer
 @assert @isdefined custom_line_plot
+@assert custom_line_plot isa Plots.Plot "custom_line_plot should be a plot object"
 println("Excellent! You've created a custom line plot.")
 
 # %% [markdown]
@@ -175,17 +191,21 @@ display(multi_plot)
 # >
 # > The `plot!()` function (with an exclamation mark) adds to an existing
 # > plot instead of creating a new one. In addition, we used the label
-# > here to add a legend to the plot.
+# > here to add a legend to the plot. Remember how we switched the legend
+# > off with `legend=false` in Section 1? With multiple series, labels and
+# > the legend are exactly how the reader tells the series apart.
 #
 # ## Exercise 3.1 - Create a Multiple Series Plot
 #
-# NYour turn! Create a plot called `multi_series_plot` with three data
-# series `y1`, `y2`, and `y3`. Make sure to give each series a different
-# color and label.
+# Your turn! Create a plot called `multi_series_plot` with three data
+# series `y1`, `y2`, and `y3`. Give each series a label. You don’t have to
+# pick colors yourself - Plots.jl automatically cycles through different
+# colors for each series - but feel free to set your own with `color=`.
 
 # %%
 # YOUR CODE BELOW
 # Hint: Use plot() for the first series, then plot!() for the second and third
+
 
 # %%
 # Test your answer
@@ -193,21 +213,20 @@ display(multi_plot)
 @assert @isdefined y2
 @assert @isdefined y3
 @assert @isdefined multi_series_plot
+@assert multi_series_plot isa Plots.Plot "multi_series_plot should be a plot object"
 println("Fantastic! You've created a plot with multiple series.")
 
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# # Section 3 - Saving Plots to Files
+# # Section 4 - Saving Plots to Files
 #
 # Plots.jl supports saving your plots to various file formats including
 # PNG, SVG, and PDF, enabling you to use your plots outside of Julia. The
-# function to save plots is `savefig()`, the first argument is the plot
-# itself and the second argument is the `path/filename` format as string.
-# Replace `path` with the path, the `filename` with the actual name and
-# `format` with the file format, e.g. `pdf`, `png`, … . For example, if
-# you want to save your file as PDF, you would just name it
-# `path/filename.pdf`. For example:
+# function to save plots is `savefig()`: the first argument is the plot
+# itself and the second argument is the file path as a string. The file
+# extension (`.png`, `.pdf`, `.svg`, …) determines the format. For
+# example:
 #
 # ``` julia
 # savefig(plot_name, "path/filename.png")
@@ -215,14 +234,19 @@ println("Fantastic! You've created a plot with multiple series.")
 #
 # This saves the plot as a PNG file.
 #
-# ## Exercise 3.1 - Save a Plot to a File
+# ## Exercise 4.1 - Save a Plot to a File
 #
 # Save your `multi_series_plot` as a PNG file named “saved_plot.png” in
-# the “ExampleData” folder.
+# the “ExampleData” folder. The first line in the code block below creates
+# the folder in case it does not exist yet - do you remember `mkpath` from
+# the previous tutorial?
 
 # %%
+# This creates the ExampleData folder if it does not exist yet
+mkpath("$(@__DIR__)/ExampleData")
 # YOUR CODE BELOW
 # Don't forget to use the @__DIR__ macro to get the correct file path!
+
 
 # %%
 # Test your answer
@@ -232,11 +256,11 @@ println("Well done! You've saved your plot as an image file.")
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# # Section 4 - Advanced Plotting Techniques
+# # Section 5 - Advanced Plotting Techniques
 #
 # Let’s explore some other common plot types. While you don’t have to
 # solve any task here, the code might come in handy later on during the
-# course as recipe.
+# course as recipes you can copy.
 #
 # ## Bar Plot
 
@@ -250,6 +274,7 @@ bar_plot = bar(
     title="Bar Plot Example"
 )
 display(bar_plot)
+
 
 # %% [markdown]
 # ## Histogram

@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -31,6 +32,12 @@
 # and confirm your understanding with `@assert` statements. Make sure to
 # have the JuMP package installed to follow this tutorial.
 #
+# By the end of this tutorial, you’ll be able to:
+#
+# 1.  Create continuous, integer, and binary variables
+# 2.  Group many similar variables in containers like arrays and matrices
+# 3.  Set and change lower and upper bounds on variables
+#
 # Let’s start by loading the JuMP package:
 
 # %%
@@ -44,6 +51,14 @@ model = Model()
 println("Great! We've created a new optimization model.")
 
 # %% [markdown]
+# > **Note**
+# >
+# > In the last tutorial, we wrote `Model(HiGHS.Optimizer)` to tell JuMP
+# > which solver to use. Here we write `Model()` without a solver, because
+# > in this tutorial we only create variables and never solve the model.
+# > If you want to solve a model later, you can still attach a solver with
+# > `set_optimizer(model, HiGHS.Optimizer)`.
+#
 # ------------------------------------------------------------------------
 #
 # # Section 1 - Understanding Different Types of Variables
@@ -52,8 +67,8 @@ println("Great! We've created a new optimization model.")
 # decisions. JuMP allows us to use three main types of variables:
 #
 # 1.  **Continuous variables**: These can take any real value within a
-#     range. Example: The amount of water in a reservoir (can be any
-#     number, like 3.7 liters).
+#     range. Example: The amount of water in a bottle (can be any number,
+#     like 0.7 liters).
 #
 # 2.  **Integer variables**: These can only be whole numbers. Example: The
 #     number of cars produced in a factory (we can’t produce half a car!).
@@ -107,11 +122,13 @@ is_integer(variableName4)
 # YOUR CODE BELOW
 # Hint: Use the @variable macro three times, once for each variable
 
+
 # %%
 # Test your answer
 @assert typeof(water_amount) == VariableRef && !is_integer(water_amount) && !is_binary(water_amount)
 @assert typeof(cars_produced) == VariableRef && is_integer(cars_produced)
 @assert typeof(build_store) == VariableRef && is_binary(build_store)
+@assert is_valid(model, water_amount) && is_valid(model, cars_produced) && is_valid(model, build_store)
 println("Excellent work! You've successfully created continuous, integer, and binary variables.")
 
 # %% [markdown]
@@ -127,8 +144,8 @@ println("Excellent work! You've successfully created continuous, integer, and bi
 @variable(model, variableName5[1:20], Bin)
 
 # %% [markdown]
-# This would create a container with 20 variables. To create a set based
-# on a range, we could do:
+# This would create a container with 20 variables. To create a container
+# indexed by a range, we could do:
 
 # %%
 new_range = 1:100
@@ -146,6 +163,13 @@ new_range = 1:100
 # without any bound. Note that you will have to change `model` and
 # `variableName` according to your instance.
 #
+# > **Note**
+# >
+# > The three examples above together added more than 1000 variables to
+# > our shared `model`. That’s no problem here, as we never solve this
+# > model - but don’t be surprised if you inspect `model` and find it
+# > quite full.
+#
 # ## Exercise 2.1 - Create an Array
 #
 # Imagine you’re planning production for a week. Create an array
@@ -155,10 +179,12 @@ new_range = 1:100
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert length(daily_production) == 7
 @assert all(lower_bound(daily_production[i]) == 0 for i in 1:7)
+@assert all(is_valid(model, daily_production[i]) for i in 1:7)
 println("Great job! You've created an array of 7 non-negative variables for daily production.")
 
 # %% [markdown]
@@ -171,13 +197,20 @@ println("Great job! You've created an array of 7 non-negative variables for dail
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert size(stock_decision) == (3, 4)
 @assert all(is_binary(stock_decision[i,j]) for i in 1:3, j in 1:4)
+@assert all(is_valid(model, stock_decision[i,j]) for i in 1:3, j in 1:4)
 println("Excellent! You've created a 3x4 matrix of binary variables for stocking decisions.")
 
 # %% [markdown]
+# Matrices of variables like this one are the backbone of many
+# optimization models. For example, the transportation problem in Tutorial
+# IV.V uses exactly this shape to decide how much to ship from each
+# supplier to each customer.
+#
 # ------------------------------------------------------------------------
 #
 # # Section 3 - Setting Bounds on Variables
@@ -197,16 +230,29 @@ println("Excellent! You've created a 3x4 matrix of binary variables for stocking
 # @variable(model, 0 <= percentage <= 100)
 # ```
 #
+# We can also change the bounds of a variable after it has been created:
+
+# %%
+@variable(model, 100 <= production <= 500)
+set_lower_bound(production, 50)     # Lower the minimum to 50
+set_upper_bound(production, 600)    # Raise the maximum to 600
+delete_lower_bound(production)      # Remove the lower bound entirely
+
+# %% [markdown]
 # ## Exercise 3.1 - Set Bounds on a Variable
 #
 # Create a variable `temperature` that represents the temperature setting
-# on a thermostat. It should be between 0 and 37 degrees.
+# on a thermostat. It should be between 0 and 37 degrees Celsius. The test
+# checks both the lower and the upper bound, so set both at once using the
+# interval syntax `lower <= variable <= upper` from the examples above.
 
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
+@assert is_valid(model, temperature)
 @assert lower_bound(temperature) == 0
 @assert upper_bound(temperature) == 37
 println("Well done! You've created a variable for temperature with appropriate bounds.")
@@ -216,9 +262,10 @@ println("Well done! You've created a variable for temperature with appropriate b
 #
 # # Conclusion
 #
-# Fantastic! You’ve completed the tutorial on advanced variables in JuMP.
-# You’ve learned how to create variables in containers, manage different
-# types of variables, and work with indexed variables. Continue to the
+# Fantastic! You’ve completed the tutorial on variables and bounds in
+# JuMP. You’ve learned how to create continuous, integer, and binary
+# variables, how to group many variables in containers like arrays and
+# matrices, and how to set and change bounds on variables. Continue to the
 # next file to learn more.
 #
 # # Solutions

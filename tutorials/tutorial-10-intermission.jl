@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -22,11 +23,12 @@
 # # Introduction
 #
 # This tutorial is another short intermission to give you an idea of the
-# structure of the exam. You can hand in your answers at the end to
-# receive half a **bonus point**, if at least 75 % of the answers are
-# correct and you describe your work clearly. If you have any questions or
-# suggestions on how to improve the structure of the exam, please ask
-# them.
+# structure of the exam. The mock exam sums to **60 points** and each
+# point corresponds to approximately one minute of work — so plan for
+# roughly 60 minutes. You can hand in your answers at the end to receive
+# half a **bonus point**, if at least 75% of the answers are correct and
+# you describe your work clearly. If you have any questions or suggestions
+# on how to improve the structure of the exam, feel free to ask.
 #
 # The exam is just meant to be a **tool** to check your understanding of
 # the material and to give you a chance to show your skills. It is not
@@ -63,7 +65,7 @@
 #
 # Each period matches a shift length of a certain number of hours,
 # identical for all periods. The objective is to minimize the total cost
-# of production and storage while satisfying all demands and production
+# of setups and storage while satisfying all demands and production
 # capacities.
 #
 # Define all sets, parameters and variables required to model the problem
@@ -119,14 +121,15 @@
 # %% [markdown]
 # ## 1.e (9 Points)
 #
-# Due to the success of the companies, workers demand higher wages and a
+# Due to the company’s success, workers demand higher wages and a
 # compensation for working overtime. Your task is to extend the model to
-# reflect this new situation. In the future, each worked hour in a period
-# has a fixed cost per shift hour, identical for all periods. If the
-# production time in one period exceeds the shift-length, workers have to
-# work overtime. For each hour working overtime, the fixed costs per hour
-# are 50% higher than usual. Furthermore, more than an additional time of
-# a half a shift length is not allowed due to legal reasons.
+# reflect this new situation. In the future, each shift hour costs a fixed
+# wage, identical for all periods, and workers are paid for the full shift
+# regardless of how much is produced. If the production time in one period
+# exceeds the shift length, workers have to work overtime. Each hour of
+# overtime costs 50% more than a regular shift hour. Furthermore, overtime
+# of more than half a shift length per period is not allowed due to legal
+# reasons.
 #
 # How can you expand your model to reflect this new situation? Write down
 # all additional or modified sets, parameters, variables, constraints and
@@ -134,19 +137,19 @@
 #
 # > **Tip**
 # >
-# > Note, that you only need to write down new and modified elements!
+# > Note that you only need to write down new and modified elements!
 
 # %% [raw] raw_mimetype="typst"
 # #pagebreak()
 
 # %% [markdown]
-# ## 1.f (4 points)
+# ## 1.f (4 Points)
 #
 # What assumptions are made in the model that might not hold in the real
 # world?
 #
-# Please describe at least two assumptions with a 1-3 sentences and
-# explain briefly why they might not hold.
+# Please describe at least two assumptions in 1-3 sentences and explain
+# briefly why they might not hold.
 
 # %% [raw] raw_mimetype="typst"
 # #pagebreak()
@@ -178,7 +181,7 @@
 # not able to handle the problem. What could you try to solve the problem
 # instead?
 #
-# Please describe one approach to adress the problem and describe the
+# Please describe one approach to address the problem and describe the
 # advantages and disadvantages of the approach in a few sentences.
 
 # %% [raw] raw_mimetype="typst"

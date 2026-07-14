@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -57,33 +58,43 @@ end
 # %% [markdown]
 # This prints each fruit in the `fruits` array.
 #
-# The `break` statement can be utilized to exit the loop based on a
-# condition. To check some condition, we can use `if` statements. For
-# example:
+# Sometimes we only want to run code **if** a certain condition is true.
+# For this, we can use an `if` statement. It checks a condition (like the
+# comparisons from the previous tutorial) and only runs the code inside if
+# that condition is `true`. For example:
 
 # %%
-loop_number = 0
+number = 7
+if number > 5
+    println("The number is larger than 5!")
+end
+
+# %% [markdown]
+# The `break` statement can be utilized to exit the loop based on a
+# condition. For example:
+
+# %%
 for x in 1:10
-    loop_number = x
-    println(loop_number)
-    if loop_number == 4
+    println(x)
+    if x == 4
         break
     end
 end
 
 # %% [markdown]
-# This exits the loop in iteration `4`, as the condition
-# `loop_number == 4` is true here.
+# This exits the loop in iteration `4`, as the condition `x == 4` is true
+# here.
 #
-# We can also chain `if` statements. For example:
+# We can also chain conditions with `elseif` and `else`. Julia checks the
+# conditions from top to bottom and runs the first block whose condition
+# is `true`. If no condition is `true`, it runs the `else` block. For
+# example:
 
 # %%
-loop_number = 0
 for x in 1:10
-    loop_number = x
-    if loop_number <= 2
-        println(loop_number)
-    elseif loop_number == 3
+    if x <= 2
+        println(x)
+    elseif x == 3
         println("We reached 3!")
     else
         break
@@ -104,6 +115,28 @@ end
 # > 3.  When done with one item, move to the next
 # > 4.  Stop when you’ve used all items (or when told to break)
 #
+# > **Running the Tutorial as a Script?**
+# >
+# > In the interactive notebook, the following exercises work exactly as
+# > described. But if you download this tutorial as a `.jl` file and run
+# > the whole file as a script (for example with
+# > `julia tutorial-02-04-loops.jl`), Julia is stricter: to change a
+# > variable that was created **outside** a loop from **inside** the loop,
+# > you have to write `global` in front of it. Otherwise, Julia treats it
+# > as a new variable inside the loop, and you get a warning and an
+# > `UndefVarError`. For example:
+# >
+# > ``` julia
+# > sum_numbers = 0
+# > for i in 1:5
+# >     global sum_numbers = sum_numbers + i
+# > end
+# > ```
+# >
+# > This applies to all exercises in this tutorial where you change a
+# > variable inside a loop. The examples in the next section already
+# > include `global` where it is needed, so they work in both settings.
+#
 # ## Exercise 1.1 - Sum the Numbers from 1 to 5
 #
 # Sum the numbers from `1` to `5` in a loop. The next lines initialize
@@ -113,6 +146,7 @@ end
 # %%
 sum_numbers = 0
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
@@ -130,6 +164,7 @@ println("Sum of numbers from 1 to 5: ", sum_numbers)
 sum_evens = 0
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert sum_evens == 30
@@ -146,7 +181,7 @@ println("Sum of even numbers from 1 to 10: ", sum_evens)
 # ## Exercise 1.3 - Exit the Loop if the Current Fruit is Banana
 #
 # Iterate over each fruit in the `fruits` array, store the current fruit
-# in `current_fruit`, and exit the loop if `current_fruit` is `banana`.
+# in `current_fruit`, and exit the loop if `current_fruit` is `"banana"`.
 # The next lines initialize the `fruits` array and `current_fruit`
 # variable.
 
@@ -154,6 +189,7 @@ println("Sum of even numbers from 1 to 10: ", sum_evens)
 fruits = ["apple", "banana", "cherry"]
 current_fruit = "None"
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
@@ -163,7 +199,7 @@ println("The current fruit is: ", current_fruit)
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# # Section 2 - While Loops for Conditional Execution
+# # Section 2 - While Loops
 #
 # A `while` loop is like giving instructions to your assistant: “Keep
 # doing this task as long as this condition is true.” They’re particularly
@@ -175,7 +211,7 @@ println("The current fruit is: ", current_fruit)
 number = 10
 while number >= 5
     println("Number is: $number")
-    number = number - 1
+    global number = number - 1
 end
 println("Final number: $number")
 
@@ -187,7 +223,7 @@ println("Final number: $number")
 lives = 3
 while lives > 0
     println("Playing game... Lives left: $lives")
-    lives = lives - 1
+    global lives = lives - 1
 end
 println("Game Over!")
 
@@ -195,12 +231,9 @@ println("Game Over!")
 # Keep filling water bucket until full
 current_liters = 0
 bucket_size = 5
-while true
+while current_liters < bucket_size
     println("Adding 1 liter...")
-    current_liters = current_liters + 1
-    if current_liters == bucket_size
-        break
-    end
+    global current_liters = current_liters + 1
 end
 println("Bucket is full!")
 
@@ -223,6 +256,7 @@ println("Bucket is full!")
 current_value = 10
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert current_value == 2
@@ -238,6 +272,7 @@ println("The first value smaller than 3 is: ", current_value)
 # %%
 first_multiple_of_7 = 0
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
@@ -280,8 +315,9 @@ end
 # %%
 numbers1 = [1, 2, 3]
 numbers2 = [4, 5, 6]
-products = []
+products = Int[]
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
@@ -291,7 +327,11 @@ println("Products of each pair from two arrays: ", products)
 # %% [markdown]
 # > **Tip**
 # >
-# > Remember, you can use push!() to append elements to an array.
+# > Remember, you can use push!() to append elements to an array. Loop
+# > over `numbers1` in the outer loop and over `numbers2` in the inner
+# > loop, so your products appear in the expected order. By the way:
+# > `Int[]` creates an empty array that can only hold integers - this is
+# > better practice than a plain `[]`, which can hold anything.
 #
 # ------------------------------------------------------------------------
 #
@@ -320,12 +360,20 @@ println("Products of each pair from two arrays: ", products)
 #
 # Both create `[1, 4, 9, 16, 25]`, but the second way is more concise!
 #
+# > **Note**
+# >
+# > This syntax is worth learning well: later in the course, we will use
+# > almost the same pattern to define sums and constraints in optimization
+# > models with JuMP, for example `sum(x[i] for i in 1:10)`.
+#
 # ## Exercise 4.1 - Create a List of Even Numbers
 #
-# Create a list of even numbers from 1 to 10 using a list comprehension.
+# Create a list of even numbers from 1 to 10 using a list comprehension
+# and store it in `even_numbers`.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
@@ -338,7 +386,7 @@ println("Even numbers from 1 to 10: ", even_numbers)
 # # Conclusion
 #
 # Great work! You’ve successfully navigated through the basics of loops in
-# Julia. You’ve seen for and while loops, tackled iterable structure, and
+# Julia. You’ve seen for and while loops, tackled iterable structures, and
 # worked on nested loops. Continue to the next file to learn more.
 #
 # # Solutions

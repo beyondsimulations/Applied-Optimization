@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -32,10 +33,12 @@
 # our optimization solver to help it find solutions more efficiently or to
 # meet specific requirements.
 #
-# By the end of this tutorial, you’ll be able to: 1. Understand what
-# solver options are and why they’re useful 2. Set basic solver options
-# like time limits and solution tolerances 3. Interpret solver output to
-# understand how well your problem was solved
+# By the end of this tutorial, you’ll be able to:
+#
+# 1.  Understand what solver options are and why they’re useful
+# 2.  Set basic solver options like time limits and solution tolerances
+# 3.  Interpret solver output to understand how well your problem was
+#     solved
 #
 # Let’s start by loading the necessary packages:
 
@@ -45,7 +48,7 @@ using JuMP, HiGHS
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# # Section 1: Understanding Solver Options
+# # Section 1 - Understanding Solver Options
 #
 # Solver options are like the “advanced settings” of our optimization
 # tool. They allow us to control how the solver approaches our problem.
@@ -75,19 +78,26 @@ println("Solver options set successfully!")
 # Let’s break this down:
 #
 # - `set_time_limit_sec(model, 60)` tells the solver to stop after 60
-#   seconds if it hasn’t found a solution
+#   seconds and return the best solution it has found so far, if any
 # - `set_optimizer_attribute(model, "mip_rel_gap", 0.01)` sets how close
-#   to the best possible solution we need to be (within 1%)
+#   to the best possible solution we need to be (within 1%). This means
+#   the solver is allowed to stop as soon as it can prove that its best
+#   solution is at most 1% worse than the true optimum - even if it is not
+#   the exact optimum. We will see this in action in the next section.
 # - `set_optimizer_attribute(model, "presolve", "on")` tells the solver to
 #   try simplifying the problem first
 #
 # ## Exercise 1.1 - Set Solver Options
 #
-# Now it’s your turn! Set the following solver options: 1. A time limit of
-# 120 seconds 2. A MIP gap tolerance of 0.5% 3. Turn off presolve
+# Now it’s your turn! Set the following solver options:
+#
+# 1.  A time limit of 120 seconds
+# 2.  A MIP gap tolerance of 0.5%
+# 3.  Turn off presolve
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
@@ -100,7 +110,7 @@ println("Great job! You've successfully set advanced solver options.")
 # %% [markdown]
 # ------------------------------------------------------------------------
 #
-# # Section 2: Creating and Solving a Sample Problem
+# # Section 2 - Creating and Solving a Sample Problem
 #
 # To see how these options affect solving, let’s create a simple
 # optimization problem. We’ll use a basic production planning scenario.
@@ -115,6 +125,7 @@ println("Great job! You've successfully set advanced solver options.")
 @variable(model, gadgets >= 0, Int)
 
 # Define constraints
+# We have 240 minutes of production time available
 @constraint(model,
     production_time,
     2*widgets + 3*gadgets <= 240
@@ -134,6 +145,10 @@ println("Great job! You've successfully set advanced solver options.")
     25*widgets + 30*gadgets
 )
 
+# The solver options from Section 1 still belong to this model!
+# We tighten the MIP gap to 0, so the solver proves the exact optimum
+set_optimizer_attribute(model, "mip_rel_gap", 0.0)
+
 # Solve the problem
 optimize!(model)
 
@@ -145,7 +160,28 @@ println("Gadgets to produce: ", value(gadgets))
 
 # %% [markdown]
 # This problem determines how many widgets and gadgets to produce to
-# maximize profit, given time constraints and maximum demand.
+# maximize profit, given the available production time in minutes and the
+# maximum demand for each product.
+#
+# Take a close look at the results. The best plan is 78 widgets and 28
+# gadgets, with a profit of 2790. Notice that the solver does not simply
+# max out widgets, even though widgets earn the most profit per minute.
+# The “greedy” plan - produce 80 widgets first, then fill the remaining
+# time with 26 gadgets - earns only 2780. If we allowed fractional
+# production, the best plan would be 80 widgets and 26.67 gadgets with a
+# profit of 2800, but we cannot sell two-thirds of a gadget, and simply
+# rounding down loses money. Finding the best whole-number plan is exactly
+# what makes integer programming powerful - and hard!
+#
+# > **Note**
+# >
+# > Why did we tighten the MIP gap to 0 before solving? With the 1% gap
+# > from Section 1 still active, the solver is allowed to stop at any plan
+# > it can prove to be within 1% of the best. When we tried it, HiGHS
+# > stopped at 79 widgets and 27 gadgets with a profit of 2785 - “good
+# > enough” by the rule we gave it, but not the true optimum. Keep this in
+# > mind whenever you combine gap tolerances with tests that expect exact
+# > values.
 #
 # ## Exercise 2.1 - Modify and Solve the Problem
 #
@@ -154,27 +190,45 @@ println("Gadgets to produce: ", value(gadgets))
 # 1.  Changing the production time constraint to 300 minutes
 # 2.  Increasing the profit for widgets to 30
 # 3.  Solving the modified problem and printing the results
+#
+# > **Tip**
+# >
+# > Re-initializing with `Model(HiGHS.Optimizer)` gives you a completely
+# > fresh model. Remember from Section 1 that solver options belong to the
+# > model - the time limit, MIP gap, and presolve settings you set earlier
+# > are gone, and you would have to set them again if you need them.
 
 # %%
 # YOUR CODE BELOW
 # Hint: Copy the code above and make the necessary changes
 model = Model(HiGHS.Optimizer) # Don't forget to re-initialize the model
 
+
 # %%
 # Test your answer
 @assert termination_status(model) == MOI.OPTIMAL "The termination status should be OPTIMAL but is $(termination_status(model))"
 @assert isapprox(objective_value(model), 3780, atol=1e-6) "The objective value should be 3780 but is $(objective_value(model))"
-@assert isapprox(value(widgets), 80, atol=1e-6) "The number of widgets to produce should be 80 but is $(value(widgets))"
-@assert isapprox(value(gadgets), 46, atol=1e-6) "The number of gadgets to produce should be 46 but is $(value(gadgets))"
 println("Excellent work! You've successfully modified and solved the optimization problem.")
 
 # %% [markdown]
+# > **Note**
+# >
+# > Why does the test only check the profit and not the number of widgets
+# > and gadgets? Because the modified problem has several optimal plans:
+# > 80 widgets and 46 gadgets, 79 and 47, and 78 and 48 all respect the
+# > time limit and earn exactly 3780. Both products now bring in the same
+# > profit per unit, so the solver is free to return any of these plans -
+# > which one you get depends on the solver’s internal path. Whenever a
+# > problem can have several optimal solutions, test the objective value,
+# > not the variable values.
+#
 # ------------------------------------------------------------------------
 #
-# # Section 3: Interpreting Solver Output
+# # Section 3 - Interpreting Solver Output
 #
 # When we solve an optimization problem, the solver gives us information
-# about how it went. Let’s look at some key pieces of information:
+# about how it went. Let’s look at some key pieces of information for the
+# problem we solved in Section 2:
 
 # %%
 println("Termination status: ", termination_status(model))
@@ -191,7 +245,9 @@ println("Solve time: ", solve_time(model))
 # - **Primal status**: Indicates if we have a valid solution for our
 #   original problem
 # - **Dual status**: Relates to the mathematical properties of the
-#   solution (don’t worry too much about this)
+#   solution; it becomes important for sensitivity analysis later in the
+#   course. For integer problems like ours there is no dual solution,
+#   which is why it shows `NO_SOLUTION` here.
 # - **Objective value**: The value of our objective function (in this
 #   case, our profit)
 # - **Solve time**: How long it took to solve the problem

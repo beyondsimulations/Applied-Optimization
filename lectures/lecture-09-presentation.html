@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture IX - Safety Planning for the Islamic Pilgrimage</title>
@@ -51,7 +52,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -158,7 +159,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -184,25 +185,35 @@ Dr.&nbsp;Tobias Vlćek
 <li><strong>The great Islamic pilgrimage towards Mecca</strong></li>
 <li>The holy city is the <strong>religious center</strong> of the Islamic religion</li>
 <li>Located in the <strong>Kingdom of Saudi Arabia</strong></li>
-<li>Each physically able Muslim should <strong>perform Hajj once</strong></li>
+<li>Each Muslim who is able should <strong>perform Hajj once</strong></li>
 <li><span class="highlight">Confined spaces</span> around the holy sites</li>
-<li>Only <strong>few million</strong> people are annually allowed</li>
+<li>Only <strong>a few million</strong> people are allowed annually</li>
+</ul>
+</section>
+<section id="learning-goals" class="slide level2">
+<h2>Learning Goals</h2>
+<p>After this lecture, you will be able to:</p>
+<ul>
+<li class="fragment">Structure a real-world <strong>scheduling problem</strong></li>
+<li class="fragment">Use <strong>subsets</strong> to keep large models small</li>
+<li class="fragment">Model time preferences with <span class="highlight">precomputed penalties</span></li>
+<li class="fragment">Limit <strong>fluctuations</strong> between consecutive periods</li>
 </ul>
 </section>
 <section id="mina-tent-city" class="slide level2">
 <h2>Mina Tent City</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-mecca01.png" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-mecca01.png" alt="Aerial view of the Mina tent city near Mecca with thousands of white tents" class="r-stretch"></section>
 <section id="mina-tent-city-1" class="slide level2">
 <h2>Mina Tent City</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-mecca03.png" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-mecca03.png" alt="Aerial close-up of white tents arranged in dense blocks in Mina" class="r-stretch"></section>
 <section id="the-scope-of-the-hajj" class="slide level2">
 <h2>The scope of the Hajj</h2>
 <ul>
 <li>Pilgrimage is actually a <span class="highlight">multi-day journey</span></li>
 <li>Involves a number of <strong>different rituals at several ritual sites</strong></li>
-<li>Our efforts focused on the <strong>Rhamy-Al-Jamarat ritual</strong></li>
+<li>Our efforts focused on the <strong>Ramy al-Jamarat ritual</strong></li>
 </ul>
 <div class="fragment">
 <div class="callout callout-caution callout-titled callout-style-simple">
@@ -211,7 +222,7 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Rhamy-Al-Jamarat ritual</strong></p>
+<p><strong>Ramy al-Jamarat ritual</strong></p>
 </div>
 <div class="callout-content">
 <p>Pilgrims throw pebbles against three pillars, which symbolize the temptations of the devil. They repeat this ritual with small variations on four consecutive days.</p>
@@ -226,7 +237,7 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li>1.5–2 million people reside in the tent city</li>
 <li>Pilgrims repeatedly access the holy site</li>
-<li>Perform the Rhamy-Al-Jamarat ritual</li>
+<li>Perform the Ramy al-Jamarat ritual</li>
 <li>Walk through a network of streets and pathways</li>
 <li>Later proceed to the Kaaba or return to the camp</li>
 </ul>
@@ -305,7 +316,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Pedestrian Traffic</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-pedtraf-1.png" style="width:100.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-pedtraf-1.png" style="width:100.0%" alt="Urban street with individual pedestrians walking in many different directions"></p>
 <ul>
 <li>Individuals and groups</li>
 <li>Multitude of destinations</li>
@@ -313,7 +324,7 @@ Dr.&nbsp;Tobias Vlćek
 <li>Distractions</li>
 </ul>
 </div><div class="column" style="width:50%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-pedtraf-2.jpg" style="width:100.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-pedtraf-2.jpg" style="width:100.0%" alt="Dense crowd of pilgrims moving together in the same direction"></p>
 <ul>
 <li>Homogeneous groups</li>
 <li>Shared destination</li>
@@ -324,7 +335,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="types-of-pedestrian-flow" class="slide level2">
 <h2>Types of Pedestrian Flow</h2>
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-unidirectional_flow.png" style="width:30.0%" alt="1."> <img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-bidirectional_crossing_flow.png" style="width:30.0%" alt="2."> <img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-multidirectional_crossing_flow.png" style="width:30.0%" alt="3."></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-unidirectional_flow.png" style="width:30.0%" alt="Diagram of a unidirectional pedestrian flow, everyone moving one way"> <img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-bidirectional_crossing_flow.png" style="width:30.0%" alt="Diagram of two pedestrian flows crossing in opposite directions"> <img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-multidirectional_crossing_flow.png" style="width:30.0%" alt="Diagram of multiple pedestrian flows crossing in several directions"></p>
 <div class="fragment">
 <p><span class="question">Question:</span> <strong>What is the most dangerous type here?</strong></p>
 </div>
@@ -344,7 +355,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="pilgrim-flows" class="slide level2">
 <h2>Pilgrim Flows</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-jamarat_flow.png" class="r-stretch"><div class="callout callout-note callout-titled callout-style-simple">
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-jamarat_flow.png" alt="Map of one-way pilgrim flows around the Jamarat bridge" class="r-stretch"><div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
@@ -392,7 +403,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="goal-conflict" class="slide level2">
 <h2>Goal Conflict</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-goalconflict.png" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-goalconflict.png" alt="Diagram of the goal conflict between time preferences, safety, and simple plans" class="r-stretch"></section>
 <section id="basic-structure" class="slide level2">
 <h2>Basic Structure</h2>
 <ul>
@@ -407,27 +418,27 @@ Dr.&nbsp;Tobias Vlćek
 <h2 data-id="quarto-animate-title">Pilgrim Routes</h2>
 <p>Each camp has a set of feasible one-way paths that include the stoning ritual.</p>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_a.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_a.svg" alt="Schematic of a camp with several feasible one-way paths towards the stoning site" class="r-stretch"></section>
 <section id="pilgrim-routes-1" class="slide level2 smaller" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Pilgrim Routes</h2>
-<p>Path may contain one or more bottlenecks, regarded as resources subject to a capacity.</p>
+<p>A path may contain one or more bottlenecks, regarded as resources subject to a capacity.</p>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_b.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_b.svg" alt="Schematic of the paths with bottleneck resources marked along the way" class="r-stretch"></section>
 <section id="pilgrim-routes-2" class="slide level2 smaller" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Pilgrim Routes</h2>
-<p>Pilgrims departure from a camp at a time <span class="math inline">\(x\)</span> and pass through the bottleneck later.</p>
+<p>Pilgrims depart from a camp at a time <span class="math inline">\(t\)</span> and pass through the bottleneck later.</p>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_c.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_c.svg" alt="Schematic of a group departing the camp and reaching a bottleneck in a later period" class="r-stretch"></section>
 <section id="pilgrim-routes-3" class="slide level2 smaller" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Pilgrim Routes</h2>
 <p>Our model should assign one of the feasible paths to a camp on all four ritual days.</p>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_d.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_d.svg" alt="Schematic of one feasible path being assigned to a camp" class="r-stretch"></section>
 <section id="pilgrim-routes-4" class="slide level2 smaller" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Pilgrim Routes</h2>
 <p>These bottlenecks should not be overcrowded at any time during the Hajj.</p>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg" alt="Schematic combining camps, assigned paths, bottlenecks, and time periods" class="r-stretch"></section>
 <section id="section-1" class="slide level2 loud-slide">
 <h2></h2>
 <div class="r-fit-text">
@@ -441,7 +452,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="time-preferences-1" class="slide level2">
 <h2>Time Preferences</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-1.png" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-1.png" alt="Histogram of clustered pilgrim time preferences over the course of a day" class="r-stretch"></section>
 <section id="time-preference-satisfaction" class="slide level2">
 <h2>Time preference satisfaction</h2>
 <ul>
@@ -469,14 +480,14 @@ Dr.&nbsp;Tobias Vlćek
 <section id="penalty-functions" class="slide level2">
 <h2>Penalty Functions</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-satisfaction.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-satisfaction.svg" alt="Different penalty functions around the preferred time, for example linear and quadratic" class="r-stretch"></section>
 <section id="fluctuations" class="slide level2">
 <h2>Fluctuations</h2>
 <p><span class="question">Question:</span> <strong>What could become a problem?</strong></p>
 <div class="fragment">
 <ul>
 <li>If allowed demand between periods <strong>varies strongly</strong>, accidents are <strong>more likely to happen!</strong></li>
-<li>We need keep the <span class="highlight">changes between periods within bounds</span></li>
+<li>We need to keep the <span class="highlight">changes between periods within bounds</span></li>
 </ul>
 </div>
 <div class="fragment">
@@ -505,7 +516,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Sets?</h2>
 <p><span class="question">Question:</span> <strong>What could be the sets here?</strong></p>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-m_e.svg" alt="Schematic combining camps, assigned paths, bottlenecks, and time periods" class="r-stretch"></section>
 <section id="sets-1" class="slide level2">
 <h2>Sets</h2>
 <ul>
@@ -515,6 +526,18 @@ Dr.&nbsp;Tobias Vlćek
 <li><span class="math inline">\(\mathcal{P}\)</span> - Paths that include the stoning, indexed by <span class="math inline">\(p\)</span></li>
 <li><span class="math inline">\(\mathcal{S}\)</span> - Scheduling groups, indexed by <span class="math inline">\(s\)</span></li>
 </ul>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>A <strong>scheduling group</strong> is a group of pilgrims from one camp on <strong>one specific ritual day</strong>. One model thus covers all four days at once.</p>
+</div>
+</div>
+</div>
+</div>
 <div class="fragment">
 <p><span class="task">But we further need subsets!</span></p>
 </div>
@@ -527,7 +550,7 @@ Dr.&nbsp;Tobias Vlćek
 <li><span class="math inline">\(\mathcal{P}_c\)</span> - Feasible paths for camp <span class="math inline">\(c\)</span></li>
 <li><span class="math inline">\(\mathcal{P}_s\)</span> - Feasible paths for group <span class="math inline">\(s\)</span></li>
 <li><span class="math inline">\(\mathcal{P}_r\)</span> - Paths that contain the resource <span class="math inline">\(r\)</span></li>
-<li><span class="math inline">\(\mathcal{T}_s\)</span> - Available stoning periods for scheduling group <span class="math inline">\(s\)</span></li>
+<li><span class="math inline">\(\mathcal{T}_s\)</span> - Available stoning periods for group <span class="math inline">\(s\)</span> on its ritual day</li>
 </ul>
 </section>
 <section id="section-2" class="slide level2 loud-slide">
@@ -572,7 +595,7 @@ Dr.&nbsp;Tobias Vlćek
 <li><span class="math inline">\(f_{s,t}\)</span> - Penalty value of assigning period <span class="math inline">\(t\)</span> to group <span class="math inline">\(s\)</span></li>
 <li><span class="math inline">\(a_{p,r}\)</span> - Offset between stoning and utilization period of <span class="math inline">\(r\)</span> on <span class="math inline">\(p\)</span></li>
 <li><span class="math inline">\(b_{r,t}\)</span> - Capacity of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span></li>
-<li><span class="math inline">\(\sigma_r\)</span> - max. relative utilization deviation between <span class="math inline">\(t\)</span> for <span class="math inline">\(r\)</span></li>
+<li><span class="math inline">\(\sigma_r\)</span> - max. change in relative utilization of <span class="math inline">\(r\)</span> between periods</li>
 </ul>
 </div>
 </section>
@@ -712,7 +735,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="third-decision-variable-1" class="slide level2">
 <h2>Third Decision Variable</h2>
 <ul>
-<li><span class="math inline">\(U_{r,t}\)</span> - Relative utilization of <span class="math inline">\(r\)</span> in <span class="math inline">\(t\)</span> with <span class="math inline">\(0 \leq U_{rt} \leq 1\)</span></li>
+<li><span class="math inline">\(U_{r,t}\)</span> - Relative utilization of <span class="math inline">\(r\)</span> in <span class="math inline">\(t\)</span> with <span class="math inline">\(0 \leq U_{r,t} \leq 1\)</span></li>
 </ul>
 <div class="fragment">
 <p><span class="question">Question:</span> <strong>What does relative utilization mean?</strong></p>
@@ -780,8 +803,11 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="fragment">
 <p><span class="math display">\[
-\text{minimize} \quad \sum_{s \in \mathcal{S}}\sum_{t \in \mathcal{T}}\sum_{p \in \mathcal{P}} f_{s,t} \times X_{s,t,p}
+\text{Minimize} \quad \sum_{s \in \mathcal{S}}\sum_{t \in \mathcal{T}_s}\sum_{p \in \mathcal{P}_s} f_{s,t} \times X_{s,t,p}
 \]</span></p>
+</div>
+<div class="fragment">
+<p>Note how we use the subsets <span class="math inline">\(\mathcal{T}_s\)</span> and <span class="math inline">\(\mathcal{P}_s\)</span> <span class="highlight">to keep the model small</span>.</p>
 </div>
 </section>
 <section id="objective-function-characteristics" class="slide level2">
@@ -794,7 +820,7 @@ Dr.&nbsp;Tobias Vlćek
 </ul>
 </div>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>Anybody an idea why?</strong></p>
+<p><span class="question">Question:</span> <strong>Any idea why?</strong></p>
 </div>
 <div class="fragment">
 <ul>
@@ -811,7 +837,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="constraints-needed" class="slide level2">
 <h2>Constraints needed?</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg" alt="Diagram of groups, paths, and bottlenecks with the time shift between stoning and utilization" class="r-stretch"></section>
 <section id="key-constraints" class="slide level2">
 <h2>Key Constraints</h2>
 <p><span class="question">Question:</span> <strong>Which constraints do we need?</strong></p>
@@ -820,7 +846,7 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment">Each camp must have <span class="highlight">one path assigned</span></li>
 <li class="fragment">Each group must have <span class="highlight">one time slot assigned</span></li>
 <li class="fragment">Each resource must have <span class="highlight">a capacity limit</span></li>
-<li class="fragment">Constraint the <span class="highlight">relative utilization between periods</span></li>
+<li class="fragment">Constrain the <span class="highlight">relative utilization between periods</span></li>
 </ol>
 </section>
 <section id="assign-paths-to-camps" class="slide level2">
@@ -920,9 +946,26 @@ Dr.&nbsp;Tobias Vlćek
 <li><span class="math inline">\(\mathcal{T}_s\)</span> - Available stoning periods for scheduling group <span class="math inline">\(s\)</span></li>
 <li><span class="math inline">\(\mathcal{P}_c\)</span> - Feasible paths for camp <span class="math inline">\(c\)</span></li>
 </ul>
+<p>Each group can use all feasible paths of its camp: <span class="math inline">\(\mathcal{P}_s = \mathcal{P}_c\)</span> for all <span class="math inline">\(s \in \mathcal{S}_c\)</span>.</p>
 </div>
 </div>
 </div>
+</div>
+</section>
+<section id="one-path-and-slot-per-group" class="slide level2">
+<h2>One Path and Slot per Group?</h2>
+<p><span class="question">Question:</span> <strong>We wanted one path and one time slot per group. Where are these two constraints?</strong></p>
+<div class="fragment">
+<p>Sum the last constraint over all paths of a camp:</p>
+<p><span class="math display">\[
+\sum_{p \in \mathcal{P}_c} \sum_{t \in \mathcal{T}_s} X_{s,t,p} = \sum_{p \in \mathcal{P}_c} Y_{c,p} = 1 \quad \forall c \in \mathcal{C}, s \in \mathcal{S}_c
+\]</span></p>
+</div>
+<div class="fragment">
+<ul>
+<li>Each group thus gets exactly <span class="highlight">one period and one path</span></li>
+<li>Some constraints can <strong>imply</strong> other constraints!</li>
+</ul>
 </div>
 </section>
 <section id="relative-utilization-and-capacities" class="slide level2">
@@ -976,7 +1019,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="compute-relative-utilization-1" class="slide level2">
 <h2>Compute Relative Utilization</h2>
 <p><span class="math display">\[
-\sum_{p \in \mathcal{P}_r}\sum_{s \in S_p} n_s \times X_{s,t-a_{p,r},p}  = b_{r,t}\times U_{r,t} \quad \forall r \in \mathcal{R}, t \in \mathcal{T}
+\sum_{p \in \mathcal{P}_r}\sum_{s \in \mathcal{S}_p} n_s \times X_{s,t-a_{p,r},p}  = b_{r,t}\times U_{r,t} \quad \forall r \in \mathcal{R}, t \in \mathcal{T}
 \]</span></p>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-simple">
@@ -985,16 +1028,33 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>We use the following:</strong></p>
+<p><strong>Convention</strong></p>
 </div>
 <div class="callout-content">
+<p>Terms where the shifted period <span class="math inline">\(t - a_{p,r}\)</span> lies outside of <span class="math inline">\(\mathcal{T}_s\)</span> are simply dropped, as no group can be scheduled for stoning there.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="where-is-the-capacity-limit" class="slide level2">
+<h2>Where is the Capacity Limit?</h2>
+<p><span class="question">Question:</span> <strong>We promised a capacity limit, but there is no “<span class="math inline">\(\leq\)</span> capacity” constraint. Why does it still hold?</strong></p>
+<div class="fragment">
 <ul>
-<li><span class="math inline">\(n_s\)</span> - Number of pilgrims in scheduling group <span class="math inline">\(s\)</span></li>
-<li><span class="math inline">\(a_{p,r}\)</span> - Period offset between stoning period and utilization period of <span class="math inline">\(r\)</span> on <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(b_{r,t}\)</span> - Capacity of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span> in number of pilgrims</li>
-<li><span class="math inline">\(X_{s,t,p}\)</span> - 1, if <span class="math inline">\(s\)</span> is scheduled to perform stoning in <span class="math inline">\(t\)</span> and to use <span class="math inline">\(p\)</span>, 0 else</li>
-<li><span class="math inline">\(U_{r,t}\)</span> - Relative utilization of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span> with <span class="math inline">\(0 \leq U_{r,t} \leq 1\)</span></li>
+<li>It is <span class="highlight">hidden in the variable bound</span> <span class="math inline">\(U_{r,t} \leq 1\)</span></li>
+<li>The equality forces the flow to equal <span class="math inline">\(b_{r,t} \times U_{r,t}\)</span></li>
+<li>Hence, the flow on <span class="math inline">\(r\)</span> can never exceed the capacity <span class="math inline">\(b_{r,t}\)</span></li>
 </ul>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>A variable domain and a constraint can <strong>combine</strong> into a constraint that is never written down explicitly.</p>
 </div>
 </div>
 </div>
@@ -1014,9 +1074,9 @@ Dr.&nbsp;Tobias Vlćek
 <section id="how-does-the-shift-work" class="slide level2">
 <h2>How does the shift work?</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg" class="r-stretch"></section>
-<section id="keep-fluctuations-within-bounds" class="slide level2">
-<h2>Keep Fluctuations within Bounds?</h2>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-model_flow.svg" alt="Diagram of groups, paths, and bottlenecks with the time shift between stoning and utilization" class="r-stretch"></section>
+<section id="fluctuation-bounds" class="slide level2">
+<h2>Fluctuation Bounds?</h2>
 <div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
@@ -1041,8 +1101,8 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="callout-content">
 <ul>
-<li><span class="math inline">\(\sigma_r\)</span> - max. relative utilization deviation between <span class="math inline">\(t\)</span> for <span class="math inline">\(r\)</span></li>
-<li><span class="math inline">\(U_{r,t}\)</span> - Relative utilization of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span> with <span class="math inline">\(0 \leq U_{rt} \leq 1\)</span></li>
+<li><span class="math inline">\(\sigma_r\)</span> - max. change in relative utilization of <span class="math inline">\(r\)</span> between periods</li>
+<li><span class="math inline">\(U_{r,t}\)</span> - Relative utilization of resource <span class="math inline">\(r\)</span> in period <span class="math inline">\(t\)</span> with <span class="math inline">\(0 \leq U_{r,t} \leq 1\)</span></li>
 </ul>
 </div>
 </div>
@@ -1052,27 +1112,31 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could be the constraint?</strong></p>
 </div>
 </section>
-<section id="keep-fluctuations-within-bounds-1" class="slide level2">
-<h2>Keep Fluctuations within Bounds</h2>
+<section id="fluctuation-bounds-1" class="slide level2">
+<h2>Fluctuation Bounds</h2>
 <p><span class="math display">\[
-U_{r,t} - U_{r,t-1} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\times \mathcal{T}\right|
+U_{r,t} - U_{r,t-1} \leq \sigma_r \quad \forall r \in \mathcal{R}, t \in \mathcal{T}: t &gt; 1
 \]</span></p>
 <p><span class="math display">\[
-U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\times \mathcal{T}\right|
+U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall r \in \mathcal{R}, t \in \mathcal{T}: t &gt; 1
 \]</span></p>
-<div class="fragment">
+</section>
+<section id="why-does-this-work" class="slide level2">
+<h2>Why Does This Work?</h2>
 <p><span class="question">Question:</span> <strong>Can somebody explain why this works?</strong></p>
+<div class="fragment">
 <ul>
 <li>Each constraint limits the <strong>change</strong></li>
 <li>The first one limits the <strong>increase</strong></li>
 <li>The second one limits the <strong>decrease</strong></li>
+<li>We start at <span class="math inline">\(t &gt; 1\)</span>, as no period exists before the first one</li>
 </ul>
 </div>
 </section>
 <section id="scheduling-problem-i" class="slide level2">
 <h2>Scheduling Problem I</h2>
 <p><span class="math display">\[\begin{align*}
-\text{min} \quad \sum_{s\in \mathcal{S}}\sum_{t \in \mathcal{T}_s}\sum_{p \in P_s} f_{s,t} \times X_{s,t,p}
+\text{Minimize} \quad \sum_{s\in \mathcal{S}}\sum_{t \in \mathcal{T}_s}\sum_{p \in \mathcal{P}_s} f_{s,t} \times X_{s,t,p}
 \end{align*}\]</span></p>
 <p>subject to:</p>
 <p><span class="math display">\[\begin{align*}
@@ -1083,9 +1147,9 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <section id="scheduling-problem-ii" class="slide level2">
 <h2>Scheduling Problem II</h2>
 <p><span class="math display">\[\begin{align*}
-&amp; \sum_{p \in \mathcal{P}_r}\sum_{s \in S_p} n_s \cdot X_{s,t-a_{p,r},p}  = b_{r,t}\cdot U_{r,t} &amp;&amp; \forall r \in \mathcal{R}, t \in \mathcal{T} \\
-&amp; U_{r,t} - U_{r,t-1} \leq \sigma_r &amp;&amp; \forall (r,t) \in \left| \mathcal{R}\times \mathcal{T}\right| \\
-&amp; U_{r,t-1} - U_{r,t} \leq \sigma_r &amp;&amp; \forall (r,t) \in \left| \mathcal{R}\times \mathcal{T}\right|
+&amp; \sum_{p \in \mathcal{P}_r}\sum_{s \in \mathcal{S}_p} n_s \times X_{s,t-a_{p,r},p}  = b_{r,t}\times U_{r,t} &amp;&amp; \forall r \in \mathcal{R}, t \in \mathcal{T} \\
+&amp; U_{r,t} - U_{r,t-1} \leq \sigma_r &amp;&amp; \forall r \in \mathcal{R}, t \in \mathcal{T}: t &gt; 1 \\
+&amp; U_{r,t-1} - U_{r,t} \leq \sigma_r &amp;&amp; \forall r \in \mathcal{R}, t \in \mathcal{T}: t &gt; 1
 \end{align*}\]</span></p>
 <div class="callout callout-note callout-style-simple">
 <div class="callout-body">
@@ -1101,7 +1165,7 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <section id="scheduling-problem-iii" class="slide level2">
 <h2>Scheduling Problem III</h2>
 <p><span class="math display">\[\begin{align*}
-&amp; X_{s,t,p} \in \{0,1\}  &amp;&amp; \forall s \in \mathcal{S}, \forall t \in \mathcal{T}_s, \forall p \in \mathcal{P}_s \\
+&amp; X_{s,t,p} \in \{0,1\}  &amp;&amp; \forall s \in \mathcal{S}, t \in \mathcal{T}_s, p \in \mathcal{P}_s \\
 &amp; Y_{c,p} \in \{0,1\} &amp;&amp; \forall c \in \mathcal{C}, p \in \mathcal{P}_c \\
 &amp; U_{r,t} \in [0,1] &amp;&amp; \forall r \in \mathcal{R}, t \in \mathcal{T}
 \end{align*}\]</span></p>
@@ -1139,11 +1203,23 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <li class="fragment">How can we measure flow capacities?</li>
 <li class="fragment">Are all pilgrims equally fast?</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-important callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Capacities are <strong>hard limits</strong>: if demand exceeds them, the model becomes <span class="highlight">infeasible</span> and refuses to produce an unsafe plan. This is a feature, not a bug!</p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="capacity-buffers" class="slide level2">
 <h2>Capacity Buffers</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-capacitybuffers.png" class="r-stretch"></section></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-capacitybuffers.png" alt="Chart of capacity buffers kept between planned utilization and the full capacity" class="r-stretch"></section></section>
 <section>
 <section id="implementation-and-impact" class="title-slide slide level1 title center">
 <h1><span class="flow">Implementation and Impact</span></h1>
@@ -1162,11 +1238,11 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <section id="section-6" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title"></h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-1.png" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-1.png" alt="Histogram of clustered pilgrim time preferences over the course of a day" class="r-stretch"></section>
 <section id="section-7" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title"></h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-5.png" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-solap-5.png" alt="Comparison of preferred and scheduled departure times after optimization, with peaks flattened" class="r-stretch"></section>
 <section id="implementation" class="slide level2">
 <h2>Implementation</h2>
 <ul>
@@ -1181,7 +1257,7 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>Optimization was part of a project by Knut Haase and his team <span class="citation" data-cites="haase2016improving">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Haase et al. 2016</a>)</span>.</p>
+<p>Optimization was part of a project by Knut Haase and his team <span class="citation" data-cites="haase2016improving">(<a href="#/literature-i" role="doc-biblioref" onclick="">Haase et al. 2016</a>)</span>.</p>
 </div>
 </div>
 </div>
@@ -1190,7 +1266,7 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <section id="section-8" class="slide level2">
 <h2></h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-media_coverage.png" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_pilgrim-media_coverage.png" alt="Collage of newspaper articles covering the Hajj scheduling project" class="r-stretch"></section>
 <section id="wrap-up" class="slide level2">
 <h2>Wrap Up</h2>
 <div class="callout callout-note callout-titled callout-style-simple">
@@ -1199,7 +1275,7 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>And that’s it for todays lecture!</strong></p>
+<p><strong>And that’s it for today’s lecture!</strong></p>
 </div>
 <div class="callout-content">
 <p>We now have covered a scheduling problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial.</p>
@@ -1221,12 +1297,9 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall (r,t) \in \left| \mathcal{R}\tim
 <h1><span class="flow">Literature</span></h1>
 
 </section>
-<section id="literature-i" class="slide level2">
+<section id="literature-i" class="slide level2 smaller scrollable">
 <h2>Literature I</h2>
-<p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
-</section>
-<section id="literature-ii" class="slide level2 smaller scrollable">
-<h2>Literature II</h2>
+<p>To learn more about the project and crowd management during the Hajj, take a look at <span class="citation" data-cites="haase2016improving">Haase et al. (<a href="#/literature-i" role="doc-biblioref" onclick="">2016</a>)</span> and the <a href="../general/literature.html">literature list</a> of this course.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">

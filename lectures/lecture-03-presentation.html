@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture III - Packages and Data Management</title>
@@ -31,8 +32,74 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -124,6 +191,9 @@
       margin-right: 0; 
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+  
+  <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -139,7 +209,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -149,6 +219,16 @@ Dr.&nbsp;Tobias Vlćek
 <section id="quick-recap-from-last-week" class="title-slide slide level1 title center">
 <h1><span class="flow">Quick Recap from last Week</span></h1>
 
+</section>
+<section id="goals-for-today" class="slide level2">
+<h2>Goals for Today</h2>
+<p>After this lecture, you will:</p>
+<ul>
+<li>Have <span class="highlight">refreshed the basics</span> from last week’s tutorials</li>
+<li>Know what packages are and why we use them</li>
+<li>Have seen your first DataFrame</li>
+<li>Be ready to start this week’s tutorials</li>
+</ul>
 </section>
 <section id="variables-and-data-types" class="slide level2">
 <h2>Variables and Data Types</h2>
@@ -175,7 +255,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Vectors and Matrices</h2>
 <ul>
 <li>Vectors and matrices are used to store multiple values</li>
-<li>You can create a them using the <code>[</code> and <code>]</code> operators</li>
+<li>You can create them using the <code>[</code> and <code>]</code> operators</li>
 <li>Access their elements using square brackets</li>
 </ul>
 <div class="fragment">
@@ -197,10 +277,10 @@ Dr.&nbsp;Tobias Vlćek
 <li>Comparisons are <span class="highlight">used to compare values</span></li>
 <li><code>==</code> checks if two values are equal</li>
 <li><code>!=</code> checks if two values are not equal</li>
-<li><code>&lt;</code> checks if one value is smaller than the other</li>
-<li><code>&gt;=</code> checks if one value is greater than or equal to the other</li>
-<li><code>&amp;&amp;</code> checks if two values are true</li>
-<li><code>||</code> checks if at least one of two values is true</li>
+<li><code>&lt;</code> and <code>&gt;</code> check if one value is smaller or greater than the other</li>
+<li><code>&lt;=</code> and <code>&gt;=</code> also allow the two values to be equal</li>
+<li><code>&amp;&amp;</code> is true if <span class="highlight">both</span> conditions are true</li>
+<li><code>||</code> is true if <span class="highlight">at least one</span> of two conditions is true</li>
 </ul>
 </section>
 <section id="loops" class="slide level2">
@@ -208,20 +288,62 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li>Loops are used to repeat code</li>
 <li><code>for</code> loop repeats code for a fixed number of times</li>
-<li><code>while</code> loop repeats code until a condition is met</li>
-<li><code>if</code> statement checks if a condition is true</li>
-<li><code>else</code> executes code if a condition is false</li>
-<li><code>elseif</code> checks if a condition is true and executes if it is</li>
+<li><code>while</code> loop repeats code as long as a condition is true</li>
 </ul>
+<div class="fragment">
+<div id="4" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a><span class="cf">for</span> product <span class="kw">in</span> [<span class="st">"apple"</span>, <span class="st">"banana"</span>, <span class="st">"cherry"</span>]</span>
+<span id="cb1-2"><a></a>    <span class="fu">println</span>(<span class="st">"We sell: </span><span class="sc">$</span>product<span class="st">"</span>)</span>
+<span id="cb1-3"><a></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>We sell: apple
+We sell: banana
+We sell: cherry</code></pre>
+</div>
+</div>
+</div>
 </section>
-<section id="scope" class="slide level2">
-<h2>Scope</h2>
+<section id="conditionals" class="slide level2">
+<h2>Conditionals</h2>
 <ul>
-<li>Scope determines where a variable is defined and lives</li>
-<li><code>global</code> keyword defines a global variable</li>
-<li><code>local</code> keyword defines a local variable</li>
-<li><code>let</code> keyword defines a local variable</li>
+<li>Conditionals run code <span class="highlight">only under certain conditions</span></li>
+<li><code>if</code> executes code if a condition is true</li>
+<li><code>elseif</code> checks a further condition if the previous one was false</li>
+<li><code>else</code> executes code if none of the conditions were true</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Conditionals are not loops: they decide <strong>whether</strong> code runs, while loops decide <strong>how often</strong> it runs.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="dictionaries" class="slide level2">
+<h2>Dictionaries</h2>
+<ul>
+<li>Dictionaries store <span class="highlight">key-value pairs</span>, like a lookup table</li>
+<li>Access a value by its key using square brackets</li>
+<li><code>keys</code> and <code>values</code> return all keys and values</li>
+</ul>
+<div class="fragment">
+<div id="6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a></a>student_ids <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"Elio"</span> <span class="op">=&gt;</span> <span class="fl">1001</span>, <span class="st">"Bob"</span> <span class="op">=&gt;</span> <span class="fl">1002</span>)</span>
+<span id="cb3-2"><a></a><span class="fu">println</span>(<span class="st">"Elio's ID: "</span>, student_ids[<span class="st">"Elio"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>Elio's ID: 1001</code></pre>
+</div>
+</div>
+</div>
 <div class="fragment">
 <div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
@@ -229,7 +351,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>Global variables usually make your code much slower, if they are not defined as constants. <span class="highlight">But for this leeture this is not that important</span>.</p>
+<p>Later in the course, we will use dictionaries to store and look up the data of our optimization models.</p>
 </div>
 </div>
 </div>
@@ -238,9 +360,9 @@ Dr.&nbsp;Tobias Vlćek
 <section id="solutions-from-last-week" class="slide level2">
 <h2>Solutions from last Week</h2>
 <ul>
-<li>The tutorials from last week will be <span class="highlight">available on Friday</span></li>
-<li>You can access them in the project folder on Github</li>
-<li>Click on the little cat icon on the bottom right</li>
+<li>The solutions to the tutorials are made <span class="highlight">available at the end of each week</span></li>
+<li>You can access them in the project folder on GitHub</li>
+<li>Click on the GitHub icon (the Octocat) at the bottom right of the page</li>
 </ul>
 <div class="fragment">
 <div class="callout callout-tip callout-style-simple">
@@ -254,10 +376,88 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
+<section>
+<section id="packages-and-data-management" class="title-slide slide level1 title center">
+<h1><span class="flow">Packages and Data Management</span></h1>
+
+</section>
+<section id="why-packages" class="slide level2">
+<h2>Why Packages?</h2>
+<p><span class="question">Question:</span> <strong>Do we have to write all code ourselves?</strong></p>
+<div class="fragment">
+<ul>
+<li>Luckily not! We can use <span class="highlight">packages</span> written by others</li>
+<li>Packages are collections of reusable code, e.g.&nbsp;<code>DataFrames.jl</code> for tables or <code>Plots.jl</code> for charts</li>
+<li>Julia’s package manager <code>Pkg</code> installs them for us:</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb5-2"><a></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"DataFrames"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="data-management-with-dataframes" class="slide level2">
+<h2>Data Management with DataFrames</h2>
+<ul>
+<li><code>DataFrames.jl</code> stores tabular data, like a <span class="highlight">spreadsheet in code</span></li>
+</ul>
+<div id="8" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb6-2"><a></a>sales <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
+<span id="cb6-3"><a></a>    product <span class="op">=</span> [<span class="st">"apple"</span>, <span class="st">"banana"</span>, <span class="st">"cherry"</span>],</span>
+<span id="cb6-4"><a></a>    price <span class="op">=</span> [<span class="fl">0.50</span>, <span class="fl">0.30</span>, <span class="fl">2.00</span>],</span>
+<span id="cb6-5"><a></a>    sold <span class="op">=</span> [<span class="fl">120</span>, <span class="fl">90</span>, <span class="fl">30</span>]</span>
+<span id="cb6-6"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+<div class="fragment">
+<ul>
+<li>This week’s tutorials show how to read, write, and plot such data</li>
+</ul>
+</div>
+</section><section id="data-management-with-dataframes-output" class="slide level2 output-location-slide"><h2>Data Management with DataFrames</h2><div class="cell output-location-slide" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>3×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top" style="margin-bottom: 6px;">
+<thead>
+<tr class="columnLabelRow header">
+<th class="stubheadLabel" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">product</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">price</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sold</th>
+</tr>
+<tr class="columnLabelRow even">
+<th class="stubheadLabel" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="dataRow odd">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">apple</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">120</td>
+</tr>
+<tr class="dataRow even">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: left;">banana</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">90</td>
+</tr>
+<tr class="dataRow odd">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: left;">cherry</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">30</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div></section></section>
 <section>
 <section id="five-tutorials-for-this-week" class="title-slide slide level1 title center">
 <h1><span class="flow">Five Tutorials for this Week</span></h1>
@@ -274,9 +474,9 @@ Dr.&nbsp;Tobias Vlćek
 </ul>
 </section>
 <section id="get-started-with-the-tutorials" class="slide level2">
-<h2>Get started with the tutorials</h2>
+<h2>Get Started with the Tutorials</h2>
 <ul>
-<li>Download this weeks tutorials and start with the first one</li>
+<li>Download this week’s tutorials and start with the first one</li>
 <li><span class="highlight">Remember, you can ask questions anytime!</span></li>
 </ul>
 <div class="fragment">
@@ -289,7 +489,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>And that’s it for this lecture!</strong></p>
 </div>
 <div class="callout-content">
-<p>The remaining time we will already start working on the problems of the third lecture.</p>
+<p>The remaining time we will already start working on this week’s tutorials.</p>
 </div>
 </div>
 </div>

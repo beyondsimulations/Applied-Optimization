@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture VIII - Police Districting</title>
@@ -51,7 +52,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -158,7 +159,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -172,8 +173,19 @@ Dr.&nbsp;Tobias Vlćek
 <section id="police-service-district-planning" class="slide level2" data-background-color="#000000" data-background-image="https://unsplash.com/photos/HkF6feHrGBE/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8NjN8fGNpdHklMjBtYXB8ZW58MHx8fHwxNzI4Mzc3MjA0fDA&amp;force=true" data-background-size="cover" data-background-position="center">
 <h2><span class="invert-font">Police Service District Planning</span></h2>
 <div class="footer">
-<p><span class="citation" data-cites="vlcek_police_2024">Vlćek et al. (<a href="#/literature-ii" role="doc-biblioref" onclick="">2024</a>)</span></p>
+<p><span class="citation" data-cites="vlcek_police_2024">Vlćek et al. (<a href="#/literature-i" role="doc-biblioref" onclick="">2024</a>)</span></p>
 </div>
+</section>
+<section id="learning-objectives" class="slide level2">
+<h2>Learning Objectives</h2>
+<p>After this lecture, you can:</p>
+<ul>
+<li class="fragment">Explain the <span class="highlight">territory design problem</span> and its applications</li>
+<li class="fragment">Model districting as a <strong>p-median problem</strong></li>
+<li class="fragment">Explain the difference between <strong>contiguity</strong> and <strong>compactness</strong></li>
+<li class="fragment">Enforce both with <span class="highlight">additional constraints</span></li>
+<li class="fragment">Discuss the assumptions and limitations of the model</li>
+</ul>
 </section>
 <section id="challenges" class="slide level2">
 <h2>Challenges</h2>
@@ -190,7 +202,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Emergency Services</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.unsplash.com/photo-1532555705039-f04fd833eb21?q=80&amp;w=3264&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:85.0%"></p>
+<p><img data-src="https://images.unsplash.com/photo-1532555705039-f04fd833eb21?q=80&amp;w=3264&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:85.0%" alt="Police car with flashing lights at night"></p>
 </div><div class="column" style="width:55%;">
 <p>Emergency services address the needs of <span class="highlight">three interest groups</span>:</p>
 <ul>
@@ -243,12 +255,12 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Emergency Service Districting</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.unsplash.com/photo-1689783101576-627f2fbdb8d5?q=80&amp;w=3687&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:85.0%"></p>
+<p><img data-src="https://images.unsplash.com/photo-1689783101576-627f2fbdb8d5?q=80&amp;w=3687&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:85.0%" alt="Aerial view of a city with a dense street network"></p>
 </div><div class="column" style="width:55%;">
 <p><span class="question">Question:</span> <strong>Why might current district layouts be suboptimal?</strong></p>
 <ul>
 <li class="fragment">Many layouts <span class="highlight">date back several decades</span></li>
-<li class="fragment">Often designed along highways and regions <span class="citation" data-cites="Bruce2009">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Bruce 2009</a>)</span></li>
+<li class="fragment">Often designed along highways and regions <span class="citation" data-cites="Bruce2009">(<a href="#/literature-i" role="doc-biblioref" onclick="">Bruce 2009</a>)</span></li>
 <li class="fragment">Extensive data <strong>not used</strong> for data-driven improvement</li>
 </ul>
 </div></div>
@@ -294,7 +306,7 @@ Dr.&nbsp;Tobias Vlćek
 <li>Based on <strong>incident records</strong> and <strong>geographical information</strong></li>
 <li>Improve the <strong>response of emergency services</strong></li>
 <li>Help administrators in making <strong>strategic decisions</strong></li>
-<li>Locate <span class="highlight">new departments</span> or <span class="highlight">close departments</span> <span class="citation" data-cites="Liberatore2020">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Liberatore et al. 2020</a>)</span></li>
+<li>Locate <span class="highlight">new departments</span> or <span class="highlight">close departments</span> <span class="citation" data-cites="Liberatore2020">(<a href="#/literature-i" role="doc-biblioref" onclick="">Liberatore et al. 2020</a>)</span></li>
 </ul>
 </section></section>
 <section>
@@ -305,7 +317,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="police-districting" class="slide level2">
 <h2>Police Districting</h2>
 <blockquote>
-<p>For an efficient and effective distribution of resources, police jurisdictions are divided into precincts or command districts with separate departments. These are further divided into patrol beats <span class="citation" data-cites="DAmico2002">(<a href="#/literature-ii" role="doc-biblioref" onclick="">D’Amico et al. 2002</a>)</span>.</p>
+<p>For an efficient and effective distribution of resources, police jurisdictions are divided into precincts or command districts with separate departments. These are further divided into patrol beats <span class="citation" data-cites="DAmico2002">(<a href="#/literature-i" role="doc-biblioref" onclick="">D’Amico et al. 2002</a>)</span>.</p>
 </blockquote>
 </section>
 <section id="service-priority-extremes" class="slide level2">
@@ -351,8 +363,8 @@ Dr.&nbsp;Tobias Vlćek
 <section id="dispatching" class="slide level2">
 <h2>Dispatching</h2>
 <ul>
-<li>Dispatchers assign all CFS to vehicles from the <span class="highlight">corresponding districts and patrol areas</span></li>
-<li>Officers are <strong>familiar with the area</strong> and are thus better prepared to respond appropriately <span class="citation" data-cites="Bodily1978">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Bodily 1978</a>)</span></li>
+<li>Dispatchers assign all calls for service (CFS) to vehicles from the <span class="highlight">corresponding districts and patrol areas</span></li>
+<li>Officers are <strong>familiar with the area</strong> and are thus better prepared to respond appropriately <span class="citation" data-cites="Bodily1978">(<a href="#/literature-i" role="doc-biblioref" onclick="">Bodily 1978</a>)</span></li>
 <li>To cope with high demands, dispatchers can <strong>assign vehicles from nearby districts or beats</strong></li>
 </ul>
 </section>
@@ -362,7 +374,7 @@ Dr.&nbsp;Tobias Vlćek
 <div class="fragment">
 <ul>
 <li>This can lead to a <span class="highlight">domino effect</span></li>
-<li>Transferring vehicles from other districts or beats <strong>reduces coverage in those locations</strong> <span class="citation" data-cites="Mayer2009">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Mayer 2009</a>)</span></li>
+<li>Transferring vehicles from other districts or beats <strong>reduces coverage in those locations</strong> <span class="citation" data-cites="Mayer2009">(<a href="#/literature-i" role="doc-biblioref" onclick="">Mayer 2009</a>)</span></li>
 <li>This makes them vulnerable to missing resources when <strong>they need assistance themselves</strong></li>
 </ul>
 </div>
@@ -372,7 +384,7 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li>This can lead to <span class="highlight">overloaded systems!</span></li>
 <li>Long dispatching delays due to <strong>staff shortages</strong></li>
-<li>Preventive patrol hardly possible <span class="citation" data-cites="Miller1972">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Miller and Knoppers 1972</a>)</span></li>
+<li>Preventive patrol hardly possible <span class="citation" data-cites="Miller1972">(<a href="#/literature-i" role="doc-biblioref" onclick="">Miller and Knoppers 1972</a>)</span></li>
 <li>Dispatchers <strong>constantly</strong> draw on patrol resources</li>
 <li>Reduces the <strong>response time</strong> of emergency services</li>
 </ul>
@@ -393,12 +405,12 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Response Time</h2>
 <div class="columns">
 <div class="column" style="width:35%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-responsetime.svg" style="width:55.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-responsetime.svg" style="width:55.0%" alt="Timeline of a response: call, dispatch, driving, arrival"></p>
 </div><div class="column" style="width:65%;">
 <ul>
 <li>Central criterion to measure the <span class="highlight">effectiveness of emergency services</span> is the response time</li>
 <li>Time between a <strong>call for aid</strong> and the arrival at the <strong>incident location</strong></li>
-<li>Low response time increases the likelihood of helping and improves confidence <span class="citation" data-cites="Bodily1978">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Bodily 1978</a>)</span></li>
+<li>Low response time increases the likelihood of helping and improves confidence <span class="citation" data-cites="Bodily1978">(<a href="#/literature-i" role="doc-biblioref" onclick="">Bodily 1978</a>)</span></li>
 </ul>
 </div></div>
 </section>
@@ -423,7 +435,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>What is Territory Design?</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:90.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:90.0%" alt="Hexagonal grid divided into three colored districts with marked department cells"></p>
 </div><div class="column" style="width:55%;">
 <p>Aggregation of <strong>small geographic areas</strong>, called basic areas (BAs), into geographic clusters, called districts, so that these are acceptable according to <strong>pre-defined planning criteria</strong><sup>1</sup>.</p>
 </div></div>
@@ -439,7 +451,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
-<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="citation" data-cites="Zoltners1983">Zoltners and Sinha (<a href="#/literature-ii" role="doc-biblioref" onclick="">1983</a>)</span></p></li></ol></aside></section>
+<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="citation" data-cites="Zoltners1983">Zoltners and Sinha (<a href="#/literature-i" role="doc-biblioref" onclick="">1983</a>)</span></p></li></ol></aside></section>
 <section id="territory-design-components" class="slide level2">
 <h2>Territory Design Components</h2>
 <p><span class="question">Question:</span> <strong>What are the key components?</strong></p>
@@ -477,7 +489,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>Geographic Criteria</strong>:</p>
 <ul>
 <li><span class="highlight">Contiguity</span>: No isolated basic areas</li>
-<li><span class="highlight">Compactness</span>: “Round”</li>
+<li><span class="highlight">Compactness</span>: “Round”, undistorted shapes</li>
 <li>Minimize travel distances</li>
 <li>Respect boundaries</li>
 </ul>
@@ -531,7 +543,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="fragment">
 <ul>
-<li>Reallocate <strong>only part</strong> of the police department’s</li>
+<li>Reallocate <strong>only part</strong> of the police department’s resources</li>
 <li>Compact and contiguous territories to <strong>improve patrol</strong></li>
 <li>Prevention of <strong>isolated departments</strong></li>
 </ul>
@@ -541,7 +553,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Response Time Components</h2>
 <div class="columns">
 <div class="column" style="width:25%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-responsetime.svg" style="width:80.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-responsetime.svg" style="width:80.0%" alt="Timeline of a response: call, dispatch, driving, arrival"></p>
 </div><div class="column" style="width:75%;">
 <p><span class="question">Question:</span> <strong>How can we model response time?</strong></p>
 <ul>
@@ -587,7 +599,7 @@ Dr.&nbsp;Tobias Vlćek
 <div class="fragment">
 <ul>
 <li>Basic areas (BAs) and potential department locations</li>
-<li>Driving times between basic areas</li>
+<li>Driving times between department locations and BAs</li>
 <li>Forecasted incident data</li>
 <li>Assignment decisions</li>
 </ul>
@@ -600,7 +612,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>From Geography to Graph</h2>
 <div class="columns">
 <div class="column" style="width:20%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg" style="width:85.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg" style="width:85.0%" alt="Hexagonal cell reduced to its centroid point"></p>
 </div><div class="column" style="width:80%;">
 <p><span class="question">Question:</span> <strong>How do we model this mathematically?</strong></p>
 <ul>
@@ -626,7 +638,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Mathematical Structure</h2>
 <div class="columns">
 <div class="column" style="width:20%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg" style="width:70.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg" style="width:70.0%" alt="Hexagon centroids as vertices of a graph connected by edges"></p>
 </div><div class="column" style="width:80%;">
 <p><span class="question">Question:</span> <strong>What sets do we need?</strong></p>
 <ul>
@@ -651,12 +663,12 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Why Hexagons?</h2>
 <div class="columns">
 <div class="column" style="width:20%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg" style="width:70.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg" style="width:70.0%" alt="Hexagon centroids as vertices of a graph connected by edges"></p>
 </div><div class="column" style="width:80%;">
 <p><span class="question">Question:</span> <strong>Advantages of hexagons?</strong></p>
 <ul>
 <li class="fragment"><span class="highlight">Equal distances</span> to all neighboring centroids</li>
-<li class="fragment">Reduces sampling bias from edge effects <span class="citation" data-cites="Wang2018a">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Wang and Kwan 2018</a>)</span></li>
+<li class="fragment">Reduces sampling bias from edge effects <span class="citation" data-cites="Wang2018a">(<a href="#/literature-i" role="doc-biblioref" onclick="">Wang and Kwan 2018</a>)</span></li>
 <li class="fragment">Special properties that help with the enforcement of <strong>compactness</strong></li>
 <li class="fragment">Better representation of urban geography</li>
 </ul>
@@ -666,8 +678,9 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Parameters</h2>
 <p><span class="question">Question:</span> <strong>What parameters do we need?</strong></p>
 <ul>
-<li class="fragment"><span class="math inline">\(p\)</span> - Number of district centres (departments)</li>
-<li class="fragment"><span class="math inline">\(t_{i,j}\)</span> - Expected driving times between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span></li>
+<li class="fragment"><span class="math inline">\(p\)</span> - Number of departments to be located</li>
+<li class="fragment"><span class="math inline">\(t_{i,j}\)</span> - Expected driving time from department location <span class="math inline">\(i\)</span> to BA <span class="math inline">\(j\)</span></li>
+<li class="fragment"><span class="math inline">\(w_j\)</span> - Forecasted number of incidents in BA <span class="math inline">\(j\)</span></li>
 </ul>
 <div class="fragment">
 <div class="callout callout-tip callout-style-simple">
@@ -729,7 +742,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="fragment">
 <ul>
-<li><span class="math inline">\(X_{i,j} \in \{0,1\} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}\)</span></li>
+<li><span class="math inline">\(X_{i,j} \in \{0,1\} \quad \forall i \in \mathcal{I}, j \in \mathcal{J}\)</span></li>
 </ul>
 </div>
 </section>
@@ -762,8 +775,8 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>How do we minimize response time?</strong></p>
 <ul>
 <li class="fragment">We want to minimize <strong>total driving time</strong></li>
-<li class="fragment">Consider frequency of incidents in each BA</li>
-<li class="fragment">Don’t include fixed costs (handled by constraints)</li>
+<li class="fragment">Weight each BA by its <span class="highlight">forecasted incidents</span> <span class="math inline">\(w_j\)</span></li>
+<li class="fragment">No fixed opening costs: the <strong>number</strong> of departments is fixed to <span class="math inline">\(p\)</span> anyway</li>
 </ul>
 </div>
 </section>
@@ -772,7 +785,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could be our objective function?</strong></p>
 <div class="fragment">
 <p><span class="math display">\[
-\text{minimize} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} t_{i,j} \times X_{i,j}
+\text{Minimize} \quad \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} w_j \times t_{i,j} \times X_{i,j}
 \]</span></p>
 </div>
 <div class="fragment">
@@ -787,7 +800,7 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-content">
 <ul>
 <li>Total driving time <strong>across all assignments</strong></li>
-<li>Weighted by <strong>incident frequency</strong></li>
+<li>Weighted by the <strong>incident frequency</strong> <span class="math inline">\(w_j\)</span> of each BA</li>
 <li>Considers <strong>all possible BA-department pairs</strong></li>
 </ul>
 </div>
@@ -804,7 +817,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Key Constraints</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_2.svg" style="width:90.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_2.svg" style="width:90.0%" alt="Hexagonal grid divided into three compact colored districts"></p>
 </div><div class="column" style="width:55%;">
 <p><span class="question">Question:</span> <strong>Constraints needed?</strong></p>
 <ol type="1">
@@ -887,15 +900,37 @@ Dr.&nbsp;Tobias Vlćek
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>We need the following sets and variables:</strong></p>
+<p><strong>We need the following sets, parameters and variables:</strong></p>
 </div>
 <div class="callout-content">
 <ul>
 <li><span class="math inline">\(\mathcal{I}\)</span> - Set of potential department locations, indexed by <span class="math inline">\(i\)</span></li>
-<li><span class="math inline">\(\mathcal{J}\)</span> - Set of BAs, indexed by <span class="math inline">\(j\)</span></li>
 <li><span class="math inline">\(X_{i,j}\)</span> - 1, if BA <span class="math inline">\(j\)</span> assigned to department <span class="math inline">\(i\)</span>, 0 otherwise</li>
 <li><span class="math inline">\(p\)</span> - Number of departments</li>
 </ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-self-assignment-trick" class="slide level2">
+<h2>The Self-Assignment Trick</h2>
+<p><span class="question">Question:</span> <strong>What does the variable <span class="math inline">\(X_{i,i}\)</span> stand for?</strong></p>
+<div class="fragment">
+<ul>
+<li>BA <span class="math inline">\(i\)</span> is assigned to the department in <strong>the same BA</strong> <span class="math inline">\(i\)</span></li>
+<li>An open department <strong>always serves its own BA</strong></li>
+<li>Hence: <span class="math inline">\(X_{i,i} = 1\)</span> exactly if department <span class="math inline">\(i\)</span> is <span class="highlight">open</span></li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Many textbooks use a separate variable <span class="math inline">\(Y_i\)</span> to model opening a facility. Using the “diagonal” <span class="math inline">\(X_{i,i}\)</span> instead saves these extra variables — both formulations are equivalent here.</p>
 </div>
 </div>
 </div>
@@ -956,7 +991,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="active-department-constraint-1" class="slide level2">
 <h2>Active Department Constraint</h2>
 <p><span class="math display">\[
-X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
+X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, j \in \mathcal{J}
 \]</span></p>
 <div class="fragment">
 <div class="callout callout-note callout-style-simple">
@@ -974,11 +1009,11 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <section id="p-median-problem" class="slide level2">
 <h2>p-Median Problem</h2>
 <p><span class="math display">\[\begin{align}
-\text{minimize} \quad &amp; \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} t_{i,j} \times X_{i,j} \\
+\text{Minimize} \quad &amp; \sum_{i \in \mathcal{I}}\sum_{j \in \mathcal{J}} w_j \times t_{i,j} \times X_{i,j} \\
 \text{subject to:} \quad &amp; \sum_{i \in \mathcal{I}} X_{i,j}= 1 &amp;&amp; \forall j \in \mathcal{J} \\
 &amp; \sum_{i \in \mathcal{I}} X_{i,i} = p &amp;&amp;  \\
-&amp; X_{i,j} \leq X_{i,i} &amp;&amp;  \forall i \in \mathcal{I}, \forall j \in \mathcal{J}  \\
-&amp; X_{i,j} \in \{0,1\}  &amp;&amp; \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
+&amp; X_{i,j} \leq X_{i,i} &amp;&amp;  \forall i \in \mathcal{I}, j \in \mathcal{J}  \\
+&amp; X_{i,j} \in \{0,1\}  &amp;&amp; \forall i \in \mathcal{I}, j \in \mathcal{J}
 \end{align}\]</span></p>
 </section>
 <section id="connection-to-facility-location" class="slide level2">
@@ -1025,7 +1060,7 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <h2>Contiguity Introduction</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:85.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:85.0%" alt="Hexagonal grid divided into three colored districts with marked department cells"></p>
 </div><div class="column" style="width:55%;">
 <p><span class="question">Question:</span> <strong>Why is contiguity important?</strong></p>
 <ul>
@@ -1039,11 +1074,11 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <h2>What is compactness?</h2>
 <div class="columns">
 <div class="column" style="width:33%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:100.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:100.0%" alt="Districting with a distorted district snaking to the corner"></p>
 </div><div class="column" style="width:34%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_2.svg" style="width:100.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_2.svg" style="width:100.0%" alt="Districting with three compact districts"></p>
 </div><div class="column" style="width:33%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_3.svg" style="width:100.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_3.svg" style="width:100.0%" alt="Alternative districting with three compact districts"></p>
 </div></div>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-simple">
@@ -1055,7 +1090,7 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <p><strong>Compactness</strong></p>
 </div>
 <div class="callout-content">
-<p>Compactness has <strong>no univocal definition</strong>; a district is commonly declared compact if it is ‘somehow round-shaped and undistorted’ <span class="citation" data-cites="Kalcsics2005">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Kalcsics et al. 2005</a>)</span>.</p>
+<p>Compactness has <strong>no univocal definition</strong>; a district is commonly declared compact if it is ‘somehow round-shaped and undistorted’ <span class="citation" data-cites="Kalcsics2005">(<a href="#/literature-i" role="doc-biblioref" onclick="">Kalcsics et al. 2005</a>)</span>.</p>
 </div>
 </div>
 </div>
@@ -1065,7 +1100,7 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <h2>Contiguity and Compactness</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_2.svg" style="width:100.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_2.svg" style="width:100.0%" alt="Districting with three compact districts"></p>
 </div><div class="column" style="width:60%;">
 <p><span class="question">Question:</span> <strong>Are our resulting districts based on the model contiguous and compact?</strong></p>
 <ul>
@@ -1098,11 +1133,11 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <p><span class="highlight">Additional Set and Parameter</span></p>
 <ul>
 <li><span class="math inline">\(e_{i,j}\)</span> - Euclidean distance between centroids</li>
-<li><span class="math inline">\(\mathcal{A}_j\)</span> - Sets of BAs adjacent to BA <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(\mathcal{A}_j\)</span> - Set of BAs adjacent to BA <span class="math inline">\(j\)</span></li>
 </ul>
 <div class="fragment">
 <p><span class="math display">\[
-\mathcal{N}_{i,j}=\{v \in \mathcal{A}_j | e_{i,v} &lt; e_{i,j}\} \quad \forall i\in \mathcal{I}, \forall j\in \mathcal{J}
+\mathcal{N}_{i,j}=\{v \in \mathcal{A}_j | e_{i,v} &lt; e_{i,j}\} \quad \forall i\in \mathcal{I}, j\in \mathcal{J}
 \]</span></p>
 </div>
 <div class="fragment">
@@ -1115,7 +1150,27 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <p><strong>The idea</strong></p>
 </div>
 <div class="callout-content">
-<p>BAs <strong>closer to department</strong> <span class="math inline">\(i\)</span> than BA <span class="math inline">\(j\)</span> on euclidian distance and <strong>adjacent to</strong> <span class="math inline">\(j\)</span>!</p>
+<p>BAs <strong>closer to department</strong> <span class="math inline">\(i\)</span> than BA <span class="math inline">\(j\)</span> in Euclidean distance and <strong>adjacent to</strong> <span class="math inline">\(j\)</span>!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="careful-with-ties" class="slide level2">
+<h2>Careful with Ties!</h2>
+<ul>
+<li>If all adjacent BAs are <em>exactly</em> as far from <span class="math inline">\(i\)</span> as <span class="math inline">\(j\)</span>, the strict inequality leaves <span class="math inline">\(\mathcal{N}_{i,j}\)</span> empty</li>
+<li>Then the assignment of <span class="math inline">\(j\)</span> to <span class="math inline">\(i\)</span> is <strong>forbidden</strong></li>
+<li>Implementations should break ties, e.g.&nbsp;with <span class="math inline">\(e_{i,v} \leq e_{i,j}\)</span> and <span class="math inline">\(v \neq j\)</span></li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>On a complete hexagonal grid, this cannot happen: one neighbor of <span class="math inline">\(j\)</span> is always strictly closer to <span class="math inline">\(i\)</span>. But real-world maps with holes, concave boundaries, or irregular BAs can produce ties!</p>
 </div>
 </div>
 </div>
@@ -1124,24 +1179,28 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J}
 <section id="example-a" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Example A</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_police-contigous-1.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_police-contigous-1.svg" style="width:65.0%" alt="Hexagonal grid with department i on the left and BA j to its right in the same row" class="r-stretch"><p>Department <span class="math inline">\(i\)</span> and BA <span class="math inline">\(j\)</span>: which neighbors of <span class="math inline">\(j\)</span> are <strong>closer to</strong> <span class="math inline">\(i\)</span>?</p>
+</section>
 <section id="example-a-1" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Example A</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_police-contigous-2.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_police-contigous-2.svg" style="width:65.0%" alt="Same grid with the three neighbors of BA j that are closer to department i highlighted in green" class="r-stretch"><p>All three highlighted BAs <span class="math inline">\(v\)</span> are adjacent to <span class="math inline">\(j\)</span> <strong>and</strong> closer to <span class="math inline">\(i\)</span>: <span class="math inline">\(|\mathcal{N}_{i,j}| = 3\)</span>.</p>
+</section>
 <section id="example-b" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Example B</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_police-contigous-3.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_police-contigous-3.svg" style="width:65.0%" alt="Hexagonal grid with department i on the left and BA j at the upper edge of the grid" class="r-stretch"><p>Same department <span class="math inline">\(i\)</span>, but BA <span class="math inline">\(j\)</span> now lies at the <strong>edge</strong> of the grid.</p>
+</section>
 <section id="example-b-1" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Example B</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_police-contigous-4.svg" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_police-contigous-4.svg" style="width:65.0%" alt="Same grid with only two neighbors of BA j highlighted in green as closer to department i" class="r-stretch"><p>Here, only two neighbors of <span class="math inline">\(j\)</span> are closer to <span class="math inline">\(i\)</span>: <span class="math inline">\(|\mathcal{N}_{i,j}| = 2\)</span>.</p>
+</section>
 <section id="enforcing-contiguity" class="slide level2">
 <h2>Enforcing Contiguity</h2>
 <p><strong>All districts have to be contiguous</strong></p>
 <p><span class="math display">\[
-X_{i,j} \leq \sum_{v \in \mathcal{N}_{i,j}} X_{i,v} \quad \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i: i \neq j
+X_{i,j} \leq \sum_{v \in \mathcal{N}_{i,j}} X_{i,v} \quad \forall i \in \mathcal{I}, j \in \mathcal{J} \setminus \mathcal{A}_i: i \neq j
 \]</span></p>
 <div class="fragment">
 <div class="callout callout-important callout-titled callout-style-simple">
@@ -1153,7 +1212,7 @@ X_{i,j} \leq \sum_{v \in \mathcal{N}_{i,j}} X_{i,v} \quad \forall i \in \mathcal
 <p><strong>The idea</strong></p>
 </div>
 <div class="callout-content">
-<p>At least <strong>one department</strong> has to be assigned to a BA that is adjacent to BA <span class="math inline">\(j\)</span> and closer to department <span class="math inline">\(i\)</span>!</p>
+<p>If BA <span class="math inline">\(j\)</span> is assigned to department <span class="math inline">\(i\)</span>, then at least <strong>one BA</strong> that is adjacent to <span class="math inline">\(j\)</span> and closer to <span class="math inline">\(i\)</span> must <strong>also</strong> be assigned to department <span class="math inline">\(i\)</span>!</p>
 </div>
 </div>
 </div>
@@ -1163,8 +1222,8 @@ X_{i,j} \leq \sum_{v \in \mathcal{N}_{i,j}} X_{i,v} \quad \forall i \in \mathcal
 <h2>Contiguity and Compactness</h2>
 <p><strong>All districts have to be contiguous and compact</strong></p>
 <p><span class="math display">\[\begin{align*}
-X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i:|\mathcal{N}_{i,j}|= 1 \wedge i \neq j \\
-2X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in \mathcal{I}, \forall j \in \mathcal{J} \setminus \mathcal{A}_i:|\mathcal{N}_{i,j}|&gt; 1 \wedge i \neq j
+X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in \mathcal{I}, j \in \mathcal{J} \setminus \mathcal{A}_i:|\mathcal{N}_{i,j}|= 1 \wedge i \neq j \\
+2X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in \mathcal{I}, j \in \mathcal{J} \setminus \mathcal{A}_i:|\mathcal{N}_{i,j}|&gt; 1 \wedge i \neq j
 \end{align*}\]</span></p>
 <div class="fragment">
 <div class="callout callout-important callout-titled callout-style-simple">
@@ -1176,7 +1235,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <p><strong>The idea</strong></p>
 </div>
 <div class="callout-content">
-<p>At least <strong>one department</strong> has to be assigned to <strong>two BAs</strong> that are adjacent to BA <span class="math inline">\(j\)</span> and closer to department <span class="math inline">\(i\)</span></p>
+<p>If BA <span class="math inline">\(j\)</span> is assigned to department <span class="math inline">\(i\)</span>, then at least <strong>two BAs</strong> that are adjacent to <span class="math inline">\(j\)</span> and closer to <span class="math inline">\(i\)</span> must <strong>also</strong> be assigned to department <span class="math inline">\(i\)</span> — if <span class="math inline">\(|\mathcal{N}_{i,j}| &gt; 1\)</span>!</p>
 </div>
 </div>
 </div>
@@ -1186,26 +1245,11 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <h2>Comparison</h2>
 <div class="columns">
 <div class="column" style="width:33%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:100.0%"></p>
-<figcaption>One department</figcaption>
-</figure>
-</div>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_1.svg" style="width:100.0%" alt="Districting where the red district snakes to the upper right corner"></p>
 </div><div class="column" style="width:34%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_2.svg" style="width:100.0%"></p>
-<figcaption>Two departments</figcaption>
-</figure>
-</div>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_2.svg" style="width:100.0%" alt="Districting with three compact, round-shaped districts"></p>
 </div><div class="column" style="width:33%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_3.svg" style="width:100.0%"></p>
-<figcaption>Up to three departments</figcaption>
-</figure>
-</div>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_police-hex_3.svg" style="width:100.0%" alt="Alternative districting with three compact, round-shaped districts"></p>
 </div></div>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-simple">
@@ -1217,7 +1261,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <p><strong>Why does this work?</strong></p>
 </div>
 <div class="callout-content">
-<p>Due to the constraints, there is <strong>always a path back</strong> to the department if a BA is assigned to a department!</p>
+<p>Due to the constraints, there is <strong>always a path back</strong> to the department if a BA is assigned to a department! Contiguity alone still allows the “snake” on the left; the compactness constraint cuts off such shapes (middle, right).</p>
 </div>
 </div>
 </div>
@@ -1228,15 +1272,42 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <h1><span class="flow">Model Characteristics</span></h1>
 
 </section>
-<section id="characteristics" class="slide level2">
-<h2>Characteristics</h2>
-<p><span class="question">Questions:</span> <strong>On model characteristics</strong></p>
+<section id="characteristics-i" class="slide level2">
+<h2>Characteristics I</h2>
+<p><span class="question">Question:</span> <strong>Is the model formulation linear or non-linear?</strong></p>
+<div class="fragment">
 <ul>
-<li class="fragment">Is the model formulation linear/ non-linear?</li>
-<li class="fragment">What kind of variable domains do we have?</li>
-<li class="fragment">What do you think, can the model be solved quickly?</li>
-<li class="fragment">Have we prevented isolated districts?</li>
+<li>Objective and all constraints are <strong>linear</strong></li>
+<li>With binary variables → <span class="highlight">mixed-integer problem (MIP)</span></li>
 </ul>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What kind of variable domains do we have?</strong></p>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(X_{i,j}\)</span> is <strong>binary</strong>: <span class="math inline">\(|\mathcal{I}| \times |\mathcal{J}|\)</span> variables in total</li>
+</ul>
+</div>
+</section>
+<section id="characteristics-ii" class="slide level2">
+<h2>Characteristics II</h2>
+<p><span class="question">Question:</span> <strong>Can the model be solved quickly?</strong></p>
+<div class="fragment">
+<ul>
+<li>For instances of <strong>moderate size</strong>: yes, with modern solvers</li>
+<li>The contiguity constraints add many rows → <span class="highlight">longer runtimes</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>Have we prevented isolated districts?</strong></p>
+</div>
+<div class="fragment">
+<ul>
+<li>The plain p-median does <strong>not</strong> prevent them</li>
+<li>That is exactly why we added the <span class="highlight">contiguity constraints</span>!</li>
+</ul>
+</div>
 </section>
 <section id="model-assumptions" class="slide level2">
 <h2>Model Assumptions</h2>
@@ -1272,7 +1343,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <div class="fragment">
 <div class="invert-font">
 <ul>
-<li>1.8 mio incidents (2015-2019)</li>
+<li>1.8 million incidents (2015-2019)</li>
 <li>~20 department locations</li>
 <li>1,596 basic areas</li>
 <li>Dense urban environment</li>
@@ -1291,7 +1362,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <section id="german-metropolitan-results" class="slide level2">
 <h2>German Metropolitan Results</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_police-g3c3_small.svg" style="width:90.0%" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_police-g3c3_small.svg" style="width:90.0%" alt="Map of optimized police districts in the German metropolitan case study" class="r-stretch"></section>
 <section id="belgian-rural-case" class="slide level2" data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1527531993849-70fc64556621?q=80&amp;w=3675&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" data-background-size="cover" data-background-position="center">
 <h2><span class="invert-font">Belgian Rural Case</span></h2>
 <div class="fragment">
@@ -1316,7 +1387,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <section id="belgian-rural-results" class="slide level2">
 <h2>Belgian Rural Results</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_police-b2c3.svg" style="width:90.0%" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_police-b2c3.svg" style="width:90.0%" alt="Map of optimized police districts in the Belgian rural case study" class="r-stretch"></section>
 <section id="simulation-framework" class="slide level2" data-background-image="https://images.beyondsimulations.com/ao/ao_police-streets.svg">
 <h2><span class="invert-font">Simulation Framework</span></h2>
 <p><span class="invert-font"><strong>How did we validate the results?</strong></span></p>
@@ -1349,6 +1420,29 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 </div>
 <div class="callout-content">
 <p>All improvements are <strong>without additional staff</strong>!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="what-about-workload-balance" class="slide level2">
+<h2>What About Workload Balance?</h2>
+<p><span class="question">Question:</span> <strong>Our model only minimizes driving time. Where does the better workload distribution come from?</strong></p>
+<div class="fragment">
+<ul>
+<li>The model does <strong>not</strong> balance workload directly — the effect is <span class="highlight">emergent</span></li>
+<li>Compact districts around well-placed departments also <strong>spread the expected workload</strong> more evenly</li>
+<li>This was measured in the <strong>simulation</strong>, not enforced by a constraint</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Think about it: how could you add an explicit workload balancing constraint with our parameters <span class="math inline">\(w_j\)</span> and <span class="math inline">\(t_{i,j}\)</span>?</p>
 </div>
 </div>
 </div>
@@ -1405,7 +1499,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>And that’s it for todays lecture!</strong></p>
+<p><strong>And that’s it for today’s lecture!</strong></p>
 </div>
 <div class="callout-content">
 <p>We now have covered districting problems and are ready to start solving some tasks in the upcoming tutorial.</p>
@@ -1427,12 +1521,9 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <h1><span class="flow">Literature</span></h1>
 
 </section>
-<section id="literature-i" class="slide level2">
+<section id="literature-i" class="slide level2 smaller scrollable">
 <h2>Literature I</h2>
 <p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
-</section>
-<section id="literature-ii" class="slide level2 smaller scrollable">
-<h2>Literature II</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">

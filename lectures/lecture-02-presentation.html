@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture II - First Steps in Julia</title>
@@ -98,7 +99,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -205,7 +206,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -216,15 +217,25 @@ Dr.&nbsp;Tobias Vlćek
 <h1><span class="flow">Quick Recap on the Technical Setup</span></h1>
 
 </section>
+<section id="goals-for-today" class="slide level2">
+<h2>Goals for Today</h2>
+<p>After this lecture, you will have:</p>
+<ul>
+<li>A <span class="highlight">working Julia and VS Code setup</span> on your computer</li>
+<li>Made your first Git commit</li>
+<li>Learned how to submit assignments and earn bonus points</li>
+<li>Started with the first tutorials</li>
+</ul>
+</section>
 <section id="download-and-install-julia" class="slide level2">
 <h2>Download and Install Julia</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_julia-programming-language.png" class="r-stretch"><p>To prepare for the upcoming lectures, we start by installing the Julia Programming Language and an Integrated Development Environment (IDE) to work with Julia.</p>
+<img data-src="https://images.beyondsimulations.com/ao/ao_julia-programming-language.png" alt="The Julia programming language logo" class="r-stretch"><p>To prepare for the upcoming lectures, we start by installing the Julia Programming Language and an Integrated Development Environment (IDE) to work with Julia.</p>
 </section>
 <section id="installing-julia" class="slide level2">
 <h2>Installing Julia</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_julia2.png" data-max-width="400px" class="r-stretch"><ul>
+<img data-src="https://images.beyondsimulations.com/ao/ao_julia2.png" alt="Screenshot of the Julia download page" width="400" class="r-stretch"><ul>
 <li>Head to <a href="https://julialang.org">julialang.org</a> and follow the instructions.</li>
 </ul>
 <div class="fragment">
@@ -243,17 +254,17 @@ Dr.&nbsp;Tobias Vlćek
 <section id="vs-code" class="slide level2">
 <h2>VS Code</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_codium_cnl.png" data-max-width="400px" class="r-stretch"><ul>
+<img data-src="https://images.beyondsimulations.com/ao/ao_codium_cnl.png" alt="The VS Codium logo" width="400" class="r-stretch"><ul>
 <li>Next, we are going to install VS Code</li>
 <li>Alternatively, you can install VS Codium</li>
-<li>It is essentially VS Code but without any tracking by MS</li>
+<li>It is essentially VS Code but without any tracking by Microsoft</li>
 </ul>
 </section>
 <section id="installing-vs-code" class="slide level2">
 <h2>Installing VS Code</h2>
 <ul>
 <li>Head to the website <a href="https://code.visualstudio.com">code.visualstudio.com</a></li>
-<li>OR to the webside <a href="https://vscodium.com">vscodium.com</a></li>
+<li>OR to the website <a href="https://vscodium.com">vscodium.com</a></li>
 <li>Download and install the latest release</li>
 </ul>
 </section>
@@ -267,27 +278,31 @@ Dr.&nbsp;Tobias Vlćek
 </ul>
 </section>
 <section id="create-a-new-file" class="slide level2">
-<h2>Create a new file</h2>
+<h2>Create a New File</h2>
 <ul>
 <li>Create a new file with a “.jl” ending</li>
 <li>Save it somewhere on your computer</li>
 <li>e.g., in a folder that you will use in the course</li>
 </ul>
-<div id="5c84cf4d" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a><span class="fu">print</span>(<span class="st">"Hello World!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="2" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a><span class="fu">println</span>(<span class="st">"Hello World!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell fragment" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
 <pre><code>Hello World!</code></pre>
 </div>
 </div>
+</section>
+<section id="run-the-file" class="slide level2">
+<h2>Run the File</h2>
 <ul>
 <li>Run the file by clicking “run” in the upper right corner</li>
-<li>OR by pressing “Control+Enter” or “STRG+Enter”</li>
+<li>OR by pressing <code>Ctrl+Enter</code> — labelled <code>Strg</code> on German keyboards</li>
+<li>On macOS it is <code>Ctrl+Enter</code> or <code>Cmd+Enter</code>, depending on your keybindings<sup>1</sup></li>
 </ul>
-</section>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>Strictly speaking, this executes the current line or cell. For longer files, use the command “Julia: Execute active File in REPL”.</p></li></ol></aside></section>
 <section id="everything-working" class="slide level2">
-<h2>Everything working?</h2>
+<h2>Everything Working?</h2>
 <ul>
 <li>If the terminal opens with a <code>Hello World!</code> → perfect!</li>
 <li>If not, it is likely that the IDE <span class="highlight">cannot find the path</span> to Julia</li>
@@ -313,11 +328,33 @@ Dr.&nbsp;Tobias Vlćek
 <section id="julia-as-a-programming-language" class="slide level2">
 <h2>Julia as a Programming Language</h2>
 <ul>
-<li>Following three lectures are dedicated to learning the basics</li>
+<li>The following three lectures are dedicated to learning the basics</li>
 <li>Start with the very basics and gradually move on</li>
 <li>Focus in the first two lectures on the programming language</li>
 <li>Third lecture dedicated to <span class="highlight">Mathematical Optimization</span></li>
 </ul>
+</section>
+<section id="a-first-taste-of-julia" class="slide level2">
+<h2>A First Taste of Julia</h2>
+<p><span class="question">Question:</span> <strong>What will your savings be worth in 10 years?</strong></p>
+<div class="fragment">
+<div id="4" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a></a>savings <span class="op">=</span> <span class="fl">1000</span>       <span class="co"># Euros in your account</span></span>
+<span id="cb3-2"><a></a>interest_rate <span class="op">=</span> <span class="fl">0.03</span> <span class="co"># 3% interest per year</span></span>
+<span id="cb3-3"><a></a>value <span class="op">=</span> savings <span class="op">*</span> (<span class="fl">1</span> <span class="op">+</span> interest_rate)<span class="op">^</span><span class="fl">10</span></span>
+<span id="cb3-4"><a></a><span class="fu">println</span>(<span class="st">"Value after 10 years: "</span>, <span class="fu">round</span>(value; digits<span class="op">=</span><span class="fl">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>Value after 10 years: 1343.92</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Don’t worry if this looks new — you will be able to <span class="highlight">read and write</span> code like this after the tutorials!</li>
+</ul>
+</div>
 </section></section>
 <section>
 <section id="working-with-vs-code-and-julia" class="title-slide slide level1 title center">
@@ -327,9 +364,9 @@ Dr.&nbsp;Tobias Vlćek
 <section id="notebooks-in-vs-code" class="slide level2">
 <h2>Notebooks in VS Code</h2>
 <ul>
-<li>The easiest way is by using VS Code</li>
-<li>For the detailed instructions, just open the first tutorial.</li>
-<li>It explains step-by-step how to use <code>.jl</code> or <code>.ipynb</code> files as notebook</li>
+<li>The easiest way to work on the tutorials is by using VS Code</li>
+<li>For detailed instructions, just open the <a href="../tutorials/tutorial-02-01-variables.html">first tutorial</a></li>
+<li>It explains step-by-step how to use <code>.jl</code> or <code>.ipynb</code> files as notebooks</li>
 </ul>
 <div class="fragment">
 <div class="callout callout-note callout-style-simple">
@@ -351,12 +388,12 @@ Dr.&nbsp;Tobias Vlćek
 <li>On each page, you will find a button <code>Julia</code> on the right</li>
 <li>Click it to download the <code>jl</code> file and save it</li>
 <li>If <code>.jl</code> files do not work for you, you can also click on <code>Jupyter</code></li>
-<li>This will download a <code>.ipynb</code>file which you can use directly as notebook</li>
+<li>This will download an <code>.ipynb</code> file which you can use directly as notebook</li>
 <li>I’d really recommend storing the files <span class="highlight">in a separate directory for this course</span></li>
 </ul>
 </section>
 <section id="learning-by-doing" class="slide level2">
-<h2>Learning by doing</h2>
+<h2>Learning by Doing</h2>
 <ul>
 <li>The best way to learn a programming language is <span class="highlight">by doing</span></li>
 <li>We will therefore solve problems the coming weeks</li>
@@ -411,7 +448,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>You don’t need to use Git, but once you get used to it it becomes invaluable, especially if you are working with a lot of code!</p>
+<p>Git is not required for the course, but strongly recommended: once you get used to it, it becomes invaluable, especially if you are working with a lot of code!</p>
 </div>
 </div>
 </div>
@@ -470,15 +507,15 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </section></section>
 <section>
-<section id="submission-of-assignments" class="title-slide slide level1 title center">
-<h1><span class="flow">Submission of Assignments</span></h1>
+<section id="assignments-grading" class="title-slide slide level1 title center">
+<h1><span class="flow">Assignments &amp; Grading</span></h1>
 
 </section>
-<section id="submission-of-assignments-1" class="slide level2">
+<section id="submission-of-assignments" class="slide level2">
 <h2>Submission of Assignments</h2>
 <ul>
 <li>You can work in groups of up to three people</li>
-<li>Submit the assignment via OpenOlat</li>
+<li>Submit the assignment via Moodle</li>
 <li>You will submit your assignment by uploading a notebook</li>
 <li>The assignment is due <span class="highlight">the day before the next tutorial</span></li>
 </ul>
@@ -489,7 +526,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>Don’t forget to save your notebook before uploading it to OpenOlat!</p>
+<p>Don’t forget to save your notebook before uploading it to Moodle!</p>
 </div>
 </div>
 </div>
@@ -528,15 +565,27 @@ Dr.&nbsp;Tobias Vlćek
 <li><strong>Vectors</strong>: Learn how to create and manipulate vectors</li>
 <li><strong>Comparisons</strong>: Learn how to compare values</li>
 <li><strong>Loops</strong>: Learn how to use loops to repeat code</li>
-<li><strong>Scope</strong>: Learn about the scope of variables</li>
+<li><strong>Dictionaries</strong>: Learn how to store and look up key-value pairs</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p>Dictionaries will become important later: they are how we will store and look up the data of our optimization models.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="get-started-with-the-tutorials" class="slide level2">
-<h2>Get started with the tutorials</h2>
+<h2>Get Started with the Tutorials</h2>
 <ul>
 <li>Download the first notebook and open it</li>
 <li>Start with the <span class="highlight">first problem and solve it step by step</span></li>
-<li>You can find the tutorials here on the website</li>
+<li>You can find the <a href="../tutorials/tutorial-02-01-variables.html">tutorials</a> here on the website</li>
 <li><span class="highlight">You can ask questions anytime!</span></li>
 </ul>
 <div class="fragment">
@@ -554,9 +603,6 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="literature" class="title-slide slide level1 title center">
@@ -573,6 +619,7 @@ Dr.&nbsp;Tobias Vlćek
 
 
 </section></section>
+
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">

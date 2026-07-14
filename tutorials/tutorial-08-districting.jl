@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -39,7 +40,7 @@
 # starting with a basic model and gradually adding real-world constraints
 # that police departments face daily.
 #
-# # 1. Modelling the P-Median Problem
+# # 1. Modeling the p-Median Problem
 #
 # Your first task is to fix a prototype model. It contains 6 critical
 # errors that are causing the model to fail. As the lead consultant, you
@@ -49,9 +50,19 @@
 # 2.  Document why each fix was necessary in a comment
 # 3.  Validate that your solution makes sense
 #
-# In this task it is **not yet necessary** to include contiguity and
-# compactness constraints! If the model takes too long on your machine,
-# you can set the **relative gap to 10% or decrease the time limit**.
+# The code is supposed to implement the weighted p-median model from the
+# lecture. Here, $\mathcal{I}$ is the set of potential department
+# locations, $\mathcal{J}$ the set of BAs, $t_{i,j}$ the expected driving
+# time from department location $i$ to BA $j$, $w_j$ the forecasted number
+# of incidents in BA $j$, and $p$ the number of departments. The variable
+# $X_{i,j}$ is 1 if BA $j$ is assigned to department $i$, and
+# $X_{i,i} = 1$ means that department $i$ is open:
+#
+# In the code, the product $w_j \times t_{i,j}$ is precomputed as the
+# matrix `weightedDriving`. In this task it is **not yet necessary** to
+# include contiguity and compactness constraints! If the model takes too
+# long on your machine, you can set the **relative gap to 10% or decrease
+# the time limit**.
 #
 # To execute the code, several files are provided, which contain the
 # Euclidean distance between the BAs, the driving time between BAs, the
@@ -79,18 +90,15 @@ using DelimitedFiles
 using Shapefile
 using DataFrames
 using Plots
+using Random
 
 # %% [markdown]
-# We then define the number of departments, load the data into scope and
-# define the number of departments and the weighted driving times. Make
-# sure to use the correct path to the data files - it should be relative
-# to the location notebook file in a folder called `data`. **Again, no
-# mistakes!**
+# We then load the data into scope and define the number of departments
+# and the weighted driving times. Make sure to use the correct path to the
+# data files - it should be relative to the location of the notebook file
+# in a folder called `data`. **Again, no mistakes!**
 
 # %%
-# Define a seed for reproducibility
-Random.seed!(42)
-
 # Load the data into scope
 file_directory = "$(@__DIR__)/data"
 euclidianDistances = readdlm("$file_directory/euclidianDistances0510.csv",'\t')
@@ -125,6 +133,7 @@ set_attribute(model, "time_limit", 120.0)
 set_attribute(pMedianModel, "mip_rel_gap", 0.0)
 
 # Define the range of the problem instance
+Random.seed!(42)  # Seed for a reproducible candidate draw (This line is correct!)
 rangeBAs = 1:2
 rangeDepartments = unique(rand(1:size(incidentWeights,1), 100))  # Ensure unique departments (This line is correct!)
 
@@ -164,27 +173,46 @@ optimize!(pMedianModel)
 # %%
 # Function to print the model status
 function print_model_status(model)
-    begin
-        println()
-    if termination_status(pMedianModel) == OPTIMAL
+    println()
+    if termination_status(model) == OPTIMAL
         println("Great, the solution is optimal.")
-        println("The relative gap is $(relative_gap(pMedianModel))")
-        println("The solve time (in seconds) is $(solve_time(pMedianModel))")
-    elseif termination_status(pMedianModel) == TIME_LIMIT && has_values(pMedianModel)
+        println("The relative gap is $(relative_gap(model))")
+        println("The solve time (in seconds) is $(solve_time(model))")
+    elseif termination_status(model) == TIME_LIMIT && has_values(model)
         println("Solution is suboptimal due to a time limit, but a primal solution is available")
     else
         error("The model was not solved correctly.")
     end
-        println("The objective value is ", objective_value(pMedianModel))
-    end
+    println("The objective value is ", objective_value(model))
 end
 
 # %%
 print_model_status(pMedianModel)
-@assert termination_status(pMedianModel) == OPTIMAL || (termination_status(pMedianModel) == TIME_LIMIT && has_values(pMedianModel)) "Unfortunate, the model was not solved correctly. Have you corrected all mistakes?"
+@assert termination_status(pMedianModel) == OPTIMAL || (termination_status(pMedianModel) == TIME_LIMIT && has_values(pMedianModel)) "Unfortunately, the model was not solved correctly. Have you corrected all mistakes?"
 println("Great, the model was solved correctly.")
 
+
 # %% [markdown]
+# > **Tip**
+# >
+# > Checkpoint: with the seed `42` and the settings above, the optimal
+# > objective value is approximately `327696.44` (computed with Julia
+# > 1.12 - other Julia versions may draw different candidate locations
+# > from the same seed).
+#
+# One of the six mistakes closely resembles a constraint from the lecture.
+# Which one, and why is it wrong here?
+#
+# > **Answer (try it yourself first!)**
+# >
+# > The planted constraint `2 * X[i,j] <= X[i,i]` looks like the
+# > compactness constraint
+# > $2 X_{i,j} \leq \sum_{v \in \mathcal{N}_{i,j}} X_{i,v}$ from the
+# > lecture. But here the right-hand side is a single binary variable, so
+# > it is at most 1. The constraint therefore forces $X_{i,j} = 0$ for all
+# > $i \neq j$, and together with the requirement that every BA is
+# > assigned to exactly one department, the model becomes infeasible.
+#
 # ------------------------------------------------------------------------
 #
 # ## Visualizing the Results
@@ -192,7 +220,7 @@ println("Great, the model was solved correctly.")
 # The following code then builds and uses a function to plot the results.
 
 # %%
-function visualize_departments(hexshape, X, p)
+function visualize_departments(hexshape, X, p, rangeDepartments)
     # Convert solution matrix to regular Matrix
     allAssignments = Matrix(value.(X))
 
@@ -232,7 +260,7 @@ function visualize_departments(hexshape, X, p)
 end
 
 # Plot the results
-plot_area = visualize_departments(hexshape, X, p)
+plot_area = visualize_departments(hexshape, X, p, rangeDepartments)
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -257,53 +285,65 @@ plot_area = visualize_departments(hexshape, X, p)
 # constraints and conditions in JuMP. You can add conditions to
 # constraints by using the `;` operator. This is useful if you want to add
 # a constraint only under certain conditions. In the example below, the
-# constraint is only active if the Euclidean distance between two BAs is
+# constraint is only created if the Euclidean distance between two BAs is
 # less than 1.5.
 
 # %%
-@constraint(model,
+@constraint(some_model,
     conditionalConstraint[
         i=rangeDepartments,
         j=rangeBAs;
         euclidianDistances[i,j] < 1.5
         ],
-    X[i,j] == 1
+    X[i,j] <= 1
     )
 
 # %% [markdown]
-# Furthermore,we can use conditions within constraints by using the `for`
+# Furthermore, we can use conditions within constraints by using the `for`
 # keyword. For example, in the constraint below, the sum is only taken
 # over the BAs that are within 1.5 units of BA $i$.
 
 # %%
-@constraint(model,
+@constraint(some_model,
     conditionalConstraint2[i=rangeDepartments],
     sum(X[i,j] for j in rangeBAs if euclidianDistances[i,j] < 1.5) >= 1
     )
 
 # %% [markdown]
+# > **Warning**
+# >
+# > Both cells are **syntax illustrations only** for some model called
+# > `some_model` - do not add them to your `pMedianModel`!
+#
 # ------------------------------------------------------------------------
 #
 # ## Extending the Model
 #
-# Now, we can start to extend the model. Add the contiguity constraint
-# from the lecture to the model.
+# Now, we can start to extend the model. First, store the current
+# objective value, e.g. as
+# `baseObjective = objective_value(pMedianModel)` - you will need it later
+# to compute the gap. Make sure to store it **before** adding new
+# constraints, as modifying the model discards the old solution. Then, add
+# the contiguity constraint from the lecture to the model.
 #
 # > **Important**
 # >
 # > Take a careful look at the Euclidean distances, as you can use them to
 # > determine if two BAs are adjacent to each other. If the distance
 # > between two BAs is less than 1.5, then the BAs are adjacent to each
-# > other. You can use this information to define the new constraint.
+# > other; a distance of at least 1.5 means they are **not** adjacent. You
+# > can use this information to define the new constraint.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %% [markdown]
 # Solve the model again, this time with the contiguity constraint.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %% [markdown]
 # The following code prints the model status and visualizes the districts.
@@ -313,7 +353,7 @@ plot_area = visualize_departments(hexshape, X, p)
 
 # %%
 print_model_status(pMedianModel)
-display(visualize_departments(hexshape, X, p))
+display(visualize_departments(hexshape, X, p, rangeDepartments))
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -321,9 +361,13 @@ display(visualize_departments(hexshape, X, p))
 # ## Compute the Gap
 #
 # Based on your results, what is the gap between the solution in the
-# previous task and this task? Write a comment answering the question in
-# cell below. You can also use the cell, to compute the gap based on the
-# objective values.
+# previous task and this task? Here, we mean the relative increase in the
+# objective value caused by the contiguity constraints,
+# $(z_{\text{contiguity}} - z_{\text{base}})/z_{\text{base}}$. Before
+# computing it: in which direction do you expect the objective value to
+# change when constraints are added to a model? Write a comment answering
+# the questions in the cell below. You can also use the cell to compute
+# the gap based on the objective values.
 
 # %%
 #=
@@ -335,8 +379,10 @@ display(visualize_departments(hexshape, X, p))
 # %% [markdown]
 # > **Tip**
 # >
-# > If you computer cannot determine the optimal solution, you can just
+# > If your computer cannot determine the optimal solution, you can just
 # > use the best solutions you found after both runs to compute the gap.
+# > Adding constraints can never improve the objective value - but don’t
+# > be surprised if the increase is tiny in this instance.
 #
 # ------------------------------------------------------------------------
 #
@@ -347,11 +393,14 @@ display(visualize_departments(hexshape, X, p))
 # guarantee this! Your task: Implement maximum response time constraints.
 #
 # Extend your model by an additional parameter `max_driving_time = 20` to
-# ensure that no allocation with a driving time $d_{i,j}$ higher than
-# `max_driving_time` minutes from $i$ to $j$ is possible.
+# ensure that no allocation with a driving time $t_{i,j}$ of
+# `max_driving_time` minutes or more from $i$ to $j$ is possible. In other
+# words, an assignment is only allowed if the driving time is **strictly
+# less** than 20 minutes.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %% [markdown]
 # > **Tip**
@@ -360,21 +409,30 @@ display(visualize_departments(hexshape, X, p))
 # > matrix! The `weightedDriving` matrix contains the weighted driving
 # > times, while the `drivingTimes` matrix contains the driving times.
 #
+# > **Note**
+# >
+# > With the seed `42` from Task 1, this remains feasible. If the solver
+# > reports infeasibility although your constraint is correct, your
+# > candidate draw likely differs (e.g. different seed or Julia version):
+# > some BA then has no candidate department within 20 minutes. In that
+# > case, re-run the cells from Task 1 onwards with the seed in place.
+#
 # Again, solve the model.
 
 # %%
 # YOUR CODE BELOW
 
+
 # %% [markdown]
 # The following code prints the model status and visualizes the districts.
 # If your implementation is correct, the districts with previously longer
-# driving times should have shrinked. Furthermore, the model should have
+# driving times should have shrunk. Furthermore, the model should have
 # reached optimality or found a feasible solution before hitting the time
 # limit.
 
 # %%
 print_model_status(pMedianModel)
-display(visualize_departments(hexshape, X, p))
+display(visualize_departments(hexshape, X, p, rangeDepartments))
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -384,11 +442,12 @@ display(visualize_departments(hexshape, X, p))
 # During major events or crime waves, districts need backup support from
 # neighboring stations. The Police Union has emphasized this as a critical
 # safety requirement for their officers. Your task: Design constraints
-# ensuring each district has backup support within 20 minutes of the
-# driving time.
+# ensuring each district has backup support within 20 minutes of driving
+# time (strictly less than 20 minutes, as in the previous task).
 
 # %%
 # YOUR CODE BELOW
+
 
 # %% [markdown]
 # > **Tip**
@@ -406,6 +465,7 @@ display(visualize_departments(hexshape, X, p))
 # %%
 # YOUR CODE BELOW
 
+
 # %% [markdown]
 # If your implementation is correct, the districts are contiguous and
 # distributed across the city. In addition, the model should have reached
@@ -413,7 +473,7 @@ display(visualize_departments(hexshape, X, p))
 
 # %%
 print_model_status(pMedianModel)
-display(visualize_departments(hexshape, X, p))
+display(visualize_departments(hexshape, X, p, rangeDepartments))
 
 # %% [markdown]
 # ------------------------------------------------------------------------

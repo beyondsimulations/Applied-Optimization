@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture XII - Metro Passenger Flow Control</title>
@@ -32,7 +33,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -139,7 +140,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -156,12 +157,22 @@ Dr.&nbsp;Tobias Vlćek
 
 </div>
 </section>
+<section id="learning-objectives" class="slide level2">
+<h2>Learning Objectives</h2>
+<p>After this lecture, you will be able to:</p>
+<ul>
+<li class="fragment"><strong>Model</strong> time-expanded passenger flows with precomputed delays</li>
+<li class="fragment"><strong>Translate</strong> a safety goal into inflow control constraints</li>
+<li class="fragment"><strong>Explain</strong> how the set <span class="math inline">\(\mathcal{R}_{e,t}\)</span> connects periods and minutes</li>
+<li class="fragment"><strong>Embed</strong> an optimization model into a rolling-horizon heuristic</li>
+</ul>
+</section>
 <section id="public-transport" class="slide level2">
 <h2>Public transport</h2>
 <ul>
-<li>FIFA Worldcup 2022 took place in a <span class="highlight">small region</span></li>
+<li>FIFA World Cup 2022 took place in a <span class="highlight">small region</span></li>
 <li>The capacity of the metro system was <strong>finite</strong></li>
-<li>More than <span class="highlight">1 million tourists</span> where expected</li>
+<li>More than <span class="highlight">1 million tourists</span> were expected</li>
 <li>Metro usage was <strong>free for all ticket holders</strong></li>
 <li>Transport methods were expected to be <strong>overloaded</strong></li>
 </ul>
@@ -191,7 +202,11 @@ Dr.&nbsp;Tobias Vlćek
 <section id="metrosystem-of-doha" class="slide level2">
 <h2>Metrosystem of Doha</h2>
 
-<img data-src="images/ao_metro-metro.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<img data-src="images/ao_metro-metro.svg" class="quarto-figure quarto-figure-center r-stretch" alt="Schematic map of the Doha metro network with the Red, Green, and Gold lines, the stadium locations, and the expanded transfer stations Al Bidda and Msheireb."></section>
+<section id="closer-look-at-the-metro-system" class="slide level2">
+<h2>Closer look at the Metro System</h2>
+
+<img data-src="images/ao_metro-zoom.svg" class="quarto-figure quarto-figure-center r-stretch" alt="Zoom on the expanded transfer stations Al Bidda and Msheireb, showing the platform nodes of the Green, Red, and Gold lines and the internal walking arcs connecting them."></section>
 <section id="main-bottleneck" class="slide level2">
 <h2>Main Bottleneck</h2>
 <p><span class="question">Question:</span> <strong>What could be a potential bottleneck?</strong></p>
@@ -213,15 +228,11 @@ Dr.&nbsp;Tobias Vlćek
 <section id="visualization" class="slide level2">
 <h2>Visualization</h2>
 
-<img data-src="images/ao_metro-overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch"><ul>
+<img data-src="images/ao_metro-overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch" alt="Example network where stations A and B on one line and station C on another feed into transfer station T, which connects to destination D. Each arc allows at most 10 passengers per minute and each station sends 10 passengers per minute towards D."><ul>
 <li>10 people want to start per minute at <strong>each station</strong></li>
 <li>Everybody wants to get to <strong>station D</strong></li>
 </ul>
 </section>
-<section id="closer-look-at-the-metro-system" class="slide level2">
-<h2>Closer look at the Metro System</h2>
-
-<img data-src="images/ao_metro-zoom.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="capacities-inside-the-stations" class="slide level2">
 <h2>Capacities inside the stations</h2>
 <ul>
@@ -342,7 +353,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>Tip: Julia is a great tool for this!</strong></p>
 </div>
 <div class="callout-content">
-<p>Simulations was build in Julia. With 1,000,000 individuals walking,using cars, busses, and the metro, a day took <strong>less than 5 minutes</strong>.</p>
+<p>The simulation was built in Julia. With 1,000,000 individuals walking, using cars, buses, and the metro, simulating a day took <strong>less than 5 minutes</strong>.</p>
 </div>
 </div>
 </div>
@@ -351,7 +362,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="results-of-the-simulation" class="slide level2">
 <h2>Results of the Simulation</h2>
 <div class="column" style="width:50%;">
-<p><img data-src="https://images.byndsim.com/ao/ao_metro-train_section.png" style="width:85.0%"></p>
+<p><img data-src="https://images.byndsim.com/ao/ao_metro-train_section.png" style="width:85.0%" alt="Simulated occupancy of a metro train section, visualizing individual passengers inside the car."></p>
 </div><div class="column" style="width:50%;">
 <ul>
 <li>Detailed movement patterns throughout the region</li>
@@ -399,7 +410,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="difficulty" class="slide level2">
 <h2>Difficulty</h2>
 
-<img data-src="images/ao_metro-inflow_impact.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="fragment">
+<img data-src="images/ao_metro-inflow_impact.svg" class="quarto-figure quarto-figure-center r-stretch" alt="Station A with a total demand of 1000 passengers and an allowed entry of 200 per period. The admitted inflow spreads over four destinations in proportion to the demand: 400 becomes 80, 300 becomes 60, 200 becomes 40, and 100 becomes 20."><div class="fragment">
 <ul>
 <li>Patterns have different origin-destination pairs</li>
 <li>Regulating the inflow does not affect the destination</li>
@@ -415,7 +426,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Graph Sets?</h2>
 <p><span class="question">Question:</span> <strong>What could be the sets for the graph?</strong></p>
 
-<img data-src="images/ao_metro-overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<img data-src="images/ao_metro-overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch" alt="Example network with stations A, B, C, transfer station T, and destination D, connected by directed arcs with capacities of 10 passengers per minute."></section>
 <section id="graph-sets-1" class="slide level2">
 <h2>Graph Sets?</h2>
 <ul>
@@ -512,12 +523,12 @@ Dr.&nbsp;Tobias Vlćek
 <p><span class="question">Question:</span> <strong>What could be possible parameters?</strong></p>
 <div class="fragment">
 <ul>
-<li><span class="math inline">\(q_{o,d,p}\)</span> - Demand from station <span class="math inline">\(o\)</span> to <span class="math inline">\(d\)</span> with <span class="math inline">\(o,d \in \mathcal{O}\)</span> in <span class="math inline">\(p\)</span></li>
-<li><span class="math inline">\(d_{e}\)</span> - Travel time (min) of the arcs <span class="math inline">\(e \in \mathcal{E}\)</span></li>
+<li><span class="math inline">\(q_{o,d,p}\)</span> - Queued passengers from station <span class="math inline">\(o\)</span> to <span class="math inline">\(d\)</span> with <span class="math inline">\(o,d \in \mathcal{O}\)</span> in <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(\tau_{e}\)</span> - Travel time (min) of the arcs <span class="math inline">\(e \in \mathcal{E}\)</span></li>
 <li><span class="math inline">\(c_e\)</span> - Max. allowed arc entry rate <span class="math inline">\(e\)</span> per minute with <span class="math inline">\(e \in \mathcal{E}\)</span></li>
 <li><span class="math inline">\(c_{o}^{min}\)</span> - Min. station entry rate <span class="math inline">\(o\)</span> per minute with <span class="math inline">\(o \in \mathcal{O}\)</span></li>
 <li><span class="math inline">\(c_{o}^{max}\)</span> - Max. station entry rate <span class="math inline">\(o\)</span> per minute with <span class="math inline">\(o \in \mathcal{O}\)</span></li>
-<li><span class="math inline">\(\alpha\)</span> - Maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
+<li><span class="math inline">\(\alpha\)</span> - Safety factor applied to all capacities (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
 </ul>
 </div>
 </section>
@@ -527,7 +538,7 @@ Dr.&nbsp;Tobias Vlćek
 <div class="fragment">
 <ul>
 <li>Simple network: assume people use the <strong>shortest path</strong></li>
-<li>Use <span class="highlight">Djikstra’s algorithm</span> to compute it</li>
+<li>Use <span class="highlight">Dijkstra’s algorithm</span> to compute it</li>
 <li>From each station to all other stations</li>
 </ul>
 </div>
@@ -550,7 +561,7 @@ Dr.&nbsp;Tobias Vlćek
 <section id="shortest-paths-sp" class="slide level2">
 <h2>Shortest Paths (SP)</h2>
 <ul>
-<li><span class="math inline">\(\mathcal{C}_{o,d}\)</span> - Set of arcs <span class="math inline">\(e \in \mathcal{E}\)</span> on the SP from <span class="math inline">\(o,d \in \mathcal{O}\)</span></li>
+<li><span class="math inline">\(\mathcal{C}_{o,d}\)</span> - Set of arcs <span class="math inline">\(e \in \mathcal{E}\)</span> on the SP from <span class="math inline">\(o\)</span> to <span class="math inline">\(d\)</span> with <span class="math inline">\(o,d \in \mathcal{O}\)</span></li>
 </ul>
 <div class="fragment">
 <div class="callout callout-note callout-style-simple">
@@ -559,15 +570,14 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>Now we compute the <strong>travel time on the shortest paths.</strong> One parameter for the SP from <strong>station to station</strong> and one for the SP from <strong>station to arc</strong>.</p>
+<p>The arc travel times <span class="math inline">\(\tau_e\)</span> are only the <strong>input</strong> to Dijkstra’s algorithm. From the resulting paths we compute the travel time parameter the model actually uses:</p>
 </div>
 </div>
 </div>
 </div>
 <div class="fragment">
 <ul>
-<li><span class="math inline">\(d_{o,d}\)</span> - travel time (min) on SP from <span class="math inline">\(o \in \mathcal{O}\)</span> to <span class="math inline">\(d \in \mathcal{O}\)</span></li>
-<li><span class="math inline">\(d_{o,e}\)</span> - travel time (min) on SP from <span class="math inline">\(o \in \mathcal{O}\)</span> to <span class="math inline">\(e \in \mathcal{E}\)</span></li>
+<li><span class="math inline">\(\tau_{o,e}\)</span> - Travel time (min) on the SP from station <span class="math inline">\(o \in \mathcal{O}\)</span> to arc <span class="math inline">\(e \in \mathcal{E}\)</span></li>
 </ul>
 </div>
 </section>
@@ -575,7 +585,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>People Spreading</h2>
 <p><span class="question">Question:</span> <strong>How do people spread?</strong></p>
 
-<img data-src="images/ao_metro-inflow_impact.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<img data-src="images/ao_metro-inflow_impact.svg" class="quarto-figure quarto-figure-center r-stretch" alt="Station A with a total demand of 1000 passengers and an allowed entry of 200 per period, spreading the admitted inflow over four destinations in proportion to the demand."></section>
 <section id="ratio-of-origin-destination" class="slide level2">
 <h2>Ratio of Origin-Destination</h2>
 <ul>
@@ -583,7 +593,7 @@ Dr.&nbsp;Tobias Vlćek
 <li>Thus we assume that people spread <span class="highlight">based on destination</span></li>
 </ul>
 <div class="fragment">
-<p><span class="math display">\[\frac{q_{o,d,p}}{\sum_{d \in \mathcal{O}} q_{o,d,p}} \quad \forall o,d \in \mathcal{O}, p\in \mathcal{P}\]</span></p>
+<p><span class="math display">\[\frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \quad \forall o,d \in \mathcal{O}, p\in \mathcal{P}\]</span></p>
 </div>
 <div class="fragment">
 <div class="callout callout-note callout-style-simple">
@@ -592,7 +602,7 @@ Dr.&nbsp;Tobias Vlćek
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>Based on the ratio of the different destinations <span class="math inline">\(d\)</span> to the total queue for each station <span class="math inline">\(o \in \mathcal{O}\)</span> in each period <span class="math inline">\(p \in \mathcal{P}\)</span>.</p>
+<p>Based on the ratio of the different destinations <span class="math inline">\(d\)</span> to the total queue for each station <span class="math inline">\(o \in \mathcal{O}\)</span> in each period <span class="math inline">\(p \in \mathcal{P}\)</span>. Note that the summation needs its <strong>own index</strong> <span class="math inline">\(f\)</span> over all destinations, as <span class="math inline">\(d\)</span> is already taken by the ratio’s destination.</p>
 </div>
 </div>
 </div>
@@ -701,8 +711,33 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="fragment">
 <p><span class="math display">\[
-\text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
+\text{Minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 \]</span></p>
+</div>
+</section>
+<section id="objective-function-revisited" class="slide level2">
+<h2>Objective Function Revisited</h2>
+<p><span class="question">Question:</span> <strong>What does the solver really maximize here?</strong></p>
+<div class="fragment">
+<ul>
+<li>The queued passengers <span class="math inline">\(q_{o,d,p}\)</span> are <span class="highlight">parameters</span>, not variables</li>
+<li>Their sum is a <strong>constant</strong> — the solver cannot change it</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note: Minimizing queues = maximizing admissions</strong></p>
+</div>
+<div class="callout-content">
+<p>Minimizing the objective is exactly the same as <strong>maximizing the total admitted passengers</strong> <span class="math inline">\(\sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} m \times X_{o,p}\)</span>. This is also why the model gets away without explicit queue dynamics.</p>
+</div>
+</div>
+</div>
 </div>
 </section></section>
 <section>
@@ -714,7 +749,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Necessary Constraints</h2>
 <p><span class="question">Question:</span> <strong>What constraints do we need?</strong></p>
 
-<img data-src="images/ao_metro-overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"><div class="fragment">
+<img data-src="images/ao_metro-overcrowded.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%" alt="Example network with stations A, B, C, transfer station T, and destination D, where all arcs are limited to 10 passengers per minute."><div class="fragment">
 <ul>
 <li>The capacity of each arc is <strong>not exceeded</strong></li>
 <li>Do not dispatch more people than are queued</li>
@@ -762,35 +797,30 @@ Dr.&nbsp;Tobias Vlćek
 <section id="set-of-time-delays" class="slide level2">
 <h2>Set of Time-Delays</h2>
 <p><span class="math display">\[
-\mathcal{R}_{e,t} = \{(o,d,p) \mid
-    \begin{array}{l}
-    (o,d) | o,d \in \mathcal{O}, \\
-    q_{o,d,p} &gt; 0, \\
-    e \in \mathcal{C}_{o,d}, \\
-    t-d_{o,e} \in I_p, \\
-    p \in \mathcal{P}\}
-    \end{array}
-    \quad \forall e \in \mathcal{E}, t \in \mathcal{T}
+\begin{align*}
+\mathcal{R}_{e,t} = \{(o,d,p) \mid \; &amp; o,d \in \mathcal{O}, p \in \mathcal{P}, q_{o,d,p} &gt; 0, \\
+&amp; e \in \mathcal{C}_{o,d}, t-\tau_{o,e} \in I_p\} \quad \forall e \in \mathcal{E}, t \in \mathcal{T}
+\end{align*}
 \]</span></p>
 <div class="fragment">
 <p><span class="question">Question:</span> <strong>Who can explain this set?</strong></p>
 </div>
 <div class="fragment">
-<p>The set <span class="math inline">\(\mathcal{R}_{e,t}\)</span> contains <strong>all combinations</strong> <span class="math inline">\((o,d,p)\)</span> which trigger a <strong>capacity utilization</strong> of arc <span class="math inline">\(e\)</span> in period <span class="math inline">\(t\)</span>.</p>
+<p>The set <span class="math inline">\(\mathcal{R}_{e,t}\)</span> contains <strong>all combinations</strong> <span class="math inline">\((o,d,p)\)</span> which trigger a <strong>capacity utilization</strong> of arc <span class="math inline">\(e\)</span> in minute <span class="math inline">\(t\)</span>.</p>
 </div>
 </section>
 <section id="small-example" class="slide level2">
 <h2>Small Example</h2>
 
-<img data-src="images/ao_metro-set_r.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="fragment">
+<img data-src="images/ao_metro-set_r.svg" class="quarto-figure quarto-figure-center r-stretch" alt="Line network from A over B and C to D with a branch from E to C. Arc travel times: A to B 5 minutes, B to C 12 minutes, E to C 5 minutes, C to D 8 minutes. Dotted arrows mark the departure times whose passengers enter arc (C,D) at minute 22."><div class="fragment">
 <div class="callout callout-tip callout-style-simple">
 <div class="callout-body">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>The set contains all possible o-d pairs and periods, that result in passengers starting at arc <span class="math inline">\((C,D)\)</span> at minute <span class="math inline">\(22\)</span>. For m=2, it would be:</p>
-<p><span class="math inline">\(\{((A,D),3),((B,D),5),((C,D),11),((E,D),9)\}\)</span>.</p>
+<p>The set contains all o-d pairs and periods that result in passengers entering arc <span class="math inline">\((C,D)\)</span> at minute <span class="math inline">\(22\)</span>. With <span class="math inline">\(m=2\)</span>, it is <span class="math inline">\(\{(A,D,3),(B,D,5),(C,D,11),(E,D,9)\}\)</span>.</p>
+<p>Check it yourself, e.g.&nbsp;from <span class="math inline">\(A\)</span>: <span class="math inline">\(\tau_{A,(C,D)} = 5 + 12 = 17\)</span> and <span class="math inline">\(22-17 = 5 \in I_3 = \{5,6\}\)</span>.</p>
 </div>
 </div>
 </div>
@@ -835,10 +865,10 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="callout-content">
 <ul>
-<li><span class="math inline">\(q_{o,d,p}\)</span> - people waiting to travel from station <span class="math inline">\(o \in \mathcal{O}\)</span> to station <span class="math inline">\(d \in \mathcal{O}\)</span> in <span class="math inline">\(p\)</span></li>
+<li><span class="math inline">\(q_{o,d,p}\)</span> - people queued to travel from station <span class="math inline">\(o \in \mathcal{O}\)</span> to station <span class="math inline">\(d \in \mathcal{O}\)</span> in <span class="math inline">\(p\)</span></li>
 <li><span class="math inline">\(c_e\)</span> - people max. allowed to enter arc <span class="math inline">\(e\)</span> per minute with <span class="math inline">\(e \in \mathcal{E}\)</span></li>
-<li><span class="math inline">\(\mathcal{R}_{e,t}\)</span> - mapping of station entries to arc <span class="math inline">\(e\)</span> in time <span class="math inline">\(t\)</span> with <span class="math inline">\(e \in \mathcal{E}\)</span> and <span class="math inline">\(t \in \mathcal{T}\)</span></li>
-<li><span class="math inline">\(\alpha\)</span> - maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
+<li><span class="math inline">\(\mathcal{R}_{e,t}\)</span> - mapping of station entries to arc <span class="math inline">\(e\)</span> in minute <span class="math inline">\(t\)</span> with <span class="math inline">\(e \in \mathcal{E}\)</span> and <span class="math inline">\(t \in \mathcal{T}\)</span></li>
+<li><span class="math inline">\(\alpha\)</span> - safety factor applied to all capacities (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
 <li><span class="math inline">\(X_{o,p}\)</span> - the allowed inflow per minute at metro station <span class="math inline">\(o\)</span> in the period <span class="math inline">\(p\)</span></li>
 </ul>
 </div>
@@ -896,7 +926,7 @@ Dr.&nbsp;Tobias Vlćek
 <li><span class="math inline">\(X_{o,p}\)</span> - Allowed inflow (per minute) at station <span class="math inline">\(o\)</span> in period <span class="math inline">\(p\)</span></li>
 <li><span class="math inline">\(c_{o}^{min}\)</span> - Min. station entry rate <span class="math inline">\(o\)</span> per minute</li>
 <li><span class="math inline">\(c_{o}^{max}\)</span> - Max. station entry rate <span class="math inline">\(o\)</span> per minute</li>
-<li><span class="math inline">\(\alpha\)</span> - Maximal allowed arc utilization (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
+<li><span class="math inline">\(\alpha\)</span> - Safety factor applied to all capacities (<span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>)</li>
 </ul>
 </div>
 </div>
@@ -980,6 +1010,26 @@ c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mat
 </div>
 </div>
 </section>
+<section id="a-hidden-pitfall" class="slide level2">
+<h2>A Hidden Pitfall</h2>
+<p><span class="question">Question:</span> <strong>What if a queue is smaller than <span class="math inline">\(m \times c_o^{min}\)</span>?</strong></p>
+<div class="fragment">
+<ul>
+<li>The lower bound forces <span class="math inline">\(m \times X_{o,p} \geq m \times c_o^{min}\)</span></li>
+<li>But we may only dispatch up to <span class="math inline">\(\sum_{d \in \mathcal{O}} q_{o,d,p}\)</span> people</li>
+<li>Example: <span class="math inline">\(c_o^{min} = 2\)</span>, <span class="math inline">\(m = 15\)</span>, but only 20 people queued</li>
+<li>A quiet station late at night makes the model <span class="highlight">infeasible</span>!</li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>How could we fix this?</strong></p>
+</div>
+<div class="fragment">
+<ul>
+<li>Set <span class="math inline">\(c_o^{min} = 0\)</span>, cap the bound at the queue, or soften the constraint</li>
+</ul>
+</div>
+</section>
 <section id="metro-inflow-model" class="slide level2">
 <h2>Metro Inflow Model</h2>
 <div class="temp-math-size">
@@ -989,11 +1039,12 @@ c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mat
 }
 </style>
 <p><span class="math display">\[\begin{align*}
-    \text{minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
+    \text{Minimize} \quad \sum_{o \in \mathcal{O}} \sum_{p \in \mathcal{P}} (\sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p})
 \end{align*}\]</span> subject to: <span class="math display">\[\begin{align*}
     &amp;  \sum_{(o,d,p) \in \mathcal{R}_{e,t}} X_{o,p} \times \frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \leq \alpha \times c_{e} &amp;&amp; \forall e \in \mathcal{E}, t \in \mathcal{T} \\
     &amp; c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P} \\
-    &amp; \sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P}
+    &amp; \sum_{d \in \mathcal{O}} q_{o,d,p} - m \times X_{o,p} \geq 0 &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P} \\
+    &amp; X_{o,p} \geq 0 &amp;&amp; \forall o \in \mathcal{O}, p \in \mathcal{P}
 \end{align*}\]</span></p>
 </div>
 </section></section>
@@ -1009,6 +1060,21 @@ c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mat
 <li class="fragment">Is the model formulation linear/ non-linear?</li>
 <li class="fragment">What kind of variable domains do we have?</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note: The answers</strong></p>
+</div>
+<div class="callout-content">
+<p>It is a <span class="highlight">linear program</span>, as objective and constraints are linear. The variable <span class="math inline">\(X_{o,p} \geq 0\)</span> is <strong>continuous</strong> — fractional inflow rates per minute are perfectly acceptable here.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="model-assumptions" class="slide level2">
 <h2>Model Assumptions</h2>
@@ -1059,11 +1125,11 @@ c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mat
 <section id="transport-demand" class="slide level2">
 <h2>Transport Demand</h2>
 
-<img data-src="images/ao_metro-transportdemand.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<img data-src="images/ao_metro-transportdemand.svg" class="quarto-figure quarto-figure-center r-stretch" alt="Line chart of transport demand over three consecutive days, fluctuating between roughly 10,000 and 40,000 passengers with pronounced afternoon and late-evening peaks."></section>
 <section id="utilization-analysis" class="slide level2">
 <h2>Utilization Analysis</h2>
 
-<img data-src="images/ao_metro-arcutil.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<img data-src="images/ao_metro-arcutil.svg" class="quarto-figure quarto-figure-center r-stretch" alt="Line chart of maximal arc utilization over time for three days. The baseline without inflow control peaks above 300 percent, while the optimized inflow control keeps utilization close to or below 100 percent."></section>
 <section id="key-results" class="slide level2">
 <h2>Key Results</h2>
 <ul>
@@ -1088,10 +1154,21 @@ c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mat
 </div>
 </div>
 </section>
+<section id="didnt-we-bound-the-utilization" class="slide level2">
+<h2>Didn’t We Bound the Utilization?</h2>
+<p><span class="question">Question:</span> <strong>Our constraint enforces <span class="math inline">\(\alpha \times c_e\)</span> with <span class="math inline">\(\alpha &lt; 1\)</span>. How can utilization still reach 109%?</strong></p>
+<div class="fragment">
+<ul>
+<li>The constraint binds the model for the <span class="highlight">forecast</span> demand</li>
+<li>The 109% occurs in the <strong>rolling-horizon simulation</strong> with realized demand</li>
+<li>Realized flows can deviate from the forecast — but far less than <strong>316%</strong></li>
+</ul>
+</div>
+</section>
 <section id="scalability-shanghai-metro" class="slide level2">
 <h2>Scalability: Shanghai Metro</h2>
 <ul>
-<li>Validated on <strong>302 stations</strong> (11× larger)</li>
+<li>Validated on <strong>302 stations</strong> (~8× more than Doha’s 37)</li>
 <li><span class="highlight">99% reduction</span> in capacity violations</li>
 <li>Computation: <strong>&lt; 2 minutes</strong> per period</li>
 <li>Works for routine <strong>peak-hour demand</strong></li>
@@ -1114,7 +1191,8 @@ c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mat
 </section>
 <section id="section-4" class="slide level2">
 <h2></h2>
-<iframe src="images/ao_metro-shanghai_network.html" style="width:100%; height:85vh; border:none;" scrolling="yes"></iframe>
+<iframe src="images/ao_metro-shanghai_network.html" title="Interactive visualization of the Shanghai metro network" style="width:100%; height:80vh; border:none;" scrolling="yes"></iframe>
+<p style="font-size:0.5em;"><a href="images/ao_metro-shanghai_network.html" target="_blank">Open the Shanghai network visualization in a new tab</a></p>
 <div class="footer">
 
 </div>
@@ -1122,7 +1200,7 @@ c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mat
 <section id="implementation" class="slide level2">
 <h2>Implementation</h2>
 <ul>
-<li><strong>Assumption of known destinations</strong> based is strong</li>
+<li><strong>Assumption of known destinations</strong> is strong</li>
 <li>Movements <strong>seemed to follow our forecasts</strong></li>
 <li>We did achieve our goal of <strong>metro inflow control</strong></li>
 <li>Simulation was used to <strong>estimate the inflows</strong></li>
@@ -1164,12 +1242,12 @@ c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mat
 <tr class="odd">
 <td>Real-Time Capable</td>
 <td>Some</td>
-<td><span class="highlight">Yes (~1-65s)</span></td>
+<td><span class="highlight">Yes (seconds to minutes)</span></td>
 </tr>
 <tr class="even">
 <td>Network Scale</td>
 <td>Up to 327 stations</td>
-<td><strong>302+ stations</strong></td>
+<td>Comparable (302 stations)</td>
 </tr>
 </tbody>
 </table>
@@ -1193,7 +1271,7 @@ c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mat
 <h2>Wrap Up</h2>
 <ul>
 <li>Model can help to achieve a <span class="highlight">good balance</span></li>
-<li>Can be adapted easily to <strong>any metro system worldwide </strong></li>
+<li>Can be adapted easily to <strong>any metro system worldwide</strong></li>
 <li>Especially interesting for <strong>larger Asian cities</strong></li>
 </ul>
 <div class="fragment">
@@ -1203,7 +1281,7 @@ c_{o}^{min} \leq X_{o,p} \leq \alpha \times c_{o}^{max} \quad \forall o \in \mat
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>And that’s it for todays lecture!</strong></p>
+<p><strong>And that’s it for today’s lecture!</strong></p>
 </div>
 <div class="callout-content">
 <p>We now have covered a metro inflow control problem based on a real-world application and are ready to start solving some new tasks in the upcoming tutorial.</p>

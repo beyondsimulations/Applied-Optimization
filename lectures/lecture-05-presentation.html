@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture V - Planning in Breweries</title>
@@ -117,7 +118,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -224,7 +225,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -239,7 +240,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Case Study</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><a href="https://unsplash.com/" width="85%"><img data-src="https://images.unsplash.com/photo-1719752486455-3c6809b5e238?q=80&amp;w=3456&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%"></a></p>
+<p><a href="https://unsplash.com/" width="85%"><img data-src="https://images.unsplash.com/photo-1719752486455-3c6809b5e238?q=80&amp;w=3456&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" alt="Copper brewing kettles in a brewery"></a></p>
 </div><div class="column" style="width:60%;">
 <ul>
 <li><strong>Large brewery</strong></li>
@@ -254,7 +255,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Challenges</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><a href="https://unsplash.com/" width="85%"><img data-src="https://images.unsplash.com/photo-1518542698889-ca82262f08d5?q=80&amp;w=3687&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%"></a></p>
+<p><a href="https://unsplash.com/" width="85%"><img data-src="https://images.unsplash.com/photo-1518542698889-ca82262f08d5?q=80&amp;w=3687&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" alt="Shelves with a large variety of beer bottles"></a></p>
 </div><div class="column" style="width:60%;">
 <ul>
 <li><strong>Strong</strong> competition</li>
@@ -269,16 +270,26 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Different costs</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><a href="https://unsplash.com/photos/a-large-industrial-machine-v-ySKssePQM" width="85%"><img data-src="https://images.unsplash.com/photo-1651475828382-1ffeea47739b?q=80&amp;w=3000&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%"></a></p>
+<p><a href="https://unsplash.com/photos/a-large-industrial-machine-v-ySKssePQM" width="85%"><img data-src="https://images.unsplash.com/photo-1651475828382-1ffeea47739b?q=80&amp;w=3000&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" alt="Industrial bottling line filling beer bottles"></a></p>
 </div><div class="column" style="width:60%;">
 <ul>
 <li>Plant can fill <strong>multiple types</strong></li>
 <li>Time depends on <strong>type and batch</strong></li>
-<li><strong>Changing type</strong> leads to set-up costs for preparation and cleaning</li>
+<li><strong>Changing type</strong> leads to setup costs for preparation and cleaning</li>
 <li><strong>Unsold beer bottles</strong> can be <span class="highlight">stored in a warehouse</span></li>
 <li>This leads to <strong>inventory costs</strong></li>
 </ul>
 </div></div>
+</section>
+<section id="learning-objectives" class="slide level2">
+<h2>Learning Objectives</h2>
+<p>After this lecture, you will be able to:</p>
+<ul>
+<li class="fragment"><strong>Formulate</strong> the Capacitated Lot-Sizing Problem (CLSP)</li>
+<li class="fragment"><strong>Explain</strong> the trade-off between setup and inventory holding costs</li>
+<li class="fragment"><strong>Recognize and construct</strong> Big-M constraints</li>
+<li class="fragment"><strong>Discuss</strong> the assumptions and limits of a finite planning horizon</li>
+</ul>
 </section>
 <section id="section" class="slide level2 loud-slide">
 <h2></h2>
@@ -299,7 +310,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Objective</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_clsp_overview.png" style="width:60.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_clsp_overview.png" style="width:60.0%" alt="Overview of the lot-sizing problem: setups, batches, and inventory"></p>
 </div><div class="column" style="width:60%;">
 <p><span class="question">Question:</span> <strong>What could be the objective?</strong></p>
 <p><span class="fragment">Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.</span></p>
@@ -309,7 +320,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Trade-Off</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_clsp_overview.png" style="width:60.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_clsp_overview.png" style="width:60.0%" alt="Overview of the lot-sizing problem: setups, batches, and inventory"></p>
 </div><div class="column" style="width:60%;">
 <p><span class="question">Question:</span> <strong>What is the trade-off?</strong></p>
 <p><span class="fragment">Larger batches require <span class="highlight">less setup cost per bottle</span>, but increase the storage cost.</span></p>
@@ -340,7 +351,7 @@ Dr.&nbsp;Tobias Vlćek
 <li><span class="math inline">\(b_i\)</span> - Time used for bottling one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
 <li><span class="math inline">\(g_i\)</span> - Setup time for beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
 <li><span class="math inline">\(f_i\)</span> - Setup cost of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
-<li><span class="math inline">\(c_i\)</span> - Inventory holding cost for unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(c_i\)</span> - Inventory holding cost for one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
 <li><span class="math inline">\(d_{i,t}\)</span> - Demand of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
 </ul>
 </div>
@@ -451,14 +462,14 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 <div class="fragment">
-<p><span class="math display">\[\text{Minimize} \quad \sum_{i=1}^{\mathcal{I}} \sum_{t=1}^{\mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
+<p><span class="math display">\[\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
 </div>
 </section>
 <section id="constraints" class="slide level2">
 <h2>Constraints</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_clsp_overview.png" style="width:60.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_clsp_overview.png" style="width:60.0%" alt="Overview of the lot-sizing problem: setups, batches, and inventory"></p>
 </div><div class="column" style="width:60%;">
 <p><span class="question">Question:</span> <strong>What constraints?</strong></p>
 <div class="fragment">
@@ -513,7 +524,8 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="demandinventory-constraints-1" class="slide level2">
 <h2>Demand/Inventory Constraints</h2>
-<p><span class="math display">\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I},t\in\mathcal{T}|t&gt;1\]</span></p>
+<p><span class="math display">\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I}, t\in\mathcal{T}\]</span></p>
+<p>with <span class="math inline">\(W_{i,0} = 0\)</span>, as the warehouse starts empty.</p>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
@@ -533,8 +545,12 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
+</section>
+<section id="why-fix-the-starting-inventory" class="slide level2">
+<h2>Why Fix the Starting Inventory?</h2>
+<p><span class="question">Question:</span> <strong>Why do we have to fix <span class="math inline">\(W_{i,0} = 0\)</span>?</strong></p>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>What does <span class="math inline">\(|t&gt;1\)</span> mean?</strong></p>
+<p>Otherwise, the solver could invent free starting inventory and would never need to bottle anything for the first weeks!</p>
 </div>
 </section>
 <section id="setup-constraints" class="slide level2">
@@ -548,7 +564,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>The goal of these constraints is to:</strong></p>
 </div>
 <div class="callout-content">
-<p>Set up beer types where the batch size is <span class="math inline">\(\geq\)</span> 0.</p>
+<p>Set up beer types in all periods where the batch size is <span class="math inline">\(&gt;\)</span> 0.</p>
 </div>
 </div>
 </div>
@@ -577,7 +593,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="setup-constraints-1" class="slide level2">
 <h2>Setup Constraints</h2>
-<p><span class="math display">\[X_{i,t} \leq Y_{i,t} \times \sum_{\tau=1}^{\mathcal{T}} d_{i\tau} \quad \forall i\in\mathcal{I},\forall t\in\mathcal{T}\]</span></p>
+<p><span class="math display">\[X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i\in\mathcal{I}, t\in\mathcal{T}\]</span></p>
 <div class="fragment">
 <p><span class="question">Question:</span> <strong>Do you know this type of constraint?</strong></p>
 </div>
@@ -586,7 +602,7 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 <div class="fragment">
 <ul>
-<li><strong>M</strong> (here <span class="math inline">\(\sum_{\tau=1}^{\mathcal{T}} d_{i\tau}\)</span>) is a large number</li>
+<li><strong>M</strong> (here <span class="math inline">\(\sum_{\tau \in \mathcal{T}} d_{i,\tau}\)</span>) is a large number</li>
 <li>It is coupled with a binary variable (here <span class="math inline">\(Y_{i,t}\)</span>)</li>
 <li><span class="highlight">Like an if-then constraint</span></li>
 </ul>
@@ -632,9 +648,9 @@ Dr.&nbsp;Tobias Vlćek
 <section id="capacity-constraints-1" class="slide level2">
 <h2>Capacity Constraints</h2>
 <p><span class="question">Question:</span> <strong>What could the third constraint be?</strong></p>
-<p>It has more variables and parameters when compared to the other constraints but it is easier to understand.</p>
+<p>It uses more parameters than the previous constraints, but it is easier to understand.</p>
 <div class="fragment">
-<p><span class="math display">\[\sum_{i=1}^{\mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t\in\mathcal{T}\]</span></p>
+<p><span class="math display">\[\sum_{i \in \mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t\in\mathcal{T}\]</span></p>
 </div>
 <div class="fragment">
 <p><span class="highlight">And that’s basically it!</span></p>
@@ -642,6 +658,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="clsp-objective-function" class="slide level2">
 <h2>CLSP: Objective Function</h2>
+<p>The complete model is known as the <strong>Capacitated Lot-Sizing Problem (CLSP)</strong>.</p>
 <p><span class="math display">\[\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
 <div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
@@ -659,8 +676,8 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="clsp-constraints" class="slide level2">
 <h2>CLSP: Constraints</h2>
-<p><span class="math display">\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I},t\in\mathcal{T}|t&gt;1\]</span></p>
-<p><span class="math display">\[X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i\in\mathcal{I},\forall t\in\mathcal{T}\]</span></p>
+<p><span class="math display">\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I}, t\in\mathcal{T} \quad (W_{i,0} = 0)\]</span></p>
+<p><span class="math display">\[X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i\in\mathcal{I}, t\in\mathcal{T}\]</span></p>
 <p><span class="math display">\[\sum_{i \in \mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t\in\mathcal{T}\]</span></p>
 <div class="callout callout-important callout-titled callout-style-simple">
 <div class="callout-body">
@@ -693,6 +710,12 @@ Dr.&nbsp;Tobias Vlćek
 </div>
 </div>
 </div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>Why is a continuous batch size acceptable here?</strong></p>
+</div>
+<div class="fragment">
+<p>At this scale, rounding a batch of thousands of bottles changes the cost only marginally.</p>
+</div>
 </section></section>
 <section>
 <section id="julia-implementation" class="title-slide slide level1 title center">
@@ -703,48 +726,129 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Variables in Julia</h2>
 <p><span class="question">Question:</span> <strong>How could we formulate the variables in Julia?</strong></p>
 <div class="fragment">
-<div id="6e7911c5" class="cell" data-execution_count="2">
+<div id="4" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
 <span id="cb1-2"><a></a>beer_types <span class="op">=</span> [<span class="st">"IPA"</span>, <span class="st">"Lager"</span>, <span class="st">"Stout"</span>] <span class="co"># Beer types</span></span>
-<span id="cb1-3"><a></a>periods <span class="op">=</span> [<span class="st">"week_1"</span>, <span class="st">"week_2"</span>, <span class="st">"week_3"</span>] <span class="co"># Time periods</span></span>
-<span id="cb1-4"><a></a>clsp_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a></a>periods <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="co"># Time periods (weeks)</span></span>
+<span id="cb1-4"><a></a>clsp_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
+<span id="cb1-5"><a></a><span class="fu">set_silent</span>(clsp_model) <span class="co"># Hide the solver output</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
-<div id="515f81d9" class="cell" data-execution_count="3">
+<div id="6" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a></a><span class="pp">@variable</span>(clsp_model, Y[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods], Bin)</span>
 <span id="cb2-2"><a></a><span class="pp">@variable</span>(clsp_model, X[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods] <span class="op">&gt;=</span> <span class="fl">0</span>)</span>
-<span id="cb2-3"><a></a><span class="pp">@variable</span>(clsp_model, W[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-3"><a></a><span class="pp">@variable</span>(clsp_model, W[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> <span class="fl">0</span><span class="op">:</span><span class="fu">last</span>(periods)] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell fragment" data-execution_count="3">
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>2-dimensional DenseAxisArray{JuMP.VariableRef,2,...} with index sets:
     Dimension 1, ["IPA", "Lager", "Stout"]
-    Dimension 2, ["week_1", "week_2", "week_3"]
-And data, a 3×3 Matrix{VariableRef}:
- W[IPA,week_1]    W[IPA,week_2]    W[IPA,week_3]
- W[Lager,week_1]  W[Lager,week_2]  W[Lager,week_3]
- W[Stout,week_1]  W[Stout,week_2]  W[Stout,week_3]</code></pre>
+    Dimension 2, 0:3
+And data, a 3×4 Matrix{JuMP.VariableRef}:
+ W[IPA,0]    W[IPA,1]    W[IPA,2]    W[IPA,3]
+ W[Lager,0]  W[Lager,1]  W[Lager,2]  W[Lager,3]
+ W[Stout,0]  W[Stout,1]  W[Stout,2]  W[Stout,3]</code></pre>
 </div>
 </div>
+</div>
+<div class="fragment">
+<p>Note, how we declare the inventory <span class="math inline">\(W\)</span> also for period 0!</p>
 </div>
 </section>
 <section id="objective-function-in-julia" class="slide level2">
 <h2>Objective Function in Julia</h2>
 <p><span class="math display">\[\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
 <div class="fragment">
-<div id="c98842eb" class="cell" data-execution_count="4">
+<div id="8" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a></a>c <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>) <span class="co"># Holding costs</span></span>
 <span id="cb4-2"><a></a>f <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">5000</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">4000</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">6000</span>) <span class="co"># Setup costs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
-<div id="1f6ff32d" class="cell" data-execution_count="5">
+<div id="10" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a></a><span class="pp">@objective</span>(clsp_model, Min,</span>
 <span id="cb5-2"><a></a>    <span class="fu">sum</span>(c[i] <span class="op">*</span> W[i,t] <span class="op">+</span> f[i] <span class="op">*</span> Y[i,t]</span>
 <span id="cb5-3"><a></a>        <span class="cf">for</span> i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods)</span>
 <span id="cb5-4"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+</div>
+</section>
+<section id="data-for-our-small-brewery" class="slide level2">
+<h2>Data for our Small Brewery</h2>
+<p>We need the demand <span class="math inline">\(d_{i,t}\)</span>, capacity <span class="math inline">\(a_t\)</span>, and times <span class="math inline">\(b_i\)</span>, <span class="math inline">\(g_i\)</span>:</p>
+<div class="fragment">
+<div id="12" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a></a>d <span class="op">=</span> <span class="fu">Dict</span>( <span class="co"># Demand per beer type and week</span></span>
+<span id="cb6-2"><a></a>    <span class="st">"IPA"</span>   <span class="op">=&gt;</span> [<span class="fl">300</span>, <span class="fl">800</span>, <span class="fl">500</span>],</span>
+<span id="cb6-3"><a></a>    <span class="st">"Lager"</span> <span class="op">=&gt;</span> [<span class="fl">600</span>, <span class="fl">500</span>, <span class="fl">800</span>],</span>
+<span id="cb6-4"><a></a>    <span class="st">"Stout"</span> <span class="op">=&gt;</span> [<span class="fl">200</span>, <span class="fl">300</span>, <span class="fl">250</span>],</span>
+<span id="cb6-5"><a></a>)</span>
+<span id="cb6-6"><a></a>a <span class="op">=</span> [<span class="fl">1800</span>, <span class="fl">1800</span>, <span class="fl">1800</span>] <span class="co"># Capacity per week in minutes</span></span>
+<span id="cb6-7"><a></a>b <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">0.9</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">0.6</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">1.2</span>) <span class="co"># Min. per bottle</span></span>
+<span id="cb6-8"><a></a>g <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">60</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">40</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">80</span>) <span class="co"># Setup in minutes</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section id="constraints-in-julia" class="slide level2">
+<h2>Constraints in Julia</h2>
+<p>The constraints map almost one-to-one from the math:</p>
+<div class="fragment">
+<div id="14" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a></a><span class="pp">@constraint</span>(clsp_model, [i <span class="kw">in</span> beer_types],</span>
+<span id="cb7-2"><a></a>    W[i,<span class="fl">0</span>] <span class="op">==</span> <span class="fl">0</span>) <span class="co"># The warehouse starts empty</span></span>
+<span id="cb7-3"><a></a><span class="pp">@constraint</span>(clsp_model, [i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods],</span>
+<span id="cb7-4"><a></a>    W[i,t<span class="op">-</span><span class="fl">1</span>] <span class="op">+</span> X[i,t] <span class="op">-</span> W[i,t] <span class="op">==</span> d[i][t])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="fragment">
+<div id="16" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a></a><span class="pp">@constraint</span>(clsp_model, [i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods],</span>
+<span id="cb8-2"><a></a>    X[i,t] <span class="op">&lt;=</span> <span class="fu">sum</span>(d[i]) <span class="op">*</span> Y[i,t]) <span class="co"># Big-M setup constraint</span></span>
+<span id="cb8-3"><a></a><span class="pp">@constraint</span>(clsp_model, [t <span class="kw">in</span> periods],</span>
+<span id="cb8-4"><a></a>    <span class="fu">sum</span>(b[i] <span class="op">*</span> X[i,t] <span class="op">+</span> g[i] <span class="op">*</span> Y[i,t] <span class="cf">for</span> i <span class="kw">in</span> beer_types) <span class="op">&lt;=</span> a[t])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section id="solving-the-model" class="slide level2">
+<h2>Solving the Model</h2>
+<div id="18" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a></a><span class="fu">optimize!</span>(clsp_model)</span>
+<span id="cb9-2"><a></a><span class="fu">println</span>(<span class="st">"Status: "</span>, <span class="fu">termination_status</span>(clsp_model))</span>
+<span id="cb9-3"><a></a><span class="fu">println</span>(<span class="st">"Total cost: "</span>, <span class="fu">objective_value</span>(clsp_model))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>Status: OPTIMAL
+Total cost: 28130.0</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>Of the 28,130 total cost, 28,000 are setup costs and only 130 are inventory holding costs — but what does the plan look like?</p>
+</div>
+</section>
+<section id="the-production-plan" class="slide level2">
+<h2>The Production Plan</h2>
+<div id="20" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a></a><span class="cf">for</span> i <span class="kw">in</span> beer_types</span>
+<span id="cb11-2"><a></a>    <span class="fu">println</span>(<span class="fu">rpad</span>(i, <span class="fl">8</span>),</span>
+<span id="cb11-3"><a></a>        <span class="st">"X = "</span>, <span class="fu">rpad</span>(<span class="fu">string</span>([<span class="fu">round</span>(<span class="dt">Int</span>, <span class="fu">value</span>(X[i,t])) for t <span class="kw">in</span> periods]), <span class="fl">18</span>),</span>
+<span id="cb11-4"><a></a>        <span class="st">"W = "</span>, [<span class="fu">round</span>(<span class="dt">Int</span>, <span class="fu">value</span>(W[i,t])) for t <span class="kw">in</span> periods])</span>
+<span id="cb11-5"><a></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>IPA     X = [300, 1300, 0]    W = [0, 500, 0]
+Lager   X = [600, 500, 800]   W = [0, 0, 0]
+Stout   X = [750, 0, 0]       W = [550, 250, 0]</code></pre>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li><strong>Stout</strong> is bottled <span class="highlight">only once</span>: week 1 covers all three weeks, saving two setups at 6,000 each</li>
+<li><strong>Lager</strong> is bottled every week, as the plant capacity is too tight to batch it</li>
+<li><strong>IPA</strong> batches the demand of week 3 into week 2</li>
+</ul>
 </div>
 </section></section>
 <section>
@@ -769,7 +873,8 @@ And data, a 3×3 Matrix{VariableRef}:
 <li class="fragment"><strong>Simplex algorithm</strong> to solve LPs</li>
 <li class="fragment"><strong>Branch &amp; Bound</strong> to solve MIPs</li>
 <li class="fragment"><strong>Outer-Approximation</strong> for mixed-integer NLPs</li>
-<li class="fragment"><strong>Math-Heuristics</strong> (e.g., Fix-and-Optimize, Tabu-Search, …)</li>
+<li class="fragment"><strong>Matheuristics</strong> (e.g., Fix-and-Optimize, …)</li>
+<li class="fragment"><strong>Metaheuristics</strong> (e.g., tabu search, genetic algorithms, …)</li>
 <li class="fragment"><strong>Decomposition</strong> methods (Lagrange, Benders, …)</li>
 <li class="fragment"><strong>Heuristics</strong> (greedy, construction method, n-opt, …)</li>
 <li class="fragment"><strong>Graph theoretical methods</strong> (network flow, shortest path)</li>
@@ -785,6 +890,19 @@ And data, a 3×3 Matrix{VariableRef}:
 <li class="fragment">Can the Big-M constraint be tightened?</li>
 </ul>
 </section>
+<section id="tightening-the-big-m" class="slide level2">
+<h2>Tightening the Big-M</h2>
+<p><span class="question">Question:</span> <strong>How small can we make M without cutting off solutions?</strong></p>
+<div class="fragment">
+<ul>
+<li>Production in period <span class="math inline">\(t\)</span> only serves demand from <span class="math inline">\(t\)</span> onward: <span class="math inline">\(M_{i,t} = \sum_{\tau \in \mathcal{T} | \tau \geq t} d_{i,\tau}\)</span></li>
+<li>Capacity limits a batch as well: <span class="math inline">\(M_{i,t} = (a_t - g_i)/b_i\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>The <span class="highlight">smaller</span> of the two is the tighter bound — and tighter formulations are usually solved faster!</p>
+</div>
+</section>
 <section id="model-assumptions" class="slide level2">
 <h2>Model Assumptions</h2>
 <p><span class="question">Questions:</span> <strong>On model assumptions</strong></p>
@@ -793,6 +911,21 @@ And data, a 3×3 Matrix{VariableRef}:
 <li class="fragment">What is the problem with the planning horizon?</li>
 <li class="fragment">Any idea how to solve it?</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>End-of-horizon effect</strong></p>
+</div>
+<div class="callout-content">
+<p>The model plans no inventory for demand after week <span class="math inline">\(|\mathcal{T}|\)</span>, as it does not know about it. In practice, this is solved by re-planning on a <strong>rolling horizon</strong>.</p>
+</div>
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="impact" class="title-slide slide level1 title center">
@@ -811,7 +944,7 @@ And data, a 3×3 Matrix{VariableRef}:
 </section>
 <section id="scale-as-a-problem" class="slide level2" data-background-color="#000000" data-background-image="https://unsplash.com/photos/9EY5ckCX9iQ/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8M3x8YnJld2VyeXxlbnwwfHx8fDE3MzEwNjYwMTl8MA&amp;force=true&amp;w=2400" data-background-size="cover" data-background-position="center">
 <h2><span class="invert-font">Scale as a Problem</span></h2>
-<p><span class="invert-font fragment">Solving the problem with commercial solvers is not feasible.</span></p>
+<p><span class="invert-font fragment">Solving the problem with commercial solvers is not tractable, as it takes too long.</span></p>
 <div class="footer">
 
 </div>
@@ -826,6 +959,9 @@ And data, a 3×3 Matrix{VariableRef}:
 <li><strong>3</strong> main production levels</li>
 <li><strong>52</strong> weeks planning horizon</li>
 </ul>
+<div class="fragment">
+<p>Our CLSP is the <strong>single-level core</strong> of this problem — the real case is multi-level, with semi-finished products and storage resources.</p>
+</div>
 </section>
 <section id="section-2" class="slide level2 loud-slide">
 <h2></h2>
@@ -851,7 +987,7 @@ And data, a 3×3 Matrix{VariableRef}:
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>And that’s it for todays lecture!</strong></p>
+<p><strong>And that’s it for today’s lecture!</strong></p>
 </div>
 <div class="callout-content">
 <p>We now have covered the basics of the CLSP and are ready to start solving some tasks in the upcoming tutorial.</p>
@@ -859,7 +995,7 @@ And data, a 3×3 Matrix{VariableRef}:
 </div>
 </div>
 </div>
-<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="citation" data-cites="mickein2022decision">Mickein et al. (<a href="#/literature-ii" role="doc-biblioref" onclick="">2022</a>)</span></p></li></ol></aside></section>
+<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="citation" data-cites="mickein2022decision">Mickein et al. (<a href="#/literature-1" role="doc-biblioref" onclick="">2022</a>)</span></p></li></ol></aside></section>
 <section id="section-3" class="slide level2 loud-slide">
 <h2></h2>
 <div class="r-fit-text">
@@ -874,12 +1010,9 @@ And data, a 3×3 Matrix{VariableRef}:
 <h1><span class="flow">Literature</span></h1>
 
 </section>
-<section id="literature-i" class="slide level2">
-<h2>Literature I</h2>
+<section id="literature-1" class="slide level2 smaller scrollable">
+<h2>Literature</h2>
 <p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
-</section>
-<section id="literature-ii" class="slide level2 smaller scrollable">
-<h2>Literature II</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">

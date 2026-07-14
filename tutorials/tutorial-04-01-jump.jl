@@ -7,11 +7,12 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.3
+#   kernel_info:
+#     name: julia
 #   kernelspec:
-#     display_name: Julia-AO 1.12.0
+#     display_name: Julia
 #     language: julia
-#     name: julia-ao-1.12
-#     path: /Users/vlcek/Library/Jupyter/kernels/julia-ao-1.12
+#     name: julia
 # ---
 
 # %% [markdown]
@@ -75,14 +76,9 @@
 # ## Setting Up
 #
 # First, we need to install and load the necessary packages. If you
-# haven’t already installed JuMP and HiGHS, run the following code:
-
-# %%
-import Pkg
-Pkg.activate("applied-optimization")
-Pkg.add(["JuMP","HiGHS"])
-
-# %% [markdown]
+# haven’t already installed JuMP and HiGHS, you can do so by running
+# `import Pkg` and then `Pkg.add(["JuMP","HiGHS"])`.
+#
 # Now, let’s load these packages:
 
 # %%
@@ -140,7 +136,8 @@ println("Optimization model created successfully!")
 # @variable(model_name, variable_name >= 0)
 # ```
 #
-# This defines a continuous variable that’s equal to or larger than 0.
+# Here, `>= 0` sets the lower bound of the variable to zero, while no
+# upper bound is given.
 #
 # ## Exercise 2.1 - Create Variables
 #
@@ -151,6 +148,7 @@ println("Optimization model created successfully!")
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert @isdefined productA
@@ -158,7 +156,7 @@ println("Optimization model created successfully!")
 @assert has_upper_bound(productA) == false
 @assert has_lower_bound(productA) == true
 @assert lower_bound(productA) == 0
-@assert @isdefined productA
+@assert @isdefined productB
 @assert typeof(productB) == VariableRef
 @assert has_upper_bound(productB) == false
 @assert has_lower_bound(productB) == true
@@ -166,6 +164,13 @@ println("Optimization model created successfully!")
 println("Variables added to the model successfully!")
 
 # %% [markdown]
+# > **Note**
+# >
+# > Our variables count units produced, but we declared them as continuous
+# > variables. That is fine here, as the optimal solution of this problem
+# > happens to be whole numbers anyway. The next tutorial shows how to
+# > declare integer variables.
+#
 # ------------------------------------------------------------------------
 #
 # # Section 3 - Adding Constraints
@@ -191,31 +196,31 @@ println("Variables added to the model successfully!")
 # For example:
 #
 # ``` julia
-# constraint(model_name, constraint_name, 4 * variable_name <= 100)
+# @constraint(model_name, constraint_name, 4 * variable_name <= 100)
 # ```
 #
-# This defines a constraint that ensures, that the variable
-# `variable_name` can maximally be 25. Note, that you will have to change
-# `model_name`, `constraint_name` and `variable_name` according to your
-# instance.
+# This defines a constraint that ensures that the variable `variable_name`
+# can be at most 25. Note that you will have to change `model_name`,
+# `constraint_name` and `variable_name` according to your instance.
 #
 # ## Exercise 3.1 - Create Constraints
 #
-# Create two constraints based on the on the Cutting and Finishing
-# department hours of the problem description in this tutorial. Call the
-# first constraint `cutting_constraint` and the second constraint
+# Create two constraints based on the Cutting and Finishing department
+# hours of the problem description in this tutorial. Call the first
+# constraint `cutting_constraint` and the second constraint
 # `finishing_constraint`.
 
 # %%
 # YOUR CODE BELOW
+
 
 # %%
 # Test your answer
 @assert is_valid(model, cutting_constraint)
 @assert is_valid(model, finishing_constraint)
 println("Constraints added to the model successfully!")
-println("Note, that only the existence of these constraints was checked!")
-println("The optimization later will show, whether the formulation was correct.")
+println("Note that only the existence of these constraints was checked!")
+println("The optimization later will show whether the formulation was correct.")
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -258,11 +263,12 @@ println("The optimization later will show, whether the formulation was correct."
 # %%
 # YOUR CODE BELOW
 
+
 # %%
 # Test your answer
 @assert typeof(objective_function(model)) == AffExpr
 println("An objective function defined successfully!")
-println("The optimization later will show, whether the formulation was correct.")
+println("The optimization later will show whether the formulation was correct.")
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -319,23 +325,41 @@ println("Product B quantity: $(value(productB))")
 # - `value(productA)` and `value(productB)` tell us how many of each
 #   product we should produce
 #
+# The following code block tests whether the solution is correct or
+# whether you have made a mistake in the formulation of the problem.
+#
 # > **Note**
 # >
 # > The values might be slightly off due to the nature of floating-point
-# > numbers in computers.
-#
-# The following code block tests whether the solution is correct or
-# whether you have made a mistake in the formulation of the problem.
+# > numbers in computers. That’s why the tests below use `isapprox`
+# > (approximately equal) with a small tolerance `atol` instead of `==`.
 
 # %%
 # Test your answer
-@assert termination_status(model) == MOI.OPTIMAL "Sorry, something didn't work out as the model status is $termination_status(model)".
-println("Solution: Product A = ", val_productA, ", Product B = ", val_productB)
-@assert value(productA) ≈ 12 atol=1e-4 "Although you have a solution, val_productA should be 12 not $val_productA"
-@assert value(productB) ≈ 4 atol=1e-4 "Although you have a solution, val_productB should be 4 not $val_productB"
+@assert termination_status(model) == OPTIMAL "Sorry, something didn't work out as the model status is $(termination_status(model))"
+println("Solution: Product A = ", value(productA), ", Product B = ", value(productB))
+@assert isapprox(value(productA), 12; atol=1e-4) "Although you have a solution, productA should be 12 not $(value(productA))"
+@assert isapprox(value(productB), 4; atol=1e-4) "Although you have a solution, productB should be 4 not $(value(productB))"
+@assert isapprox(objective_value(model), 1800; atol=1e-4) "The quantities are correct, but the objective value should be 1800 not $(objective_value(model))"
 println("You have solved the model correctly!")
 
 # %% [markdown]
+# If everything worked, you found the optimal production plan: 12 units of
+# Product A and 4 units of Product B, for a maximum profit of
+# $100 \cdot 12 + 150 \cdot 4 = 1800$. Note that both departments are
+# fully used: Cutting takes $2 \cdot 12 + 4 \cdot 4 = 40$ of the 40
+# available hours and Finishing takes $4 \cdot 12 + 3 \cdot 4 = 60$ of the
+# 60 available hours.
+#
+# > **Question: Why don’t we produce only Product B?**
+# >
+# > Product B earns 150 per unit and Product A only 100, so producing only
+# > Product B sounds tempting. But Product B also uses up the Cutting
+# > hours twice as fast as Product A. With only Product B, the Cutting
+# > department limits us to $40 / 4 = 10$ units, for a profit of
+# > $10 \cdot 150 = 1500$. Mixing both products uses the hours of both
+# > departments fully and earns more: $1800$.
+#
 # ------------------------------------------------------------------------
 #
 # # Conclusion

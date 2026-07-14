@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
   <title>Applied Optimization with Julia – Lecture VI - Minimizing Split Orders</title>
@@ -117,7 +118,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-9f6b19013e95e7799aef0609da437db5.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-299c686dacb9362c07d2221f940f3113.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -224,7 +225,7 @@
 Dr.&nbsp;Tobias Vlćek 
 </div>
         <p class="quarto-title-affiliation">
-            University of Hamburg - Fall 2025
+            University of Hamburg
           </p>
     </div>
 </div>
@@ -249,8 +250,8 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li>Products are <strong>no longer bound between borders</strong></li>
 <li>Product variety is <strong>rising</strong></li>
-<li>Consumer shopping patterns are <strong>shifting </strong></li>
-<li>Brick-and-mortar stores <strong>loose customers to the internet</strong></li>
+<li>Consumer shopping patterns are <strong>shifting</strong></li>
+<li>Brick-and-mortar stores <strong>lose customers to the internet</strong></li>
 <li>Covid-19 <strong>accelerated this trend even more</strong></li>
 </ul></li>
 </ul>
@@ -260,17 +261,17 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li>The number of parcels is rising:
 <ul>
-<li><strong>2014</strong>: 44 billion parcels <span class="citation" data-cites="PitneyBowes2017">(<a href="#/literature-i" role="doc-biblioref" onclick="">Pitney Bowes Inc. 2017</a>)</span></li>
-<li><strong>2019</strong>: 103 billion parcels <span class="citation" data-cites="PitneyBowes2019">(<a href="#/literature-i" role="doc-biblioref" onclick="">Pitney Bowes Inc. 2019</a>)</span></li>
-<li><strong>2026</strong>: 220 – 262 billion<sup>1</sup> <span class="citation" data-cites="PitneyBowes2020">(<a href="#/literature-i" role="doc-biblioref" onclick="">Pitney Bowes Inc. 2020</a>)</span></li>
+<li><strong>2014</strong>: 44 billion parcels <span class="citation" data-cites="PitneyBowes2017">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Pitney Bowes Inc. 2017</a>)</span></li>
+<li><strong>2019</strong>: 103 billion parcels <span class="citation" data-cites="PitneyBowes2019">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Pitney Bowes Inc. 2019</a>)</span></li>
+<li><strong>2026</strong>: forecast of 220 – 262 billion<sup>1</sup> <span class="citation" data-cites="PitneyBowes2020">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Pitney Bowes Inc. 2020</a>)</span></li>
 </ul></li>
 </ul>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>Forecast, not actual number</p></li></ol></aside></section>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>Forecast made in 2020, not an actual number</p></li></ol></aside></section>
 <section id="pressure-on-infrastructure" class="slide level2">
 <h2>Pressure on infrastructure</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><a href="https://unsplash.com/photos/person-holding-black-samsung-android-smartphone-hTUZW7E7krg" width="85%"><img data-src="https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?q=80&amp;w=2832&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%"></a></p>
+<p><a href="https://unsplash.com/photos/person-holding-black-samsung-android-smartphone-hTUZW7E7krg" width="85%"><img data-src="https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?q=80&amp;w=2832&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" alt="Person holding a smartphone while shopping online"></a></p>
 </div><div class="column" style="width:60%;">
 <ul>
 <li>Consumers nowadays expect <span class="highlight">free, fast deliveries and returns</span></li>
@@ -284,7 +285,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Pressure on the environment</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><a href="https://unsplash.com/photos/white-and-red-cars-parked-near-white-concrete-building-during-daytime-4jLpCkGqClE" width="85%"><img data-src="https://images.unsplash.com/photo-1606942298712-8bd250ff40f0?q=80&amp;w=2398&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%"></a></p>
+<p><a href="https://unsplash.com/photos/white-and-red-cars-parked-near-white-concrete-building-during-daytime-4jLpCkGqClE" width="85%"><img data-src="https://images.unsplash.com/photo-1606942298712-8bd250ff40f0?q=80&amp;w=2398&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" alt="Delivery vehicles parked in front of a building"></a></p>
 </div><div class="column" style="width:60%;">
 <ul>
 <li><strong>Each parcel packaging</strong> consumes resources during production</li>
@@ -292,6 +293,16 @@ Dr.&nbsp;Tobias Vlćek
 <li>In case of returns, <strong>more parcels cause more emissions</strong></li>
 </ul>
 </div></div>
+</section>
+<section id="learning-objectives" class="slide level2">
+<h2>Learning Objectives</h2>
+<p>After this lecture, you will be able to:</p>
+<ul>
+<li class="fragment"><strong>Explain</strong> split orders and why they matter in e-commerce</li>
+<li class="fragment"><strong>Build</strong> a coappearance matrix from transactional data</li>
+<li class="fragment"><strong>Formulate and solve</strong> the Quadratic Multiple Knapsack Problem (QMKP) in JuMP</li>
+<li class="fragment"><strong>Judge</strong> when exact solvers reach their limits and heuristics are needed</li>
+</ul>
 </section></section>
 <section>
 <section id="problem-structure" class="title-slide slide level1 title center">
@@ -302,13 +313,13 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Split Order</h2>
 <p><span class="question">Question:</span> <strong>What is a split order?</strong></p>
 <div class="fragment">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_split-unoptimized.png" class="center" style="width:75.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_split-unoptimized.png" class="center" style="width:75.0%" alt="One customer order shipped in two parcels from two different warehouses"></p>
 </div>
 </section>
 <section id="no-split-order" class="slide level2">
 <h2>No Split Order</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_split-optimized.png" class="center r-stretch" style="width:75.0%"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_split-optimized.png" class="center r-stretch" style="width:75.0%" alt="The same customer order shipped in one parcel from a single warehouse"></section>
 <section id="reason-for-split-orders" class="slide level2">
 <h2>Reason for Split Orders</h2>
 <p><span class="question">Question:</span> <strong>Why might they occur?</strong></p>
@@ -338,9 +349,9 @@ Dr.&nbsp;Tobias Vlćek
 <div class="fragment">
 <ul>
 <li><strong>Consolidation</strong>: Ship to a central warehouse before dispatch</li>
-<li><strong>Cross-docking</strong>: Ship directly from supplier to customer</li>
+<li><strong>Cross-docking</strong>: Transfer goods from inbound to outbound transport with little or no storage in between</li>
 <li><strong>Transshipment</strong>: Ship between warehouses before delivery</li>
-<li><strong>Co-allocation</strong>: Predict <span class="highlight">co-appearance of products</span> and allocate them to the <span class="highlight">same warehouse</span></li>
+<li><strong>Co-allocation</strong>: Predict <span class="highlight">coappearance of products</span> and allocate them to the <span class="highlight">same warehouse</span></li>
 </ul>
 </div>
 </section></section>
@@ -353,7 +364,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Optimizing Co-allocation</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_split-suppliers.png" class="center" style="width:90.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_split-suppliers.png" class="center" style="width:90.0%" alt="Two warehouses shipping parcels to customers"></p>
 </div><div class="column" style="width:60%;">
 <p><span class="question"><strong>Question:</strong></span> <strong>What could be our objective?</strong></p>
 <div class="fragment">
@@ -374,7 +385,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Available Parameters</h2>
 <p><span class="question">Question:</span> <strong>What are possible parameters?</strong></p>
 <ul>
-<li class="fragment"><span class="math inline">\(c_k\)</span> - Storage space of warehouse <span class="math inline">\(k \in \{1,\dots,|\mathcal{K}|\}\)</span></li>
+<li class="fragment"><span class="math inline">\(c_k\)</span> - Storage space of warehouse <span class="math inline">\(k \in \{1,\dots,|\mathcal{K}|\}\)</span>, measured in number of SKUs</li>
 <li class="fragment"><span class="math inline">\(\boldsymbol{T}= (t_{m,i})\)</span> - Past customer orders for SKUs</li>
 </ul>
 <div class="fragment">
@@ -500,12 +511,35 @@ Dr.&nbsp;Tobias Vlćek
 <section id="integer-programming-model" class="slide level2">
 <h2>Integer Programming Model</h2>
 <ul>
-<li><span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#/literature-i" role="doc-biblioref" onclick="">2012</a>)</span> created an <strong>integer model</strong></li>
+<li><span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#/literature-ii" role="doc-biblioref" onclick="">2012</a>)</span> created an <strong>integer model</strong></li>
 <li>Number of SKUs of E-Commerce retailers can easily be <strong>between 10,000 - 100,000</strong></li>
-<li>Number of customer orders necessary for “stable” results have to be higher in the order of <strong>100,000 - 10,000,000</strong></li>
+<li>The number of customer orders needed for “stable” results is one order of magnitude higher: <strong>100,000 - 10,000,000</strong></li>
 </ul>
 <div class="fragment">
-<p><span class="question">Question:</span> <strong>Anybody an idea what this could mean?</strong></p>
+<p><span class="question">Question:</span> <strong>Does anyone have an idea what this could mean?</strong></p>
+</div>
+</section>
+<section id="why-is-version-1-so-hard" class="slide level2">
+<h2>Why is Version 1 so hard?</h2>
+<ul>
+<li>Objective: <strong>minimize the number of warehouses</strong> that ship parcels for each customer order</li>
+<li>Requires <span class="math inline">\(Y_{m,i,k}\)</span>: one variable per order, SKU <strong>and</strong> warehouse</li>
+<li><span class="math inline">\(\rightarrow |\mathcal{M}| \times |\mathcal{I}| \times |\mathcal{K}|\)</span> binary variables</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-important callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Variables explode with the instance size</strong></p>
+</div>
+<div class="callout-content">
+<p>10,000 SKUs, 1,000,000 orders and 2 warehouses already lead to <span class="math inline">\(2 \times 10^{10}\)</span> binary variables <span class="math inline">\(Y_{m,i,k}\)</span>!</p>
+</div>
+</div>
+</div>
 </div>
 </section>
 <section id="implementation-challenges" class="slide level2">
@@ -513,7 +547,7 @@ Dr.&nbsp;Tobias Vlćek
 <ul>
 <li>Small instance with 10 SKUs and 1000 customer orders</li>
 <li><strong>CPLEX 20.1.0</strong> needs 3100 seconds to solve the problem</li>
-<li>Computation times scales exponentially</li>
+<li>Computation time scales exponentially</li>
 <li><span class="math inline">\(\rightarrow\)</span> <strong>Not applicable</strong> in real world applications!</li>
 </ul>
 </section>
@@ -549,7 +583,7 @@ Dr.&nbsp;Tobias Vlćek
 <p><strong>Different view on the problem</strong></p>
 </div>
 <div class="callout-content">
-<p>Focus on the warehouses and the co-appearance of SKUs! Discard the exact information about the customer orders.</p>
+<p>Focus on the warehouses and the coappearance of SKUs! Discard the exact information about the customer orders.</p>
 </div>
 </div>
 </div>
@@ -559,7 +593,7 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Objective</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_split-suppliers.png" style="width:75.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_split-suppliers.png" style="width:75.0%" alt="Two warehouses shipping parcels to customers"></p>
 </div><div class="column" style="width:60%;">
 <p><span class="question">Question:</span> <strong>What could be the objective?</strong></p>
 <p><span class="fragment">Maximize the coappearance of products that are often <strong>part of the same customer orders</strong>.</span></p>
@@ -567,7 +601,7 @@ Dr.&nbsp;Tobias Vlćek
 </section>
 <section id="transaction-matrix" class="slide level2">
 <h2>Transaction Matrix</h2>
-<div id="fb1049c7" class="cell columns column-output-location" data-execution_count="2">
+<div id="4" class="cell columns column-output-location" data-execution_count="1">
 <div class="column">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a>T <span class="op">=</span> [</span>
 <span id="cb1-2"><a></a>    <span class="fl">1</span> <span class="fl">1</span> <span class="fl">1</span> <span class="fl">0</span>;</span>
@@ -601,16 +635,17 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Coappearance Matrix</h2>
 <ul>
 <li><span class="math inline">\(\boldsymbol{Q}\)</span> is a <span class="highlight">symmetric matrix</span></li>
-<li>Proposed by <span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#/literature-i" role="doc-biblioref" onclick="">2012</a>)</span></li>
-<li><span class="math inline">\(\boldsymbol{Q} = (\boldsymbol{T}^T \cdot \boldsymbol{T})\)</span> where <span class="math inline">\(\boldsymbol{Q} = (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}\)</span></li>
-<li><span class="math inline">\(q_{ij}\)</span> shows how often <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> appear <strong>in the same order</strong></li>
+<li>Proposed by <span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#/literature-ii" role="doc-biblioref" onclick="">2012</a>)</span></li>
+<li><span class="math inline">\(\boldsymbol{Q} = \boldsymbol{T}^\top \boldsymbol{T}\)</span> where <span class="math inline">\(\boldsymbol{Q} = (q_{i,j})_{i,j \in \{1,\dots,|\mathcal{I}|\}}\)</span></li>
+<li><span class="math inline">\(q_{i,j}\)</span> shows how often <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> appear <strong>in the same order</strong></li>
 </ul>
 <div class="fragment">
 <p><span class="question">Question:</span> <strong>What do the principal diagonal values tell us?</strong></p>
 </div>
 <div class="fragment">
 <ul>
-<li>How often each SKU appeared over all orders <strong>(binary!)</strong></li>
+<li>In how many <strong>orders</strong> each SKU appeared</li>
+<li>As <span class="math inline">\(t_{m,i}\)</span> is binary, <span class="math inline">\(q_{i,i}\)</span> counts orders, <strong>not units sold</strong></li>
 </ul>
 </div>
 </section>
@@ -623,11 +658,11 @@ Dr.&nbsp;Tobias Vlćek
 <li class="fragment"><span class="highlight">New</span>: Max. coappearance with non-linear solver</li>
 <li class="fragment"><span class="highlight">New</span>: Heuristic based on Chi-Square Tests</li>
 </ul>
-<aside><ol class="aside-footnotes"><li id="fn3"><p>Simple and very fast, <span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#/literature-i" role="doc-biblioref" onclick="">2012</a>)</span></p></li><li id="fn4"><p>Computationally intensive with CPLEX, <span class="citation" data-cites="Zhu2021">Zhu et al. (<a href="#/literature-i" role="doc-biblioref" onclick="">2021</a>)</span></p></li><li id="fn5"><p>Greedy Randomized Adaptive Search Procedure, <span class="citation" data-cites="Zhu2021">Zhu et al. (<a href="#/literature-i" role="doc-biblioref" onclick="">2021</a>)</span></p></li></ol></aside></section>
+<aside><ol class="aside-footnotes"><li id="fn3"><p>Simple and very fast, <span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#/literature-ii" role="doc-biblioref" onclick="">2012</a>)</span></p></li><li id="fn4"><p>Computationally intensive with CPLEX, <span class="citation" data-cites="Zhu2021">Zhu et al. (<a href="#/literature-ii" role="doc-biblioref" onclick="">2021</a>)</span></p></li><li id="fn5"><p>Greedy Randomized Adaptive Search Procedure, <span class="citation" data-cites="Zhu2021">Zhu et al. (<a href="#/literature-ii" role="doc-biblioref" onclick="">2021</a>)</span></p></li></ol></aside></section>
 <section id="basic-setting" class="slide level2">
 <h2>Basic Setting</h2>
 
-<img data-src="https://images.beyondsimulations.com/ao/ao_split-warehouse.png" style="width:75.0%" class="r-stretch"></section>
+<img data-src="https://images.beyondsimulations.com/ao/ao_split-warehouse.png" style="width:75.0%" alt="SKUs allocated to two warehouses with limited storage space" class="r-stretch"></section>
 <section id="available-data-version-2" class="slide level2">
 <h2>Available Data (Version 2)</h2>
 <p><span class="question">Question:</span> <strong>What could be the sets?</strong></p>
@@ -657,8 +692,8 @@ Dr.&nbsp;Tobias Vlćek
 <h2>Available Parameters</h2>
 <p><span class="question">Question:</span> <strong>What are possible parameters?</strong></p>
 <ul>
-<li class="fragment"><span class="math inline">\(c_k\)</span> - Storage space of warehouse <span class="math inline">\(k \in \{1,\dots,|\mathcal{K}|\}\)</span></li>
-<li class="fragment"><span class="math inline">\(\boldsymbol{Q}= (q_{ij})_{i \in \{1,\dots,\mathcal{I}\},j \in \{1,\dots,\mathcal{I}\}}\)</span> - Coappearance matrix</li>
+<li class="fragment"><span class="math inline">\(c_k\)</span> - Storage space of warehouse <span class="math inline">\(k \in \{1,\dots,|\mathcal{K}|\}\)</span>, measured in number of SKUs</li>
+<li class="fragment"><span class="math inline">\(\boldsymbol{Q}= (q_{i,j})_{i,j \in \{1,\dots,|\mathcal{I}|\}}\)</span> - Coappearance matrix</li>
 </ul>
 <div class="fragment">
 <div class="callout callout-important callout-titled callout-style-simple">
@@ -742,28 +777,28 @@ Dr.&nbsp;Tobias Vlćek
 <section id="decision-variable-in-julia" class="slide level2">
 <h2>Decision Variable in Julia</h2>
 <p><span class="question">Question:</span> <strong>How could we formulate the variable in Julia?</strong></p>
-<div id="b9bd88b5" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a></a><span class="im">import</span> <span class="bu">Pkg;</span> Pkg.add("SCIP")</span>
-<span id="cb4-2"><a></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">SCIP</span> <span class="co"># SCIP is a non-commercial MIQCP solver</span></span>
-<span id="cb4-3"><a></a></span>
-<span id="cb4-4"><a></a>warehouses <span class="op">=</span> [<span class="st">"Hamburg"</span>, <span class="st">"Berlin"</span>] <span class="co"># Add warehouses as a vector</span></span>
-<span id="cb4-5"><a></a>skus <span class="op">=</span> [<span class="st">"Smartphone"</span>, <span class="st">"Socks"</span>, <span class="st">"Charger"</span>] <span class="co"># Add SKUs as a vector</span></span>
-<span id="cb4-6"><a></a></span>
-<span id="cb4-7"><a></a>warehouse_model <span class="op">=</span> <span class="fu">Model</span>(SCIP.Optimizer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">SCIP</span> <span class="co"># SCIP is a non-commercial solver for quadratic models</span></span>
+<span id="cb4-2"><a></a></span>
+<span id="cb4-3"><a></a>warehouses <span class="op">=</span> [<span class="st">"Hamburg"</span>, <span class="st">"Berlin"</span>] <span class="co"># Add warehouses as a vector</span></span>
+<span id="cb4-4"><a></a>skus <span class="op">=</span> [<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>] <span class="co"># The four SKUs from our transactional data</span></span>
+<span id="cb4-5"><a></a></span>
+<span id="cb4-6"><a></a>warehouse_model <span class="op">=</span> <span class="fu">Model</span>(SCIP.Optimizer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
-<div id="ed06e456" class="cell" data-execution_count="4">
+<div id="8" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a></a><span class="pp">@variable</span>(warehouse_model, X[i <span class="kw">in</span> skus, k <span class="kw">in</span> warehouses], Bin)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell fragment" data-execution_count="4">
-<div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>2-dimensional DenseAxisArray{VariableRef,2,...} with index sets:
-    Dimension 1, ["Smartphone", "Socks", "Charger"]
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>2-dimensional DenseAxisArray{JuMP.VariableRef,2,...} with index sets:
+    Dimension 1, ["A", "B", "C", "D"]
     Dimension 2, ["Hamburg", "Berlin"]
-And data, a 3×2 Matrix{VariableRef}:
- X[Smartphone,Hamburg]  X[Smartphone,Berlin]
- X[Socks,Hamburg]       X[Socks,Berlin]
- X[Charger,Hamburg]     X[Charger,Berlin]</code></pre>
+And data, a 4×2 Matrix{JuMP.VariableRef}:
+ X[A,Hamburg]  X[A,Berlin]
+ X[B,Hamburg]  X[B,Berlin]
+ X[C,Hamburg]  X[C,Berlin]
+ X[D,Hamburg]  X[D,Berlin]</code></pre>
 </div>
 </div>
 </div>
@@ -781,7 +816,7 @@ And data, a 3×2 Matrix{VariableRef}:
 <div class="callout-content">
 <ul>
 <li><span class="math inline">\(X_{i,k}\)</span> - 1, if SKU <span class="math inline">\(i\in\mathcal{I}\)</span> is stored in <span class="math inline">\(k\in\mathcal{K}\)</span>, 0 otherwise</li>
-<li><span class="math inline">\(q_{ij}\)</span> - Coappearance of SKU <span class="math inline">\(i\in\mathcal{I}\)</span> and <span class="math inline">\(j\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(q_{i,j}\)</span> - Coappearance of SKU <span class="math inline">\(i\in\mathcal{I}\)</span> and <span class="math inline">\(j\in\mathcal{I}\)</span></li>
 </ul>
 </div>
 </div>
@@ -805,7 +840,7 @@ And data, a 3×2 Matrix{VariableRef}:
 </section>
 <section id="quadratic-objective-function" class="slide level2">
 <h2>Quadratic Objective Function</h2>
-<p><span class="math display">\[\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}\]</span></p>
+<p><span class="math display">\[\text{Maximize} \quad \sum_{i=2}^{|\mathcal{I}|} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{i,k}\times X_{j,k} \times q_{i,j}\]</span></p>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
@@ -816,7 +851,7 @@ And data, a 3×2 Matrix{VariableRef}:
 <p><strong>This is a <strong>quadratic objective function</strong>!</strong></p>
 </div>
 <div class="callout-content">
-<p>The quadratic terms are <span class="math inline">\(X_{ik}\times X_{jk}\)</span>. This objective function is based on the <strong>Quadratic Multiple Knapsack Problem (QMKP)</strong>, formulated by <span class="citation" data-cites="Hiley2006">Hiley and Julstrom (<a href="#/literature-i" role="doc-biblioref" onclick="">2006</a>)</span>.</p>
+<p>The quadratic terms are <span class="math inline">\(X_{i,k}\times X_{j,k}\)</span>. This objective function is based on the <strong>Quadratic Multiple Knapsack Problem (QMKP)</strong>, formulated by <span class="citation" data-cites="Hiley2006">Hiley and Julstrom (<a href="#/literature-ii" role="doc-biblioref" onclick="">2006</a>)</span>.</p>
 </div>
 </div>
 </div>
@@ -826,8 +861,8 @@ And data, a 3×2 Matrix{VariableRef}:
 <h2>Objective Function in Julia</h2>
 <p><span class="question">Question:</span> <strong>How could we formulate this in Julia?</strong></p>
 <div class="fragment">
-<div id="97bc4282" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a></a>Q <span class="op">=</span> [<span class="fl">2</span> <span class="fl">1</span> <span class="fl">2</span>; <span class="fl">1</span> <span class="fl">2</span> <span class="fl">1</span>; <span class="fl">2</span> <span class="fl">1</span> <span class="fl">2</span>]</span>
+<div id="10" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a></a><span class="co"># We reuse the matrix Q = T' * T computed from our transactional data</span></span>
 <span id="cb7-2"><a></a></span>
 <span id="cb7-3"><a></a><span class="pp">@objective</span>(warehouse_model,</span>
 <span id="cb7-4"><a></a>    Max,</span>
@@ -839,9 +874,9 @@ And data, a 3×2 Matrix{VariableRef}:
 <span id="cb7-10"><a></a>    )</span>
 <span id="cb7-11"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell fragment" data-execution_count="5">
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="6">
-<p>$ X_{Socks,Hamburg}X_{Smartphone,Hamburg} + X_{Socks,Berlin}X_{Smartphone,Berlin} + 2 X_{Charger,Hamburg}X_{Smartphone,Hamburg} + 2 X_{Charger,Berlin}X_{Smartphone,Berlin} + X_{Charger,Hamburg}X_{Socks,Hamburg} + X_{Charger,Berlin}X_{Socks,Berlin} $</p>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>3 X[B,Hamburg]*X[A,Hamburg] + 3 X[B,Berlin]*X[A,Berlin] + 2 X[C,Hamburg]*X[A,Hamburg] + 2 X[C,Berlin]*X[A,Berlin] + 2 X[C,Hamburg]*X[B,Hamburg] + 2 X[C,Berlin]*X[B,Berlin] + 4 X[D,Hamburg]*X[A,Hamburg] + 4 X[D,Berlin]*X[A,Berlin] + X[D,Hamburg]*X[C,Hamburg] + X[D,Berlin]*X[C,Berlin]</code></pre>
 </div>
 </div>
 </div>
@@ -855,7 +890,7 @@ And data, a 3×2 Matrix{VariableRef}:
 <h2>What constraints?</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_split-warehouse.png" style="width:90.0%"></p>
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_split-warehouse.png" style="width:90.0%" alt="SKUs allocated to two warehouses with limited storage space"></p>
 </div><div class="column" style="width:60%;">
 <p><span class="question">Question:</span> <strong>What constraints?</strong></p>
 <div class="fragment">
@@ -905,7 +940,7 @@ And data, a 3×2 Matrix{VariableRef}:
 </section>
 <section id="single-allocation-constraint-1" class="slide level2">
 <h2>Single Allocation Constraint</h2>
-<p><span class="math display">\[\sum_{k \in \mathcal{K}} X_{ik} \geq 1 \quad \forall i \in \mathcal{I}\]</span></p>
+<p><span class="math display">\[\sum_{k \in \mathcal{K}} X_{i,k} \geq 1 \quad \forall i \in \mathcal{I}\]</span></p>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-simple">
 <div class="callout-body">
@@ -932,19 +967,20 @@ And data, a 3×2 Matrix{VariableRef}:
 </section>
 <section id="single-allocation-in-julia" class="slide level2">
 <h2>Single Allocation in Julia</h2>
-<div id="1ae9e825" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a></a><span class="pp">@constraint</span>(warehouse_model, single_allocation[i <span class="kw">in</span> skus],</span>
-<span id="cb8-2"><a></a>    <span class="fu">sum</span>(X[i, k] <span class="cf">for</span> k <span class="kw">in</span> warehouses) <span class="op">&gt;=</span> <span class="fl">1</span></span>
-<span id="cb8-3"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="12" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a></a><span class="pp">@constraint</span>(warehouse_model, single_allocation[i <span class="kw">in</span> skus],</span>
+<span id="cb9-2"><a></a>    <span class="fu">sum</span>(X[i, k] <span class="cf">for</span> k <span class="kw">in</span> warehouses) <span class="op">&gt;=</span> <span class="fl">1</span></span>
+<span id="cb9-3"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell fragment" data-execution_count="6">
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>1-dimensional DenseAxisArray{ConstraintRef{Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.GreaterThan{Float64}}, ScalarShape},1,...} with index sets:
-    Dimension 1, ["Smartphone", "Socks", "Charger"]
-And data, a 3-element Vector{ConstraintRef{Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.GreaterThan{Float64}}, ScalarShape}}:
- single_allocation[Smartphone] : X[Smartphone,Hamburg] + X[Smartphone,Berlin] ≥ 1
- single_allocation[Socks] : X[Socks,Hamburg] + X[Socks,Berlin] ≥ 1
- single_allocation[Charger] : X[Charger,Hamburg] + X[Charger,Berlin] ≥ 1</code></pre>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>1-dimensional DenseAxisArray{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.GreaterThan{Float64}}, JuMP.ScalarShape},1,...} with index sets:
+    Dimension 1, ["A", "B", "C", "D"]
+And data, a 4-element Vector{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.GreaterThan{Float64}}, JuMP.ScalarShape}}:
+ single_allocation[A] : X[A,Hamburg] + X[A,Berlin] ≥ 1
+ single_allocation[B] : X[B,Hamburg] + X[B,Berlin] ≥ 1
+ single_allocation[C] : X[C,Hamburg] + X[C,Berlin] ≥ 1
+ single_allocation[D] : X[D,Hamburg] + X[D,Berlin] ≥ 1</code></pre>
 </div>
 </div>
 </section>
@@ -987,7 +1023,7 @@ And data, a 3-element Vector{ConstraintRef{Model, MathOptInterface.ConstraintInd
 </section>
 <section id="capacity-constraints-1" class="slide level2">
 <h2>Capacity Constraints</h2>
-<p><span class="math display">\[\sum_{i \in \mathcal{I}} X_{ik} \leq c_k \quad \forall k \in \mathcal{K}\]</span></p>
+<p><span class="math display">\[\sum_{i \in \mathcal{I}} X_{i,k} \leq c_k \quad \forall k \in \mathcal{K}\]</span></p>
 <div class="fragment">
 <p><span class="highlight">And that’s basically it!</span></p>
 </div>
@@ -997,58 +1033,82 @@ And data, a 3-element Vector{ConstraintRef{Model, MathOptInterface.ConstraintInd
 </section>
 <section id="capacity-constraints-in-julia" class="slide level2">
 <h2>Capacity Constraints in Julia</h2>
-<div id="31795dd8" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a></a>capacities <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"Hamburg"</span> <span class="op">=&gt;</span> <span class="fl">2</span>, <span class="st">"Berlin"</span> <span class="op">=&gt;</span> <span class="fl">1</span>) <span class="co"># Add capacities</span></span>
-<span id="cb10-2"><a></a></span>
-<span id="cb10-3"><a></a><span class="pp">@constraint</span>(warehouse_model, capacity[k <span class="kw">in</span> warehouses],</span>
-<span id="cb10-4"><a></a>    <span class="fu">sum</span>(X[i, k] <span class="cf">for</span> i <span class="kw">in</span> skus) <span class="op">&lt;=</span> capacities[k]</span>
-<span id="cb10-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="14" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a></a>capacities <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"Hamburg"</span> <span class="op">=&gt;</span> <span class="fl">2</span>, <span class="st">"Berlin"</span> <span class="op">=&gt;</span> <span class="fl">2</span>) <span class="co"># Add capacities</span></span>
+<span id="cb11-2"><a></a></span>
+<span id="cb11-3"><a></a><span class="pp">@constraint</span>(warehouse_model, capacity[k <span class="kw">in</span> warehouses],</span>
+<span id="cb11-4"><a></a>    <span class="fu">sum</span>(X[i, k] <span class="cf">for</span> i <span class="kw">in</span> skus) <span class="op">&lt;=</span> capacities[k]</span>
+<span id="cb11-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell fragment" data-execution_count="7">
-<div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>1-dimensional DenseAxisArray{ConstraintRef{Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.LessThan{Float64}}, ScalarShape},1,...} with index sets:
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>1-dimensional DenseAxisArray{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.LessThan{Float64}}, JuMP.ScalarShape},1,...} with index sets:
     Dimension 1, ["Hamburg", "Berlin"]
-And data, a 2-element Vector{ConstraintRef{Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.LessThan{Float64}}, ScalarShape}}:
- capacity[Hamburg] : X[Smartphone,Hamburg] + X[Socks,Hamburg] + X[Charger,Hamburg] ≤ 2
- capacity[Berlin] : X[Smartphone,Berlin] + X[Socks,Berlin] + X[Charger,Berlin] ≤ 1</code></pre>
+And data, a 2-element Vector{JuMP.ConstraintRef{JuMP.Model, MathOptInterface.ConstraintIndex{MathOptInterface.ScalarAffineFunction{Float64}, MathOptInterface.LessThan{Float64}}, JuMP.ScalarShape}}:
+ capacity[Hamburg] : X[A,Hamburg] + X[B,Hamburg] + X[C,Hamburg] + X[D,Hamburg] ≤ 2
+ capacity[Berlin] : X[A,Berlin] + X[B,Berlin] + X[C,Berlin] + X[D,Berlin] ≤ 2</code></pre>
 </div>
 </div>
 </section>
 <section id="qmk-model" class="slide level2">
 <h2>QMK Model</h2>
-<p><span class="math display">\[\text{maximize} \quad \sum_{i=2}^{\mathcal{I}} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{ik}\times X_{jk} \times q_{ij}\]</span></p>
+<p><span class="math display">\[\text{Maximize} \quad \sum_{i=2}^{|\mathcal{I}|} \sum_{j=1}^{i-1} \sum_{k \in \mathcal{K}} X_{i,k}\times X_{j,k} \times q_{i,j}\]</span></p>
 <p>subject to:</p>
 <p><span class="math display">\[
 \begin{align*}
-                &amp; \sum_{k \in \mathcal{K}} X_{ik} \geq 1 &amp;&amp; \forall i \in \mathcal{I}\\
-                &amp; \sum_{i \in \mathcal{I}} X_{ik} \leq c_{k} &amp;&amp; \forall k \in \mathcal{K}\\
-                &amp; X_{ik} \in \{0,1\}  &amp;&amp; \forall i \in \mathcal{I}, \forall k \in \mathcal{K}
+                &amp; \sum_{k \in \mathcal{K}} X_{i,k} \geq 1 &amp;&amp; \forall i \in \mathcal{I}\\
+                &amp; \sum_{i \in \mathcal{I}} X_{i,k} \leq c_{k} &amp;&amp; \forall k \in \mathcal{K}\\
+                &amp; X_{i,k} \in \{0,1\}  &amp;&amp; \forall i \in \mathcal{I}, k \in \mathcal{K}
 \end{align*}
 \]</span></p>
 </section>
 <section id="qmk-model-in-julia" class="slide level2">
 <h2>QMK Model in Julia</h2>
-<div id="2baf8602" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a></a><span class="fu">set_attribute</span>(warehouse_model, <span class="st">"display/verblevel"</span>, <span class="fl">0</span>) <span class="co"># Hide solver output</span></span>
-<span id="cb12-2"><a></a><span class="fu">optimize!</span>(warehouse_model)</span>
-<span id="cb12-3"><a></a></span>
-<span id="cb12-4"><a></a><span class="fu">println</span>(<span class="st">"The optimal objective value is: "</span>, <span class="fu">objective_value</span>(warehouse_model))</span>
-<span id="cb12-5"><a></a><span class="fu">println</span>(<span class="st">"The optimal solution is: "</span>, <span class="fu">value</span>.(X))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="16" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a></a><span class="fu">set_attribute</span>(warehouse_model, <span class="st">"display/verblevel"</span>, <span class="fl">0</span>) <span class="co"># Hide solver output</span></span>
+<span id="cb13-2"><a></a><span class="fu">optimize!</span>(warehouse_model)</span>
+<span id="cb13-3"><a></a></span>
+<span id="cb13-4"><a></a><span class="fu">println</span>(<span class="st">"The optimal objective value is: "</span>, <span class="fu">objective_value</span>(warehouse_model))</span>
+<span id="cb13-5"><a></a><span class="fu">println</span>(<span class="st">"The optimal solution is: "</span>, <span class="fu">value</span>.(X))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell fragment" data-execution_count="8">
+<div class="cell fragment" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
-<pre><code>The optimal objective value is: 2.0
+<pre><code>The optimal objective value is: 6.0
 The optimal solution is: 2-dimensional DenseAxisArray{Float64,2,...} with index sets:
-    Dimension 1, ["Smartphone", "Socks", "Charger"]
+    Dimension 1, ["A", "B", "C", "D"]
     Dimension 2, ["Hamburg", "Berlin"]
-And data, a 3×2 Matrix{Float64}:
-  1.0  0.0
- -0.0  1.0
-  1.0  0.0</code></pre>
+And data, a 4×2 Matrix{Float64}:
+ 1.0  0.0
+ 0.0  1.0
+ 0.0  1.0
+ 1.0  0.0</code></pre>
 </div>
 </div>
 <div class="fragment">
-<p><span class="question">Question:</span> What does this value tell us?</p>
+<p><span class="question">Question:</span> <strong>What does this value tell us?</strong></p>
+</div>
+</section>
+<section id="interpreting-the-solution" class="slide level2">
+<h2>Interpreting the Solution</h2>
+<ul>
+<li>Total capacity (<span class="math inline">\(2+2\)</span>) <strong>equals</strong> the number of SKUs</li>
+<li>Hence, each SKU is stored <strong>exactly once</strong></li>
+<li>Optimal: <strong>A and D</strong> share a warehouse, so do <strong>B and C</strong></li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The objective value is 6</strong></p>
+</div>
+<div class="callout-content">
+<p>It sums the coappearances of SKUs sharing a warehouse: <span class="math inline">\(q_{A,D} + q_{B,C} = 4 + 2 = 6\)</span>. It does <strong>not</strong> directly count the avoided split orders!</p>
+</div>
+</div>
+</div>
 </div>
 </section></section>
 <section>
@@ -1068,7 +1128,7 @@ And data, a 3×2 Matrix{Float64}:
 <section id="choosing-a-solver" class="slide level2">
 <h2>Choosing a solver</h2>
 <ul>
-<li>Identify <strong>problem structure</strong>, e.g.&nbsp;LP, MIP, NLP, QCP, MIQCP, …</li>
+<li>Identify <strong>problem structure</strong>, e.g.&nbsp;LP, MIP, NLP, MIQP, MIQCP, …</li>
 <li>What is the <strong>size</strong> of the problem?</li>
 <li>Is a <strong>commercial</strong> solver needed?</li>
 </ul>
@@ -1082,7 +1142,30 @@ And data, a 3×2 Matrix{Float64}:
 <p><strong>Commercial Solvers</strong></p>
 </div>
 <div class="callout-content">
-<p>Commercial solvers are <strong>faster</strong> and <strong>more robust</strong> as open source solvers but also <strong>more expensive</strong>. During your studies, you can use most of them for free though! Nonetheless, we will only use open source solvers in this course.</p>
+<p>Commercial solvers are <strong>faster</strong> and <strong>more robust</strong> than open source solvers but also <strong>more expensive</strong>. During your studies, you can use most of them for free though! Nonetheless, we will only use open source solvers in this course.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="our-problem-class" class="slide level2">
+<h2>Our Problem Class</h2>
+<ul>
+<li>Objective: <strong>quadratic</strong> terms <span class="math inline">\(X_{i,k} \times X_{j,k}\)</span></li>
+<li>Constraints: all <strong>linear</strong></li>
+<li>Variables: all <strong>binary</strong></li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Mixed-Integer Quadratic Program (MIQP)</strong></p>
+</div>
+<div class="callout-content">
+<p>Our model is a <strong>MIQP</strong>, as only the objective is quadratic. It is not a MIQCP, which would also allow quadratic <strong>constraints</strong>. MIQCP solvers, e.g.&nbsp;SCIP, subsume MIQPs and can thus solve our model.</p>
 </div>
 </div>
 </div>
@@ -1090,12 +1173,7 @@ And data, a 3×2 Matrix{Float64}:
 </section>
 <section id="global-vs-local-optimality" class="slide level2">
 <h2>Global vs Local Optimality</h2>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><a href="https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/"><img data-src="https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&amp;ssl=1" style="width:80.0%"></a></p>
-<figcaption>Local vs Global Optimum by Christoph Roser</figcaption>
-</figure>
-</div>
+<p><a href="https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/"><img data-src="https://i0.wp.com/www.allaboutlean.com/wp-content/uploads/2018/08/Local-Global-Optimum.png?w=1040&amp;ssl=1" style="width:80.0%" alt="Local vs Global Optimum by Christoph Roser"></a></p>
 </section>
 <section id="solver-comparisonsolvers" class="slide level2">
 <h2>Solver Comparison<sup>1</sup></h2>
@@ -1129,14 +1207,15 @@ And data, a 3×2 Matrix{Float64}:
 </tr>
 </tbody>
 </table>
-<div class="fragment">
+<aside><ol class="aside-footnotes"><li id="fn6"><p>Based on numerical experiments with QMK instances. Times are averages over the instances solved to optimality; the percentage shows the share of instances solved within one hour, X = none solved within one hour.</p></li></ol></aside></section>
+<section id="solver-comparison-takeaways" class="slide level2">
+<h2>Solver Comparison: Takeaways</h2>
 <ul>
-<li><span class="highlight">SCIP</span>: Best open-source for MIQCP, but limited scalability</li>
+<li><span class="highlight">SCIP</span>: Best open-source for MIQP/MIQCP, limited scalability</li>
 <li><strong>Commercial solvers</strong>: Better but still fail on 10,000+ SKUs</li>
 <li><strong>Conclusion</strong>: Heuristics necessary for realistic problems!</li>
 </ul>
-</div>
-<aside><ol class="aside-footnotes"><li id="fn6"><p>Based on numerical experiments (QMK). The percentage in the table shows instances that could be solved within one hour and their average time (if solved).</p></li></ol></aside></section>
+</section>
 <section id="model-assumptions" class="slide level2">
 <h2>Model Assumptions</h2>
 <p><span class="question">Questions:</span> <strong>On model assumptions</strong></p>
@@ -1145,6 +1224,21 @@ And data, a 3×2 Matrix{Float64}:
 <li class="fragment">Problem with allocating SKUs to multiple warehouses?</li>
 <li class="fragment">What else might pose a problem in the real world?</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Duplicates can inflate the objective</strong></p>
+</div>
+<div class="callout-content">
+<p>With slack capacity, the model may store one SKU in <strong>several warehouses</strong>. A shared pair then counts <strong>once per warehouse</strong>, raising the objective without avoiding any further splits.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="model-limitations" class="slide level2">
 <h2>Model Limitations</h2>
@@ -1245,7 +1339,9 @@ And data, a 3×2 Matrix{Float64}:
 <li class="fragment">If difference is significant → SKUs are <strong>dependent</strong></li>
 <li class="fragment">Allocate dependent SKUs to <span class="highlight">same warehouse</span>!</li>
 </ul>
-<div class="fragment">
+</section>
+<section id="from-tests-to-allocations" class="slide level2">
+<h2>From Tests to Allocations</h2>
 <div class="callout callout-tip callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
@@ -1257,7 +1353,6 @@ And data, a 3×2 Matrix{Float64}:
 <div class="callout-content">
 <p><strong>Phase 1</strong>: Build allocation using dependencies<br>
 <strong>Phase 2</strong>: Refine with local search</p>
-</div>
 </div>
 </div>
 </div>
@@ -1282,10 +1377,11 @@ And data, a 3×2 Matrix{Float64}:
 </section>
 <section id="rolling-horizon-approach" class="slide level2">
 <h2>Rolling Horizon Approach</h2>
+<p>In the following case study <span class="citation" data-cites="vlcek_optimizing_2024">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Vlćek and Voigt 2024</a>)</span>, we:</p>
 <ul>
-<li>Use <strong>5-week training window</strong> for allocation decisions</li>
-<li>Update allocations <strong>weekly</strong> based on recent patterns</li>
-<li>Balance <span class="highlight">stability</span> vs.&nbsp;<span class="highlight">responsiveness</span></li>
+<li>used a <strong>5-week training window</strong> for allocation decisions</li>
+<li>updated allocations <strong>weekly</strong> based on recent patterns</li>
+<li>balanced <span class="highlight">stability</span> vs.&nbsp;<span class="highlight">responsiveness</span></li>
 </ul>
 <div class="fragment">
 <div class="callout callout-tip callout-style-simple">
@@ -1294,7 +1390,7 @@ And data, a 3×2 Matrix{Float64}:
 <i class="callout-icon"></i>
 </div>
 <div class="callout-content">
-<p>Grouped SKUs by <strong>category-brand combinations</strong> to reduce problem size while maintaining allocation quality. New SKUs inherit allocation from their cluster!</p>
+<p>In the case study, SKUs were grouped by <strong>category-brand combinations</strong> to reduce the problem size while maintaining allocation quality. New SKUs inherit the allocation of their cluster!</p>
 </div>
 </div>
 </div>
@@ -1314,33 +1410,31 @@ And data, a 3×2 Matrix{Float64}:
 </div><div class="column" style="width:50%;">
 <p><strong>Heuristics compared</strong><sup>1</sup>:</p>
 <ul>
-<li><strong>CHI</strong>: Chi-Square tests <span class="citation" data-cites="vlcek_optimizing_2024">(<a href="#/literature-i" role="doc-biblioref" onclick="">Vlćek and Voigt 2024</a>)</span></li>
-<li><strong>GP, GO, GS, BS</strong>: Greedy <span class="citation" data-cites="Catalan2012">(<a href="#/literature-i" role="doc-biblioref" onclick="">Catalán and Fisher 2012</a>)</span></li>
+<li><strong>CHI</strong>: Chi-Square tests <span class="citation" data-cites="vlcek_optimizing_2024">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Vlćek and Voigt 2024</a>)</span></li>
+<li><strong>GP, GO, GS, BS</strong>: Greedy <span class="citation" data-cites="Catalan2012">(<a href="#/literature-ii" role="doc-biblioref" onclick="">Catalán and Fisher 2012</a>)</span></li>
 <li><strong>RA</strong>: Random allocation</li>
 </ul>
 </div></div>
-<div class="fragment">
-<p><img data-src="https://images.beyondsimulations.com/ao/ao_split-case.png" style="width:70.0%"></p>
-</div>
 <aside><ol class="aside-footnotes"><li id="fn7"><p>QMKP is not applicable for instance in case study</p></li></ol></aside></section>
 <section id="implementation-results" class="slide level2">
 <h2>Implementation Results</h2>
-<p><strong>Theoretical improvements</strong>:</p>
+<p><strong>Retailer’s status quo</strong>: 6.95% of all orders were split</p>
+<div class="fragment">
+<p><strong>Theoretical reduction of these splits</strong>:</p>
 <ul>
 <li>CHI: <strong>82.25%</strong> reduction</li>
-<li>BS: <strong>62.63%</strong> reduction<br>
-</li>
+<li>BS: <strong>62.63%</strong> reduction</li>
 <li>GS: <strong>59.16%</strong> reduction</li>
-<li>vs.&nbsp;retailer: <strong>6.95%</strong> split ratio</li>
 </ul>
+</div>
 </section>
 <section id="conclusion" class="slide level2">
 <h2>Conclusion</h2>
 <ul>
 <li>Splits are <strong>of no benefit</strong>, except <strong>faster customer deliveries</strong></li>
 <li><span class="highlight">Increase workload, packaging and shipping costs</span></li>
-<li>Mathematical Optimisation of <strong>“full” problem not solvable</strong></li>
-<li><strong>CHI</strong> Heuristic close to mathematical optimisation</li>
+<li>Mathematical Optimization of <strong>“full” problem not solvable</strong></li>
+<li><strong>CHI</strong> Heuristic close to mathematical optimization</li>
 </ul>
 <div class="fragment">
 <div class="callout callout-note callout-titled callout-style-simple">
@@ -1349,7 +1443,7 @@ And data, a 3×2 Matrix{Float64}:
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>And that’s it for todays lecture!</strong></p>
+<p><strong>And that’s it for today’s lecture!</strong></p>
 </div>
 <div class="callout-content">
 <p>We now have covered the Quadratic Multiple Knapsack Problem and are ready to start solving some tasks in the upcoming tutorial.</p>
@@ -1375,8 +1469,18 @@ And data, a 3×2 Matrix{Float64}:
 <h1><span class="flow">Literature</span></h1>
 
 </section>
-<section id="literature-i" class="slide level2 smaller scrollable">
+<section id="literature-i" class="slide level2">
 <h2>Literature I</h2>
+<p>References for this lecture:</p>
+<ul>
+<li><span class="citation" data-cites="Catalan2012">Catalán and Fisher (<a href="#/literature-ii" role="doc-biblioref" onclick="">2012</a>)</span>: Integer model and greedy heuristics</li>
+<li><span class="citation" data-cites="Hiley2006">Hiley and Julstrom (<a href="#/literature-ii" role="doc-biblioref" onclick="">2006</a>)</span>: The Quadratic Multiple Knapsack Problem</li>
+<li><span class="citation" data-cites="Zhu2021">Zhu et al. (<a href="#/literature-ii" role="doc-biblioref" onclick="">2021</a>)</span>: Mathematical model and GRASP</li>
+<li><span class="citation" data-cites="vlcek_optimizing_2024">Vlćek and Voigt (<a href="#/literature-ii" role="doc-biblioref" onclick="">2024</a>)</span>: CHI heuristic and case study</li>
+</ul>
+</section>
+<section id="literature-ii" class="slide level2 smaller scrollable">
+<h2>Literature II</h2>
 <p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
 
 
