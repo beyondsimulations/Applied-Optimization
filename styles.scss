@@ -1,45 +1,103 @@
+/*  ─────────────────────────────────────────────────────────────────────────
+    LECTURE CORE STYLES — single source of truth
+    Generated into each lecture by scripts/sync-core-scss.py. DO NOT EDIT the
+    copy inside a lecture repo; edit this file and re-run the script.
+
+    Theme order in every lecture:
+
+        theme:
+          - default
+          - fonts.scss     self-hosted @font-face, no CDN
+          - _core.scss     this file
+          - styles.scss    lecture-local rules only
+          - brand          _brand.yml
+
+    Two things about that order, both verified against a real render:
+
+    1. Quarto emits `scss:defaults` in REVERSE theme order. So `brand` is
+       declared first (which is why `$brand-*` resolves at all), and a lecture's
+       `styles.scss` is declared BEFORE this file — meaning a plain assignment
+       there pre-empts any `!default` below. That is how Study-Business-Basics
+       remaps the palette.
+    2. `scss:rules` are emitted in FORWARD order, so a lecture's local rules
+       come after these and win on a tie.
+
+    ── Why the colours below are literal hex, not `$brand-*` ──────────────────
+    Only four palette tokens exist in ALL fifteen lectures: `codeline`,
+    `darker`, `greyer`, `lighter`. Study-Business-Basics has no `oneDark` /
+    `twoDark` / `threeDark` at all — its palette is `sand` / `teal` /
+    `dangerColor`, with different hex values. Referencing `$brand-twoDark` here
+    would therefore fail to COMPILE in that one lecture. The four universal
+    tokens are used directly; everything else goes through a `!default`
+    variable, and each hex is annotated with the token it mirrors.
+    ───────────────────────────────────────────────────────────────────────── */
+
 /*-- scss:defaults --*/
 
-// ========================================================================
-// HTML BASE THEME VARS (applies to all HTML, including presentations)
-// ========================================================================
+// ── Semantic colours ──────────────────────────────────────────────────────
+// Override any of these in a lecture's styles.scss if its palette differs.
+// Contrast ratios are against the slide/page background #FFFDFC (`lighter`).
+// WCAG AA: 4.5:1 for body text, 3:1 for large text.
 
-// Callouts
-$callout-color-note: $brand-oneLight;
-$callout-color-tip: $brand-twoLight;
-$callout-color-warning: $brand-threeLight;
-$callout-color-important: $brand-oneDark;
-$callout-color-caution: $brand-threeDark;
+$lec-emphasis:  #537E8F !default;   // = twoDark.  .reveal strong / em     4.36:1
+$lec-task:      #B25F00 !default;   // NEW.        .task                   4.57:1
+$lec-highlight: #B3403F !default;   // NEW.        .highlight / .errors    5.56:1
+$lec-loud-bg:   #537E8F !default;   // = twoDark.  .loud-slide background
 
-// Code styling
-$code-block-border-left: $brand-threeLight;
+// `.question` uses $brand-greyer (#3D5369, 7.84:1) and `.invert-font` /
+// `.title-slide.title` / `.exercise-slide` use $brand-lighter / -darker /
+// -codeline. All four tokens are universal, so they are referenced directly.
 
-// Heading sizes (HTML documents only; presentations use $presentation-* vars)
+// ── Callouts ──────────────────────────────────────────────────────────────
+$lec-callout-note:      #FCCF9C !default;   // = oneLight
+$lec-callout-tip:       #A7C7C6 !default;   // = twoLight
+$lec-callout-warning:   #EBADAD !default;   // = threeLight
+$lec-callout-important: #F6B265 !default;   // = oneDark
+$lec-callout-caution:   #DB6B6B !default;   // = threeDark
+$lec-code-border:       #EBADAD !default;   // = threeLight
+
+$callout-color-note:      $lec-callout-note;
+$callout-color-tip:       $lec-callout-tip;
+$callout-color-warning:   $lec-callout-warning;
+$callout-color-important: $lec-callout-important;
+$callout-color-caution:   $lec-callout-caution;
+$code-block-border-left:  $lec-code-border;
+
+// ── Heading sizes ─────────────────────────────────────────────────────────
+// HTML documents only. Slides size headings via $presentation-*-font-size and
+// are unaffected.
 $h1-font-size: 1.75rem;
 $h2-font-size: 1.5rem;
 $h3-font-size: 1.3rem;
 $h4-font-size: 1.15rem;
 
-// ========================================================================
-// REVEAL.JS PRESENTATION VARS (override to match HTML theme)
-// ========================================================================
+// ── RevealJS ──────────────────────────────────────────────────────────────
 $presentation-title-slide-text-align: left;
 
-// ========================================================================
-// RULES: only for custom visual effects / overrides
-// ========================================================================
 
-// Tabset navigation: compact tabs so they fit on one row in documents
-.panel-tabset .nav-tabs .nav-link {
-    font-size: 0.9em;
-    padding: 0.3rem 0.7rem;
-}
+/*-- scss:rules --*/
 
-// Text emphasis
+// ── Self-hosted brand fonts ───────────────────────────────────────────────
+// Gelasio / Reddit Sans / Google Sans Code, base64-embedded as @font-face.
+// Vendored by scripts/sync-fonts.py; regenerate with `--generate`.
+//
+// This is @import-ed rather than added to the `theme:` lists on purpose. About
+// 25 pages across Materiallogistik, Produktionswirtschaft and
+// Optimization-with-Julia declare their own `theme:` in front matter, which
+// REPLACES the project's — anything wired only into the project theme silently
+// misses them. Coming in through styles.scss means every page that already
+// loads styles.scss gets the fonts, with no YAML changes anywhere.
+//
+// Without this, `source: google` in _brand.yml makes Quarto emit an @import of
+// fonts.googleapis.com into every page's CSS, sending each visitor's IP to
+// Google on every page view.
+@import "fonts";
+
+// ── Text emphasis (slides) ────────────────────────────────────────────────
 .reveal strong,
 .reveal b,
 .reveal .bold {
-    color: $brand-twoDark;
+    color: $lec-emphasis;
     font-size: 1em;
     font-weight: 600;
 }
@@ -48,32 +106,33 @@ $presentation-title-slide-text-align: left;
 .reveal i,
 .reveal .italic {
     font-style: italic;
-    color: $brand-twoDark;
+    color: $lec-emphasis;
     font-weight: 400;
 }
 
-// Utility text classes
+// ── Utility text classes ──────────────────────────────────────────────────
+// These carry inline TEXT, so they need the 4.5:1 body bar, not the 3:1 large
+// bar. The old values did not clear it: .task was #F6B265 at 1.80:1 across 334
+// usages, .highlight #DB6B6B at 3.27:1 across 2,238. The light palette tints
+// they used are fine as fills and callout backgrounds — just not as type.
 .highlight {
-    color: $brand-threeDark;
+    color: $lec-highlight;
     font-weight: bold;
 }
 .task {
-    color: $brand-oneDark;
+    color: $lec-task;
     font-weight: bold;
 }
 .question {
     color: $brand-greyer;
     font-weight: bold;
 }
-.light {
-    color: $brand-oneLight;
-}
 .errors {
-    color: $brand-threeDark;
+    color: $lec-highlight;
     font-weight: bold;
 }
 
-// Inverted font block
+// ── Slide blocks ──────────────────────────────────────────────────────────
 .invert-font {
     color: $brand-lighter;
     background-color: $brand-darker;
@@ -81,20 +140,52 @@ $presentation-title-slide-text-align: left;
     border-radius: 0;
 }
 
-// Slide-specific
+// Section-break slide.
 .title-slide.title {
     background-color: $brand-codeline !important;
 }
+
+// Exercise-break slide ("Your turn"), from Introduction-to-Python.
+.exercise-slide {
+    background-color: $brand-codeline !important;
+}
+
+// Light type on the accent, not amber-on-teal: the old pairing (#F6B265 on
+// #537E8F) was 2.42:1 across 69 slides — the least readable thing on the site.
+// This is Study-Business-Basics' treatment, which reaches 4.36:1.
 .loud-slide {
-    background-color: $brand-twoDark !important;
-    color: $brand-oneDark !important;
+    background-color: $lec-loud-bg !important;
+    color: $brand-lighter !important;
     font-weight: bold !important;
 }
 
-// Animation effect
+// ── Animated section headings ─────────────────────────────────────────────
 .flow {
-    background-image: url("https://images.beyondsimulations.com/logo/main-web.png");
-    background-size: 3840px 2160px;
+    // Was a 4.2 MB photo from an external CDN, upscaled and aspect-stretched,
+    // that painted #B5C5B5 (1.78:1) into the letterforms.
+    //
+    // These stops are that photo's own dominant colours — it is the image the
+    // whole brand palette was sampled from, so this is the same colourway, not
+    // a new one. Every stop clears the 3:1 large-text bar. The brand gold
+    // #e4b169 is 1.92:1 and is deliberately absent; #b87d33 (3.44:1) carries
+    // the warm glint instead.
+    //
+    // First and last stops are identical and the animation advances exactly one
+    // tile, so the loop is seamless. (The photo version was not: it jumped 0.8
+    // of a tile on every wrap.)
+    background-image: linear-gradient(
+        to right,
+        #363D45 0%,     // darker      10.84:1
+        #506061 14%,    // photo slate  6.50:1
+        #537E8F 28%,    // twoDark      4.36:1
+        #5D969B 42%,    // photo teal   3.29:1
+        #b87d33 54%,    // warm glint   3.44:1
+        #537E8F 68%,
+        #506061 84%,
+        #363D45 100%    // == 0%, for a seamless wrap
+    );
+    background-size: 1400px 100%;
+    background-repeat: repeat;
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
     background-clip: text;
@@ -103,10 +194,109 @@ $presentation-title-slide-text-align: left;
 }
 
 @keyframes animate {
-    0% {
-        background-position: left 384px top 216px;
-    }
-    100% {
-        background-position: left 3456px top 1944px;
+    from { background-position: 0 0; }
+    to   { background-position: 1400px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flow {
+        animation: none;
     }
 }
+
+// ── Sidebar logo ──────────────────────────────────────────────────────────
+// The course SVG is viewBox-only, so it needs an explicit bound or it fills the
+// sidebar. The mark is square, so capping height caps width.
+.sidebar-logo {
+    max-height: 150px;
+    width: auto;
+}
+
+// ── Page title ────────────────────────────────────────────────────────────
+// Quarto sizes the document title independently of $h1-font-size, so setting
+// that variable alone does not shrink it — which is exactly why Grundlagen-OR
+// and Mathematics each grew their own hand-tuned override (1.9rem and 2rem).
+// Deriving it from the same variable keeps the heading scale on one knob.
+// #title-block-header does not exist in RevealJS, so slides are unaffected.
+#title-block-header .title {
+    font-size: $h1-font-size;
+    line-height: 1.25;
+}
+
+// ── Tabsets ───────────────────────────────────────────────────────────────
+// Compact enough to fit on one row. From Applied-Optimization; Mathematics has
+// tabsets in 14 files and had no styling for them.
+.panel-tabset .nav-tabs .nav-link {
+    font-size: 0.9em;
+    padding: 0.3rem 0.7rem;
+}
+
+// ── Slide images ──────────────────────────────────────────────────────────
+// Quarto's auto-stretch only fires when the image is the LAST element on the
+// slide. Put a caption underneath and it stops applying, so the image scales
+// unbounded and runs off the slide. This caps it.
+//
+// `:not(.r-stretch)` matters: auto-stretch is deliberate where it is used, and
+// Reveal implements it by setting an inline height at runtime. Excluding it
+// here keeps that explicit rather than relying on inline-style precedence.
+// (Grundlagen-OR uses r-stretch in 12 deck files, Introduction-to-Python in 10.)
+.reveal .slides img:not(.r-stretch) {
+    max-height: 60vh;
+    width: auto;
+    height: auto;
+}
+
+// ── Document pages: columns and figures ───────────────────────────────────
+// Scoped to #quarto-document-content, which does not exist in RevealJS, so the
+// slide rule above is untouched.
+//
+// Two separate bugs, both from Grundlagen-OR:
+//  · Quarto lays columns out as adjacent inline-blocks with no gutter. As a
+//    flexbox with `gap` they get one — but only if `min-width: 0` releases the
+//    flex minimum-size floor, or the columns refuse to shrink below their
+//    content.
+//  · Julia plot output (.cell-output-display) carries no .img-fluid class, so
+//    it rendered at pixel width and pushed a horizontal scrollbar onto the page.
+//
+// 10 lectures use ::: {.columns} across 49 files.
+#quarto-document-content {
+    .columns {
+        display: flex;
+        gap: 2rem;
+        align-items: flex-start;
+    }
+    .column {
+        min-width: 0;
+    }
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+    .cell-output-display svg {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+// ── Responsive video embed ────────────────────────────────────────────────
+// 16:9 iframe wrapper. Inert unless a lecture uses .video-wrapper.
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+
+    iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+}
+
+/*  ─────────────────────────────────────────────────────────────────────────
+    LOCAL — rules specific to this lecture.
+    Everything ABOVE this line is generated from Lecture-Foundations/brand/
+    _core.scss by scripts/sync-core-scss.py. Edit it there, not here.
+    Everything BELOW is yours and is preserved across syncs.
+    ───────────────────────────────────────────────────────────────────────── */

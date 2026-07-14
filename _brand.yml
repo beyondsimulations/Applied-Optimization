@@ -10,6 +10,8 @@ color:
     darker: "#363D45"
     greyer: "#3D5369"
     lighter: "#FFFDFC"
+    linkColor: "#B3403F" # threeDark (#DB6B6B) is 3.27:1 and fails WCAG AA for body
+                         # text; this is the same hue at 5.56:1. Matches .highlight.
 
   foreground: darker #The main text color. Typically will be close to black and must have high contrast with the background color.
   background: lighter #The main background color. Tyically will be close to white and must have high contrast with the foreground color.
@@ -27,13 +29,9 @@ color:
   dark: darker #A dark color, used as a high-contrast foreground color on light elements or high-contrast background color on light elements.
 
 typography:
-  fonts:
-    - family: Gelasio
-      source: google
-    - family: Reddit Sans
-      source: google
-    - family: Google Sans Code
-      source: google
+  # The font declaration block is deliberately absent. The families named
+  # below are supplied locally by _fonts.scss (base64 @font-face), so no
+  # page fetches them from a CDN. Regenerate: scripts/sync-fonts.py.
 
   base:
     family: Reddit Sans
@@ -51,7 +49,7 @@ typography:
     color: twoDark
     background-color: codeline
   link:
-    color: threeDark
+    color: linkColor
     decoration: underline
 
 defaults:
