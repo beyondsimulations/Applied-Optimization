@@ -1,0 +1,21 @@
+# Branding & content guard. Runs the checks in .github/guard.sh on every push
+# and PR — no Quarto, Julia or Python, so it finishes in seconds. What it asserts
+# and why is documented in guard.sh itself. Both files are generated from
+# Lecture-Foundations/brand/ by scripts/sync-guard.py; edit them there.
+name: guard
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run guard
+        run: bash .github/guard.sh
