@@ -1,0 +1,26 @@
+<!--
+  Canonical. Distributed to every deck repo as general/mathjax.html by
+  scripts/sync-mathjax.py. Edit it here, not there.
+
+  Reveal renders slide maths with MathJax 2.7.9 (its own plugin; the `html`
+  format's html-math-method: mathjax@3 does not apply to decks). Left alone,
+  MathJax 2 prefers a LOCALLY INSTALLED font set, picks the system STIX, and
+  renders \mathcal and friends at STIX private-use codepoints that live in the
+  STIXNonUnicode family. macOS ships that font, Windows does not, and headless
+  chromium does not resolve it either — so those glyphs came out as □ in every
+  exported PDF, and do the same on any machine without STIX.
+
+  Emptying availableFonts forbids the local shortcut, so MathJax loads its own
+  TeX webfonts: measured on Applied-Optimization lecture 1, one @font-face rule
+  (MathJax_Blank) became ten, and no private-use glyph survived. It also lines
+  the decks up with the reading pages, which already render in MathJax's TeX
+  fonts via MathJax 3.
+
+  Must run before MathJax loads, hence a plain head script rather than a
+  MathJax.Hub.Config call.
+-->
+<script>
+  window.MathJax = {
+    "HTML-CSS": { availableFonts: [], preferredFont: "TeX", webFont: "TeX" }
+  };
+</script>

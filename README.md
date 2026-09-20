@@ -54,7 +54,6 @@ project:
   post-render:
     - helpers/convert_pypercent.py
     - helpers/convert_qmd_to_md.py
-    - helpers/create_pdf.py
 ```
 
 ## Helper Functions
@@ -95,6 +94,15 @@ The `helpers/` directory contains automation scripts that run after each build:
 - **Output**: SVG files with naming convention
 - **Technology**: Uses `pdf2svg` command-line tool
 - **Usage**: Manual execution for converting diagrams or figures
+
+### Slide PDFs (shared script)
+
+**Purpose**: Renders the revealjs decks to PDF (`?print-pdf` in headless
+chromium, with MathJax fonts inlined). Lives in the shared standard repo, not
+in `helpers/`.
+
+- **Usage**: after a full render, `uv run ../lecture-foundations/scripts/create_pdf.py --dir _site/ --output-dir pdf-slides/`
+- **Prerequisite**: `uv run playwright install chromium` once per machine
 
 ## Getting Started
 
