@@ -1,0 +1,95 @@
+/* gamekit.css — layout and theme tokens. The canvas reads only the --gk-*
+   tokens. They are declared with zero specificity, so a course's
+   `.gamekit { --gk-accent: … }` always wins regardless of stylesheet order. */
+:where(.gamekit) {
+  --gk-accent: var(--bs-link-color, var(--r-link-color, #9e2b2b));
+  --gk-neutral: var(--bs-primary, var(--r-main-color, #537e8f));
+  --gk-text: var(--bs-body-color, var(--r-main-color, #363d45));
+  --gk-muted: var(--bs-secondary-color, #6c757d);
+  --gk-bg: var(--bs-body-bg, var(--r-background-color, #fffdfc));
+  --gk-good: var(--bs-success, #2e7d5b);
+  --gk-bad: var(--bs-danger, #b3261e);
+}
+
+.gamekit {
+  color: var(--gk-text);
+  margin: 1rem 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.gamekit-task { margin: 0 0 0.5rem; }
+.gamekit-main { display: flex; gap: 1rem; align-items: flex-start; }
+.gamekit-play { flex: 1; min-width: 0; }
+.gamekit-stage { position: relative; }
+.gamekit canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.gamekit-card {
+  position: absolute;
+  inset: 8% 6%;
+  overflow: auto;
+  padding: 0.8rem 1rem;
+  background: var(--gk-bg);
+  border: 2px solid var(--gk-accent);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.3rem 1.2rem rgb(0 0 0 / 0.18);
+}
+.gamekit-card[hidden] { display: none; }
+.gamekit-card.gk-think {
+  inset: auto 6% 38% 6%;
+  text-align: center;
+  font-size: 1.1em;
+}
+.gamekit-card p { margin: 0 0 0.6rem; }
+.gamekit-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+.gamekit-scores { font-size: 1.25em; font-variant-numeric: tabular-nums; }
+.gamekit-scores .gk-opt { color: var(--gk-accent); font-weight: 600; margin-left: 1rem; }
+.gamekit-buttons { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.gamekit button {
+  font: inherit;
+  font-size: 0.95em;
+  min-height: 44px;
+  padding: 0.3em 0.9em;
+  color: var(--gk-text);
+  background: var(--gk-bg);
+  border: 1px solid var(--gk-neutral);
+  border-radius: 0.4em;
+  cursor: pointer;
+}
+.gamekit button.gk-primary {
+  color: var(--gk-bg);
+  background: var(--gk-accent);
+  border-color: var(--gk-accent);
+}
+.gamekit button:disabled { opacity: 0.45; cursor: not-allowed; }
+.gamekit button[hidden] { display: none; }
+.gamekit-status { min-height: 1.4em; margin: 0.4rem 0 0; color: var(--gk-muted); }
+.gamekit-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.gamekit-qr { width: 180px; flex: none; text-align: center; font-size: 0.8em; }
+.gamekit-qr svg { width: 100%; height: auto; background: #fff; }
+
+/* Slides: fixed height so the slide passes the overflow gate; the canvas is
+   sized by height and the QR code sits on the right. */
+.reveal .gamekit-slide { font-size: 18px; height: 560px; margin: 0; }
+.reveal .gamekit-slide .gamekit-task { font-size: 1em; }
+.reveal .gamekit-slide canvas { width: auto; height: 400px; max-width: 100%; margin: 0 auto; }
+.reveal .gamekit-slide p { line-height: 1.3; }
