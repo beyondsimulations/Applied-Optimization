@@ -15,11 +15,11 @@ Welcome to this interactive Julia tutorial which introduces the basics of variab
 
 This script is designed to be interactive. Follow the instructions, write your code in the designated code blocks, and then execute the corresponding code. Each exercise is followed by an `@assert` statement that checks your solution.
 
-## Julia in VS Code
+## Julia in Zed
 
-1. First, install the [Julia](https://marketplace.visualstudio.com/items?itemName=julialang.language-julia) and the [Jupyter Extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter) from the extensions menu on the left side.
-2. Open VS Code and navigate to the folder where you want to save all the files for this course.
-3. Open the terminal in VS Code (Terminal → New Terminal) and run:
+1. First, install the **Julia** extension for syntax support: open the command palette (`Ctrl+Shift+P`, macOS `Cmd+Shift+P`), choose **zed: extensions**, and search for "Julia".
+2. Create (or pick) the folder where you want to save all the files for this course.
+3. Open a terminal in that folder and run:
    ```
    julia --project=applied-optimization
    ```
@@ -34,11 +34,11 @@ This script is designed to be interactive. Follow the instructions, write your c
    using IJulia
    IJulia.installkernel("Applied Optimization", "--project=applied-optimization")
    ```
-   This creates a Jupyter kernel that uses the course environment.
+   This creates a Jupyter kernel that uses the course environment: it is how Zed runs Julia code.
 6. Type `exit()` or press Ctrl+D to exit the Julia REPL.
-7. Download the first `.ipynb` notebook from the course website and save it in your course folder. You can do so by clicking on the "Jupyter" link under "Other Formats" on the tutorial page.
-8. Now, just open the `.ipynb` file and you are good to go.
-9. Click the kernel selector (top-right corner) and choose "Applied Optimization" from the list - that is the kernel you just installed. If VS Code suggests a kernel with a different name, pick "Applied Optimization" anyway.
+7. Download this tutorial as a `.jl` file from the course website and save it in your course folder. You can do so by clicking on the "Julia" link in the sidebar (under "Code Links") on the tutorial page.
+8. Open the `.jl` file in Zed. The file is split into cells by `# %%` markers.
+9. Select the code of a cell, open the command palette, and run **repl: run**. The first time, pick the kernel **"Applied Optimization"** — that is the kernel you just installed. Output appears right next to the code.
 
 :::{.callout-warning}
 Sorry that the start is rather complicated. But by following these steps, you get a clean environment to work in and you basically cannot break anything by installing packages.
@@ -46,6 +46,11 @@ Sorry that the start is rather complicated. But by following these steps, you ge
 
 :::{.callout-note}
 These steps ensure you're working in a clean Julia environment for the course. The `--project=applied-optimization` flag tells Julia to create (or later reuse) an environment in a subfolder called `applied-optimization`, keeping all course packages organized in one place and avoiding conflicts with other projects.
+:::
+
+:::{.callout-tip collapse="true"}
+## Fallback: VS Code
+If Zed does not run on your machine (for example, an older Windows GPU without DirectX 11), install [VS Code](https://code.visualstudio.com) with the [Julia](https://marketplace.visualstudio.com/items?itemName=julialang.language-julia) extension instead. Open the same `.jl` file there: the extension recognizes the `# %%` cell markers, and `Alt+Enter` (or `Shift+Enter`) runs the current cell in the Julia REPL using the course environment.
 :::
 
 ---

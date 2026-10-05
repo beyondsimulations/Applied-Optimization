@@ -30,6 +30,8 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 ![](https://images.beyondsimulations.com/ao/ao_julia2.png){width=400 fig-alt="Screenshot of the Julia download page"}
 
 - Head to [julialang.org](https://julialang.org) and follow the instructions.
+- The easiest way to install Julia is via the shell/terminal
+- Later, you can then manage Julia with `juliaup`
 
 . . .
 
@@ -37,26 +39,25 @@ To prepare for the upcoming lectures, we start by installing the Julia Programmi
 If you are ever asked to add something to your "PATH", do so!
 :::
 
-## VS Code
+## Zed
 
-![](https://images.beyondsimulations.com/ao/ao_codium_cnl.png){width=400 fig-alt="The VS Codium logo"}
+- Next, we are going to install [Zed](https://zed.dev), the editor of this course
+- macOS: `brew install --cask zed` (or the installer from [zed.dev](https://zed.dev))
+- Windows: installer from [zed.dev/windows](https://zed.dev/windows)
+- Linux: `curl -f https://zed.dev/install.sh | sh`
 
-- Next, we are going to install VS Code
-- Alternatively, you can install VS Codium
-- It is essentially VS Code but without any tracking by Microsoft
+. . .
 
-## Installing VS Code
-
-- Head to the website [code.visualstudio.com](https://code.visualstudio.com)
-- OR to the website [vscodium.com](https://vscodium.com)
-- Download and install the latest release
+:::{.callout-tip}
+On Windows, Zed needs a DirectX-11-capable GPU. If it only shows a blank window, use [VS Code](https://code.visualstudio.com) with the "Julia (Julia Language Support)" extension instead: everything in this course works there too.
+:::
 
 ## Verify the Installation
 
-- Start the IDE and take a look around
-- Search for the field "Extensions" on the left sidebar
-- Click it and search for "Julia"
-- Download and install "Julia (Julia Language Support)"
+- Start Zed and take a look around
+- Open the command palette: `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS)
+- Choose **zed: extensions** and search for "Julia"
+- Install the Julia extension for syntax support
 
 ## Create a New File
 
@@ -72,18 +73,16 @@ println("Hello World!")
 
 ## Run the File
 
-- Run the file by clicking "run" in the upper right corner
-- OR by pressing `Ctrl+Enter` — labelled `Strg` on German keyboards
-- On macOS it is `Ctrl+Enter` or `Cmd+Enter`, depending on your keybindings[^execute-file]
-
-[^execute-file]: Strictly speaking, this executes the current line or cell. For longer files, use the command "Julia: Execute active File in REPL".
+- Open a terminal in the folder where you saved the file
+- Run it with `julia test.jl`
+- Later, we will run files [cell by cell]{.highlight} directly from Zed — the first tutorial sets that up
 
 ## Everything Working?
 
-- If the terminal opens with a `Hello World!` → perfect!
-- If not, it is likely that the IDE [cannot find the path]{.highlight} to Julia
-- Try to determine the path and save it to VS Code
-- After saving it, try to run the file again
+- If the terminal prints `Hello World!` → perfect!
+- If not, the terminal likely [cannot find the path]{.highlight} to Julia
+- Close and reopen the terminal after installing Julia, and say yes to any "PATH" question during installation
+- Then try to run the file again
 
 :::{.callout-tip}
 Don't worry if it is not running right away. We will fix this together!
@@ -117,13 +116,13 @@ println("Value after 10 years: ", round(value; digits=2))
 
 - Don't worry if this looks new — you will be able to [read and write]{.highlight} code like this after the tutorials!
 
-# [Working with VS Code and Julia]{.flow} {.title}
+# [Working with Zed and Julia]{.flow} {.title}
 
-## Notebooks in VS Code
+## Tutorials in Zed
 
-- The easiest way to work on the tutorials is by using VS Code
+- The easiest way to work on the tutorials is a `.jl` file in Zed, run cell by cell
 - For detailed instructions, just open the [first tutorial](../tutorials/tutorial-02-01-variables.qmd)
-- It explains step-by-step how to use `.jl` or `.ipynb` files as notebooks
+- It explains step-by-step how to set up the course environment and run the cells
 
 . . .
 
@@ -133,11 +132,10 @@ If you use `.jl` files, you can also put them under version control with Git, as
 
 ## Downloading the Notebooks
 
-- You will find the tutorial notebooks next to the tutorial pages
+- You will find the tutorial files next to the tutorial pages
 - On each page, you will find a button `Julia` on the right
-- Click it to download the `jl` file and save it
-- If `.jl` files do not work for you, you can also click on `Jupyter`
-- This will download an `.ipynb` file which you can use directly as notebook
+- Click it to download the `.jl` file and save it
+- The file is split into cells by `# %%` markers, ready to run cell by cell
 - I'd really recommend storing the files [in a separate directory for this course]{.highlight}
 
 ## Learning by Doing
