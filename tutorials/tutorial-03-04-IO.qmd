@@ -144,6 +144,76 @@ Note, that you need to provide a sink for the data when using `CSV.read()`, e.g.
 println("CSV file 'table_out.csv' read successfully!")
 ```
 
+## Exercise 2.3 - Read the Brewery's Order File
+
+Remember the brewery game from the lecture? Its order file now lands on your desk. The sales team exported it from a German spreadsheet: columns are separated by `;`, and numbers use a decimal comma, like `60,0`. The following code writes the file to `ExampleData/orders.csv` exactly as you received it:
+
+```{julia}
+#| eval: false
+mkpath("$(@__DIR__)/ExampleData")
+write("$(@__DIR__)/ExampleData/orders.csv", """
+week;crates;note
+1;53;
+2;60,0;
+3;61;
+4;;
+5;56;
+6;126;harbour festival
+7;60;
+7;60;
+8;59;
+""")
+println("File 'orders.csv' written to the folder ExampleData!")
+```
+
+First, read the file with plain `CSV.read(path, DataFrame)` and print it. What type does the `crates` column have, and why? Then read the file again into the variable `orders`, this time telling `CSV.read()` how the file was written: `delim=';'` and `decimal=','`.
+
+::: {.callout-tip}
+Keyword arguments come after a semicolon: `CSV.read(path, DataFrame; delim=';', decimal=',')`. Other tools treat the comma as a thousands separator and read `60,0` as 600: that is what happened in the game.
+:::
+
+```{julia}
+#| eval: false
+# YOUR CODE BELOW
+
+```
+```{julia}
+#| eval: false
+#| code-fold: true
+# Test your answer
+@assert orders.crates[2] == 60.0 "Week 2 should read 60.0 crates. Did you set decimal=','?"
+@assert ismissing(orders.crates[4]) "Week 4 has no number in the file, so it should be missing."
+println("Order file read successfully!")
+```
+
+## Exercise 2.4 - Clean the Order File
+
+Two problems remain: week 7 appears twice, and week 4 is `missing`. Remove the duplicated row with `unique!()`, then replace the missing value with the median of the other weeks. Week 6 looks unusual too, but read its `note` before you touch it.
+
+::: {.callout-tip}
+`median()` comes with the `Statistics` package (`using Statistics`; it ships with Julia). `skipmissing()` ignores missing values, and `coalesce.(column, value)` replaces every missing entry with `value`.
+:::
+
+```{julia}
+#| eval: false
+# YOUR CODE BELOW
+
+```
+```{julia}
+#| eval: false
+#| code-fold: true
+# Test your answer
+@assert nrow(orders) == 8 "Week 7 should appear only once. Did you remove the duplicated row?"
+@assert count(ismissing, orders.crates) == 0 "There are still missing values in the crates column."
+@assert orders.crates[4] == 60.0 "Week 4 should get the median of the other weeks, 60 crates."
+@assert orders.crates[6] == 126 "The harbour festival in week 6 was real: keep its 126 crates."
+println("Order file cleaned successfully!")
+```
+
+::: {.callout-note}
+This is the same file as in the lecture's game. In lecture 5, these weekly orders become the demand of the brewery's production model, there in bottles: 20 per crate.
+:::
+
 ---
 
 # Conclusion
