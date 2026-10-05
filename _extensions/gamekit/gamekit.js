@@ -73,6 +73,10 @@
     }
     return rgb;
   }
+  // A score line: small label, large value (e.g. "Optimal" / "225,460 €").
+  function setScore(node, label, value) {
+    node.replaceChildren(el("span", { class: "gk-label" }, label), el("span", { class: "gk-value" }, value));
+  }
   const cssOf = (rgb) => {
     const out = {};
     for (const t in rgb) out[t] = C.css(rgb[t]);
@@ -89,21 +93,26 @@
     const g = { def, root, ui: {}, phase: "play", started: false, revealed: false, skip: false, raf: 0, run: 0 };
     views.push(g);
 
-    // DOM
+    // DOM: task line, then the board (stage) and a side block with scores,
+    // buttons and status. On pages the side block is a bar under the board;
+    // on slides it is a column right of the board, with the QR code on top.
     root.innerHTML = "";
+    const slide = root.classList.contains("gamekit-slide");
     const task = el("p", { class: "gamekit-task" });
-    task.append(el("strong", null, def.title), document.createTextNode(" · " + def.task));
+    if (!slide) task.append(el("strong", null, def.title), document.createTextNode(" · ")); // slides have a title
+    task.append(document.createTextNode(def.task));
     const main = el("div", { class: "gamekit-main" });
-    const play = el("div", { class: "gamekit-play" });
     const stage = el("div", { class: "gamekit-stage" });
     g.canvas = el("canvas", { role: "img", "aria-label": `${def.title}: ${def.task}` });
-    g.canvas.style.aspectRatio = `${def.board.w} / ${def.board.h}`;
+    // pages size the canvas by the board's shape; slides let it fill the stage (drawing is letterboxed)
+    if (!slide) g.canvas.style.aspectRatio = `${def.board.w} / ${def.board.h}`;
     g.card = el("div", { class: "gamekit-card", hidden: "" });
     stage.append(g.canvas, g.card);
-    const bar = el("div", { class: "gamekit-bar" });
+    const side = el("div", { class: "gamekit-side" });
+    if (slide && window.qrcode) side.append(qrBlock(root));
     const scores = el("div", { class: "gamekit-scores" });
-    g.you = el("span", { class: "gk-you" });
-    g.opt = el("span", { class: "gk-opt" });
+    g.you = el("div", { class: "gamekit-score gk-you" });
+    g.opt = el("div", { class: "gamekit-score gk-opt", hidden: "" });
     scores.append(g.you, g.opt);
     const buttons = el("div", { class: "gamekit-buttons" });
     g.btn = {
@@ -114,12 +123,13 @@
       fresh: el("button", { type: "button" }, "New puzzle"),
     };
     buttons.append(g.btn.optimize, g.btn.toggle, g.btn.why, g.btn.reset, g.btn.fresh);
-    bar.append(scores, buttons);
     g.status = el("p", { class: "gamekit-status" });
     g.sr = el("p", { class: "gamekit-sr", "aria-live": "polite" });
-    play.append(stage, bar, g.status, g.sr);
-    main.append(play);
-    if (root.classList.contains("gamekit-slide") && window.qrcode) main.append(qrBlock(root));
+    // everything that reports state first, the buttons always last (bottom right)
+    const info = el("div", { class: "gamekit-info" });
+    info.append(scores, g.status);
+    side.append(info, buttons, g.sr);
+    main.append(stage, side);
     root.append(task, main);
 
     g.ctx = g.canvas.getContext("2d");
@@ -183,7 +193,8 @@
     if (isNew) g.started = false;
     g.card.hidden = true;
     g.btn.toggle.hidden = g.btn.why.hidden = true;
-    g.opt.textContent = "";
+    g.btn.optimize.hidden = false;
+    g.opt.hidden = true;
     update(g);
   }
 
@@ -257,7 +268,7 @@
   }
   function update(g) {
     const ok = g.def.feasible(g.puzzle, g.plan);
-    g.you.textContent = "You: " + C.formatScore(g.def.score(g.puzzle, g.plan), g.def.unit);
+    setScore(g.you, "You", C.formatScore(g.def.score(g.puzzle, g.plan), g.def.unit));
     g.btn.optimize.disabled = ok !== true;
     g.status.textContent = ok === true ? "Ready: press Optimize to compare with the best plan." : ok;
     g.sr.textContent = g.def.describe(g.puzzle, g.plan);
@@ -316,13 +327,16 @@
     if (run !== g.run) return;
     g.card.hidden = true;
     g.status.textContent = "";
+    g.opt.hidden = false;
     animate(g, g.yours, "yours", g.optimal, "optimal", g.skip || reducedMotion() ? 0 : MORPH_MS, (q) => {
-      g.opt.textContent = "Optimal: " + C.formatScore(yourScore + (optScore - yourScore) * C.ease(q), g.def.unit);
+      setScore(g.opt, "Optimal", C.formatScore(yourScore + (optScore - yourScore) * C.ease(q), g.def.unit));
     }, () => {
       g.showing = "optimal";
       g.revealed = true;
       g.btn.toggle.textContent = "Show yours";
       g.btn.toggle.hidden = g.btn.why.hidden = false;
+      if (document.activeElement === g.btn.optimize) g.btn.toggle.focus(); // keep keyboard focus in the game
+      g.btn.optimize.hidden = true; // the board is locked until Reset or New puzzle
     });
   }
 

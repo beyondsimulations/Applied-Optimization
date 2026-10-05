@@ -18,8 +18,7 @@
   line-height: 1.4;
 }
 .gamekit-task { margin: 0 0 0.5rem; }
-.gamekit-main { display: flex; gap: 1rem; align-items: flex-start; }
-.gamekit-play { flex: 1; min-width: 0; }
+.gamekit-main { display: flex; flex-direction: column; gap: 0.5rem; }
 .gamekit-stage { position: relative; }
 .gamekit canvas {
   display: block;
@@ -36,7 +35,6 @@
   padding: 0.8rem 1rem;
   background: var(--gk-bg);
   border: 2px solid var(--gk-accent);
-  border-radius: 0.5rem;
   box-shadow: 0 0.3rem 1.2rem rgb(0 0 0 / 0.18);
 }
 .gamekit-card[hidden] { display: none; }
@@ -46,17 +44,17 @@
   font-size: 1.1em;
 }
 .gamekit-card p { margin: 0 0 0.6rem; }
-.gamekit-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 0.5rem;
-}
-.gamekit-scores { font-size: 1.25em; font-variant-numeric: tabular-nums; }
-.gamekit-scores .gk-opt { color: var(--gk-accent); font-weight: 600; margin-left: 1rem; }
-.gamekit-buttons { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+/* Below the board (pages) or beside it (slides): first everything that
+   reports state (scores, status), then the buttons, always at the bottom right. */
+.gamekit-side { display: flex; flex-direction: column; gap: 0.6rem; }
+.gamekit-info { display: flex; flex-direction: column; gap: 0.2rem; }
+.gamekit-scores { display: flex; flex-wrap: wrap; gap: 0.2rem 1.5rem; font-variant-numeric: tabular-nums; }
+.gamekit-score { display: flex; align-items: baseline; gap: 0.4em; white-space: nowrap; }
+.gamekit-score[hidden] { display: none; }
+.gamekit-score .gk-label { font-size: 0.85em; color: var(--gk-muted); }
+.gamekit-score .gk-value { font-size: 1.3em; }
+.gamekit-score.gk-opt .gk-value { color: var(--gk-accent); font-weight: 600; }
+.gamekit-buttons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem; }
 .gamekit button {
   font: inherit;
   font-size: 0.95em;
@@ -65,7 +63,7 @@
   color: var(--gk-text);
   background: var(--gk-bg);
   border: 1px solid var(--gk-neutral);
-  border-radius: 0.4em;
+  border-radius: 0; /* square, like the course style */
   cursor: pointer;
 }
 .gamekit button.gk-primary {
@@ -75,7 +73,7 @@
 }
 .gamekit button:disabled { opacity: 0.45; cursor: not-allowed; }
 .gamekit button[hidden] { display: none; }
-.gamekit-status { min-height: 1.4em; margin: 0.4rem 0 0; color: var(--gk-muted); }
+.gamekit-status { min-height: 1.4em; margin: 0; color: var(--gk-muted); }
 .gamekit-sr {
   position: absolute;
   width: 1px;
@@ -84,12 +82,28 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
-.gamekit-qr { width: 180px; flex: none; text-align: center; font-size: 0.8em; }
-.gamekit-qr svg { width: 100%; height: auto; background: #fff; }
+.gamekit-qr { text-align: center; font-size: 0.75em; }
+.gamekit-qr svg { display: block; width: 100%; height: auto; background: #fff; }
+.gamekit-qr p { margin: 0.2rem 0 0; }
 
-/* Slides: fixed height so the slide passes the overflow gate; the canvas is
-   sized by height and the QR code sits on the right. */
-.reveal .gamekit-slide { font-size: 18px; height: 560px; margin: 0; }
-.reveal .gamekit-slide .gamekit-task { font-size: 1em; }
-.reveal .gamekit-slide canvas { width: auto; height: 400px; max-width: 100%; margin: 0 auto; }
+/* Slides: the board fills the left area at full height; the side panel on
+   the right holds the QR code, scores and status, and the buttons pinned to
+   its bottom. The fixed height keeps the slide inside the overflow gate. */
+.reveal .gamekit-slide {
+  font-size: 22px;
+  height: 575px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
 .reveal .gamekit-slide p { line-height: 1.3; }
+.reveal .gamekit-slide .gamekit-task { flex: none; margin-bottom: 0.4rem; }
+.reveal .gamekit-slide .gamekit-main { flex: 1; min-height: 0; flex-direction: row; gap: 1rem; }
+.reveal .gamekit-slide .gamekit-stage { flex: 1; min-width: 0; height: 100%; }
+.reveal .gamekit-slide canvas { width: 100%; height: 100%; }
+.reveal .gamekit-slide .gamekit-side { flex: 0 0 240px; gap: 0.5rem; }
+.reveal .gamekit-slide .gamekit-qr { width: 170px; align-self: center; }
+.reveal .gamekit-slide .gamekit-scores { flex-direction: column; }
+.reveal .gamekit-slide .gamekit-score { justify-content: space-between; }
+.reveal .gamekit-slide .gamekit-buttons { margin-top: auto; flex-direction: column; }
+.reveal .gamekit-slide .gamekit-buttons button { width: 100%; min-height: 40px; }

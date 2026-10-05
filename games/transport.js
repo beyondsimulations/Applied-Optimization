@@ -1,9 +1,10 @@
 // transport.js — lecture 01: ship solar panels from two plants to three farms.
 (function () {
-  // Layout in board units (board 100 × 75). Plants left, farms right; the
-  // stepper row sits below the network.
-  const PLANT_XY = [[15, 12], [15, 48]];          // Dresden, Laupheim
-  const FARM_XY = [[85, 6], [85, 52], [85, 29]];  // Hamburg, Munich, Berlin
+  // Layout in board units (board 100 × 66). Plants left, farms right; the
+  // stepper pops up next to the selected route's badge.
+  const BOARD_H = 66;
+  const PLANT_XY = [[12, 14], [12, 52]];          // Dresden, Laupheim
+  const FARM_XY = [[88, 8], [88, 58], [88, 33]];  // Hamburg, Munich, Berlin
   const BADGE_T = 0.3;                            // badge position along a route
   const BADGE_R = 3.4;
   const STEPS = [-5, -1, 1, 5];
@@ -20,8 +21,14 @@
     const [x2, y2] = FARM_XY[j];
     return [x1 + (x2 - x1) * BADGE_T, y1 + (y2 - y1) * BADGE_T];
   }
-  function stepper() {
-    return STEPS.map((d, k) => ({ d, x: 27 + k * 12, y: 66, w: 10, h: 7 }));
+  // Pop-up card right of the selected badge, kept inside the board.
+  function popup(sel) {
+    const [bx, by] = badge(sel[0], sel[1]);
+    const w = 40, h = 15;
+    const x = bx + BADGE_R + 2;
+    const y = Math.max(1, Math.min(BOARD_H - h - 1, by - h / 2));
+    const buttons = STEPS.map((d, k) => ({ d, x: x + 2 + k * 9.25, y: y + 6.5, w: 8, h: 7 }));
+    return { x, y, w, h, buttons };
   }
   const inside = (e, b) => e.x >= b.x && e.x <= b.x + b.w && e.y >= b.y && e.y <= b.y + b.h;
 
@@ -30,7 +37,7 @@
     task: "Meet every farm's demand at the lowest cost. Tap a route's number, then use the buttons.",
     goal: "min",
     unit: "€",
-    board: { w: 100, h: 75 },
+    board: { w: 100, h: BOARD_H },
     class: {
       plants: [{ name: "Dresden", supply: 34 }, { name: "Laupheim", supply: 41 }],
       farms: [{ name: "Hamburg", demand: 21 }, { name: "Munich", demand: 17 }, { name: "Berlin", demand: 29 }],
@@ -64,7 +71,9 @@
     pointer(p, plan, ui, e) {
       if (e.type !== "down") return undefined;
       if (ui.sel) {
-        const hit = stepper().find((b) => inside(e, b));
+        const card = popup(ui.sel);
+        const hit = card.buttons.find((b) => inside(e, b));
+        if (!hit && inside(e, card)) return undefined; // a near miss on the card keeps it open
         if (hit) {
           const [i, j] = ui.sel;
           const next = plan.map((row) => row.slice());
@@ -111,8 +120,11 @@
       });
       if (ui.sel) {
         const [i, j] = ui.sel;
-        out.push({ key: "info", kind: "info", text: `${route(p, i, j)} · ${fmt(p.cost[i][j])} € per truckload`, color: "text" });
-        for (const b of stepper()) {
+        const card = popup(ui.sel);
+        out.push({ key: "popup", kind: "popup", x: card.x, y: card.y, w: card.w, h: card.h, color: "muted" });
+        out.push({ key: "info", kind: "info", x: card.x + card.w / 2, y: card.y + 3.6,
+          text: `${fmt(p.cost[i][j])} € per truckload`, color: "text" });
+        for (const b of card.buttons) {
           out.push(Object.assign({ key: `step${b.d}`, kind: "button", label: b.d > 0 ? `+${b.d}` : `−${-b.d}`, color: "neutral" }, b));
         }
       }
@@ -162,15 +174,21 @@
           ctx.strokeText(text, piece.x, piece.y + dy);
           ctx.fillText(text, piece.x, piece.y + dy);
         }
+      } else if (piece.kind === "popup") {
+        ctx.beginPath();
+        ctx.rect(piece.x, piece.y, piece.w, piece.h);
+        ctx.fillStyle = view.css.bg;
+        ctx.fill();
+        ctx.lineWidth = 0.3;
+        ctx.strokeStyle = piece.paint;
+        ctx.stroke();
       } else if (piece.kind === "info") {
+        ctx.font = `2.6px ${view.font}`;
         ctx.fillStyle = piece.paint;
-        ctx.fillText(piece.text, 50, 61);
+        ctx.fillText(piece.text, piece.x, piece.y);
       } else if (piece.kind === "button") {
         ctx.fillStyle = piece.paint;
-        ctx.beginPath();
-        if (ctx.roundRect) ctx.roundRect(piece.x, piece.y, piece.w, piece.h, 1.2);
-        else ctx.rect(piece.x, piece.y, piece.w, piece.h);
-        ctx.fill();
+        ctx.fillRect(piece.x, piece.y, piece.w, piece.h);
         ctx.fillStyle = view.css.bg;
         ctx.fillText(piece.label, piece.x + piece.w / 2, piece.y + piece.h / 2 + 0.2);
       }
