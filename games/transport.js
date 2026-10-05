@@ -9,6 +9,7 @@
   //                                      Dresden, Laupheim         Hamburg, Munich, Berlin
   const lay = (view) => (view && view.compact ? COMPACT : WIDE);
   const BADGE_T = 0.3; // badge position along a route
+  const COST_T = 0.72; // cost label position: past all route crossings, so labels never collide
   const STEPS = [-5, -1, 1, 5];
 
   const fmt = (n) => Math.round(n).toLocaleString("en-US");
@@ -18,11 +19,12 @@
   const cost = (p, plan) => plan.reduce((s, row, i) => s + row.reduce((t, x, j) => t + x * p.cost[i][j], 0), 0);
   const route = (p, i, j) => `${p.plants[i].name}→${p.farms[j].name}`;
 
-  function badge(L, i, j) {
+  function along(L, i, j, t) {
     const [x1, y1] = L.plants[i];
     const [x2, y2] = L.farms[j];
-    return [x1 + (x2 - x1) * BADGE_T, y1 + (y2 - y1) * BADGE_T];
+    return [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
   }
+  const badge = (L, i, j) => along(L, i, j, BADGE_T);
   // The stepper for the selected route: a card next to its badge (wide), or a
   // strip across the bottom of the board (compact). `text` is where the price goes.
   function stepper(L, sel) {
@@ -120,6 +122,13 @@
           });
         }
       }
+      // cost per truckload on every route, so prices can be compared without tapping
+      for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 3; j++) {
+          const [x, y] = along(L, i, j, COST_T);
+          out.push({ key: `cost-${i}-${j}`, kind: "cost", x, y, text: `${fmt(p.cost[i][j])} €`, color: "muted" });
+        }
+      }
       p.plants.forEach((pl, i) => {
         const u = used(plan, i);
         out.push({ key: `plant-${i}`, kind: "node", x: L.plants[i][0], y: L.plants[i][1], scale, name: pl.name,
@@ -190,6 +199,14 @@
           ctx.strokeText(text, piece.x, piece.y + dy);
           ctx.fillText(text, piece.x, piece.y + dy);
         }
+      } else if (piece.kind === "cost") {
+        // a background patch, so the route line passes behind the label
+        const w = ctx.measureText(piece.text).width + view.em * 0.5;
+        const h = view.em * 1.25;
+        ctx.fillStyle = view.css.bg;
+        ctx.fillRect(piece.x - w / 2, piece.y - h / 2, w, h);
+        ctx.fillStyle = piece.paint;
+        ctx.fillText(piece.text, piece.x, piece.y + 0.1 * view.em);
       } else if (piece.kind === "popup") {
         ctx.beginPath();
         ctx.rect(piece.x, piece.y, piece.w, piece.h);
