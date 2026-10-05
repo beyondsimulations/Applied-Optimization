@@ -176,7 +176,6 @@
     qr.make();
     const box = el("div", { class: "gamekit-qr" }); // not <aside>: Quarto styles slide asides as margin notes
     box.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true, alt: "QR code: " + url });
-    box.prepend(el("p", null, "Play on your phone")); // caption above the code
     return box;
   }
 
