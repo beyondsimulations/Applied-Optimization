@@ -176,13 +176,20 @@
     setPuzzle(g, def.class, "class", true);
   }
 
+  // QR code as one SVG path in the text color, without its own quiet zone (the
+  // column's whitespace provides it), so its edges line up with the scores and
+  // buttons below it.
   function qrBlock(root) {
     const url = new URL(root.dataset.page, location.href).href;
     const qr = window.qrcode(0, "M");
     qr.addData(url);
     qr.make();
-    const box = el("div", { class: "gamekit-qr" }); // not <aside>: Quarto styles slide asides as margin notes
-    box.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true, alt: "QR code: " + url });
+    const n = qr.getModuleCount();
+    let d = "";
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) d += `M${c} ${r}h1v1h-1z`;
+    // not <aside>: Quarto styles slide asides as margin notes
+    const box = el("div", { class: "gamekit-qr", role: "img", "aria-label": "QR code: " + url });
+    box.innerHTML = `<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="${d}"/></svg>`;
     return box;
   }
 
