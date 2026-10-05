@@ -25,19 +25,21 @@
     return [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
   }
   const badge = (L, i, j) => along(L, i, j, BADGE_T);
-  // The stepper for the selected route: a card next to its badge (wide), or a
-  // strip across the bottom of the board (compact). `text` is where the price goes.
+  // The stepper for the selected route: a compact 2×2 card next to its badge
+  // that stays clear of the cost labels (wide), or a strip across the bottom of
+  // the board with the price above it (compact). `text` is where the price goes.
   function stepper(L, sel) {
     if (L === COMPACT) {
       const buttons = STEPS.map((d, k) => ({ d, x: 4 + k * 24, y: 109, w: 20, h: 13 }));
       return { card: null, text: [50, 104], buttons };
     }
     const [bx, by] = badge(L, sel[0], sel[1]);
-    const w = 40, h = 15;
+    const w = 19, h = 18;
     const x = bx + L.r + 2;
     const y = Math.max(1, Math.min(L.h - h - 1, by - h / 2));
-    const buttons = STEPS.map((d, k) => ({ d, x: x + 2 + k * 9.25, y: y + 6.5, w: 8, h: 7 }));
-    return { card: { x, y, w, h }, text: [x + w / 2, y + 3.6], buttons };
+    // −5 −1 on top, +1 +5 below
+    const buttons = STEPS.map((d, k) => ({ d, x: x + 1.5 + (k % 2) * 8.5, y: y + 1.5 + Math.floor(k / 2) * 8, w: 7.5, h: 7 }));
+    return { card: { x, y, w, h }, text: null, buttons };
   }
   const inside = (e, b) => e.x >= b.x && e.x <= b.x + b.w && e.y >= b.y && e.y <= b.y + b.h;
 
@@ -143,12 +145,14 @@
         const [i, j] = ui.sel;
         const st = stepper(L, ui.sel);
         if (st.card) out.push(Object.assign({ key: "popup", kind: "popup", color: "muted" }, st.card));
-        out.push({ key: "info", kind: "info", x: st.text[0], y: st.text[1],
-          text: `${fmt(p.cost[i][j])} € per truckload`, color: "text" });
+        if (st.text) {
+          out.push({ key: "info", kind: "info", x: st.text[0], y: st.text[1],
+            text: `${fmt(p.cost[i][j])} € per truckload`, color: "text" });
+        }
         for (const b of st.buttons) {
           out.push(Object.assign({ key: `step${b.d}`, kind: "button", label: b.d > 0 ? `+${b.d}` : `−${-b.d}`, color: "neutral" }, b));
         }
-      } else if (L === COMPACT) {
+      } else if (L === COMPACT && !(view && view.locked)) { // no tap hint while the board is locked
         out.push({ key: "info", kind: "info", x: 50, y: 104, text: "Tap a route's number to change it", color: "muted" });
       }
       return out;
@@ -231,7 +235,7 @@
     feasible(p, plan) {
       for (let i = 0; i < 2; i++) {
         const over = used(plan, i) - p.plants[i].supply;
-        if (over > 0) return `${p.plants[i].name} ships ${over} more than it has`;
+        if (over > 0) return `${p.plants[i].name} ships ${plural(over, "truckload")} more than it has`;
       }
       for (let j = 0; j < 3; j++) {
         const diff = got(plan, j) - p.farms[j].demand;
@@ -277,7 +281,7 @@
       return {
         diff,
         mechanism: "Taking the cheapest route for every farm fails, because the plants can't supply everyone that way. What counts is how much a truck saves compared with sending it from the other plant, not how cheap its route is.",
-        model: "That's why the model decides all routes together, `x[i,j]`, with one supply constraint per plant.",
+        model: "That's why the model decides all routes together, `X[i,j]`, with one supply constraint per plant.",
       };
     },
 

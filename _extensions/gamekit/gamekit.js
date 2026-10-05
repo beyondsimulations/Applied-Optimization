@@ -180,7 +180,7 @@
   // column's whitespace provides it), so its edges line up with the scores and
   // buttons below it.
   function qrBlock(root) {
-    const url = new URL(root.dataset.page, location.href).href;
+    const url = root.dataset.qr || new URL(root.dataset.page, location.href).href;
     const qr = window.qrcode(0, "M");
     qr.addData(url);
     qr.make();
@@ -248,10 +248,10 @@
   }
   // em: the game's text size in board units; compact: phone layout
   function view(g) {
-    return { w: g.board.w, h: g.board.h, px: g.px, css: g.css, font: g.font, em: g.em || 3, compact: !!g.compact };
+    return { w: g.board.w, h: g.board.h, px: g.px, css: g.css, font: g.font, em: g.em || 3, compact: !!g.compact,
+      locked: g.phase !== "play" };
   }
-  function paint(g, pieces) {
-    if (!fit(g)) return;
+  function paint(g, pieces) { // callers fit() first
     const ctx = g.ctx;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, g.canvas.width, g.canvas.height);
@@ -271,7 +271,7 @@
   }
   function still(g, plan, role) {
     const colors = colorsFor(g, role);
-    fit(g);
+    if (!fit(g)) return;
     paint(g, g.def.pieces(g.puzzle, plan, role === "play" ? g.ui : {}, view(g)).map((p) => C.resolve(p, colors)));
   }
   function redraw(g) {
@@ -289,7 +289,9 @@
     const dx = ((e.clientX - r.left) / r.width) * g.canvas.width;
     const dy = ((e.clientY - r.top) / r.height) * g.canvas.height;
     const pt = { type, x: (dx - g.ox) / g.px, y: (dy - g.oy) / g.px };
+    const uiBefore = JSON.stringify(g.ui);
     const next = g.def.pointer(g.puzzle, g.plan, g.ui, pt, view(g));
+    if (next === undefined && JSON.stringify(g.ui) === uiBefore) return; // nothing changed
     if (next !== undefined) {
       g.plan = next;
       if (!g.started) {
@@ -307,7 +309,7 @@
     g.root.style.paddingBottom = g.solo && g.compact ? `${g.side.offsetHeight + 16}px` : "";
   }
   function keepInView(g) {
-    if (!(g.solo && g.compact)) return;
+    if (!g.compact) return;
     const overlap = g.canvas.getBoundingClientRect().bottom - g.side.getBoundingClientRect().top;
     if (overlap > 0) window.scrollBy({ top: overlap + 8, behavior: reducedMotion() ? "auto" : "smooth" });
   }
@@ -319,7 +321,8 @@
     setScore(g.you, "You", C.formatScore(g.def.score(g.puzzle, g.plan), g.def.unit));
     g.btn.optimize.disabled = ok !== true;
     g.status.textContent = ok === true ? "Ready: press Optimize to compare with the best plan." : ok;
-    g.sr.textContent = g.def.describe(g.puzzle, g.plan);
+    const said = g.def.describe(g.puzzle, g.plan);
+    if (g.sr.textContent !== said) g.sr.textContent = said; // identical rewrites can be re-announced
     reserveBottom(g);
     redraw(g);
   }
@@ -344,7 +347,7 @@
     showCard(g, [el("p", null, "Thinking…")], true);
     redraw(g);
     const t0 = performance.now();
-    let line, optScore;
+    let line, optScore, pairs;
     try {
       if (g.def.optimal) {
         const s0 = performance.now();
@@ -357,7 +360,8 @@
         line = C.thinkLine(r.counts, r.ms);
       }
       optScore = g.def.score(g.puzzle, g.optimal);
-      C.pair(g.def.pieces(g.puzzle, g.yours, {}, view(g)), g.def.pieces(g.puzzle, g.optimal, {}, view(g))); // throws on duplicate keys
+      fit(g); // phase is "think": view(g).locked is already true
+      pairs = C.pair(g.def.pieces(g.puzzle, g.yours, {}, view(g)), g.def.pieces(g.puzzle, g.optimal, {}, view(g))); // throws on duplicate keys
     } catch (err) {
       if (run !== g.run) return;
       g.phase = "play";
@@ -379,7 +383,7 @@
     g.opt.hidden = false;
     animate(g, g.yours, "yours", g.optimal, "optimal", g.skip || reducedMotion() ? 0 : MORPH_MS, (q) => {
       setScore(g.opt, "Optimal", C.formatScore(yourScore + (optScore - yourScore) * C.ease(q), g.def.unit));
-    }, () => {
+    }, pairs, () => {
       g.showing = "optimal";
       g.revealed = true;
       g.btn.toggle.textContent = "Show yours";
@@ -389,19 +393,22 @@
     });
   }
 
-  // startQ > 0 starts part-way, e.g. when a toggle reverses a running toggle.
-  function animate(g, fromPlan, fromRole, toPlan, toRole, ms, onFrame, done, startQ) {
+  // startQ > 0 starts part-way, e.g. when a toggle reverses a running toggle;
+  // pairs may be passed in when the caller already built them.
+  function animate(g, fromPlan, fromRole, toPlan, toRole, ms, onFrame, pairs, done, startQ) {
     cancelAnimationFrame(g.raf);
     g.phase = "morph";
-    fit(g);
-    const pairs = C.pair(g.def.pieces(g.puzzle, fromPlan, {}, view(g)), g.def.pieces(g.puzzle, toPlan, {}, view(g)));
+    if (!pairs) {
+      fit(g);
+      pairs = C.pair(g.def.pieces(g.puzzle, fromPlan, {}, view(g)), g.def.pieces(g.puzzle, toPlan, {}, view(g)));
+    }
     const fromColors = colorsFor(g, fromRole);
     const toColors = colorsFor(g, toRole);
     const t0 = performance.now() - (startQ || 0) * ms;
     const step = (now) => {
       const q = g.skip || !ms ? 1 : Math.min(1, (now - t0) / ms);
       g.q = q;
-      paint(g, C.frame(pairs, q, fromColors, toColors));
+      if (fit(g)) paint(g, C.frame(pairs, q, fromColors, toColors));
       if (onFrame) onFrame(q);
       if (q < 1) {
         g.raf = requestAnimationFrame(step);
@@ -424,7 +431,7 @@
     g.skip = false;
     g.card.hidden = true;
     g.btn.toggle.textContent = toYours ? "Show optimal" : "Show yours";
-    animate(g, from[0], from[1], to[0], to[1], reducedMotion() ? 0 : TOGGLE_MS, null, () => {}, midway);
+    animate(g, from[0], from[1], to[0], to[1], reducedMotion() ? 0 : TOGGLE_MS, null, null, () => {}, midway);
   }
 
   function why(g) {

@@ -2,7 +2,7 @@
 -- revealjs) or a one-line link (every other format). Reads a `gamekit:`
 -- metadata block (url, telemetry) and injects window.gamekitConfig.
 
-local VERSION = "0.2.1"
+local VERSION = "0.2.2"
 local CONFIG = { url = nil, telemetry = nil }
 
 local function attr_escape(s)
@@ -72,11 +72,17 @@ local function Div(el)
   local web = quarto.doc.is_format("html") and not quarto.doc.is_format("epub")
   if slide or web then
     ensure_deps()
+    -- the slide QR code links to the public page when gamekit.url is set, so
+    -- slides exported or presented from a local server still work for phones
+    local qr = ""
+    if slide and CONFIG.url then
+      qr = string.format(' data-qr="%s/games/%s.html"', attr_escape((CONFIG.url:gsub("/+$", ""))), name)
+    end
     return pandoc.RawBlock("html", string.format(
-      '<div class="gamekit%s" data-game="%s" data-page="%s/games/%s.html"%s></div>\n' ..
+      '<div class="gamekit%s" data-game="%s" data-page="%s/games/%s.html"%s%s></div>\n' ..
       '<script src="%s/games/%s.js"></script>',
       slide and " gamekit-slide" or "", name, offset, name,
-      slide and " data-prevent-swipe" or "", offset, name))
+      slide and " data-prevent-swipe" or "", qr, offset, name))
   end
   local base = CONFIG.url and CONFIG.url:gsub("/+$", "") or nil
   if not base then
