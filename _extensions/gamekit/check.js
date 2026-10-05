@@ -53,8 +53,10 @@ for (const { name, def } of games) {
       if (label === "class" && !close(objective, def.check.optimum)) {
         fail(`${where}: optimum ${objective}, expected check.optimum ${def.check.optimum}`);
       }
-      C.assertUniqueKeys(def.pieces(puzzle, def.start(puzzle), {}));
-      C.assertUniqueKeys(def.pieces(puzzle, plan, {}));
+      for (const view of [{ compact: false, em: 3 }, { compact: true, em: 4.5 }]) {
+        C.assertUniqueKeys(def.pieces(puzzle, def.start(puzzle), {}, view));
+        C.assertUniqueKeys(def.pieces(puzzle, plan, {}, view));
+      }
       const ins = def.insight(puzzle, plan, plan);
       for (const k of ["diff", "mechanism", "model"]) {
         if (typeof ins[k] !== "string") fail(`${where}: insight().${k} is not a string`);

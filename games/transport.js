@@ -1,12 +1,14 @@
 // transport.js — lecture 01: ship solar panels from two plants to three farms.
 (function () {
-  // Layout in board units (board 100 × 66). Plants left, farms right; the
-  // stepper pops up next to the selected route's badge.
-  const BOARD_H = 66;
-  const PLANT_XY = [[12, 14], [12, 52]];          // Dresden, Laupheim
-  const FARM_XY = [[88, 8], [88, 58], [88, 33]];  // Hamburg, Munich, Berlin
-  const BADGE_T = 0.3;                            // badge position along a route
-  const BADGE_R = 3.4;
+  // Two layouts in board units. Wide (slides, desktop pages): board 100 × 66,
+  // the stepper pops up next to the tapped badge. Compact (phones): board
+  // 100 × 124 with more room between routes for finger-sized badges, and the
+  // stepper as a strip at the bottom that never covers the farm numbers.
+  const WIDE = { h: 66, r: 3.4, plants: [[12, 14], [12, 52]], farms: [[88, 8], [88, 58], [88, 33]] };
+  const COMPACT = { h: 124, r: 5, plants: [[12, 22], [12, 82]], farms: [[88, 10], [88, 90], [88, 50]] };
+  //                                      Dresden, Laupheim         Hamburg, Munich, Berlin
+  const lay = (view) => (view && view.compact ? COMPACT : WIDE);
+  const BADGE_T = 0.3; // badge position along a route
   const STEPS = [-5, -1, 1, 5];
 
   const fmt = (n) => Math.round(n).toLocaleString("en-US");
@@ -16,19 +18,24 @@
   const cost = (p, plan) => plan.reduce((s, row, i) => s + row.reduce((t, x, j) => t + x * p.cost[i][j], 0), 0);
   const route = (p, i, j) => `${p.plants[i].name}→${p.farms[j].name}`;
 
-  function badge(i, j) {
-    const [x1, y1] = PLANT_XY[i];
-    const [x2, y2] = FARM_XY[j];
+  function badge(L, i, j) {
+    const [x1, y1] = L.plants[i];
+    const [x2, y2] = L.farms[j];
     return [x1 + (x2 - x1) * BADGE_T, y1 + (y2 - y1) * BADGE_T];
   }
-  // Pop-up card right of the selected badge, kept inside the board.
-  function popup(sel) {
-    const [bx, by] = badge(sel[0], sel[1]);
+  // The stepper for the selected route: a card next to its badge (wide), or a
+  // strip across the bottom of the board (compact). `text` is where the price goes.
+  function stepper(L, sel) {
+    if (L === COMPACT) {
+      const buttons = STEPS.map((d, k) => ({ d, x: 4 + k * 24, y: 109, w: 20, h: 13 }));
+      return { card: null, text: [50, 104], buttons };
+    }
+    const [bx, by] = badge(L, sel[0], sel[1]);
     const w = 40, h = 15;
-    const x = bx + BADGE_R + 2;
-    const y = Math.max(1, Math.min(BOARD_H - h - 1, by - h / 2));
+    const x = bx + L.r + 2;
+    const y = Math.max(1, Math.min(L.h - h - 1, by - h / 2));
     const buttons = STEPS.map((d, k) => ({ d, x: x + 2 + k * 9.25, y: y + 6.5, w: 8, h: 7 }));
-    return { x, y, w, h, buttons };
+    return { card: { x, y, w, h }, text: [x + w / 2, y + 3.6], buttons };
   }
   const inside = (e, b) => e.x >= b.x && e.x <= b.x + b.w && e.y >= b.y && e.y <= b.y + b.h;
 
@@ -37,7 +44,8 @@
     task: "Meet every farm's demand at the lowest cost. Tap a route's number, then use the buttons.",
     goal: "min",
     unit: "€",
-    board: { w: 100, h: BOARD_H },
+    board: { w: 100, h: WIDE.h },
+    compactBoard: { w: 100, h: COMPACT.h },
     class: {
       plants: [{ name: "Dresden", supply: 34 }, { name: "Laupheim", supply: 41 }],
       farms: [{ name: "Hamburg", demand: 21 }, { name: "Munich", demand: 17 }, { name: "Berlin", demand: 29 }],
@@ -68,12 +76,14 @@
     },
     start() { return [[0, 0, 0], [0, 0, 0]]; },
 
-    pointer(p, plan, ui, e) {
+    pointer(p, plan, ui, e, view) {
       if (e.type !== "down") return undefined;
+      const L = lay(view);
       if (ui.sel) {
-        const card = popup(ui.sel);
-        const hit = card.buttons.find((b) => inside(e, b));
-        if (!hit && inside(e, card)) return undefined; // a near miss on the card keeps it open
+        const st = stepper(L, ui.sel);
+        const hit = st.buttons.find((b) => inside(e, b));
+        if (!hit && st.card && inside(e, st.card)) return undefined; // a near miss on the card keeps it open
+        if (!hit && L === COMPACT && e.y > 100) return undefined;   // ... and on the strip
         if (hit) {
           const [i, j] = ui.sel;
           const next = plan.map((row) => row.slice());
@@ -83,10 +93,10 @@
       }
       // nearest badge within reach: neighbouring hit zones overlap slightly
       let best = null;
-      let bestDist = BADGE_R + 1;
+      let bestDist = L.r + (L === COMPACT ? 1.5 : 1);
       for (let i = 0; i < 2; i++) {
         for (let j = 0; j < 3; j++) {
-          const [bx, by] = badge(i, j);
+          const [bx, by] = badge(L, i, j);
           const d = Math.hypot(e.x - bx, e.y - by);
           if (d <= bestDist) { best = [i, j]; bestDist = d; }
         }
@@ -95,38 +105,42 @@
       return undefined;
     },
 
-    pieces(p, plan, ui) {
+    pieces(p, plan, ui, view) {
+      const L = lay(view);
+      const scale = L.r / WIDE.r; // line widths and dots grow with the badges
       const out = [];
       for (let i = 0; i < 2; i++) {
         for (let j = 0; j < 3; j++) {
-          const [bx, by] = badge(i, j);
+          const [bx, by] = badge(L, i, j);
           const sel = ui.sel && ui.sel[0] === i && ui.sel[1] === j;
           out.push({
             key: `route-${i}-${j}`, kind: "route",
-            x1: PLANT_XY[i][0], y1: PLANT_XY[i][1], x2: FARM_XY[j][0], y2: FARM_XY[j][1],
-            bx, by, trucks: plan[i][j], sel: sel ? 1 : 0, color: "plan",
+            x1: L.plants[i][0], y1: L.plants[i][1], x2: L.farms[j][0], y2: L.farms[j][1],
+            bx, by, r: L.r, scale, trucks: plan[i][j], sel: sel ? 1 : 0, color: "plan",
           });
         }
       }
       p.plants.forEach((pl, i) => {
         const u = used(plan, i);
-        out.push({ key: `plant-${i}`, kind: "node", x: PLANT_XY[i][0], y: PLANT_XY[i][1], name: pl.name,
+        out.push({ key: `plant-${i}`, kind: "node", x: L.plants[i][0], y: L.plants[i][1], scale, name: pl.name,
           value: u, limit: pl.supply, color: u > pl.supply ? "bad" : "text" });
       });
       p.farms.forEach((f, j) => {
         const g = got(plan, j);
-        out.push({ key: `farm-${j}`, kind: "node", x: FARM_XY[j][0], y: FARM_XY[j][1], name: f.name,
+        out.push({ key: `farm-${j}`, kind: "node", x: L.farms[j][0], y: L.farms[j][1], scale, name: f.name,
           value: g, limit: f.demand, color: g !== f.demand ? "bad" : "text" });
       });
       if (ui.sel) {
         const [i, j] = ui.sel;
-        const card = popup(ui.sel);
-        out.push({ key: "popup", kind: "popup", x: card.x, y: card.y, w: card.w, h: card.h, color: "muted" });
-        out.push({ key: "info", kind: "info", x: card.x + card.w / 2, y: card.y + 3.6,
+        const st = stepper(L, ui.sel);
+        if (st.card) out.push(Object.assign({ key: "popup", kind: "popup", color: "muted" }, st.card));
+        out.push({ key: "info", kind: "info", x: st.text[0], y: st.text[1],
           text: `${fmt(p.cost[i][j])} € per truckload`, color: "text" });
-        for (const b of card.buttons) {
+        for (const b of st.buttons) {
           out.push(Object.assign({ key: `step${b.d}`, kind: "button", label: b.d > 0 ? `+${b.d}` : `−${-b.d}`, color: "neutral" }, b));
         }
+      } else if (L === COMPACT) {
+        out.push({ key: "info", kind: "info", x: 50, y: 104, text: "Tap a route's number to change it", color: "muted" });
       }
       return out;
     },
@@ -134,7 +148,7 @@
     drawBoard() {},
 
     drawPiece(ctx, piece, view) {
-      ctx.font = `3px ${view.font}`;
+      ctx.font = `${view.em}px ${view.font}`; // the same size as the HTML text around the board
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       if (piece.kind === "route") {
@@ -143,34 +157,36 @@
         ctx.moveTo(piece.x1, piece.y1);
         ctx.lineTo(piece.x2, piece.y2);
         if (n < 0.5) {
-          ctx.setLineDash([1, 1]);
+          ctx.setLineDash([piece.scale, piece.scale]);
           ctx.strokeStyle = view.css.muted;
-          ctx.lineWidth = 0.3;
+          ctx.lineWidth = 0.3 * piece.scale;
         } else {
           ctx.strokeStyle = piece.paint;
-          ctx.lineWidth = 0.4 + n * 0.12;
+          ctx.lineWidth = (0.4 + n * 0.12) * piece.scale;
         }
         ctx.stroke();
         ctx.setLineDash([]);
         ctx.beginPath();
-        ctx.arc(piece.bx, piece.by, BADGE_R, 0, 2 * Math.PI);
+        ctx.arc(piece.bx, piece.by, piece.r, 0, 2 * Math.PI);
         ctx.fillStyle = view.css.bg;
         ctx.fill();
-        ctx.lineWidth = piece.sel > 0.5 ? 0.9 : 0.35;
+        ctx.lineWidth = (piece.sel > 0.5 ? 0.9 : 0.35) * piece.scale;
         ctx.strokeStyle = piece.sel > 0.5 ? view.css.accent : piece.paint;
         ctx.stroke();
         ctx.fillStyle = view.css.text;
         ctx.fillText(String(Math.round(n)), piece.bx, piece.by + 0.2);
       } else if (piece.kind === "node") {
+        const dot = 1.6 * piece.scale;
         ctx.beginPath();
-        ctx.arc(piece.x, piece.y, 1.6, 0, 2 * Math.PI);
+        ctx.arc(piece.x, piece.y, dot, 0, 2 * Math.PI);
         ctx.fillStyle = piece.paint;
         ctx.fill();
         // a background-coloured halo keeps labels readable where routes cross them
         ctx.strokeStyle = view.css.bg;
-        ctx.lineWidth = 1;
+        ctx.lineWidth = view.em * 0.3;
         ctx.lineJoin = "round";
-        for (const [text, dy] of [[piece.name, -3.6], [`${Math.round(piece.value)} / ${piece.limit}`, 3.8]]) {
+        const gap = dot + view.em * 0.75;
+        for (const [text, dy] of [[piece.name, -gap], [`${Math.round(piece.value)} / ${piece.limit}`, gap]]) {
           ctx.strokeText(text, piece.x, piece.y + dy);
           ctx.fillText(text, piece.x, piece.y + dy);
         }
@@ -183,7 +199,6 @@
         ctx.strokeStyle = piece.paint;
         ctx.stroke();
       } else if (piece.kind === "info") {
-        ctx.font = `2.6px ${view.font}`;
         ctx.fillStyle = piece.paint;
         ctx.fillText(piece.text, piece.x, piece.y);
       } else if (piece.kind === "button") {

@@ -8,6 +8,7 @@
   const THINK_MS = 1000;
   const MORPH_MS = 2000;
   const TOGGLE_MS = 400;
+  const COMPACT_W = 600; // screens narrower than this (phones) use the compact layout
   const defs = {};
   const views = [];
 
@@ -98,14 +99,15 @@
     // on slides it is a column right of the board, with the QR code on top.
     root.innerHTML = "";
     const slide = root.classList.contains("gamekit-slide");
-    const task = el("p", { class: "gamekit-task" });
-    if (!slide) task.append(el("strong", null, def.title), document.createTextNode(" · ")); // slides have a title
-    task.append(document.createTextNode(def.task));
+    g.slide = slide;
+    // the game's own phone page (games/<name>.html), as opposed to a lecture page
+    g.solo = new URL(root.dataset.page, location.href).pathname === location.pathname;
+    root.classList.toggle("gamekit-solo", g.solo);
+    // the task is the same text everywhere; the slide or page heading carries the title
+    const task = el("p", { class: "gamekit-task" }, def.task);
     const main = el("div", { class: "gamekit-main" });
     const stage = el("div", { class: "gamekit-stage" });
     g.canvas = el("canvas", { role: "img", "aria-label": `${def.title}: ${def.task}` });
-    // pages size the canvas by the board's shape; slides let it fill the stage (drawing is letterboxed)
-    if (!slide) g.canvas.style.aspectRatio = `${def.board.w} / ${def.board.h}`;
     g.card = el("div", { class: "gamekit-card", hidden: "" });
     stage.append(g.canvas, g.card);
     const side = el("div", { class: "gamekit-side" });
@@ -129,9 +131,14 @@
     const info = el("div", { class: "gamekit-info" });
     info.append(scores, g.status);
     side.append(info, buttons, g.sr);
-    main.append(stage, side);
-    root.append(task, main);
+    g.side = side;
+    // left: task text and board; right (slides) or below (pages): the side block
+    const play = el("div", { class: "gamekit-play" });
+    play.append(task, stage);
+    main.append(play, side);
+    root.append(main);
 
+    layout(g);
     g.ctx = g.canvas.getContext("2d");
     g.colors = readColors(root);
     g.css = cssOf(g.colors);
@@ -198,6 +205,20 @@
   }
 
   // ---------- drawing ----------
+  // Compact (phone) layout on screens narrower than COMPACT_W (the screen, not
+  // the column: desktop article columns can be narrow too); a game may then use
+  // its taller compactBoard. Pages size the canvas by the board's
+  // shape; slides let it fill the stage (drawing is letterboxed).
+  function layout(g) {
+    const compact = !g.slide && window.innerWidth < COMPACT_W;
+    if (compact === g.compact && g.board) return;
+    g.compact = compact;
+    g.root.classList.toggle("gamekit-compact", compact);
+    g.board = (compact && g.def.compactBoard) || g.def.board;
+    g.canvas.dataset.board = `${g.board.w}x${g.board.h}`; // for tests
+    if (!g.slide) g.canvas.style.aspectRatio = `${g.board.w} / ${g.board.h}`;
+    if (g.side) reserveBottom(g);
+  }
   function fit(g) {
     const r = g.canvas.getBoundingClientRect();
     if (!r.width || !r.height) return false;
@@ -207,13 +228,20 @@
       g.canvas.height = size.h;
     }
     // Uniform scale, centred: the board never distorts, whatever box CSS gives the canvas.
-    g.px = Math.min(size.w / g.def.board.w, size.h / g.def.board.h);
-    g.ox = (size.w - g.def.board.w * g.px) / 2;
-    g.oy = (size.h - g.def.board.h * g.px) / 2;
+    g.px = Math.min(size.w / g.board.w, size.h / g.board.h);
+    g.ox = (size.w - g.board.w * g.px) / 2;
+    g.oy = (size.h - g.board.h * g.px) / 2;
+    // the game's text size in board units, so canvas text matches the HTML text
+    // exactly; the rect is in screen pixels (reveal scales slides), the font size is not
+    const dpr = window.devicePixelRatio || 1;
+    const slideScale = g.canvas.offsetWidth ? r.width / g.canvas.offsetWidth : 1;
+    g.em = (parseFloat(getComputedStyle(g.root).fontSize) * slideScale) / (g.px / dpr);
+    g.canvas.dataset.em = g.em.toFixed(4); // for tests: canvas text size in board units
     return true;
   }
+  // em: the game's text size in board units; compact: phone layout
   function view(g) {
-    return { w: g.def.board.w, h: g.def.board.h, px: g.px, css: g.css, font: g.font };
+    return { w: g.board.w, h: g.board.h, px: g.px, css: g.css, font: g.font, em: g.em || 3, compact: !!g.compact };
   }
   function paint(g, pieces) {
     if (!fit(g)) return;
@@ -236,9 +264,11 @@
   }
   function still(g, plan, role) {
     const colors = colorsFor(g, role);
-    paint(g, g.def.pieces(g.puzzle, plan, role === "play" ? g.ui : {}).map((p) => C.resolve(p, colors)));
+    fit(g);
+    paint(g, g.def.pieces(g.puzzle, plan, role === "play" ? g.ui : {}, view(g)).map((p) => C.resolve(p, colors)));
   }
   function redraw(g) {
+    layout(g);
     if (g.phase === "play") still(g, g.plan, "play");
     else if (g.phase === "done") still(g, g.showing === "yours" ? g.yours : g.optimal, g.showing);
     else if (g.phase === "think") still(g, g.yours, "yours");
@@ -252,7 +282,7 @@
     const dx = ((e.clientX - r.left) / r.width) * g.canvas.width;
     const dy = ((e.clientY - r.top) / r.height) * g.canvas.height;
     const pt = { type, x: (dx - g.ox) / g.px, y: (dy - g.oy) / g.px };
-    const next = g.def.pointer(g.puzzle, g.plan, g.ui, pt);
+    const next = g.def.pointer(g.puzzle, g.plan, g.ui, pt, view(g));
     if (next !== undefined) {
       g.plan = next;
       if (!g.started) {
@@ -261,6 +291,18 @@
       }
     }
     update(g);
+    if (type === "down") keepInView(g);
+  }
+  // Phone page: scores, status and buttons form a panel fixed to the bottom of
+  // the screen. The page reserves its height, and taps keep the whole board
+  // above it.
+  function reserveBottom(g) {
+    g.root.style.paddingBottom = g.solo && g.compact ? `${g.side.offsetHeight + 16}px` : "";
+  }
+  function keepInView(g) {
+    if (!(g.solo && g.compact)) return;
+    const overlap = g.canvas.getBoundingClientRect().bottom - g.side.getBoundingClientRect().top;
+    if (overlap > 0) window.scrollBy({ top: overlap + 8, behavior: reducedMotion() ? "auto" : "smooth" });
   }
   function meta(g) {
     return { page: document.title, game: g.root.dataset.game, puzzle: g.kind };
@@ -271,6 +313,7 @@
     g.btn.optimize.disabled = ok !== true;
     g.status.textContent = ok === true ? "Ready: press Optimize to compare with the best plan." : ok;
     g.sr.textContent = g.def.describe(g.puzzle, g.plan);
+    reserveBottom(g);
     redraw(g);
   }
 
@@ -307,7 +350,7 @@
         line = C.thinkLine(r.counts, r.ms);
       }
       optScore = g.def.score(g.puzzle, g.optimal);
-      C.pair(g.def.pieces(g.puzzle, g.yours, {}), g.def.pieces(g.puzzle, g.optimal, {})); // throws on duplicate keys
+      C.pair(g.def.pieces(g.puzzle, g.yours, {}, view(g)), g.def.pieces(g.puzzle, g.optimal, {}, view(g))); // throws on duplicate keys
     } catch (err) {
       if (run !== g.run) return;
       g.phase = "play";
@@ -343,7 +386,8 @@
   function animate(g, fromPlan, fromRole, toPlan, toRole, ms, onFrame, done, startQ) {
     cancelAnimationFrame(g.raf);
     g.phase = "morph";
-    const pairs = C.pair(g.def.pieces(g.puzzle, fromPlan, {}), g.def.pieces(g.puzzle, toPlan, {}));
+    fit(g);
+    const pairs = C.pair(g.def.pieces(g.puzzle, fromPlan, {}, view(g)), g.def.pieces(g.puzzle, toPlan, {}, view(g)));
     const fromColors = colorsFor(g, fromRole);
     const toColors = colorsFor(g, toRole);
     const t0 = performance.now() - (startQ || 0) * ms;
@@ -395,6 +439,8 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
+  // canvas text uses the page font: repaint once web fonts have loaded
+  if (document.fonts) document.fonts.ready.then(redrawAll);
   window.addEventListener("resize", redrawAll);
   // reveal.js loads after this script; attach its hooks once the page is loaded.
   window.addEventListener("load", () => {
