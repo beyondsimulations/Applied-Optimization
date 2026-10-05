@@ -2,7 +2,7 @@
 -- revealjs) or a one-line link (every other format). Reads a `gamekit:`
 -- metadata block (url, telemetry) and injects window.gamekitConfig.
 
-local VERSION = "0.1.1"
+local VERSION = "0.1.2"
 local CONFIG = { url = nil, telemetry = nil }
 
 local function attr_escape(s)
