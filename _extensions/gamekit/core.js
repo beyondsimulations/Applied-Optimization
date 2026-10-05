@@ -165,8 +165,17 @@
     return unit ? `${n} ${unit}` : n;
   }
 
+  // Draws text whose digits and capitals are centred on y: canvas's "middle"
+  // baseline centres the font's em box, which leaves labels a little off the
+  // middle of their boxes. align: "center" (default), "start" or "end".
+  function fillCentred(ctx, text, x, y, align) {
+    ctx.textAlign = align || "center";
+    ctx.textBaseline = "alphabetic";
+    ctx.fillText(text, x, y + ctx.measureText("0").actualBoundingBoxAscent / 2);
+  }
+
   globalThis.GamekitCore = {
     rng, pair, frame, resolve, assertUniqueKeys, parseColor, css, gap, thinkLine,
-    pixelSize, codeSpans, formatScore, ease,
+    pixelSize, codeSpans, formatScore, ease, fillCentred,
   };
 })();

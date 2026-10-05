@@ -234,6 +234,14 @@
       g.canvas.width = size.w;
       g.canvas.height = size.h;
     }
+    // A stretching board grows wider to fill a wider slide stage, so it lines
+    // up with the task text; the game lays out with view.w. Not mid-morph: the
+    // frames were built for the old width (animate repaints at the end).
+    if (g.slide && g.def.board.stretch && g.phase !== "morph") {
+      const base = g.def.board;
+      g.board = { w: Math.max(base.w, (base.h * size.w) / size.h), h: base.h };
+      g.canvas.dataset.board = `${+g.board.w.toFixed(2)}x${g.board.h}`; // for tests
+    }
     // Uniform scale, centred: the board never distorts, whatever box CSS gives the canvas.
     g.px = Math.min(size.w / g.board.w, size.h / g.board.h);
     g.ox = (size.w - g.board.w * g.px) / 2;
@@ -351,12 +359,13 @@
     try {
       if (g.def.optimal) {
         const s0 = performance.now();
-        g.optimal = await g.def.optimal(g.puzzle);
+        g.optimal = await g.def.optimal(g.puzzle, g.yours);
         line = g.def.think ? g.def.think(g.puzzle, { plan: g.optimal, ms: performance.now() - s0 }) : "";
       } else {
-        const r = await solveLP(g.def.model(g.puzzle));
+        // the player's plan is passed on: a game may let the player size the problem
+        const r = await solveLP(g.def.model(g.puzzle, g.yours));
         if (r.status !== "Optimal") throw new Error("Solver: " + r.status);
-        g.optimal = g.def.decode(g.puzzle, r.values);
+        g.optimal = g.def.decode(g.puzzle, r.values, g.yours);
         line = C.thinkLine(r.counts, r.ms);
       }
       optScore = g.def.score(g.puzzle, g.optimal);
@@ -415,6 +424,7 @@
       } else {
         g.phase = "done";
         done();
+        if (g.def.board.stretch) redraw(g); // picks up a width change during the morph
       }
     };
     g.raf = requestAnimationFrame(step);
