@@ -106,7 +106,7 @@
       const b = Math.round(MAX - (e.y - L.y0) / L.s);
       // only a press on the chart starts a drag; a drag that leaves it stays on its edge
       if (e.type === "down") ui.drag = a >= -1 && a <= MAX + 1 && b >= -1 && b <= MAX + 1;
-      if (e.type === "up") { ui.drag = false; return undefined; }
+      if (e.type === "up" || e.type === "cancel") { ui.drag = false; return undefined; }
       if (!ui.drag) return undefined;
       const next = [Math.max(0, Math.min(MAX, a)), Math.max(0, Math.min(MAX, b))];
       return next[0] === plan[0] && next[1] === plan[1] ? undefined : next;

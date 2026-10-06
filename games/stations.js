@@ -61,9 +61,8 @@
 
   Gamekit.game("stations", {
     title: "Place the Police Stations",
-    task: "Each area shows its incidents per week and is served by the nearest of 3 police departments: 2 min " +
-      "inside an area, 3 min for each area crossed. Tap a department, then an area to move it there. Drive as few " +
-      "minutes as possible.",
+    task: "Each area shows its incidents per week and is served by its nearest police department: 2 min inside an " +
+      "area, 3 min for each area crossed. Drag the 3 departments to drive as few minutes as possible.",
     goal: "min",
     unit: "min",
     board: { w: 100, h: 70, stretch: true },
@@ -108,31 +107,60 @@
     },
     start(p) { return busiest(p, p.n); }, // the rule of thumb: the busiest areas
 
-    // a tap on a department (or its block) picks it; a tap on another area moves it there
+    // A department can be dragged to another area; the districts follow while
+    // it moves, and letting go off the map leaves it where it was. A tap picks
+    // a department (on the map or in its block), and a tap on an area moves the
+    // picked one there.
     pointer(p, plan, ui, e, view) {
-      if (e.type !== "down") return undefined;
       const L = lay(view);
-      const block = L.rows.findIndex((b) => inside(e, b));
-      if (block >= 0) { ui.sel = ui.sel === block ? null : block; return undefined; }
-      let hit = -1;
-      let d = L.s;
-      CELLS.forEach((_, j) => {
-        const [x, y] = at(L, j);
-        const dj = Math.hypot(e.x - x, e.y - y);
-        if (dj < d) { hit = j; d = dj; }
-      });
-      if (hit < 0) { ui.sel = null; return undefined; }
-      const k = plan.indexOf(hit);
+      const areaAt = (x, y) => {
+        let hit = -1;
+        let d = L.s;
+        CELLS.forEach((_, j) => {
+          const [ax, ay] = at(L, j);
+          const dj = Math.hypot(x - ax, y - ay);
+          if (dj < d) { hit = j; d = dj; }
+        });
+        return hit;
+      };
+      if (e.type === "down") {
+        const block = L.rows.findIndex((b) => inside(e, b));
+        const hit = areaAt(e.x, e.y);
+        const k = block >= 0 ? block : plan.indexOf(hit);
+        ui.drag = { k: k >= 0 ? k : null, block: block >= 0 ? block : null, hit };
+        return undefined;
+      }
+      const d = ui.drag;
+      if (!d || e.type === "cancel") { ui.drag = null; return undefined; }
+      d.moved = e.moved; // Gamekit: the press has travelled far enough to be a drag
+      if (e.type === "move") {
+        if (d.k != null && d.moved) d.to = areaAt(e.x, e.y);
+        return undefined;
+      }
+      ui.drag = null; // released
+      if (d.moved) {
+        const to = areaAt(e.x, e.y);
+        if (d.k == null || to < 0 || plan.includes(to)) return undefined; // off the map or onto another department
+        const next = plan.slice();
+        next[d.k] = to;
+        ui.sel = null;
+        return next;
+      }
+      if (d.block != null) { ui.sel = ui.sel === d.block ? null : d.block; return undefined; } // a tap
+      if (d.hit < 0) { ui.sel = null; return undefined; }
+      const k = plan.indexOf(d.hit);
       if (k >= 0) { ui.sel = ui.sel === k ? null : k; return undefined; }
       if (ui.sel == null) return undefined;
       const next = plan.slice();
-      next[ui.sel] = hit;
+      next[ui.sel] = d.hit;
       ui.sel = null;
       return next;
     },
 
-    pieces(p, plan, ui, view) {
+    pieces(p, real, ui, view) {
       const L = lay(view);
+      const d = ui.drag && ui.drag.moved && ui.drag.k != null ? ui.drag : null; // a department being dragged
+      const plan = d && d.to >= 0 && !real.includes(d.to) ? real.map((j, k) => (k === d.k ? d.to : j)) : real;
       const out = [];
       CELLS.forEach((_, j) => {
         const [x, y] = at(L, j);
@@ -160,8 +188,10 @@
           min: mine.reduce((t, j) => t + p.w[j] * minutes(plan[k], j), 0) });
       });
       if (!(view && view.locked)) {
-        out.push({ key: "hint", kind: "hint", ...L.hint, color: ui.sel == null ? "muted" : "accent",
-          text: ui.sel == null ? "Tap a department to move it." : `Tap an area to move department ${ui.sel + 1} there.` });
+        const stuck = d && plan === real; // over another department or off the map: letting go changes nothing
+        out.push({ key: "hint", kind: "hint", ...L.hint, color: stuck ? "bad" : ui.sel == null && !d ? "muted" : "accent",
+          text: stuck ? "Drop it on a free area." : d ? `Let go to move department ${d.k + 1} there.` :
+            ui.sel == null ? "Drag a department, or tap it and then an area." : `Tap an area to move department ${ui.sel + 1} there.` });
       }
       return out;
     },

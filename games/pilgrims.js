@@ -126,7 +126,7 @@
     // a press on a group's row moves the group to that hour, and it follows
     // the finger along the row until release; its shuttle times stop it
     pointer(p, plan, ui, e, view) {
-      if (e.type === "up") { ui.drag = null; return undefined; }
+      if (e.type === "up" || e.type === "cancel") { ui.drag = null; return undefined; }
       const L = lay(view);
       if (e.type === "down") {
         const row = Math.floor((e.y - L.top) / L.rh);
