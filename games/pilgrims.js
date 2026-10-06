@@ -126,15 +126,22 @@
     // a press on a group's row moves the group to that hour, and it follows
     // the finger along the row until release; its shuttle times stop it
     pointer(p, plan, ui, e, view) {
-      if (e.type === "up" || e.type === "cancel") { ui.drag = null; return undefined; }
       const L = lay(view);
       if (e.type === "down") {
         const row = Math.floor((e.y - L.top) / L.rh);
-        ui.drag = row >= 0 && row < p.groups.length && e.x >= L.lab ? row : null;
+        ui.drag = row >= 0 && row < p.groups.length && e.x >= L.lab ? { k: row, was: plan[row] } : null;
         ui.msg = null;
       }
-      if (ui.drag == null) return undefined;
-      const k = ui.drag;
+      if (!ui.drag) return undefined;
+      const k = ui.drag.k;
+      if (e.type === "up" || e.type === "cancel") {
+        const was = ui.drag.was;
+        ui.drag = null;
+        if (e.type === "up" || plan[k] === was) return undefined;
+        const back = plan.slice();
+        back[k] = was; // the browser took the touch: back to where the group was
+        return back;
+      }
       const g = p.groups[k];
       const at = HOURS[0] + Math.floor((e.x - L.lab) / L.cw);
       const h = Math.min(g.hi, Math.max(g.lo, at));

@@ -10,28 +10,28 @@
   const MAP_H = 72;
   const NODES = {
     A: { name: "Airport", x: 4, y: 12, label: "above" },
-    O: { name: "Old Town", x: 34, y: 12, label: "above" },
+    O: { name: "Old Town", x: 38, y: 12, label: "above" },
     U: { name: "University", x: 4, y: 62, label: "below" },
-    W: { name: "West Bay", x: 34, y: 62, label: "below" },
-    C: { name: "Central", x: 59, y: 37, label: "right" },
-    S: { name: "Stadium", x: 93, y: 12, label: "above" },
-    F: { name: "Fan Zone", x: 93, y: 62, label: "below" },
+    W: { name: "West Bay", x: 38, y: 62, label: "below" },
+    C: { name: "Central", x: 63, y: 37, label: "right" },
+    S: { name: "Stadium", x: 92, y: 12, label: "above" },
+    F: { name: "Fan Zone", x: 92, y: 62, label: "below" },
   };
   const ORIGINS = ["A", "O", "U", "W"];
   // track sections: their course on the map and which riders use them
   // (`all` for every rider from these stations, `to` for those heading there)
   // (`quiet`: it takes more than a gate admits, so its load needs no label)
   const SECTIONS = [
-    { id: "AO", path: [[4, 12], [34, 12]], all: ["A"], quiet: true },
-    { id: "OC", path: [[34, 12], [58, 36]], all: ["A", "O"] },
-    { id: "UW", path: [[4, 62], [34, 62]], all: ["U"], quiet: true },
-    { id: "WC", path: [[34, 62], [58, 38]], all: ["U", "W"] },
-    { id: "CS", path: [[60, 36], [84, 12], [93, 12]], to: "S" },
-    { id: "CF", path: [[60, 38], [84, 62], [93, 62]], to: "F" },
+    { id: "AO", ends: "AO", path: [[4, 12], [38, 12]], all: ["A"], quiet: true },
+    { id: "OC", ends: "OC", path: [[38, 12], [62, 36]], all: ["A", "O"] },
+    { id: "UW", ends: "UW", path: [[4, 62], [38, 62]], all: ["U"], quiet: true },
+    { id: "WC", ends: "WC", path: [[38, 62], [62, 38]], all: ["U", "W"] },
+    { id: "CS", ends: "CS", path: [[64, 36], [88, 12], [92, 12]], to: "S" },
+    { id: "CF", ends: "CF", path: [[64, 38], [88, 62], [92, 62]], to: "F" },
   ];
-  // riders per minute on a section, in tenths (mixes are in tenths)
-  const load10 = (p, plan, sec) => ORIGINS.reduce((sum, o, k) => sum + plan[k] * (sec.all
-    ? (sec.all.includes(o) ? 10 : 0) : sec.to === "S" ? p.mix[k] : 10 - p.mix[k]), 0);
+  // tenths of station k's riders on a section (mixes are in tenths), and its riders per minute in tenths
+  const share = (p, sec, k) => (sec.all ? (sec.all.includes(ORIGINS[k]) ? 10 : 0) : sec.to === "S" ? p.mix[k] : 10 - p.mix[k]);
+  const load10 = (p, plan, sec) => ORIGINS.reduce((sum, _, k) => sum + plan[k] * share(p, sec, k), 0);
   const total = (plan) => plan.reduce((s, x) => s + x, 0);
   const fits = (p, plan) => SECTIONS.every((sec) => load10(p, plan, sec) <= 10 * p.cap[sec.id]);
   const tenths = (v) => (v % 10 ? (v / 10).toFixed(1) : String(v / 10));
@@ -58,12 +58,15 @@
   // follows the text size.
   function lay(view) {
     const em = (view && view.em) || 3;
-    const block = (x, y, w) => ({ x, y, w, h: 3.8 * em });
+    const block = (x, y, w, row) => ({ x, y, w, h: row ? 2.8 * em : 3.8 * em, row: row ? 1 : 0 }); // row: the mix on the name's line
     if (view && view.compact) { // the gates above the map, so they stay clear of the panel at the bottom
       const k = (100 - 2 * em) / 100;
       const ky = 0.8 * k; // a flatter map, so gates and map fit on one screen
-      const gates = ORIGINS.map((_, i) => block((i % 2) * 51, 0.3 * em + Math.floor(i / 2) * 4.5 * em, 47));
-      const y0 = 9.3 * em + 1.6 * em;
+      const cols = 21 * em <= 100 ? 2 : 1; // one column on narrow phones, so names, values and mixes fit
+      const pitch = cols > 1 ? 4.5 * em : 3.2 * em;
+      const gates = ORIGINS.map((_, i) => block((i % cols) * (100 / cols + (cols > 1 ? 1 : 0)), 0.3 * em +
+        Math.floor(i / cols) * pitch, cols > 1 ? 47 : 100, cols === 1));
+      const y0 = 0.3 * em + (ORIGINS.length / cols) * pitch + 1.6 * em;
       const hint = { x: 0, y: y0 + MAP_H * ky + 1.4 * em, w: 100 };
       return { k, ky, x0: em, y0, gates, hint, h: hint.y + 2.6 * em + 0.5 };
     }
@@ -109,17 +112,26 @@
     pointer(p, plan, ui, e, view) {
       const L = lay(view);
       const em = (view && view.em) || 3;
-      if (e.type === "up" || e.type === "cancel") { ui.drag = null; return undefined; }
+      const band = (b) => { const g = gauge(b, em); return { x: g.x - 0.5 * em, y: g.y - 0.45 * em, w: g.w + em, h: g.h + 0.9 * em }; };
       if (e.type === "down") {
-        const k = L.gates.findIndex((b) => inside(e, b));
-        ui.drag = k >= 0 ? k : null;
+        const k = L.gates.findIndex((b) => inside(e, band(b)));
+        ui.drag = k >= 0 ? { k, was: plan[k] } : null;
       }
-      if (ui.drag == null) return undefined;
-      const g = gauge(L.gates[ui.drag], em);
-      const x = Math.max(0, Math.min(GATE, Math.round(((e.x - g.x) / g.w) * GATE + 0.5)));
-      if (x === plan[ui.drag]) return undefined;
+      const d = ui.drag;
+      if (!d) return undefined;
       const next = plan.slice();
-      next[ui.drag] = x;
+      if (e.type === "up" || e.type === "cancel") {
+        ui.drag = null;
+        if (e.type === "up" || plan[d.k] === d.was) return undefined;
+        next[d.k] = d.was; // the browser took the touch: back to where the gate was
+        return next;
+      }
+      const g = gauge(L.gates[d.k], em);
+      // the gate fills up to the cell under the finger; left of the first cell's middle closes it
+      const f = (e.x - g.x) / g.w;
+      const x = f < 0.5 / GATE ? 0 : Math.min(GATE, Math.floor(f * GATE) + 1);
+      if (x === plan[d.k]) return undefined;
+      next[d.k] = x;
       return next;
     },
 
@@ -143,7 +155,7 @@
         const over = SECTIONS.filter((sec) => load10(p, plan, sec) > 10 * p.cap[sec.id]).length;
         out.push({ key: "hint", kind: "hint", ...L.hint, color: over ? "bad" : "muted",
           text: over ? `${fmt(over, ["track is", "tracks are"])} over capacity.` :
-            "Drag a gate along its cells, or tap a cell." });
+            "Drag a gate along its cells; its left edge closes it." });
       }
       return out;
     },
@@ -212,16 +224,18 @@
         }
         ctx.fillStyle = view.css.text;
         const gap = 1.5 * em;
-        const origin = ORIGINS.includes(piece.id); // origins' names start at their station, the ends' are centred
-        const nx = origin ? piece.x - 0.6 * em : piece.x;
-        if (n.label === "above") fillCentred(ctx, n.name, nx, piece.y - gap, origin ? "start" : "center");
-        else if (n.label === "below") fillCentred(ctx, n.name, nx, piece.y + gap, origin ? "start" : "center");
+        const origin = ORIGINS.includes(piece.id); // origins' names start at their station, the ends' end at their icon
+        const nx = origin ? piece.x - 0.6 * em : piece.x + 1.3 * em;
+        if (n.label === "above") fillCentred(ctx, n.name, nx, piece.y - gap, origin ? "start" : "end");
+        else if (n.label === "below") fillCentred(ctx, n.name, nx, piece.y + gap, origin ? "start" : "end");
         else fillCentred(ctx, n.name, piece.x + 1.3 * em, piece.y, "start");
       } else if (piece.kind === "gate") { // a station's gate: its riders per minute as cells, and where they go
         const v = Math.round(piece.value);
+        const name = NODES[piece.o].name;
         ctx.fillStyle = view.css.text;
-        fillCentred(ctx, NODES[piece.o].name, piece.x, piece.y + 0.6 * em, "start");
+        fillCentred(ctx, name, piece.x, piece.y + 0.6 * em, "start");
         fillCentred(ctx, `${v}/min`, piece.x + piece.w, piece.y + 0.6 * em, "end");
+        const mixes = [`${piece.mix * 10}% to the stadium`, `${piece.mix * 10}% stadium`, `${piece.mix * 10}%`];
         const g = gauge(piece, em);
         const cw = g.w / GATE;
         const alpha = ctx.globalAlpha;
@@ -232,7 +246,11 @@
         }
         ctx.globalAlpha = alpha;
         ctx.fillStyle = view.css.muted;
-        fillCentred(ctx, `${piece.mix * 10}% to the stadium`, piece.x, piece.y + 3.35 * em, "start");
+        if (piece.row > 0.5) { // between the name and the value, as long as it fits
+          const x = piece.x + ctx.measureText(name).width + 0.6 * em;
+          const room = piece.x + piece.w - ctx.measureText(`${GATE}/min`).width - 0.6 * em - x;
+          fillCentred(ctx, mixes.find((m) => ctx.measureText(m).width <= room) || "", x, piece.y + 0.6 * em, "start");
+        } else fillCentred(ctx, mixes[0], piece.x, piece.y + 3.35 * em, "start");
       } else if (piece.kind === "hint") {
         ctx.fillStyle = piece.paint;
         wrapText(ctx, piece.text, piece.w).forEach((line, n) => fillCentred(ctx, line, piece.x, piece.y + (n + 0.5) * 1.3 * em, "start"));
@@ -245,7 +263,7 @@
     feasible(p, plan) {
       const over = SECTIONS.find((sec) => load10(p, plan, sec) > 10 * p.cap[sec.id]);
       if (!over) return true;
-      const [a, b] = [over.path[0], over.path[over.path.length - 1]].map(([x, y]) => Object.values(NODES).find((n) => Math.abs(n.x - x) < 2 && Math.abs(n.y - y) < 2).name);
+      const [a, b] = [...over.ends].map((id) => NODES[id].name);
       return `${a} to ${b}: ${tenths(load10(p, plan, over))} riders per minute, but it takes ${p.cap[over.id]}`;
     },
     score(p, plan) { return total(plan); },
@@ -259,10 +277,8 @@
         "Maximize",
         " admitted: " + ORIGINS.map((_, k) => x(k)).join(" + "),
         "Subject To",
-        ...SECTIONS.map((sec) => ` ${sec.id}: ` + ORIGINS.map((o, k) => {
-          const share = sec.all ? (sec.all.includes(o) ? 10 : 0) : sec.to === "S" ? p.mix[k] : 10 - p.mix[k];
-          return share ? `${share / 10} ${x(k)}` : null;
-        }).filter(Boolean).join(" + ") + ` <= ${p.cap[sec.id]}`),
+        ...SECTIONS.map((sec) => ` ${sec.id}: ` + ORIGINS.map((_, k) => (share(p, sec, k) ? `${share(p, sec, k) / 10} ${x(k)}` : null))
+          .filter(Boolean).join(" + ") + ` <= ${p.cap[sec.id]}`),
         "Bounds",
         ...ORIGINS.map((_, k) => ` 0 <= ${x(k)} <= ${GATE}`),
         "General", // whole riders per minute, like the gates
@@ -289,7 +305,7 @@
         mechanism: `Opening every gate equally admits ${fmt(eq, UNIT)} here, ${fmt(total(optimal) - eq)} fewer than the ` +
           "best gates. A gate only sets how many riders enter, not where they go: each rider loads every track on the " +
           "way, so a station whose riders head for a full track must open less, and the others can open more.",
-        model: "Lecture 12's capacity constraint adds up, for every track, the inflow `X[o,p]` times the share of riders " +
+        model: "Lecture 12's capacity constraint, coming up next, adds up for every track the inflow `X[o,p]` times the share of riders " +
           "whose path uses it, `q[o,d,p] / Σ q[o,f,p]`, and keeps it within `α·c[e]`. Minimizing the queues is the same " +
           "as maximizing these admissions; here with one period, no travel times and whole riders per minute.",
       };
