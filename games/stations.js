@@ -2,7 +2,7 @@
 // 37 hexagonal areas. Every area is served by its nearest department; the
 // students move the departments to drive as few minutes as possible.
 (function () {
-  const { fillCentred, formatScore: fmt, seconds } = GamekitCore;
+  const { fillCentred, formatScore: fmt, seconds, wrapText } = GamekitCore;
   // the city: a hexagon of radius 3 in axial coordinates (q, r), row by row
   const R = 3;
   const CELLS = [];
@@ -14,6 +14,8 @@
     return (Math.abs(q1 - q2) + Math.abs(r1 - r2) + Math.abs(q1 + r1 - q2 - r2)) / 2;
   };
   const minutes = (a, b) => 2 + 3 * steps(a, b); // 2 min inside an area, 3 min per area crossed
+  const count = (n, word) => `${fmt(n)} ${word}${Math.round(n) === 1 ? "" : "s"}`;
+  const inside = (e, b) => e.x >= b.x && e.x <= b.x + b.w && e.y >= b.y && e.y <= b.y + b.h;
 
   // each area's department: the nearest one, the lower number on a tie
   // (checked: on this map every placement then keeps each district in one piece)
@@ -83,8 +85,9 @@
 
     // Random cities: an old town around the centre, a second hot spot and a
     // busy suburb on the rim, quiet areas elsewhere. Resampled until the three
-    // busiest areas are clear and placing the departments there drives longer
-    // than the best placement, so the mechanism text holds for every puzzle.
+    // busiest areas are clear and placing the departments there drives at
+    // least 5 % longer than the best placement, so the mechanism text holds
+    // for every puzzle and the gap shows.
     puzzle(rng) {
       const int = (lo, hi) => lo + Math.floor(rng() * (hi - lo + 1));
       const near = (j) => DIRS.map(([dq, dr]) => index.get(`${CELLS[j][0] + dq},${CELLS[j][1] + dr}`)).filter((n) => n != null);
@@ -101,17 +104,19 @@
         const p = { n: 3, w };
         const top = busiest(p, p.n + 1);
         if (w[top[p.n - 1]] === w[top[p.n]]) continue; // the rule of thumb must be clear
-        if (total(p, busiest(p, p.n)) > bestTotal(p)) return p;
+        if (total(p, busiest(p, p.n)) >= 1.05 * bestTotal(p)) return p;
       }
     },
     start(p) { return busiest(p, p.n); }, // the rule of thumb: the busiest areas
 
-    // a tap on a department picks it; a tap on another area moves it there
+    // a tap on a department (or its block) picks it; a tap on another area moves it there
     pointer(p, plan, ui, e, view) {
       if (e.type !== "down") return undefined;
       const L = lay(view);
+      const block = L.rows.findIndex((b) => inside(e, b));
+      if (block >= 0) { ui.sel = ui.sel === block ? null : block; return undefined; }
       let hit = -1;
-      let d = L.s * 0.95;
+      let d = L.s;
       CELLS.forEach((_, j) => {
         const [x, y] = at(L, j);
         const dj = Math.hypot(e.x - x, e.y - y);
@@ -179,12 +184,12 @@
         ctx.stroke();
         if (piece.w > 0) {
           ctx.fillStyle = view.css.text;
-          fillCentred(ctx, String(Math.round(piece.w)), piece.x, piece.y + piece.st * 0.9 * em); // under a department
+          fillCentred(ctx, String(Math.round(piece.w)), piece.x + piece.st * 0.62 * em, piece.y); // beside a department
         }
       } else if (piece.kind === "edge") {
         ctx.strokeStyle = piece.paint;
         ctx.lineWidth = 0.8;
-        ctx.lineCap = "round";
+        ctx.lineCap = "square"; // closes the corners where two edges meet
         ctx.beginPath();
         ctx.moveTo(piece.x1, piece.y1);
         ctx.lineTo(piece.x2, piece.y2);
@@ -197,7 +202,7 @@
           ctx.lineWidth = 0.6;
           ctx.stroke();
         }
-        station(ctx, piece.x, piece.y - 0.55 * em, em, piece.n, piece.paint, view.css.bg);
+        station(ctx, piece.x - 0.45 * em, piece.y, em, piece.n, piece.paint, view.css.bg); // its count to the right
       } else if (piece.kind === "district") { // a department: its icon, incidents and minutes
         if (piece.sel > 0.5) {
           ctx.strokeStyle = view.css.accent;
@@ -206,7 +211,7 @@
         }
         station(ctx, piece.x + 1.3 * em, piece.y + piece.h / 2, em, piece.n, piece.paint, view.css.bg);
         const right = piece.x + piece.w - 0.6 * em;
-        const lines = [`${fmt(piece.min)} min`, `${fmt(piece.incidents)} incidents`];
+        const lines = [`${fmt(piece.min)} min`, count(piece.incidents, "incident")];
         if (view.compact) { // one line: incidents, then the minutes at the right edge
           ctx.fillStyle = view.css.muted;
           fillCentred(ctx, lines[1], piece.x + 3 * em, piece.y + piece.h / 2, "start");
@@ -220,7 +225,7 @@
         }
       } else if (piece.kind === "hint") {
         ctx.fillStyle = piece.paint;
-        wrap(ctx, piece.text, piece.w).forEach((line, n) => fillCentred(ctx, line, piece.x, piece.y + (n + 0.5) * 1.3 * em, "start"));
+        wrapText(ctx, piece.text, piece.w).forEach((line, n) => fillCentred(ctx, line, piece.x, piece.y + (n + 0.5) * 1.3 * em, "start"));
       }
       ctx.textAlign = "start";
       ctx.textBaseline = "alphabetic";
@@ -277,15 +282,16 @@
 
     insight(p, yours, optimal) {
       const t = (plan, j) => minutes(plan[home(plan, j)], j);
-      let diff = total(p, yours) === total(p, optimal)
+      const same = total(p, yours) === total(p, optimal);
+      let diff = same
         ? `Your departments drive ${fmt(total(p, yours))} min per week, as few as the best placement.`
-        : `Your departments drive ${fmt(total(p, yours))} min per week, the best placement HiGHS found ` +
-          `${fmt(total(p, optimal))} min.`;
+        : `Your departments drive ${fmt(total(p, yours))} min per week, while the best placement HiGHS found ` +
+          `drives ${fmt(total(p, optimal))} min.`;
       const gains = CELLS.map((_, j) => ({ j, d: p.w[j] * (t(yours, j) - t(optimal, j)) })).sort((a, b) => b.d - a.d);
-      if (gains[0].d > 0) {
+      if (!same && gains[0].d > 0) {
         const j = gains[0].j;
-        diff += ` The biggest gain: an area with ${p.w[j]} incidents is ${t(yours, j)} min from your nearest department ` +
-          `and ${t(optimal, j)} min from the best placement's.`;
+        diff += ` The biggest gain: an area with ${count(p.w[j], "incident")} is ${t(yours, j)} min from your nearest ` +
+          `department and ${t(optimal, j)} min from the best placement's.`;
       }
       const busy = total(p, busiest(p, p.n));
       return {
@@ -302,7 +308,7 @@
     describe(p, plan) {
       const parts = plan.map((j, k) => {
         const mine = CELLS.map((_, a) => a).filter((a) => home(plan, a) === k);
-        return `Department ${k + 1} serves ${mine.length} areas with ${mine.reduce((s, a) => s + p.w[a], 0)} incidents`;
+        return `Department ${k + 1} serves ${count(mine.length, "area")} with ${count(mine.reduce((s, a) => s + p.w[a], 0), "incident")}`;
       });
       return `${parts.join(". ")}. ${fmt(total(p, plan))} min of driving per week.`;
     },
@@ -317,15 +323,15 @@
     ctx.closePath();
   }
 
-  // A police badge with the department's number, about 1.7 em tall and
+  // A police badge with the department's number, 1.3 em wide and 1.5 em tall,
   // centred on (x, y): a shield.
   function station(ctx, x, y, em, n, paint, bg) {
     ctx.beginPath();
-    ctx.moveTo(x - 0.78 * em, y - 0.85 * em);
-    ctx.lineTo(x + 0.78 * em, y - 0.85 * em);
-    ctx.lineTo(x + 0.78 * em, y + 0.25 * em);
-    ctx.lineTo(x, y + 0.85 * em);
-    ctx.lineTo(x - 0.78 * em, y + 0.25 * em);
+    ctx.moveTo(x - 0.65 * em, y - 0.75 * em);
+    ctx.lineTo(x + 0.65 * em, y - 0.75 * em);
+    ctx.lineTo(x + 0.65 * em, y + 0.22 * em);
+    ctx.lineTo(x, y + 0.75 * em);
+    ctx.lineTo(x - 0.65 * em, y + 0.22 * em);
     ctx.closePath();
     ctx.strokeStyle = bg; // a halo where borders pass
     ctx.lineWidth = 0.3 * em;
@@ -334,17 +340,6 @@
     ctx.fillStyle = paint;
     ctx.fill();
     ctx.fillStyle = bg;
-    fillCentred(ctx, String(n), x, y - 0.12 * em);
-  }
-
-  // Words into lines no wider than `w`.
-  function wrap(ctx, text, w) {
-    const lines = [];
-    let line = "";
-    for (const word of text.split(" ")) {
-      const next = line ? `${line} ${word}` : word;
-      if (line && ctx.measureText(next).width > w) { lines.push(line); line = word; } else line = next;
-    }
-    return line ? [...lines, line] : lines;
+    fillCentred(ctx, String(n), x, y - 0.1 * em);
   }
 })();
