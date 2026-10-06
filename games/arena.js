@@ -81,9 +81,9 @@
 
   Gamekit.game("arena", {
     title: "Seat the Arena",
-    task: "Seat groups in the stand for as many points as possible. Keep an empty seat beside, in front of and " +
-      "diagonally to every group, and at most 2 groups per row. Tap a group, then the seat for its left end; " +
-      "tap a seated group to take it out.",
+    task: "Seat groups for as many points as possible, with an empty seat beside, in front of and diagonally to " +
+      "every group and at most 2 groups per row. Drag a group onto the seats, its left end where you let go; drag " +
+      "it off the stand to take it out.",
     goal: "max",
     unit: ["point", "points"],
     board: { w: 100, h: 70, stretch: true },
@@ -118,28 +118,61 @@
     },
     start() { return TYPES.map((t) => Array(t.n).fill(null)); },
 
-    // a tap on a group in the column picks its type; a tap on a seat seats a
-    // group of the picked type there, or takes out the group sitting there
+    // A group can be dragged from the column onto the stand, or from its seat
+    // to another one (off the stand takes it out). A tap without moving picks a
+    // type in the column, seats the picked type on an empty seat, or takes out
+    // the group sitting there.
     pointer(p, plan, ui, e, view) {
-      if (e.type !== "down") return undefined;
       const L = lay(view);
-      const tile = L.tiles.findIndex((b) => inside(e, b));
-      ui.msg = null;
-      if (tile >= 0) { ui.sel = ui.sel === tile ? null : tile; return undefined; }
-      const r = 1 + Math.floor((e.y - L.y0) / L.s);
-      const c = 1 + Math.floor((e.x - L.x0) / L.s);
-      if (r < 1 || r > ROWS || c < 1 || c > COLS) return undefined;
+      const seatOf = (x, y) => ({ r: 1 + Math.floor((y - L.y0) / L.s), c: 1 + Math.floor((x - L.x0) / L.s) });
+      const onStand = ({ r, c }) => r >= 1 && r <= ROWS && c >= 1 && c <= COLS;
       const seated = groups(plan);
-      const here = seated.find((g) => g.r === r && c >= g.c && c < g.c + TYPES[g.t].d);
+      const sittingAt = (at) => seated.find((g) => g.r === at.r && at.c >= g.c && at.c < g.c + TYPES[g.t].d);
+      if (e.type === "down") {
+        ui.msg = null;
+        const tile = L.tiles.findIndex((b) => inside(e, b));
+        const at = seatOf(e.x, e.y);
+        const here = onStand(at) ? sittingAt(at) : null;
+        ui.drag = { x: e.x, y: e.y, tile: tile >= 0 ? tile : null, t: tile >= 0 ? tile : here ? here.t : null,
+          i: here ? here.i : null, grab: here ? at.c - here.c : 0 };
+        return undefined;
+      }
+      const d = ui.drag;
+      if (!d) return undefined;
+      d.moved = d.moved || Math.hypot(e.x - d.x, e.y - d.y) > 0.4 * L.s;
+      const at = seatOf(e.x, e.y);
+      if (e.type === "move") {
+        if (d.t != null && d.moved) Object.assign(d, { r: at.r, c: at.c - d.grab, on: onStand(at) });
+        return undefined;
+      }
+      ui.drag = null; // released
       const next = plan.map((slots) => slots.slice());
+      if (d.moved && d.t != null) { // a drop
+        if (!onStand(at)) {
+          if (d.i == null) return undefined;
+          next[d.t][d.i] = null; // dragged off the stand
+          return next;
+        }
+        const slot = d.i != null ? d.i : plan[d.t].indexOf(null);
+        if (slot < 0) { ui.msg = `All ${TYPES[d.t].n} groups ${TYPES[d.t].id} are seated.`; return undefined; }
+        const others = seated.filter((g) => !(g.t === d.t && g.i === d.i));
+        const why = refusal(p, others, d.t, at.r, at.c - d.grab);
+        if (why) { ui.msg = why; return undefined; }
+        next[d.t][slot] = [at.r, at.c - d.grab];
+        return next;
+      }
+      if (d.moved) return undefined;
+      if (d.tile != null) { ui.sel = ui.sel === d.tile ? null : d.tile; return undefined; } // a tap
+      if (!onStand(at)) return undefined;
+      const here = sittingAt(at);
       if (here) { next[here.t][here.i] = null; return next; }
       if (ui.sel == null) { ui.msg = "Pick a group first."; return undefined; }
       const t = ui.sel;
       const free = plan[t].indexOf(null);
       if (free < 0) { ui.msg = `All ${TYPES[t].n} groups ${TYPES[t].id} are seated.`; return undefined; }
-      const why = refusal(p, seated, t, r, c);
+      const why = refusal(p, seated, t, at.r, at.c);
       if (why) { ui.msg = why; return undefined; }
-      next[t][free] = [r, c];
+      next[t][free] = [at.r, at.c];
       if (next[t].indexOf(null) < 0) ui.sel = null; // that type is all seated
       return next;
     },
@@ -157,17 +190,30 @@
             kept: kept ? 1 : 0, color: "muted" });
         }
       }
+      const d = ui.drag && ui.drag.moved && ui.drag.t != null ? ui.drag : null; // a group being dragged
       seated.forEach((g) => {
         const { x, y } = seatAt(L, g.r, g.c);
-        out.push({ key: `group-${g.t}-${g.i}`, kind: "group", t: g.t, x, y, w: TYPES[g.t].d * L.s, s: L.s, color: "plan" });
+        const lifted = d && d.t === g.t && d.i === g.i;
+        out.push({ key: `group-${g.t}-${g.i}`, kind: "group", t: g.t, x, y, w: TYPES[g.t].d * L.s, s: L.s, color: "plan",
+          alpha: lifted ? 0.3 : 1 });
       });
+      let why = null;
+      if (d && d.on) { // where it would land: see-through, red with the reason where it can't
+        const others = seated.filter((g) => !(g.t === d.t && g.i === d.i));
+        why = d.i == null && plan[d.t].indexOf(null) < 0 ? `All ${TYPES[d.t].n} groups ${TYPES[d.t].id} are seated.`
+          : refusal(p, others, d.t, d.r, d.c);
+        const c = Math.max(1, Math.min(COLS - TYPES[d.t].d + 1, d.c));
+        const { x, y } = seatAt(L, d.r, c);
+        out.push({ key: "ghost", kind: "group", t: d.t, x, y, w: TYPES[d.t].d * L.s, s: L.s, color: why ? "bad" : "plan", alpha: 0.5 });
+      }
       L.tiles.forEach((b, t) => {
         out.push({ key: `type-${t}`, kind: "type", t, ...b, left: plan[t].filter((s) => !s).length,
           sel: ui.sel === t ? 1 : 0, color: "plan" });
       });
       if (!(view && view.locked)) {
-        out.push({ key: "hint", kind: "hint", ...L.hint, color: ui.msg ? "bad" : "muted",
-          text: ui.msg || (ui.sel == null ? "Pick a group, then tap the seat for its left end." :
+        const msg = why || ui.msg;
+        out.push({ key: "hint", kind: "hint", ...L.hint, color: msg ? "bad" : "muted",
+          text: msg || (ui.sel == null ? "Drag a group onto a seat, or tap a group, then a seat." :
             `Tap the seat for group ${TYPES[ui.sel].id}'s left end.`) });
       }
       return out;

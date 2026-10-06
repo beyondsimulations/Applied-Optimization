@@ -60,9 +60,9 @@
 
   Gamekit.game("warehouses", {
     title: "Store the Products Together",
-    task: "An online shop stores 8 products in Hamburg and Berlin, 4 places each. An order with products from " +
-      "both warehouses ships as two parcels. Tap two products in different warehouses to swap them, and split as " +
-      "few parcels as possible.",
+    task: "An online shop stores 8 products in Hamburg and Berlin, 4 places each; an order with products from both " +
+      "ships as two parcels. Drag a product onto one in the other warehouse to swap them, and split as few parcels " +
+      "as possible.",
     goal: "min",
     unit: ["split parcel", "split parcels"],
     board: { w: 100, h: 70, stretch: true },
@@ -96,41 +96,69 @@
     },
     start() { return NAMES.map((_, i) => i); }, // the themes kept together, the camera with the camping gear
 
-    // a first tap picks a product, a second one in the other warehouse swaps
-    // the two (a tap in the same warehouse picks that product instead)
+    // A product can be dragged onto a product in the other warehouse to swap
+    // the two; the orders follow while it hovers there. A first tap picks a
+    // product, a second one in the other warehouse swaps them (a tap in the
+    // same warehouse picks that product instead).
     pointer(p, plan, ui, e, view) {
-      if (e.type !== "down") return undefined;
       const L = lay(view);
-      for (let i = 0; i < plan.length; i++) {
-        const s = slot(L, home(p, plan, i), plan[i] % p.cap);
-        if (Math.abs(e.x - s.x) > L.bw / 2 || Math.abs(e.y - s.y) > L.sh / 2) continue;
-        if (ui.sel == null || ui.sel === i || home(p, plan, ui.sel) === home(p, plan, i)) {
-          ui.sel = ui.sel === i ? null : i;
-          return undefined;
-        }
+      const productAt = (x, y) => plan.findIndex((place, i) => {
+        const s = slot(L, home(p, plan, i), place % p.cap);
+        return Math.abs(x - s.x) <= L.bw / 2 && Math.abs(y - s.y) <= L.sh / 2;
+      });
+      if (e.type === "down") {
+        const i = productAt(e.x, e.y);
+        ui.drag = { x: e.x, y: e.y, i: i >= 0 ? i : null };
+        return undefined;
+      }
+      const d = ui.drag;
+      if (!d) return undefined;
+      d.moved = d.moved || Math.hypot(e.x - d.x, e.y - d.y) > 0.4 * L.bw;
+      const j = productAt(e.x, e.y);
+      const other = d.i != null && j >= 0 && home(p, plan, j) !== home(p, plan, d.i) ? j : null;
+      if (e.type === "move") {
+        if (d.i != null && d.moved) Object.assign(d, { to: other, px: e.x, py: e.y });
+        return undefined;
+      }
+      ui.drag = null; // released
+      const swap = (a, b) => {
         const next = plan.slice();
-        next[i] = plan[ui.sel];
-        next[ui.sel] = plan[i];
+        next[a] = plan[b];
+        next[b] = plan[a];
         ui.sel = null;
         return next;
+      };
+      if (d.moved) return other != null ? swap(d.i, other) : undefined;
+      if (d.i == null) { ui.sel = null; return undefined; } // a tap
+      if (ui.sel == null || ui.sel === d.i || home(p, plan, ui.sel) === home(p, plan, d.i)) {
+        ui.sel = ui.sel === d.i ? null : d.i;
+        return undefined;
       }
-      ui.sel = null;
-      return undefined;
+      return swap(d.i, ui.sel);
     },
 
-    pieces(p, plan, ui, view) {
+    pieces(p, real, ui, view) {
       const L = lay(view, p.pairs.length);
       const out = [];
+      const d = ui.drag && ui.drag.moved && ui.drag.i != null ? ui.drag : null; // a product being dragged
+      // over a product in the other warehouse the two show swapped, so the orders show the result
+      const plan = d && d.to != null ? real.map((place, i) => (i === d.i ? real[d.to] : i === d.to ? real[d.i] : place)) : real;
       L.houses.forEach((H, k) => out.push({ key: `house-${k}`, kind: "house", k, ...H, color: "text" }));
       plan.forEach((place, i) => {
         const s = slot(L, home(p, plan, i), place % p.cap);
-        out.push({ key: `product-${i}`, kind: "product", i, x: s.x, y: s.y, size: L.icon, w: L.bw, h: L.sh,
-          sel: ui.sel === i ? 1 : 0, color: "plan" });
+        const loose = d && d.i === i && d.to == null; // carried, not over a product it could swap with
+        out.push({ key: `product-${i}`, kind: "product", i, x: loose ? d.px : s.x, y: loose ? d.py : s.y, size: L.icon,
+          w: L.bw, h: L.sh, sel: ui.sel === i || (d && d.i === i) ? 1 : 0, color: "plan" });
       });
-      if (ui.sel != null) { // on the name line of the warehouse to tap next
+      if (d) { // on the name line of the warehouse to drop into
+        const H = L.houses[1 - home(p, real, d.i)];
+        out.push({ key: "hint", kind: "hint", k: 1 - home(p, real, d.i), x: H.x + H.w, x0: H.x, y: H.name,
+          color: "accent", text: d.to != null ? "Let go to swap" : "Drop it on a product here",
+          short: d.to != null ? "Let go" : "Drop it here" });
+      } else if (ui.sel != null) { // on the name line of the warehouse to tap next
         const H = L.houses[1 - home(p, plan, ui.sel)];
         out.push({ key: "hint", kind: "hint", k: 1 - home(p, plan, ui.sel), x: H.x + H.w, x0: H.x, y: H.name,
-          color: "accent", text: "Now tap a product here" });
+          color: "accent", text: "Now tap a product here", short: "Tap one here" });
       }
       p.pairs.forEach(([i, j, q], r) => {
         const R = L.rows;
@@ -173,7 +201,7 @@
       } else if (piece.kind === "hint") { // shorter where it would reach the warehouse's name
         const free = piece.x - (piece.x0 + 1.7 * em + ctx.measureText(HOUSES[piece.k]).width + em);
         ctx.fillStyle = piece.paint;
-        fillCentred(ctx, ctx.measureText(piece.text).width <= free ? piece.text : "Tap one here", piece.x, piece.y, "end");
+        fillCentred(ctx, ctx.measureText(piece.text).width <= free ? piece.text : piece.short, piece.x, piece.y, "end");
       } else if (piece.kind === "order") { // a pair bought together: icons, how often, and its parcels
         const s = 1.3 * em;
         const x = piece.x;
