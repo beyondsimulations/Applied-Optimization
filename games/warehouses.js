@@ -4,22 +4,27 @@
 // products between the warehouses to split as few parcels as possible.
 (function () {
   const { fillCentred, formatScore: fmt } = GamekitCore;
-  const NAMES = ["tent", "sleeping bag", "lantern", "camera", "tripod", "phone", "charger", "headphones"];
+  const NAMES = ["tent", "camping mat", "lantern", "camera", "tripod", "phone", "charger", "headset"];
+  const LABELS = ["Tent", "Mat", "Lantern", "Camera", "Tripod", "Phone", "Charger", "Headset"]; // one word under each icon
   const HOUSES = ["Hamburg", "Berlin"];
 
-  // Two layouts in board units. Wide: the warehouses on the left, the past
-  // orders in one column on the right (the board stretches on slides, view.w).
-  // Compact (phones): the orders below the warehouses, in two columns.
+  // Two layouts in board units. Wide: the warehouses fill the space left of
+  // the past orders, which run in one column on the right (the board stretches
+  // on slides, view.w). Compact (phones): the orders below the warehouses, in
+  // two columns. A place holds an icon with its name under it.
   function lay(view) {
     const em = (view && view.em) || 3;
+    const sh = 3.6 * em + 1.5; // place height: icon, name, padding
     if (view && view.compact) {
-      return { w: 100, h: 99, title: 3, box: [{ x: 0, y: 7 }, { x: 55, y: 7 }], slot: { w: 21, h: 17 }, icon: 2 * em,
-        hint: 50, head: 57.5, rows: { x: [0, 52], y: 64, h: 7.2, per: 5, w: 48 } };
+      const bottom = 7 + 2 * sh + 3;
+      return { w: 100, h: 106, title: 3, box: [{ x: 0, y: 7 }, { x: 55, y: 7 }], slot: { w: 21, h: sh }, icon: 2 * em,
+        hint: bottom + 5, head: 63, rows: { x: [0, 52], y: 68.5, h: 7.2, per: 5, w: 48 } };
     }
     const w = (view && view.w) || 100;
-    const ox = Math.max(68, w - 13 * em);
-    return { w, h: 70, title: 3, box: [{ x: 0, y: 7 }, { x: 33, y: 7 }], slot: { w: 13, h: 12 }, icon: 2 * em,
-      hint: 40, head: 3, rows: { x: [ox], y: 9, h: 5.8, per: 10, w: w - ox } };
+    const ox = w - 8.2 * em; // the orders column: two icons, a count and the parcels
+    const sw = Math.min(22, (ox - 4 - 10) / 4);
+    return { w, h: 70, title: 3, box: [{ x: 0, y: 7 }, { x: 2 * sw + 7, y: 7 }], slot: { w: sw, h: sh }, icon: 2 * em,
+      hint: 7 + 2 * sh + 3 + 5, head: 3, rows: { x: [ox], y: 9, h: 5.8, per: 10, w: w - ox } };
   }
   // where product number `n` (0-based) of a warehouse sits: a 2 × 2 grid
   function slot(L, k, n) {
@@ -42,7 +47,7 @@
     goal: "min",
     unit: ["split parcel", "split parcels"],
     board: { w: 100, h: 70, stretch: true },
-    compactBoard: { w: 100, h: 99 },
+    compactBoard: { w: 100, h: 106 },
     // pairs bought together last month: [product, product, orders]
     class: {
       cap: 4,
@@ -139,13 +144,16 @@
         ctx.strokeStyle = view.css.muted;
         ctx.lineWidth = 0.35;
         ctx.strokeRect(piece.x, piece.y, piece.w, piece.h);
-      } else if (piece.kind === "product") {
+      } else if (piece.kind === "product") { // its icon with its name under it
         if (piece.sel > 0.5) { // the picked product
           ctx.strokeStyle = view.css.accent;
           ctx.lineWidth = 0.5;
           ctx.strokeRect(piece.x - piece.w / 2 + 1, piece.y - piece.h / 2 + 1, piece.w - 2, piece.h - 2);
         }
-        icon(ctx, piece.i, piece.x, piece.y, piece.size, piece.paint, view.css.bg);
+        const top = piece.y - piece.h / 2 + 0.75;
+        icon(ctx, piece.i, piece.x, top + em, piece.size, piece.paint, view.css.bg);
+        ctx.fillStyle = view.css.text;
+        fillCentred(ctx, LABELS[piece.i], piece.x, top + 2.85 * em);
       } else if (piece.kind === "hint") {
         ctx.fillStyle = piece.paint;
         fillCentred(ctx, piece.text, piece.x, piece.y, "start");
