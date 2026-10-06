@@ -7,12 +7,12 @@
   // so that no two names collide: a(bove), b(elow), l(eft) or r(ight).
   const TOWNS = [
     { name: "Rendsburg", lat: 54.30, lon: 9.66, side: "b" },
-    { name: "Kiel", lat: 54.32, lon: 10.13, side: "a" },
+    { name: "Kiel", lat: 54.32, lon: 10.13, side: "r" },
     { name: "Neumünster", lat: 54.07, lon: 9.98, side: "b" },
     { name: "Eckernförde", lat: 54.47, lon: 9.84, side: "r" },
     { name: "Schleswig", lat: 54.52, lon: 9.56, side: "a" },
-    { name: "Husum", lat: 54.48, lon: 9.05, side: "r" },
-    { name: "Heide", lat: 54.19, lon: 9.10, side: "r" },
+    { name: "Husum", lat: 54.48, lon: 9.05, side: "b" },
+    { name: "Heide", lat: 54.19, lon: 9.10, side: "b" },
     { name: "Itzehoe", lat: 53.92, lon: 9.52, side: "r" },
     { name: "Plön", lat: 54.16, lon: 10.42, side: "l" },
   ];
@@ -64,13 +64,13 @@
     const plan = [];
     while (left.size && plan.length < VANS) {
       const t = [];
-      let at = 0;
+      let here = 0;
       for (;;) {
         const fits = [...left].filter((j) => load(p, t) + p.crates[j - 1] <= p.cap);
         if (!fits.length) break;
-        at = fits.reduce((a, b) => (KM[at][b] < KM[at][a] ? b : a));
-        t.push(at);
-        left.delete(at);
+        here = fits.reduce((a, b) => (KM[here][b] < KM[here][a] ? b : a));
+        t.push(here);
+        left.delete(here);
       }
       plan.push(t);
     }
@@ -142,7 +142,7 @@
       ui.msg = null;
       const hitVan = L.vans.findIndex((b) => inside(e, b));
       if (hitVan >= 0) { ui.van = hitVan; return undefined; }
-      const r = Math.max(1.2 * em, 3.5); // a finger's reach
+      const r = Math.max(1.35 * em, 3.5); // a finger's reach: 44 px across at the game's text size
       let hit = -1;
       let d = Infinity;
       TOWNS.forEach((_, i) => {
@@ -194,11 +194,13 @@
         out.push({ key: `town-${i}`, kind: "library", x, y, name: town.name, side: town.side, crates: p.crates[i - 1],
           color: served ? "plan" : "muted" });
       });
-      plan.forEach((t, k) => { // each van on its first leg
+      plan.forEach((t, k) => { // each van in the middle of its longest leg, clear of the towns and the other van
         if (!t.length) return;
-        const [x1, y1] = at(L, 0);
-        const [x2, y2] = at(L, t[0]);
-        out.push({ key: `van-${k}`, kind: "van", n: k + 1, x: x1 + 0.5 * (x2 - x1), y: y1 + 0.5 * (y2 - y1), color: "plan" });
+        const stops = [0, ...t, 0].map((i) => at(L, i));
+        const legs = stops.slice(1).map((b, n) => [stops[n], b]);
+        const [[x1, y1], [x2, y2]] = legs.reduce((u, v) => (Math.hypot(v[1][0] - v[0][0], v[1][1] - v[0][1]) >
+          Math.hypot(u[1][0] - u[0][0], u[1][1] - u[0][1]) ? v : u));
+        out.push({ key: `van-${k}`, kind: "van", n: k + 1, x: (x1 + x2) / 2, y: (y1 + y2) / 2, color: "plan" });
       });
       const open = view && view.locked ? -1 : ui.van || 0;
       L.vans.forEach((b, k) => {
@@ -250,27 +252,31 @@
         }
         const x = piece.x + 0.6 * em;
         const y1 = piece.y + 1.1 * em;
+        // the line shows a dash on either side of the van where the block has room
+        // next to the widest km text (narrow phones: just the van)
+        const len = Math.max(2.3 * em, Math.min(4.4 * em, piece.w - 1.7 * em - ctx.measureText("888 km").width));
         ctx.strokeStyle = piece.paint;
         ctx.lineWidth = 0.5;
         if (piece.dash > 0.5) ctx.setLineDash([1.1 * em, 0.6 * em]);
         ctx.beginPath();
         ctx.moveTo(x, y1);
-        ctx.lineTo(x + 4.4 * em, y1); // a dash shows on either side of the van
+        ctx.lineTo(x + len, y1);
         ctx.stroke();
         ctx.setLineDash([]);
-        van(ctx, x + 2.2 * em, y1, em, piece.n, piece.paint, view.css.bg);
+        van(ctx, x + len / 2, y1, em, piece.n, piece.paint, view.css.bg);
         ctx.fillStyle = view.css.text;
         fillCentred(ctx, `${fmt(piece.km)} km`, piece.x + piece.w - 0.6 * em, y1, "end");
         const used = Math.round(piece.load);
         const count = `${used}/${piece.cap}`;
         const cw = (piece.w - 1.2 * em - ctx.measureText(`${piece.cap}/${piece.cap}`).width - 0.5 * em) / piece.cap;
         const y2 = piece.y + 2.5 * em;
+        const alpha = ctx.globalAlpha; // the piece's own, while it fades in or out
         for (let c = 0; c < piece.cap; c++) {
           ctx.fillStyle = c < used ? piece.paint : view.css.muted;
-          ctx.globalAlpha = c < used ? 1 : 0.35;
+          ctx.globalAlpha = alpha * (c < used ? 1 : 0.35);
           ctx.fillRect(x + c * cw, y2 - 0.4 * em, cw - Math.min(0.4, cw * 0.2), 0.8 * em);
         }
-        ctx.globalAlpha = 1;
+        ctx.globalAlpha = alpha;
         ctx.fillStyle = view.css.text;
         fillCentred(ctx, count, piece.x + piece.w - 0.6 * em, y2, "end");
       } else if (piece.kind === "hint") {
@@ -373,19 +379,22 @@
     },
   });
 
-  // A town's name on its side, with a halo where legs pass behind it.
+  // A town's name on its side, with a halo where legs pass behind it; a name
+  // above or below its town stays inside the board.
   function label(ctx, piece, gap, em, view) {
     const [dx, dy, align] = { a: [0, -gap - 0.55 * em, "center"], b: [0, gap + 0.6 * em, "center"],
       l: [-gap - 0.3 * em, 0, "end"], r: [gap + 0.3 * em, 0, "start"] }[piece.side];
+    const half = ctx.measureText(piece.name).width / 2;
+    const x = align === "center" ? Math.min(Math.max(piece.x, half), view.w - half) : piece.x + dx;
     ctx.strokeStyle = view.css.bg;
     ctx.lineWidth = 0.3 * em;
     ctx.lineJoin = "round";
     ctx.textAlign = align;
     ctx.textBaseline = "alphabetic";
     const y = piece.y + dy + ctx.measureText("0").actualBoundingBoxAscent / 2;
-    ctx.strokeText(piece.name, piece.x + dx, y);
+    ctx.strokeText(piece.name, x, y);
     ctx.fillStyle = view.css.text;
-    ctx.fillText(piece.name, piece.x + dx, y);
+    ctx.fillText(piece.name, x, y);
   }
 
   // The central library, about `s` wide and centred on (x, y): a pediment,
