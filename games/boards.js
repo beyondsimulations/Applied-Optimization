@@ -17,12 +17,21 @@
         table: { x: 0, w: 100, y: 99, row: 7 } };
     }
     const w = (view && view.w) || 100;
-    const px = Math.max(70, w * 0.62); // the table starts right of the chart
-    return { w, h: 70, x0: 8, y0: 7, s: 52 / MAX, tick: 62.5, xTitle: 68.5,
-      table: { x: px, w: w - px, y: 11, row: 7.5 } };
+    const em = (view && view.em) || 3;
+    // the table needs about 13 text sizes; on a narrow page the chart gives way
+    const tw = Math.max(w * 0.38, 13 * em);
+    const s = Math.min(52 / MAX, (w - tw - 14) / MAX);
+    const tick = 7 + MAX * s + 3.5;
+    return { w, h: 70, x0: 8, y0: 7, s, tick, xTitle: tick + 6,
+      table: { x: w - tw, w: tw, y: 11, row: 7.5 } };
   }
-  // right edges of the profit, cutting and finishing columns
-  const cols = (t) => [t.x + 0.34 * t.w, t.x + 0.67 * t.w, t.x + t.w];
+  // right edges of the profit, cutting and finishing columns; the profit column
+  // keeps room for a board icon, a gap and "150 €" on narrow tables
+  function cols(t, em) {
+    const p = Math.max(t.x + 0.34 * t.w, t.x + 5.6 * em);
+    const end = t.x + t.w;
+    return [p, p + (end - p) / 2, end];
+  }
   const X = (L, a) => L.x0 + a * L.s; // skateboards → board x
   const Y = (L, b) => L.y0 + (MAX - b) * L.s; // surfboards → board y
 
@@ -114,7 +123,9 @@
           alpha: Math.abs(v - b) < 2.5 ? 0 : 1, color: "muted" });
       }
       out.push({ key: "va", kind: "value", x: X(L, a), y: L.tick, text: String(a), color: "plan" });
-      out.push({ key: "vb", kind: "value", x: L.x0 - 1.2, y: Y(L, b), text: String(b), right: 1, color: "plan" });
+      // on the y-axis itself (no skateboards) the marker would cover the number: it moves left
+      out.push({ key: "vb", kind: "value", x: L.x0 - 1.2 - (a === 0 ? 0.55 * view.em : 0), y: Y(L, b), text: String(b),
+        right: 1, color: "plan" });
       const cs = corners(p);
       const best = cs[2].map(Math.round); // the corner where both departments are full
       if (view && view.locked && a === best[0] && b === best[1]) { // the optimal plan shows the corners and what they earn
@@ -126,7 +137,7 @@
       out.push({ key: "plan", kind: "plan", x: X(L, a), y: Y(L, b), text: `${fmt(profit(p, plan))} €`,
         label: view && view.locked ? 0 : 1, color: "plan" });
       const t = L.table;
-      const c = cols(t);
+      const c = cols(t, view.em);
       p.use.forEach((u, k) => { // the hours the plan uses, under each department's column
         const h = used(p, plan, k);
         out.push({ key: `dept-${k}`, kind: "dept", x: c[k + 1], w: c[k + 1] - c[k] - 1, y: t.y + 3 * t.row,
@@ -188,7 +199,7 @@
       });
       // the workshop's table: what a board earns and needs (the plan's hours are pieces)
       const t = L.table;
-      const tc = cols(t);
+      const tc = cols(t, em);
       saw(ctx, tc[1] - 0.6 * em, t.y, em, view.css.text);
       brush(ctx, tc[2] - 0.6 * em, t.y, em, view.css.text);
       ctx.fillStyle = view.css.muted;
