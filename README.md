@@ -27,7 +27,6 @@ The course covers applied optimization methods with hands-on tutorials and real-
 
 - **`helpers/`** - Post-processing automation scripts (see [Helper Functions](#-helper-functions))
 - **`_site/`** - Generated website output (created by Quarto)
-- **`_repo-md/`** - Processed markdown files (created by helper scripts)
 - **`_freeze/`** - Quarto's computational cache
 - **`site_libs/`** - Website dependencies and libraries
 
@@ -53,7 +52,6 @@ project:
   type: website
   post-render:
     - helpers/convert_pypercent.py
-    - helpers/convert_qmd_to_md.py
 ```
 
 ## Helper Functions
@@ -73,19 +71,6 @@ The `helpers/` directory contains automation scripts that run after each build:
 2. Reads each notebook using Jupytext
 3. Converts to Julia percent format (`.jl` files with `# %%` cell separators)
 4. Saves alongside original notebooks
-
-### `convert_qmd_to_md.py`
-**Purpose**: Extracts and organizes rendered markdown files
-
-- **Input**: All `.md` files in `_site/`
-- **Output**: Organized copy in `_repo-md/` maintaining directory structure
-- **Usage**: Creates a clean markdown repository for version control or external processing
-
-**How it works**:
-1. Recursively finds all `.md` files in the rendered site
-2. Recreates the directory structure in `_repo-md/`
-3. Moves files while preserving relative paths
-4. Provides organized markdown output separate from HTML site
 
 ### `convert-pdf.py`
 **Purpose**: Converts PDF files to SVG format (manual use)

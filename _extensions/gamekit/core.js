@@ -160,9 +160,12 @@
       .filter((s) => s.text !== "");
   }
 
+  // unit: a string, or [singular, plural] (e.g. ["crate", "crates"])
   function formatScore(value, unit) {
-    const n = (Math.round(value) + 0).toLocaleString("en-US"); // + 0 turns -0 into 0
-    return unit ? `${n} ${unit}` : n;
+    const r = Math.round(value) + 0; // + 0 turns -0 into 0
+    const n = r.toLocaleString("en-US");
+    const u = Array.isArray(unit) ? unit[r === 1 ? 0 : 1] : unit;
+    return u ? `${n} ${u}` : n;
   }
 
   // Draws text whose digits and capitals are centred on y: canvas's "middle"
@@ -174,8 +177,19 @@
     ctx.fillText(text, x, y + ctx.measureText("0").actualBoundingBoxAscent / 2);
   }
 
+  // Words into lines no wider than `w` at the context's current font.
+  function wrapText(ctx, text, w) {
+    const lines = [];
+    let line = "";
+    for (const word of text.split(" ")) {
+      const next = line ? `${line} ${word}` : word;
+      if (line && ctx.measureText(next).width > w) { lines.push(line); line = word; } else line = next;
+    }
+    return line ? [...lines, line] : lines;
+  }
+
   globalThis.GamekitCore = {
-    rng, pair, frame, resolve, assertUniqueKeys, parseColor, css, gap, thinkLine,
-    pixelSize, codeSpans, formatScore, ease, fillCentred,
+    rng, pair, frame, resolve, assertUniqueKeys, parseColor, css, gap, thinkLine, seconds,
+    pixelSize, codeSpans, formatScore, ease, fillCentred, wrapText,
   };
 })();
