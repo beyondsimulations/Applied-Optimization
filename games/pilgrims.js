@@ -3,7 +3,7 @@
 // Students move groups within their shuttle times; a move costs the group's
 // size times the hours moved, squared.
 (function () {
-  const { fillCentred, formatScore: fmt, seconds, wrapText } = GamekitCore;
+  const { fillCentred, formatScore: fmt, thinkLine, wrapText } = GamekitCore;
   const HOURS = Array.from({ length: 12 }, (_, k) => 6 + k); // 6:00 … 17:00
   const NAMES = "ABCDEFGHIJ";
   const UNIT = 10000; // pilgrims per figure
@@ -13,7 +13,7 @@
   const total = (p, plan) => p.groups.reduce((s, g, k) => s + penalty(g, plan[k]), 0);
   const load = (p, plan, h) => p.groups.reduce((s, g, k) => s + (plan[k] === h ? g.n : 0), 0);
   const clock = (h) => `${h}:00`;
-  const count = (n, word) => `${fmt(n)} ${word}${Math.round(n) === 1 ? "" : "s"}`;
+  const POINTS = ["penalty point", "penalty points"];
 
   // The rule of thumb: in the order of their wishes, each group takes the
   // nearest free hour it may use (null when a group finds none).
@@ -68,14 +68,14 @@
     const cw = (w - lab - 2.2 * em) / HOURS.length;
     const top = 1.8 * em; // the hour labels above
     if (compact) {
-      const rh = 1.5 * em;
+      const rh = 1.8 * em; // a finger's height; the hour follows the finger along the row
       const uh = 0.8 * em; // a figure in the bridge chart
       const bridge = top + 10 * rh + 0.6 * em;
       const hint = bridge + ROOM * uh + 0.4 * em;
       return { lab, cw, top, rh, bridge, uh, hint, w, every: cw < 1.6 * em ? 2 : 1, h: hint + 2.6 * em + 0.5 };
     }
     const h = (view && view.h) || 70;
-    const rh = Math.min(1.6 * em, (h - top - 0.6 * em - ROOM * 0.95 * em - 1.6 * em) / 10);
+    const rh = Math.max(1.15 * em, Math.min(1.6 * em, (h - top - 0.6 * em - ROOM * 0.95 * em - 1.6 * em) / 10));
     const uh = Math.min(1.1 * em, (h - top - 10 * rh - 0.6 * em - 1.6 * em) / ROOM);
     const bridge = top + 10 * rh + 0.6 * em;
     return { lab, cw, top, rh, bridge, uh, hint: bridge + ROOM * uh + 0.3 * em, w, every: 1 };
@@ -123,18 +123,22 @@
     },
     start(p) { return p.groups.map((g) => g.pref); }, // everyone at their preferred hour: the bridge overflows
 
+    // a press on a group's row moves the group to that hour, and it follows
+    // the finger along the row until release; its shuttle times stop it
     pointer(p, plan, ui, e, view) {
-      if (e.type !== "down") return undefined;
+      if (e.type === "up") { ui.drag = null; return undefined; }
       const L = lay(view);
-      const k = Math.floor((e.y - L.top) / L.rh);
-      const h = HOURS[0] + Math.floor((e.x - L.lab) / L.cw);
-      ui.msg = null;
-      if (k < 0 || k >= p.groups.length || h < HOURS[0] || h > HOURS[HOURS.length - 1]) return undefined;
-      const g = p.groups[k];
-      if (h < g.lo || h > g.hi) {
-        ui.msg = `Group ${NAMES[k]}'s shuttles allow ${clock(g.lo)} to ${clock(g.hi)}.`;
-        return undefined;
+      if (e.type === "down") {
+        const row = Math.floor((e.y - L.top) / L.rh);
+        ui.drag = row >= 0 && row < p.groups.length && e.x >= L.lab ? row : null;
+        ui.msg = null;
       }
+      if (ui.drag == null) return undefined;
+      const k = ui.drag;
+      const g = p.groups[k];
+      const at = HOURS[0] + Math.floor((e.x - L.lab) / L.cw);
+      const h = Math.min(g.hi, Math.max(g.lo, at));
+      ui.msg = h === at ? null : `Group ${NAMES[k]}'s shuttles allow ${clock(g.lo)} to ${clock(g.hi)}.`;
       if (plan[k] === h) return undefined;
       const next = plan.slice();
       next[k] = h;
@@ -153,11 +157,11 @@
       });
       HOURS.forEach((h) => {
         out.push({ key: `bridge-${h}`, kind: "bridge", x: col(L, h), y: L.bridge, cw: L.cw, uh: L.uh,
-          load: load(p, plan, h), cap: p.cap, color: "plan" });
+          load: load(p, plan, h), cap: p.cap, color: "neutral" }); // red only past the capacity, also in the reveal
       });
       if (!(view && view.locked)) {
         out.push({ key: "hint", kind: "hint", x: 0, y: L.hint, w: L.w, color: ui.msg ? "bad" : "muted",
-          text: ui.msg || "Tap an hour in a group's row to move the group there." });
+          text: ui.msg || "Tap or drag a group along its row." });
       }
       return out;
     },
@@ -167,7 +171,8 @@
       const em = view.em;
       ctx.font = `${em}px ${view.font}`; // the same size as the HTML text around the board
       ctx.fillStyle = view.css.muted;
-      HOURS.forEach((h, n) => { if (n % L.every === 0) fillCentred(ctx, String(h), col(L, h), L.top - 0.8 * em); });
+      const last = HOURS[HOURS.length - 1]; // every label on wide boards; on narrow ones every second, ending at the last hour
+      HOURS.forEach((h) => { if ((last - h) % L.every === 0) fillCentred(ctx, String(h), col(L, h), L.top - 0.8 * em); });
       fillCentred(ctx, "Bridge", 0.2 * em, L.bridge + ROOM * L.uh - 0.6 * L.uh, "start");
       // the bridge's capacity: a line above the third figure
       ctx.strokeStyle = view.css.muted;
@@ -261,26 +266,31 @@
       ].join("\n");
     },
     decode(p, values) {
-      return p.groups.map((g, s) => HOURS.find((h) => Math.round(values[`x_${s}_${h}`] || 0) === 1) ?? g.pref);
+      return p.groups.map((g, s) => {
+        const h = HOURS.find((t) => Math.round(values[`x_${s}_${t}`] || 0) === 1);
+        if (h == null) throw new Error(`HiGHS gave group ${NAMES[s]} no hour`);
+        return h;
+      });
     },
-    // the generic line would count every x_s_t as a separate yes/no decision
+    // one choice per group among its allowed hours, not every x_s_t as a yes/no decision
     think(p, r) {
-      const ways = p.groups.reduce((t, g) => t * (g.hi - g.lo + 1), 1);
-      return `${p.groups.length} groups, their shuttle times → ${fmt(ways)} timetables · HiGHS: ${seconds(r.ms)}`;
+      const log10Combos = p.groups.reduce((t, g) => t + Math.log10(g.hi - g.lo + 1), 0);
+      return thinkLine({ binary: 0, integer: p.groups.length, continuous: 0, log10Combos }, r.ms);
     },
 
     insight(p, yours, optimal) {
       const same = total(p, yours) === total(p, optimal);
       let diff = same
-        ? `Your timetable costs ${count(total(p, yours), "penalty point")}, as few as the best one.`
-        : `Your timetable costs ${count(total(p, yours), "penalty point")}, while the best one HiGHS found costs ` +
+        ? `Your timetable costs ${fmt(total(p, yours), POINTS)}, as few as the best one.`
+        : `Your timetable costs ${fmt(total(p, yours), POINTS)}, while the best one HiGHS found costs ` +
           `${fmt(total(p, optimal))}.`;
       const gaps = p.groups.map((g, k) => ({ k, d: penalty(g, yours[k]) - penalty(g, optimal[k]) })).sort((a, b) => b.d - a.d);
       if (!same && gaps[0].d > 0) {
         const k = gaps[0].k;
         const moved = (plan) => Math.abs(plan[k] - p.groups[k].pref);
+        const best = moved(optimal) ? `moves ${fmt(moved(optimal), ["hour", "hours"])}` : "stays at its wish";
         diff += ` The biggest difference: group ${NAMES[k]} (${fmt(p.groups[k].n * UNIT)} pilgrims) moves ` +
-          `${count(moved(yours), "hour")} in yours and ${count(moved(optimal), "hour")} in the best one.`;
+          `${fmt(moved(yours), ["hour", "hours"])} in yours and ${best} in the best one.`;
       }
       const rule = total(p, firstCome(p));
       return {
@@ -296,7 +306,7 @@
 
     describe(p, plan) {
       const rows = p.groups.map((g, k) => `group ${NAMES[k]} at ${clock(plan[k])} (wish ${clock(g.pref)})`);
-      return `${rows.join(", ")}. ${count(total(p, plan), "penalty point")}.`;
+      return `${rows.join(", ")}. ${fmt(total(p, plan), POINTS)}.`;
     },
   });
 
