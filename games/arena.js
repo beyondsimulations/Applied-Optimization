@@ -73,7 +73,8 @@
     const pw = 10.5 * em;
     const s = Math.min((h - 1.6 * em - 0.5) / ROWS, (w - pw - 2 * em) / COLS);
     const y0 = 1.6 * em;
-    return { s, x0: 0, y0, tiles: tile(1, w - pw, 0.5, pw), hint: { x: w - pw, y: 0.5 + TYPES.length * 1.8 * em + 0.3 * em, w: pw }, w };
+    const ty = 0.4 * em; // room above the first type for its pick frame
+    return { s, x0: 0, y0, tiles: tile(1, w - pw, ty, pw), hint: { x: w - pw, y: ty + TYPES.length * 1.8 * em + 0.3 * em, w: pw }, w };
   }
   const seatAt = (L, r, c) => ({ x: L.x0 + (c - 1) * L.s, y: L.y0 + (r - 1) * L.s });
   const inside = (e, b) => e.x >= b.x && e.x <= b.x + b.w && e.y >= b.y && e.y <= b.y + b.h;
