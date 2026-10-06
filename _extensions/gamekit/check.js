@@ -4,8 +4,8 @@
 // (from the start plan and any check.plans, for games whose problem depends on
 // the player's plan);
 // the class optimum must equal check.optimum, score(decode(solution)) must
-// equal the solver objective, the optimal plan must be feasible, and piece
-// keys must be unique.
+// equal the solver objective, the optimal plan must be feasible, piece keys
+// must be unique, and a game's think() must return a line.
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import "./core.js";
@@ -44,7 +44,7 @@ for (const { name, def } of games) {
       let first;
       for (const [k, from] of froms.entries()) {
         const at = k === 0 ? where : `${where}, check.plans[${k - 1}]`;
-        let plan, objective;
+        let plan, objective, counts;
         if (def.optimal) {
           plan = await def.optimal(puzzle, from);
           objective = def.score(puzzle, plan);
@@ -52,6 +52,7 @@ for (const { name, def } of games) {
           const r = await solve(def.model(puzzle, from));
           if (r.status !== "Optimal") { fail(`${at}: solver status ${r.status}`); continue; }
           objective = r.objective;
+          counts = r.counts;
           plan = def.decode(puzzle, r.values, from);
           const s = def.score(puzzle, plan);
           if (!close(s, objective)) fail(`${at}: score(decode(solution)) = ${s}, solver objective = ${objective}`);
@@ -59,6 +60,9 @@ for (const { name, def } of games) {
         if (k === 0) first = objective;
         const ok = def.feasible(puzzle, plan);
         if (ok !== true) fail(`${at}: optimal plan is not feasible: ${ok}`);
+        if (def.think && typeof def.think(puzzle, { plan, ms: 0, counts }) !== "string") {
+          fail(`${at}: think() does not return a string`);
+        }
         for (const view of [{ compact: false, em: 3 }, { compact: true, em: 4.5 }]) {
           C.assertUniqueKeys(def.pieces(puzzle, from, {}, view));
           C.assertUniqueKeys(def.pieces(puzzle, plan, {}, view));

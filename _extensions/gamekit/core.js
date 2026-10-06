@@ -178,7 +178,7 @@
   }
 
   globalThis.GamekitCore = {
-    rng, pair, frame, resolve, assertUniqueKeys, parseColor, css, gap, thinkLine,
+    rng, pair, frame, resolve, assertUniqueKeys, parseColor, css, gap, thinkLine, seconds,
     pixelSize, codeSpans, formatScore, ease, fillCentred,
   };
 })();
