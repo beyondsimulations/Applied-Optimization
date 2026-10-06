@@ -177,8 +177,19 @@
     ctx.fillText(text, x, y + ctx.measureText("0").actualBoundingBoxAscent / 2);
   }
 
+  // Words into lines no wider than `w` at the context's current font.
+  function wrapText(ctx, text, w) {
+    const lines = [];
+    let line = "";
+    for (const word of text.split(" ")) {
+      const next = line ? `${line} ${word}` : word;
+      if (line && ctx.measureText(next).width > w) { lines.push(line); line = word; } else line = next;
+    }
+    return line ? [...lines, line] : lines;
+  }
+
   globalThis.GamekitCore = {
     rng, pair, frame, resolve, assertUniqueKeys, parseColor, css, gap, thinkLine, seconds,
-    pixelSize, codeSpans, formatScore, ease, fillCentred,
+    pixelSize, codeSpans, formatScore, ease, fillCentred, wrapText,
   };
 })();

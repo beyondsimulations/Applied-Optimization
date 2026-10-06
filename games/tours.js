@@ -2,7 +2,7 @@
 // to 8 local libraries with two vans. Students build each van's tour by
 // tapping the libraries in the order it visits them; the shortest tours win.
 (function () {
-  const { fillCentred, formatScore: fmt, seconds } = GamekitCore;
+  const { fillCentred, formatScore: fmt, seconds, wrapText } = GamekitCore;
   // Node 0 is the central library. `side` places a town's name next to it
   // so that no two names collide: a(bove), b(elow), l(eft) or r(ight).
   const TOWNS = [
@@ -281,7 +281,7 @@
         fillCentred(ctx, count, piece.x + piece.w - 0.6 * em, y2, "end");
       } else if (piece.kind === "hint") {
         ctx.fillStyle = piece.paint;
-        wrap(ctx, piece.text, piece.w).forEach((line, n) => fillCentred(ctx, line, piece.x, piece.y + (n + 0.5) * 1.3 * em, "start"));
+        wrapText(ctx, piece.text, piece.w).forEach((line, n) => fillCentred(ctx, line, piece.x, piece.y + (n + 0.5) * 1.3 * em, "start"));
       }
       ctx.textAlign = "start";
       ctx.textBaseline = "alphabetic";
@@ -448,16 +448,5 @@
     }
     ctx.fillStyle = bg;
     fillCentred(ctx, String(n), x0 + bw / 2, y0 + bh / 2);
-  }
-
-  // Words into lines no wider than `w`.
-  function wrap(ctx, text, w) {
-    const lines = [];
-    let line = "";
-    for (const word of text.split(" ")) {
-      const next = line ? `${line} ${word}` : word;
-      if (line && ctx.measureText(next).width > w) { lines.push(line); line = word; } else line = next;
-    }
-    return line ? [...lines, line] : lines;
   }
 })();
