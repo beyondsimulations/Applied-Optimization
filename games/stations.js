@@ -14,7 +14,6 @@
     return (Math.abs(q1 - q2) + Math.abs(r1 - r2) + Math.abs(q1 + r1 - q2 - r2)) / 2;
   };
   const minutes = (a, b) => 2 + 3 * steps(a, b); // 2 min inside an area, 3 min per area crossed
-  const count = (n, word) => `${fmt(n)} ${word}${Math.round(n) === 1 ? "" : "s"}`;
   const inside = (e, b) => e.x >= b.x && e.x <= b.x + b.w && e.y >= b.y && e.y <= b.y + b.h;
 
   // each area's department: the nearest one, the lower number on a tie
@@ -211,7 +210,7 @@
         }
         station(ctx, piece.x + 1.3 * em, piece.y + piece.h / 2, em, piece.n, piece.paint, view.css.bg);
         const right = piece.x + piece.w - 0.6 * em;
-        const lines = [`${fmt(piece.min)} min`, count(piece.incidents, "incident")];
+        const lines = [`${fmt(piece.min)} min`, fmt(piece.incidents, ["incident", "incidents"])];
         if (view.compact) { // one line: incidents, then the minutes at the right edge
           ctx.fillStyle = view.css.muted;
           fillCentred(ctx, lines[1], piece.x + 3 * em, piece.y + piece.h / 2, "start");
@@ -290,7 +289,7 @@
       const gains = CELLS.map((_, j) => ({ j, d: p.w[j] * (t(yours, j) - t(optimal, j)) })).sort((a, b) => b.d - a.d);
       if (!same && gains[0].d > 0) {
         const j = gains[0].j;
-        diff += ` The biggest gain: an area with ${count(p.w[j], "incident")} is ${t(yours, j)} min from your nearest ` +
+        diff += ` The biggest gain: an area with ${fmt(p.w[j], ["incident", "incidents"])} is ${t(yours, j)} min from your nearest ` +
           `department and ${t(optimal, j)} min from the best placement's.`;
       }
       const busy = total(p, busiest(p, p.n));
@@ -308,7 +307,8 @@
     describe(p, plan) {
       const parts = plan.map((j, k) => {
         const mine = CELLS.map((_, a) => a).filter((a) => home(plan, a) === k);
-        return `Department ${k + 1} serves ${count(mine.length, "area")} with ${count(mine.reduce((s, a) => s + p.w[a], 0), "incident")}`;
+        return `Department ${k + 1} serves ${fmt(mine.length, ["area", "areas"])} with ` +
+          `${fmt(mine.reduce((s, a) => s + p.w[a], 0), ["incident", "incidents"])}`;
       });
       return `${parts.join(". ")}. ${fmt(total(p, plan))} min of driving per week.`;
     },
