@@ -127,12 +127,12 @@
         const block = L.rows.findIndex((b) => inside(e, b));
         const hit = areaAt(e.x, e.y);
         const k = block >= 0 ? block : plan.indexOf(hit);
-        ui.drag = { x: e.x, y: e.y, k: k >= 0 ? k : null, block: block >= 0 ? block : null, hit };
+        ui.drag = { k: k >= 0 ? k : null, block: block >= 0 ? block : null, hit };
         return undefined;
       }
       const d = ui.drag;
-      if (!d) return undefined;
-      d.moved = d.moved || Math.hypot(e.x - d.x, e.y - d.y) > 0.4 * L.s;
+      if (!d || e.type === "cancel") { ui.drag = null; return undefined; }
+      d.moved = e.moved; // Gamekit: the press has travelled far enough to be a drag
       if (e.type === "move") {
         if (d.k != null && d.moved) d.to = areaAt(e.x, e.y);
         return undefined;

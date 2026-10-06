@@ -133,13 +133,13 @@
         const tile = L.tiles.findIndex((b) => inside(e, b));
         const at = seatOf(e.x, e.y);
         const here = onStand(at) ? sittingAt(at) : null;
-        ui.drag = { x: e.x, y: e.y, tile: tile >= 0 ? tile : null, t: tile >= 0 ? tile : here ? here.t : null,
+        ui.drag = { tile: tile >= 0 ? tile : null, t: tile >= 0 ? tile : here ? here.t : null,
           i: here ? here.i : null, grab: here ? at.c - here.c : 0 };
         return undefined;
       }
       const d = ui.drag;
-      if (!d) return undefined;
-      d.moved = d.moved || Math.hypot(e.x - d.x, e.y - d.y) > 0.4 * L.s;
+      if (!d || e.type === "cancel") { ui.drag = null; return undefined; }
+      d.moved = e.moved; // Gamekit: the press has travelled far enough to be a drag
       const at = seatOf(e.x, e.y);
       if (e.type === "move") {
         if (d.t != null && d.moved) Object.assign(d, { r: at.r, c: at.c - d.grab, on: onStand(at) });

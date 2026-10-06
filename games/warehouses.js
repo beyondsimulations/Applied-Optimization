@@ -108,12 +108,12 @@
       });
       if (e.type === "down") {
         const i = productAt(e.x, e.y);
-        ui.drag = { x: e.x, y: e.y, i: i >= 0 ? i : null };
+        ui.drag = { i: i >= 0 ? i : null };
         return undefined;
       }
       const d = ui.drag;
-      if (!d) return undefined;
-      d.moved = d.moved || Math.hypot(e.x - d.x, e.y - d.y) > 0.4 * L.bw;
+      if (!d || e.type === "cancel") { ui.drag = null; return undefined; }
+      d.moved = e.moved; // Gamekit: the press has travelled far enough to be a drag
       const j = productAt(e.x, e.y);
       const other = d.i != null && j >= 0 && home(p, plan, j) !== home(p, plan, d.i) ? j : null;
       if (e.type === "move") {
