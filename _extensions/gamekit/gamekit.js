@@ -214,21 +214,36 @@
   // ---------- drawing ----------
   // Compact (phone) layout on screens narrower than COMPACT_W (the screen, not
   // the column: desktop article columns can be narrow too); a game may then use
-  // its taller compactBoard. Pages size the canvas by the board's
-  // shape; slides let it fill the stage (drawing is letterboxed).
+  // its taller compactBoard, whose height may follow the text size (h: em =>
+  // units; fit() settles it). Pages size the canvas by the board's shape;
+  // slides let it fill the stage (drawing is letterboxed).
   function layout(g) {
     const compact = !g.slide && window.innerWidth < COMPACT_W;
     if (compact === g.compact && g.board) return;
     g.compact = compact;
     g.root.classList.toggle("gamekit-compact", compact);
-    g.board = (compact && g.def.compactBoard) || g.def.board;
+    const b = (compact && g.def.compactBoard) || g.def.board;
+    g.board = typeof b.h === "function" ? { w: b.w, h: b.h(g.em || 3) } : b;
     g.canvas.dataset.board = `${g.board.w}x${g.board.h}`; // for tests
     if (!g.slide) g.canvas.style.aspectRatio = `${g.board.w} / ${g.board.h}`;
     if (g.side) reserveBottom(g);
   }
-  function fit(g) {
+  function fit(g, settled) {
     const r = g.canvas.getBoundingClientRect();
     if (!r.width || !r.height) return false;
+    // A compact board whose height follows the text size: its em from the
+    // page's width alone (the rounded canvas height must not feed back), so
+    // one more pass settles it.
+    const b = g.compact && g.def.compactBoard;
+    if (!settled && b && typeof b.h === "function") {
+      const h = b.h((parseFloat(getComputedStyle(g.root).fontSize) * b.w) / r.width);
+      if (Math.abs(h - g.board.h) > 0.01) {
+        g.board = { w: b.w, h };
+        g.canvas.dataset.board = `${g.board.w}x${+h.toFixed(2)}`;
+        g.canvas.style.aspectRatio = `${g.board.w} / ${h}`;
+        return fit(g, true);
+      }
+    }
     const size = C.pixelSize(r.width, r.height, window.devicePixelRatio || 1);
     if (g.canvas.width !== size.w || g.canvas.height !== size.h) {
       g.canvas.width = size.w;

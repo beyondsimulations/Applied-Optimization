@@ -8,34 +8,41 @@
   const LABELS = ["Tent", "Mat", "Lantern", "Camera", "Tripod", "Phone", "Charger", "Headset"]; // one word under each icon
   const HOUSES = ["Hamburg", "Berlin"];
 
-  // Two layouts in board units. Wide: the warehouses fill the space left of
-  // the past orders, which run in one column on the right (the board stretches
-  // on slides, view.w). Compact (phones): the orders below the warehouses, in
-  // two columns spaced by the text size. A place holds an icon with its name
-  // under it.
+  // Layout in board units. Each warehouse is a frame with its 4 places in a
+  // row, under its name with a warehouse icon; Hamburg stands above Berlin. Wide (slides, pages): the buildings fill the board's height left
+  // of the past orders, which run in one column on the right (the board
+  // stretches on slides, view.w). Compact (phones): the orders below, in two
+  // columns; everything is spaced by the text size, and so is the board's
+  // height (compactBoard.h). A place holds an icon with its name under it.
   function lay(view) {
     const em = (view && view.em) || 3;
-    const sh = 3.6 * em + 1.5; // place height: icon, name, padding
-    const bottom = 7 + 2 * sh + 3; // the warehouses' lower edge
-    if (view && view.compact) {
-      // ponytail: fixed board height; below ~360 px (em > 5.5) the order rows
-      // squeeze together. An em-dependent compactBoard height in Gamekit would fix it.
-      const hint = bottom + 0.75 * em;
-      const y = hint + 2.8 * em; // the first order, below the heading
-      const rh = Math.min(Math.max(7.2, 1.35 * em), (106 - 1 - 0.65 * em - y) / 4);
-      return { title: 3, box: [{ x: 0, y: 7 }, { x: 53, y: 7 }], slot: { w: 22, h: sh }, icon: 2 * em,
-        hint, head: y - 1.4 * em, rows: { x: [0, 53], y, h: rh, per: 5 } };
-    }
-    const w = (view && view.w) || 100;
+    const compact = !!(view && view.compact);
+    const w = compact ? 100 : (view && view.w) || 100;
     const ox = w - 8.2 * em; // the orders column: two icons, a count and the parcels
-    const sw = Math.min(22, (ox - 4 - 10) / 4);
-    return { title: 3, box: [{ x: 0, y: 7 }, { x: 2 * sw + 7, y: 7 }], slot: { w: sw, h: sh }, icon: 2 * em,
-      hint: bottom + 5, head: 3, rows: { x: [ox], y: 9, h: 5.8, per: 10 } };
+    const bw = compact ? (w - 2) / 4 : Math.min(24, (ox - 6) / 4); // place width
+    const sh = compact ? 3.6 * em + 1 : (((view && view.h) || 70) - 4.5 - 3.8 * em) / 2; // place height
+    const houses = [];
+    let y0 = 0;
+    for (let k = 0; k < 2; k++) {
+      const y = y0 + 1.6 * em; // the frame's top, under the name
+      houses.push({ x: 0, y, name: y0 + 0.7 * em, w: 4 * bw + 2, h: sh + 2 });
+      y0 = y + sh + 2 + 0.6 * em;
+    }
+    const bottom = houses[1].y + houses[1].h; // Berlin's lower edge
+    if (compact) {
+      const y = bottom + 2.8 * em; // the first order, a row under the heading
+      return { houses, bw, sh, icon: 2 * em, head: bottom + 1.3 * em, rows: { x: [0, 50], y, h: 1.5 * em, per: 5 },
+        h: y + 6.75 * em + 0.5 };
+    }
+    const first = houses[0].name + 1.45 * em; // the orders span the warehouses
+    const last = bottom - 0.65 * em;
+    return { houses, bw, sh, icon: Math.min(0.6 * bw, sh - 1.4 * em - 3), head: houses[0].name,
+      rows: { x: [ox], y: first, h: (last - first) / 9, per: 10 } };
   }
-  // where place `n` (0-based) of warehouse `k` sits: a 2 × 2 grid
+  // where place `n` (0-based) of warehouse `k` sits
   function slot(L, k, n) {
-    const b = L.box[k];
-    return { x: b.x + 1.5 + (n % 2) * L.slot.w + L.slot.w / 2, y: b.y + 1.5 + Math.floor(n / 2) * L.slot.h + L.slot.h / 2 };
+    const H = L.houses[k];
+    return { x: H.x + 1 + (n + 0.5) * L.bw, y: H.y + 1 + L.sh / 2 };
   }
   // A plan gives each product its place: 0–3 in Hamburg, 4–7 in Berlin, so a
   // swap moves only the two products.
@@ -59,7 +66,7 @@
     goal: "min",
     unit: ["split parcel", "split parcels"],
     board: { w: 100, h: 70, stretch: true },
-    compactBoard: { w: 100, h: 106 },
+    compactBoard: { w: 100, h: (em) => lay({ compact: true, em }).h },
     // pairs bought together last month: [product, product, orders]
     class: {
       cap: 4,
@@ -96,7 +103,7 @@
       const L = lay(view);
       for (let i = 0; i < plan.length; i++) {
         const s = slot(L, home(p, plan, i), plan[i] % p.cap);
-        if (Math.abs(e.x - s.x) > L.slot.w / 2 || Math.abs(e.y - s.y) > L.slot.h / 2) continue;
+        if (Math.abs(e.x - s.x) > L.bw / 2 || Math.abs(e.y - s.y) > L.sh / 2) continue;
         if (ui.sel == null || ui.sel === i || home(p, plan, ui.sel) === home(p, plan, i)) {
           ui.sel = ui.sel === i ? null : i;
           return undefined;
@@ -114,18 +121,15 @@
     pieces(p, plan, ui, view) {
       const L = lay(view);
       const out = [];
-      for (let k = 0; k < 2; k++) {
-        out.push({ key: `house-${k}`, kind: "house", k, x: L.box[k].x, y: L.box[k].y, ty: L.title,
-          w: 2 * L.slot.w + 3, h: 2 * L.slot.h + 3, cap: p.cap, color: "text" });
-      }
+      L.houses.forEach((H, k) => out.push({ key: `house-${k}`, kind: "house", k, ...H, cap: p.cap, color: "text" }));
       plan.forEach((place, i) => {
         const s = slot(L, home(p, plan, i), place % p.cap);
-        out.push({ key: `product-${i}`, kind: "product", i, x: s.x, y: s.y, size: L.icon, w: L.slot.w, h: L.slot.h,
+        out.push({ key: `product-${i}`, kind: "product", i, x: s.x, y: s.y, size: L.icon, w: L.bw, h: L.sh,
           sel: ui.sel === i ? 1 : 0, color: "plan" });
       });
-      if (ui.sel != null) {
-        out.push({ key: "hint", kind: "hint", x: 0, y: L.hint, color: "muted",
-          text: `Now tap a product in ${HOUSES[1 - home(p, plan, ui.sel)]}` });
+      if (ui.sel != null) { // on the name line of the warehouse to tap next
+        const H = L.houses[1 - home(p, plan, ui.sel)];
+        out.push({ key: "hint", kind: "hint", x: H.x + H.w, y: H.name, color: "accent", text: "Now tap a product here" });
       }
       p.pairs.forEach(([i, j, q], r) => {
         const R = L.rows;
@@ -147,27 +151,27 @@
     drawPiece(ctx, piece, view) {
       const em = view.em;
       ctx.font = `${em}px ${view.font}`;
-      if (piece.kind === "house") { // a warehouse: its name and a box with four places
+      if (piece.kind === "house") { // a warehouse: its icon and name, and a frame around its places
+        warehouse(ctx, piece.x + 0.65 * em, piece.name, 1.3 * em, piece.paint, view.css.bg);
         ctx.fillStyle = piece.paint;
-        const long = (h) => `${h}, ${piece.cap} places`; // just the cities where a name doesn't fit (narrow phones)
-        const fits = HOUSES.every((h) => ctx.measureText(long(h)).width <= piece.w);
-        fillCentred(ctx, fits ? long(HOUSES[piece.k]) : HOUSES[piece.k], piece.x, piece.ty, "start");
+        fillCentred(ctx, HOUSES[piece.k], piece.x + 1.7 * em, piece.name, "start");
         ctx.strokeStyle = view.css.muted;
         ctx.lineWidth = 0.35;
         ctx.strokeRect(piece.x, piece.y, piece.w, piece.h);
       } else if (piece.kind === "product") { // its icon with its name under it
+        const top = piece.y - piece.h / 2;
         if (piece.sel > 0.5) { // the picked product
           ctx.strokeStyle = view.css.accent;
           ctx.lineWidth = 0.5;
-          ctx.strokeRect(piece.x - piece.w / 2 + 0.5, piece.y - piece.h / 2 + 1, piece.w - 1, piece.h - 2);
+          ctx.strokeRect(piece.x - piece.w / 2 + 0.5, top + 0.5, piece.w - 1, piece.h - 1);
         }
-        const top = piece.y - piece.h / 2 + 0.75;
-        icon(ctx, piece.i, piece.x, top + em, piece.size, piece.paint, view.css.bg);
+        const gy = piece.y - (piece.size + 1.4 * em) / 2; // icon and name centred together in the place
+        icon(ctx, piece.i, piece.x, gy + piece.size / 2, piece.size, piece.paint, view.css.bg);
         ctx.fillStyle = view.css.text;
-        fillCentred(ctx, LABELS[piece.i], piece.x, top + 2.85 * em);
+        fillCentred(ctx, LABELS[piece.i], piece.x, gy + piece.size + 0.9 * em);
       } else if (piece.kind === "hint") {
         ctx.fillStyle = piece.paint;
-        fillCentred(ctx, piece.text, piece.x, piece.y, "start");
+        fillCentred(ctx, piece.text, piece.x, piece.y, "end");
       } else if (piece.kind === "order") { // a pair bought together: icons, how often, and its parcels
         const s = 1.3 * em;
         const x = piece.x;
@@ -257,6 +261,24 @@
         `${fmt(parcels(p, plan))} split parcels.`;
     },
   });
+
+  // A warehouse, about `s` wide and centred on (x, y): a hall with a sawtooth
+  // roof and a door.
+  function warehouse(ctx, x, y, s, paint, bg) {
+    const u = s / 10;
+    ctx.fillStyle = paint;
+    ctx.fillRect(x - 5 * u, y - 1 * u, 10 * u, 5.5 * u);
+    ctx.beginPath();
+    for (let n = 0; n < 3; n++) { // three teeth
+      const a = x + (n * 10 / 3 - 5) * u;
+      ctx.moveTo(a, y - 1 * u);
+      ctx.lineTo(a, y - 4.5 * u);
+      ctx.lineTo(a + (10 / 3) * u, y - 1 * u);
+    }
+    ctx.fill();
+    ctx.fillStyle = bg;
+    ctx.fillRect(x - 1.5 * u, y + 1.2 * u, 3 * u, 3.3 * u);
+  }
 
   // A parcel: a box with its lid line and a thin strip of tape.
   function parcel(ctx, x, y, s, paint, bg) {
