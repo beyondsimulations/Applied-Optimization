@@ -5,7 +5,8 @@
 // the player's plan);
 // the class optimum must equal check.optimum, score(decode(solution)) must
 // equal the solver objective, the optimal plan must be feasible, piece keys
-// must be unique, and a game's think() must return a line.
+// must be unique, a game's think() must return a line, and a compactBoard.h
+// function must return a positive height.
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import "./core.js";
@@ -33,6 +34,10 @@ for (const { name, def } of games) {
   const missing = REQUIRED.filter((k) => def[k] == null);
   if (!def.optimal && (!def.model || !def.decode)) missing.push("model+decode (or optimal)");
   if (missing.length) { fail(`${name}: missing ${missing.join(", ")}`); continue; }
+  const ch = def.compactBoard && def.compactBoard.h;
+  if (typeof ch === "function" && ![3, 4.5, 6.5].every((em) => Number.isFinite(ch(em)) && ch(em) > 0)) {
+    fail(`${name}: compactBoard.h(em) must return a positive number`);
+  }
   const cases = [["class", def.class]];
   for (let seed = 1; seed <= 5; seed++) cases.push([`seed ${seed}`, def.puzzle(C.rng(seed))]);
   for (const [label, puzzle] of cases) {

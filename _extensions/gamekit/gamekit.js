@@ -223,24 +223,26 @@
     g.compact = compact;
     g.root.classList.toggle("gamekit-compact", compact);
     const b = (compact && g.def.compactBoard) || g.def.board;
-    g.board = typeof b.h === "function" ? { w: b.w, h: b.h(g.em || 3) } : b;
-    g.canvas.dataset.board = `${g.board.w}x${g.board.h}`; // for tests
-    if (!g.slide) g.canvas.style.aspectRatio = `${g.board.w} / ${g.board.h}`;
+    setBoard(g, typeof b.h === "function" ? { w: b.w, h: b.h(g.em || 3) } : b);
     if (g.side) reserveBottom(g);
+  }
+  function setBoard(g, board) {
+    g.board = board;
+    g.canvas.dataset.board = `${board.w}x${+board.h.toFixed(2)}`; // for tests
+    if (!g.slide) g.canvas.style.aspectRatio = `${board.w} / ${board.h}`;
   }
   function fit(g, settled) {
     const r = g.canvas.getBoundingClientRect();
     if (!r.width || !r.height) return false;
+    const font = parseFloat(getComputedStyle(g.root).fontSize);
     // A compact board whose height follows the text size: its em from the
     // page's width alone (the rounded canvas height must not feed back), so
     // one more pass settles it.
     const b = g.compact && g.def.compactBoard;
     if (!settled && b && typeof b.h === "function") {
-      const h = b.h((parseFloat(getComputedStyle(g.root).fontSize) * b.w) / r.width);
+      const h = b.h((font * b.w) / r.width);
       if (Math.abs(h - g.board.h) > 0.01) {
-        g.board = { w: b.w, h };
-        g.canvas.dataset.board = `${g.board.w}x${+h.toFixed(2)}`;
-        g.canvas.style.aspectRatio = `${g.board.w} / ${h}`;
+        setBoard(g, { w: b.w, h });
         return fit(g, true);
       }
     }
@@ -265,7 +267,7 @@
     // exactly; the rect is in screen pixels (reveal scales slides), the font size is not
     const dpr = window.devicePixelRatio || 1;
     const slideScale = g.canvas.offsetWidth ? r.width / g.canvas.offsetWidth : 1;
-    g.em = (parseFloat(getComputedStyle(g.root).fontSize) * slideScale) / (g.px / dpr);
+    g.em = (font * slideScale) / (g.px / dpr);
     g.canvas.dataset.em = g.em.toFixed(4); // for tests: canvas text size in board units
     return true;
   }

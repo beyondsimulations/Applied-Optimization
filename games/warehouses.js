@@ -14,7 +14,7 @@
   // stretches on slides, view.w). Compact (phones): the orders below, in two
   // columns; everything is spaced by the text size, and so is the board's
   // height (compactBoard.h). A place holds an icon with its name under it.
-  function lay(view) {
+  function lay(view, n = 10) { // n: the number of past orders
     const em = (view && view.em) || 3;
     const compact = !!(view && view.compact);
     const w = compact ? 100 : (view && view.w) || 100;
@@ -37,7 +37,7 @@
     const first = houses[0].name + 1.45 * em; // the orders span the warehouses
     const last = bottom - 0.65 * em;
     return { houses, bw, sh, icon: Math.min(0.6 * bw, sh - 1.4 * em - 3), head: houses[0].name,
-      rows: { x: [ox], y: first, h: (last - first) / 9, per: 10 } };
+      rows: { x: [ox], y: first, h: (last - first) / (n - 1), per: 10 } };
   }
   // where place `n` (0-based) of warehouse `k` sits
   function slot(L, k, n) {
@@ -119,9 +119,9 @@
     },
 
     pieces(p, plan, ui, view) {
-      const L = lay(view);
+      const L = lay(view, p.pairs.length);
       const out = [];
-      L.houses.forEach((H, k) => out.push({ key: `house-${k}`, kind: "house", k, ...H, cap: p.cap, color: "text" }));
+      L.houses.forEach((H, k) => out.push({ key: `house-${k}`, kind: "house", k, ...H, color: "text" }));
       plan.forEach((place, i) => {
         const s = slot(L, home(p, plan, i), place % p.cap);
         out.push({ key: `product-${i}`, kind: "product", i, x: s.x, y: s.y, size: L.icon, w: L.bw, h: L.sh,
@@ -129,7 +129,8 @@
       });
       if (ui.sel != null) { // on the name line of the warehouse to tap next
         const H = L.houses[1 - home(p, plan, ui.sel)];
-        out.push({ key: "hint", kind: "hint", x: H.x + H.w, y: H.name, color: "accent", text: "Now tap a product here" });
+        out.push({ key: "hint", kind: "hint", k: 1 - home(p, plan, ui.sel), x: H.x + H.w, x0: H.x, y: H.name,
+          color: "accent", text: "Now tap a product here" });
       }
       p.pairs.forEach(([i, j, q], r) => {
         const R = L.rows;
@@ -169,9 +170,10 @@
         icon(ctx, piece.i, piece.x, gy + piece.size / 2, piece.size, piece.paint, view.css.bg);
         ctx.fillStyle = view.css.text;
         fillCentred(ctx, LABELS[piece.i], piece.x, gy + piece.size + 0.9 * em);
-      } else if (piece.kind === "hint") {
+      } else if (piece.kind === "hint") { // shorter where it would reach the warehouse's name
+        const free = piece.x - (piece.x0 + 1.7 * em + ctx.measureText(HOUSES[piece.k]).width + em);
         ctx.fillStyle = piece.paint;
-        fillCentred(ctx, piece.text, piece.x, piece.y, "end");
+        fillCentred(ctx, ctx.measureText(piece.text).width <= free ? piece.text : "Tap one here", piece.x, piece.y, "end");
       } else if (piece.kind === "order") { // a pair bought together: icons, how often, and its parcels
         const s = 1.3 * em;
         const x = piece.x;
@@ -189,18 +191,13 @@
     },
 
     feasible(p, plan) { // swaps keep one product in each place; this guards the solver's plan
-      for (let k = 0; k < 2; k++) {
-        const n = inHouse(p, plan, k).length;
-        if (n > p.cap) return `${HOUSES[k]} holds ${n} products, but only ${p.cap} fit`;
-      }
+      if (!plan.every((s) => Number.isInteger(s) && s >= 0 && s < 2 * p.cap)) return "A product has no place";
       return new Set(plan).size === plan.length || "Two products share a place";
     },
     score(p, plan) { return parcels(p, plan); },
 
-    // x_i = 1 stores product i in Hamburg; s_k = 1 when pair k is split. The
-    // tent stays where the player put it: with equal space, the mirror image
-    // splits the same parcels.
-    model(p, yours) {
+    // x_i = 1 stores product i in Hamburg; s_k = 1 when pair k is split
+    model(p) {
       const N = NAMES.length;
       const ids = [...Array(N).keys()];
       return [
@@ -210,8 +207,6 @@
         ...p.pairs.flatMap(([i, j], k) => [` a_${k}: s_${k} - x_${i} + x_${j} >= 0`, ` b_${k}: s_${k} + x_${i} - x_${j} >= 0`]),
         ` hamburg: ${ids.map((i) => `x_${i}`).join(" + ")} <= ${p.cap}`,
         ` berlin: ${ids.map((i) => `x_${i}`).join(" + ")} >= ${N - p.cap}`,
-        "Bounds",
-        ` x_0 = ${home(p, yours, 0) === 0 ? 1 : 0}`,
         "Binary",
         " " + ids.map((i) => `x_${i}`).join(" "),
         "End",
@@ -220,8 +215,11 @@
     },
     // the products that stay keep the player's places; the movers take the places freed
     decode(p, values, yours) {
-      const h = NAMES.map((_, i) => (Math.round(values[`x_${i}`] || 0) === 1 ? 0 : 1));
-      const moves = [...yours.keys()].filter((i) => home(p, yours, i) !== h[i]);
+      const x = NAMES.map((_, i) => (Math.round(values[`x_${i}`] || 0) === 1 ? 0 : 1));
+      // with equal space, the mirror image splits the same parcels: take the one with fewer moves
+      const moved = (h) => [...yours.keys()].filter((i) => home(p, yours, i) !== h[i]);
+      const h = [x, x.map((k) => 1 - k)].reduce((a, b) => (moved(b).length < moved(a).length ? b : a));
+      const moves = moved(h);
       const freed = [[], []];
       for (const i of moves) freed[home(p, yours, i)].push(yours[i]);
       const plan = yours.slice();
@@ -239,10 +237,10 @@
       const y = splits(p, yours);
       const b = splits(p, optimal);
       const say = (s) => {
-        const n = s.reduce((a, q) => a + q[2], 0);
+        const n = sum(s);
         return `${fmt(n)} parcel${n === 1 ? "" : "s"}: ${list(s.map(pairText))}`;
       };
-      const diff = parcels(p, yours) === parcels(p, optimal)
+      const diff = sum(y) === sum(b)
         ? `Your layout is as good as the best one. It splits ${say(y)}.`
         : `Your layout splits ${say(y)}. The best layout HiGHS found, with ` +
           `${list(inHouse(p, optimal, 0).map((i) => NAMES[i]))} in Hamburg, splits ${say(b)}.`;
