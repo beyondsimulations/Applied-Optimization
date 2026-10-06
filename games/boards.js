@@ -11,19 +11,24 @@
   // view.w). Compact (phones): the table below the chart.
   // The table: per board its profit and hours in both departments, then the
   // hours the plan uses. Columns: board icon, profit, cutting, finishing.
+  // The tick row sits below the chart's bottom, clear of the plan's marker, and
+  // the x-axis title below it; both follow the text size.
   function lay(view) {
+    const em = (view && view.em) || 3;
+    const rows = (y0, s) => {
+      const tick = y0 + MAX * s + 1.35 * em;
+      return { tick, xTitle: tick + 1.5 * em };
+    };
     if (view && view.compact) {
-      return { w: 100, h: 128, x0: 10, y0: 9, s: 72 / MAX, tick: 84.5, xTitle: 91.5,
-        table: { x: 0, w: 100, y: 99, row: 7 } };
+      const r = rows(9, 70 / MAX);
+      return Object.assign({ w: 100, h: 134, x0: 10, y0: 9, s: 70 / MAX,
+        table: { x: 0, w: 100, y: r.xTitle + 1.6 * em, row: 7 } }, r);
     }
     const w = (view && view.w) || 100;
-    const em = (view && view.em) || 3;
     // the table needs about 13 text sizes; on a narrow page the chart gives way
     const tw = Math.max(w * 0.38, 13 * em);
-    const s = Math.min(52 / MAX, (w - tw - 14) / MAX);
-    const tick = 7 + MAX * s + 3.5;
-    return { w, h: 70, x0: 8, y0: 7, s, tick, xTitle: tick + 6,
-      table: { x: w - tw, w: tw, y: 11, row: 7.5 } };
+    const s = Math.min(50 / MAX, (w - tw - 14) / MAX);
+    return Object.assign({ w, h: 70, x0: 8, y0: 7, s, table: { x: w - tw, w: tw, y: 11, row: 7.5 } }, rows(7, s));
   }
   // right edges of the profit, cutting and finishing columns; the profit column
   // keeps room for a board icon, a gap and "150 €" on narrow tables
@@ -65,7 +70,7 @@
     goal: "max",
     unit: "€",
     board: { w: 100, h: 70, stretch: true },
-    compactBoard: { w: 100, h: 128 },
+    compactBoard: { w: 100, h: 134 },
     // tutorial 04-01: profit 100 / 150 € per board; cutting 2 / 4 h of 40 h,
     // finishing 4 / 3 h of 60 h per skateboard / surfboard
     class: { profit: [100, 150], use: [[2, 4], [4, 3]], hours: [40, 60] },
@@ -99,14 +104,18 @@
       const L = lay(view);
       const a = Math.round((e.x - L.x0) / L.s);
       const b = Math.round(MAX - (e.y - L.y0) / L.s);
-      // a tap outside the chart is ignored; a drag that leaves it stays on its edge
-      if (e.type === "down" && (a < -1 || a > MAX + 1 || b < -1 || b > MAX + 1)) return undefined;
+      // only a press on the chart starts a drag; a drag that leaves it stays on its edge
+      if (e.type === "down") ui.drag = a >= -1 && a <= MAX + 1 && b >= -1 && b <= MAX + 1;
+      if (e.type === "up") { ui.drag = false; return undefined; }
+      if (!ui.drag) return undefined;
       const next = [Math.max(0, Math.min(MAX, a)), Math.max(0, Math.min(MAX, b))];
       return next[0] === plan[0] && next[1] === plan[1] ? undefined : next;
     },
 
     pieces(p, plan, ui, view) {
       const L = lay(view);
+      const em = (view && view.em) || 3;
+      const locked = !!(view && view.locked);
       const out = [];
       const [a, b] = plan;
       // the dashed line joins all plans with the profit of this one
@@ -123,21 +132,27 @@
           alpha: Math.abs(v - b) < 2.5 ? 0 : 1, color: "muted" });
       }
       out.push({ key: "va", kind: "value", x: X(L, a), y: L.tick, text: String(a), color: "plan" });
-      // on the y-axis itself (no skateboards) the marker would cover the number: it moves left
-      out.push({ key: "vb", kind: "value", x: L.x0 - 1.2 - (a === 0 ? 0.55 * view.em : 0), y: Y(L, b), text: String(b),
+      // left of the axis, and left of the marker when it sits close to the axis
+      out.push({ key: "vb", kind: "value", x: Math.min(L.x0 - 1.2, X(L, a) - 0.45 * em - 0.9), y: Y(L, b), text: String(b),
         right: 1, color: "plan" });
       const cs = corners(p);
       const best = cs[2].map(Math.round); // the corner where both departments are full
-      if (view && view.locked && a === best[0] && b === best[1]) { // the optimal plan shows the corners and what they earn
+      if (locked && a === best[0] && b === best[1]) { // the optimal plan shows the corners and what they earn
+        // labels sit inside the region, towards its middle: the department icons are outside
+        const mid = [cs.reduce((m, q) => m + q[0], 0) / 4, cs.reduce((m, q) => m + q[1], 0) / 4];
         cs.slice(1).forEach(([ca, cb], k) => {
-          out.push({ key: `corner-${k}`, kind: "corner", x: X(L, ca), y: Y(L, cb),
-            text: `${fmt(profit(p, [ca, cb]))} €`, color: "muted" });
+          out.push({ key: `corner-${k}`, kind: "corner", x: X(L, ca), y: Y(L, cb), left: ca > mid[0] ? 1 : 0,
+            down: cb > mid[1] ? 1 : 0, text: `${fmt(profit(p, [ca, cb]))} €`, color: "muted" });
         });
       }
-      out.push({ key: "plan", kind: "plan", x: X(L, a), y: Y(L, b), text: `${fmt(profit(p, plan))} €`,
-        label: view && view.locked ? 0 : 1, color: "plan" });
+      // the plan's profit: up and right of the marker, flipped where it would leave the chart
+      const text = `${fmt(profit(p, plan))} €`;
+      const lw = (text.length * 0.55 + 0.5) * em; // about as wide as the text
+      out.push({ key: "plan", kind: "plan", x: X(L, a), y: Y(L, b), text, label: locked ? 0 : 1,
+        left: X(L, a) + 0.45 * em + 0.6 + lw > X(L, MAX) + 2 ? 1 : 0, down: Y(L, b) - 2.2 * em < L.y0 ? 1 : 0,
+        color: "plan" });
       const t = L.table;
-      const c = cols(t, view.em);
+      const c = cols(t, em);
       p.use.forEach((u, k) => { // the hours the plan uses, under each department's column
         const h = used(p, plan, k);
         out.push({ key: `dept-${k}`, kind: "dept", x: c[k + 1], w: c[k + 1] - c[k] - 1, y: t.y + 3 * t.row,
@@ -166,7 +181,6 @@
       ctx.lineTo(L.x0, Y(L, 0));
       ctx.lineTo(X(L, MAX), Y(L, 0));
       ctx.stroke();
-      ctx.fillStyle = view.css.muted;
       // axis titles with their boards
       ctx.fillStyle = view.css.text;
       const ty = L.y0 - 0.95 * em; // above the chart
@@ -242,18 +256,11 @@
       } else if (piece.kind === "value") { // the plan's numbers on the axes
         ctx.fillStyle = piece.paint;
         ctx.font = `600 ${em}px ${view.font}`;
-        fillCentred(ctx, piece.text, piece.right ? piece.x : piece.x, piece.y, piece.right ? "end" : "center");
+        fillCentred(ctx, piece.text, piece.x, piece.y, piece.right ? "end" : "center");
       } else if (piece.kind === "corner") {
-        // up and to the right of a corner is always outside the region
         ctx.fillStyle = piece.paint;
         ctx.fillRect(piece.x - 0.6, piece.y - 0.6, 1.2, 1.2);
-        const w = ctx.measureText(piece.text).width + 0.5 * em;
-        const x = piece.x + 0.5 * em;
-        const y = piece.y - 0.9 * em;
-        ctx.fillStyle = view.css.bg;
-        ctx.fillRect(x - 0.25 * em, y - 0.65 * em, w, 1.3 * em);
-        ctx.fillStyle = piece.paint;
-        fillCentred(ctx, piece.text, x, y, "start");
+        tag(ctx, view, piece.text, piece.x, piece.y, 0.5 * em, 0.75 * em, piece.left > 0.5, piece.down > 0.5, piece.paint);
       } else if (piece.kind === "plan") { // the plan: a square marker, with its profit
         const r = 0.45 * em;
         ctx.fillStyle = view.css.bg;
@@ -261,13 +268,7 @@
         ctx.fillStyle = piece.paint;
         ctx.fillRect(piece.x - r, piece.y - r, 2 * r, 2 * r);
         if (piece.label > 0.5) {
-          const w = ctx.measureText(piece.text).width + 0.5 * em;
-          const x = piece.x + r + 0.6;
-          const y = piece.y - r - 0.9 * em;
-          ctx.fillStyle = view.css.bg;
-          ctx.fillRect(x - 0.25 * em, y - 0.65 * em, w, 1.3 * em);
-          ctx.fillStyle = piece.paint;
-          fillCentred(ctx, piece.text, x, y, "start");
+          tag(ctx, view, piece.text, piece.x, piece.y, r + 0.6, r + 0.9 * em, piece.left > 0.5, piece.down > 0.5, piece.paint);
         }
       } else if (piece.kind === "dept") { // hours used / available, with a bar below
         ctx.fillStyle = piece.paint;
@@ -316,9 +317,9 @@
         mechanism: "The dashed line joins all plans with the same profit. Pushing it outwards raises the profit, " +
           "and the last part of the region it touches always includes a corner: a best plan of a linear model " +
           "can always be found at a corner of its region.",
-        model: "In JuMP, every `@constraint` adds one edge to this region, and so does each bound like `x >= 0` " +
-          "in `@variable`: the corners are where two edges meet. HiGHS finds the best corner among infinitely " +
-          "many plans in milliseconds.",
+        model: "In JuMP, every `@constraint` draws a boundary line like these, and so does each bound like " +
+          "`x >= 0` in `@variable`: the corners are where two boundary lines meet. HiGHS finds the best corner " +
+          "among infinitely many plans in milliseconds.",
       };
     },
 
@@ -327,6 +328,19 @@
         `${p.hours[0]} hours, finishing ${fmt(used(p, plan, 1))} of ${p.hours[1]} hours.`;
     },
   });
+
+  // A label with a background patch, dx / dy away from (x, y): to the right and
+  // up by default, to the left or down where asked.
+  function tag(ctx, view, text, x, y, dx, dy, left, down, paint) {
+    const em = view.em;
+    const w = ctx.measureText(text).width + 0.5 * em;
+    const tx = left ? x - dx - w + 0.25 * em : x + dx;
+    const ty = down ? y + dy : y - dy;
+    ctx.fillStyle = view.css.bg;
+    ctx.fillRect(tx - 0.25 * em, ty - 0.65 * em, w, 1.3 * em);
+    ctx.fillStyle = paint;
+    fillCentred(ctx, text, tx, ty, "start");
+  }
 
   // Icons, about one text size tall, centred on (x, y).
   function skateboard(ctx, x, y, em, color) { // side view: a deck with kicked-up tails on two wheels
