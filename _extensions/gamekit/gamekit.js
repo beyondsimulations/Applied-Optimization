@@ -366,7 +366,9 @@
         const r = await solveLP(g.def.model(g.puzzle, g.yours));
         if (r.status !== "Optimal") throw new Error("Solver: " + r.status);
         g.optimal = g.def.decode(g.puzzle, r.values, g.yours);
-        line = C.thinkLine(r.counts, r.ms);
+        // a game may phrase the Think card itself, e.g. when helper variables
+        // would make the generic count misleading
+        line = g.def.think ? g.def.think(g.puzzle, { plan: g.optimal, ms: r.ms, counts: r.counts }) : C.thinkLine(r.counts, r.ms);
       }
       optScore = g.def.score(g.puzzle, g.optimal);
       fit(g); // phase is "think": view(g).locked is already true
