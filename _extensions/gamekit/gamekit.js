@@ -214,21 +214,38 @@
   // ---------- drawing ----------
   // Compact (phone) layout on screens narrower than COMPACT_W (the screen, not
   // the column: desktop article columns can be narrow too); a game may then use
-  // its taller compactBoard. Pages size the canvas by the board's
-  // shape; slides let it fill the stage (drawing is letterboxed).
+  // its taller compactBoard, whose height may follow the text size (h: em =>
+  // units; fit() settles it). Pages size the canvas by the board's shape;
+  // slides let it fill the stage (drawing is letterboxed).
   function layout(g) {
     const compact = !g.slide && window.innerWidth < COMPACT_W;
     if (compact === g.compact && g.board) return;
     g.compact = compact;
     g.root.classList.toggle("gamekit-compact", compact);
-    g.board = (compact && g.def.compactBoard) || g.def.board;
-    g.canvas.dataset.board = `${g.board.w}x${g.board.h}`; // for tests
-    if (!g.slide) g.canvas.style.aspectRatio = `${g.board.w} / ${g.board.h}`;
+    const b = (compact && g.def.compactBoard) || g.def.board;
+    setBoard(g, typeof b.h === "function" ? { w: b.w, h: b.h(g.em || 3) } : b);
     if (g.side) reserveBottom(g);
   }
-  function fit(g) {
+  function setBoard(g, board) {
+    g.board = board;
+    g.canvas.dataset.board = `${board.w}x${+board.h.toFixed(2)}`; // for tests
+    if (!g.slide) g.canvas.style.aspectRatio = `${board.w} / ${board.h}`;
+  }
+  function fit(g, settled) {
     const r = g.canvas.getBoundingClientRect();
     if (!r.width || !r.height) return false;
+    const font = parseFloat(getComputedStyle(g.root).fontSize);
+    // A compact board whose height follows the text size: its em from the
+    // page's width alone (the rounded canvas height must not feed back), so
+    // one more pass settles it.
+    const b = g.compact && g.def.compactBoard;
+    if (!settled && b && typeof b.h === "function") {
+      const h = b.h((font * b.w) / r.width);
+      if (Math.abs(h - g.board.h) > 0.01) {
+        setBoard(g, { w: b.w, h });
+        return fit(g, true);
+      }
+    }
     const size = C.pixelSize(r.width, r.height, window.devicePixelRatio || 1);
     if (g.canvas.width !== size.w || g.canvas.height !== size.h) {
       g.canvas.width = size.w;
@@ -250,7 +267,7 @@
     // exactly; the rect is in screen pixels (reveal scales slides), the font size is not
     const dpr = window.devicePixelRatio || 1;
     const slideScale = g.canvas.offsetWidth ? r.width / g.canvas.offsetWidth : 1;
-    g.em = (parseFloat(getComputedStyle(g.root).fontSize) * slideScale) / (g.px / dpr);
+    g.em = (font * slideScale) / (g.px / dpr);
     g.canvas.dataset.em = g.em.toFixed(4); // for tests: canvas text size in board units
     return true;
   }
@@ -366,7 +383,9 @@
         const r = await solveLP(g.def.model(g.puzzle, g.yours));
         if (r.status !== "Optimal") throw new Error("Solver: " + r.status);
         g.optimal = g.def.decode(g.puzzle, r.values, g.yours);
-        line = C.thinkLine(r.counts, r.ms);
+        // a game may phrase the Think card itself, e.g. when helper variables
+        // would make the generic count misleading
+        line = g.def.think ? g.def.think(g.puzzle, { plan: g.optimal, ms: r.ms, counts: r.counts }) : C.thinkLine(r.counts, r.ms);
       }
       optScore = g.def.score(g.puzzle, g.optimal);
       fit(g); // phase is "think": view(g).locked is already true
