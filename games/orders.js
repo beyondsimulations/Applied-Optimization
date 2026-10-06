@@ -1,15 +1,14 @@
 // orders.js — lecture 03: a brewery's order file was imported with errors, and
 // the brewing plan made from it looks absurd. Students clean the weeks they
 // distrust (a cleaned week gets the median order); the plan updates live and
-// its real cost is measured against the true orders.
+// is measured against the true orders: how many crates go wrong, short or left
+// over (costs only come in lecture 5).
 (function () {
   const { fillCentred, formatScore: fmt } = GamekitCore;
-  // Orders and batches in crates of 20 bottles; storage 2 € per crate and week
-  // is lecture 5's 0.1 € per bottle.
+  // Orders and batches in crates of 20 bottles. The planner weighs a brew's
+  // setup against storage (lecture 5's 0.1 € per bottle is 2 € per crate).
   const SETUP = 400;  // € per brew
   const STORE = 2;    // € per crate and week in stock
-  const LOST = 15;    // € of margin per crate of orders that can't be served
-  const WASTE = 10;   // € per crate left over after the last week
   const TOP = 150;    // crates at the top of the chart; larger orders stop there, labelled with ↑
   const BOX = 20;     // crates per drawn box in the order stacks
 
@@ -50,29 +49,28 @@
     for (let k = T; k > 0; k = from[k]) brew[from[k]] = d.slice(from[k], k).reduce((a, b) => a + b, 0);
     return brew;
   }
-  // What a plan really costs against the true orders.
+  // What a plan does against the true orders: crates short each week, crates left over.
   function outcome(p, plan) {
     const brew = brewing(cleaned(p, plan));
     let stock = 0;
-    let cost = 0;
     const short = [];
     for (let t = 0; t < p.truth.length; t++) {
       stock += brew[t];
       const sold = Math.min(stock, p.truth[t]);
       short[t] = p.truth[t] - sold;
       stock -= sold;
-      cost += (brew[t] > 0 ? SETUP : 0) + STORE * stock + LOST * short[t];
     }
-    return { brew, short, left: stock, cost: cost + WASTE * stock };
+    return { brew, short, left: stock, wrong: short.reduce((a, b) => a + b, 0) + stock };
   }
 
-  // The cheapest of all 2^8 ways to clean the file (ties: the first found).
-  function cheapest(p, first) {
-    let best = { plan: first, cost: outcome(p, first).cost };
+  // The best of all 2^8 ways to clean the file: fewest crates short or left
+  // over (ties: the first found).
+  function bestCleaning(p, first) {
+    let best = { plan: first, wrong: outcome(p, first).wrong };
     for (let m = 0; m < 1 << p.raw.length; m++) {
       const plan = p.raw.map((_, t) => !!((m >> t) & 1));
-      const cost = outcome(p, plan).cost;
-      if (cost < best.cost) best = { plan, cost };
+      const wrong = outcome(p, plan).wrong;
+      if (wrong < best.wrong) best = { plan, wrong };
     }
     return best;
   }
@@ -105,20 +103,21 @@
   Gamekit.game("orders", {
     title: "Clean the Order File",
     task: "The brewing plan comes straight from the sales team's order file, in crates of 20 bottles, and the " +
-      "file was imported with errors. Tap a week you don't trust to replace its order with the median. A flag " +
-      "marks the harbour festival.",
+      "file was imported with errors. Tap a week you don't trust to replace its order with the median, so that " +
+      "no crate is short or left over. A flag marks the harbour festival.",
     goal: "min",
-    unit: "€",
+    unit: "crates wrong",
     board: { w: 100, h: 70, stretch: true },
     compactBoard: { w: 100, h: 94 },
     // weeks 1–8: "60,0" read as 600 in week 2, an empty cell in week 4, the
     // festival in week 6, a duplicated row in week 7
     class: file([53, 61, 56, 59], { comma: 1, blank: 3, festival: 5, double: 6 }, 126),
-    check: { optimum: 2020 },
+    check: { optimum: 0 }, // the clean file meets every true order exactly
 
-    // Resampled until each error, left in, costs money, cleaning the festival
-    // costs money too, and no other way to clean beats cleaning exactly the
-    // errors, so the mechanism text and the best plan hold for every puzzle.
+    // Resampled until each error, left in, makes crates go wrong and cleaning
+    // the festival does too, so the mechanism text holds for every puzzle.
+    // Cleaning exactly the errors always leaves no crate wrong: the planner
+    // then plans with the true orders.
     puzzle(rng) {
       const int = (lo, hi) => lo + Math.floor(rng() * (hi - lo + 1));
       for (;;) {
@@ -130,12 +129,10 @@
         const festival = Math.round(((s[2] + s[3]) / 2) * (1.9 + rng() * 0.3));
         if (festival === s[2] + s[3]) continue; // never exactly the duplicated row's 2 × median
         const p = file(normal, { comma: t[0], blank: t[1], festival: t[2], double: t[3] }, festival);
-        const best = outcome(p, errors(p)).cost;
-        const worse = (flags) => outcome(p, flags).cost > best;
+        const worse = (flags) => outcome(p, flags).wrong > 0;
         const errorsMatter = ["comma", "blank", "double"].every((k) => worse(p.kind.map((x) => x !== "" && x !== "festival" && x !== k)));
         const festivalMatters = worse(p.kind.map((x) => x !== ""));
-        // and cleaning exactly the three errors is the cheapest of all 2^8 ways to clean
-        if (errorsMatter && festivalMatters && cheapest(p, errors(p)).cost === best) return p;
+        if (errorsMatter && festivalMatters) return p;
       }
     },
     start(p) { return p.raw.map(() => false); },
@@ -237,15 +234,15 @@
     },
 
     feasible() { return true; },
-    score(p, plan) { return outcome(p, plan).cost; },
+    score(p, plan) { return outcome(p, plan).wrong; },
 
-    // tries every way to clean the file and keeps the cheapest (the guards in
-    // puzzle() make that cleaning exactly the three import errors)
-    optimal(p) { return cheapest(p, errors(p)).plan; },
+    // tries every way to clean the file and keeps the best one: cleaning exactly
+    // the three import errors, which leaves no crate wrong (ties keep it)
+    optimal(p) { return bestCleaning(p, errors(p)).plan; },
     think(p, result) {
       const best = p.raw.map((_, t) => t).filter((t) => result.plan[t]);
       return `Tried all ${fmt(Math.pow(2, p.raw.length))} ways to clean the file: cleaning ${weeks(best)} ` +
-        `is the cheapest · ${result.ms < 1 ? "under 1" : fmt(result.ms)} ms`;
+        `leaves no crate short or left over · ${result.ms < 1 ? "under 1" : fmt(result.ms)} ms`;
     },
 
     insight(p, yours, optimal) {
@@ -262,19 +259,18 @@
         if (yours[t] && p.kind[t] === "") notes.push(`week ${t + 1} was fine (${fmt(p.raw[t])} crates)`);
       }
       const y = outcome(p, yours);
-      const best = outcome(p, optimal).cost;
       let diff = mine.length ? `You cleaned ${weeks(mine)}.` : "You cleaned nothing.";
       if (!notes.length) {
         diff += " That's exactly the three import errors, and the festival stayed in: the best plan.";
       } else {
         diff += " But " + list(notes) + ".";
-        if (y.cost > best) {
+        if (y.wrong > 0) {
           const what = [];
           if (y.short.some((s) => s > 0)) what.push(`${fmt(y.short.reduce((a, b) => a + b, 0))} crates of orders go unserved`);
           if (y.left > 0) what.push(`${fmt(y.left)} crates are left over`);
-          diff += ` Your plan costs ${fmt(y.cost - best)} € more than the best plan${what.length ? ": " + list(what) : ""}.`;
+          diff += ` With your plan ${list(what)}; with the best plan, none.`;
         } else {
-          diff += " Here that costs nothing extra.";
+          diff += " Here that changes nothing.";
         }
       }
       return {
@@ -293,7 +289,7 @@
       const mine = p.raw.map((_, t) => t).filter((t) => plan[t]);
       const batches = o.brew.map((b, t) => [b, t]).filter(([b]) => b > 0).map(([b, t]) => `${fmt(b)} crates in week ${t + 1}`);
       return `${mine.length ? "Cleaned " + weeks(mine) : "Nothing cleaned"}. The plan brews ${batches.join(", ") || "nothing"}. ` +
-        `Real cost ${fmt(o.cost)} €.`;
+        `${fmt(o.wrong)} crates short or left over.`;
     },
   });
 
