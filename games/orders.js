@@ -26,6 +26,7 @@
 
   const list = (xs) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
   const weeks = (ts) => `week${ts.length === 1 ? "" : "s"} ${list(ts.map((t) => t + 1))}`;
+  const crates = (n) => `${fmt(n)} crate${n === 1 ? "" : "s"}`;
   const cleaned = (p, plan) => p.raw.map((v, t) => (plan[t] ? p.median : v));
   const errors = (p) => p.kind.map((k) => k === "comma" || k === "blank" || k === "double"); // clean exactly these
 
@@ -106,7 +107,7 @@
       "file was imported with errors. Tap a week you don't trust to replace its order with the median, so that " +
       "no crate is short or left over. A flag marks the harbour festival.",
     goal: "min",
-    unit: "crates wrong",
+    unit: ["crate wrong", "crates wrong"],
     board: { w: 100, h: 70, stretch: true },
     compactBoard: { w: 100, h: 94 },
     // weeks 1–8: "60,0" read as 600 in week 2, an empty cell in week 4, the
@@ -266,8 +267,9 @@
         diff += " But " + list(notes) + ".";
         if (y.wrong > 0) {
           const what = [];
-          if (y.short.some((s) => s > 0)) what.push(`${fmt(y.short.reduce((a, b) => a + b, 0))} crates of orders go unserved`);
-          if (y.left > 0) what.push(`${fmt(y.left)} crates are left over`);
+          const short = y.short.reduce((a, b) => a + b, 0);
+          if (short > 0) what.push(`${crates(short)} of orders ${short === 1 ? "goes" : "go"} unserved`);
+          if (y.left > 0) what.push(`${crates(y.left)} ${y.left === 1 ? "is" : "are"} left over`);
           diff += ` With your plan ${list(what)}; with the best plan, none.`;
         } else {
           diff += " Here that changes nothing.";
@@ -289,7 +291,7 @@
       const mine = p.raw.map((_, t) => t).filter((t) => plan[t]);
       const batches = o.brew.map((b, t) => [b, t]).filter(([b]) => b > 0).map(([b, t]) => `${fmt(b)} crates in week ${t + 1}`);
       return `${mine.length ? "Cleaned " + weeks(mine) : "Nothing cleaned"}. The plan brews ${batches.join(", ") || "nothing"}. ` +
-        `${fmt(o.wrong)} crates short or left over.`;
+        `${crates(o.wrong)} short or left over.`;
     },
   });
 

@@ -160,9 +160,12 @@
       .filter((s) => s.text !== "");
   }
 
+  // unit: a string, or [singular, plural] (e.g. ["crate", "crates"])
   function formatScore(value, unit) {
-    const n = (Math.round(value) + 0).toLocaleString("en-US"); // + 0 turns -0 into 0
-    return unit ? `${n} ${unit}` : n;
+    const r = Math.round(value) + 0; // + 0 turns -0 into 0
+    const n = r.toLocaleString("en-US");
+    const u = Array.isArray(unit) ? unit[r === 1 ? 0 : 1] : unit;
+    return u ? `${n} ${u}` : n;
   }
 
   // Draws text whose digits and capitals are centred on y: canvas's "middle"
