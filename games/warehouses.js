@@ -19,7 +19,7 @@
     const compact = !!(view && view.compact);
     const w = compact ? 100 : (view && view.w) || 100;
     const ox = w - 8.2 * em; // the orders column: two icons, a count and the parcels
-    const bw = compact ? (w - 2) / 4 : Math.min(24, (ox - 6) / 4); // place width
+    const bw = compact ? (w - 2) / 4 : Math.min(24, (ox - 2 - 2.5 * em) / 4); // place width; 2.5 em to the orders
     const sh = compact ? 3.6 * em + 1 : (((view && view.h) || 70) - 4.5 - 3.8 * em) / 2; // place height
     const houses = [];
     let y0 = 0;
