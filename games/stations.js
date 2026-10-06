@@ -188,9 +188,10 @@
           min: mine.reduce((t, j) => t + p.w[j] * minutes(plan[k], j), 0) });
       });
       if (!(view && view.locked)) {
-        out.push({ key: "hint", kind: "hint", ...L.hint, color: ui.sel == null && !d ? "muted" : "accent",
-          text: d ? `Let go to move department ${d.k + 1} there.` : ui.sel == null ? "Drag a department, or tap it and then an area." :
-            `Tap an area to move department ${ui.sel + 1} there.` });
+        const stuck = d && plan === real; // over another department or off the map: letting go changes nothing
+        out.push({ key: "hint", kind: "hint", ...L.hint, color: stuck ? "bad" : ui.sel == null && !d ? "muted" : "accent",
+          text: stuck ? "Drop it on a free area." : d ? `Let go to move department ${d.k + 1} there.` :
+            ui.sel == null ? "Drag a department, or tap it and then an area." : `Tap an area to move department ${ui.sel + 1} there.` });
       }
       return out;
     },

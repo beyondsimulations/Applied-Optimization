@@ -314,14 +314,17 @@
 
   // ---------- play ----------
   function onPointer(g, e, type) {
-    if (g.phase !== "play" || !fit(g)) return;
+    if (g.phase !== "play") return;
+    // one pointer at a time: a second finger never takes over the first one's drag
+    if (type === "down" ? !e.isPrimary : g.press && e.pointerId !== g.press.id) return;
+    if (!fit(g)) return;
     const r = g.canvas.getBoundingClientRect();
     const dx = ((e.clientX - r.left) / r.width) * g.canvas.width;
     const dy = ((e.clientY - r.top) / r.height) * g.canvas.height;
     const pt = { type, x: (dx - g.ox) / g.px, y: (dy - g.oy) / g.px };
     // A press can become a drag: later events carry where it started (board
     // units) and whether it has moved more than a few screen pixels since.
-    if (type === "down") g.press = { cx: e.clientX, cy: e.clientY, x: pt.x, y: pt.y, moved: false };
+    if (type === "down") g.press = { id: e.pointerId, cx: e.clientX, cy: e.clientY, x: pt.x, y: pt.y, moved: false };
     if (type !== "down" && g.press) {
       g.press.moved = g.press.moved || Math.hypot(e.clientX - g.press.cx, e.clientY - g.press.cy) > DRAG_PX;
       Object.assign(pt, { from: { x: g.press.x, y: g.press.y }, moved: g.press.moved });
@@ -338,7 +341,7 @@
       }
     }
     update(g);
-    if (type === "down") keepInView(g);
+    if (type === "up" || type === "cancel") keepInView(g); // after the action: scrolling under a pressed finger moves its target
   }
   // Phone page: scores, status and buttons form a panel fixed to the bottom of
   // the screen. The page reserves its height, and taps keep the whole board
@@ -348,7 +351,9 @@
   }
   function keepInView(g) {
     if (!g.compact) return;
-    const overlap = g.canvas.getBoundingClientRect().bottom - g.side.getBoundingClientRect().top;
+    const r = g.canvas.getBoundingClientRect();
+    if (r.height > g.side.getBoundingClientRect().top) return; // taller than the screen: scrolling would hide its top
+    const overlap = r.bottom - g.side.getBoundingClientRect().top;
     if (overlap > 0) window.scrollBy({ top: overlap + 8, behavior: reducedMotion() ? "auto" : "smooth" });
   }
   function meta(g) {

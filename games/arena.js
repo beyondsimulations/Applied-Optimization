@@ -9,6 +9,7 @@
   const H = 1; // empty seats between groups in a row
   const B = 1; // empty rows between groups, also diagonally
   const PER_ROW = 2;
+  const allSeated = (t) => (TYPES[t].n === 1 ? `Group ${TYPES[t].id} is already seated.` : `All ${TYPES[t].n} groups ${TYPES[t].id} are seated.`);
   // the lecture's group types: seats, points and how many want tickets
   const TYPES = [["a", 1, 1, 3], ["b", 2, 2, 2], ["c", 2, 4, 3], ["d", 4, 4, 5], ["e", 4, 5, 2], ["f", 6, 6, 1], ["g", 6, 12, 1]]
     .map(([id, d, v, n]) => ({ id, d, v, n }));
@@ -54,18 +55,19 @@
 
   // Layout in board units. Wide (slides, pages): the stand on the left with
   // the pitch above it, the groups in a column on the right, the hint below
-  // them. Compact (phones): the groups below the stand in two columns (one
+  // them. Compact (phones): the groups above the stand in two columns (one
   // when narrow); the board's height follows the text size.
   function lay(view) {
     const em = (view && view.em) || 3;
-    const tile = (cols, x0, y0, w) => TYPES.map((_, t) => ({ x: x0 + (t % cols) * w, y: y0 + Math.floor(t / cols) * 1.8 * em, w: w - 0.6 * em, h: 1.5 * em }));
-    if (view && view.compact) {
+    // a group type's tile; on phones 2.6 em tall, a finger's 44 px
+    const tile = (cols, x0, y0, w, h) => TYPES.map((_, t) => ({ x: x0 + (t % cols) * w, y: y0 + Math.floor(t / cols) * (h + 0.3 * em), w: w - 0.6 * em, h }));
+    if (view && view.compact) { // the groups above the stand, so they show together with its first rows
       const s = 99.5 / COLS;
-      const y0 = 1.6 * em; // the pitch above the first row
       const cols = 2 * 9.6 * em <= 100 ? 2 : 1;
-      const py = y0 + ROWS * s + 1.0 * em;
-      const tiles = tile(cols, 0, py, 100 / cols);
-      const hint = { x: 0, y: py + Math.ceil(TYPES.length / cols) * 1.8 * em + 0.2 * em, w: 100 };
+      const ty = 0.4 * em;
+      const tiles = tile(cols, 0.6 * em, ty, (100 - 0.6 * em) / cols, 2.6 * em);
+      const y0 = ty + Math.ceil(TYPES.length / cols) * 2.9 * em + 1.6 * em; // the pitch above the first row
+      const hint = { x: 0, y: y0 + ROWS * s + 0.4 * em, w: 100 };
       return { s, x0: 0.25, y0, tiles, hint, w: 100, h: hint.y + 2.6 * em + 0.5 };
     }
     const w = (view && view.w) || 100;
@@ -74,7 +76,7 @@
     const s = Math.min((h - 1.6 * em - 0.5) / ROWS, (w - pw - 2 * em) / COLS);
     const y0 = 1.6 * em;
     const ty = 0.4 * em; // room above the first type for its pick frame
-    return { s, x0: 0, y0, tiles: tile(1, w - pw, ty, pw), hint: { x: w - pw, y: ty + TYPES.length * 1.8 * em + 0.3 * em, w: pw }, w };
+    return { s, x0: 0, y0, tiles: tile(1, w - pw, ty, pw, 1.5 * em), hint: { x: w - pw, y: ty + TYPES.length * 1.8 * em + 0.3 * em, w: pw }, w };
   }
   const seatAt = (L, r, c) => ({ x: L.x0 + (c - 1) * L.s, y: L.y0 + (r - 1) * L.s });
   const inside = (e, b) => e.x >= b.x && e.x <= b.x + b.w && e.y >= b.y && e.y <= b.y + b.h;
@@ -128,13 +130,14 @@
       const onStand = ({ r, c }) => r >= 1 && r <= ROWS && c >= 1 && c <= COLS;
       const seated = groups(plan);
       const sittingAt = (at) => seated.find((g) => g.r === at.r && at.c >= g.c && at.c < g.c + TYPES[g.t].d);
+      const leftEnd = (t, c) => Math.max(1, Math.min(COLS - TYPES[t].d + 1, c)); // a dragged group stays inside its row
       if (e.type === "down") {
         ui.msg = null;
         const tile = L.tiles.findIndex((b) => inside(e, b));
         const at = seatOf(e.x, e.y);
         const here = onStand(at) ? sittingAt(at) : null;
         ui.drag = { tile: tile >= 0 ? tile : null, t: tile >= 0 ? tile : here ? here.t : null,
-          i: here ? here.i : null, grab: here ? at.c - here.c : 0 };
+          i: here ? here.i : null, grab: here ? at.c - here.c : 0, at };
         return undefined;
       }
       const d = ui.drag;
@@ -142,7 +145,7 @@
       d.moved = e.moved; // Gamekit: the press has travelled far enough to be a drag
       const at = seatOf(e.x, e.y);
       if (e.type === "move") {
-        if (d.t != null && d.moved) Object.assign(d, { r: at.r, c: at.c - d.grab, on: onStand(at) });
+        if (d.t != null && d.moved) Object.assign(d, { r: at.r, c: leftEnd(d.t, at.c - d.grab), on: onStand(at) });
         return undefined;
       }
       ui.drag = null; // released
@@ -154,25 +157,28 @@
           return next;
         }
         const slot = d.i != null ? d.i : plan[d.t].indexOf(null);
-        if (slot < 0) { ui.msg = `All ${TYPES[d.t].n} groups ${TYPES[d.t].id} are seated.`; return undefined; }
+        if (slot < 0) { ui.msg = allSeated(d.t); return undefined; }
         const others = seated.filter((g) => !(g.t === d.t && g.i === d.i));
-        const why = refusal(p, others, d.t, at.r, at.c - d.grab);
+        const c = leftEnd(d.t, at.c - d.grab);
+        const why = refusal(p, others, d.t, at.r, c);
         if (why) { ui.msg = why; return undefined; }
-        next[d.t][slot] = [at.r, at.c - d.grab];
+        next[d.t][slot] = [at.r, c];
+        if (ui.sel === d.t && next[d.t].indexOf(null) < 0) ui.sel = null; // that type is all seated
         return next;
       }
       if (d.moved) return undefined;
-      if (d.tile != null) { ui.sel = ui.sel === d.tile ? null : d.tile; return undefined; } // a tap
-      if (!onStand(at)) return undefined;
-      const here = sittingAt(at);
+      if (d.tile != null) { ui.sel = ui.sel === d.tile ? null : d.tile; return undefined; } // a tap, where it was pressed
+      const tap = d.at;
+      if (!onStand(tap)) return undefined;
+      const here = sittingAt(tap);
       if (here) { next[here.t][here.i] = null; return next; }
       if (ui.sel == null) { ui.msg = "Pick a group first."; return undefined; }
       const t = ui.sel;
       const free = plan[t].indexOf(null);
-      if (free < 0) { ui.msg = `All ${TYPES[t].n} groups ${TYPES[t].id} are seated.`; return undefined; }
-      const why = refusal(p, seated, t, at.r, at.c);
+      if (free < 0) { ui.msg = allSeated(t); return undefined; }
+      const why = refusal(p, seated, t, tap.r, tap.c);
       if (why) { ui.msg = why; return undefined; }
-      next[t][free] = [at.r, at.c];
+      next[t][free] = [tap.r, tap.c];
       if (next[t].indexOf(null) < 0) ui.sel = null; // that type is all seated
       return next;
     },
@@ -180,17 +186,18 @@
     pieces(p, plan, ui, view) {
       const L = lay(view);
       const out = [];
+      const d = ui.drag && ui.drag.moved && ui.drag.t != null ? ui.drag : null; // a group being dragged
       const seated = groups(plan);
+      const staying = seated.filter((g) => !(d && d.t === g.t && d.i === g.i)); // its seats are free while it's lifted
       const blocked = blockedSet(p);
       for (let r = 1; r <= ROWS; r++) {
         for (let c = 1; c <= COLS; c++) {
           const { x, y } = seatAt(L, r, c);
-          const kept = seated.some((g) => Math.abs(g.r - r) <= B && c >= g.c - H && c <= g.c + TYPES[g.t].d - 1 + H);
+          const kept = staying.some((g) => Math.abs(g.r - r) <= B && c >= g.c - H && c <= g.c + TYPES[g.t].d - 1 + H);
           out.push({ key: `seat-${r}-${c}`, kind: "seat", x, y, s: L.s, blocked: blocked.has(`${r},${c}`) ? 1 : 0,
             kept: kept ? 1 : 0, color: "muted" });
         }
       }
-      const d = ui.drag && ui.drag.moved && ui.drag.t != null ? ui.drag : null; // a group being dragged
       seated.forEach((g) => {
         const { x, y } = seatAt(L, g.r, g.c);
         const lifted = d && d.t === g.t && d.i === g.i;
@@ -199,11 +206,8 @@
       });
       let why = null;
       if (d && d.on) { // where it would land: see-through, red with the reason where it can't
-        const others = seated.filter((g) => !(g.t === d.t && g.i === d.i));
-        why = d.i == null && plan[d.t].indexOf(null) < 0 ? `All ${TYPES[d.t].n} groups ${TYPES[d.t].id} are seated.`
-          : refusal(p, others, d.t, d.r, d.c);
-        const c = Math.max(1, Math.min(COLS - TYPES[d.t].d + 1, d.c));
-        const { x, y } = seatAt(L, d.r, c);
+        why = d.i == null && plan[d.t].indexOf(null) < 0 ? allSeated(d.t) : refusal(p, staying, d.t, d.r, d.c);
+        const { x, y } = seatAt(L, d.r, d.c);
         out.push({ key: "ghost", kind: "group", t: d.t, x, y, w: TYPES[d.t].d * L.s, s: L.s, color: why ? "bad" : "plan", alpha: 0.5 });
       }
       L.tiles.forEach((b, t) => {
