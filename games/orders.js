@@ -206,7 +206,7 @@
         const x = piece.x - piece.w / 2;
         ctx.fillStyle = piece.paint;
         for (let y = piece.base; y > piece.y + 0.05; y -= piece.crate) {
-          const h = Math.min(piece.crate, y - piece.y);
+          const h = Math.max(Math.min(piece.crate, y - piece.y), 0.6); // a few crates over a box still show
           ctx.fillRect(x, y - h + 0.3, piece.w, h - 0.3);
         }
       } else if (piece.kind === "label") {
