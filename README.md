@@ -34,9 +34,8 @@ The course covers applied optimization methods with hands-on tutorials and real-
 
 - **`_quarto.yml`** - Main Quarto configuration and build settings
 - **`_brand.yml`** - Website branding and styling
-- **`Project.toml`** - Julia project dependencies
-- **`Pipfile`** - Python dependencies for helper scripts
-- **`jupytext.toml`** - Jupytext configuration for notebook conversion
+- **`applied-optimization/`** - Julia environment (`Project.toml`, `Manifest.toml`) the tutorials run in
+- **`pyproject.toml`** - Python dependencies for helper scripts (managed with uv)
 
 ## 🔧 Build Process
 
@@ -70,7 +69,7 @@ The `helpers/` directory contains automation scripts that run after each build:
 1. Finds all notebook files in the tutorials directory
 2. Reads each notebook using Jupytext
 3. Converts to Julia percent format (`.jl` files with `# %%` cell separators)
-4. Saves alongside original notebooks
+4. Saves the `.jl` file and deletes the notebook, so students only download the `.jl`
 
 ### `convert-pdf.py`
 **Purpose**: Converts PDF files to SVG format (manual use)
@@ -93,7 +92,7 @@ in `helpers/`.
 
 ### Prerequisites
 
-1. **Julia** - For running computational content
+1. **Julia** 1.13 - For running computational content
 2. **Python** - For helper scripts and Quarto
 3. **Quarto** - For building the website
 
@@ -107,7 +106,7 @@ in `helpers/`.
 
 2. Install Julia dependencies:
    ```bash
-   julia --project=. -e 'using Pkg; Pkg.instantiate()'
+   julia --project=applied-optimization -e 'using Pkg; Pkg.instantiate()'
    ```
 
 3. Install Python dependencies:
