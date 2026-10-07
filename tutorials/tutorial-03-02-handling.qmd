@@ -64,25 +64,25 @@ Think of environments as separate workspaces for different projects. It's like h
 1. `Project.toml`: Lists direct dependencies of your project.
 2. `Manifest.toml`: Contains a complete dependency graph of your project.
 
-These files help ensure reproducibility and should be version controlled with your project. Remember what we did at the start of the tutorial? We activated the course environment together, which means we are already working in an environment:
+These files help ensure reproducibility and should be version controlled with your project. Remember the first tutorial? There, we created the course environment in the folder `applied-optimization` inside your course folder. To activate it, run:
 
 ```{julia}
 #| eval: false
-Pkg.activate("../applied-optimization")
+Pkg.activate("applied-optimization")
 ```
 
-Here, `"../applied-optimization"` is the path to the folder with the course's `Project.toml`, relative to the folder of this tutorial. Before installing new packages, we should always activate this environment again. This ensures that the packages are **installed in the environment** and not globally.
+Here, `"applied-optimization"` is the path to the folder with the course's `Project.toml`, relative to the folder Julia runs in: your course folder. Whenever you start Julia without this environment, activate it before installing new packages. This ensures that the packages are **installed in the environment** and not globally.
 
 ::: {.callout-caution}
 Check the path carefully: if it does not point to an existing environment, `Pkg.activate` silently creates a new, empty environment at that location, and your packages end up in the wrong place.
 :::
 
 :::{.callout-tip}
-Our environment is linked to the Jupyter kernel. It is the thing in the upper right corner we are using in this course. Therefore, we don't need to activate it most of the time as it is already running automatically. But to update packages or add new packages, we should activate it so the packages are added permanently.
+Our Zed kernel "Applied Optimization" from the first tutorial already starts in this environment. Therefore, we don't need to activate it most of the time: in Zed, `Pkg.add` installs packages into the course environment directly.
 :::
 
 :::{.callout-tip}
-Once created and while working in the folder with `Project.toml` and `Manifest.toml`, a simple `Pkg.activate()` is faster and enough to load the environment in the working folder!
+Once created and while working in the folder with `Project.toml` and `Manifest.toml`, a simple `Pkg.activate(".")` is faster and enough to load the environment in the working folder!
 :::
 
 Afterwards, adding packages is straightforward using the `Pkg.add("PackageName")` function. Replace `PackageName` with the actual package name you wish to add.
