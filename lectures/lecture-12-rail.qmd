@@ -382,7 +382,7 @@ $$\frac{q_{o,d,p}}{\sum_{f \in \mathcal{O}} q_{o,f,p}} \quad \forall o,d \in \ma
 Based on the ratio of the different destinations $d$ to the total queue for each station $o \in \mathcal{O}$ in each period $p \in \mathcal{P}$. Note that the summation needs its **own index** $f$ over all destinations, as $d$ is already taken by the ratio's destination.
 :::
 
-# [Variables and Objective]{.flow} {.title}
+# [Inflow and Queues]{.flow} {.title}
 
 ## Decision Variable?
 
@@ -622,7 +622,7 @@ $$
 This constraint bounds the inflow rate at each station between the **minimum and maximum** allowed entry rates, ensuring compliance with **operational capacity limits**.
 :::
 
-## Dispatch Only Available People?
+## Only Queued Passengers?
 
 ::: {.callout-important}
 ## The goal of this constraint is to:
@@ -640,7 +640,7 @@ Ensure that we do not dispatch more people than are queued.
 
 :::
 
-## Dispatch Only Available People
+## Only Queued Passengers
 
 [Question:]{.question} **What could be the constraint?**
 
@@ -699,7 +699,7 @@ subject to:
 
 :::
 
-# [Model Characteristics]{.flow} {.title}
+# [Characteristics]{.flow} {.title}
 
 ## Characteristics
 
@@ -728,7 +728,7 @@ It is a [linear program]{.highlight}, as objective and constraints are linear. T
 - Are shortest paths a feasible assumption?
 :::
 
-# [Implementation and Impact]{.flow} {.title}
+# [Results]{.flow} {.title}
 
 ## [Metro Inflow Optimization]{.invert-font} {background-image="https://images.unsplash.com/photo-1658490505550-60191ee61ec6?q=80&w=4334&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
 
@@ -780,7 +780,7 @@ It is a [linear program]{.highlight}, as objective and constraints are linear. T
 The remaining 19% of passengers experience external queuing - this is the price for preventing dangerous overcrowding inside the system.
 :::
 
-## Didn't We Bound the Utilization?
+## Why Above 100%?
 
 [Question:]{.question} **Our constraint enforces $\alpha \times c_e$ with $\alpha < 1$. How can utilization still reach 109%?**
 
