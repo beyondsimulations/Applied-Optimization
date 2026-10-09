@@ -227,7 +227,8 @@ Create the objective function based on the problem description of this tutorial.
 #| eval: false
 #| code-fold: true
 # Test your answer
-@assert typeof(objective_function(model)) == AffExpr
+@assert objective_sense(model) == MOI.MAX_SENSE "The objective should be maximized. Did you define it with @objective(model, Max, ...)?"
+@assert typeof(objective_function(model)) == AffExpr "The objective should be a linear expression of productA and productB."
 println("An objective function defined successfully!")
 println("The optimization later will show whether the formulation was correct.")
 ```
