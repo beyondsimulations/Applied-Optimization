@@ -51,6 +51,8 @@ project:
   type: website
   post-render:
     - helpers/convert_pypercent.py
+    - ../Lecture-Foundations/scripts/split_refs_post.py
+    - ../Lecture-Foundations/scripts/create_pdf.py
 ```
 
 ## Helper Functions
@@ -79,14 +81,21 @@ The `helpers/` directory contains automation scripts that run after each build:
 - **Technology**: Uses `pdf2svg` command-line tool
 - **Usage**: Manual execution for converting diagrams or figures
 
-### Slide PDFs (shared script)
+### Slide PDFs (shared scripts)
 
-**Purpose**: Renders the revealjs decks to PDF (`?print-pdf` in headless
-chromium, with MathJax fonts inlined). Lives in the shared standard repo, not
-in `helpers/`.
+**Purpose**: Every render prints the revealjs decks it touched to PDF
+(`?print-pdf` in headless chromium, with MathJax fonts inlined). The scripts
+live in the shared standard repo, not in `helpers/`, and run as two post-render
+hooks:
 
-- **Usage**: after a full render, `uv run ../lecture-foundations/scripts/create_pdf.py --dir _site/ --output-dir pdf-slides/`
-- **Prerequisite**: `uv run playwright install chromium` once per machine
+- `split_refs_post.py` spreads a deck's bibliography over slides of four entries
+- `create_pdf.py` then writes `lecture-XX-presentation.pdf` next to the deck in
+  `_site/lectures/`, linked on the lecture page as "Slides (PDF)". Photos larger
+  than a slide needs are shrunk in the PDF only
+
+- **Prerequisites**: the sibling checkout `../Lecture-Foundations`, `uv run playwright install chromium` once per machine, and rendering through `uv run`
+- **A deck that cannot be printed fails the render on purpose**, as its page already links the PDF
+- **One deck by hand**: after a full render, `uv run ../Lecture-Foundations/scripts/create_pdf.py _site/lectures/lecture-XX-presentation.html _site/lectures/lecture-XX-presentation.pdf`
 
 ## Getting Started
 
@@ -119,7 +128,7 @@ in `helpers/`.
 To build the complete website with all post-processing:
 
 ```bash
-quarto render
+uv run quarto render
 ```
 
 This will:
@@ -128,12 +137,20 @@ This will:
 - Generate PDFs, Julia files, and organized markdown
 - Create the complete website in `_site/`
 
+To publish that build:
+
+```bash
+bash ../Lecture-Foundations/scripts/publish-gh-pages.sh
+```
+
+It publishes without rendering again and keeps the `gh-pages` branch at a single commit, so past builds of the site do not pile up in the repository. A bare `quarto publish` renders again outside `uv`, where the slide PDF hook cannot run.
+
 ### Development
 
 For development with live preview:
 
 ```bash
-quarto preview
+uv run quarto preview
 ```
 
 Note: Post-render scripts only run on full renders, not during preview mode.
@@ -144,7 +161,8 @@ Note: Post-render scripts only run on full renders, not during preview mode.
 
 1. Create a new `.qmd` file in `lectures/` following the naming convention: `lecture-XX-topic.qmd`
 2. For presentations, create a corresponding `lecture-XX-presentation.html` file
-3. Run `quarto render` to process and generate PDFs automatically
+3. Add the `format-links` entry "Slides (PDF)" to the front matter, as in the other lectures
+4. Run `uv run quarto render` to process and generate PDFs automatically
 
 ### Adding New Tutorials
 
@@ -162,7 +180,7 @@ Note: Post-render scripts only run on full renders, not during preview mode.
 
 1. Fork the repository
 2. Create content following the established naming conventions
-3. Test your changes with `quarto render`
+3. Test your changes with `uv run quarto render`
 4. Submit a pull request
 
 ## License
