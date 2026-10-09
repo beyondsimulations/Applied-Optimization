@@ -12,8 +12,7 @@ The course covers applied optimization methods with hands-on tutorials and real-
 
 - **`lectures/`** - Course lecture materials
   - Lecture content in Quarto markdown (`.qmd`) files
-  - Rendered HTML versions for web viewing
-  - Presentation slides (`*-presentation.html`) for classroom use
+  - Each renders to a reading page, a PDF and a slide deck (`*-presentation.html`) for classroom use
   - Supporting images and files
 
 - **`tutorials/`** - Interactive tutorials and exercises
@@ -25,10 +24,9 @@ The course covers applied optimization methods with hands-on tutorials and real-
 
 ### Technical Directories
 
-- **`helpers/`** - Post-processing automation scripts (see [Helper Functions](#-helper-functions))
+- **`helpers/`** - Post-processing automation scripts (see [Helper Functions](#helper-functions))
 - **`_site/`** - Generated website output (created by Quarto)
 - **`_freeze/`** - Quarto's computational cache
-- **`site_libs/`** - Website dependencies and libraries
 
 ### Configuration Files
 
@@ -72,14 +70,6 @@ The `helpers/` directory contains automation scripts that run after each build:
 2. Reads each notebook using Jupytext
 3. Converts to Julia percent format (`.jl` files with `# %%` cell separators)
 4. Saves the `.jl` file and deletes the notebook, so students only download the `.jl`
-
-### `convert-pdf.py`
-**Purpose**: Converts PDF files to SVG format (manual use)
-
-- **Input**: PDF files in specified directory
-- **Output**: SVG files with naming convention
-- **Technology**: Uses `pdf2svg` command-line tool
-- **Usage**: Manual execution for converting diagrams or figures
 
 ### Slide PDFs (shared scripts)
 
@@ -134,7 +124,7 @@ uv run quarto render
 This will:
 - Render all `.qmd` files to HTML
 - Execute the post-render helper scripts
-- Generate PDFs, Julia files, and organized markdown
+- Generate PDFs and Julia files
 - Create the complete website in `_site/`
 
 To publish that build:
