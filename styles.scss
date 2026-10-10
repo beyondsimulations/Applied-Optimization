@@ -380,6 +380,49 @@ $presentation-title-slide-text-align: left;
     overflow-wrap: anywhere;
 }
 
+// ── Slide tables ──────────────────────────────────────────────────────────
+// Reveal centres a table, rules every row but the last and leaves no space
+// below it: the table started at another edge than the title and the text,
+// and ran into the paragraph after it. A table starts at the slide's left
+// edge, has one rule under its header, sets its digits at equal width and
+// keeps some distance from what follows. Number columns are right-aligned in
+// the source (`|---:|`); a stylesheet cannot know which columns hold numbers.
+// Two columns stay 1em apart, as before (0.5em on each side). Only the first
+// column's left and the last column's right padding are gone, so no table is
+// wider than it was.
+.reveal table {
+    margin-left: 0;
+    font-variant-numeric: tabular-nums lining-nums;
+}
+
+// The distance is for what follows the table. A table that ends its
+// container (the output of a code cell, a column, a callout) would only make
+// that container taller: a pandas table at the bottom of a full slide
+// overflowed by exactly this margin.
+.reveal table:not(:last-child) {
+    margin-bottom: 0.9em;
+}
+
+.reveal table th,
+.reveal table td {
+    padding: 0.2em 1em 0.2em 0;
+    border-bottom: 0;
+}
+
+// :where() keeps this at the weight of the rule above, so a course's own
+// table rule still wins: the simplex tableaus in Grundlagen-Operations-Research
+// set their padding themselves, and lost it on the right in the last column.
+.reveal table th:where(:last-child),
+.reveal table td:where(:last-child) {
+    padding-right: 0;
+}
+
+// Only the last header row: a DataFrame prints two (names, then types), and
+// a rule under each cut the header in half.
+.reveal table thead tr:last-child th {
+    border-bottom: 2px solid;
+}
+
 // ── Document pages: columns and figures ───────────────────────────────────
 // Scoped to #quarto-document-content, which does not exist in RevealJS, so the
 // slide rule above is untouched.
