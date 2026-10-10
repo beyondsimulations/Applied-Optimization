@@ -88,8 +88,12 @@
 
 /* Slides: a wide left column with the task text above the board, a lane with
    a thin divider, and a narrow right column: QR code, then the game's state
-   (scores, status), then the buttons pinned to the bottom. The fixed height
-   keeps the slide inside the overflow gate. */
+   (scores, status), then the buttons pinned to the bottom. reveal.js sets the
+   height to what the slide has left below its heading (r-stretch) and writes
+   the stage width with it. The height here holds where reveal sets none: a
+   game nested in another block. No min-height and no padding on this box:
+   reveal measures the slide with the game at height 0, and both would count
+   as content. */
 .reveal .gamekit-slide {
   font-size: 22px;
   height: 575px;
@@ -97,9 +101,13 @@
   display: flex;
   flex-direction: column;
 }
+.reveal .gamekit-slide.r-stretch { max-width: 100%; } /* reveal's own rule lifts the limit */
+/* reveal's scroll view (decks on a narrow phone) stretches nothing and sets the height to 0 */
+.reveal-scroll .gamekit-slide { height: 575px !important; }
 .reveal .gamekit-slide p { line-height: 1.3; }
 .reveal .gamekit-slide .gamekit-task { flex: none; margin-bottom: 0.4rem; }
-.reveal .gamekit-slide .gamekit-main { flex: 1; min-height: 0; flex-direction: row; gap: 1.25rem; }
+/* the padding keeps board and buttons off the slide's bottom edge */
+.reveal .gamekit-slide .gamekit-main { flex: 1; min-height: 0; flex-direction: row; gap: 1.25rem; box-sizing: border-box; padding-bottom: 12px; }
 .reveal .gamekit-slide .gamekit-play { flex: 1; height: 100%; }
 .reveal .gamekit-slide .gamekit-stage { flex: 1; min-height: 0; }
 .reveal .gamekit-slide canvas { width: 100%; height: 100%; }
