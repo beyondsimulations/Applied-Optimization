@@ -409,8 +409,11 @@ $presentation-title-slide-text-align: left;
     border-bottom: 0;
 }
 
-.reveal table th:last-child,
-.reveal table td:last-child {
+// :where() keeps this at the weight of the rule above, so a course's own
+// table rule still wins: the simplex tableaus in Grundlagen-Operations-Research
+// set their padding themselves, and lost it on the right in the last column.
+.reveal table th:where(:last-child),
+.reveal table td:where(:last-child) {
     padding-right: 0;
 }
 
