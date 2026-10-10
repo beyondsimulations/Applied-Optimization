@@ -96,6 +96,63 @@ $presentation-title-slide-text-align: left;
 // Google on every page view.
 @import "fonts";
 
+// ── Slide headings ────────────────────────────────────────────────────────
+// _brand.yml gives headings a line height of 1.4, which suits a page. A slide
+// title is one line, and the 13px it costs below every title pushed slides
+// over the edge: 21 of the 40 flagged slides in Management-Science
+// (research/slide-sizes.md, 2026-10-09). 1.2 is Reveal's own value. The theme
+// reads it from this variable, so it is set here rather than on the headings.
+.reveal {
+    --r-heading-line-height: 1.2;
+}
+
+// ── Text column ───────────────────────────────────────────────────────────
+// The stage is 1280px wide, and a line of 40px text across all of it holds
+// about 65 characters: long to read from the back of a room. A slide's content
+// gets 1200px, about 61 characters, with 40px free on each side. Backgrounds
+// keep the whole stage, and so do the games.
+//
+// A border, not padding: Reveal's print rules reset a slide's padding, and the
+// width Reveal fits text to (below) leaves out borders only.
+.reveal .slides section:not(.stack) {
+    border-inline: 40px solid transparent;
+    box-sizing: border-box;
+}
+
+.reveal .slides section:not(.stack):has(.gamekit-slide) {
+    border-inline-width: 0;
+}
+
+// Reveal sizes a stretched element (r-stretch: an image, an embedded page)
+// against the stage, not against the column, and writes that width into the
+// element.
+.reveal .slides .r-stretch {
+    max-width: 100%;
+}
+
+.reveal .slides img.r-stretch {
+    object-fit: contain;
+}
+
+// ── Fitted text (r-fit-text) ──────────────────────────────────────────────
+// Reveal sizes fitted text by the slide's width alone. On the 16:9 stage a
+// loud slide of two or three lines ("Any questions?") came out taller than the
+// slide. So the slide gives the text 84% of its width, 3:2 over 16:9: the text
+// is as large as on the old stage, what fitted there fits here, and the free
+// sixth is split evenly left and right.
+//
+// A border, because Reveal fits the text to the slide's inner width, and that
+// leaves out borders but not padding. 102px is 8% of the 1280px stage (a
+// border takes no percentage); it replaces the text column's 40px here. This is plain layout, so it holds in every
+// browser and in the PDF. Two visual shortcuts did not (2026-10-09): `zoom`
+// cancels itself out in Safari's engine, which reports the zoomed width to
+// Reveal, and `scale` leaves the full-size box in the layout, which Chromium
+// pushes off the page when printing, so the PDF page came out empty.
+.reveal .slides section:has(> .r-fit-text) {
+    border-inline: 102px solid transparent;
+    box-sizing: border-box;
+}
+
 // ── Text emphasis (slides) ────────────────────────────────────────────────
 .reveal strong,
 .reveal b,
@@ -149,17 +206,36 @@ $presentation-title-slide-text-align: left;
 }
 
 // Exercise-break slide ("Your turn"), from Introduction-to-Python.
-.exercise-slide {
+// Scoped to .reveal: on the HTML page the class lands on the whole
+// section.level1 and would tint every paragraph under the heading.
+.reveal .exercise-slide {
     background-color: $brand-codeline !important;
 }
 
 // Light type on the accent, not amber-on-teal: the old pairing (#F6B265 on
 // #537E8F) was 2.42:1 across 69 slides — the least readable thing on the site.
 // This is Study-Business-Basics' treatment, which reaches 4.36:1.
-.loud-slide {
+//
+// Every accent colour in the palette is tuned against the PALE ground and goes
+// invisible on this one: `strong`/`em` are $lec-emphasis, which IS this
+// background, and the link colour lands near 1.6:1. So on the accent, weight
+// carries the emphasis and hue never does.
+//
+// Bold is scoped rather than blanket: the fleet's 90 `.loud-slide`s are all
+// one-line `::: {.r-fit-text}` statements and stay bold, while a slide that
+// carries real prose (Introduction-to-Python's checkpoint procedure) gets a
+// readable body weight instead of a wall of bold.
+.reveal .loud-slide {
     background-color: $lec-loud-bg !important;
     color: $brand-lighter !important;
-    font-weight: bold !important;
+
+    h1, h2, h3, strong, b, em, i, a {
+        color: $brand-lighter !important;
+    }
+
+    h1, h2, h3, strong, b, .r-fit-text {
+        font-weight: bold !important;
+    }
 }
 
 // ── Animated section headings ─────────────────────────────────────────────
@@ -243,10 +319,65 @@ $presentation-title-slide-text-align: left;
 // Reveal implements it by setting an inline height at runtime. Excluding it
 // here keeps that explicit rather than relying on inline-style precedence.
 // (Grundlagen-OR uses r-stretch in 12 deck files, Introduction-to-Python in 10.)
+//
+// The cap must be in stage pixels, not vh: vh tracks the browser window while
+// the slide stage is a fixed 720px box that Reveal transform-scales, so a vh
+// cap makes image size (and overflow) depend on the viewer's window. And no
+// width/height:auto: that discards Quarto's logical size attributes and shows
+// retina 2x PNGs at double size and half sharpness.
+//
+// object-fit: an image with a width of its own (`width="90%"`) that reaches
+// the cap would otherwise be squashed to fit both: 28 images in
+// Applied-Optimization came out distorted (2026-10-09).
+//
+// 540px is 75% of the 720px stage: a title and one image fit up to about 570px
+// (measured in Applied-Optimization, 2026-10-09: 3 slides overflow at 540,
+// 22 at 600). It was 420px, 60% of the old 700px stage.
 .reveal .slides img:not(.r-stretch) {
-    max-height: 60vh;
-    width: auto;
+    max-height: 540px;
+    object-fit: contain;
+}
+
+// A computed figure (figure-revealjs/ output, not a hand-placed image) inside
+// ::: {.columns} fills its column. SVG output otherwise keeps its intrinsic
+// point size (a 4 in figure is ~300 px wide), so tick labels end up unreadably
+// small next to the column's text. Same cap.
+.reveal .columns .column img.quarto-figure:is([src*="figure-revealjs/"], [data-src*="figure-revealjs/"]) {
+    width: 100%;
     height: auto;
+    max-height: 540px;
+    object-fit: contain;
+}
+
+// Quarto marks the slide holding the bibliography as `.smaller .scrollable`
+// on its own, so everything on it shrinks to 0.7em: also a closing slide
+// ("Next Up", "Literature") that the list merely hangs below. Undo that for the
+// slide and keep the smaller size for the list alone. Headings need their own
+// reset: Quarto scales them by 1/0.7.
+//
+// `.csl-bib-body`, not `#refs`: split_refs_post.py spreads a long list over
+// several slides, and only the first keeps that id. The list stays small
+// because the splitter's four entries per slide are sized for it: at 40px
+// four entries are 870 to 1025px tall on a 720px stage (Applied-Optimization,
+// 2026-10-09).
+.reveal .slides section.smaller:has(.csl-bib-body) {
+    font-size: 1em;
+
+    h2 {
+        font-size: var(--r-heading2-size);
+    }
+    h3 {
+        font-size: var(--r-heading3-size);
+    }
+    .csl-bib-body {
+        font-size: 0.7em;
+    }
+}
+
+// A URL in an entry has no place to break, so it ran out of the slide to the
+// right.
+.reveal .csl-entry {
+    overflow-wrap: anywhere;
 }
 
 // ── Document pages: columns and figures ───────────────────────────────────
@@ -294,6 +425,40 @@ $presentation-title-slide-text-align: left;
         width: 100%;
         height: 100%;
         border: 0;
+    }
+}
+
+// Table captions: Bootstrap colours them with the secondary brand colour
+// (sand), which reads as a warning and fails contrast on the light ground.
+// Keep them in the body colour, slightly smaller, like figure captions.
+caption,
+.table > caption {
+    color: var(--bs-body-color);
+    font-size: 0.9em;
+}
+
+// Document blockquotes: Quarto colours blockquote text with the secondary brand
+// colour (sand) too, which lands near 1.4:1 on the light ground and is unreadable
+// (the emphasis inside inherits it, since only `.reveal em` carries a colour).
+// Same fix as captions: body colour; the left border and italic still mark it as
+// a quote. Doc only; `.reveal blockquote` is more specific and keeps its own colour.
+blockquote {
+    color: var(--bs-body-color);
+}
+
+// Document pages without a TOC (quizzes, exams with `toc: false`) get Quarto's
+// `fullcontent` grid, which drops the right margin column and centres the body,
+// so the text jumps right compared with every page that has a TOC. Give those
+// pages the same grid as TOC pages; the margin column simply stays empty.
+// Values copied from Quarto's `body.floating .page-columns` per breakpoint.
+@media (min-width: 992px) {
+    body.floating.fullcontent .page-columns {
+        grid-template-columns: [screen-start] 1.5em [screen-start-inset] 5fr [page-start] minmax(25px, 50px) [page-start-inset] minmax(50px, 150px) [body-start-outset] minmax(25px, 50px) [body-start] 1.5em [body-content-start] minmax(500px, calc(800px - 3em)) [body-content-end] 1.5em [body-end] minmax(25px, 50px) [body-end-outset] minmax(50px, 150px) [page-end-inset] minmax(25px, 50px) [page-end] 5fr [screen-end-inset] 1.5em [screen-end];
+    }
+}
+@media (max-width: 991.98px) and (min-width: 768px) {
+    body.floating.fullcontent .page-columns {
+        grid-template-columns: [screen-start] 1.5em [screen-start-inset] 5fr [page-start page-start-inset body-start-outset body-start] 1.5em [body-content-start] minmax(500px, calc(750px - 3em)) [body-content-end] 1.5em [body-end] 50px [body-end-outset] minmax(75px, 150px) [page-end-inset] 25px [page-end] 5fr [screen-end-inset] 1.5em [screen-end];
     }
 }
 
