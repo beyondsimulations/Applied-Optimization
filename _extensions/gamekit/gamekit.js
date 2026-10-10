@@ -79,6 +79,12 @@
   function setScore(node, label, value) {
     node.replaceChildren(el("span", { class: "gk-label" }, label), el("span", { class: "gk-value" }, value));
   }
+  // Buttons carry one short word, so that four of them fit one row on a phone;
+  // the full action is the accessible name. The toggle names the plan it leads to.
+  function labelToggle(btn, toYours) {
+    btn.textContent = toYours ? "Yours" : "Optimal";
+    btn.setAttribute("aria-label", toYours ? "Show yours" : "Show optimal");
+  }
   const cssOf = (rgb) => {
     const out = {};
     for (const t in rgb) out[t] = C.css(rgb[t]);
@@ -120,11 +126,12 @@
     const buttons = el("div", { class: "gamekit-buttons" });
     g.btn = {
       optimize: el("button", { type: "button", class: "gk-primary" }, "Optimize"),
-      toggle: el("button", { type: "button", hidden: "" }, "Show yours"),
+      toggle: el("button", { type: "button", hidden: "" }),
       why: el("button", { type: "button", hidden: "" }, "Why?"),
       reset: el("button", { type: "button" }, "Reset"),
-      fresh: el("button", { type: "button" }, "New puzzle"),
+      fresh: el("button", { type: "button", "aria-label": "New puzzle" }, "New"),
     };
+    labelToggle(g.btn.toggle, true);
     buttons.append(g.btn.optimize, g.btn.toggle, g.btn.why, g.btn.reset, g.btn.fresh);
     g.status = el("p", { class: "gamekit-status" });
     g.sr = el("p", { class: "gamekit-sr", "aria-live": "polite" });
@@ -432,10 +439,10 @@
     }, pairs, () => {
       g.showing = "optimal";
       g.revealed = true;
-      g.btn.toggle.textContent = "Show yours";
+      labelToggle(g.btn.toggle, true);
       g.btn.toggle.hidden = g.btn.why.hidden = false;
       if (document.activeElement === g.btn.optimize) g.btn.toggle.focus(); // keep keyboard focus in the game
-      g.btn.optimize.hidden = true; // the board is locked until Reset or New puzzle
+      g.btn.optimize.hidden = true; // the board is locked until Reset or New
     });
   }
 
@@ -477,7 +484,7 @@
     g.showing = to[1];
     g.skip = false;
     g.card.hidden = true;
-    g.btn.toggle.textContent = toYours ? "Show optimal" : "Show yours";
+    labelToggle(g.btn.toggle, !toYours);
     animate(g, from[0], from[1], to[0], to[1], reducedMotion() ? 0 : TOGGLE_MS, null, null, () => {}, midway);
   }
 
