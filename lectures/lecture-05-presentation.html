@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bb62276ab45c84d9efd712f51ff97b5a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-contrib/gamekit-0.4.12/qr.js"></script>
+<script src="../site_libs/quarto-contrib/gamekit-0.4.12/core.js"></script>
+<script src="../site_libs/quarto-contrib/gamekit-0.4.12/gamekit.js"></script>
+<link href="../site_libs/quarto-contrib/gamekit-0.4.12/gamekit.css" rel="stylesheet"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="Dr.&nbsp;Tobias Vlćek">
+  <title>Applied Optimization with Julia – Lecture V - Planning in Breweries</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-c376059b85c52accdb58d7a7d20493c2.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <!--
+    Canonical. Distributed to every deck repo as general/mathjax.html by
+    scripts/sync-mathjax.py. Edit it here, not there.
+
+    Reveal renders slide maths with MathJax 2.7.9 (its own plugin; the `html`
+    format's html-math-method: mathjax@3 does not apply to decks). Left alone,
+    MathJax 2 prefers a LOCALLY INSTALLED font set, picks the system STIX, and
+    renders \mathcal and friends at STIX private-use codepoints that live in the
+    STIXNonUnicode family. macOS ships that font, Windows does not, and headless
+    chromium does not resolve it either — so those glyphs came out as □ in every
+    exported PDF, and do the same on any machine without STIX.
+
+    Emptying availableFonts forbids the local shortcut, so MathJax loads its own
+    TeX webfonts: measured on Applied-Optimization lecture 1, one @font-face rule
+    (MathJax_Blank) became ten, and no private-use glyph survived. It also lines
+    the decks up with the reading pages, which already render in MathJax's TeX
+    fonts via MathJax 3.
+
+    Must run before MathJax loads, hence a plain head script rather than a
+    MathJax.Hub.Config call.
+  -->
+  <script>
+    window.MathJax = {
+      "HTML-CSS": { availableFonts: [], preferredFont: "TeX", webFont: "TeX" }
+    };
+  </script>
+  <script>window.gamekitConfig={};</script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Lecture V - Planning in Breweries</h1>
+  <p class="subtitle">Applied Optimization with Julia</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Dr.&nbsp;Tobias Vlćek
+</div>
+        <p class="quarto-title-affiliation">
+            University of Hamburg
+          </p>
+    </div>
+</div>
+
+</section>
+<section>
+<section id="introduction" class="title-slide slide level1 title center">
+<h1><span class="flow">Introduction</span></h1>
+
+</section>
+<section id="case-study" class="slide level2">
+<h2>Case Study</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><a href="https://unsplash.com/" width="85%"><img data-src="https://images.unsplash.com/photo-1719752486455-3c6809b5e238?q=80&amp;w=3456&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" alt="Copper brewing kettles in a brewery"></a></p>
+</div><div class="column" style="width:60%;">
+<ul>
+<li><strong>Large brewery</strong></li>
+<li>Brews and sells beverages</li>
+<li>Production planning by hand</li>
+<li>Planner has a <span class="highlight">lot of experience</span></li>
+<li><strong>But</strong> will retire soon</li>
+</ul>
+</div></div>
+</section>
+<section id="challenges" class="slide level2">
+<h2>Challenges</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><a href="https://unsplash.com/" width="85%"><img data-src="https://images.unsplash.com/photo-1518542698889-ca82262f08d5?q=80&amp;w=3687&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" alt="Shelves with a large variety of beer bottles"></a></p>
+</div><div class="column" style="width:60%;">
+<ul>
+<li><strong>Strong</strong> competition</li>
+<li>Customer <strong>demand is changing</strong></li>
+<li>Craft beer <strong>gains popularity</strong></li>
+<li><strong>Variety</strong> of drinks is increasing</li>
+<li><span class="highlight">Batch sizes are getting smaller</span></li>
+</ul>
+</div></div>
+</section>
+<section id="different-costs" class="slide level2">
+<h2>Different costs</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><a href="https://unsplash.com/photos/a-large-industrial-machine-v-ySKssePQM" width="85%"><img data-src="https://images.unsplash.com/photo-1651475828382-1ffeea47739b?q=80&amp;w=3000&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="width:90.0%" alt="Industrial bottling line filling beer bottles"></a></p>
+</div><div class="column" style="width:60%;">
+<ul>
+<li>Plant can fill <strong>multiple types</strong></li>
+<li>Time depends on <strong>type and batch</strong></li>
+<li><strong>Changing type</strong> leads to setup costs for preparation and cleaning</li>
+<li><strong>Unsold beer bottles</strong> can be <span class="highlight">stored in a warehouse</span></li>
+<li>This leads to <strong>inventory costs</strong></li>
+</ul>
+</div></div>
+</section>
+<section id="learning-objectives" class="slide level2">
+<h2>Learning Objectives</h2>
+<p>After this lecture, you will be able to:</p>
+<ul>
+<li class="fragment"><strong>Formulate</strong> the Capacitated Lot-Sizing Problem (CLSP)</li>
+<li class="fragment"><strong>Explain</strong> the trade-off between setup and inventory holding costs</li>
+<li class="fragment"><strong>Recognize and construct</strong> Big-M constraints</li>
+<li class="fragment"><strong>Discuss</strong> the assumptions and limits of a finite planning horizon</li>
+</ul>
+</section>
+<section id="section" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Where is the</p>
+<p>challenge?</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="your-turn" class="slide level2">
+<h2>Your Turn</h2>
+<div class="gamekit gamekit-slide" data-game="bottling" data-page="../games/bottling.html" data-prevent-swipe="" data-qr="https://beyondsimulations.github.io/Applied-Optimization/games/bottling.html"></div>
+<script src="../games/bottling.js"></script>
+</section></section>
+<section>
+<section id="problem-structure" class="title-slide slide level1 title center">
+<h1><span class="flow">Problem Structure</span></h1>
+
+</section>
+<section id="objective" class="slide level2">
+<h2>Objective</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_clsp_overview.png" style="width:60.0%" alt="Overview of the lot-sizing problem: setups, batches, and inventory"></p>
+</div><div class="column" style="width:60%;">
+<p><span class="question">Question:</span> <strong>What could be the objective?</strong></p>
+<p><span class="fragment">Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.</span></p>
+</div></div>
+</section>
+<section id="trade-off" class="slide level2">
+<h2>Trade-Off</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_clsp_overview.png" style="width:60.0%" alt="Overview of the lot-sizing problem: setups, batches, and inventory"></p>
+</div><div class="column" style="width:60%;">
+<p><span class="question">Question:</span> <strong>What is the trade-off?</strong></p>
+<p><span class="fragment">Larger batches require <span class="highlight">less setup cost per bottle</span>, but increase the storage cost.</span></p>
+</div></div>
+</section>
+<section id="available-sets" class="slide level2">
+<h2>Available Sets</h2>
+<p><span class="question">Question:</span> <strong>What are sets again?</strong></p>
+<div class="fragment">
+<p>Sets are <span class="highlight">collections of objects</span>.</p>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What could be the sets here?</strong></p>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(\mathcal{I}\)</span> - Set of beer types indexed by <span class="math inline">\(i \in \{1,2,...,|\mathcal{I}|\}\)</span></li>
+<li><span class="math inline">\(\mathcal{T}\)</span> - Set of time periods indexed by <span class="math inline">\(t \in \{1,2,...,|\mathcal{T}|\}\)</span></li>
+</ul>
+</div>
+</section>
+<section id="available-parameters" class="slide level2">
+<h2>Available Parameters</h2>
+<p><span class="question">Question:</span> <strong>What are possible parameters?</strong></p>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(a_t\)</span> - Available time on the bottling plant in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(b_i\)</span> - Time used for bottling one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(g_i\)</span> - Setup time for beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(f_i\)</span> - Setup cost of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(c_i\)</span> - Inventory holding cost for one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(d_{i,t}\)</span> - Demand of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+</ul>
+</div>
+</section>
+<section id="decision-variables" class="slide level2">
+<h2>Decision Variables?</h2>
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We have the following sets:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Beer types indexed by <span class="math inline">\(i \in \{1,2,...,|\mathcal{I}|\}\)</span></li>
+<li>Time periods of the planning horizon indexed by <span class="math inline">\(t \in \{1,2,...,|\mathcal{T}|\}\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-important callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Our objective is to:</strong></p>
+</div>
+<div class="callout-content">
+<p>Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What could be our decision variable/s?</strong></p>
+</div>
+</section>
+<section id="decision-variables-1" class="slide level2">
+<h2>Decision Variables</h2>
+<ul>
+<li><span class="math inline">\(W_{i,t}\)</span> - Inventory of type <span class="math inline">\(i\in\mathcal{I}\)</span> at the end of <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(Y_{i,t}\)</span> - 1, if type <span class="math inline">\(i\in\mathcal{I}\)</span> is bottled in <span class="math inline">\(t\in\mathcal{T}\)</span>, 0 otherwise</li>
+<li><span class="math inline">\(X_{i,t}\)</span> - Batch size of type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+</ul>
+</section></section>
+<section>
+<section id="model-formulation" class="title-slide slide level1 title center">
+<h1><span class="flow">Model Formulation</span></h1>
+
+</section>
+<section id="objective-function" class="slide level2">
+<h2>Objective Function?</h2>
+<div class="callout callout-important callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Our objective is to:</strong></p>
+</div>
+<div class="callout-content">
+<p>Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.</p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What could be our objective function?</strong></p>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We need the following variables:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(W_{i,t}\)</span> - Inventory of type <span class="math inline">\(i\in\mathcal{I}\)</span> at the end of <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(Y_{i,t}\)</span> - 1, if type <span class="math inline">\(i\in\mathcal{I}\)</span> is bottled in <span class="math inline">\(t\in\mathcal{T}\)</span>, 0 otherwise</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="objective-function-1" class="slide level2">
+<h2>Objective Function</h2>
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We need the following parameters:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(f_i\)</span> - Setup cost of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(c_i\)</span> - Inventory holding cost for one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><span class="math display">\[\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
+</div>
+</section>
+<section id="constraints" class="slide level2">
+<h2>Constraints</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img data-src="https://images.beyondsimulations.com/ao/ao_clsp_overview.png" style="width:60.0%" alt="Overview of the lot-sizing problem: setups, batches, and inventory"></p>
+</div><div class="column" style="width:60%;">
+<p><span class="question">Question:</span> <strong>What constraints?</strong></p>
+<div class="fragment">
+<ul>
+<li>Transfer <strong>unused</strong> inventory</li>
+<li><strong>Fulfill</strong> the customer demand</li>
+<li><strong>Set up</strong> beer types</li>
+<li>Calculate <strong>batch size</strong> per set-up</li>
+<li>Compute <strong>remaining</strong> inventory</li>
+<li><strong>Limit</strong> the bottling plant</li>
+</ul>
+</div>
+</div></div>
+</section>
+<section id="demandinventory-constraints" class="slide level2">
+<h2>Demand/Inventory Constraints?</h2>
+<div class="callout callout-important callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The goal of these constraints is to:</strong></p>
+</div>
+<div class="callout-content">
+<p>Consider the current inventory and batch sizes and compute the remaining inventory.</p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We need the following variables and parameters:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(W_{i,t}\)</span> - Inventory of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> at the end of period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(X_{i,t}\)</span> - Batch size of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(d_{i,t}\)</span> - Demand of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What could the constraint look like?</strong></p>
+</div>
+</section>
+<section id="demandinventory-constraints-1" class="slide level2">
+<h2>Demand/Inventory Constraints</h2>
+<p><span class="math display">\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I}, t\in\mathcal{T}\]</span></p>
+<p>with <span class="math inline">\(W_{i,0} = 0\)</span>, as the warehouse starts empty.</p>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Remember, these are the variables and parameters:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(W_{i,t}\)</span> - Inventory of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> at the end of period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(X_{i,t}\)</span> - Batch size of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(d_{i,t}\)</span> - Demand of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="why-fix-the-starting-inventory" class="slide level2">
+<h2>Why Fix the Starting Inventory?</h2>
+<p><span class="question">Question:</span> <strong>Why do we have to fix <span class="math inline">\(W_{i,0} = 0\)</span>?</strong></p>
+<div class="fragment">
+<p>Otherwise, the solver could invent free starting inventory and would never need to bottle anything for the first weeks!</p>
+</div>
+</section>
+<section id="setup-constraints" class="slide level2">
+<h2>Setup Constraints?</h2>
+<div class="callout callout-important callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The goal of these constraints is to:</strong></p>
+</div>
+<div class="callout-content">
+<p>Set up beer types in all periods where the batch size is <span class="math inline">\(&gt;\)</span> 0.</p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We need the following variables and parameters:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(Y_{i,t}\)</span> - 1, if beer type <span class="math inline">\(i\in\mathcal{I}\)</span> is bottled in period <span class="math inline">\(t\in\mathcal{T}\)</span>, 0 otherwise</li>
+<li><span class="math inline">\(X_{i,t}\)</span> - Batch size of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(d_{i,t}\)</span> - Demand of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>What could the second constraint be?</strong></p>
+</div>
+</section>
+<section id="setup-constraints-1" class="slide level2">
+<h2>Setup Constraints</h2>
+<p><span class="math display">\[X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i\in\mathcal{I}, t\in\mathcal{T}\]</span></p>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>Do you know this type of constraint?</strong></p>
+</div>
+<div class="fragment">
+<p>This type of constraint is called a <strong>“Big-M”</strong> constraint!</p>
+</div>
+<div class="fragment">
+<ul>
+<li><strong>M</strong> (here <span class="math inline">\(\sum_{\tau \in \mathcal{T}} d_{i,\tau}\)</span>) is a large number</li>
+<li>It is coupled with a binary variable (here <span class="math inline">\(Y_{i,t}\)</span>)</li>
+<li><span class="highlight">Like an if-then constraint</span></li>
+</ul>
+</div>
+</section>
+<section id="capacity-constraints" class="slide level2">
+<h2>Capacity Constraints?</h2>
+<div class="callout callout-important callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The goal of these constraints is to:</strong></p>
+</div>
+<div class="callout-content">
+<p>Limit the capacity of the bottling plant per period.</p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>We need the following variables and parameters:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(Y_{i,t}\)</span> - 1, if beer type <span class="math inline">\(i\in\mathcal{I}\)</span> is bottled in period <span class="math inline">\(t\in\mathcal{T}\)</span>, 0 otherwise</li>
+<li><span class="math inline">\(X_{i,t}\)</span> - Batch size of beer type <span class="math inline">\(i\in\mathcal{I}\)</span> in <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(a_t\)</span> - Available time on the bottling plant in period <span class="math inline">\(t\in\mathcal{T}\)</span></li>
+<li><span class="math inline">\(b_i\)</span> - Time used for bottling one unit of beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+<li><span class="math inline">\(g_i\)</span> - Setup time for beer type <span class="math inline">\(i\in\mathcal{I}\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="capacity-constraints-1" class="slide level2">
+<h2>Capacity Constraints</h2>
+<p><span class="question">Question:</span> <strong>What could the third constraint be?</strong></p>
+<p>It uses more parameters than the previous constraints, but it is easier to understand.</p>
+<div class="fragment">
+<p><span class="math display">\[\sum_{i \in \mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t\in\mathcal{T}\]</span></p>
+</div>
+<div class="fragment">
+<p><span class="highlight">And that’s basically it!</span></p>
+</div>
+</section>
+<section id="clsp-objective-function" class="slide level2">
+<h2>CLSP: Objective Function</h2>
+<p>The complete model is known as the <strong>Capacitated Lot-Sizing Problem (CLSP)</strong>.</p>
+<p><span class="math display">\[\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
+<div class="callout callout-important callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The goal of the objective function is to:</strong></p>
+</div>
+<div class="callout-content">
+<p>Minimize the combined setup and inventory holding cost while satisfying the demand and adhering to the production capacity.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="clsp-constraints" class="slide level2">
+<h2>CLSP: Constraints</h2>
+<p><span class="math display">\[W_{i,t-1} + X_{i,t} - W_{i,t} = d_{i,t} \quad \forall i\in\mathcal{I}, t\in\mathcal{T} \quad (W_{i,0} = 0)\]</span></p>
+<p><span class="math display">\[X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i\in\mathcal{I}, t\in\mathcal{T}\]</span></p>
+<p><span class="math display">\[\sum_{i \in \mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t\in\mathcal{T}\]</span></p>
+<div class="callout callout-important callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Our constraints ensure:</strong></p>
+</div>
+<div class="callout-content">
+<p>Demand is met, inventory transferred, setup taken care of, and capacity respected.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="clsp-variable-domains" class="slide level2">
+<h2>CLSP: Variable Domains</h2>
+<p><span class="math display">\[Y_{i,t}\in\{0,1\} \quad \forall i\in\mathcal{I},t\in\mathcal{T}\]</span></p>
+<p><span class="math display">\[W_{i,t}, X_{i,t}\geq 0 \quad \forall i\in\mathcal{I},t\in\mathcal{T}\]</span></p>
+<div class="callout callout-important callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The variable domains make sure that:</strong></p>
+</div>
+<div class="callout-content">
+<p>The binary setup variable is either 0 or 1 and that the inventory and batch size are non-negative.</p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><span class="question">Question:</span> <strong>Why is a continuous batch size acceptable here?</strong></p>
+</div>
+<div class="fragment">
+<p>Rounding a batch of thousands barely changes the cost.</p>
+</div>
+</section></section>
+<section>
+<section id="julia-implementation" class="title-slide slide level1 title center">
+<h1><span class="flow">Julia Implementation</span></h1>
+
+</section>
+<section id="variables-in-julia" class="slide level2">
+<h2>Variables in Julia</h2>
+<p><span class="question">Question:</span> <strong>How could we formulate the variables in Julia?</strong></p>
+<div class="fragment">
+<div id="4" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a aria-label="1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
+<span id="cb1-2"><a aria-label="2"></a>beer_types <span class="op">=</span> [<span class="st">"IPA"</span>, <span class="st">"Lager"</span>, <span class="st">"Stout"</span>] <span class="co"># Beer types</span></span>
+<span id="cb1-3"><a aria-label="3"></a>periods <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="co"># Time periods (weeks)</span></span>
+<span id="cb1-4"><a aria-label="4"></a>clsp_model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
+<span id="cb1-5"><a aria-label="5"></a><span class="fu">set_silent</span>(clsp_model) <span class="co"># Hide the solver output</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="fragment">
+<div id="6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a aria-label="1"></a><span class="pp">@variable</span>(clsp_model, Y[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods], Bin)</span>
+<span id="cb2-2"><a aria-label="2"></a><span class="pp">@variable</span>(clsp_model, X[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods] <span class="op">&gt;=</span> <span class="fl">0</span>)</span>
+<span id="cb2-3"><a aria-label="3"></a><span class="pp">@variable</span>(clsp_model, W[i <span class="kw">in</span> beer_types, t <span class="kw">in</span> <span class="fl">0</span><span class="op">:</span><span class="fu">last</span>(periods)] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>2-dimensional DenseAxisArray{JuMP.VariableRef,2,...} with index sets:
+    Dimension 1, ["IPA", "Lager", "Stout"]
+    Dimension 2, 0:3
+And data, a 3×4 Matrix{JuMP.VariableRef}:
+ W[IPA,0]    W[IPA,1]    W[IPA,2]    W[IPA,3]
+ W[Lager,0]  W[Lager,1]  W[Lager,2]  W[Lager,3]
+ W[Stout,0]  W[Stout,1]  W[Stout,2]  W[Stout,3]</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>Note, how we declare the inventory <span class="math inline">\(W\)</span> also for period 0!</p>
+</div>
+</section>
+<section id="objective-function-in-julia" class="slide level2">
+<h2>Objective Function in Julia</h2>
+<p><span class="math display">\[\text{Minimize} \quad \sum_{i \in \mathcal{I}} \sum_{t \in \mathcal{T}} (c_i \times W_{i,t} + f_i \times Y_{i,t})\]</span></p>
+<div class="fragment">
+<div id="8" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a aria-label="1"></a>c <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">0.1</span>) <span class="co"># Holding costs</span></span>
+<span id="cb4-2"><a aria-label="2"></a>f <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">5000</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">4000</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">6000</span>) <span class="co"># Setup costs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="fragment">
+<div id="10" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a aria-label="1"></a><span class="pp">@objective</span>(clsp_model, Min,</span>
+<span id="cb5-2"><a aria-label="2"></a>    <span class="fu">sum</span>(c[i] <span class="op">*</span> W[i,t] <span class="op">+</span> f[i] <span class="op">*</span> Y[i,t]</span>
+<span id="cb5-3"><a aria-label="3"></a>        <span class="cf">for</span> i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods)</span>
+<span id="cb5-4"><a aria-label="4"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section id="data-for-our-small-brewery" class="slide level2">
+<h2>Data for our Small Brewery</h2>
+<p>We need the demand <span class="math inline">\(d_{i,t}\)</span>, capacity <span class="math inline">\(a_t\)</span>, and times <span class="math inline">\(b_i\)</span>, <span class="math inline">\(g_i\)</span>:</p>
+<div class="fragment">
+<div id="12" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a aria-label="1"></a>d <span class="op">=</span> <span class="fu">Dict</span>( <span class="co"># Demand per beer type and week</span></span>
+<span id="cb6-2"><a aria-label="2"></a>    <span class="st">"IPA"</span>   <span class="op">=&gt;</span> [<span class="fl">300</span>, <span class="fl">800</span>, <span class="fl">500</span>],</span>
+<span id="cb6-3"><a aria-label="3"></a>    <span class="st">"Lager"</span> <span class="op">=&gt;</span> [<span class="fl">600</span>, <span class="fl">500</span>, <span class="fl">800</span>],</span>
+<span id="cb6-4"><a aria-label="4"></a>    <span class="st">"Stout"</span> <span class="op">=&gt;</span> [<span class="fl">200</span>, <span class="fl">300</span>, <span class="fl">250</span>],</span>
+<span id="cb6-5"><a aria-label="5"></a>)</span>
+<span id="cb6-6"><a aria-label="6"></a>a <span class="op">=</span> [<span class="fl">1800</span>, <span class="fl">1800</span>, <span class="fl">1800</span>] <span class="co"># Capacity per week in minutes</span></span>
+<span id="cb6-7"><a aria-label="7"></a>b <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">0.9</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">0.6</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">1.2</span>) <span class="co"># Min. per bottle</span></span>
+<span id="cb6-8"><a aria-label="8"></a>g <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"IPA"</span> <span class="op">=&gt;</span> <span class="fl">60</span>, <span class="st">"Lager"</span> <span class="op">=&gt;</span> <span class="fl">40</span>, <span class="st">"Stout"</span> <span class="op">=&gt;</span> <span class="fl">80</span>) <span class="co"># Setup in minutes</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section id="constraints-in-julia" class="slide level2">
+<h2>Constraints in Julia</h2>
+<p>The constraints map almost one-to-one from the math:</p>
+<div class="fragment">
+<div id="14" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a aria-label="1"></a><span class="pp">@constraint</span>(clsp_model, [i <span class="kw">in</span> beer_types],</span>
+<span id="cb7-2"><a aria-label="2"></a>    W[i,<span class="fl">0</span>] <span class="op">==</span> <span class="fl">0</span>) <span class="co"># The warehouse starts empty</span></span>
+<span id="cb7-3"><a aria-label="3"></a><span class="pp">@constraint</span>(clsp_model, [i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods],</span>
+<span id="cb7-4"><a aria-label="4"></a>    W[i,t<span class="op">-</span><span class="fl">1</span>] <span class="op">+</span> X[i,t] <span class="op">-</span> W[i,t] <span class="op">==</span> d[i][t])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="fragment">
+<div id="16" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a aria-label="1"></a><span class="pp">@constraint</span>(clsp_model, [i <span class="kw">in</span> beer_types, t <span class="kw">in</span> periods],</span>
+<span id="cb8-2"><a aria-label="2"></a>    X[i,t] <span class="op">&lt;=</span> <span class="fu">sum</span>(d[i]) <span class="op">*</span> Y[i,t]) <span class="co"># Big-M setup constraint</span></span>
+<span id="cb8-3"><a aria-label="3"></a><span class="pp">@constraint</span>(clsp_model, [t <span class="kw">in</span> periods],</span>
+<span id="cb8-4"><a aria-label="4"></a>    <span class="fu">sum</span>(b[i] <span class="op">*</span> X[i,t] <span class="op">+</span> g[i] <span class="op">*</span> Y[i,t] <span class="cf">for</span> i <span class="kw">in</span> beer_types) <span class="op">&lt;=</span> a[t])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section id="solving-the-model" class="slide level2">
+<h2>Solving the Model</h2>
+<div id="18" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a aria-label="1"></a><span class="fu">optimize!</span>(clsp_model)</span>
+<span id="cb9-2"><a aria-label="2"></a><span class="fu">println</span>(<span class="st">"Status: "</span>, <span class="fu">termination_status</span>(clsp_model))</span>
+<span id="cb9-3"><a aria-label="3"></a><span class="fu">println</span>(<span class="st">"Total cost: "</span>, <span class="fu">objective_value</span>(clsp_model))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>Status: OPTIMAL
+Total cost: 28130.0</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>Of the 28,130 total cost, 28,000 are setup costs and only 130 are inventory holding costs — but what does the plan look like?</p>
+</div>
+</section>
+<section id="the-production-plan" class="slide level2">
+<h2>The Production Plan</h2>
+<div id="20" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a aria-label="1"></a><span class="cf">for</span> i <span class="kw">in</span> beer_types</span>
+<span id="cb11-2"><a aria-label="2"></a>    <span class="fu">println</span>(<span class="fu">rpad</span>(i, <span class="fl">8</span>),</span>
+<span id="cb11-3"><a aria-label="3"></a>        <span class="st">"X = "</span>, <span class="fu">rpad</span>(<span class="fu">string</span>([<span class="fu">round</span>(<span class="dt">Int</span>, <span class="fu">value</span>(X[i,t])) for t <span class="kw">in</span> periods]), <span class="fl">18</span>),</span>
+<span id="cb11-4"><a aria-label="4"></a>        <span class="st">"W = "</span>, [<span class="fu">round</span>(<span class="dt">Int</span>, <span class="fu">value</span>(W[i,t])) for t <span class="kw">in</span> periods])</span>
+<span id="cb11-5"><a aria-label="5"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>IPA     X = [300, 1300, 0]    W = [0, 500, 0]
+Lager   X = [600, 500, 800]   W = [0, 0, 0]
+Stout   X = [750, 0, 0]       W = [550, 250, 0]</code></pre>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li><strong>Stout</strong> is bottled <span class="highlight">only once</span>: week 1 covers all three weeks, saving two setups at 6,000 each</li>
+<li><strong>Lager</strong> is bottled every week, as the plant capacity is too tight to batch it</li>
+<li><strong>IPA</strong> batches the demand of week 3 into week 2</li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="model-characteristics" class="title-slide slide level1 title center">
+<h1><span class="flow">Model Characteristics</span></h1>
+
+</section>
+<section id="recap-on-some-basics" class="slide level2">
+<h2>Recap on some Basics</h2>
+<p>There exist several types of optimization problems:</p>
+<ul>
+<li class="fragment"><strong>Linear (LP):</strong> Linear constraints and objective function</li>
+<li class="fragment"><strong>Mixed-integer (MIP):</strong> Linear constraints and objective function, but discrete variable domains</li>
+<li class="fragment"><strong>Quadratic (QP):</strong> Quadratic constraints and/or objective</li>
+<li class="fragment"><strong>Non-linear (NLP):</strong> Non-linear constraints and/or objective</li>
+<li class="fragment"><span class="highlight">And more!</span></li>
+</ul>
+</section>
+<section id="recap-on-solution-algorithms" class="slide level2">
+<h2>Recap on Solution Algorithms</h2>
+<ul>
+<li class="fragment"><strong>Simplex algorithm</strong> to solve LPs</li>
+<li class="fragment"><strong>Branch &amp; Bound</strong> to solve MIPs</li>
+<li class="fragment"><strong>Outer-Approximation</strong> for mixed-integer NLPs</li>
+<li class="fragment"><strong>Matheuristics</strong> (e.g., Fix-and-Optimize, …)</li>
+<li class="fragment"><strong>Metaheuristics</strong> (e.g., tabu search, genetic algorithms, …)</li>
+<li class="fragment"><strong>Decomposition</strong> methods (Lagrange, Benders, …)</li>
+<li class="fragment"><strong>Heuristics</strong> (greedy, construction method, n-opt, …)</li>
+<li class="fragment"><strong>Graph theoretical methods</strong> (network flow, shortest path)</li>
+</ul>
+</section>
+<section id="model-characteristics-1" class="slide level2">
+<h2>Model Characteristics</h2>
+<p><span class="question">Questions:</span> <strong>On model characteristics</strong></p>
+<ul>
+<li class="fragment">Is the model formulation linear/ non-linear?</li>
+<li class="fragment">What kind of variable domains do we have?</li>
+<li class="fragment">What kind of solver could we use?</li>
+<li class="fragment">Can the Big-M constraint be tightened?</li>
+</ul>
+</section>
+<section id="tightening-the-big-m" class="slide level2">
+<h2>Tightening the Big-M</h2>
+<p><span class="question">Question:</span> <strong>How small can we make M without cutting off solutions?</strong></p>
+<div class="fragment">
+<ul>
+<li>Production in period <span class="math inline">\(t\)</span> only serves demand from <span class="math inline">\(t\)</span> onward: <span class="math inline">\(M_{i,t} = \sum_{\tau \in \mathcal{T} | \tau \geq t} d_{i,\tau}\)</span></li>
+<li>Capacity limits a batch as well: <span class="math inline">\(M_{i,t} = (a_t - g_i)/b_i\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>The <span class="highlight">smaller</span> of the two is the tighter bound — and tighter formulations are usually solved faster!</p>
+</div>
+</section>
+<section id="model-assumptions" class="slide level2">
+<h2>Model Assumptions</h2>
+<p><span class="question">Questions:</span> <strong>On model assumptions</strong></p>
+<ul>
+<li class="fragment">What assumptions have we made?</li>
+<li class="fragment">What is the problem with the planning horizon?</li>
+<li class="fragment">Any idea how to solve it?</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>End-of-horizon effect</strong></p>
+</div>
+<div class="callout-content">
+<p>The model plans no inventory for demand after week <span class="math inline">\(|\mathcal{T}|\)</span>, as it does not know about it. In practice, this is solved by re-planning on a <strong>rolling horizon</strong>.</p>
+</div>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="impact" class="title-slide slide level1 title center">
+<h1><span class="flow">Impact</span></h1>
+
+</section>
+<section id="section-1" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Can this be</p>
+<p>applied?</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="scale-as-a-problem" class="slide level2" data-background-color="#000000" data-background-image="https://images.unsplash.com/photo-1532634740-6837b2a21d39?ixlib=rb-4.1.0&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb&amp;w=2400" data-background-size="cover" data-background-position="center">
+<h2><span class="invert-font">Scale as a Problem</span></h2>
+<p><span class="invert-font fragment">Solving the problem with commercial solvers is not tractable, as it takes too long.</span></p>
+<div class="footer">
+
+</div>
+</section>
+<section id="scale-of-the-case-study" class="slide level2">
+<h2>Scale of the Case Study</h2>
+<ul>
+<li><strong>220</strong> finished products</li>
+<li><strong>100</strong> semi-finished products</li>
+<li><strong>13</strong> production resources</li>
+<li><strong>8</strong> storage resources</li>
+<li><strong>3</strong> main production levels</li>
+<li><strong>52</strong> weeks planning horizon</li>
+</ul>
+<div class="fragment">
+<p>Our CLSP is the <strong>single-level core</strong>: the real case is multi-level, with semi-finished products and storage.</p>
+</div>
+</section>
+<section id="section-2" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Any idea what</p>
+<p>could be done?</p>
+</div>
+<div class="footer">
+
+</div>
+</section>
+<section id="heuristics-and-optimization" class="slide level2">
+<h2>Heuristics and Optimization</h2>
+<ul>
+<li>Multi-level Capacitated Lot-Sizing Problem</li>
+<li>Heuristic fix and optimize approach <sup>1</sup></li>
+<li>Operating cost reduction by 5% and planning effort by 40%</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>And that’s it for today’s lecture!</strong></p>
+</div>
+<div class="callout-content">
+<p>We now have covered the basics of the CLSP and are ready to start solving some tasks in the upcoming tutorial.</p>
+</div>
+</div>
+</div>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="citation" data-cites="mickein2022decision">Mickein et al. (<a href="#/literature-1" role="doc-biblioref" onclick="">2022</a>)</span></p></li></ol></aside></section>
+<section id="section-3" class="slide level2 loud-slide">
+<h2></h2>
+<div class="r-fit-text">
+<p>Questions?</p>
+</div>
+<div class="footer">
+
+</div>
+</section></section>
+<section>
+<section id="literature" class="title-slide slide level1 title center">
+<h1><span class="flow">Literature</span></h1>
+
+</section>
+<section id="literature-1" class="slide level2 smaller scrollable">
+<h2>Literature</h2>
+<p>For more interesting literature to learn more about Julia, take a look at the <a href="../general/literature.html">literature list</a> of this course.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-mickein2022decision" class="csl-entry" role="listitem">
+Mickein, Markus, Matthes Koch, and Knut Haase. 2022. <span>“A Decision Support System for Brewery Production Planning at Feldschl<span>ö</span>sschen.”</span> <em>INFORMS Journal on Applied Analytics</em> 52 (2): 158–72.
+</div>
+</div>
+</section></section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Lecture V - Planning in Breweries | Dr.&nbsp;Tobias Vlćek | <a href="../lectures/lecture-05-production.html">Home</a></p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'fast',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 720,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/beyondsimulations\.github\.io\/Applied-Optimization");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
