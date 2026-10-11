@@ -6,14 +6,18 @@ format:
   revealjs:
     footer: " {{< meta title >}} | {{< meta author >}} | [Home](lecture-08-districting.qmd)"
     output-file: lecture-08-presentation.html
+format-links:
+  - text: Slides (PDF)
+    href: lecture-08-presentation.pdf
+    icon: file-earmark-slides
 ---
 
 # [Introduction]{.flow} {.title}
 
-## [Police Service District Planning]{.invert-font} {background-color="#000000" background-image="https://unsplash.com/photos/HkF6feHrGBE/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8NjN8fGNpdHklMjBtYXB8ZW58MHx8fHwxNzI4Mzc3MjA0fDA&force=true" background-size="cover" background-position="center"}
+## [Police Service District Planning]{.invert-font} {background-color="#000000" background-image="https://images.beyondsimulations.com/ao/ao_photo-01-police-service-district-planning.jpg" background-size="cover" background-position="center"}
 
 ::: {.footer}
-@vlcek_police_2024
+[@vlcek_police_2024]{.invert-font}
 :::
 
 ## Learning Objectives
@@ -46,7 +50,7 @@ After this lecture, you can:
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](https://images.unsplash.com/photo-1532555705039-f04fd833eb21?q=80&w=3264&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width=85% fig-alt="Police car with flashing lights at night"}
+![](https://images.beyondsimulations.com/ao/ao_photo-08-emergency-services.jpg){width=85% fig-alt="Police car with flashing lights at night"}
 :::
 ::: {.column width="55%"}
 Emergency services address the needs of [three interest groups]{.highlight}:
@@ -90,7 +94,7 @@ Aligning the objectives of the three interest groups is challenging.
 
 ::: {.columns}
 ::: {.column width="40%"}
-![](https://images.unsplash.com/photo-1689783101576-627f2fbdb8d5?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D){width=85% fig-alt="Aerial view of a city with a dense street network"}
+![](https://images.beyondsimulations.com/ao/ao_photo-08-emergency-service-districting.jpg){width=85% fig-alt="Aerial view of a city with a dense street network"}
 :::
 ::: {.column width="55%"}
 [Question:]{.question} **Why might current district layouts be suboptimal?**
@@ -237,7 +241,7 @@ This is a **common problem** in many emergency services.
 :::
 
 
-# [Territory Design Problem]{.flow} {.title}
+# [Territory Design]{.flow} {.title}
 
 ## What is Territory Design?
 
@@ -396,7 +400,7 @@ step by step!
 
 ::: {.columns}
 ::: {.column width="20%"}
-![](https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg){width=85% fig-alt="Hexagonal cell reduced to its centroid point"}
+![](https://images.beyondsimulations.com/ao/ao_police-hex_to_centroid.svg){width=70% fig-alt="Hexagonal cell reduced to its centroid point"}
 :::
 ::: {.column width="80%"}
 [Question:]{.question} **How do we model this mathematically?**
@@ -419,7 +423,7 @@ This abstraction allows us to use [optimization techniques]{.highlight} from gra
 
 ::: {.columns}
 ::: {.column width="20%"}
-![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70% fig-alt="Hexagon centroids as vertices of a graph connected by edges"}
+![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=60% fig-alt="Hexagon centroids as vertices of a graph connected by edges"}
 :::
 ::: {.column width="80%"}
 [Question:]{.question} **What sets do we need?**
@@ -441,7 +445,7 @@ Department locations are a [subset]{.highlight} of all BAs as not every BA can h
 
 ::: {.columns}
 ::: {.column width="20%"}
-![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=70% fig-alt="Hexagon centroids as vertices of a graph connected by edges"}
+![](https://images.beyondsimulations.com/ao/ao_police-vertex_connected.svg){width=60% fig-alt="Hexagon centroids as vertices of a graph connected by edges"}
 :::
 ::: {.column width="80%"}
 [Question:]{.question} **Advantages of hexagons?**
@@ -745,7 +749,7 @@ This constraint creates a **logical connection between department locations and 
 Our police districting is a **p-Median variant** with additional geographic constraints (contiguity, compactness)!
 :::
 
-# [Contiguity and Compactness]{.flow} {.title}
+# [Contiguous & Compact]{.flow} {.title}
 
 ## Contiguity Introduction
 
@@ -806,7 +810,7 @@ Compactness has **no univocal definition**; a district is commonly declared comp
 
 ## [Compactness p-Median]{.invert-font} {background-color="#000000" background-image="https://images.beyondsimulations.com/ao/ao_police-streets.svg"}
 
-[**Question:** Is this likely for police service districting?]{.invert-font .fragment}
+[[Question:]{.question} Is this likely for police service districting?]{.invert-font .fragment}
 
 ::: {.invert-font .fragment}
 - No, as we minimize the driving time within a city
@@ -983,7 +987,7 @@ Due to the constraints, there is **always a path back** to the department if a B
 :::
 
 
-# [Implementation and Impact]{.flow} {.title}
+# [In Practice]{.flow} {.title}
 
 ## Overview of Studies
 
@@ -999,7 +1003,7 @@ Due to the constraints, there is **always a path back** to the department if a B
 :::
 :::
 
-## [German Metropolitan Case]{.invert-font} {background-color="#000000" background-image="https://images.unsplash.com/photo-1527478950489-e544549ca1d4?q=80&w=2782&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
+## [German Metropolitan Case]{.invert-font} {background-color="#000000" background-image="https://images.beyondsimulations.com/ao/ao_photo-08-german-metropolitan-case.jpg" background-size="cover" background-position="center"}
 
 . . .
 
@@ -1024,7 +1028,7 @@ Due to the constraints, there is **always a path back** to the department if a B
 
 ![](https://images.beyondsimulations.com/ao/ao_police-g3c3_small.svg){width=90% fig-alt="Map of optimized police districts in the German metropolitan case study"}
 
-## [Belgian Rural Case]{.invert-font} {background-color="#000000" background-image="https://images.unsplash.com/photo-1527531993849-70fc64556621?q=80&w=3675&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" background-size="cover" background-position="center"}
+## [Belgian Rural Case]{.invert-font} {background-color="#000000" background-image="https://images.beyondsimulations.com/ao/ao_photo-08-belgian-rural-case.jpg" background-size="cover" background-position="center"}
 
 . . .
 
@@ -1052,7 +1056,7 @@ Due to the constraints, there is **always a path back** to the department if a B
 
 ## [Simulation Framework]{.invert-font} {background-image="https://images.beyondsimulations.com/ao/ao_police-streets.svg"}
 
-[**How did we validate the results?**]{.invert-font}
+[How did we validate the results?]{.invert-font}
 
 . . .
 

@@ -13,6 +13,8 @@
 #      solutions ON PURPOSE are unaffected — they live elsewhere:
 #      Optimization-with-Julia ships part-NN/solution/, and the retired DuSpo
 #      lectures gate them behind `profile:`. Only a top-level solutions/ fails.
+#      The same goes for top-level students/ (personal data) and _reviews/
+#      (internal review notes, which Applied-Optimization had published).
 #
 #   2  no live Google-Fonts source in _brand.yml. `source: google` makes Quarto
 #      emit an @import of fonts.googleapis.com into every page (a GDPR problem
@@ -54,12 +56,12 @@ strip_comments() { sed -E 's/^[[:space:]]*#.*$//; s/[[:space:]]#.*$//'; }
 say "guard: $repo"
 
 # 1 — no top-level solutions/ tracked -----------------------------------------
-leaked="$(git ls-files 'solutions' 'solutions/**' 2>/dev/null)"
+leaked="$(git ls-files 'solutions' 'solutions/**' 'students' 'students/**' '_reviews' '_reviews/**' 2>/dev/null)"
 if [ -n "$leaked" ]; then
-  bad "tracked files under a top-level solutions/ directory:"
+  bad "tracked files under a top-level solutions/, students/ or _reviews/ directory:"
   printf '        %s\n' $leaked
 else
-  ok "no top-level solutions/ tracked"
+  ok "no top-level solutions/, students/ or _reviews/ tracked"
 fi
 
 # 2 — no live Google-Fonts source in _brand.yml -------------------------------
