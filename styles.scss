@@ -192,6 +192,18 @@ $presentation-title-slide-text-align: left;
     font-weight: bold;
 }
 
+// Emphasis on a dark ground. The emphasis colours above are tuned for the pale
+// ground and are hard to read on a dark one: teal or oxblood on slate. On a
+// slide with a dark background colour (reveal's `has-dark-background`), in an
+// `.invert-font` box and on a `.loud-slide`, weight carries the emphasis and
+// the colour follows the text. `:where()` keeps the weight of the rules
+// above, so a course's own rule still wins.
+.reveal :where(section.has-dark-background, .invert-font, .loud-slide) {
+    strong, b, em, i, .bold, .italic, .highlight, .task, .question, .errors {
+        color: inherit;
+    }
+}
+
 // ── Slide blocks ──────────────────────────────────────────────────────────
 .invert-font {
     color: $brand-lighter;
