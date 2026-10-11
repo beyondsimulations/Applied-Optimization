@@ -2,7 +2,7 @@
 -- revealjs) or a one-line link (every other format). Reads a `gamekit:`
 -- metadata block (url, telemetry) and injects window.gamekitConfig.
 
-local VERSION = "0.4.12"
+local VERSION = "0.4.14"
 local CONFIG = { url = nil, telemetry = nil }
 
 local function attr_escape(s)
@@ -81,7 +81,8 @@ local function Div(el)
     return pandoc.RawBlock("html", string.format(
       '<div class="gamekit%s" data-game="%s" data-page="%s/games/%s.html"%s%s></div>\n' ..
       '<script src="%s/games/%s.js"></script>',
-      slide and " gamekit-slide" or "", name, offset, name,
+      -- r-stretch: reveal.js gives the game the height the slide has left
+      slide and " gamekit-slide r-stretch" or "", name, offset, name,
       slide and " data-prevent-swipe" or "", qr, offset, name))
   end
   local base = CONFIG.url and CONFIG.url:gsub("/+$", "") or nil
