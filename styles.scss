@@ -225,6 +225,15 @@ $presentation-title-slide-text-align: left;
     .question { color: $lec-question-on-dark; }
     .highlight, .errors { color: $lec-highlight-on-dark; }
 }
+// A link on a plate keeps its underline and takes the plate's text colour:
+// the link red reaches 1.5:1 on slate (the photographer's name in a photo
+// credit). `:any-link` lifts the rule over reveal's own link colours, in the
+// footer too, whatever order the theme layers come in.
+.invert-font a:any-link,
+.reveal .invert-font a:any-link,
+.reveal .footer .invert-font a:any-link {
+    color: inherit;
+}
 
 // On a slide the plate follows each line with the same room left and right
 // (`box-decoration-break`). The lines of one text join into one block; a thin
