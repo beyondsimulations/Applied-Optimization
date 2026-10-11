@@ -47,6 +47,14 @@ $lec-loud-bg:   #537E8F !default;   // = twoDark.  .loud-slide background
 // logo mark and the links (set in _brand.yml). It replaced #B3403F so every
 // red on the page is one identical red against the otherwise-teal system.
 
+// On the slate plate of `.invert-font` the three colours above fail (.task
+// 2.37:1, .highlight 1.48:1, .question 1.38:1), so there each takes a colour
+// of its palette pair that reads on slate. Contrast against `darker` #363D45.
+// #F6B265 failed as type on the pale ground (1.80:1, see below) and passes here.
+$lec-task-on-dark:      #F6B265 !default;   // = oneDark.    6.01:1
+$lec-question-on-dark:  #A7C7C6 !default;   // = twoLight.   6.09:1
+$lec-highlight-on-dark: #EBADAD !default;   // = threeLight. 5.82:1
+
 // `.question` uses $brand-greyer (#3D5369, 7.84:1) and `.invert-font` /
 // `.title-slide.title` / `.exercise-slide` use $brand-lighter / -darker /
 // -codeline. All four tokens are universal, so they are referenced directly.
@@ -197,7 +205,8 @@ $presentation-title-slide-text-align: left;
 // slide with a dark background colour (reveal's `has-dark-background`), in an
 // `.invert-font` box and on a `.loud-slide`, weight carries the emphasis and
 // the colour follows the text. `:where()` keeps the weight of the rules
-// above, so a course's own rule still wins.
+// above, so a course's own rule still wins. In an `.invert-font` plate the
+// three classes with a meaning of their own get a light colour instead (below).
 .reveal :where(section.has-dark-background, .invert-font, .loud-slide) {
     strong, b, em, i, .bold, .italic, .highlight, .task, .question, .errors {
         color: inherit;
@@ -205,11 +214,46 @@ $presentation-title-slide-text-align: left;
 }
 
 // ── Slide blocks ──────────────────────────────────────────────────────────
+// Text on a photo sits on a slate plate.
 .invert-font {
     color: $brand-lighter;
     background-color: $brand-darker;
     border: 5px solid $brand-darker;
     border-radius: 0;
+
+    .task { color: $lec-task-on-dark; }
+    .question { color: $lec-question-on-dark; }
+    .highlight, .errors { color: $lec-highlight-on-dark; }
+}
+
+// On a slide the plate follows each line with the same room left and right
+// (`box-decoration-break`). The lines of one text join into one block; a thin
+// gap separates it from the plates above and below (title, text, question).
+// Vertical padding on an inline plate does not move any line. Only spans and
+// divs carry the class today; any other element keeps the old box.
+.reveal div.invert-font {
+    border: 0;
+    padding: 5px 16px;
+}
+.reveal span.invert-font {
+    border: 0;
+    padding: 1px 16px 3px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+// A block that opens with a plate reaches 16px into the slide's margin, so its
+// text keeps the left edge of every other slide and no line is shorter than it
+// was with the old box. Only for blocks that span the slide: in a column, a
+// list or a callout the plate stays inside its container. Two rules, so a
+// browser without `:has()` still places the block plates.
+.reveal .slides :is(section:not(.scrollable), section:not(.scrollable) > div.fragment) > div.invert-font {
+    margin-left: -16px;
+    margin-right: -16px;
+}
+.reveal .slides :is(section:not(.scrollable), section:not(.scrollable) > div.fragment) > :is(h1, h2, h3, p):has(span.invert-font) {
+    margin-left: -16px;
+    margin-right: -16px;
 }
 
 // Section-break slide.
