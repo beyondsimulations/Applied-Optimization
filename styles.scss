@@ -224,13 +224,14 @@ $presentation-title-slide-text-align: left;
     .task { color: $lec-task-on-dark; }
     .question { color: $lec-question-on-dark; }
     .highlight, .errors { color: $lec-highlight-on-dark; }
-    // A link keeps its underline and takes the plate's text colour: the link
-    // red reaches 1.5:1 on slate (the photographer's name in a photo credit).
-    a { color: inherit; }
 }
-// Reveal colours links on slides and in the footer with more weight.
-.reveal .invert-font a,
-.reveal .footer .invert-font a {
+// A link on a plate keeps its underline and takes the plate's text colour:
+// the link red reaches 1.5:1 on slate (the photographer's name in a photo
+// credit). `:any-link` lifts the rule over reveal's own link colours, in the
+// footer too, whatever order the theme layers come in.
+.invert-font a:any-link,
+.reveal .invert-font a:any-link,
+.reveal .footer .invert-font a:any-link {
     color: inherit;
 }
 
