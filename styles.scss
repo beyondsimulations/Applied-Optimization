@@ -69,8 +69,9 @@ $lec-code-inline:  #4B7282 !default;   // 4.61:1
 
 // Quarto's slide grey ($text-muted, body colour lightened 30 %: #7C8998) is
 // 3.51:1 on the page ground. Footer, slide number, slide blockquotes and
-// asides take a darker grey.
-$lec-slide-muted:  #697480 !default;   // 4.70:1 / 4.60:1 on #FCFBF8
+// asides take a darker grey. It has to hold on the section slides too, which
+// sit on `codeline`: #697480 was 4.70:1 on the page and 4.21:1 there.
+$lec-slide-muted:  #646C76 !default;   // page 5.24:1 / 5.14:1, codeline 4.71:1 / 4.63:1
 
 // ── Callouts ──────────────────────────────────────────────────────────────
 $lec-callout-note:      #FCCF9C !default;   // = oneLight
@@ -611,6 +612,24 @@ body.quarto-light {
 .reveal:not(.has-dark-background) .slide aside,
 .reveal:not(.has-dark-background) .slide div.aside {
     color: $lec-slide-muted;
+}
+
+// Footer and slide number while a `.loud-slide` is showing. Both belong to the
+// deck, not to the slide, so the slide's colours never reached them: the grey
+// above is 1.08:1 on the accent ground and the link red 1.68:1. They take the
+// slide's own light text colour, 4.36:1, the most this ground allows. A slide
+// in a stack that is not showing keeps its `.present`, so the stack is checked
+// as well. The printed deck gets the same from create_pdf.py (`on-dark-bg`).
+.reveal:has(.slides > section.present.loud-slide,
+            .slides > section.present > section.present.loud-slide) {
+    .footer, .footer a:any-link, .slide-number {
+        color: $brand-lighter;
+    }
+    // The menu icon is an SVG with the link red painted in (1.68:1 here), so
+    // `color` does not reach it; the filter turns it white.
+    .slide-menu-button .fa-bars::before {
+        filter: brightness(0) invert(1);
+    }
 }
 
 // Document pages without a TOC (quizzes, exams with `toc: false`) get Quarto's

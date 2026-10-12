@@ -22,6 +22,10 @@ The course covers applied optimization methods with hands-on tutorials and real-
 
 - **`general/`** - General course information and resources
 
+- **`chatbot/`** - Introduction of the course chatbot (slide deck and reading page, no PDF)
+  - Not in the render list until the `#go-live# ` markers in `_quarto.yml` are removed
+  - `_survey.qmd` is the start-of-course survey, included while it is open
+
 ### Technical Directories
 
 - **`helpers/`** - Post-processing automation scripts (see [Helper Functions](#helper-functions))
