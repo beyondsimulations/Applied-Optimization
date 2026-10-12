@@ -59,6 +59,19 @@ $lec-highlight-on-dark: #EBADAD !default;   // = threeLight. 5.82:1
 // `.title-slide.title` / `.exercise-slide` use $brand-lighter / -darker /
 // -codeline. All four tokens are universal, so they are referenced directly.
 
+// Code sits on `codeline` (#FFEEE2), not on the page, and three colours fail
+// there: GitHub's comment grey #6A737D (4.26:1), its keyword red #D73A49
+// (4.04:1) and inline code in twoDark (3.91:1). Each takes a darker shade of
+// its own hue. Contrast against #FFEEE2 / Study-Business-Basics' #F2EFE6.
+$lec-code-comment: #646C76 !default;   // 4.71:1 / 4.63:1
+$lec-code-keyword: #C53543 !default;   // 4.69:1 / 4.61:1
+$lec-code-inline:  #4B7282 !default;   // 4.61:1
+
+// Quarto's slide grey ($text-muted, body colour lightened 30 %: #7C8998) is
+// 3.51:1 on the page ground. Footer, slide number, slide blockquotes and
+// asides take a darker grey.
+$lec-slide-muted:  #697480 !default;   // 4.70:1 / 4.60:1 on #FCFBF8
+
 // ── Callouts ──────────────────────────────────────────────────────────────
 $lec-callout-note:      #FCCF9C !default;   // = oneLight
 $lec-callout-tip:       #A7C7C6 !default;   // = twoLight
@@ -567,9 +580,37 @@ caption,
 // colour (sand) too, which lands near 1.4:1 on the light ground and is unreadable
 // (the emphasis inside inherits it, since only `.reveal em` carries a colour).
 // Same fix as captions: body colour; the left border and italic still mark it as
-// a quote. Doc only; `.reveal blockquote` is more specific and keeps its own colour.
-blockquote {
+// a quote. Quarto sets the colour on the class `.blockquote`, so the element
+// alone loses to it. Doc only; slide blockquotes do not carry the class.
+blockquote.blockquote {
     color: var(--bs-body-color);
+}
+
+// Code colours on the codeline ground, see $lec-code-* above. Light mode only:
+// the dark theme has its own ground and colours. `code.sourceCode` outranks
+// the highlight stylesheet, which loads after this one.
+body.quarto-light {
+    code.sourceCode span:is(.an, .co, .cv, .do, .in, .re) {
+        color: $lec-code-comment;
+    }
+    code.sourceCode span:is(.at, .bu, .cf, .dt, .ex, .kw, .pp) {
+        color: $lec-code-keyword;
+    }
+    :not(pre) > code:not(.sourceCode) {
+        color: $lec-code-inline;
+    }
+}
+
+// Footer, slide number, blockquotes and asides on a light slide: everything
+// Quarto sets in its slide grey. On a dark background colour reveal flags the
+// deck (`.reveal.has-dark-background`); there they keep Quarto's lighter grey,
+// which is 5.9:1 on black where the darker one would be 4.4:1.
+.reveal:not(.has-dark-background) .footer,
+.reveal:not(.has-dark-background) .slide-number,
+.reveal:not(.has-dark-background) blockquote,
+.reveal:not(.has-dark-background) .slide aside,
+.reveal:not(.has-dark-background) .slide div.aside {
+    color: $lec-slide-muted;
 }
 
 // Document pages without a TOC (quizzes, exams with `toc: false`) get Quarto's

@@ -5,4 +5,11 @@
 
 using Pkg
 Pkg.activate("../applied-optimization")
+
+# Plots.jl otherwise hands Quarto a finished HTML <img>, which bypasses Quarto's
+# figure handling: `#| fig-alt` and captions are dropped on the web page. Without
+# the HTML form Quarto receives the SVG and treats it as a figure. Applied once
+# Plots is loaded, so pages without plots do not load it.
+push!(Base.package_callbacks, pkg -> pkg.name == "Plots" &&
+    @eval Base.showable(::MIME"text/html", ::$(Base.loaded_modules[pkg]).Plot) = false)
 ```
