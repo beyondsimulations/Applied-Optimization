@@ -3,6 +3,7 @@
 (function () {
   "use strict";
   const C = globalThis.GamekitCore;
+  const T = C.setLang(document.documentElement.lang); // the page's language, English otherwise
   const BASE = document.currentScript ? document.currentScript.src : location.href;
   const TOKENS = ["accent", "neutral", "text", "muted", "bg", "good", "bad"];
   const THINK_MS = 1000;
@@ -33,7 +34,7 @@
       // Drop the dead worker so the next solve starts a fresh one.
       worker.terminate();
       worker = null;
-      for (const job of pending.values()) job.reject(new Error(e.message || "The solver failed to load."));
+      for (const job of pending.values()) job.reject(new Error(e.message || T.solverLoad));
       pending.clear();
     };
     return worker;
@@ -82,8 +83,8 @@
   // Buttons carry one short word, so that four of them fit one row on a phone;
   // the full action is the accessible name. The toggle names the plan it leads to.
   function labelToggle(btn, toYours) {
-    btn.textContent = toYours ? "Yours" : "Optimal";
-    btn.setAttribute("aria-label", toYours ? "Show yours" : "Show optimal");
+    btn.textContent = toYours ? T.yours : T.optimal;
+    btn.setAttribute("aria-label", toYours ? T.showYours : T.showOptimal);
   }
   const cssOf = (rgb) => {
     const out = {};
@@ -95,11 +96,12 @@
   function mount(root) {
     const def = defs[root.dataset.game];
     if (!def) {
-      root.textContent = `Gamekit: game "${root.dataset.game}" was not found.`;
+      root.textContent = T.missing(root.dataset.game);
       return;
     }
     const g = { def, root, ui: {}, phase: "play", started: false, revealed: false, skip: false, raf: 0, run: 0 };
     views.push(g);
+    g.id = "gamekit-" + views.length; // prefix for ids inside the game
 
     // DOM: task line, then the board (stage) and a side block with scores,
     // buttons and status. On pages the side block is a bar under the board;
@@ -125,11 +127,11 @@
     scores.append(g.you, g.opt);
     const buttons = el("div", { class: "gamekit-buttons" });
     g.btn = {
-      optimize: el("button", { type: "button", class: "gk-primary" }, "Optimize"),
+      optimize: el("button", { type: "button", class: "gk-primary" }, T.optimize),
       toggle: el("button", { type: "button", hidden: "" }),
-      why: el("button", { type: "button", hidden: "" }, "Why?"),
-      reset: el("button", { type: "button" }, "Reset"),
-      fresh: el("button", { type: "button", "aria-label": "New puzzle" }, "New"),
+      why: el("button", { type: "button", hidden: "" }, T.why),
+      reset: el("button", { type: "button" }, T.reset),
+      fresh: el("button", { type: "button", "aria-label": T.freshLabel }, T.fresh),
     };
     labelToggle(g.btn.toggle, true);
     buttons.append(g.btn.optimize, g.btn.toggle, g.btn.why, g.btn.reset, g.btn.fresh);
@@ -161,8 +163,12 @@
       const seed = (Math.random() * 4294967296) >>> 0;
       setPuzzle(g, def.puzzle(C.rng(seed)), "random", true);
     });
-    g.card.addEventListener("click", () => { if (g.revealed) g.card.hidden = true; });
-    stage.addEventListener("pointerdown", () => { if (g.phase === "think" || g.phase === "morph") g.skip = true; });
+    g.card.addEventListener("click", () => closeCard(g));
+    // a tap skips Think and the morph, except one on the Why card (closing it mid-toggle)
+    stage.addEventListener("pointerdown", (e) => {
+      if (!g.card.classList.contains("gk-think") && g.card.contains(e.target)) return;
+      if (g.phase === "think" || g.phase === "morph") g.skip = true;
+    });
     g.canvas.addEventListener("pointerdown", (e) => {
       g.canvas.setPointerCapture?.(e.pointerId); // a drag that leaves the canvas still ends here
       onPointer(g, e, "down");
@@ -200,7 +206,7 @@
     let d = "";
     for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) d += `M${c} ${r}h1v1h-1z`;
     // not <aside>: Quarto styles slide asides as margin notes
-    const box = el("div", { class: "gamekit-qr", role: "img", "aria-label": "QR code: " + url });
+    const box = el("div", { class: "gamekit-qr", role: "img", "aria-label": T.qr + url });
     box.innerHTML = `<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="${d}"/></svg>`;
     return box;
   }
@@ -226,8 +232,9 @@
   // ---------- drawing ----------
   // Compact (phone) layout on screens narrower than COMPACT_W (the screen, not
   // the column: desktop article columns can be narrow too); a game may then use
-  // its taller compactBoard, whose height may follow the text size (h: em =>
-  // units; fit() settles it). Pages size the canvas by the board's shape;
+  // its taller compactBoard, whose height may follow the text size and the
+  // puzzle (h: (em, puzzle) => units; fit() settles it, also after New). Pages
+  // size the canvas by the board's shape;
   // slides let it fill the stage (drawing is letterboxed).
   function layout(g) {
     const compact = !g.slide && window.innerWidth < COMPACT_W;
@@ -235,8 +242,9 @@
     g.compact = compact;
     g.root.classList.toggle("gamekit-compact", compact);
     const b = (compact && g.def.compactBoard) || g.def.board;
-    setBoard(g, typeof b.h === "function" ? { w: b.w, h: b.h(g.em || 3) } : b);
+    setBoard(g, typeof b.h === "function" ? { w: b.w, h: b.h(g.em || 3, g.puzzle || g.def.class) } : b);
     if (g.side) reserveBottom(g);
+    if (g.phase === "play" && g.plan) playStatus(g); // the note shows on phones only
   }
   function setBoard(g, board) {
     g.board = board;
@@ -252,7 +260,7 @@
     // one more pass settles it.
     const b = g.compact && g.def.compactBoard;
     if (!settled && b && typeof b.h === "function") {
-      const h = b.h((font * b.w) / r.width);
+      const h = b.h((font * b.w) / r.width, g.puzzle || g.def.class);
       if (Math.abs(h - g.board.h) > 0.01) {
         setBoard(g, { w: b.w, h });
         return fit(g, true);
@@ -316,6 +324,7 @@
     if (g.phase === "play") still(g, g.plan, "play");
     else if (g.phase === "done") still(g, g.showing === "yours" ? g.yours : g.optimal, g.showing);
     else if (g.phase === "think") still(g, g.yours, "yours");
+    markBottomSoon(); // the panel may have moved, appeared (a tab opened) or vanished
   }
   function redrawAll() { views.forEach(redraw); }
 
@@ -366,11 +375,47 @@
   function meta(g) {
     return { page: document.title, game: g.root.dataset.game, puzzle: g.kind };
   }
-  function update(g) {
+  function setStatus(g, text, bad) {
+    g.status.textContent = text;
+    g.status.classList.toggle("gk-bad", !!bad);
+  }
+  // While a game's panel lies in the bottom right corner of the screen (on
+  // phones it sticks there), <html> has the class gamekit-at-bottom, so a site
+  // can hide a button floating there (e.g. a chat button) instead of covering
+  // the game's buttons with it.
+  const CORNER = 100; // px: how far such a button reaches into the corner, margin included
+  function markBottom() {
+    const vh = window.innerHeight;
+    const vw = document.documentElement.clientWidth;
+    const low = views.some((g) => {
+      if (g.slide || !g.side) return false;
+      const r = g.side.getBoundingClientRect();
+      return r.height > 0 && r.bottom > vh - CORNER && r.top < vh && r.right > vw - CORNER;
+    });
+    document.documentElement.classList.toggle("gamekit-at-bottom", low);
+  }
+  // at most one check per frame: scrolling fires far more often, and each check measures every game
+  let markPending = false;
+  function markBottomSoon() {
+    if (markPending) return;
+    markPending = true;
+    requestAnimationFrame(() => {
+      markPending = false;
+      markBottom();
+    });
+  }
+  // a game's note on the plan or the piece being dragged (e.g. what makes it
+  // infeasible): on phones in the status line, which the panel keeps in view;
+  // elsewhere the game draws it
+  function playStatus(g) {
     const ok = g.def.feasible(g.puzzle, g.plan);
-    setScore(g.you, "You", C.formatScore(g.def.score(g.puzzle, g.plan), g.def.unit));
-    g.btn.optimize.disabled = ok !== true;
-    g.status.textContent = ok === true ? "Ready: press Optimize to compare with the best plan." : ok;
+    const note = g.compact && g.def.note ? g.def.note(g.puzzle, g.plan, g.ui) : null;
+    setStatus(g, note || (ok === true ? T.ready : ok), !!note);
+    return ok;
+  }
+  function update(g) {
+    setScore(g.you, T.you, C.formatScore(g.def.score(g.puzzle, g.plan), g.def.unit, g.def.digits));
+    g.btn.optimize.disabled = playStatus(g) !== true;
     const said = g.def.describe(g.puzzle, g.plan);
     if (g.sr.textContent !== said) g.sr.textContent = said; // identical rewrites can be re-announced
     reserveBottom(g);
@@ -378,10 +423,35 @@
   }
 
   // ---------- reveal ----------
+  // The Why card gets a × in its corner; a click anywhere on the card or Escape
+  // closes it (once revealed), so the × needs no handler of its own. The Think
+  // card has none.
   function showCard(g, nodes, think) {
-    g.card.replaceChildren(...nodes);
+    const close = think ? [] : [el("button", { class: "gamekit-card-close", type: "button", "aria-label": T.close }, "×")];
+    g.card.replaceChildren(...close, ...nodes);
     g.card.classList.toggle("gk-think", !!think);
+    // the Why card is a dialog named "Why?" and described by its paragraphs, so a
+    // screen reader reads the insight when the focus moves to its ×
+    if (think) {
+      for (const a of ["role", "aria-label", "aria-describedby"]) g.card.removeAttribute(a);
+    } else {
+      nodes.forEach((n, i) => { n.id = `${g.id}-why-${i}`; });
+      g.card.setAttribute("role", "dialog");
+      g.card.setAttribute("aria-label", T.why);
+      g.card.setAttribute("aria-describedby", nodes.map((n) => n.id).join(" "));
+    }
     g.card.hidden = false;
+  }
+  // Closing hands the focus back to Why? when it was on the card (or fell to the
+  // page, as a click on the card's text does), so a keyboard user keeps their
+  // place. Returns whether a card was closed.
+  function closeCard(g) {
+    if (!g.revealed || g.card.hidden) return false;
+    const active = document.activeElement;
+    const focused = !active || active === document.body || g.card.contains(active);
+    g.card.hidden = true;
+    if (focused) g.btn.why.focus({ preventScroll: true });
+    return true;
   }
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -394,7 +464,7 @@
     g.yours = g.plan;
     const yourScore = g.def.score(g.puzzle, g.yours);
     g.btn.optimize.disabled = true;
-    showCard(g, [el("p", null, "Thinking…")], true);
+    showCard(g, [el("p", null, T.thinking)], true);
     redraw(g);
     const t0 = performance.now();
     let line, optScore, pairs;
@@ -406,7 +476,7 @@
       } else {
         // the player's plan is passed on: a game may let the player size the problem
         const r = await solveLP(g.def.model(g.puzzle, g.yours));
-        if (r.status !== "Optimal") throw new Error("Solver: " + r.status);
+        if (r.status !== "Optimal") throw new Error(T.solver + r.status);
         g.optimal = g.def.decode(g.puzzle, r.values, g.yours);
         // a game may phrase the Think card itself, e.g. when helper variables
         // would make the generic count misleading
@@ -420,7 +490,7 @@
       g.phase = "play";
       g.card.hidden = true;
       update(g);
-      g.status.textContent = err.message;
+      setStatus(g, err.message);
       return;
     }
     if (run !== g.run) return;
@@ -432,10 +502,10 @@
     if (!fast) await wait(Math.max(0, THINK_MS - (performance.now() - t0)));
     if (run !== g.run) return;
     g.card.hidden = true;
-    g.status.textContent = "";
+    setStatus(g, "");
     g.opt.hidden = false;
     animate(g, g.yours, "yours", g.optimal, "optimal", g.skip || reducedMotion() ? 0 : MORPH_MS, (q) => {
-      setScore(g.opt, "Optimal", C.formatScore(yourScore + (optScore - yourScore) * C.ease(q), g.def.unit));
+      setScore(g.opt, T.optimal, C.formatScore(yourScore + (optScore - yourScore) * C.ease(q), g.def.unit, g.def.digits));
     }, pairs, () => {
       g.showing = "optimal";
       g.revealed = true;
@@ -498,6 +568,7 @@
       return p;
     };
     showCard(g, [para(ins.diff, true), para(ins.mechanism), para(ins.model)], false);
+    g.card.querySelector(".gamekit-card-close").focus({ preventScroll: true });
     track("game-why", meta(g));
   }
 
@@ -510,6 +581,17 @@
   // canvas text uses the page font: repaint once web fonts have loaded
   if (document.fonts) document.fonts.ready.then(redrawAll);
   window.addEventListener("resize", redrawAll);
+  window.addEventListener("scroll", markBottomSoon, { passive: true });
+  // Escape closes an open Why card wherever the focus is (also after a click
+  // left it on the page) and goes no further: on a slide it would also open
+  // reveal's overview. Capture phase, so this runs before reveal's handler.
+  window.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const shown = views.filter((g) => !g.slide || g.root.closest("section.present"));
+    if (!shown.map(closeCard).some(Boolean)) return;
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
   // reveal.js loads after this script; attach its hooks once the page is loaded.
   window.addEventListener("load", () => {
     const R = window.Reveal;
@@ -518,6 +600,6 @@
         try { R.on(ev, redrawAll); } catch (e) { /* older reveal: ignore */ }
       }
     }
-    redrawAll();
+    redrawAll(); // also checks the corner again: images above a game may have moved it
   });
 })();

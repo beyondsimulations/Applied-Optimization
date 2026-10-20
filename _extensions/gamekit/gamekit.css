@@ -39,6 +39,24 @@
   box-shadow: 0 0.3rem 1.2rem rgb(0 0 0 / 0.18);
 }
 .gamekit-card[hidden] { display: none; }
+/* the × stays in the corner while the card scrolls; .gamekit button would give it a frame */
+.gamekit .gamekit-card-close {
+  position: sticky;
+  top: 0;
+  float: right;
+  margin: -0.7rem -0.9rem 0 0.4rem;
+  min-width: 44px; /* touch target, like the other buttons */
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: var(--gk-bg);
+  color: var(--gk-muted);
+  font: inherit;
+  font-size: 1.4em;
+  line-height: 1;
+  cursor: pointer;
+}
+.gamekit .gamekit-card-close:hover, .gamekit .gamekit-card-close:focus-visible { color: var(--gk-accent); }
 .gamekit-card.gk-think {
   inset: auto 6% 38% 6%;
   text-align: center;
@@ -75,6 +93,7 @@
 .gamekit button:disabled { opacity: 0.45; cursor: not-allowed; }
 .gamekit button[hidden] { display: none; }
 .gamekit-status { min-height: 1.4em; margin: 0; color: var(--gk-muted); }
+.gamekit-status.gk-bad { color: var(--gk-bad); } /* a game's note: what is wrong with the plan */
 .gamekit-sr {
   position: absolute;
   width: 1px;
