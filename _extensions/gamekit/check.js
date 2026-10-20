@@ -26,7 +26,9 @@ const fail = (msg) => { failed++; console.error(`FAIL ${msg}`); };
 // a check that fails the same way for every puzzle reports only its first case
 const reported = new Set();
 const failOnce = (key, msg) => { if (!reported.has(key)) { reported.add(key); fail(msg); } };
-const SENSE = { max: /^\s*max/i, min: /^\s*min/i }; // LP files open with Maximize or Minimize
+const SENSE = { max: /^max/i, min: /^min/i }; // LP files open with Maximize or Minimize,
+// after any comments (\ to the end of a line, or \* … *\)
+const lpStart = (lp) => lp.replace(/\\\*[\s\S]*?\*\\/g, "").replace(/\\.*$/gm, "").trimStart();
 
 const files = process.argv.slice(2);
 if (!files.length) {
@@ -46,8 +48,13 @@ for (const { name, def } of games) {
     const where = `${name} (${label})`;
     try {
       const ch = def.compactBoard && def.compactBoard.h;
-      if (typeof ch === "function" && ![3, 4.5, 6.5].every((em) => { const h = ch(em, puzzle); return Number.isFinite(h) && h > 0; })) {
-        failOnce(`${name}/h`, `${where}: compactBoard.h(em, puzzle) must return a positive number`);
+      if (typeof ch === "function") {
+        // its own try: a throw here must not skip the solver checks below
+        let bad = null;
+        try {
+          if (![3, 4.5, 6.5].every((em) => { const h = ch(em, puzzle); return Number.isFinite(h) && h > 0; })) bad = "";
+        } catch (err) { bad = ` (it threw: ${err.message})`; }
+        if (bad !== null) failOnce(`${name}/h`, `${where}: compactBoard.h(em, puzzle) must return a positive number${bad}`);
       }
       const goal = C.goalOf(def, puzzle);
       if (goal !== "max" && goal !== "min") failOnce(`${name}/goal`, `${where}: goal must be "max" or "min", not ${JSON.stringify(goal)}`);
@@ -67,7 +74,7 @@ for (const { name, def } of games) {
           }
         } else {
           const lp = def.model(puzzle, from);
-          if (SENSE[goal] && !SENSE[goal].test(lp)) fail(`${at}: goal is "${goal}", but the model does not open with ${goal === "max" ? "Maximize" : "Minimize"}`);
+          if (SENSE[goal] && !SENSE[goal].test(lpStart(lp))) fail(`${at}: goal is "${goal}", but the model does not open with ${goal === "max" ? "Maximize" : "Minimize"}`);
           const r = await solve(lp);
           if (r.status !== "Optimal") { fail(`${at}: solver status ${r.status}`); continue; }
           objective = r.objective;

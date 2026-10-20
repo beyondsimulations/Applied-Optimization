@@ -2,7 +2,7 @@
 -- revealjs) or a one-line link (every other format). Reads a `gamekit:`
 -- metadata block (url, telemetry) and injects window.gamekitConfig.
 
-local VERSION = "0.5.2"
+local VERSION = "0.5.3"
 local CONFIG = { url = nil, telemetry = nil, play = "Play:" }
 -- the link line's first word per language (the document's `lang`)
 local PLAY = { de = "Spielen:" }

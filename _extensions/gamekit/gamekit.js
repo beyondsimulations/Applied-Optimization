@@ -178,7 +178,8 @@
     g.canvas.addEventListener("pointercancel", (e) => onPointer(g, e, "cancel")); // e.g. the browser took the touch
 
     // repaint when the canvas changes size, e.g. a hidden tab or callout opens
-    if ("ResizeObserver" in window) new ResizeObserver(() => redraw(g)).observe(g.canvas);
+    // the panel may also have moved, appeared or vanished then: check the corner
+    if ("ResizeObserver" in window) new ResizeObserver(() => { redraw(g); markBottomSoon(); }).observe(g.canvas);
 
     // warm the solver when the game first scrolls into view
     if (def.model && "IntersectionObserver" in window) {
@@ -244,7 +245,7 @@
     const b = (compact && g.def.compactBoard) || g.def.board;
     setBoard(g, typeof b.h === "function" ? { w: b.w, h: b.h(g.em || 3, g.puzzle || g.def.class) } : b);
     if (g.side) reserveBottom(g);
-    if (g.phase === "play" && g.plan) playStatus(g); // the note shows on phones only
+    if (g.def.note && g.phase === "play" && g.plan) playStatus(g); // the note shows on phones only
   }
   function setBoard(g, board) {
     g.board = board;
@@ -324,7 +325,6 @@
     if (g.phase === "play") still(g, g.plan, "play");
     else if (g.phase === "done") still(g, g.showing === "yours" ? g.yours : g.optimal, g.showing);
     else if (g.phase === "think") still(g, g.yours, "yours");
-    markBottomSoon(); // the panel may have moved, appeared (a tab opened) or vanished
   }
   function redrawAll() { views.forEach(redraw); }
 
@@ -430,15 +430,16 @@
     const close = think ? [] : [el("button", { class: "gamekit-card-close", type: "button", "aria-label": T.close }, "×")];
     g.card.replaceChildren(...close, ...nodes);
     g.card.classList.toggle("gk-think", !!think);
-    // the Why card is a dialog named "Why?" and described by its paragraphs, so a
-    // screen reader reads the insight when the focus moves to its ×
+    // the Why card is a (non-modal) dialog named by its first paragraph, the
+    // difference between the plans: a screen reader says it when the focus
+    // moves to the ×, and reads the rest from there
     if (think) {
-      for (const a of ["role", "aria-label", "aria-describedby"]) g.card.removeAttribute(a);
+      g.card.removeAttribute("role");
+      g.card.removeAttribute("aria-labelledby");
     } else {
-      nodes.forEach((n, i) => { n.id = `${g.id}-why-${i}`; });
+      nodes[0].id = `${g.id}-why`;
       g.card.setAttribute("role", "dialog");
-      g.card.setAttribute("aria-label", T.why);
-      g.card.setAttribute("aria-describedby", nodes.map((n) => n.id).join(" "));
+      g.card.setAttribute("aria-labelledby", nodes[0].id);
     }
     g.card.hidden = false;
   }
@@ -490,7 +491,7 @@
       g.phase = "play";
       g.card.hidden = true;
       update(g);
-      setStatus(g, err.message);
+      setStatus(g, err.message, true);
       return;
     }
     if (run !== g.run) return;
@@ -575,20 +576,29 @@
   // ---------- startup ----------
   function start() {
     document.querySelectorAll(".gamekit[data-game]").forEach(mount);
+    markBottomSoon();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
   // canvas text uses the page font: repaint once web fonts have loaded
   if (document.fonts) document.fonts.ready.then(redrawAll);
-  window.addEventListener("resize", redrawAll);
+  window.addEventListener("resize", () => { redrawAll(); markBottomSoon(); });
   window.addEventListener("scroll", markBottomSoon, { passive: true });
-  // Escape closes an open Why card wherever the focus is (also after a click
-  // left it on the page) and goes no further: on a slide it would also open
-  // reveal's overview. Capture phase, so this runs before reveal's handler.
+  // Escape closes an open Why card while the focus is in its game, or on the
+  // page after a click left it there (then the cards on screen), and goes no
+  // further: on a slide it would also open reveal's overview. Capture phase, so
+  // this runs before reveal's handler. Focus anywhere else (a search box, a
+  // chat window) keeps its Escape.
+  const onScreen = (g) => {
+    const r = g.card.getBoundingClientRect();
+    return r.bottom > 0 && r.top < window.innerHeight && (!g.slide || !!g.root.closest("section.present"));
+  };
   window.addEventListener("keydown", (e) => {
-    if (e.key !== "Escape") return;
-    const shown = views.filter((g) => !g.slide || g.root.closest("section.present"));
-    if (!shown.map(closeCard).some(Boolean)) return;
+    if (e.key !== "Escape" || e.isComposing) return;
+    const active = document.activeElement;
+    const free = !active || active === document.body;
+    const games = views.filter((g) => (free ? onScreen(g) : g.root.contains(active)));
+    if (!games.map(closeCard).some(Boolean)) return;
     e.preventDefault();
     e.stopPropagation();
   }, true);
@@ -600,6 +610,7 @@
         try { R.on(ev, redrawAll); } catch (e) { /* older reveal: ignore */ }
       }
     }
-    redrawAll(); // also checks the corner again: images above a game may have moved it
+    redrawAll();
+    markBottomSoon(); // images above a game may have moved it
   });
 })();
