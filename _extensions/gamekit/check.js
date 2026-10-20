@@ -5,8 +5,10 @@
 // the player's plan);
 // the class optimum must equal check.optimum, score(decode(solution)) must
 // equal the solver objective, the optimal plan must be feasible, piece keys
-// must be unique, a game's think() must return a line, and a compactBoard.h
-// function must return a positive height.
+// must be unique, a game's think() must return a line, a compactBoard.h
+// function must return a positive height for each of these puzzles, and the
+// goal must match the model's direction (or, for optimal(), the optimal plan
+// must score at least as well as a feasible start plan).
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import "./core.js";
@@ -21,6 +23,12 @@ globalThis.Gamekit = { game(name, def) { games.push({ name, def }); } };
 const close = (a, b) => Math.abs(a - b) <= 1e-6 * Math.max(1, Math.abs(b));
 let failed = 0;
 const fail = (msg) => { failed++; console.error(`FAIL ${msg}`); };
+// a check that fails the same way for every puzzle reports only its first case
+const reported = new Set();
+const failOnce = (key, msg) => { if (!reported.has(key)) { reported.add(key); fail(msg); } };
+const SENSE = { max: /^max/i, min: /^min/i }; // LP files open with Maximize or Minimize,
+// after any comments (\ to the end of a line, or \* … *\)
+const lpStart = (lp) => lp.replace(/\\\*[\s\S]*?\*\\/g, "").replace(/\\.*$/gm, "").trimStart();
 
 const files = process.argv.slice(2);
 if (!files.length) {
@@ -34,15 +42,22 @@ for (const { name, def } of games) {
   const missing = REQUIRED.filter((k) => def[k] == null);
   if (!def.optimal && (!def.model || !def.decode)) missing.push("model+decode (or optimal)");
   if (missing.length) { fail(`${name}: missing ${missing.join(", ")}`); continue; }
-  const ch = def.compactBoard && def.compactBoard.h;
-  if (typeof ch === "function" && ![3, 4.5, 6.5].every((em) => Number.isFinite(ch(em)) && ch(em) > 0)) {
-    fail(`${name}: compactBoard.h(em) must return a positive number`);
-  }
   const cases = [["class", def.class]];
   for (let seed = 1; seed <= 5; seed++) cases.push([`seed ${seed}`, def.puzzle(C.rng(seed))]);
   for (const [label, puzzle] of cases) {
     const where = `${name} (${label})`;
     try {
+      const ch = def.compactBoard && def.compactBoard.h;
+      if (typeof ch === "function") {
+        // its own try: a throw here must not skip the solver checks below
+        let bad = null;
+        try {
+          if (![3, 4.5, 6.5].every((em) => { const h = ch(em, puzzle); return Number.isFinite(h) && h > 0; })) bad = "";
+        } catch (err) { bad = ` (it threw: ${err.message})`; }
+        if (bad !== null) failOnce(`${name}/h`, `${where}: compactBoard.h(em, puzzle) must return a positive number${bad}`);
+      }
+      const goal = C.goalOf(def, puzzle);
+      if (goal !== "max" && goal !== "min") failOnce(`${name}/goal`, `${where}: goal must be "max" or "min", not ${JSON.stringify(goal)}`);
       const start = def.start(puzzle);
       // also solve from the game's extra plans (check.plans), e.g. a size the player can choose
       const froms = [start].concat(def.check.plans ? def.check.plans(puzzle) : []);
@@ -53,8 +68,14 @@ for (const { name, def } of games) {
         if (def.optimal) {
           plan = await def.optimal(puzzle, from);
           objective = def.score(puzzle, plan);
+          const s0 = def.score(puzzle, from);
+          if (SENSE[goal] && def.feasible(puzzle, from) === true && (goal === "max" ? objective < s0 : objective > s0) && !close(objective, s0)) {
+            fail(`${at}: goal is "${goal}", but the optimal plan scores ${objective} against the start plan's ${s0}`);
+          }
         } else {
-          const r = await solve(def.model(puzzle, from));
+          const lp = def.model(puzzle, from);
+          if (SENSE[goal] && !SENSE[goal].test(lpStart(lp))) fail(`${at}: goal is "${goal}", but the model does not open with ${goal === "max" ? "Maximize" : "Minimize"}`);
+          const r = await solve(lp);
           if (r.status !== "Optimal") { fail(`${at}: solver status ${r.status}`); continue; }
           objective = r.objective;
           counts = r.counts;

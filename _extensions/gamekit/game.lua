@@ -2,14 +2,17 @@
 -- revealjs) or a one-line link (every other format). Reads a `gamekit:`
 -- metadata block (url, telemetry) and injects window.gamekitConfig.
 
-local VERSION = "0.4.14"
-local CONFIG = { url = nil, telemetry = nil }
+local VERSION = "0.5.3"
+local CONFIG = { url = nil, telemetry = nil, play = "Play:" }
+-- the link line's first word per language (the document's `lang`)
+local PLAY = { de = "Spielen:" }
 
 local function attr_escape(s)
   return (tostring(s):gsub("&", "&amp;"):gsub('"', "&quot;"):gsub("<", "&lt;"):gsub(">", "&gt;"))
 end
 
 local function Meta(m)
+  if m.lang then CONFIG.play = PLAY[pandoc.utils.stringify(m.lang):sub(1, 2):lower()] or CONFIG.play end
   local g = m.gamekit
   if not g then return nil end
   if g.url then CONFIG.url = pandoc.utils.stringify(g.url) end
@@ -91,7 +94,7 @@ local function Div(el)
     base = offset
   end
   local target = base .. "/games/" .. name .. ".html"
-  return pandoc.Para({ pandoc.Str("Play:"), pandoc.Space(), pandoc.Link(target, target) })
+  return pandoc.Para({ pandoc.Str(CONFIG.play), pandoc.Space(), pandoc.Link(target, target) })
 end
 
 -- Meta first (fills CONFIG), then Div.
