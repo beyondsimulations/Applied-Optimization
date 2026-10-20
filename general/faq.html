@@ -48,9 +48,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-07311628652e75f956396d70ae2c81bf.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-165d373a1ef8ee877747cc9050609b36.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-659b1e114af0d9b0f8d459a0470685fe.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-165d373a1ef8ee877747cc9050609b36.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-436e16de1bc67a934fef3e23c4b1bfe5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-694e07afed332aee4571d728dd9aa29b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-436e16de1bc67a934fef3e23c4b1bfe5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -557,6 +557,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#how-do-the-groups-for-the-assignments-work" id="toc-how-do-the-groups-for-the-assignments-work" class="nav-link" data-scroll-target="#how-do-the-groups-for-the-assignments-work">How do the groups for the assignments work?</a></li>
   <li><a href="#can-i-take-a-sheet-with-me-to-the-exam" id="toc-can-i-take-a-sheet-with-me-to-the-exam" class="nav-link" data-scroll-target="#can-i-take-a-sheet-with-me-to-the-exam">Can I take a sheet with me to the exam?</a></li>
   <li><a href="#how-does-the-chatbot-work" id="toc-how-does-the-chatbot-work" class="nav-link" data-scroll-target="#how-does-the-chatbot-work">How does the chatbot work?</a></li>
+  <li><a href="#my-julia-code-does-not-run-in-zed.-what-can-i-do" id="toc-my-julia-code-does-not-run-in-zed.-what-can-i-do" class="nav-link" data-scroll-target="#my-julia-code-does-not-run-in-zed.-what-can-i-do">My Julia code does not run in Zed. What can I do?</a></li>
+  <li><a href="#julia-or-zed-does-not-work-on-my-windows-laptop.-what-can-i-do" id="toc-julia-or-zed-does-not-work-on-my-windows-laptop.-what-can-i-do" class="nav-link" data-scroll-target="#julia-or-zed-does-not-work-on-my-windows-laptop.-what-can-i-do">Julia or Zed does not work on my Windows laptop. What can I do?</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/beyondsimulations/Applied-Optimization/blob/main/general/faq.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/beyondsimulations/Applied-Optimization/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="faq.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
@@ -617,6 +619,35 @@ ul.task-list li input[type="checkbox"] {
 <section id="how-does-the-chatbot-work" class="level2">
 <h2 class="anchored" data-anchor-id="how-does-the-chatbot-work">How does the chatbot work?</h2>
 <p>The course AI is a chatbot that uses the <a href="https://mistral.ai">Mistral</a> and some custom code hosted on Hetzner in Germany. If you have any questions about the course, feel free to ask the AI. Note, that the AI is not perfect and sometimes the answers might be incorrect. For more information about how the data is processed, please refer to the <a href="../general/privacy.html">privacy policy</a>.</p>
+</section>
+<section id="my-julia-code-does-not-run-in-zed.-what-can-i-do" class="level2">
+<h2 class="anchored" data-anchor-id="my-julia-code-does-not-run-in-zed.-what-can-i-do">My Julia code does not run in Zed. What can I do?</h2>
+<p>The commands in <strong>bold</strong> are in Zed’s command palette (<code>Ctrl+Shift+P</code>, macOS <code>Cmd+Shift+P</code>).</p>
+<ul>
+<li><strong>Nothing happens when I press <code>Ctrl+Shift+Enter</code>.</strong> Save the file with the ending <code>.jl</code> and press the shortcut a second time: right after Zed starts, the first press can get lost while Zed looks for its kernels. Each cell has to start with <code># %%</code> at the very beginning of a line.</li>
+<li><strong>Zed does not list the kernel <code>applied-optimization-1.13</code>.</strong> Run <strong>repl: refresh kernelspecs</strong>. If it is still missing, repeat steps 3 to 5 of the <a href="../tutorials/tutorial-02-01-variables.html">first tutorial</a> and look for error messages after <code>installkernel</code>.</li>
+<li><strong><code>ArgumentError: Package JuMP not found in current path</code></strong> (or any other package). Zed started another kernel, for example <code>julia-1.13</code>, which does not use the course environment. Check the kernel selector at the top right of the editor and choose <code>applied-optimization-1.13</code>. If the kernel is right, the package is not installed yet: run <code>using Pkg; Pkg.add("JuMP")</code> in a cell.</li>
+<li><strong><code>UndefVarError: ... not defined</code>.</strong> The cell uses a variable from a cell that has not run yet. Run the cells above it first. After <strong>repl: restart</strong>, all variables are gone and you start again from the top.</li>
+<li><strong>Plots do not appear.</strong> Your kernel was installed without the <code>zed_plots</code> part of step 5 in the <a href="../tutorials/tutorial-02-01-variables.html">first tutorial</a>: close Zed and run steps 3 and 5 again. Interactive plots made with <code>plotly()</code> cannot be shown in Zed; leave that line out.</li>
+<li><strong>A model keeps solving and does not stop.</strong> <strong>repl: interrupt</strong> cannot stop a running solver. Use <strong>repl: restart</strong> instead and run your cells again from the top.</li>
+<li><strong>The kernel does not start after a Julia update.</strong> The kernel still points to the old Julia version, which the update removed. Close Zed and run steps 3 and 5 of the <a href="../tutorials/tutorial-02-01-variables.html">first tutorial</a> again.</li>
+<li><strong>The first cell takes minutes.</strong> Julia compiles each package once on your computer, so the first <code>using JuMP</code> or <code>using Plots</code> is slow, on Windows even slower because Microsoft Defender scans the new files. Let it finish: afterwards, the same commands are fast.</li>
+<li><strong>An exclamation mark appears in Zed’s title bar, and code completion does not work.</strong> Zed opened your folder in Restricted Mode. Click the exclamation mark and trust your course folder (only that folder, not your whole user folder).</li>
+<li><strong><code>Ctrl+C</code> does not copy in Zed’s terminal (Windows, Linux).</strong> In the terminal, <code>Ctrl+C</code> stops the running program; copy with <code>Ctrl+Shift+C</code>.</li>
+</ul>
+<p>If Zed itself does not run on your computer, use the VS Code fallback described in the <a href="../tutorials/tutorial-02-01-variables.html">first tutorial</a>.</p>
+</section>
+<section id="julia-or-zed-does-not-work-on-my-windows-laptop.-what-can-i-do" class="level2">
+<h2 class="anchored" data-anchor-id="julia-or-zed-does-not-work-on-my-windows-laptop.-what-can-i-do">Julia or Zed does not work on my Windows laptop. What can I do?</h2>
+<ul>
+<li><strong>The terminal does not find <code>julia</code>.</strong> Open a new terminal; if you use the terminal inside Zed, restart Zed. If that does not help, open <em>Settings → Apps → Advanced app settings → App execution aliases</em> and switch on <code>julia.exe</code> and <code>juliaup.exe</code>. If the Microsoft Store is blocked on your laptop, use the <a href="https://install.julialang.org/Julia-x64.msi">MSI installer</a> instead.</li>
+<li><strong>“An Application Control policy has blocked this file”, “Smart App Control has blocked part of this app” or error <code>0xc0e90002</code>.</strong> Windows Smart App Control blocks the package files that Julia compiles on your laptop. Switch it off under <em>Windows Security → App &amp; browser control → Smart App Control</em> and keep it off during the course: switched on again, it can block every package Julia compiles later. Then delete the folder <code>%USERPROFILE%\.julia\compiled\v1.13</code> and run <code>using Pkg; Pkg.precompile()</code> in the course environment. On a laptop managed by your university or employer, only the IT department can allow these files; until then, start Julia with <code>julia --pkgimages=no --project=applied-optimization</code> in the <a href="../tutorials/tutorial-02-01-variables.html">first tutorial</a> and add <code>"--pkgimages=no"</code> right after the <code>--project</code> argument of its <code>installkernel</code> call. Packages then load more slowly, but they load.</li>
+<li><strong>Precompiling IJulia fails with an <code>EPIPE</code> error.</strong> Run <code>using IJulia</code> again: the error is known on Windows and usually disappears on the second attempt.</li>
+<li><strong>The Git panel in Zed reports “dubious ownership” or cannot initialize a repository.</strong> Zed needs Git itself: install <a href="https://git-scm.com/downloads/win">Git for Windows</a> and restart Zed.</li>
+<li><strong>Your laptop has a Snapdragon (ARM) processor.</strong> Julia runs there in x64 emulation: the course setup should work the same way, only slower.</li>
+<li><strong>Your course folder lies in OneDrive.</strong> Synced folders can block Julia from replacing files. Use a plain folder such as <code>C:\Users\&lt;name&gt;\ao</code>.</li>
+</ul>
+<p>Still stuck? Bring your laptop to the tutorial and we’ll fix it together.</p>
 
 
 </section>

@@ -47,6 +47,11 @@ plotly() # This will create interactive plots later on
 # > `using Pkg` first and then
 # > `Pkg.add(["JuMP", "HiGHS", "CSV", "DataFrames", "Plots", "StatsPlots"])`.
 #
+# > **Note**
+# >
+# > Zed cannot show interactive plots yet. If you work in Zed, remove the
+# > `plotly()` line: your plots then appear as images.
+#
 # ------------------------------------------------------------------------
 #
 # ## Load the data

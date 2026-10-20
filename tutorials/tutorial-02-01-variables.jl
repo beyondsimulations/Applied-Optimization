@@ -58,11 +58,17 @@
 #
 #     ``` julia
 #     using IJulia
-#     IJulia.installkernel("Applied Optimization", "--project=" * abspath("applied-optimization"))
+#     zed_plots = raw"""
+#     push!(Base.package_callbacks, pkg -> pkg.name == "Plots" &&
+#         @eval Base.showable(::MIME"text/html", ::$(Base.loaded_modules[pkg]).Plot) = false)
+#     """
+#     IJulia.installkernel("Applied Optimization", "--project=" * abspath("applied-optimization"), "-e", zed_plots)
 #     ```
 #
 #     This creates a Jupyter kernel that uses the course environment: it
-#     is how Zed runs Julia code.
+#     is how Zed runs Julia code. The `zed_plots` part makes your plots
+#     visible in Zed: Zed cannot show the web version of a plot yet, so
+#     the kernel sends plots as images instead.
 #
 # 6.  Type `exit()` or press Ctrl+D to exit the Julia REPL.
 #
@@ -76,9 +82,12 @@
 #
 # 9.  Put the cursor in a cell and press `Ctrl+Shift+Enter` (also on
 #     macOS), or run **repl: run** from the command palette. This runs the
-#     cell and jumps to the next one. The first time, pick the kernel that
-#     starts with **applied-optimization** — that is the kernel you just
-#     installed. Output appears right below the code.
+#     cell and jumps to the next one. Output appears right below the code.
+#     Zed picks the kernel by itself: the kernel selector at the top right
+#     of the editor should show the kernel that starts with
+#     **applied-optimization** — that is the kernel you just installed. If
+#     it shows another one (such as `julia-1.13`), click it and choose
+#     yours.
 #
 # > **Warning**
 # >
@@ -93,8 +102,9 @@
 # > create (or later reuse) an environment in a subfolder called
 # > `applied-optimization`, keeping all course packages organized in one
 # > place and avoiding conflicts with other projects. The kernel remembers
-# > the exact Julia version it was installed with: after updating Julia
-# > (for example with `juliaup update`), run steps 3 and 5 again.
+# > the exact Julia version it was installed with: close Zed before you
+# > update Julia (for example with `juliaup update`), then run steps 3 and
+# > 5 again.
 #
 # > **Fallback: VS Code**
 # >
