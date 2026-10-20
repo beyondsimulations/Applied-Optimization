@@ -566,8 +566,11 @@ html.print-pdf .reveal .r-stack table {
 // On phones, columns that hold text or a box stack: beside a figure, a box
 // broke words mid-way and its formulas ran out of it. The text may sit in a
 // slide fragment (.fragment, .incremental); a figure's own <p> doesn't count,
-// so pairs of figures stay side by side. (No :has() inside the selector list:
-// :has() can't nest, and :is() would silently drop that part.)
+// so pairs of figures stay side by side, and so do two columns that each
+// hold just one image without caption (a <p> around the <img>). DataFrames.jl
+// tables already scroll in their .data-frame wrapper and are left alone.
+// (No :has() inside a :has(): it can't nest, and :is() would silently drop
+// that part; the image pairs are two :has() side by side in a :not().)
 // Quarto writes each column's width inline, hence !important; a flex item
 // keeps its children's margins, so the second column's top margin would
 // double the gap between two stacked boxes.
@@ -575,7 +578,7 @@ html.print-pdf .reveal .r-stack table {
 // Also on phones, wide tables and formulas scroll on their own instead of
 // widening the page (a third of the Grundlagen-OR pages did). Tables keep
 // their content's width and still wrap text; formulas scroll in their
-// paragraph (MathML cannot break a line; not in a list item, whose overflow
+// paragraph (MathML or MathJax; neither breaks a line; not in a list item, whose overflow
 // would clip its bullet). Outside boxes both may reach 1.25rem into the right
 // page margin (26px on phones), as they did before, so one that is a few
 // pixels too wide is not cut off (inside a callout they would cover its
@@ -596,7 +599,7 @@ html.print-pdf .reveal .r-stack table {
         min-width: 0;
     }
     @media (max-width: 575.98px) {
-        .columns:has(> .column :is(p, ul, ol, table, .callout):not(figure *, .cell-output-display *)) {
+        .columns:has(> .column :is(p, ul, ol, table, .callout):not(figure *, .cell-output-display *)):not(:has(> .column:first-child > p:only-child > img:only-child):has(> .column:last-child > p:only-child > img:only-child)) {
             flex-direction: column;
             gap: 0;
             > .column {
@@ -606,24 +609,24 @@ html.print-pdf .reveal .r-stack table {
                 margin-top: 0;
             }
         }
-        table {
+        table:not(.data-frame *) {
             display: block;
             width: fit-content;
             max-width: 100%;
             overflow-x: auto;
         }
-        p:has(> math) {
+        p:has(> math, > span.math.display) {
             overflow-x: auto;
             overflow-y: hidden;
         }
-        table:not(.callout *) {
+        table:not(.callout *, .data-frame *) {
             max-width: calc(100% + 1.25rem);
         }
-        p:has(> math):not(.callout *) {
+        p:has(> math, > span.math.display):not(.callout *) {
             margin-right: -1.25rem;
             padding-right: 1.25rem;
         }
-        :is(table, p:has(> math)) {
+        :is(table:not(.data-frame *), p:has(> math, > span.math.display)) {
             --bs-table-bg: transparent; // cell backgrounds would hide the shadow
             background:
                 linear-gradient(to right, var(--bs-body-bg) 40%, transparent) left center / 1.5rem 100% no-repeat local,
@@ -671,15 +674,20 @@ caption,
     font-size: 0.9em;
 }
 
-// Figure captions: Quarto's caption rule gives them the same sand (about
-// 1.4:1 on the light ground, e.g. under two graphs side by side). Body colour;
-// their size stays Quarto's.
-.panel-caption,
-.figure-caption,
-.subfigure-caption,
-.table-caption,
-figcaption {
+// Figure captions on pages: Quarto's caption rule gives them the same sand
+// (about 1.4:1 on the light ground, e.g. under two graphs side by side). Body
+// colour; their size stays Quarto's. Slides keep reveal's caption grey.
+body:not(.reveal-viewport) :is(.panel-caption, .figure-caption, .subfigure-caption, .table-caption, figcaption) {
     color: var(--bs-body-color);
+}
+
+// Gamekit and the course chat button share the bottom right corner: the chat
+// button makes way on a game's own phone page and while a game's buttons sit
+// in that corner (Gamekit >= 0.5.2 sets gamekit-at-bottom on <html>). It
+// disappears without a transition, the same both ways and without motion.
+body:has(.gamekit-solo) .cw-fab,
+html.gamekit-at-bottom .cw-fab {
+    display: none !important;
 }
 
 // Document blockquotes: Quarto colours blockquote text with the secondary brand
@@ -768,14 +776,4 @@ body.quarto-light {
   --gk-neutral: #{$lec-emphasis};
   --gk-muted: #6c757d;
   --gk-bad: #b3261e;
-}
-
-// The game's own phone page: the chat button would cover the button bar at the bottom.
-body:has(.gamekit-solo) .cw-fab { display: none !important; }
-// A game's button bar in the bottom right corner of the screen (Gamekit sets the class): same reason.
-html.gamekit-at-bottom .cw-fab {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.25s, visibility 0.25s;
 }
