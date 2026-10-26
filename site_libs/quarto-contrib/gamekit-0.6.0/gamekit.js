@@ -5,6 +5,7 @@
   const C = globalThis.GamekitCore;
   const T = C.setLang(document.documentElement.lang); // the page's language, English otherwise
   const BASE = document.currentScript ? document.currentScript.src : location.href;
+  const FILLS = ["accent", "neutral", "good", "bad"];
   const TOKENS = ["accent", "neutral", "text", "muted", "bg", "good", "bad"];
   const THINK_MS = 1000;
   const MORPH_MS = 2000;
@@ -74,6 +75,8 @@
       probe.fillStyle = cs.getPropertyValue("--gk-" + t).trim() || "#000";
       rgb[t] = C.parseColor(probe.fillStyle) || [0, 0, 0, 1];
     }
+    // games draw labels in the page color on fills: keep every fill readable against it
+    for (const t of FILLS) rgb[t] = C.fillOnBg(rgb[t], rgb.bg);
     return rgb;
   }
   // A score line: small label, large value (e.g. "Optimal" / "225,460 €").
@@ -576,6 +579,11 @@
   // ---------- startup ----------
   function start() {
     document.querySelectorAll(".gamekit[data-game]").forEach(mount);
+    // Quarto's light/dark toggle swaps the class on body: re-read the tokens and repaint
+    new MutationObserver(() => {
+      views.forEach((g) => { g.colors = readColors(g.root); g.css = cssOf(g.colors); });
+      redrawAll();
+    }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
     markBottomSoon();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);

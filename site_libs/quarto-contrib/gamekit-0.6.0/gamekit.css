@@ -5,10 +5,19 @@
   --gk-accent: var(--bs-link-color, var(--r-link-color, #9e2b2b));
   --gk-neutral: var(--bs-primary, var(--r-main-color, #537e8f));
   --gk-text: var(--bs-body-color, var(--r-main-color, #363d45));
-  --gk-muted: var(--bs-secondary-color, #6c757d);
+  /* muted: a mix of the kit's own text and ground, so it follows both modes and
+     never borrows a brand accent (--bs-secondary-color). 75% text is 5.15:1 for
+     #363D45 on #FFFDFC and 7.82:1 for #E0DAD2 on #131415. */
+  --gk-muted: color-mix(in srgb, var(--gk-text) 75%, var(--gk-bg));
   --gk-bg: var(--bs-body-bg, var(--r-background-color, #fffdfc));
   --gk-good: var(--bs-success, #2e7d5b);
   --gk-bad: var(--bs-danger, #b3261e);
+}
+/* Dark page (#131415): the light good/bad are 3.69:1 and 2.82:1 there. These
+   reach 7.14:1 (#4fb386) and 6.36:1 (#e8766d) as text, same hues, softer. */
+:where(body.quarto-dark .gamekit) {
+  --gk-good: #4fb386;
+  --gk-bad: #e8766d;
 }
 
 .gamekit {

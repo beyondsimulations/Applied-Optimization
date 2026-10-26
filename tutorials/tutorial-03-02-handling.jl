@@ -96,17 +96,20 @@ end
 # These files help ensure reproducibility and should be version controlled
 # with your project. Remember the first tutorial? There, we created the
 # course environment in the folder `applied-optimization` inside your
-# course folder. To activate it, run:
+# course folder, and your tutorial files live in that folder too. To
+# activate it, run:
 
 # %%
-Pkg.activate("applied-optimization")
+Pkg.activate(".")
 
 # %% [markdown]
-# Here, `"applied-optimization"` is the path to the folder with the
-# course’s `Project.toml`, relative to the folder Julia runs in: your
-# course folder. Whenever you start Julia without this environment,
-# activate it before installing new packages. This ensures that the
-# packages are **installed in the environment** and not globally.
+# Here, `"."` stands for the folder Julia runs in. In Zed, that is the
+# folder of your tutorial file, so `"."` points to the course’s
+# `Project.toml`. In a terminal opened in your course folder, use
+# `Pkg.activate("applied-optimization")` instead. Whenever you start Julia
+# without this environment, activate it before installing new packages.
+# This ensures that the packages are **installed in the environment** and
+# not globally.
 #
 # > **Caution**
 # >
@@ -120,12 +123,6 @@ Pkg.activate("applied-optimization")
 # > starts in this environment. Therefore, we don’t need to activate it
 # > most of the time: in Zed, `Pkg.add` installs packages into the course
 # > environment directly.
-#
-# > **Tip**
-# >
-# > Once created and while working in the folder with `Project.toml` and
-# > `Manifest.toml`, a simple `Pkg.activate(".")` is faster and enough to
-# > load the environment in the working folder!
 #
 # Afterwards, adding packages is straightforward using the
 # `Pkg.add("PackageName")` function. Replace `PackageName` with the actual

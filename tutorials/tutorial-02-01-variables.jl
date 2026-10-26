@@ -73,9 +73,12 @@
 # 6.  Type `exit()` or press Ctrl+D to exit the Julia REPL.
 #
 # 7.  Download this tutorial as a `.jl` file from the course website and
-#     save it in your course folder. You can do so by clicking on the
+#     save it in the `applied-optimization` folder that the steps above
+#     created inside your course folder. You can do so by clicking on the
 #     “Julia” link in the sidebar (under “Code Links”) on the tutorial
-#     page.
+#     page. Keep all tutorial files in that folder, together with the
+#     `data` folders some of them need later: Zed’s Julia extension then
+#     knows the course packages.
 #
 # 8.  Open the `.jl` file in Zed. The file is split into cells by `# %%`
 #     markers.
