@@ -46,7 +46,11 @@
 // after this file and replaces them in the dark bundle.
 $code-block-bg: $pi-light-code-surface;
 $code-bg: $pi-light-code-surface;
-$code-color: $pi-light-string;   // inline code, as Zed shows it in markdown
+// Inline code in the brand's slate teal (twoDark, darkened for the chip:
+// 4.61:1 on #FFEEE2); dark mode takes its twoLight pair (9.56:1 on #191B1D).
+// A rule below applies it, so a course's LOCAL `$lec-code-inline` still wins.
+$lec-code-inline: #4B7282 !default;
+$lec-code-inline-on-dark: #A7C7C6 !default;
 $pre-bg: $pi-light-code-surface;   // plain blocks and cell output: the same surface
 
 // ── Semantic colours ──────────────────────────────────────────────────────
@@ -725,6 +729,12 @@ html.gamekit-at-bottom .cw-fab {
 // alone loses to it. Doc only; slide blockquotes do not carry the class.
 blockquote.blockquote {
     color: var(--bs-body-color);
+}
+
+// Inline code, see $lec-code-inline. Both modes: the dark layer swaps the
+// variable.
+:not(pre) > code:not(.sourceCode) {
+    color: $lec-code-inline;
 }
 
 // Inline code in a heading takes the heading's colour. Quarto sets h3 to 90 %
