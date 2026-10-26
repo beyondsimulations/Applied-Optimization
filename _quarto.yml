@@ -25,7 +25,9 @@ website:
   bread-crumbs: true
   sidebar:
     style: floating
-    logo: images/course-logo.svg
+    logo:
+      light: images/course-logo.svg
+      dark: images/course-logo-dark.svg
     logo-alt: "Applied Optimization with Julia"
     collapse-level: 1
     search: true
@@ -172,11 +174,20 @@ website:
 format:
   html:
     theme:
-      - default
-      - styles.scss
-      - brand
+      light:
+        - default
+        - styles.scss
+        - brand
+      dark:
+        - default
+        - _dark.scss
+        - styles.scss
+        - brand
+    respect-user-color-scheme: true
     toc: true
-    highlight-style: github
+    syntax-highlighting:
+      light: _paper-and-ink-light.theme
+      dark: _paper-and-ink-dark.theme
     callout-appearance: simple
     code-copy: true
     code-link: true
@@ -202,6 +213,7 @@ format:
         </script>
 
   typst:
+    syntax-highlighting: _paper-and-ink-light.theme
     template-partials:
       - helpers/typst-show.typ
     logo:

@@ -1,0 +1,63 @@
+/*-- scss:defaults --*/
+
+/*  ─────────────────────────────────────────────────────────────────────────
+    DARK MODE: the dark layer of every lecture site.
+    Copied next to styles.scss as _dark.scss by scripts/sync-core-scss.py.
+    Edit Lecture-Foundations/brand/_dark.scss, not the copy.
+
+    Only a site's `theme: dark:` list names it (wire-dark-mode.py), so it
+    reaches the dark bundle alone. Quarto emits scss:defaults in reverse theme
+    order (brand, styles.scss, this file, default): the core's variables and
+    Paper & Ink's $pi-* exist here already, and a plain assignment beats the
+    brand's light values and every !default. Verified against a real render
+    on 2026-10-26 (docs/paper-and-ink-sites-design.md).
+    ───────────────────────────────────────────────────────────────────────── */
+
+// Page: Paper & Ink Dark's ground, text between its code and its prose
+$body-bg: $pi-dark-ground;
+$body-color: $pi-dark-text;
+$headings-color: $pi-dark-heading;
+$body-emphasis-color: $pi-dark-heading;
+$text-muted: $pi-dark-muted;
+$border-color: $pi-dark-border;
+$body-secondary-bg: $pi-dark-code-surface;
+$body-tertiary-bg: $pi-dark-code-surface;
+$link-color: $lec-highlight-on-dark;
+$primary: $lec-question-on-dark;
+
+// Code: Zed's dark active line; the left bar marks a block as code
+$code-block-bg: $pi-dark-code-surface;
+$code-bg: $pi-dark-code-surface;
+$code-color: $pi-dark-string;
+$code-block-border-left: $pi-dark-code-bar;
+$pre-bg: $pi-dark-code-surface;
+$pre-color: $pi-dark-text;   // plain blocks and cell output; the brand sets its light foreground
+
+// Text classes take the core's on-dark pairs
+$lec-task: $lec-task-on-dark;
+$lec-highlight: $lec-highlight-on-dark;
+$lec-question: $lec-question-on-dark;
+
+// ANSI output in Paper & Ink Dark's terminal colours
+$lec-ansi: (
+    red: ($pi-dark-ansi-red, $pi-dark-ansi-bright-red),
+    green: ($pi-dark-ansi-green, $pi-dark-ansi-bright-green),
+    yellow: ($pi-dark-ansi-yellow, $pi-dark-ansi-bright-yellow),
+    blue: ($pi-dark-ansi-blue, $pi-dark-ansi-bright-blue),
+    magenta: ($pi-dark-ansi-magenta, $pi-dark-ansi-bright-magenta),
+    cyan: ($pi-dark-ansi-cyan, $pi-dark-ansi-bright-cyan),
+);
+$lec-ansi-grey: $pi-dark-ansi-bright-black;
+$lec-ansi-on-colour: $pi-dark-ground;
+$lec-line-number: $pi-dark-line-number;
+
+// `.flow` headings in light stops, each 10:1 or more on the ground
+$lec-flow-gradient: linear-gradient(
+    to right,
+    #F2EADE 0%,     // Paper & Ink prose   15.5:1
+    #A7C7C6 28%,    // twoLight            10.2:1
+    #97CDCC 42%,    // Paper & Ink teal    10.5:1
+    #F6B265 54%,    // oneDark, the glint  10.1:1
+    #A7C7C6 68%,
+    #F2EADE 100%    // == 0%, for a seamless wrap
+);

@@ -149,7 +149,31 @@
     if (m) return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16), 1];
     m = /^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,\s/]+([\d.]+))?/i.exec(str);
     if (m) return [Number(m[1]), Number(m[2]), Number(m[3]), m[4] == null ? 1 : Number(m[4])];
+    // a canvas serializes color-mix() as color(srgb 0.35 0.36 0.37)
+    m = /^color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?\s*\)/i.exec(str);
+    if (m) return [Math.round(m[1] * 255), Math.round(m[2] * 255), Math.round(m[3] * 255), m[4] == null ? 1 : Number(m[4])];
     return null;
+  }
+
+  // WCAG relative luminance and contrast ratio of two [r, g, b] colors
+  function luminance(c) {
+    const [r, g, b] = c.slice(0, 3).map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+  function contrast(a, b) {
+    const x = luminance(a), y = luminance(b);
+    return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+  }
+  // A fill token moved away from the background (toward black on a light page,
+  // white on a dark one) in 4% steps until it reaches 4.5:1, so that text in the
+  // page color on a fill stays readable in every theme and mode. Alpha is kept.
+  function fillOnBg(c, bg) {
+    const end = luminance(bg) > 0.5 ? 0 : 255;
+    let out = c;
+    for (let i = 0; i < 25 && contrast(out, bg) < 4.5; i++) {
+      out = [...c.slice(0, 3).map((v, k) => v + (end - v) * 0.04 * (i + 1)), c[3]];
+    }
+    return out.map((v, k) => (k < 3 ? Math.round(v) : v));
   }
 
   // Percent distance from the optimum. With an optimum of 0 a percentage is
@@ -265,7 +289,7 @@
   const goalOf = (def, puzzle) => (typeof def.goal === "function" ? def.goal(puzzle) : def.goal);
 
   globalThis.GamekitCore = {
-    rng, pair, frame, resolve, assertUniqueKeys, parseColor, css, gap, thinkLine, seconds,
+    rng, pair, frame, resolve, assertUniqueKeys, parseColor, css, contrast, fillOnBg, gap, thinkLine, seconds,
     pixelSize, codeSpans, formatScore, ease, fillCentred, wrapText, setLang, joinList, subscript, fillRuns, goalOf,
   };
 })();

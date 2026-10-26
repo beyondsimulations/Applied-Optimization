@@ -34,6 +34,21 @@
 
 /*-- scss:defaults --*/
 
+// ── Paper & Ink ───────────────────────────────────────────────────────────
+// Code surfaces, inline code and the dark page come from paper-and-ink-theme/
+// build.py, copied next to styles.scss as _paper-and-ink.scss by
+// scripts/sync-core-scss.py. Code block colours come from the two synced
+// highlight themes (_paper-and-ink-*.theme, wired by wire-dark-mode.py).
+@import "paper-and-ink";
+
+// Plain assignments: the brand layer, which Quarto emits first, sets its own
+// codeline and inline colour; these win. The dark layer (_dark.scss) comes
+// after this file and replaces them in the dark bundle.
+$code-block-bg: $pi-light-code-surface;
+$code-bg: $pi-light-code-surface;
+$code-color: $pi-light-string;   // inline code, as Zed shows it in markdown
+$pre-bg: $pi-light-code-surface;   // plain blocks and cell output: the same surface
+
 // ── Semantic colours ──────────────────────────────────────────────────────
 // Override any of these in a lecture's styles.scss if its palette differs.
 // Contrast ratios are against the slide/page background #FFFDFC (`lighter`).
@@ -43,6 +58,36 @@ $lec-emphasis:  #537E8F !default;   // = twoDark.  .reveal strong / em     4.36:
 $lec-task:      #B25F00 !default;   // NEW.        .task                   4.57:1
 $lec-highlight: #9E2B2B !default;   // oxblood.    .highlight / .errors    7.31:1
 $lec-loud-bg:   #537E8F !default;   // = twoDark.  .loud-slide background
+$lec-question:  $brand-greyer !default;   // .question  7.84:1
+
+// `.flow` headings (rule and the story of these stops further down). A
+// variable, so the dark layer can swap the stops.
+$lec-flow-gradient: linear-gradient(
+    to right,
+    #363D45 0%,     // darker      10.84:1
+    #506061 14%,    // photo slate  6.50:1
+    #537E8F 28%,    // twoDark      4.36:1
+    #5D969B 42%,    // photo teal   3.29:1
+    #b87d33 54%,    // warm glint   3.44:1
+    #537E8F 68%,
+    #506061 84%,
+    #363D45 100%    // == 0%, for a seamless wrap
+) !default;
+
+// ANSI output (tracebacks, coloured logs): Paper & Ink's terminal palette, the
+// colours Zed's terminal shows. The notebook palette Quarto ships failed AA
+// on the light page (yellow 1.9:1, cyan 2.0:1). Each hue: (base, bright).
+$lec-ansi: (
+    red: ($pi-light-ansi-red, $pi-light-ansi-bright-red),
+    green: ($pi-light-ansi-green, $pi-light-ansi-bright-green),
+    yellow: ($pi-light-ansi-yellow, $pi-light-ansi-bright-yellow),
+    blue: ($pi-light-ansi-blue, $pi-light-ansi-bright-blue),
+    magenta: ($pi-light-ansi-magenta, $pi-light-ansi-bright-magenta),
+    cyan: ($pi-light-ansi-cyan, $pi-light-ansi-bright-cyan),
+) !default;
+$lec-ansi-grey: $pi-light-ansi-bright-black !default;   // Julia's de-emphasised grey
+$lec-ansi-on-colour: $pi-light-ground !default;          // text on an ANSI background
+$lec-line-number: $pi-light-line-number !default;        // code-line-numbers; Quarto ignores the theme's LineNumbers
 // $lec-highlight is oxblood, the single red accent — the same colour as the
 // logo mark and the links (set in _brand.yml). It replaced #B3403F so every
 // red on the page is one identical red against the otherwise-teal system.
@@ -58,14 +103,6 @@ $lec-highlight-on-dark: #EBADAD !default;   // = threeLight. 5.82:1
 // `.question` uses $brand-greyer (#3D5369, 7.84:1) and `.invert-font` /
 // `.title-slide.title` / `.exercise-slide` use $brand-lighter / -darker /
 // -codeline. All four tokens are universal, so they are referenced directly.
-
-// Code sits on `codeline` (#FFEEE2), not on the page, and three colours fail
-// there: GitHub's comment grey #6A737D (4.26:1), its keyword red #D73A49
-// (4.04:1) and inline code in twoDark (3.91:1). Each takes a darker shade of
-// its own hue. Contrast against #FFEEE2 / Study-Business-Basics' #F2EFE6.
-$lec-code-comment: #646C76 !default;   // 4.71:1 / 4.63:1
-$lec-code-keyword: #C53543 !default;   // 4.69:1 / 4.61:1
-$lec-code-inline:  #4B7282 !default;   // 4.61:1
 
 // Quarto's slide grey ($text-muted, body colour lightened 30 %: #7C8998) is
 // 3.51:1 on the page ground. Footer, slide number, slide blockquotes and
@@ -206,7 +243,7 @@ $presentation-title-slide-text-align: left;
     font-weight: bold;
 }
 .question {
-    color: $brand-greyer;
+    color: $lec-question;
     font-weight: bold;
 }
 .errors {
@@ -331,17 +368,7 @@ $presentation-title-slide-text-align: left;
     // First and last stops are identical and the animation advances exactly one
     // tile, so the loop is seamless. (The photo version was not: it jumped 0.8
     // of a tile on every wrap.)
-    background-image: linear-gradient(
-        to right,
-        #363D45 0%,     // darker      10.84:1
-        #506061 14%,    // photo slate  6.50:1
-        #537E8F 28%,    // twoDark      4.36:1
-        #5D969B 42%,    // photo teal   3.29:1
-        #b87d33 54%,    // warm glint   3.44:1
-        #537E8F 68%,
-        #506061 84%,
-        #363D45 100%    // == 0%, for a seamless wrap
-    );
+    background-image: $lec-flow-gradient;
     background-size: 1400px 100%;
     background-repeat: repeat;
     -webkit-text-fill-color: transparent;
@@ -700,19 +727,62 @@ blockquote.blockquote {
     color: var(--bs-body-color);
 }
 
-// Code colours on the codeline ground, see $lec-code-* above. Light mode only:
-// the dark theme has its own ground and colours. `code.sourceCode` outranks
-// the highlight stylesheet, which loads after this one.
-body.quarto-light {
-    code.sourceCode span:is(.an, .co, .cv, .do, .in, .re) {
-        color: $lec-code-comment;
-    }
-    code.sourceCode span:is(.at, .bu, .cf, .dt, .ex, .kw, .pp) {
-        color: $lec-code-keyword;
-    }
-    :not(pre) > code:not(.sourceCode) {
-        color: $lec-code-inline;
-    }
+// Inline code in a heading takes the heading's colour. Quarto sets h3 to 90 %
+// opacity, which pulled teal inline code in a heading under 4.5:1 on its chip
+// (Introduction-to-Python's cheatsheet and FAQ: 4.23:1).
+:is(h1, h2, h3, h4, h5, h6) > code:not(.sourceCode) {
+    color: inherit;
+}
+
+// ANSI output, see $lec-ansi. Scoped to .ansi-escaped-output so it outranks
+// Quarto's own notebook colours whatever order the layers come in.
+@each $hue, $pair in $lec-ansi {
+    .ansi-escaped-output .ansi-#{$hue}-fg { color: nth($pair, 1); }
+    .ansi-escaped-output :is(.ansi-bright-#{$hue}-fg, .ansi-#{$hue}-intense-#{$hue}) { color: nth($pair, 2); }
+    .ansi-escaped-output .ansi-#{$hue}-bg { background-color: nth($pair, 1); color: $lec-ansi-on-colour; }
+    .ansi-escaped-output .ansi-bright-#{$hue}-bg { background-color: nth($pair, 2); color: $lec-ansi-on-colour; }
+}
+.ansi-escaped-output .ansi-bright-black-fg {
+    color: $lec-ansi-grey;
+}
+// IPython writes 256-colour codes as inline styles. The one in use (colour
+// 28, a green; 3.9:1 on the dark ground) follows the palette's green.
+.ansi-escaped-output span[style*="rgb(0,135,0)"]:not([class*="-bg"]) {
+    color: nth(map-get($lec-ansi, green), 1) !important;
+}
+// A span with an ANSI background keeps readable text, also when IPython set
+// an inline colour on it (a green on the yellow error marker: 1.1:1).
+.ansi-escaped-output [class*="-bg"][style*="color"] {
+    color: $lec-ansi-on-colour !important;
+}
+
+// Line numbers (code-line-numbers) are link anchors; without this they take the link colour.
+pre.numberSource code > span > a:first-child::before {
+    color: $lec-line-number;
+}
+
+// Light/dark toggle: a moon in light mode and a sun in dark mode (the mode a
+// click switches to), from the Bootstrap Icons font every site loads, in the
+// text colour and the link colour on hover. Replaces Quarto's 16px switch,
+// which read as a faint grey pill next to the logo.
+.quarto-color-scheme-toggle .bi::before {
+    background-image: none !important;
+    width: auto !important;
+    height: auto !important;
+    font-family: "bootstrap-icons" !important;
+    font-size: 1.35rem;
+    line-height: 1;
+    vertical-align: -0.15em;
+    color: var(--bs-body-color);
+}
+.quarto-color-scheme-toggle:is(:hover, :focus-visible) .bi::before {
+    color: var(--bs-link-color);
+}
+body.quarto-light .quarto-color-scheme-toggle .bi::before {
+    content: "\f497";   // bi-moon
+}
+body.quarto-dark .quarto-color-scheme-toggle .bi::before {
+    content: "\f5a2";   // bi-sun
 }
 
 // Footer, slide number, blockquotes and asides on a light slide: everything
@@ -769,11 +839,8 @@ body.quarto-light {
     ───────────────────────────────────────────────────────────────────────── */
 
 // Gamekit: the optimum in oxblood, the student's plan in teal, on pages and slides alike.
-// Muted and bad are pinned too: on pages Bootstrap's secondary colour is the brand's
-// light orange and its danger colour (#DB6B6B) fails AA contrast for text.
+// Muted and bad come from Gamekit, which follows the page's light or dark mode.
 .gamekit {
   --gk-accent: #{$lec-highlight};
   --gk-neutral: #{$lec-emphasis};
-  --gk-muted: #6c757d;
-  --gk-bad: #b3261e;
 }
