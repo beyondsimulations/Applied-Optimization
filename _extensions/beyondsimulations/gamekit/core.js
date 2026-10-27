@@ -164,11 +164,13 @@
     const x = luminance(a), y = luminance(b);
     return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
   }
-  // A fill token moved away from the background (toward black on a light page,
-  // white on a dark one) in 4% steps until it reaches 4.5:1, so that text in the
-  // page color on a fill stays readable in every theme and mode. Alpha is kept.
+  // A fill token moved away from the background in 4% steps until it reaches
+  // 4.5:1, so that text in the page color on a fill stays readable in every
+  // theme and mode. Toward black above luminance 0.179 (where black contrasts
+  // more than white), toward white below. Alpha is kept but not measured: a
+  // translucent fill blends with the page and gets no real guarantee.
   function fillOnBg(c, bg) {
-    const end = luminance(bg) > 0.5 ? 0 : 255;
+    const end = luminance(bg) > 0.179 ? 0 : 255;
     let out = c;
     for (let i = 0; i < 25 && contrast(out, bg) < 4.5; i++) {
       out = [...c.slice(0, 3).map((v, k) => v + (end - v) * 0.04 * (i + 1)), c[3]];

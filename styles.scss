@@ -3,27 +3,29 @@
     Generated into each lecture by scripts/sync-core-scss.py. DO NOT EDIT the
     copy inside a lecture repo; edit this file and re-run the script.
 
-    Theme order in every lecture:
+    Theme order in every lecture (wired by scripts/wire-dark-mode.py):
 
         theme:
-          - default
-          - fonts.scss     self-hosted @font-face, no CDN
-          - _core.scss     this file
-          - styles.scss    lecture-local rules only
-          - brand          _brand.yml
+          light: [default, styles.scss, brand]
+          dark:  [default, _dark.scss, styles.scss, brand]
+
+    styles.scss is this file (it @imports _fonts.scss and _paper-and-ink.scss)
+    followed by the lecture's LOCAL fragment. _dark.scss is the dark layer and
+    sits in the dark list only.
 
     Two things about that order, both verified against a real render:
 
     1. Quarto emits `scss:defaults` in REVERSE theme order. So `brand` is
-       declared first (which is why `$brand-*` resolves at all), and a lecture's
-       `styles.scss` is declared BEFORE this file — meaning a plain assignment
-       there pre-empts any `!default` below. That is how Study-Business-Basics
-       remaps the palette.
+       declared first (which is why `$brand-*` resolves at all), and
+       `_dark.scss` after this file, so its plain assignments replace the light
+       values in the dark bundle. A plain assignment in a lecture's LOCAL
+       fragment pre-empts any `!default` below: that is how
+       Study-Business-Basics remaps the palette.
     2. `scss:rules` are emitted in FORWARD order, so a lecture's local rules
        come after these and win on a tie.
 
     ── Why the colours below are literal hex, not `$brand-*` ──────────────────
-    Only four palette tokens exist in ALL fifteen lectures: `codeline`,
+    Only four palette tokens exist in ALL sixteen lectures: `codeline`,
     `darker`, `greyer`, `lighter`. Study-Business-Basics has no `oneDark` /
     `twoDark` / `threeDark` at all — its palette is `sand` / `teal` /
     `dangerColor`, with different hex values. Referencing `$brand-twoDark` here
@@ -662,8 +664,8 @@ html.print-pdf .reveal .r-stack table {
             background:
                 linear-gradient(to right, var(--bs-body-bg) 40%, transparent) left center / 1.5rem 100% no-repeat local,
                 linear-gradient(to left, var(--bs-body-bg) 40%, transparent) right center / 1.5rem 100% no-repeat local,
-                radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.15), transparent) left 1px center / 0.45rem 100% no-repeat scroll,
-                radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.15), transparent) right 1px center / 0.45rem 100% no-repeat scroll;
+                radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--bs-body-color) 25%, transparent), transparent) left 1px center / 0.45rem 100% no-repeat scroll,
+                radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--bs-body-color) 25%, transparent), transparent) right 1px center / 0.45rem 100% no-repeat scroll;
         }
         :is(h1, h2, h3, h4) {
             -webkit-hyphens: auto;
@@ -737,11 +739,22 @@ blockquote.blockquote {
     color: $lec-code-inline;
 }
 
-// Inline code in a heading takes the heading's colour. Quarto sets h3 to 90 %
-// opacity, which pulled teal inline code in a heading under 4.5:1 on its chip
-// (Introduction-to-Python's cheatsheet and FAQ: 4.23:1).
-:is(h1, h2, h3, h4, h5, h6) > code:not(.sourceCode) {
+// Inline code in a heading, a footnote or a callout title takes the text's
+// colour. Quarto sets h3 and the footnote list to 90 % opacity and the callout
+// header to 75 %, which pulled teal inline code under 4.5:1 on its chip
+// (Introduction-to-Python's cheatsheet and FAQ: 4.23:1; Materiallogistik's
+// footnotes: 3.81:1; Grundlagen-OR's callout titles: 2.89:1).
+:is(h1, h2, h3, h4, h5, h6) > code:not(.sourceCode),
+.footnotes code:not(.sourceCode),
+.callout-header code:not(.sourceCode) {
     color: inherit;
+}
+// A link or a coloured text class in a callout title keeps full strength: at
+// the header's 75 % the link red fell to 4.23:1 (Study-Business-Basics' index
+// cards). `div.` ties with Quarto's `.callout.callout-style-simple >
+// div.callout-header { opacity: 75% }`, and this rule comes later in the bundle.
+div.callout-header:has(.callout-title-container :is(a, .highlight, .errors, .task, .question)) {
+    opacity: 1;
 }
 
 // ANSI output, see $lec-ansi. Scoped to .ansi-escaped-output so it outranks
@@ -749,11 +762,15 @@ blockquote.blockquote {
 @each $hue, $pair in $lec-ansi {
     .ansi-escaped-output .ansi-#{$hue}-fg { color: nth($pair, 1); }
     .ansi-escaped-output :is(.ansi-bright-#{$hue}-fg, .ansi-#{$hue}-intense-#{$hue}) { color: nth($pair, 2); }
-    .ansi-escaped-output .ansi-#{$hue}-bg { background-color: nth($pair, 1); color: $lec-ansi-on-colour; }
-    .ansi-escaped-output .ansi-bright-#{$hue}-bg { background-color: nth($pair, 2); color: $lec-ansi-on-colour; }
 }
 .ansi-escaped-output .ansi-bright-black-fg {
     color: $lec-ansi-grey;
+}
+// Backgrounds after every foreground, so a span with both classes takes the
+// on-colour text whatever its hues.
+@each $hue, $pair in $lec-ansi {
+    .ansi-escaped-output .ansi-#{$hue}-bg { background-color: nth($pair, 1); color: $lec-ansi-on-colour; }
+    .ansi-escaped-output .ansi-bright-#{$hue}-bg { background-color: nth($pair, 2); color: $lec-ansi-on-colour; }
 }
 // IPython writes 256-colour codes as inline styles. The one in use (colour
 // 28, a green; 3.9:1 on the dark ground) follows the palette's green.
@@ -790,9 +807,38 @@ pre.numberSource code > span > a:first-child::before {
 }
 body.quarto-light .quarto-color-scheme-toggle .bi::before {
     content: "\f497";   // bi-moon
+    content: "\f497" / "";   // no alt text: the link's title stays its name
 }
 body.quarto-dark .quarto-color-scheme-toggle .bi::before {
     content: "\f5a2";   // bi-sun
+    content: "\f5a2" / "";
+}
+
+// Plots on a dark page: the courses' plot helpers draw on a transparent
+// background in the brand's dark text, which vanishes on the dark ground. Every
+// image a code cell produces (also in a `layout` panel, which has no
+// .cell-output-display) sits on the light page colour as a card, as opaque
+// figures already do. A hand-made transparent diagram opts in with
+// `{.light-card}`. Later, maybe: a dark rendering per plot (Quarto's
+// `renderings: [light, dark]`).
+body.quarto-dark :is(div.cell img, img.light-card) {
+    background-color: $pi-light-ground;
+    border-radius: 6px;
+}
+
+// QR codes (transparent, dark modules: `assets/qr/`, `images/*-qr.svg`) turn
+// white on a dark page; scanners read them inverted. Keep them out of the card
+// above (a code cell, `.light-card`): white on it would vanish. Decks stay
+// light and keep the dark modules.
+body.quarto-dark img:is([src*="/qr/"], [src*="-qr."]) {
+    filter: brightness(0) invert(1);
+}
+
+// Search hits on a dark page sit on a dark fill ($mark-bg in _dark.scss), but
+// the browser paints <mark> text black (2.0:1 there). They take the text's own
+// colour: body text 7.6:1, links 5.6:1. Light mode keeps the black.
+body.quarto-dark mark {
+    color: inherit;
 }
 
 // Footer, slide number, blockquotes and asides on a light slide: everything

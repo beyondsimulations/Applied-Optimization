@@ -579,11 +579,15 @@
   // ---------- startup ----------
   function start() {
     document.querySelectorAll(".gamekit[data-game]").forEach(mount);
-    // Quarto's light/dark toggle swaps the class on body: re-read the tokens and repaint
-    new MutationObserver(() => {
+    // Quarto's light/dark toggle swaps the class on body: re-read the tokens and
+    // repaint, now and once more on the next frame, in case the newly enabled
+    // stylesheet applies a moment later (the canvas would stay in the old mode)
+    const repaint = () => {
       views.forEach((g) => { g.colors = readColors(g.root); g.css = cssOf(g.colors); });
       redrawAll();
-    }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    };
+    new MutationObserver(() => { repaint(); requestAnimationFrame(repaint); })
+      .observe(document.body, { attributes: true, attributeFilter: ["class"] });
     markBottomSoon();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
