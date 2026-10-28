@@ -71,7 +71,7 @@
 try
     Pkg.status()
     println("Pkg module imported successfully!")
-catch e
+catch
     @error "The Pkg module was not imported yet! Have you used the correct syntax?"
 end
 
@@ -142,7 +142,7 @@ Pkg.activate(".")
 try
     using DataFrames
     println("Package added successfully!")
-catch e
+catch
     @error "Package was not added yet! Have you used the correct syntax?"
 end
 

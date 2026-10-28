@@ -63,14 +63,28 @@
 #         @eval Base.showable(::MIME"text/html", ::$(Base.loaded_modules[pkg]).Plot) = false)
 #     """
 #     IJulia.installkernel("Applied Optimization", "--project=" * abspath("applied-optimization"), "-e", zed_plots)
+#     write(".JETLSConfig.toml", """
+#     [[diagnostic.patterns]]
+#     pattern = "(lowering|inference)/undef-global-var"
+#     match_by = "code"
+#     match_type = "regex"
+#     severity = "off"
+#     path = "**/tutorial-*.jl"
+#     """)
 #     ```
 #
 #     This creates a Jupyter kernel that uses the course environment: it
 #     is how Zed runs Julia code. The `zed_plots` part makes your plots
 #     visible in Zed: Zed cannot show the web version of a plot yet, so
-#     the kernel sends plots as images instead.
+#     the kernel sends plots as images instead. The `write` line saves a
+#     settings file for Zed’s Julia extension in your course folder.
+#     Without it, the extension underlines the test cells of every
+#     tutorial with “… is not defined”, because they check variables that
+#     you only create when you solve the exercise.
 #
-# 6.  Type `exit()` or press Ctrl+D to exit the Julia REPL.
+# 6.  Type `exit()` or press Ctrl+D to exit the Julia REPL. If Zed was
+#     open during these steps, quit it completely (macOS: `Cmd+Q`) and
+#     start it again: Zed only reads its kernels when it starts.
 #
 # 7.  Download this tutorial as a `.jl` file from the course website and
 #     save it in the `applied-optimization` folder that the steps above
@@ -80,8 +94,11 @@
 #     `data` folders some of them need later: Zed’s Julia extension then
 #     knows the course packages.
 #
-# 8.  Open the `.jl` file in Zed. The file is split into cells by `# %%`
-#     markers.
+# 8.  In Zed, open your course folder (the one that contains
+#     `applied-optimization`, not `applied-optimization` itself) and open
+#     the `.jl` file from there: the settings file from step 5 only works
+#     while the course folder is open. The file is split into cells by
+#     `# %%` markers.
 #
 # 9.  Put the cursor in a cell and press `Ctrl+Shift+Enter` (also on
 #     macOS), or run **repl: run** from the command palette. This runs the

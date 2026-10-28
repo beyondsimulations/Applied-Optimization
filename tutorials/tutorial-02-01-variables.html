@@ -83,9 +83,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-c83e01c5de7e11edcf7e0477bd36081a.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-fa76a3e270d311939917e311adbf59f0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-2ab167a658de57491c9bed94ea203576.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-fa76a3e270d311939917e311adbf59f0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4754f9005c0c25fdda22fa6567943b9e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-9f0fe4beab8cdd0c6ff754b9fb15e27f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-4754f9005c0c25fdda22fa6567943b9e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -828,11 +828,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">push!(Base.package_callbacks, pkg -&gt; pkg.name == "Plots" &amp;&amp;</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">    @eval Base.showable(::MIME"text/html", ::$(Base.loaded_modules[pkg]).Plot) = false)</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>IJulia.<span class="fu">installkernel</span>(<span class="st">"Applied Optimization"</span>, <span class="st">"--project="</span> <span class="op">*</span> <span class="fu">abspath</span>(<span class="st">"applied-optimization"</span>), <span class="st">"-e"</span>, zed_plots)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This creates a Jupyter kernel that uses the course environment: it is how Zed runs Julia code. The <code>zed_plots</code> part makes your plots visible in Zed: Zed cannot show the web version of a plot yet, so the kernel sends plots as images instead.</p></li>
-<li><p>Type <code>exit()</code> or press Ctrl+D to exit the Julia REPL.</p></li>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>IJulia.<span class="fu">installkernel</span>(<span class="st">"Applied Optimization"</span>, <span class="st">"--project="</span> <span class="op">*</span> <span class="fu">abspath</span>(<span class="st">"applied-optimization"</span>), <span class="st">"-e"</span>, zed_plots)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">".JETLSConfig.toml"</span>, <span class="st">"""</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">[[diagnostic.patterns]]</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">pattern = "(lowering|inference)/undef-global-var"</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="st">match_by = "code"</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="st">match_type = "regex"</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="st">severity = "off"</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="st">path = "**/tutorial-*.jl"</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This creates a Jupyter kernel that uses the course environment: it is how Zed runs Julia code. The <code>zed_plots</code> part makes your plots visible in Zed: Zed cannot show the web version of a plot yet, so the kernel sends plots as images instead. The <code>write</code> line saves a settings file for Zed’s Julia extension in your course folder. Without it, the extension underlines the test cells of every tutorial with “… is not defined”, because they check variables that you only create when you solve the exercise.</p></li>
+<li><p>Type <code>exit()</code> or press Ctrl+D to exit the Julia REPL. If Zed was open during these steps, quit it completely (macOS: <code>Cmd+Q</code>) and start it again: Zed only reads its kernels when it starts.</p></li>
 <li><p>Download this tutorial as a <code>.jl</code> file from the course website and save it in the <code>applied-optimization</code> folder that the steps above created inside your course folder. You can do so by clicking on the “Julia” link in the sidebar (under “Code Links”) on the tutorial page. Keep all tutorial files in that folder, together with the <code>data</code> folders some of them need later: Zed’s Julia extension then knows the course packages.</p></li>
-<li><p>Open the <code>.jl</code> file in Zed. The file is split into cells by <code># %%</code> markers.</p></li>
+<li><p>In Zed, open your course folder (the one that contains <code>applied-optimization</code>, not <code>applied-optimization</code> itself) and open the <code>.jl</code> file from there: the settings file from step 5 only works while the course folder is open. The file is split into cells by <code># %%</code> markers.</p></li>
 <li><p>Put the cursor in a cell and press <code>Ctrl+Shift+Enter</code> (also on macOS), or run <strong>repl: run</strong> from the command palette. This runs the cell and jumps to the next one. Output appears right below the code. Zed picks the kernel by itself: the kernel selector at the top right of the editor should show the kernel that starts with <strong>applied-optimization</strong> — that is the kernel you just installed. If it shows another one (such as <code>julia-1.13</code>), click it and choose yours.</p></li>
 </ol>
 <div class="callout callout-style-simple callout-warning">
