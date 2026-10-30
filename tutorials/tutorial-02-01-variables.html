@@ -817,8 +817,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>First, install the <strong>Julia</strong> extension for syntax support: open the command palette (<code>Ctrl+Shift+P</code>, macOS <code>Cmd+Shift+P</code>), choose <strong>zed: extensions</strong>, and search for “Julia”.</p></li>
 <li><p>Create (or pick) the folder where you want to save all the files for this course.</p></li>
 <li><p>Open a terminal in that folder and run:</p>
-<pre><code>julia --project=applied-optimization</code></pre>
-<p>This starts Julia with the course project environment.</p></li>
+<pre><code>julia --project=.</code></pre>
+<p>The <code>.</code> means ‘this folder’: Julia uses your course folder as the environment.</p></li>
 <li><p>In the Julia REPL that opens, run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"IJulia"</span>)  <span class="co"># Add IJulia to the environment</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
@@ -828,7 +828,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">push!(Base.package_callbacks, pkg -&gt; pkg.name == "Plots" &amp;&amp;</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">    @eval Base.showable(::MIME"text/html", ::$(Base.loaded_modules[pkg]).Plot) = false)</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>IJulia.<span class="fu">installkernel</span>(<span class="st">"Applied Optimization"</span>, <span class="st">"--project="</span> <span class="op">*</span> <span class="fu">abspath</span>(<span class="st">"applied-optimization"</span>), <span class="st">"-e"</span>, zed_plots)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>IJulia.<span class="fu">installkernel</span>(<span class="st">"Applied Optimization"</span>, <span class="st">"--project="</span> <span class="op">*</span> <span class="fu">abspath</span>(<span class="st">"."</span>), <span class="st">"-e"</span>, zed_plots)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">".JETLSConfig.toml"</span>, <span class="st">"""</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">[[diagnostic.patterns]]</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">pattern = "(lowering|inference)/undef-global-var"</span></span>
@@ -839,8 +839,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This creates a Jupyter kernel that uses the course environment: it is how Zed runs Julia code. The <code>zed_plots</code> part makes your plots visible in Zed: Zed cannot show the web version of a plot yet, so the kernel sends plots as images instead. The <code>write</code> line saves a settings file for Zed’s Julia extension in your course folder. Without it, the extension underlines the test cells of every tutorial with “… is not defined”, because they check variables that you only create when you solve the exercise.</p></li>
 <li><p>Type <code>exit()</code> or press Ctrl+D to exit the Julia REPL. If Zed was open during these steps, quit it completely (macOS: <code>Cmd+Q</code>) and start it again: Zed only reads its kernels when it starts.</p></li>
-<li><p>Download this tutorial as a <code>.jl</code> file from the course website and save it in the <code>applied-optimization</code> folder that the steps above created inside your course folder. You can do so by clicking on the “Julia” link in the sidebar (under “Code Links”) on the tutorial page. Keep all tutorial files in that folder, together with the <code>data</code> folders some of them need later: Zed’s Julia extension then knows the course packages.</p></li>
-<li><p>In Zed, open your course folder (the one that contains <code>applied-optimization</code>, not <code>applied-optimization</code> itself) and open the <code>.jl</code> file from there: the settings file from step 5 only works while the course folder is open. The file is split into cells by <code># %%</code> markers.</p></li>
+<li><p>Download this tutorial as a <code>.jl</code> file from the course website and save it in your course folder. You can do so by clicking on the “Julia” link in the sidebar (under “Code Links”) on the tutorial page. Keep all tutorial files there, together with the <code>data</code> folders some of them need later: Zed’s Julia extension then knows the course packages.</p></li>
+<li><p>In Zed, open your course folder and open the <code>.jl</code> file from there: the settings file from step 5 only works while the course folder is open. The file is split into cells by <code># %%</code> markers.</p></li>
 <li><p>Put the cursor in a cell and press <code>Ctrl+Shift+Enter</code> (also on macOS), or run <strong>repl: run</strong> from the command palette. This runs the cell and jumps to the next one. Output appears right below the code. Zed picks the kernel by itself: the kernel selector at the top right of the editor should show the kernel that starts with <strong>applied-optimization</strong> — that is the kernel you just installed. If it shows another one (such as <code>julia-1.13</code>), click it and choose yours.</p></li>
 </ol>
 <div class="callout callout-style-simple callout-warning">
@@ -859,7 +859,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>These steps ensure you’re working in a clean Julia environment for the course. The <code>--project=applied-optimization</code> flag tells Julia to create (or later reuse) an environment in a subfolder called <code>applied-optimization</code>, keeping all course packages organized in one place and avoiding conflicts with other projects. The kernel remembers the exact Julia version it was installed with: close Zed before you update Julia (for example with <code>juliaup update</code>), then run steps 3 and 5 again.</p>
+<p>These steps ensure you’re working in a clean Julia environment for the course. The <code>--project=.</code> flag tells Julia to use your course folder itself as the environment: the course packages live there, in the files <code>Project.toml</code> and <code>Manifest.toml</code>, and stay separate from your other projects. The kernel remembers the exact Julia version it was installed with: close Zed before you update Julia (for example with <code>juliaup update</code>), then run steps 3 and 5 again.</p>
 </div>
 </div>
 </div>

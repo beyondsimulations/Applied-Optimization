@@ -94,19 +94,16 @@ end
 #     project.
 #
 # These files help ensure reproducibility and should be version controlled
-# with your project. Remember the first tutorial? There, we created the
-# course environment in the folder `applied-optimization` inside your
-# course folder, and your tutorial files live in that folder too. To
-# activate it, run:
+# with your project. Remember the first tutorial? There, we set up the
+# course environment in your course folder, and your tutorial files live
+# there too. To activate it, run:
 
 # %%
 Pkg.activate(".")
 
 # %% [markdown]
-# Here, `"."` stands for the folder Julia runs in. In Zed, that is the
-# folder of your tutorial file, so `"."` points to the course’s
-# `Project.toml`. In a terminal opened in your course folder, use
-# `Pkg.activate("applied-optimization")` instead. Whenever you start Julia
+# Here, `"."` stands for the folder Julia runs in, so it points to the
+# course’s `Project.toml` in your course folder. Whenever you start Julia
 # without this environment, activate it before installing new packages.
 # This ensures that the packages are **installed in the environment** and
 # not globally.

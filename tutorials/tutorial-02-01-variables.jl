@@ -43,9 +43,10 @@
 #
 # 3.  Open a terminal in that folder and run:
 #
-#         julia --project=applied-optimization
+#         julia --project=.
 #
-#     This starts Julia with the course project environment.
+#     The `.` means ‘this folder’: Julia uses your course folder as the
+#     environment.
 #
 # 4.  In the Julia REPL that opens, run:
 #
@@ -62,7 +63,7 @@
 #     push!(Base.package_callbacks, pkg -> pkg.name == "Plots" &&
 #         @eval Base.showable(::MIME"text/html", ::$(Base.loaded_modules[pkg]).Plot) = false)
 #     """
-#     IJulia.installkernel("Applied Optimization", "--project=" * abspath("applied-optimization"), "-e", zed_plots)
+#     IJulia.installkernel("Applied Optimization", "--project=" * abspath("."), "-e", zed_plots)
 #     write(".JETLSConfig.toml", """
 #     [[diagnostic.patterns]]
 #     pattern = "(lowering|inference)/undef-global-var"
@@ -87,18 +88,15 @@
 #     start it again: Zed only reads its kernels when it starts.
 #
 # 7.  Download this tutorial as a `.jl` file from the course website and
-#     save it in the `applied-optimization` folder that the steps above
-#     created inside your course folder. You can do so by clicking on the
+#     save it in your course folder. You can do so by clicking on the
 #     “Julia” link in the sidebar (under “Code Links”) on the tutorial
-#     page. Keep all tutorial files in that folder, together with the
-#     `data` folders some of them need later: Zed’s Julia extension then
-#     knows the course packages.
+#     page. Keep all tutorial files there, together with the `data`
+#     folders some of them need later: Zed’s Julia extension then knows
+#     the course packages.
 #
-# 8.  In Zed, open your course folder (the one that contains
-#     `applied-optimization`, not `applied-optimization` itself) and open
-#     the `.jl` file from there: the settings file from step 5 only works
-#     while the course folder is open. The file is split into cells by
-#     `# %%` markers.
+# 8.  In Zed, open your course folder and open the `.jl` file from there:
+#     the settings file from step 5 only works while the course folder is
+#     open. The file is split into cells by `# %%` markers.
 #
 # 9.  Put the cursor in a cell and press `Ctrl+Shift+Enter` (also on
 #     macOS), or run **repl: run** from the command palette. This runs the
@@ -118,13 +116,12 @@
 # > **Note**
 # >
 # > These steps ensure you’re working in a clean Julia environment for the
-# > course. The `--project=applied-optimization` flag tells Julia to
-# > create (or later reuse) an environment in a subfolder called
-# > `applied-optimization`, keeping all course packages organized in one
-# > place and avoiding conflicts with other projects. The kernel remembers
-# > the exact Julia version it was installed with: close Zed before you
-# > update Julia (for example with `juliaup update`), then run steps 3 and
-# > 5 again.
+# > course. The `--project=.` flag tells Julia to use your course folder
+# > itself as the environment: the course packages live there, in the
+# > files `Project.toml` and `Manifest.toml`, and stay separate from your
+# > other projects. The kernel remembers the exact Julia version it was
+# > installed with: close Zed before you update Julia (for example with
+# > `juliaup update`), then run steps 3 and 5 again.
 #
 # > **Fallback: VS Code**
 # >
