@@ -22,6 +22,23 @@
 #
 # # Introduction
 #
+# > **Optional: A Zed Theme for the Tutorials**
+# >
+# > In these tutorial files, the comments are the instructions, yet most
+# > Zed themes grey them out. The theme Paper & Ink does the opposite: it
+# > gives the comments the strongest contrast and the code calmer colors.
+# > Run the next cell once to install it. Then quit Zed completely (macOS:
+# > `Cmd+Q`), start it again, open the command palette (`Ctrl+Shift+P`,
+# > macOS `Cmd+Shift+P`), run **theme selector: toggle** and choose
+# > **Paper & Ink Light** or **Paper & Ink Dark**.
+
+# %%
+using Downloads
+themes = Sys.iswindows() ? joinpath(ENV["APPDATA"], "Zed", "themes") : expanduser("~/.config/zed/themes")
+mkpath(themes)
+Downloads.download("https://raw.githubusercontent.com/beyondsimulations/paper-and-ink-theme/main/themes/paper-and-ink.json", joinpath(themes, "paper-and-ink.json"))
+
+# %% [markdown]
 # We are consulting for FitGear, a rapidly growing e-commerce company
 # specializing in fitness equipment and athletic wear. FitGear is facing a
 # challenge: customer complaints about split orders have increased by 40%
