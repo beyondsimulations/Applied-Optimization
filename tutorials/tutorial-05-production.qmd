@@ -21,6 +21,19 @@ code-links:
 
 After this tutorial, you will be able to implement the Capacitated Lot-Sizing Problem (CLSP) from the lecture in JuMP, work with periods that are stored as strings, and diagnose a model that looks fine at first glance but ignores part of the demand.
 
+:::{.callout-tip}
+## Optional: A Zed Theme for the Tutorials
+In these tutorial files, the comments are the instructions, yet most Zed themes grey them out. The theme Paper & Ink does the opposite: it gives the comments the strongest contrast and the code calmer colors. Run the next cell once to install it. Then quit Zed completely (macOS: `Cmd+Q`), start it again, open the command palette (`Ctrl+Shift+P`, macOS `Cmd+Shift+P`), run **theme selector: toggle** and choose **Paper & Ink Light** or **Paper & Ink Dark**.
+:::
+
+```{julia}
+#| eval: false
+using Downloads
+themes = Sys.iswindows() ? joinpath(ENV["APPDATA"], "Zed", "themes") : expanduser("~/.config/zed/themes")
+mkpath(themes)
+Downloads.download("https://raw.githubusercontent.com/beyondsimulations/paper-and-ink-theme/main/themes/paper-and-ink.json", joinpath(themes, "paper-and-ink.json"))
+```
+
 # 1. Modelling the CLSP
 
 ## Load the necessary packages and data
