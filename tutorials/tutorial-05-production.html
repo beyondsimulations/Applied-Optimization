@@ -801,18 +801,37 @@ window.Quarto = {
 
 
 <p>After this tutorial, you will be able to implement the Capacitated Lot-Sizing Problem (CLSP) from the lecture in JuMP, work with periods that are stored as strings, and diagnose a model that looks fine at first glance but ignores part of the demand.</p>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Optional: A Zed Theme for the Tutorials
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In these tutorial files, the comments are the instructions, yet most Zed themes grey them out. The theme Paper &amp; Ink does the opposite: it gives the comments the strongest contrast and the code calmer colors. Run the next cell once to install it. Then quit Zed completely (macOS: <code>Cmd+Q</code>), start it again, open the command palette (<code>Ctrl+Shift+P</code>, macOS <code>Cmd+Shift+P</code>), run <strong>theme selector: toggle</strong> and choose <strong>Paper &amp; Ink Light</strong> or <strong>Paper &amp; Ink Dark</strong>.</p>
+</div>
+</div>
+<div id="2" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Downloads</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>themes <span class="op">=</span> <span class="bu">Sys</span>.<span class="fu">iswindows</span>() ? <span class="fu">joinpath</span>(<span class="cn">ENV</span>[<span class="st">"APPDATA"</span>], <span class="st">"Zed"</span>, <span class="st">"themes"</span>) <span class="op">:</span> <span class="fu">expanduser</span>(<span class="st">"~/.config/zed/themes"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkpath</span>(themes)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Downloads</span>.<span class="fu">download</span>(<span class="st">"https://raw.githubusercontent.com/beyondsimulations/paper-and-ink-theme/main/themes/paper-and-ink.json"</span>, <span class="fu">joinpath</span>(themes, <span class="st">"paper-and-ink.json"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <section id="modelling-the-clsp" class="level1">
 <h1>1. Modelling the CLSP</h1>
 <section id="load-the-necessary-packages-and-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-the-necessary-packages-and-data">Load the necessary packages and data</h2>
 <p>Implement the CLSP from the lecture in Julia. Before we start, let’s load the necessary packages and data.</p>
-<div id="4" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">StatsPlots</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plotly</span>() <span class="co"># This will create interactive plots later on</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">StatsPlots</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plotly</span>() <span class="co"># This will create interactive plots later on</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-simple callout-tip">
 <div class="callout-body d-flex">
@@ -839,15 +858,15 @@ window.Quarto = {
 <section id="load-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-the-data">Load the data</h2>
 <p>Now, let’s load the data. The weekly demand in bottles <span class="math inline">\(d_{i,t}\)</span>, the available time at the bottling plant in hours <span class="math inline">\(a_t\)</span>, the time required to bottle each beer in hours <span class="math inline">\(b_i\)</span>, and the setup time in hours <span class="math inline">\(g_i\)</span> are provided as CSV files.</p>
-<div id="6" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the directory of the current file</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>file_directory <span class="op">=</span> <span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/data"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data about the available time at the bottling plant</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>availableTime <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>file_directory<span class="st">/availabletime.csv"</span>, DataFrame)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of periods: </span><span class="sc">$</span>(<span class="fu">nrow</span>(availableTime))<span class="st">"</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"First 5 rows of available time per period:"</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(availableTime[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">:</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="8" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the directory of the current file</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>file_directory <span class="op">=</span> <span class="st">"</span><span class="sc">$</span>(<span class="pp">@__DIR__</span>)<span class="st">/data"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data about the available time at the bottling plant</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>availableTime <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>file_directory<span class="st">/availabletime.csv"</span>, DataFrame)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of periods: </span><span class="sc">$</span>(<span class="fu">nrow</span>(availableTime))<span class="st">"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"First 5 rows of available time per period:"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(availableTime[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">:</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
 <pre>Number of periods: 27
@@ -875,12 +894,12 @@ First 5 rows of available time per period:
 </div>
 </div>
 </div>
-<div id="8" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data about the bottling time for each beer</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bottlingTime <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>file_directory<span class="st">/bottlingtime.csv"</span>, DataFrame)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of beers: </span><span class="sc">$</span>(<span class="fu">nrow</span>(bottlingTime))<span class="st">"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Bottling time per beer:"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(bottlingTime)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="10" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data about the bottling time for each beer</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bottlingTime <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>file_directory<span class="st">/bottlingtime.csv"</span>, DataFrame)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Number of beers: </span><span class="sc">$</span>(<span class="fu">nrow</span>(bottlingTime))<span class="st">"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Bottling time per beer:"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(bottlingTime)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
 <pre>Number of beers: 6
@@ -899,11 +918,11 @@ Bottling time per beer:
 </div>
 </div>
 </div>
-<div id="10" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data about the setup time for each beer</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>setupTime <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>file_directory<span class="st">/setuptime.csv"</span>, DataFrame)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Setup time per beer:"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(setupTime)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="12" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data about the setup time for each beer</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>setupTime <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>file_directory<span class="st">/setuptime.csv"</span>, DataFrame)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Setup time per beer:"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(setupTime)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
 <pre>Setup time per beer:
@@ -921,11 +940,11 @@ Bottling time per beer:
 </div>
 </div>
 </div>
-<div id="12" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data about the weekly demand for each beer</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>demandCustomers <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>file_directory<span class="st">/demand.csv"</span>, DataFrame)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"First 5 rows of demand per beer:"</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(demandCustomers[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">:</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="14" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data about the weekly demand for each beer</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>demandCustomers <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"</span><span class="sc">$</span>file_directory<span class="st">/demand.csv"</span>, DataFrame)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"First 5 rows of demand per beer:"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(demandCustomers[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">:</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
 <pre>First 5 rows of demand per beer:
@@ -947,17 +966,17 @@ Bottling time per beer:
 <section id="define-the-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-parameters">Define the parameters</h2>
 <p>Consider in your implementation, that <strong>each hour of setup</strong> is associated with a cost of 1000 Euros, and the inventory holding cost for unsold bottles at the end of each period is 0.1 Euro per bottle. Implement <strong>both parameters</strong> for the cost of setup and the inventory holding cost in the model. Call them <code>setupHourCosts</code> and <code>warehouseCosts</code>.</p>
-<div id="14" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="16" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="18" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> setupHourCosts <span class="op">&gt;</span> <span class="fl">0</span> <span class="st">"Setup hour costs must be positive"</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> warehouseCosts <span class="op">&gt;</span> <span class="fl">0</span> <span class="st">"Warehouse costs must be positive"</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> setupHourCosts <span class="op">==</span> <span class="fl">1000</span> <span class="st">"Setup hour costs must be 1000 euros"</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> warehouseCosts <span class="op">==</span> <span class="fl">0.1</span> <span class="st">"Warehouse costs must be 0.1 euros per bottle"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> setupHourCosts <span class="op">&gt;</span> <span class="fl">0</span> <span class="st">"Setup hour costs must be positive"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> warehouseCosts <span class="op">&gt;</span> <span class="fl">0</span> <span class="st">"Warehouse costs must be positive"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> setupHourCosts <span class="op">==</span> <span class="fl">1000</span> <span class="st">"Setup hour costs must be 1000 euros"</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> warehouseCosts <span class="op">==</span> <span class="fl">0.1</span> <span class="st">"Warehouse costs must be 0.1 euros per bottle"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Next, you need to prepare the given data for the model. Create a dictionary for the available time, bottling time, and setup time. Call them <code>dictAvailableTime</code>, <code>dictBottlingTime</code>, and <code>dictSetupTime</code>.</p>
@@ -982,30 +1001,30 @@ Bottling time per beer:
 </div>
 </div>
 </div>
-<div id="18" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the data for the model</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>dictDemand <span class="op">=</span> <span class="fu">Dict</span>((row.beer_type,row.period) <span class="op">=&gt;</span> row.demand <span class="cf">for</span> row <span class="kw">in</span> <span class="fu">eachrow</span>(demandCustomers))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="20" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the data for the model</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dictDemand <span class="op">=</span> <span class="fu">Dict</span>((row.beer_type,row.period) <span class="op">=&gt;</span> row.demand <span class="cf">for</span> row <span class="kw">in</span> <span class="fu">eachrow</span>(demandCustomers))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="22" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(dictAvailableTime) <span class="op">==</span> <span class="fu">nrow</span>(availableTime) <span class="st">"Available time dictionary should have same length as input data"</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">==</span> <span class="fu">nrow</span>(bottlingTime) <span class="st">"Bottling time dictionary should have same length as input data"</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(dictSetupTime) <span class="op">==</span> <span class="fu">nrow</span>(setupTime) <span class="st">"Setup time dictionary should have same length as input data"</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Check that all values are positive</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(v <span class="op">-&gt;</span> v <span class="op">&gt;</span> <span class="fl">0</span>, <span class="fu">values</span>(dictAvailableTime)) <span class="st">"All available time values must be positive"</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(v <span class="op">-&gt;</span> v <span class="op">&gt;</span> <span class="fl">0</span>, <span class="fu">values</span>(dictBottlingTime)) <span class="st">"All bottling time values must be positive"</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(v <span class="op">-&gt;</span> v <span class="op">&gt;</span> <span class="fl">0</span>, <span class="fu">values</span>(dictSetupTime)) <span class="st">"All setup time values must be positive"</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Check that dictionaries contain all expected keys</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(p <span class="op">-&gt;</span> <span class="fu">haskey</span>(dictAvailableTime, p), availableTime.period) <span class="st">"Missing periods in available time dictionary"</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(b <span class="op">-&gt;</span> <span class="fu">haskey</span>(dictBottlingTime, b), bottlingTime.beer_type) <span class="st">"Missing beer types in bottling time dictionary"</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(b <span class="op">-&gt;</span> <span class="fu">haskey</span>(dictSetupTime, b), setupTime.beer_type) <span class="st">"Missing beer types in setup time dictionary"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(dictAvailableTime) <span class="op">==</span> <span class="fu">nrow</span>(availableTime) <span class="st">"Available time dictionary should have same length as input data"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">==</span> <span class="fu">nrow</span>(bottlingTime) <span class="st">"Bottling time dictionary should have same length as input data"</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(dictSetupTime) <span class="op">==</span> <span class="fu">nrow</span>(setupTime) <span class="st">"Setup time dictionary should have same length as input data"</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Check that all values are positive</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(v <span class="op">-&gt;</span> v <span class="op">&gt;</span> <span class="fl">0</span>, <span class="fu">values</span>(dictAvailableTime)) <span class="st">"All available time values must be positive"</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(v <span class="op">-&gt;</span> v <span class="op">&gt;</span> <span class="fl">0</span>, <span class="fu">values</span>(dictBottlingTime)) <span class="st">"All bottling time values must be positive"</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(v <span class="op">-&gt;</span> v <span class="op">&gt;</span> <span class="fl">0</span>, <span class="fu">values</span>(dictSetupTime)) <span class="st">"All setup time values must be positive"</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Check that dictionaries contain all expected keys</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(p <span class="op">-&gt;</span> <span class="fu">haskey</span>(dictAvailableTime, p), availableTime.period) <span class="st">"Missing periods in available time dictionary"</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(b <span class="op">-&gt;</span> <span class="fu">haskey</span>(dictBottlingTime, b), bottlingTime.beer_type) <span class="st">"Missing beer types in bottling time dictionary"</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(b <span class="op">-&gt;</span> <span class="fu">haskey</span>(dictSetupTime, b), setupTime.beer_type) <span class="st">"Missing beer types in setup time dictionary"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <hr>
@@ -1013,11 +1032,11 @@ Bottling time per beer:
 <section id="define-the-model-instance" class="level2">
 <h2 class="anchored" data-anchor-id="define-the-model-instance">Define the model instance</h2>
 <p>Next, we define the model instance for the CLSP.</p>
-<div id="22" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the model instance</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>lotsizeModel <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set_attribute</span>(lotsizeModel, <span class="st">"presolve"</span>, <span class="st">"on"</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set_time_limit_sec</span>(lotsizeModel, <span class="fl">60.0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="24" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the model instance</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>lotsizeModel <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set_attribute</span>(lotsizeModel, <span class="st">"presolve"</span>, <span class="st">"on"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set_time_limit_sec</span>(lotsizeModel, <span class="fl">60.0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
@@ -1032,7 +1051,7 @@ Bottling time per beer:
 </div>
 <div class="callout-body-container">
 <p>When creating your variables, you’ll have to create one variable for <strong>each combination</strong> of beer type and period. You can use the dictionary keys directly in the variable definition:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, x[<span class="fu">keys</span>(dictBottlingTime), <span class="fu">keys</span>(dictAvailableTime)] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@variable</span>(model, x[<span class="fu">keys</span>(dictBottlingTime), <span class="fu">keys</span>(dictAvailableTime)] <span class="op">&gt;=</span> <span class="fl">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This creates variables indexed by:</p>
 <ul>
 <li>First index: beer types (from <code>dictBottlingTime</code>)</li>
@@ -1043,30 +1062,30 @@ Bottling time per beer:
 </div>
 </div>
 </div>
-<div id="24" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="26" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="28" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if variables exist in the model</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">haskey</span>(lotsizeModel.obj_dict, <span class="op">:</span>productBottled) <span class="st">"productBottled variable not found in model"</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">haskey</span>(lotsizeModel.obj_dict, <span class="op">:</span>productQuantity) <span class="st">"productQuantity variable not found in model"</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">haskey</span>(lotsizeModel.obj_dict, <span class="op">:</span>WarehouseStockPeriodEnd) <span class="st">"WarehouseStockPeriodEnd variable not found in model"</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check variable dimensions</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(productBottled) <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"Incorrect dimensions for productBottled"</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(productQuantity) <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"Incorrect dimensions for productQuantity"</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(WarehouseStockPeriodEnd) <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"Incorrect dimensions for WarehouseStockPeriodEnd"</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Check variable types and domains</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(is_binary, productBottled) <span class="st">"productBottled must be binary variables"</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> !<span class="fu">any</span>(is_integer, productQuantity) <span class="st">"productQuantity must be continuous variables"</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> !<span class="fu">any</span>(is_integer, WarehouseStockPeriodEnd) <span class="st">"WarehouseStockPeriodEnd must be continuous variables"</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(v <span class="op">-&gt;</span> <span class="fu">has_lower_bound</span>(v) <span class="op">&amp;&amp;</span> <span class="fu">lower_bound</span>(v) <span class="op">==</span> <span class="fl">0</span>, productQuantity) <span class="st">"productQuantity needs the lower bound &gt;= 0"</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(v <span class="op">-&gt;</span> <span class="fu">has_lower_bound</span>(v) <span class="op">&amp;&amp;</span> <span class="fu">lower_bound</span>(v) <span class="op">==</span> <span class="fl">0</span>, WarehouseStockPeriodEnd) <span class="st">"WarehouseStockPeriodEnd needs the lower bound &gt;= 0"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if variables exist in the model</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">haskey</span>(lotsizeModel.obj_dict, <span class="op">:</span>productBottled) <span class="st">"productBottled variable not found in model"</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">haskey</span>(lotsizeModel.obj_dict, <span class="op">:</span>productQuantity) <span class="st">"productQuantity variable not found in model"</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">haskey</span>(lotsizeModel.obj_dict, <span class="op">:</span>WarehouseStockPeriodEnd) <span class="st">"WarehouseStockPeriodEnd variable not found in model"</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check variable dimensions</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(productBottled) <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"Incorrect dimensions for productBottled"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(productQuantity) <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"Incorrect dimensions for productQuantity"</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">length</span>(WarehouseStockPeriodEnd) <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"Incorrect dimensions for WarehouseStockPeriodEnd"</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Check variable types and domains</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(is_binary, productBottled) <span class="st">"productBottled must be binary variables"</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> !<span class="fu">any</span>(is_integer, productQuantity) <span class="st">"productQuantity must be continuous variables"</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> !<span class="fu">any</span>(is_integer, WarehouseStockPeriodEnd) <span class="st">"WarehouseStockPeriodEnd must be continuous variables"</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(v <span class="op">-&gt;</span> <span class="fu">has_lower_bound</span>(v) <span class="op">&amp;&amp;</span> <span class="fu">lower_bound</span>(v) <span class="op">==</span> <span class="fl">0</span>, productQuantity) <span class="st">"productQuantity needs the lower bound &gt;= 0"</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(v <span class="op">-&gt;</span> <span class="fu">has_lower_bound</span>(v) <span class="op">&amp;&amp;</span> <span class="fu">lower_bound</span>(v) <span class="op">==</span> <span class="fl">0</span>, WarehouseStockPeriodEnd) <span class="st">"WarehouseStockPeriodEnd needs the lower bound &gt;= 0"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <hr>
@@ -1081,9 +1100,9 @@ Bottling time per beer:
 </div>
 <div class="callout-body-container">
 <p>The objective function needs to sum costs across <strong>all beer types</strong> and <strong>all periods</strong>. With dictionaries, you reference the data like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(model, Min,</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="op">...</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictBottlingTime), t <span class="kw">in</span> <span class="fu">keys</span>(dictAvailableTime))</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@objective</span>(model, Min,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="op">...</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictBottlingTime), t <span class="kw">in</span> <span class="fu">keys</span>(dictAvailableTime))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Inside the sum, you’ll need:</p>
 <ol type="1">
 <li><strong>Setup costs</strong>: <code>setupHourCosts * dictSetupTime[i] * productBottled[i,t]</code>
@@ -1096,23 +1115,23 @@ Bottling time per beer:
 </div>
 </div>
 </div>
-<div id="28" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="30" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="32" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the model has an objective</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">objective_function</span>(lotsizeModel) <span class="op">!==</span> <span class="cn">nothing</span> <span class="st">"Model must have an objective function"</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if it's a minimization problem</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">objective_sense</span>(lotsizeModel) <span class="op">==</span> MOI.MIN_SENSE <span class="st">"Objective should be minimization"</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the objective function contains both cost components</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>obj_expr <span class="op">=</span> <span class="fu">objective_function</span>(lotsizeModel)</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">contains</span>(<span class="fu">string</span>(obj_expr), <span class="st">"productBottled"</span>) <span class="st">"Objective must include setup costs (productBottled)"</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">contains</span>(<span class="fu">string</span>(obj_expr), <span class="st">"WarehouseStockPeriodEnd"</span>) <span class="st">"Objective must include warehouse costs (WarehouseStockPeriodEnd)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the model has an objective</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">objective_function</span>(lotsizeModel) <span class="op">!==</span> <span class="cn">nothing</span> <span class="st">"Model must have an objective function"</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if it's a minimization problem</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">objective_sense</span>(lotsizeModel) <span class="op">==</span> MOI.MIN_SENSE <span class="st">"Objective should be minimization"</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the objective function contains both cost components</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>obj_expr <span class="op">=</span> <span class="fu">objective_function</span>(lotsizeModel)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">contains</span>(<span class="fu">string</span>(obj_expr), <span class="st">"productBottled"</span>) <span class="st">"Objective must include setup costs (productBottled)"</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">contains</span>(<span class="fu">string</span>(obj_expr), <span class="st">"WarehouseStockPeriodEnd"</span>) <span class="st">"Objective must include warehouse costs (WarehouseStockPeriodEnd)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <hr>
@@ -1131,46 +1150,46 @@ Bottling time per beer:
 </div>
 </div>
 </div>
-<div id="32" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the first period and all periods</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>first_period <span class="op">=</span> <span class="fu">first</span>(<span class="fu">sort</span>(<span class="fu">collect</span>(<span class="fu">keys</span>(dictAvailableTime))))</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>all_periods <span class="op">=</span> <span class="fu">sort</span>(<span class="fu">collect</span>(<span class="fu">keys</span>(dictAvailableTime)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="34" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the first period and all periods</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>first_period <span class="op">=</span> <span class="fu">first</span>(<span class="fu">sort</span>(<span class="fu">collect</span>(<span class="fu">keys</span>(dictAvailableTime))))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>all_periods <span class="op">=</span> <span class="fu">sort</span>(<span class="fu">collect</span>(<span class="fu">keys</span>(dictAvailableTime)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>With these, we can now define the demand/inventory balance constraint. As this is the first constraint and might be a bit tricky, the solution is already given below.</p>
-<div id="34" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inventory balance constraints for periods after first period</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(lotsizeModel,</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    demandBalance[i<span class="op">=</span><span class="fu">keys</span>(dictBottlingTime), t<span class="op">=</span><span class="fl">2</span><span class="op">:</span><span class="fu">length</span>(all_periods)],</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    WarehouseStockPeriodEnd[i,all_periods[t<span class="op">-</span><span class="fl">1</span>]] <span class="op">+</span> productQuantity[i,all_periods[t]] <span class="op">-</span> WarehouseStockPeriodEnd[i,all_periods[t]] <span class="op">==</span> dictDemand[i,all_periods[t]]</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="36" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inventory balance constraints for periods after first period</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(lotsizeModel,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    demandBalance[i<span class="op">=</span><span class="fu">keys</span>(dictBottlingTime), t<span class="op">=</span><span class="fl">2</span><span class="op">:</span><span class="fu">length</span>(all_periods)],</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    WarehouseStockPeriodEnd[i,all_periods[t<span class="op">-</span><span class="fl">1</span>]] <span class="op">+</span> productQuantity[i,all_periods[t]] <span class="op">-</span> WarehouseStockPeriodEnd[i,all_periods[t]] <span class="op">==</span> dictDemand[i,all_periods[t]]</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next, we need to ensure that a beer type can only be bottled in a period if the plant is set up for it in that period. This is the “Big-M” constraint from the lecture:</p>
 <p><span class="math display">\[X_{i,t} \leq Y_{i,t} \times \sum_{\tau \in \mathcal{T}} d_{i,\tau} \quad \forall i \in \mathcal{I}, t \in \mathcal{T}\]</span></p>
-<div id="36" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="38" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="40" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">num_constraints</span>(lotsizeModel, AffExpr, MOI.LessThan{<span class="dt">Float64</span>}) <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"You need one setup constraint for each combination of beer type and period"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">num_constraints</span>(lotsizeModel, AffExpr, MOI.LessThan{<span class="dt">Float64</span>}) <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"You need one setup constraint for each combination of beer type and period"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Last, we need to limit the time used at the bottling plant. In each period, the total bottling time <strong>plus the setup time</strong> of all bottled beer types must not exceed the available time:</p>
 <p><span class="math display">\[\sum_{i \in \mathcal{I}} (b_i \times X_{i,t} + g_i \times Y_{i,t}) \leq a_t \quad \forall t \in \mathcal{T}\]</span></p>
-<div id="40" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="42" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="44" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">num_constraints</span>(lotsizeModel, AffExpr, MOI.LessThan{<span class="dt">Float64</span>}) <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="op">+</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"You need one capacity constraint for each period (in addition to the setup constraints)"</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Each capacity constraint has to contain the quantity and the setup of every beer type</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>all_lt_constraints <span class="op">=</span> <span class="fu">all_constraints</span>(lotsizeModel, AffExpr, MOI.LessThan{<span class="dt">Float64</span>})</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>number_capacity_constraints <span class="op">=</span> <span class="fu">count</span>(c <span class="op">-&gt;</span> <span class="fu">length</span>(<span class="fu">constraint_object</span>(c).func.terms) <span class="op">==</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu">length</span>(dictBottlingTime), all_lt_constraints)</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> number_capacity_constraints <span class="op">==</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"Each capacity constraint must include the bottling time AND the setup time of every beer type"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">num_constraints</span>(lotsizeModel, AffExpr, MOI.LessThan{<span class="dt">Float64</span>}) <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="op">+</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"You need one capacity constraint for each period (in addition to the setup constraints)"</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Each capacity constraint has to contain the quantity and the setup of every beer type</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>all_lt_constraints <span class="op">=</span> <span class="fu">all_constraints</span>(lotsizeModel, AffExpr, MOI.LessThan{<span class="dt">Float64</span>})</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>number_capacity_constraints <span class="op">=</span> <span class="fu">count</span>(c <span class="op">-&gt;</span> <span class="fu">length</span>(<span class="fu">constraint_object</span>(c).func.terms) <span class="op">==</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu">length</span>(dictBottlingTime), all_lt_constraints)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> number_capacity_constraints <span class="op">==</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"Each capacity constraint must include the bottling time AND the setup time of every beer type"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <hr>
@@ -1178,15 +1197,15 @@ Bottling time per beer:
 <section id="solve-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="solve-the-model">Solve the model</h2>
 <p>Finally, implement the solve statement for your model instance.</p>
-<div id="44" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="46" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="48" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">primal_status</span>(lotsizeModel) <span class="op">==</span> MOI.FEASIBLE_POINT <span class="st">"The solver found no feasible solution within the time limit — check your model and re-run the cell"</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fl">360000</span> <span class="op">&lt;=</span> <span class="fu">objective_value</span>(lotsizeModel) <span class="op">&lt;=</span> <span class="fl">900000</span> <span class="st">"Objective value should be between 360,000 and 900,000"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">primal_status</span>(lotsizeModel) <span class="op">==</span> MOI.FEASIBLE_POINT <span class="st">"The solver found no feasible solution within the time limit — check your model and re-run the cell"</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fl">360000</span> <span class="op">&lt;=</span> <span class="fu">objective_value</span>(lotsizeModel) <span class="op">&lt;=</span> <span class="fl">900000</span> <span class="st">"Objective value should be between 360,000 and 900,000"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Now, unfortunately we cannot assert the value of the objective function perfectly here, as the model is hard to solve and we abort the computation at the time limit of 60 seconds. The solver then returns the best solution found so far, so everybody is likely getting slightly different results. The solution for the first task will likely be in the <span class="highlight">range of 550,000 to 700,000</span>, and the validation above is deliberately generous to allow for this variation. Don’t worry if the solver reports a large remaining gap — the best solution found is good enough for our purposes.</p>
@@ -1205,155 +1224,155 @@ Bottling time per beer:
 </div>
 </div>
 </div>
-<div id="48" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the production results</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_production_results</span>()</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a DataFrame to store the results</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    productionResults <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>        period <span class="op">=</span> <span class="dt">String</span>[],</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>        product <span class="op">=</span> <span class="dt">String</span>[],</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>        productBottled <span class="op">=</span> <span class="dt">Bool</span>[],</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        productQuantity<span class="op">=</span><span class="dt">Int</span>[],</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>        WarehouseStockPeriodEnd<span class="op">=</span><span class="dt">Int</span>[]</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Populate the DataFrame with the results</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictSetupTime)</span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="fu">keys</span>(dictAvailableTime)</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>                productionResults,(</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>                period <span class="op">=</span> t,</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>                product <span class="op">=</span> i,</span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>                productBottled <span class="op">=</span> <span class="fu">value</span>(productBottled[i,t]) <span class="op">&gt;</span> <span class="fl">0.5</span>,</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>                productQuantity <span class="op">=</span> <span class="fu">round</span>(<span class="dt">Int</span>,<span class="fu">value</span>(productQuantity[i,t])),</span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>                WarehouseStockPeriodEnd <span class="op">=</span> <span class="fu">round</span>(<span class="dt">Int</span>,<span class="fu">value</span>(WarehouseStockPeriodEnd[i,t])),</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>                )</span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sort!</span>(productionResults,[<span class="op">:</span>period, <span class="op">:</span>product])</span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> productionResults</span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the production plot</span></span>
-<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_production_plot</span>(productionResults)</span>
-<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fu">groupedbar</span>(</span>
-<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>        productionResults.period,</span>
-<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>        productionResults.productQuantity,</span>
-<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>        group<span class="op">=</span>productionResults.product,</span>
-<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>        ylabel<span class="op">=</span><span class="st">"Production Quantity (Bottles)"</span>,</span>
-<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>        xlabel<span class="op">=</span><span class="st">"Period"</span>,</span>
-<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Production Schedule by Beer Type"</span>,</span>
-<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>(<span class="fl">1200</span>,<span class="fl">600</span>),</span>
-<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>        palette <span class="op">=</span> <span class="op">:</span>Set3,</span>
-<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=:</span>outertopright,</span>
-<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>        xrotation <span class="op">=</span> <span class="fl">45</span>,</span>
-<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>        legendtitle<span class="op">=</span><span class="st">"Beer Type"</span>,</span>
-<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>        bar_width<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,</span>
-<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>        dpi<span class="op">=</span><span class="fl">300</span></span>
-<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
-<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the warehouse stock plot</span></span>
-<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_warehouse_plot</span>(productionResults)</span>
-<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fu">groupedbar</span>(</span>
-<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>        productionResults.period,</span>
-<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>        productionResults.WarehouseStockPeriodEnd,</span>
-<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>        group<span class="op">=</span>productionResults.product,</span>
-<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>        ylabel<span class="op">=</span><span class="st">"Warehouse Stock"</span>,</span>
-<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>        xlabel<span class="op">=</span><span class="st">"Period"</span>,</span>
-<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Warehouse Stock"</span>,</span>
-<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>(<span class="fl">1200</span>,<span class="fl">600</span>),</span>
-<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>        palette <span class="op">=</span> <span class="op">:</span>Set3,</span>
-<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=:</span>outertopright,</span>
-<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a>        xrotation <span class="op">=</span> <span class="fl">45</span>,</span>
-<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a>        legendtitle<span class="op">=</span><span class="st">"Beer Type"</span>,</span>
-<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a>        bar_width<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,</span>
-<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a>        dpi<span class="op">=</span><span class="fl">300</span></span>
-<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
-<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="50" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the production results</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_production_results</span>()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a DataFrame to store the results</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    productionResults <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>        period <span class="op">=</span> <span class="dt">String</span>[],</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>        product <span class="op">=</span> <span class="dt">String</span>[],</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        productBottled <span class="op">=</span> <span class="dt">Bool</span>[],</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>        productQuantity<span class="op">=</span><span class="dt">Int</span>[],</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>        WarehouseStockPeriodEnd<span class="op">=</span><span class="dt">Int</span>[]</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Populate the DataFrame with the results</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictSetupTime)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="fu">keys</span>(dictAvailableTime)</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>                productionResults,(</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>                period <span class="op">=</span> t,</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>                product <span class="op">=</span> i,</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>                productBottled <span class="op">=</span> <span class="fu">value</span>(productBottled[i,t]) <span class="op">&gt;</span> <span class="fl">0.5</span>,</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>                productQuantity <span class="op">=</span> <span class="fu">round</span>(<span class="dt">Int</span>,<span class="fu">value</span>(productQuantity[i,t])),</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>                WarehouseStockPeriodEnd <span class="op">=</span> <span class="fu">round</span>(<span class="dt">Int</span>,<span class="fu">value</span>(WarehouseStockPeriodEnd[i,t])),</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sort!</span>(productionResults,[<span class="op">:</span>period, <span class="op">:</span>product])</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> productionResults</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the production plot</span></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_production_plot</span>(productionResults)</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fu">groupedbar</span>(</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>        productionResults.period,</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>        productionResults.productQuantity,</span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>        group<span class="op">=</span>productionResults.product,</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>        ylabel<span class="op">=</span><span class="st">"Production Quantity (Bottles)"</span>,</span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>        xlabel<span class="op">=</span><span class="st">"Period"</span>,</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Production Schedule by Beer Type"</span>,</span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>(<span class="fl">1200</span>,<span class="fl">600</span>),</span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>        palette <span class="op">=</span> <span class="op">:</span>Set3,</span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=:</span>outertopright,</span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>        xrotation <span class="op">=</span> <span class="fl">45</span>,</span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>        legendtitle<span class="op">=</span><span class="st">"Beer Type"</span>,</span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>        bar_width<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,</span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>        dpi<span class="op">=</span><span class="fl">300</span></span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the warehouse stock plot</span></span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_warehouse_plot</span>(productionResults)</span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fu">groupedbar</span>(</span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>        productionResults.period,</span>
+<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a>        productionResults.WarehouseStockPeriodEnd,</span>
+<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a>        group<span class="op">=</span>productionResults.product,</span>
+<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a>        ylabel<span class="op">=</span><span class="st">"Warehouse Stock"</span>,</span>
+<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a>        xlabel<span class="op">=</span><span class="st">"Period"</span>,</span>
+<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Warehouse Stock"</span>,</span>
+<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>(<span class="fl">1200</span>,<span class="fl">600</span>),</span>
+<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a>        palette <span class="op">=</span> <span class="op">:</span>Set3,</span>
+<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=:</span>outertopright,</span>
+<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a>        xrotation <span class="op">=</span> <span class="fl">45</span>,</span>
+<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a>        legendtitle<span class="op">=</span><span class="st">"Beer Type"</span>,</span>
+<span id="cb26-66"><a href="#cb26-66" aria-hidden="true" tabindex="-1"></a>        bar_width<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb26-67"><a href="#cb26-67" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,</span>
+<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a>        dpi<span class="op">=</span><span class="fl">300</span></span>
+<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
+<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The following code creates the production plot.</p>
-<div id="50" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>productionResults <span class="op">=</span> <span class="fu">create_production_results</span>()</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_production_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="52" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>productionResults <span class="op">=</span> <span class="fu">create_production_results</span>()</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_production_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The following code creates the warehouse stock plot. Note that we can reuse the <code>productionResults</code> DataFrame from the previous cell.</p>
-<div id="52" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_warehouse_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="54" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_warehouse_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
 <section id="calculate-the-setup-and-inventory-costs" class="level2">
 <h2 class="anchored" data-anchor-id="calculate-the-setup-and-inventory-costs">Calculate the setup and inventory costs</h2>
 <p>Next, we calculate the setup and inventory costs for each period and store them in a DataFrame. This should also work for you, if you followed the previous name instructions.</p>
-<div id="54" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate costs per period</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_cost_results</span>()</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    costResults <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>        period <span class="op">=</span> <span class="dt">String</span>[],</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        setup_costs <span class="op">=</span> <span class="dt">Float64</span>[],</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>        inventory_costs <span class="op">=</span> <span class="dt">Float64</span>[]</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="fu">sort</span>(<span class="fu">collect</span>(<span class="fu">keys</span>(dictAvailableTime)))</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate setup costs for this period</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We round the binary values, as the solver only guarantees them up to a small tolerance</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>        period_setup_costs <span class="op">=</span> <span class="fu">sum</span>(</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>            setupHourCosts <span class="op">*</span> dictSetupTime[i] <span class="op">*</span> <span class="fu">round</span>(<span class="fu">value</span>(productBottled[i,t]))</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictBottlingTime)</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate inventory costs for this period</span></span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>        period_inventory_costs <span class="op">=</span> <span class="fu">sum</span>(</span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>            warehouseCosts <span class="op">*</span> <span class="fu">value</span>(WarehouseStockPeriodEnd[i,t])</span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictBottlingTime)</span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(costResults, (</span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>            period <span class="op">=</span> t,</span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>            setup_costs <span class="op">=</span> period_setup_costs,</span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>            inventory_costs <span class="op">=</span> period_inventory_costs</span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>        ))</span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Stack the cost columns</span></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>    stacked_costs <span class="op">=</span> <span class="fu">stack</span>(costResults, [<span class="op">:</span>setup_costs, <span class="op">:</span>inventory_costs],</span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>                         variable_name<span class="op">=</span><span class="st">"Cost_Type"</span>, value_name<span class="op">=</span><span class="st">"Cost"</span>)</span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> stacked_costs</span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the cost plot</span></span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_cost_plot</span>(stacked_costs)</span>
-<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fu">groupedbar</span>(</span>
-<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>        stacked_costs.period,</span>
-<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>        stacked_costs.Cost,</span>
-<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>        group<span class="op">=</span>stacked_costs.Cost_Type,</span>
-<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>        ylabel<span class="op">=</span><span class="st">"Costs (€)"</span>,</span>
-<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>        xlabel<span class="op">=</span><span class="st">"Period"</span>,</span>
-<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Setup and Inventory Costs per Period"</span>,</span>
-<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>(<span class="fl">1200</span>,<span class="fl">600</span>),</span>
-<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>        palette<span class="op">=:</span>Set2,</span>
-<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=:</span>outertopright,</span>
-<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a>        xrotation<span class="op">=</span><span class="fl">45</span>,</span>
-<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a>        legendtitle<span class="op">=</span><span class="st">"Cost Type"</span>,</span>
-<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a>        bar_width<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,</span>
-<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a>        dpi<span class="op">=</span><span class="fl">300</span></span>
-<span id="cb28-53"><a href="#cb28-53" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb28-54"><a href="#cb28-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
-<span id="cb28-55"><a href="#cb28-55" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="56" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate costs per period</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_cost_results</span>()</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    costResults <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>        period <span class="op">=</span> <span class="dt">String</span>[],</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>        setup_costs <span class="op">=</span> <span class="dt">Float64</span>[],</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>        inventory_costs <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="fu">sort</span>(<span class="fu">collect</span>(<span class="fu">keys</span>(dictAvailableTime)))</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate setup costs for this period</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We round the binary values, as the solver only guarantees them up to a small tolerance</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>        period_setup_costs <span class="op">=</span> <span class="fu">sum</span>(</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>            setupHourCosts <span class="op">*</span> dictSetupTime[i] <span class="op">*</span> <span class="fu">round</span>(<span class="fu">value</span>(productBottled[i,t]))</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictBottlingTime)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate inventory costs for this period</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>        period_inventory_costs <span class="op">=</span> <span class="fu">sum</span>(</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>            warehouseCosts <span class="op">*</span> <span class="fu">value</span>(WarehouseStockPeriodEnd[i,t])</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictBottlingTime)</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(costResults, (</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>            period <span class="op">=</span> t,</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>            setup_costs <span class="op">=</span> period_setup_costs,</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>            inventory_costs <span class="op">=</span> period_inventory_costs</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>        ))</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Stack the cost columns</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>    stacked_costs <span class="op">=</span> <span class="fu">stack</span>(costResults, [<span class="op">:</span>setup_costs, <span class="op">:</span>inventory_costs],</span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>                         variable_name<span class="op">=</span><span class="st">"Cost_Type"</span>, value_name<span class="op">=</span><span class="st">"Cost"</span>)</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> stacked_costs</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the cost plot</span></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">create_cost_plot</span>(stacked_costs)</span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fu">groupedbar</span>(</span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>        stacked_costs.period,</span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a>        stacked_costs.Cost,</span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a>        group<span class="op">=</span>stacked_costs.Cost_Type,</span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a>        ylabel<span class="op">=</span><span class="st">"Costs (€)"</span>,</span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a>        xlabel<span class="op">=</span><span class="st">"Period"</span>,</span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Setup and Inventory Costs per Period"</span>,</span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>(<span class="fl">1200</span>,<span class="fl">600</span>),</span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a>        palette<span class="op">=:</span>Set2,</span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=:</span>outertopright,</span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a>        xrotation<span class="op">=</span><span class="fl">45</span>,</span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a>        legendtitle<span class="op">=</span><span class="st">"Cost Type"</span>,</span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a>        bar_width<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,</span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a>        dpi<span class="op">=</span><span class="fl">300</span></span>
+<span id="cb29-53"><a href="#cb29-53" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb29-54"><a href="#cb29-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
+<span id="cb29-55"><a href="#cb29-55" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The following code calls the setup and inventory costs plot.</p>
-<div id="56" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>stacked_costs <span class="op">=</span> <span class="fu">create_cost_results</span>()</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_cost_plot</span>(stacked_costs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="58" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>stacked_costs <span class="op">=</span> <span class="fu">create_cost_results</span>()</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_cost_plot</span>(stacked_costs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
@@ -1364,32 +1383,32 @@ Bottling time per beer:
 <p>Fix this by adding the <strong>inventory balance for the first period</strong>, assuming that the warehouse starts empty. As in the lecture, we set the initial stock <span class="math inline">\(W_{i,0} = 0\)</span>, so the balance for the first period becomes:</p>
 <p><span class="math display">\[X_{i,1} - W_{i,1} = d_{i,1} \quad \forall i \in \mathcal{I}\]</span></p>
 <p>To solve this task, you can simply extend the previous model by these additional constraints in the cell below. The variable <code>first_period</code>, which we defined earlier, is exactly what you need here. Afterwards, re-run the optimization.</p>
-<div id="58" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="60" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="62" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># A balance constraint links at least two variables — fixing a single variable to zero is not enough</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>balance_constraints <span class="op">=</span> <span class="fu">all_constraints</span>(lotsizeModel, AffExpr, MOI.EqualTo{<span class="dt">Float64</span>})</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>number_balance_constraints <span class="op">=</span> <span class="fu">count</span>(c <span class="op">-&gt;</span> <span class="fu">length</span>(<span class="fu">constraint_object</span>(c).func.terms) <span class="op">&gt;=</span> <span class="fl">2</span>, balance_constraints)</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> number_balance_constraints <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"You need one inventory balance constraint for each combination of beer type and period — did you add the balance for the first period?"</span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">primal_status</span>(lotsizeModel) <span class="op">==</span> MOI.FEASIBLE_POINT <span class="st">"The solver found no feasible solution within the time limit — check your model and re-run the cell"</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fl">500000</span> <span class="op">&lt;=</span> <span class="fu">objective_value</span>(lotsizeModel) <span class="op">&lt;=</span> <span class="fl">950000</span> <span class="st">"Objective value should be between 500,000 and 950,000"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># A balance constraint links at least two variables — fixing a single variable to zero is not enough</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>balance_constraints <span class="op">=</span> <span class="fu">all_constraints</span>(lotsizeModel, AffExpr, MOI.EqualTo{<span class="dt">Float64</span>})</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>number_balance_constraints <span class="op">=</span> <span class="fu">count</span>(c <span class="op">-&gt;</span> <span class="fu">length</span>(<span class="fu">constraint_object</span>(c).func.terms) <span class="op">&gt;=</span> <span class="fl">2</span>, balance_constraints)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> number_balance_constraints <span class="op">==</span> <span class="fu">length</span>(dictBottlingTime) <span class="op">*</span> <span class="fu">length</span>(dictAvailableTime) <span class="st">"You need one inventory balance constraint for each combination of beer type and period — did you add the balance for the first period?"</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">primal_status</span>(lotsizeModel) <span class="op">==</span> MOI.FEASIBLE_POINT <span class="st">"The solver found no feasible solution within the time limit — check your model and re-run the cell"</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fl">500000</span> <span class="op">&lt;=</span> <span class="fu">objective_value</span>(lotsizeModel) <span class="op">&lt;=</span> <span class="fl">950000</span> <span class="st">"Objective value should be between 500,000 and 950,000"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>The objective value should now be higher, likely in the <span class="highlight">range of 700,000 to 800,000</span>. The solution space is smaller than before: the model can no longer invent starting stock, but has to bottle the demand of the first week itself. You can check the plots for the production and warehouse stock to verify this.</p>
-<div id="62" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>productionResults <span class="op">=</span> <span class="fu">create_production_results</span>()</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_production_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="64" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_warehouse_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>productionResults <span class="op">=</span> <span class="fu">create_production_results</span>()</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_production_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="66" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>stacked_costs <span class="op">=</span> <span class="fu">create_cost_results</span>()</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_cost_plot</span>(stacked_costs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_warehouse_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="68" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>stacked_costs <span class="op">=</span> <span class="fu">create_cost_results</span>()</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_cost_plot</span>(stacked_costs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
@@ -1397,30 +1416,30 @@ Bottling time per beer:
 <h1>3. Scheduled Repair</h1>
 <p>Unfortunately, the bottling plant has to undergo maintenance in periods <code>"week_10"</code> and <code>"week_11"</code>. <strong>Extend your model</strong> to prevent any production in those two periods.</p>
 <p>Again, to solve this task, you can simply extend the previous model by these additional constraints in the cell below. Afterwards, you can re-run the optimization.</p>
-<div id="68" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="70" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="72" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">primal_status</span>(lotsizeModel) <span class="op">==</span> MOI.FEASIBLE_POINT <span class="st">"The solver found no feasible solution within the time limit — check your model and re-run the cell"</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fl">520000</span> <span class="op">&lt;=</span> <span class="fu">objective_value</span>(lotsizeModel) <span class="op">&lt;=</span> <span class="fl">950000</span> <span class="st">"Objective value should be between 520,000 and 950,000"</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">value</span>(productQuantity[i,t]) <span class="op">&lt;=</span> <span class="fl">1e-6</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictBottlingTime), t <span class="kw">in</span> [<span class="st">"week_10"</span>, <span class="st">"week_11"</span>]) <span class="st">"No production is allowed in week_10 and week_11"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate your solution</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">primal_status</span>(lotsizeModel) <span class="op">==</span> MOI.FEASIBLE_POINT <span class="st">"The solver found no feasible solution within the time limit — check your model and re-run the cell"</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fl">520000</span> <span class="op">&lt;=</span> <span class="fu">objective_value</span>(lotsizeModel) <span class="op">&lt;=</span> <span class="fl">950000</span> <span class="st">"Objective value should be between 520,000 and 950,000"</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">all</span>(<span class="fu">value</span>(productQuantity[i,t]) <span class="op">&lt;=</span> <span class="fl">1e-6</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">keys</span>(dictBottlingTime), t <span class="kw">in</span> [<span class="st">"week_10"</span>, <span class="st">"week_11"</span>]) <span class="st">"No production is allowed in week_10 and week_11"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Again, the solution space is smaller, so the true optimal objective value can only increase. Because we stop the solver at the time limit, the value you see can still be a bit lower than before — in that case, the solver simply found a better solution for the restricted model than it previously did for the unrestricted one. You can check the plots for the production and warehouse stock to verify whether the production is zero in the maintenance periods.</p>
-<div id="72" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>productionResults <span class="op">=</span> <span class="fu">create_production_results</span>()</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_production_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div id="74" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_warehouse_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>productionResults <span class="op">=</span> <span class="fu">create_production_results</span>()</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_production_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="76" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>stacked_costs <span class="op">=</span> <span class="fu">create_cost_results</span>()</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_cost_plot</span>(stacked_costs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_warehouse_plot</span>(productionResults)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="78" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>stacked_costs <span class="op">=</span> <span class="fu">create_cost_results</span>()</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">create_cost_plot</span>(stacked_costs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
@@ -1428,17 +1447,17 @@ Bottling time per beer:
 <h1>4. Production Schedule Analysis</h1>
 <p>Analyze the production schedule of your current model, which includes the constraints from sections 2 and 3. Is the workload <strong>distributed evenly</strong> across all time periods? Provide a rationale for your assessment.</p>
 <p>Please answer in the following cell. Note that <code>#=</code> and <code>=#</code> are comment delimiters for multiline comments. You can write whatever you want between them and the code will not be executed.</p>
-<div id="78" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR REASONING BELOW</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="80" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR REASONING BELOW</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Based on the production data from the final period, <strong>calculate the ending inventory levels for each type of beer</strong>. Discuss any significant findings. Compute the ending inventory levels for each type of beer in the following cell. You can name the DataFrame however you want.</p>
-<div id="80" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="82" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
@@ -1446,13 +1465,13 @@ Bottling time per beer:
 <h1>5. Semiannual Bottling Strategy</h1>
 <p>Reflecting on a scenario where the company schedules its bottling operations <strong>semiannually (every six months)</strong> using the current method: identify and discuss potential pitfalls of this strategy.</p>
 <p>Offer at least one actionable suggestion for enhancing the efficiency or effectiveness of the production planning process.</p>
-<div id="82" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWER BELOW</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="84" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR ANSWER BELOW</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
