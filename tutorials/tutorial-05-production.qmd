@@ -50,15 +50,10 @@ using CSV
 using DataFrames
 using Plots
 using StatsPlots
-plotly() # This will create interactive plots later on
 ```
 
 ::: {.callout-tip}
 If you haven't installed the packages yet, you can do so by running `using Pkg` first and then `Pkg.add(["JuMP", "HiGHS", "CSV", "DataFrames", "Plots", "StatsPlots"])`.
-:::
-
-::: {.callout-note}
-Zed cannot show interactive plots yet. If you work in Zed, remove the `plotly()` line: your plots then appear as images.
 :::
 
 ---
@@ -418,44 +413,73 @@ function create_production_results()
     return productionResults
 end
 
+# All plots in this tutorial: one bar per week, stacked by group
+function weekly_bars(period, values, group; ylabel, title)
+    p = groupedbar(
+        replace.(period, "week_" => ""), # "week_01" becomes "01"
+        values,
+        group=replace.(group, "_" => " "), # "Amber_Ale" becomes "Amber Ale"
+        bar_position=:stack,
+        xlabel="Week",
+        ylabel=ylabel,
+        title=title,
+        # The course look: brand colors, quiet labels, no frame
+        palette=["#537E8F", "#F6B265", "#3D5369", "#A7C7C6", "#DB6B6B", "#FCCF9C"],
+        background_color="#FFFDFC",
+        linecolor="#FFFDFC",
+        fontfamily="Helvetica",
+        titlefontfamily="Helvetica Bold",
+        titlefontsize=18,
+        titlefontcolor="#363D45",
+        titlelocation=:left,
+        foreground_color_text="#6B7480",
+        foreground_color_guide="#6B7480",
+        foreground_color_axis="#9AA1A8",
+        foreground_color_border="#9AA1A8",
+        yforeground_color_border="#FFFDFC", # no line on the left, the grid is enough
+        guidefontsize=12,
+        tickfontsize=11,
+        legendfontsize=11,
+        legend=:outertop,
+        legend_column=-1,
+        foreground_color_legend=nothing,
+        grid=:y,
+        gridcolor="#E8E4E0",
+        gridalpha=1,
+        framestyle=:axes,
+        tick_direction=:none,
+        ylims=:round, # bars start at 0, the axis ends on a round number
+        yformatter=:plain,
+        bar_width=0.8,
+        size=(1200, 600),
+        dpi=300,
+        top_margin=4Plots.mm,
+        left_margin=8Plots.mm,
+        bottom_margin=6Plots.mm
+    )
+    return p
+end
+
 # Create the production plot
 function create_production_plot(productionResults)
-    p = groupedbar(
+    p = weekly_bars(
         productionResults.period,
         productionResults.productQuantity,
-        group=productionResults.product,
-        ylabel="Production Quantity (Bottles)",
-        xlabel="Period",
-        title="Production Schedule by Beer Type",
-        size=(1200,600),
-        palette = :Set3,
-        legend=:outertopright,
-        xrotation = 45,
-        legendtitle="Beer Type",
-        bar_width=0.7,
-        grid=false,
-        dpi=300
+        productionResults.product;
+        ylabel="Production (bottles)",
+        title="Production schedule"
     )
     return p
 end
 
 # Create the warehouse stock plot
 function create_warehouse_plot(productionResults)
-    p = groupedbar(
+    p = weekly_bars(
         productionResults.period,
         productionResults.WarehouseStockPeriodEnd,
-        group=productionResults.product,
-        ylabel="Warehouse Stock",
-        xlabel="Period",
-        title="Warehouse Stock",
-        size=(1200,600),
-        palette = :Set3,
-        legend=:outertopright,
-        xrotation = 45,
-        legendtitle="Beer Type",
-        bar_width=0.7,
-        grid=false,
-        dpi=300
+        productionResults.product;
+        ylabel="Stock at week end (bottles)",
+        title="Warehouse stock"
     )
     return p
 end
@@ -523,21 +547,12 @@ end
 
 # Create the cost plot
 function create_cost_plot(stacked_costs)
-    p = groupedbar(
+    p = weekly_bars(
         stacked_costs.period,
-        stacked_costs.Cost,
-        group=stacked_costs.Cost_Type,
+        round.(stacked_costs.Cost), # whole euros keep the axis from dipping below 0
+        stacked_costs.Cost_Type;
         ylabel="Costs (€)",
-        xlabel="Period",
-        title="Setup and Inventory Costs per Period",
-        size=(1200,600),
-        palette=:Set2,
-        legend=:outertopright,
-        xrotation=45,
-        legendtitle="Cost Type",
-        bar_width=0.7,
-        grid=false,
-        dpi=300
+        title="Setup and inventory costs"
     )
     return p
 end
