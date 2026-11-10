@@ -261,11 +261,11 @@ blocked_seats = [
 
 To test your solution, visualize it with a plot in Julia. The visualization is a great tool to [check if your solution is correct]{.highlight}. Your first model will likely run without errors and yet still violate some seating rule - the plot makes such violations easy to spot, as they are marked with a [red cross]{.highlight}. [If everything works from the start, great!]{.highlight}
 
+{{< include ../include/plot_style.qmd >}}
+
 ::: {.content-visible when-profile="solutions"}
 ```{julia}
-#| fig-alt: "Arena seating grid of 10 rows and 10 columns, titled Arena Seating Layout, for the solution that maximizes the total score. Seats of placed groups are squares coloured by group type, free seats are white and blocked seats grey. Neighbouring groups keep at least one empty seat between them in every direction, and no red cross marks a violated rule."
-using Plots
-
+#| fig-alt: "Arena seating grid of 10 rows and 10 columns, titled Arena seating layout, for the solution that maximizes the total score. Seats of placed groups are squares coloured by group type, free seats are white with a grey outline and blocked seats grey. Neighbouring groups keep at least one empty seat between them in every direction, and no red cross marks a violated rule."
 # Create visualization of the solution
 function visualize_seating(model)
     # Determine which group covers each seat
@@ -289,23 +289,22 @@ function visualize_seating(model)
     end
 
     # Create color mapping for groups
-    color_map = Dict(
-        "a" => :blue,
-        "b" => :green,
-        "c" => :red,
-        "d" => :purple,
-        "e" => :orange,
-        "f" => :yellow,
-        "g" => :pink
-    )
+    # The six course colors plus a light rose for the seventh group
+    color_map = Dict(zip(groups, [course_style.palette; "#EBADAD"]))
 
-    # Create plot
-    plt = plot(
+    # Create plot: a seating map needs no grid and no frame
+    plt = plot(;
+        course_style...,
+        grid=false,
+        foreground_color_border=course_style.background_color,
         aspect_ratio=:equal,
         xlims=(0.5,10.5),
         ylims=(0.5,10.5),
+        xticks=1:10,
+        yticks=1:10,
         yflip=true,  # Flip y-axis to match traditional seating layout
-        legend=:outerright
+        legend=:outerright,
+        size=(700, 550)
     )
 
     # Plot empty and blocked seats
@@ -313,7 +312,8 @@ function visualize_seating(model)
         if seat_owner[r,c] == ""
             is_blocked = (r,c) in blocked_seats
             scatter!(plt, [c], [r],
-                    color=is_blocked ? :gray : :white,
+                    color=is_blocked ? "#959CA3" : course_style.background_color,
+                    markerstrokecolor=is_blocked ? "#959CA3" : "#9AA1A8",
                     markersize=10,
                     markershape=:square,
                     label=nothing)
@@ -327,6 +327,7 @@ function visualize_seating(model)
         if g != ""
             scatter!(plt, [c], [r],
                     color=color_map[g],
+                    markerstrokecolor=color_map[g],
                     markersize=10,
                     markershape=:square,
                     label=g in shown_groups ? nothing : g)
@@ -336,14 +337,18 @@ function visualize_seating(model)
 
     # Mark constraint violations in a loud color instead of hiding them
     for (r,c) in violations
-        scatter!(plt, [c], [r],
-                color=:red,
-                markersize=8,
-                markershape=:x,
-                label=nothing)
+        # Oxblood with a light halo, so the cross shows on every seat color
+        for (color, width) in [(course_style.background_color, 7), ("#9E2B2B", 3)]
+            scatter!(plt, [c], [r],
+                    color=color,
+                    markersize=10,
+                    markershape=:x,
+                    markerstrokewidth=width,
+                    label=nothing)
+        end
     end
 
-    title!(plt, "Arena Seating Layout")
+    title!(plt, "Arena seating layout")
     xlabel!(plt, "Column")
     ylabel!(plt, "Row")
 
@@ -359,8 +364,6 @@ display(plt)
 ::: {.content-visible unless-profile="solutions"}
 ```{julia}
 #| eval: false
-using Plots
-
 # Create visualization of the solution
 function visualize_seating(model)
     # Determine which group covers each seat
@@ -384,23 +387,22 @@ function visualize_seating(model)
     end
 
     # Create color mapping for groups
-    color_map = Dict(
-        "a" => :blue,
-        "b" => :green,
-        "c" => :red,
-        "d" => :purple,
-        "e" => :orange,
-        "f" => :yellow,
-        "g" => :pink
-    )
+    # The six course colors plus a light rose for the seventh group
+    color_map = Dict(zip(groups, [course_style.palette; "#EBADAD"]))
 
-    # Create plot
-    plt = plot(
+    # Create plot: a seating map needs no grid and no frame
+    plt = plot(;
+        course_style...,
+        grid=false,
+        foreground_color_border=course_style.background_color,
         aspect_ratio=:equal,
         xlims=(0.5,10.5),
         ylims=(0.5,10.5),
+        xticks=1:10,
+        yticks=1:10,
         yflip=true,  # Flip y-axis to match traditional seating layout
-        legend=:outerright
+        legend=:outerright,
+        size=(700, 550)
     )
 
     # Plot empty and blocked seats
@@ -408,7 +410,8 @@ function visualize_seating(model)
         if seat_owner[r,c] == ""
             is_blocked = (r,c) in blocked_seats
             scatter!(plt, [c], [r],
-                    color=is_blocked ? :gray : :white,
+                    color=is_blocked ? "#959CA3" : course_style.background_color,
+                    markerstrokecolor=is_blocked ? "#959CA3" : "#9AA1A8",
                     markersize=10,
                     markershape=:square,
                     label=nothing)
@@ -422,6 +425,7 @@ function visualize_seating(model)
         if g != ""
             scatter!(plt, [c], [r],
                     color=color_map[g],
+                    markerstrokecolor=color_map[g],
                     markersize=10,
                     markershape=:square,
                     label=g in shown_groups ? nothing : g)
@@ -431,14 +435,18 @@ function visualize_seating(model)
 
     # Mark constraint violations in a loud color instead of hiding them
     for (r,c) in violations
-        scatter!(plt, [c], [r],
-                color=:red,
-                markersize=8,
-                markershape=:x,
-                label=nothing)
+        # Oxblood with a light halo, so the cross shows on every seat color
+        for (color, width) in [(course_style.background_color, 7), ("#9E2B2B", 3)]
+            scatter!(plt, [c], [r],
+                    color=color,
+                    markersize=10,
+                    markershape=:x,
+                    markerstrokewidth=width,
+                    label=nothing)
+        end
     end
 
-    title!(plt, "Arena Seating Layout")
+    title!(plt, "Arena seating layout")
     xlabel!(plt, "Column")
     ylabel!(plt, "Row")
 

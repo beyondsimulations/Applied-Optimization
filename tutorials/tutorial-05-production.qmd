@@ -381,6 +381,8 @@ The following code creates production and warehouse plots for you. Use it to ver
 The creation of the dataframes and the plots is implemented inside a function, as we will need to use it multiple times in the following tasks.
 :::
 
+{{< include ../include/plot_style.qmd >}}
+
 ```{julia}
 #| eval: false
 # Create the production results
@@ -417,45 +419,19 @@ end
 function weekly_bars(period, values, group; ylabel, title)
     p = groupedbar(
         replace.(period, "week_" => ""), # "week_01" becomes "01"
-        values,
+        values;
         group=replace.(group, "_" => " "), # "Amber_Ale" becomes "Amber Ale"
         bar_position=:stack,
         xlabel="Week",
         ylabel=ylabel,
         title=title,
-        # The course look: brand colors, quiet labels, no frame
-        palette=["#537E8F", "#F6B265", "#3D5369", "#A7C7C6", "#DB6B6B", "#FCCF9C"],
-        background_color="#FFFDFC",
-        linecolor="#FFFDFC",
-        fontfamily="Helvetica",
-        titlefontfamily="Helvetica Bold",
-        titlefontsize=18,
-        titlefontcolor="#363D45",
-        titlelocation=:left,
-        foreground_color_text="#6B7480",
-        foreground_color_guide="#6B7480",
-        foreground_color_axis="#9AA1A8",
-        foreground_color_border="#9AA1A8",
-        yforeground_color_border="#FFFDFC", # no line on the left, the grid is enough
-        guidefontsize=12,
-        tickfontsize=11,
-        legendfontsize=11,
+        course_style...,
+        linecolor=course_style.background_color, # a thin gap between the stacked parts
+        ylims=:round, # bars start at 0, the axis ends on a round number
+        bar_width=0.8,
         legend=:outertop,
         legend_column=-1,
-        foreground_color_legend=nothing,
-        grid=:y,
-        gridcolor="#E8E4E0",
-        gridalpha=1,
-        framestyle=:axes,
-        tick_direction=:none,
-        ylims=:round, # bars start at 0, the axis ends on a round number
-        yformatter=:plain,
-        bar_width=0.8,
-        size=(1200, 600),
-        dpi=300,
-        top_margin=4Plots.mm,
-        left_margin=8Plots.mm,
-        bottom_margin=6Plots.mm
+        size=(1200, 600)
     )
     return p
 end
