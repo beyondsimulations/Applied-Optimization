@@ -728,6 +728,40 @@ This constraint creates a **logical connection between department locations and 
 & X_{i,j} \in \{0,1\}  && \forall i \in \mathcal{I}, j \in \mathcal{J}
 \end{align}
 
+## Why "Median"?
+
+Seven areas along one road, one department, and the driving time between two areas is how many steps apart they are:
+
+```{julia}
+#| output-location: fragment
+w = [1, 2, 8, 3, 1, 1, 5] # incidents per area
+driving(i) = sum(w[j] * abs(i - j) for j in 1:7) # department in area i
+println(driving.(1:7))
+```
+
+## The Best Spot
+
+```{julia}
+#| echo: false
+#| output: false
+{{< include ../include/plot_style.jl >}}
+```
+
+```{julia}
+#| echo: false
+#| fig-alt: "Two bar charts over the areas 1 to 7. The top one shows the incidents per area: 1, 2, 8, 3, 1, 1 and 5. The bottom one shows the weighted driving time with the department in each area: 66, 47, 32, 33, 40, 49 and 60, with the lowest value in area 3 highlighted."
+best = argmin(driving.(1:7))
+top = bar(1:7, w; course_style..., color="#A7C7C6", linecolor=course_style.background_color,
+    title="Incidents per area", titlefontsize=14, ylabel="Incidents", legend=false, xticks=1:7, ylims=(0, 9))
+bottom = bar(1:7, driving.(1:7); course_style...,
+    color=[i == best ? "#537E8F" : "#959CA3" for i in 1:7], linecolor=course_style.background_color,
+    title="Weighted driving time with the department in area i", titlefontsize=14,
+    xlabel="Area", ylabel="Steps × incidents", legend=false, xticks=1:7, ylims=:round)
+plot(top, bottom; layout=(2, 1), size=(800, 450))
+```
+
+Area 3 is the [weighted median]{.highlight}: no more than half of the incidents lie on either side of it.
+
 ## Connection to Facility Location {.smaller}
 
 [Question:]{.question} **How does this relate to these problems?**

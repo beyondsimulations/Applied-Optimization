@@ -555,6 +555,28 @@ end
 - **Lager** is bottled every week, as the plant capacity is too tight to batch it
 - **IPA** batches the demand of week 3 into week 2
 
+## Where the Minutes Go
+
+```{julia}
+#| echo: false
+#| output: false
+{{< include ../include/plot_style.jl >}}
+```
+
+```{julia}
+#| echo: false
+#| fig-alt: "Stacked bars of bottling minutes per week, split into IPA, Lager and Stout, with a dashed capacity line at 1,800 minutes. Week 1 uses 1,710 minutes and week 2 uses 1,570, while week 3 uses only 520 minutes for Lager."
+using StatsPlots
+minutes = [b[i] * value(X[i,t]) + g[i] * value(Y[i,t]) for t in periods, i in beer_types]
+p = groupedbar(["Week $t" for t in periods], round.(minutes);
+    bar_position=:stack, label=permutedims(beer_types),
+    title="Weeks 1 and 2 have no room for week 3's Lager",
+    ylabel="Bottling time (minutes)", course_style...,
+    linecolor=course_style.background_color, bar_width=0.6,
+    ylims=(0, 2000), legend=:outertop, legend_column=-1, size=(1000, 500))
+hline!(p, [a[1]]; color="#6B7480", linestyle=:dash, linewidth=2, label="Capacity") # the same in every week
+```
+
 # [Model Characteristics]{.flow} {.title}
 
 ## Recap on some Basics

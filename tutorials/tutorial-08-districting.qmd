@@ -199,9 +199,11 @@ The planted constraint `2 * X[i,j] <= X[i,i]` looks like the compactness constra
 
 The following code then builds and uses a function to plot the results.
 
+{{< include ../include/plot_style.qmd >}}
+
 ```{julia}
 #| eval: false
-function visualize_departments(hexshape, X, p, rangeDepartments)
+function visualize_departments(hexshape, X, rangeDepartments, euclidianDistances)
     # Convert solution matrix to regular Matrix
     allAssignments = Matrix(value.(X))
 
@@ -211,37 +213,42 @@ function visualize_departments(hexshape, X, p, rangeDepartments)
     # Create copy of hexshape to avoid modifying original
     plot_data = copy(hexshape)
 
-    # Assign departments and initialize colors
+    # Assign each BA to its department
     plot_data.department = rangeDepartments[map(x->x[1], assignments)]
-    plot_data.color = fill(RGB(0/255, 0/255, 0/255), nrow(plot_data))
+    department_locations = unique(plot_data.department)
 
-    # Get unique department locations and create color mapping
-    department_locations = unique(rangeDepartments[map(x->x[1], assignments)])
-    color_palette = cgrad(:Pastel1_9, p, categorical=true)
-    color_dict = Dict(department_locations[i] => color_palette[i] for i in 1:p)
-
-    # Color non-department locations
-    for hex in eachrow(plot_data)
-        if hex.id in department_locations
-            hex.color = RGB(0/255, 0/255, 0/255)
-        else
-            hex.color = color_dict[hex.department]
-        end
+    # Give neighboring districts different colors: two districts are neighbors
+    # if any of their BAs are adjacent (distance below 1.5)
+    colors = [course_style.palette[[1, 2, 4, 5, 6]]; "#EBADAD"] # no dark blue, the departments are dark
+    district_color = Dict{Int,String}()
+    for d in department_locations
+        own = plot_data.department .== d
+        taken = [district_color[plot_data.department[k]] for k in 1:nrow(plot_data)
+            if haskey(district_color, plot_data.department[k]) && any(euclidianDistances[k, own] .< 1.5)]
+        free = setdiff(colors, taken)
+        district_color[d] = isempty(free) ? colors[1] : first(free)
     end
+
+    # Departments in dark ink, all other BAs in the color of their district
+    plot_data.color = [hex.id in department_locations ? "#363D45" : district_color[hex.department]
+        for hex in eachrow(plot_data)]
 
     # Create and return plot
     return plot(
-        plot_data.geometry,
-        color=plot_data.color',
+        plot_data.geometry;
+        course_style...,
+        color=permutedims(plot_data.color),
+        linecolor=course_style.background_color,
         legend=false,
         axis=false,
         ticks=false,
-        size=(800,450)
+        grid=false,
+        size=(800, 450)
     )
 end
 
 # Plot the results
-plot_area = visualize_departments(hexshape, X, p, rangeDepartments)
+plot_area = visualize_departments(hexshape, X, rangeDepartments, euclidianDistances)
 ```
 
 ---
@@ -313,7 +320,7 @@ The following code prints the model status and visualizes the districts. If your
 ```{julia}
 #| eval: false
 print_model_status(pMedianModel)
-display(visualize_departments(hexshape, X, p, rangeDepartments))
+display(visualize_departments(hexshape, X, rangeDepartments, euclidianDistances))
 ```
 
 ---
@@ -367,7 +374,7 @@ The following code prints the model status and visualizes the districts. If your
 ```{julia}
 #| eval: false
 print_model_status(pMedianModel)
-display(visualize_departments(hexshape, X, p, rangeDepartments))
+display(visualize_departments(hexshape, X, rangeDepartments, euclidianDistances))
 ```
 
 ---
@@ -397,7 +404,7 @@ If your implementation is correct, the districts are contiguous and distributed 
 ```{julia}
 #| eval: false
 print_model_status(pMedianModel)
-display(visualize_departments(hexshape, X, p, rangeDepartments))
+display(visualize_departments(hexshape, X, rangeDepartments, euclidianDistances))
 ```
 
 ---

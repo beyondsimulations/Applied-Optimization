@@ -776,6 +776,38 @@ $$
 - The second one limits the **decrease**
 - We start at $t > 1$, as no period exists before the first one
 
+## A Quick Check
+
+{{< include ../include/activate_environment.qmd >}}
+
+```{julia}
+#| output-location: fragment
+σ = 0.3
+U = [0.2, 0.9, 0.5, 1.0, 0.4, 0.2] # relative utilization per period
+[abs(U[t] - U[t-1]) <= σ for t in 2:6] # change within σ? (1 = yes)
+```
+
+## Same Pilgrims, Smoother Flow
+
+```{julia}
+#| echo: false
+#| output: false
+{{< include ../include/plot_style.jl >}}
+```
+
+```{julia}
+#| echo: false
+#| fig-alt: "Line chart of relative utilization over six periods. The spiky plan jumps between 0.2 and 1.0, with four changes larger than 0.3. The smooth plan with the same total rises from 0.3 to 0.8 and falls back to 0.3, and every change stays within 0.3."
+smooth = [0.3, 0.55, 0.8, 0.75, 0.5, 0.3] # the same pilgrims in total
+plot(1:6, [U smooth]; course_style...,
+    label=["Spiky: $(count(abs.(diff(U)) .> σ)) changes above σ" "Smooth: every change within σ"],
+    color=["#F6B265" "#537E8F"], linewidth=3, marker=:circle, markersize=7,
+    markerstrokecolor=course_style.background_color, markerstrokewidth=2,
+    title="Only the smooth plan keeps every change within σ = 0.3",
+    xlabel="Period", ylabel="Relative utilization", xticks=1:6, ylims=(0, 1.05),
+    legend=:outertop, legend_column=-1, size=(1000, 500))
+```
+
 ## Scheduling Problem I
 
 

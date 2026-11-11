@@ -1073,6 +1073,34 @@ The solution space grows **explosively** with problem size:
 
 [^gap-def]: Note that most solvers (including HiGHS) report the gap relative to the best solution, $\frac{\text{Best Solution} - \text{Lower Bound}}{\text{Best Solution}}$, so the numbers in the solver log differ slightly from our definition.
 
+## The Gap Over Time
+
+```{julia}
+#| echo: false
+#| output: false
+{{< include ../include/plot_style.jl >}}
+```
+
+```{julia}
+#| echo: false
+#| fig-alt: "Step chart over 10 minutes of solving time. The best tour found drops from about 8,700 km to 4,100 km within the first 90 seconds and then stays flat, while the lower bound rises only from about 2,060 to 2,310 km. The shaded gap between them stays wide until the end."
+# From the log of a 10-minute HiGHS run: our CVRP model, 45 random customers
+seconds = [0, 0.8, 1.4, 2.1, 16.7, 71.4, 81.8, 83.9, 139, 287, 397, 600]
+bound = [2058, 2272, 2272, 2272, 2280, 2285, 2285, 2285, 2298, 2303, 2309, 2309]
+best = [8668, 6306, 4806, 4686, 4620, 4576, 4290, 4098, 4098, 4098, 4098, 4098]
+p = plot(seconds ./ 60, best; course_style..., seriestype=:steppost,
+    fillrange=bound, fillcolor="#A7C7C6", fillalpha=0.35, color="#537E8F", linewidth=3,
+    label="Best tour found", title="Ten minutes in, the gap is still wide",
+    xlabel="Solving time (minutes)", ylabel="Total distance (km)",
+    ylims=(0, 9000), xticks=0:10, legend=:outertop, legend_column=-1, size=(800, 380))
+plot!(p, seconds ./ 60, bound; seriestype=:steppost, color="#F6B265", linewidth=3,
+    label="Lower bound")
+annotate!(p, 5, (last(best) + last(bound)) / 2, text("Gap", 14, "Helvetica", :center, parse(Colorant, course_style.titlefontcolor)))
+```
+
+- 45 random customers, solved with our model in HiGHS
+- The best tour improves in jumps, the [lower bound hardly moves]{.highlight}
+
 ## Consequences of the Gap
 
 - For 165 libraries, even **state-of-the-art solvers** struggle
