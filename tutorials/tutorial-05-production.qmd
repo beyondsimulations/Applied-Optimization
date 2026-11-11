@@ -365,11 +365,11 @@ Finally, implement the solve statement for your model instance.
 #| eval: false
 #| code-fold: true
 # Validate your solution
-@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit — check your model and re-run the cell"
+@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit. Check your model and re-run the cell"
 @assert 360000 <= objective_value(lotsizeModel) <= 900000 "Objective value should be between 360,000 and 900,000"
 ```
 
-Now, unfortunately we cannot assert the value of the objective function perfectly here, as the model is hard to solve and we abort the computation at the time limit of 60 seconds. The solver then returns the best solution found so far, so everybody is likely getting slightly different results. The solution for the first task will likely be in the [range of 550,000 to 700,000]{.highlight}, and the validation above is deliberately generous to allow for this variation. Don't worry if the solver reports a large remaining gap — the best solution found is good enough for our purposes.
+Now, unfortunately we cannot assert the value of the objective function perfectly here, as the model is hard to solve and we abort the computation at the time limit of 60 seconds. The solver then returns the best solution found so far, so everybody is likely getting slightly different results. The solution for the first task will likely be in the [range of 550,000 to 700,000]{.highlight}, and the validation above is deliberately generous to allow for this variation. Don't worry if the solver reports a large remaining gap: the best solution found is good enough for our purposes.
 
 ---
 
@@ -562,11 +562,11 @@ To solve this task, you can simply extend the previous model by these additional
 #| eval: false
 #| code-fold: true
 # Validate your solution
-# A balance constraint links at least two variables — fixing a single variable to zero is not enough
+# A balance constraint links at least two variables: fixing a single variable to zero is not enough
 balance_constraints = all_constraints(lotsizeModel, AffExpr, MOI.EqualTo{Float64})
 number_balance_constraints = count(c -> length(constraint_object(c).func.terms) >= 2, balance_constraints)
-@assert number_balance_constraints == length(dictBottlingTime) * length(dictAvailableTime) "You need one inventory balance constraint for each combination of beer type and period — did you add the balance for the first period?"
-@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit — check your model and re-run the cell"
+@assert number_balance_constraints == length(dictBottlingTime) * length(dictAvailableTime) "You need one inventory balance constraint for each combination of beer type and period. Did you add the balance for the first period?"
+@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit. Check your model and re-run the cell"
 @assert 500000 <= objective_value(lotsizeModel) <= 950000 "Objective value should be between 500,000 and 950,000"
 ```
 
@@ -607,12 +607,12 @@ Again, to solve this task, you can simply extend the previous model by these add
 #| eval: false
 #| code-fold: true
 # Validate your solution
-@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit — check your model and re-run the cell"
+@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit. Check your model and re-run the cell"
 @assert 520000 <= objective_value(lotsizeModel) <= 950000 "Objective value should be between 520,000 and 950,000"
 @assert all(value(productQuantity[i,t]) <= 1e-6 for i in keys(dictBottlingTime), t in ["week_10", "week_11"]) "No production is allowed in week_10 and week_11"
 ```
 
-Again, the solution space is smaller, so the true optimal objective value can only increase. Because we stop the solver at the time limit, the value you see can still be a bit lower than before — in that case, the solver simply found a better solution for the restricted model than it previously did for the unrestricted one. You can check the plots for the production and warehouse stock to verify whether the production is zero in the maintenance periods.
+Again, the solution space is smaller, so the true optimal objective value can only increase. Because we stop the solver at the time limit, the value you see can still be a bit lower than before. In that case, the solver simply found a better solution for the restricted model than it previously did for the unrestricted one. You can check the plots for the production and warehouse stock to verify whether the production is zero in the maintenance periods.
 
 ```{julia}
 #| eval: false
