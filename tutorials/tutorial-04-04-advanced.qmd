@@ -144,6 +144,28 @@ This problem determines how many widgets and gadgets to produce to maximize prof
 
 Take a close look at the results. The best plan is 78 widgets and 28 gadgets, with a profit of 2790. Notice that the solver does not simply max out widgets, even though widgets earn the most profit per minute. The "greedy" plan - produce 80 widgets first, then fill the remaining time with 26 gadgets - earns only 2780. If we allowed fractional production, the best plan would be 80 widgets and 26.67 gadgets with a profit of 2800, but we cannot sell two-thirds of a gadget, and simply rounding down loses money. Finding the best whole-number plan is exactly what makes integer programming powerful - and hard!
 
+A plot makes this easier to see. It shows the whole-number plans near the best one and the line where all 240 minutes are used.
+
+{{< include ../include/plot_style.qmd >}}
+
+```{julia}
+#| fig-alt: "Grid of whole-number plans with 72 to 80 widgets and 24 to 32 gadgets, cut off by a dashed line where all 240 minutes are used. The best plan, 78 widgets and 28 gadgets, lies exactly on the line. The fractional plan, 80 widgets and 26.67 gadgets, also lies on the line but between two whole numbers. The greedy plan, 80 widgets and 26 gadgets, lies just below it."
+# All whole-number plans near the best ones that fit into the 240 minutes
+plans = [(w, g) for w in 72:80 for g in 24:32 if 2w + 3g <= 240]
+p = scatter(first.(plans), last.(plans); course_style...,
+    color="#959CA3", markersize=4, markerstrokewidth=0, label="Whole-number plans",
+    title="The best plan uses all 240 minutes", xlabel="Widgets", ylabel="Gadgets",
+    xticks=72:80, yticks=24:32, xlims=(71.5, 80.5), ylims=(23.5, 32.5),
+    legend=:outerright, size=(900, 550))
+plot!(p, w -> (240 - 2w) / 3, 71.5, 80; color="#6B7480", linestyle=:dash, label="240 minutes")
+scatter!(p, [80], [80 / 3]; color=course_style.background_color, markerstrokecolor="#3D5369",
+    markerstrokewidth=2, markersize=9, label="Fractional: 2800")
+scatter!(p, [80], [26]; color="#F6B265", markerstrokecolor=course_style.background_color,
+    markerstrokewidth=2, markersize=10, label="Greedy: 2780")
+scatter!(p, [value(widgets)], [value(gadgets)]; color="#537E8F", markerstrokecolor=course_style.background_color,
+    markerstrokewidth=2, markersize=10, label="Best: $(round(Int, objective_value(model)))")
+```
+
 ::: {.callout-note}
 Why did we tighten the MIP gap to 0 before solving? With the 1% gap from Section 1 still active, the solver is allowed to stop at any plan it can prove to be within 1% of the best. When we tried it, HiGHS stopped at 79 widgets and 27 gadgets with a profit of 2785 - "good enough" by the rule we gave it, but not the true optimum. Keep this in mind whenever you combine gap tolerances with tests that expect exact values.
 :::

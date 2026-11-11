@@ -321,6 +321,16 @@ $$
 - $I_p$ is the set of minutes $t$ that belong to period $p$
 - Minutes are **not overlapping**, but they are **continuous**
 
+## The Same Set in Julia
+
+With periods of $m = 5$ minutes, $I_p$ is a range of minutes for each period:
+
+```{julia}
+#| output-location: fragment
+m, n = 5, 3 # 5 minutes per period, 3 periods
+I = [((p - 1) * m + 1):(p * m) for p in 1:n]
+```
+
 ## Parameters?
 
 [Question:]{.question} **What could be possible parameters?**
