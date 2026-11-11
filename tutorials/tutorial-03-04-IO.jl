@@ -75,11 +75,12 @@ println("CSV file 'matrix.csv' written successfully to folder ExampleData!")
 # %% [markdown]
 # > **Note**
 # >
-# > Note that we used the `@__DIR__` macro to get the directory of the
-# > current file. This is a convenient way to ensure that the file path is
-# > correct, no matter where you run the script from. The reason is that
-# > the `@__DIR__` macro returns the directory of the file containing the
-# > macro, not your current working directory.
+# > Note that we used the `@__DIR__` macro to build the path. When you run
+# > a file as a script, `@__DIR__` returns the folder of that file, no
+# > matter where you start Julia from. In the Zed REPL, a cell does not
+# > belong to a file, so `@__DIR__` returns the folder Julia runs in
+# > instead, the same as `pwd()`. Run `pwd()` in a cell to see where your
+# > files end up.
 #
 # ## Exercise 1.1 - Read a CSV File
 #
@@ -122,10 +123,9 @@ println("File 'matrix.csv' read successfully!")
 # The CSV package in Julia provides powerful tools for reading and writing
 # CSV files to and from DataFrames, a common requirement in data analysis
 # and data science projects. This requires the CSV and DataFrames
-# packages. If you have only been following along with the course so far,
-# you first have to install the CSV package before you can start using it.
-# Remember from the last tutorial: our Zed kernel already runs in the
-# course environment, so the package is added there permanently:
+# packages. Both ship with the course environment, so you can use them
+# right away. In your own projects, you add CSV first, as you learned in
+# the package tutorial:
 
 # %%
 import Pkg
@@ -204,7 +204,10 @@ println("File 'orders.csv' written to the folder ExampleData!")
 
 # %% [markdown]
 # First, read the file with plain `CSV.read(path, DataFrame)` and print
-# it. What type does the `crates` column have, and why? Then read the file
+# it. What type does the `crates` column have, and why? The printed table
+# shortens long type names, so check with `eltype()`. Notice that CSV.jl
+# found the `;` on its own: it can guess which character separates the
+# columns, but not that `60,0` uses a decimal comma. Then read the file
 # again into the variable `orders`, this time telling `CSV.read()` how the
 # file was written: `delim=';'` and `decimal=','`.
 #
@@ -254,9 +257,9 @@ println("Order file cleaned successfully!")
 # %% [markdown]
 # > **Note**
 # >
-# > This is the same file as in the lecture’s game. In lecture 5, these
-# > weekly orders become the demand of the brewery’s production model,
-# > there in bottles: 20 per crate.
+# > This is the same file as in the lecture’s game. In lecture 5, the
+# > cleaned orders come back in the bottling game, where you plan the
+# > brewery’s bottling runs for these eight weeks.
 #
 # ------------------------------------------------------------------------
 #
@@ -265,8 +268,8 @@ println("Order file cleaned successfully!")
 # Congratulations! You’ve successfully completed the tutorial on reading
 # and writing external files in Julia. As a rule of thumb: use
 # DelimitedFiles for quick numeric matrices, and CSV.jl together with
-# DataFrames for real tabular data — in this course, we will mostly use
-# the latter. Continue to the next file to learn more.
+# DataFrames for real tabular data. In this course, we will mostly use the
+# latter. Continue to the next file to learn more.
 #
 # # Solutions
 #

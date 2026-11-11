@@ -26,7 +26,7 @@
 #
 # Welcome to this beginner-friendly tutorial on mathematical optimization
 # using JuMP and the HiGHS solver in Julia! Don’t worry if these terms
-# sound unfamiliar – we’ll explain everything step by step.
+# sound unfamiliar. We’ll explain everything step by step.
 #
 # In this tutorial, you’ll learn how to:
 #

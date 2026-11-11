@@ -812,7 +812,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>Note that we used the <code>@__DIR__</code> macro to get the directory of the current file. This is a convenient way to ensure that the file path is correct, no matter where you run the script from. The reason is that the <code>@__DIR__</code> macro returns the directory of the file containing the macro, not your current working directory.</p>
+<p>Note that we used the <code>@__DIR__</code> macro to build the path. When you run a file as a script, <code>@__DIR__</code> returns the folder of that file, no matter where you start Julia from. In the Zed REPL, a cell does not belong to a file, so <code>@__DIR__</code> returns the folder Julia runs in instead, the same as <code>pwd()</code>. Run <code>pwd()</code> in a cell to see where your files end up.</p>
 </div>
 </div>
 </div>
@@ -858,7 +858,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="section-2---working-with-csv-files-and-dataframes" class="level1">
 <h1>Section 2 - Working with CSV Files and DataFrames</h1>
-<p>The CSV package in Julia provides powerful tools for reading and writing CSV files to and from DataFrames, a common requirement in data analysis and data science projects. This requires the CSV and DataFrames packages. If you have only been following along with the course so far, you first have to install the CSV package before you can start using it. Remember from the last tutorial: our Zed kernel already runs in the course environment, so the package is added there permanently:</p>
+<p>The CSV package in Julia provides powerful tools for reading and writing CSV files to and from DataFrames, a common requirement in data analysis and data science projects. This requires the CSV and DataFrames packages. Both ship with the course environment, so you can use them right away. In your own projects, you add CSV first, as you learned in the package tutorial:</p>
 <div id="12" class="cell" data-execution_count="0">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"CSV"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -928,7 +928,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>)</span>
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"File 'orders.csv' written to the folder ExampleData!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>First, read the file with plain <code>CSV.read(path, DataFrame)</code> and print it. What type does the <code>crates</code> column have, and why? Then read the file again into the variable <code>orders</code>, this time telling <code>CSV.read()</code> how the file was written: <code>delim=';'</code> and <code>decimal=','</code>.</p>
+<p>First, read the file with plain <code>CSV.read(path, DataFrame)</code> and print it. What type does the <code>crates</code> column have, and why? The printed table shortens long type names, so check with <code>eltype()</code>. Notice that CSV.jl found the <code>;</code> on its own: it can guess which character separates the columns, but not that <code>60,0</code> uses a decimal comma. Then read the file again into the variable <code>orders</code>, this time telling <code>CSV.read()</code> how the file was written: <code>delim=';'</code> and <code>decimal=','</code>.</p>
 <div class="callout callout-style-simple callout-tip">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -985,7 +985,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>This is the same file as in the lecture’s game. In lecture 5, these weekly orders become the demand of the brewery’s production model, there in bottles: 20 per crate.</p>
+<p>This is the same file as in the lecture’s game. In lecture 5, the cleaned orders come back in the bottling game, where you plan the brewery’s bottling runs for these eight weeks.</p>
 </div>
 </div>
 </div>
@@ -994,7 +994,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
-<p>Congratulations! You’ve successfully completed the tutorial on reading and writing external files in Julia. As a rule of thumb: use DelimitedFiles for quick numeric matrices, and CSV.jl together with DataFrames for real tabular data — in this course, we will mostly use the latter. Continue to the next file to learn more.</p>
+<p>Congratulations! You’ve successfully completed the tutorial on reading and writing external files in Julia. As a rule of thumb: use DelimitedFiles for quick numeric matrices, and CSV.jl together with DataFrames for real tabular data. In this course, we will mostly use the latter. Continue to the next file to learn more.</p>
 </section>
 <section id="solutions" class="level1">
 <h1>Solutions</h1>

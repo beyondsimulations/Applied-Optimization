@@ -176,10 +176,47 @@ blocked_seats = [
 # violations easy to spot, as they are marked with a
 # <span class="highlight">red cross</span>. <span class="highlight">If
 # everything works from the start, great!</span>
+#
+# The next cell sets the look of the plots below: the course colors, quiet
+# grey labels and no frame. Run it once. A plot picks it up when you add
+# `course_style...` to its keywords, after a semicolon.
 
 # %%
 using Plots
+# The course look for plots, used like this: bar(x, y; course_style...)
+course_style = (
+    palette=["#537E8F", "#F6B265", "#3D5369", "#A7C7C6", "#DB6B6B", "#FCCF9C"],
+    background_color="#FFFDFC",
+    fontfamily="Helvetica",
+    titlefontfamily="Helvetica Bold",
+    titlefontsize=18,
+    titlefontcolor="#363D45",
+    titlelocation=:left,
+    foreground_color_text="#6B7480",
+    foreground_color_guide="#6B7480",
+    foreground_color_axis="#9AA1A8",
+    foreground_color_border="#9AA1A8",
+    yforeground_color_border="#FFFDFC", # no line on the left, the grid is enough
+    guidefontsize=12,
+    tickfontsize=11,
+    legendfontsize=11,
+    foreground_color_legend=nothing,
+    background_color_legend=nothing,
+    grid=:y,
+    gridcolor="#E8E4E0",
+    gridalpha=1,
+    framestyle=:axes,
+    tick_direction=:none,
+    yformatter=:plain,
+    dpi=300,
+    top_margin=4Plots.mm,
+    left_margin=8Plots.mm,
+    bottom_margin=6Plots.mm
+)
 
+
+
+# %%
 # Create visualization of the solution
 function visualize_seating(model)
     # Determine which group covers each seat
@@ -203,23 +240,22 @@ function visualize_seating(model)
     end
 
     # Create color mapping for groups
-    color_map = Dict(
-        "a" => :blue,
-        "b" => :green,
-        "c" => :red,
-        "d" => :purple,
-        "e" => :orange,
-        "f" => :yellow,
-        "g" => :pink
-    )
+    # The six course colors plus a light rose for the seventh group
+    color_map = Dict(zip(groups, [course_style.palette; "#EBADAD"]))
 
-    # Create plot
-    plt = plot(
+    # Create plot: a seating map needs no grid and no frame
+    plt = plot(;
+        course_style...,
+        grid=false,
+        foreground_color_border=course_style.background_color,
         aspect_ratio=:equal,
         xlims=(0.5,10.5),
         ylims=(0.5,10.5),
+        xticks=1:10,
+        yticks=1:10,
         yflip=true,  # Flip y-axis to match traditional seating layout
-        legend=:outerright
+        legend=:outerright,
+        size=(700, 550)
     )
 
     # Plot empty and blocked seats
@@ -227,7 +263,8 @@ function visualize_seating(model)
         if seat_owner[r,c] == ""
             is_blocked = (r,c) in blocked_seats
             scatter!(plt, [c], [r],
-                    color=is_blocked ? :gray : :white,
+                    color=is_blocked ? "#959CA3" : course_style.background_color,
+                    markerstrokecolor=is_blocked ? "#959CA3" : "#9AA1A8",
                     markersize=10,
                     markershape=:square,
                     label=nothing)
@@ -241,6 +278,7 @@ function visualize_seating(model)
         if g != ""
             scatter!(plt, [c], [r],
                     color=color_map[g],
+                    markerstrokecolor=color_map[g],
                     markersize=10,
                     markershape=:square,
                     label=g in shown_groups ? nothing : g)
@@ -250,14 +288,18 @@ function visualize_seating(model)
 
     # Mark constraint violations in a loud color instead of hiding them
     for (r,c) in violations
-        scatter!(plt, [c], [r],
-                color=:red,
-                markersize=8,
-                markershape=:x,
-                label=nothing)
+        # Oxblood with a light halo, so the cross shows on every seat color
+        for (color, width) in [(course_style.background_color, 7), ("#9E2B2B", 3)]
+            scatter!(plt, [c], [r],
+                    color=color,
+                    markersize=10,
+                    markershape=:x,
+                    markerstrokewidth=width,
+                    label=nothing)
+        end
     end
 
-    title!(plt, "Arena Seating Layout")
+    title!(plt, "Arena seating layout")
     xlabel!(plt, "Column")
     ylabel!(plt, "Row")
 

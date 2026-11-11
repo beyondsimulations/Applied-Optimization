@@ -780,6 +780,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container">
 <p>While we’ll practice some commands here, you’ll typically manage packages in Julia’s REPL (Read-Eval-Print Loop), which is like Julia’s command center.</p>
+<p>In the REPL, typing <code>]</code> switches to the package mode, and the prompt changes to <code>pkg&gt;</code>, with the name of the active environment in front. There, <code>add DataFrames</code> does the same as <code>Pkg.add("DataFrames")</code>; backspace takes you back. Most packages show their installation in this <code>] add</code> form.</p>
 </div>
 </div>
 </div>
@@ -811,12 +812,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: This test passes as soon as Pkg is loaded in the current session,</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># even if an earlier cell imported it. To really test your own line,</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># restart the kernel first.</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Pkg</span>.<span class="fu">status</span>()</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Pkg module imported successfully!"</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="cf">catch</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"The Pkg module was not imported yet! Have you used the correct syntax?"</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="pp">@isdefined</span>(<span class="bu">Pkg</span>) <span class="st">"The Pkg module was not imported yet! Have you used the correct syntax?"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">status</span>()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Pkg module imported successfully!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <hr>
@@ -865,12 +863,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">using</span> <span class="bu">DataFrames</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Package added successfully!"</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">catch</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"Package was not added yet! Have you used the correct syntax?"</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Package added successfully!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <hr>
@@ -902,14 +896,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="exercise-3.1---which-command">Exercise 3.1 - Which Command?</h2>
 <p>Imagine you no longer need DataFrames in the current environment. Which function removes it? Assign the name of the function as a string to the variable <code>remove_command</code>: <code>"add"</code>, <code>"update"</code>, or <code>"rm"</code>.</p>
 <div id="14" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>remove_command <span class="op">=</span> <span class="st">""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="16" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> remove_command <span class="kw">in</span> [<span class="st">"add"</span>, <span class="st">"update"</span>, <span class="st">"rm"</span>] <span class="st">"Please assign one of the strings </span><span class="sc">\"</span><span class="st">add</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\"</span><span class="st">update</span><span class="sc">\"</span><span class="st"> or </span><span class="sc">\"</span><span class="st">rm</span><span class="sc">\"</span><span class="st"> to remove_command."</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="pp">@isdefined</span>(remove_command) <span class="op">&amp;&amp;</span> remove_command <span class="kw">in</span> [<span class="st">"add"</span>, <span class="st">"update"</span>, <span class="st">"rm"</span>] <span class="st">"Please assign one of the strings </span><span class="sc">\"</span><span class="st">add</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\"</span><span class="st">update</span><span class="sc">\"</span><span class="st"> or </span><span class="sc">\"</span><span class="st">rm</span><span class="sc">\"</span><span class="st"> to remove_command."</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> remove_command <span class="op">==</span> <span class="st">"rm"</span> <span class="st">"Not quite! Have another look at the list above: which function removes a package from the environment?"</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Correct! Pkg.rm(</span><span class="sc">\"</span><span class="st">DataFrames</span><span class="sc">\"</span><span class="st">) removes the package from the current environment, but it stays in the depot on your computer."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>

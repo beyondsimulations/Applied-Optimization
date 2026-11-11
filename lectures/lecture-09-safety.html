@@ -27,6 +27,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -821,6 +856,8 @@ window.Quarto = {
   <li><a href="#fluctuation-bounds" id="toc-fluctuation-bounds" class="nav-link" data-scroll-target="#fluctuation-bounds">Fluctuation Bounds?</a></li>
   <li><a href="#fluctuation-bounds-1" id="toc-fluctuation-bounds-1" class="nav-link" data-scroll-target="#fluctuation-bounds-1">Fluctuation Bounds</a></li>
   <li><a href="#why-does-this-work" id="toc-why-does-this-work" class="nav-link" data-scroll-target="#why-does-this-work">Why Does This Work?</a></li>
+  <li><a href="#a-quick-check" id="toc-a-quick-check" class="nav-link" data-scroll-target="#a-quick-check">A Quick Check</a></li>
+  <li><a href="#same-pilgrims-smoother-flow" id="toc-same-pilgrims-smoother-flow" class="nav-link" data-scroll-target="#same-pilgrims-smoother-flow">Same Pilgrims, Smoother Flow</a></li>
   <li><a href="#scheduling-problem-i" id="toc-scheduling-problem-i" class="nav-link" data-scroll-target="#scheduling-problem-i">Scheduling Problem I</a></li>
   <li><a href="#scheduling-problem-ii" id="toc-scheduling-problem-ii" class="nav-link" data-scroll-target="#scheduling-problem-ii">Scheduling Problem II</a></li>
   <li><a href="#scheduling-problem-iii" id="toc-scheduling-problem-iii" class="nav-link" data-scroll-target="#scheduling-problem-iii">Scheduling Problem III</a></li>
@@ -1758,6 +1795,34 @@ U_{r,t-1} - U_{r,t} \leq \sigma_r \quad \forall r \in \mathcal{R}, t \in \mathca
 <li>The second one limits the <strong>decrease</strong></li>
 <li>We start at <span class="math inline">\(t &gt; 1\)</span>, as no period exists before the first one</li>
 </ul>
+</section>
+<section id="a-quick-check" class="level2">
+<h2 class="anchored" data-anchor-id="a-quick-check">A Quick Check</h2>
+<div id="4" class="cell" data-output-location="fragment" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>σ <span class="op">=</span> <span class="fl">0.3</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>U <span class="op">=</span> [<span class="fl">0.2</span>, <span class="fl">0.9</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>, <span class="fl">0.4</span>, <span class="fl">0.2</span>] <span class="co"># relative utilization per period</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>[<span class="fu">abs</span>(U[t] <span class="op">-</span> U[t<span class="op">-</span><span class="fl">1</span>]) <span class="op">&lt;=</span> σ for t <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fl">6</span>] <span class="co"># change within σ? (1 = yes)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>5-element Vector{Bool}:
+ 0
+ 0
+ 0
+ 0
+ 1</code></pre>
+</div>
+</div>
+</section>
+<section id="same-pilgrims-smoother-flow" class="level2">
+<h2 class="anchored" data-anchor-id="same-pilgrims-smoother-flow">Same Pilgrims, Smoother Flow</h2>
+<div id="8" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="lecture-09-safety_files/figure-revealjs/cell-5-output-1.svg" class="img-fluid figure-img" alt="Line chart of relative utilization over six periods. The spiky plan jumps between 0.2 and 1.0, with four changes larger than 0.3. The smooth plan with the same total rises from 0.3 to 0.8 and falls back to 0.3, and every change stays within 0.3."></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="scheduling-problem-i" class="level2">
 <h2 class="anchored" data-anchor-id="scheduling-problem-i">Scheduling Problem I</h2>

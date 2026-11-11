@@ -173,6 +173,65 @@ println("Gadgets to produce: ", value(gadgets))
 # rounding down loses money. Finding the best whole-number plan is exactly
 # what makes integer programming powerful - and hard!
 #
+# A plot makes this easier to see. It shows the whole-number plans near
+# the best one and the line where all 240 minutes are used.
+#
+# The next cell sets the look of the plots below: the course colors, quiet
+# grey labels and no frame. Run it once. A plot picks it up when you add
+# `course_style...` to its keywords, after a semicolon.
+
+# %%
+using Plots
+# The course look for plots, used like this: bar(x, y; course_style...)
+course_style = (
+    palette=["#537E8F", "#F6B265", "#3D5369", "#A7C7C6", "#DB6B6B", "#FCCF9C"],
+    background_color="#FFFDFC",
+    fontfamily="Helvetica",
+    titlefontfamily="Helvetica Bold",
+    titlefontsize=18,
+    titlefontcolor="#363D45",
+    titlelocation=:left,
+    foreground_color_text="#6B7480",
+    foreground_color_guide="#6B7480",
+    foreground_color_axis="#9AA1A8",
+    foreground_color_border="#9AA1A8",
+    yforeground_color_border="#FFFDFC", # no line on the left, the grid is enough
+    guidefontsize=12,
+    tickfontsize=11,
+    legendfontsize=11,
+    foreground_color_legend=nothing,
+    background_color_legend=nothing,
+    grid=:y,
+    gridcolor="#E8E4E0",
+    gridalpha=1,
+    framestyle=:axes,
+    tick_direction=:none,
+    yformatter=:plain,
+    dpi=300,
+    top_margin=4Plots.mm,
+    left_margin=8Plots.mm,
+    bottom_margin=6Plots.mm
+)
+
+
+
+# %%
+# All whole-number plans near the best ones that fit into the 240 minutes
+plans = [(w, g) for w in 72:80 for g in 24:32 if 2w + 3g <= 240]
+p = scatter(first.(plans), last.(plans); course_style...,
+    color="#959CA3", markersize=4, markerstrokewidth=0, label="Whole-number plans",
+    title="The best plan uses all 240 minutes", xlabel="Widgets", ylabel="Gadgets",
+    xticks=72:80, yticks=24:32, xlims=(71.5, 80.5), ylims=(23.5, 32.5),
+    legend=:outerright, size=(900, 550))
+plot!(p, w -> (240 - 2w) / 3, 71.5, 80; color="#6B7480", linestyle=:dash, label="240 minutes")
+scatter!(p, [80], [80 / 3]; color=course_style.background_color, markerstrokecolor="#3D5369",
+    markerstrokewidth=2, markersize=9, label="Fractional: 2800")
+scatter!(p, [80], [26]; color="#F6B265", markerstrokecolor=course_style.background_color,
+    markerstrokewidth=2, markersize=10, label="Greedy: 2780")
+scatter!(p, [value(widgets)], [value(gadgets)]; color="#537E8F", markerstrokecolor=course_style.background_color,
+    markerstrokewidth=2, markersize=10, label="Best: $(round(Int, objective_value(model)))")
+
+# %% [markdown]
 # > **Note**
 # >
 # > Why did we tighten the MIP gap to 0 before solving? With the 1% gap

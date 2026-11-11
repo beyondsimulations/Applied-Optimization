@@ -749,6 +749,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#histogram" id="toc-histogram" class="nav-link" data-scroll-target="#histogram">Histogram</a></li>
   <li><a href="#box-plot" id="toc-box-plot" class="nav-link" data-scroll-target="#box-plot">Box Plot</a></li>
   </ul></li>
+  <li><a href="#section-6---the-course-look" id="toc-section-6---the-course-look" class="nav-link" data-scroll-target="#section-6---the-course-look">Section 6 - The Course Look</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
   </ul>
@@ -780,10 +781,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Welcome to this tutorial on plotting in Julia! We’ll be using the powerful Plots.jl package to create beautiful and informative visualizations. Don’t worry if you’re new to plotting – we’ll start with the basics and gradually build up to more advanced techniques.</p>
-<p>In this tutorial, you’ll learn how to: 1. Create simple plots like line graphs and scatter plots 2. Customize your plots with colors, labels, and styles 3. Add multiple data series to a single plot 4. Save your plots as image files for use in reports or presentations</p>
+<p>Welcome to this tutorial on plotting in Julia! We’ll be using the powerful Plots.jl package to create beautiful and informative visualizations. Don’t worry if you’re new to plotting. We’ll start with the basics and gradually build up to more advanced techniques.</p>
+<p>In this tutorial, you’ll learn how to:</p>
+<ol type="1">
+<li>Create simple plots like line graphs and scatter plots</li>
+<li>Customize your plots with colors, labels, and styles</li>
+<li>Add multiple data series to a single plot</li>
+<li>Save your plots as image files for use in reports or presentations</li>
+<li>Give your plots a clear look that puts the data first</li>
+</ol>
 <p>Follow the instructions, write your code in the designated code blocks, and validate your results with <code>@assert</code> statements.</p>
-<p>Before we begin, let’s make sure you have the necessary packages installed. If you’ve been following the course, you’ll need to install the Plots and StatsPlots packages (StatsPlots adds statistical plot recipes like <code>boxplot</code>, which we will use at the end of this tutorial):</p>
+<p>We need the Plots and StatsPlots packages (StatsPlots adds statistical plot recipes like <code>boxplot</code>, which we will use at the end of this tutorial). Both ship with the course environment, so you can use them right away. In your own projects, you add them first:</p>
 <div id="4" class="cell" data-execution_count="0">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>([<span class="st">"Plots"</span>,<span class="st">"StatsPlots"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -816,7 +824,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-5-output-1.svg" class="img-fluid figure-img" alt="Line plot of 10 random values between 0 and 1 over x from 1 to 10, with the title My First Line Plot, labelled x and y axes and no legend."></p>
+<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-5-output-1.svg" class="img-fluid figure-img" alt="Line plot of 10 random values between 0 and 1 over x from 1 to 10, with the title My First Line Plot, labeled x and y axes and no legend."></p>
 </figure>
 </div>
 </div>
@@ -841,7 +849,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="exercise-1.1---create-a-scatter-plot" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1.1---create-a-scatter-plot">Exercise 1.1 - Create a Scatter Plot</h2>
-<p>Now it’s your turn! Create a scatter plot using the <code>scatter()</code> function instead of <code>plot()</code>. Use a range from 1 to 20 for x, and generate 20 random numbers for y.</p>
+<p>Now it’s your turn! Create a scatter plot using the <code>scatter()</code> function instead of <code>plot()</code>. Use a range from 1 to 20 for x, and generate 20 random numbers for y. Save the plot in the variable <code>scatter_plot</code>.</p>
 <div id="10" class="cell" data-execution_count="0">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: Use x = 1:20 and y = rand(20)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -879,7 +887,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-8-output-1.svg" class="img-fluid figure-img" alt="Line plot of 10 random values drawn as a red dashed line with a circle marker at every point, titled Customized Line Plot: line style, colour and markers are changed from the defaults."></p>
+<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-8-output-1.svg" class="img-fluid figure-img" alt="Line plot of 10 random values drawn as a red dashed line with a circle marker at every point, titled Customized Line Plot: line style, color and markers are changed from the defaults."></p>
 </figure>
 </div>
 </div>
@@ -906,7 +914,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>Feel free to experiment with different options. There’s no “right” answer here – it’s all about what looks good to you!</p>
+<p>Feel free to experiment with different options. There’s no “right” answer here: it’s all about what looks good to you!</p>
 </div>
 </div>
 </div>
@@ -937,7 +945,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-11-output-1.svg" class="img-fluid figure-img" alt="Line plot with two series of 20 random values each, drawn in different colours and named Series A and Series B in the legend, titled Plot with Two Series."></p>
+<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-11-output-1.svg" class="img-fluid figure-img" alt="Line plot with two series of 20 random values each, drawn in different colors and named Series A and Series B in the legend, titled Plot with Two Series."></p>
 </figure>
 </div>
 </div>
@@ -1036,7 +1044,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-17-output-1.svg" class="img-fluid figure-img" alt="Histogram of 1000 normally distributed random numbers in about 30 bins, titled Histogram Example: a bell shape centred near zero."></p>
+<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-17-output-1.svg" class="img-fluid figure-img" alt="Histogram of 1000 normally distributed random numbers in about 30 bins, titled Histogram Example: a bell shape centered near zero."></p>
 </figure>
 </div>
 </div>
@@ -1057,13 +1065,83 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-18-output-1.svg" class="img-fluid figure-img" alt="Four box plots side by side for the groups 1 to 4, titled Box Plot Example. The boxes shift upward from group to group, because each group's random values are centred on its group number."></p>
+<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-18-output-1.svg" class="img-fluid figure-img" alt="Four box plots side by side for the groups 1 to 4, titled Box Plot Example. The boxes shift upward from group to group, because each group's random values are centered on its group number."></p>
 </figure>
 </div>
 </div>
 </div>
 <hr>
 </section>
+</section>
+<section id="section-6---the-course-look" class="level1">
+<h1>Section 6 - The Course Look</h1>
+<p>The plots above use the defaults of Plots.jl. They are correct, but a reader should get their point at a glance. Four rules from the <a href="https://beyondsimulations.github.io/Introduction-to-Python/lectures/lec_09_plotting.html">plotting lecture of our Python course</a> get you most of the way:</p>
+<ul>
+<li><strong>The title states the point</strong>: “Category D sells most” says more than “Bar Plot Example”.</li>
+<li><strong>Every number axis has a label with its unit</strong>, for example <em>Sales (units)</em>.</li>
+<li><strong>Bars start at 0</strong>: a bar shows its number by its length, so a cut axis distorts the comparison.</li>
+<li><strong>Quiet everything that is not data</strong>: no frame, light grid lines, grey labels, calm colors.</li>
+</ul>
+<p>The later tutorials share one style for this, called <code>course_style</code>.</p>
+<p>The next cell sets the look of the plots below: the course colors, quiet grey labels and no frame. Run it once. A plot picks it up when you add <code>course_style...</code> to its keywords, after a semicolon.</p>
+<div id="36" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The course look for plots, used like this: bar(x, y; course_style...)</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>course_style <span class="op">=</span> (</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>[<span class="st">"#537E8F"</span>, <span class="st">"#F6B265"</span>, <span class="st">"#3D5369"</span>, <span class="st">"#A7C7C6"</span>, <span class="st">"#DB6B6B"</span>, <span class="st">"#FCCF9C"</span>],</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    background_color<span class="op">=</span><span class="st">"#FFFDFC"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    fontfamily<span class="op">=</span><span class="st">"Helvetica"</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    titlefontfamily<span class="op">=</span><span class="st">"Helvetica Bold"</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    titlefontsize<span class="op">=</span><span class="fl">18</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    titlefontcolor<span class="op">=</span><span class="st">"#363D45"</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    titlelocation<span class="op">=:</span>left,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    foreground_color_text<span class="op">=</span><span class="st">"#6B7480"</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    foreground_color_guide<span class="op">=</span><span class="st">"#6B7480"</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    foreground_color_axis<span class="op">=</span><span class="st">"#9AA1A8"</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    foreground_color_border<span class="op">=</span><span class="st">"#9AA1A8"</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    yforeground_color_border<span class="op">=</span><span class="st">"#FFFDFC"</span>, <span class="co"># no line on the left, the grid is enough</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    guidefontsize<span class="op">=</span><span class="fl">12</span>,</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    tickfontsize<span class="op">=</span><span class="fl">11</span>,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    legendfontsize<span class="op">=</span><span class="fl">11</span>,</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    foreground_color_legend<span class="op">=</span><span class="cn">nothing</span>,</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    background_color_legend<span class="op">=</span><span class="cn">nothing</span>,</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    grid<span class="op">=:</span>y,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    gridcolor<span class="op">=</span><span class="st">"#E8E4E0"</span>,</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    gridalpha<span class="op">=</span><span class="fl">1</span>,</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    framestyle<span class="op">=:</span>axes,</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    tick_direction<span class="op">=:</span>none,</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    yformatter<span class="op">=:</span>plain,</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    dpi<span class="op">=</span><span class="fl">300</span>,</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    top_margin<span class="op">=</span><span class="fl">4</span>Plots.mm,</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    left_margin<span class="op">=</span><span class="fl">8</span>Plots.mm,</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    bottom_margin<span class="op">=</span><span class="fl">6</span>Plots.mm</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Here is the bar plot from above in the course look:</p>
+<div id="38" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>course_bar_plot <span class="op">=</span> <span class="fu">bar</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    x_categories,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    y_values;</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Category D sells most: 30 units"</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">"Category"</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">"Sales (units)"</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="cn">false</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    course_style<span class="op">...</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    linecolor<span class="op">=</span>course_style.background_color,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span>(<span class="fl">800</span>, <span class="fl">400</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(course_bar_plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-03-05-Plotting_files/figure-html/cell-20-output-1.svg" class="img-fluid figure-img" alt="The bar plot from above in the course style: four slate-blue bars for the categories A to D with the sales 15, 23, 18 and 30 units, titled Category D sells most: 30 units. The y-axis is labeled Sales (units) and starts at 0, with light horizontal grid lines and no frame."></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The three dots after <code>course_style</code> unpack all of its settings into the call, as if you had typed each of them. You can add more settings after it, like <code>size=(800, 400)</code> here, and if one of them is already in <code>course_style</code>, the one after it wins. <code>course_style.background_color</code> reads a single setting back, so the gaps between the bars match the background.</p>
+<hr>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>

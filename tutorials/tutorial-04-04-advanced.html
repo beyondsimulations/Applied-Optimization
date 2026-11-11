@@ -921,7 +921,7 @@ Solving report
   Primal bound      2790
   Dual bound        2790
   Gap               0%
-  P-D integral      1.37351910355e-05
+  P-D integral      1.91228277769e-06
   Solution status   feasible
                     2790 (objective)
                     0 (bound viol.)
@@ -943,6 +943,65 @@ Gadgets to produce: 28.0</code></pre>
 </div>
 <p>This problem determines how many widgets and gadgets to produce to maximize profit, given the available production time in minutes and the maximum demand for each product.</p>
 <p>Take a close look at the results. The best plan is 78 widgets and 28 gadgets, with a profit of 2790. Notice that the solver does not simply max out widgets, even though widgets earn the most profit per minute. The “greedy” plan - produce 80 widgets first, then fill the remaining time with 26 gadgets - earns only 2780. If we allowed fractional production, the best plan would be 80 widgets and 26.67 gadgets with a profit of 2800, but we cannot sell two-thirds of a gadget, and simply rounding down loses money. Finding the best whole-number plan is exactly what makes integer programming powerful - and hard!</p>
+<p>A plot makes this easier to see. It shows the whole-number plans near the best one and the line where all 240 minutes are used.</p>
+<p>The next cell sets the look of the plots below: the course colors, quiet grey labels and no frame. Run it once. A plot picks it up when you add <code>course_style...</code> to its keywords, after a semicolon.</p>
+<div id="16" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The course look for plots, used like this: bar(x, y; course_style...)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>course_style <span class="op">=</span> (</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>[<span class="st">"#537E8F"</span>, <span class="st">"#F6B265"</span>, <span class="st">"#3D5369"</span>, <span class="st">"#A7C7C6"</span>, <span class="st">"#DB6B6B"</span>, <span class="st">"#FCCF9C"</span>],</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    background_color<span class="op">=</span><span class="st">"#FFFDFC"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    fontfamily<span class="op">=</span><span class="st">"Helvetica"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    titlefontfamily<span class="op">=</span><span class="st">"Helvetica Bold"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    titlefontsize<span class="op">=</span><span class="fl">18</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    titlefontcolor<span class="op">=</span><span class="st">"#363D45"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    titlelocation<span class="op">=:</span>left,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    foreground_color_text<span class="op">=</span><span class="st">"#6B7480"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    foreground_color_guide<span class="op">=</span><span class="st">"#6B7480"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    foreground_color_axis<span class="op">=</span><span class="st">"#9AA1A8"</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    foreground_color_border<span class="op">=</span><span class="st">"#9AA1A8"</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    yforeground_color_border<span class="op">=</span><span class="st">"#FFFDFC"</span>, <span class="co"># no line on the left, the grid is enough</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    guidefontsize<span class="op">=</span><span class="fl">12</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    tickfontsize<span class="op">=</span><span class="fl">11</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    legendfontsize<span class="op">=</span><span class="fl">11</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    foreground_color_legend<span class="op">=</span><span class="cn">nothing</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    background_color_legend<span class="op">=</span><span class="cn">nothing</span>,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    grid<span class="op">=:</span>y,</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    gridcolor<span class="op">=</span><span class="st">"#E8E4E0"</span>,</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    gridalpha<span class="op">=</span><span class="fl">1</span>,</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    framestyle<span class="op">=:</span>axes,</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    tick_direction<span class="op">=:</span>none,</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    yformatter<span class="op">=:</span>plain,</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    dpi<span class="op">=</span><span class="fl">300</span>,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    top_margin<span class="op">=</span><span class="fl">4</span>Plots.mm,</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    left_margin<span class="op">=</span><span class="fl">8</span>Plots.mm,</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    bottom_margin<span class="op">=</span><span class="fl">6</span>Plots.mm</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="18" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># All whole-number plans near the best ones that fit into the 240 minutes</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plans <span class="op">=</span> [(w, g) for w <span class="kw">in</span> <span class="fl">72</span><span class="op">:</span><span class="fl">80</span> for g <span class="kw">in</span> <span class="fl">24</span><span class="op">:</span><span class="fl">32</span> if <span class="fl">2</span>w <span class="op">+</span> <span class="fl">3</span>g <span class="op">&lt;=</span> <span class="fl">240</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">scatter</span>(<span class="fu">first</span>.(plans), <span class="fu">last</span>.(plans); course_style<span class="op">...</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"#959CA3"</span>, markersize<span class="op">=</span><span class="fl">4</span>, markerstrokewidth<span class="op">=</span><span class="fl">0</span>, label<span class="op">=</span><span class="st">"Whole-number plans"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"The best plan uses all 240 minutes"</span>, xlabel<span class="op">=</span><span class="st">"Widgets"</span>, ylabel<span class="op">=</span><span class="st">"Gadgets"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    xticks<span class="op">=</span><span class="fl">72</span><span class="op">:</span><span class="fl">80</span>, yticks<span class="op">=</span><span class="fl">24</span><span class="op">:</span><span class="fl">32</span>, xlims<span class="op">=</span>(<span class="fl">71.5</span>, <span class="fl">80.5</span>), ylims<span class="op">=</span>(<span class="fl">23.5</span>, <span class="fl">32.5</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=:</span>outerright, size<span class="op">=</span>(<span class="fl">900</span>, <span class="fl">550</span>))</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot!</span>(p, w <span class="op">-&gt;</span> (<span class="fl">240</span> <span class="op">-</span> <span class="fl">2</span>w) <span class="op">/</span> <span class="fl">3</span>, <span class="fl">71.5</span>, <span class="fl">80</span>; color<span class="op">=</span><span class="st">"#6B7480"</span>, linestyle<span class="op">=:</span>dash, label<span class="op">=</span><span class="st">"240 minutes"</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter!</span>(p, [<span class="fl">80</span>], [<span class="fl">80</span> <span class="op">/</span> <span class="fl">3</span>]; color<span class="op">=</span>course_style.background_color, markerstrokecolor<span class="op">=</span><span class="st">"#3D5369"</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    markerstrokewidth<span class="op">=</span><span class="fl">2</span>, markersize<span class="op">=</span><span class="fl">9</span>, label<span class="op">=</span><span class="st">"Fractional: 2800"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter!</span>(p, [<span class="fl">80</span>], [<span class="fl">26</span>]; color<span class="op">=</span><span class="st">"#F6B265"</span>, markerstrokecolor<span class="op">=</span>course_style.background_color,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    markerstrokewidth<span class="op">=</span><span class="fl">2</span>, markersize<span class="op">=</span><span class="fl">10</span>, label<span class="op">=</span><span class="st">"Greedy: 2780"</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter!</span>(p, [<span class="fu">value</span>(widgets)], [<span class="fu">value</span>(gadgets)]; color<span class="op">=</span><span class="st">"#537E8F"</span>, markerstrokecolor<span class="op">=</span>course_style.background_color,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    markerstrokewidth<span class="op">=</span><span class="fl">2</span>, markersize<span class="op">=</span><span class="fl">10</span>, label<span class="op">=</span><span class="st">"Best: </span><span class="sc">$</span>(<span class="fu">round</span>(<span class="dt">Int</span>, <span class="fu">objective_value</span>(model)))<span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="tutorial-04-04-advanced_files/figure-html/cell-10-output-1.svg" class="img-fluid figure-img" alt="Grid of whole-number plans with 72 to 80 widgets and 24 to 32 gadgets, cut off by a dashed line where all 240 minutes are used. The best plan, 78 widgets and 28 gadgets, lies exactly on the line. The fractional plan, 80 widgets and 26.67 gadgets, also lies on the line but between two whole numbers. The greedy plan, 80 widgets and 26 gadgets, lies just below it."></p>
+</figure>
+</div>
+</div>
+</div>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -971,18 +1030,18 @@ Gadgets to produce: 28.0</code></pre>
 </div>
 </div>
 </div>
-<div id="16" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: Copy the code above and make the necessary changes</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer) <span class="co"># Don't forget to re-initialize the model</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="20" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: Copy the code above and make the necessary changes</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">Model</span>(HiGHS.Optimizer) <span class="co"># Don't forget to re-initialize the model</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="18" class="cell" data-execution_count="0">
+<div id="22" class="cell" data-execution_count="0">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> MOI.OPTIMAL <span class="st">"The termination status should be OPTIMAL but is </span><span class="sc">$</span>(<span class="fu">termination_status</span>(model))<span class="st">"</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">isapprox</span>(<span class="fu">objective_value</span>(model), <span class="fl">3780</span>, atol<span class="op">=</span><span class="fl">1e-6</span>) <span class="st">"The objective value should be 3780 but is </span><span class="sc">$</span>(<span class="fu">objective_value</span>(model))<span class="st">"</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Excellent work! You've successfully modified and solved the optimization problem."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">termination_status</span>(model) <span class="op">==</span> MOI.OPTIMAL <span class="st">"The termination status should be OPTIMAL but is </span><span class="sc">$</span>(<span class="fu">termination_status</span>(model))<span class="st">"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">isapprox</span>(<span class="fu">objective_value</span>(model), <span class="fl">3780</span>, atol<span class="op">=</span><span class="fl">1e-6</span>) <span class="st">"The objective value should be 3780 but is </span><span class="sc">$</span>(<span class="fu">objective_value</span>(model))<span class="st">"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Excellent work! You've successfully modified and solved the optimization problem."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="callout callout-style-simple callout-note">
@@ -1001,18 +1060,18 @@ Gadgets to produce: 28.0</code></pre>
 <section id="section-3---interpreting-solver-output" class="level1">
 <h1>Section 3 - Interpreting Solver Output</h1>
 <p>When we solve an optimization problem, the solver gives us information about how it went. Let’s look at some key pieces of information for the problem we solved in Section 2:</p>
-<div id="20" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Termination status: "</span>, <span class="fu">termination_status</span>(model))</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Primal status: "</span>, <span class="fu">primal_status</span>(model))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Dual status: "</span>, <span class="fu">dual_status</span>(model))</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective value: "</span>, <span class="fu">objective_value</span>(model))</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solve time: "</span>, <span class="fu">solve_time</span>(model))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="24" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Termination status: "</span>, <span class="fu">termination_status</span>(model))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Primal status: "</span>, <span class="fu">primal_status</span>(model))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Dual status: "</span>, <span class="fu">dual_status</span>(model))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Objective value: "</span>, <span class="fu">objective_value</span>(model))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Solve time: "</span>, <span class="fu">solve_time</span>(model))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Termination status: OPTIMAL
 Primal status: FEASIBLE_POINT
 Dual status: NO_SOLUTION
 Objective value: 2790.0
-Solve time: 0.00934841699199751</code></pre>
+Solve time: 0.005202208005357534</code></pre>
 </div>
 </div>
 <p>Let’s break this down:</p>

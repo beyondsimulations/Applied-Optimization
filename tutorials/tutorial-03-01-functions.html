@@ -874,7 +874,7 @@ The result of do_something(5, 10) is 15</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># But this would cause an error:</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(secret_ingredient)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>If you want to access the variable outside of the function, you have to explicitly return it. You can do this by writing <code>return</code> in front of the variable you want to return from the function.</p>
+<p>If you want to access the variable outside of the function, you have to return it, either by writing <code>return</code> in front of the variable or by making it the last expression of the function.</p>
 <section id="exercise-2.1---return-a-local-variable" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2.1---return-a-local-variable">Exercise 2.1 - Return a Local Variable</h2>
 <p>Run the block below and then the test underneath it. The block itself executes without an error - it is the test that fails. Before fixing anything, think about why the function returns 20 and not nothing. (Hint: Section 1, implicit return - the last expression is <code>local_variable_two = 20</code>.) Your task is to change the function so that it returns the value of <code>local_variable_one</code>.</p>
@@ -960,6 +960,7 @@ Generic operation for objects of type String and Int64</code></pre>
 <section id="exercise-3.2---add-your-own-method" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-3.2---add-your-own-method">Exercise 3.2 - Add Your Own Method</h2>
 <p>Now, add a method to the generic function <code>operation</code> yourself. Define <code>operation</code> for two <code>Bool</code> arguments so that it returns <code>true</code> only if both arguments are <code>true</code> (you can use <code>a &amp;&amp; b</code> for this). This is exactly how you extend an existing function with a new method in Julia.</p>
+<p>Before you write it, run <code>operation(true, true)</code>. Why does it return <code>2</code>? (Hint: run <code>Bool &lt;: Number</code>.) Your new method is more specific than the one for <code>Number</code>, so Julia picks it for two <code>Bool</code> arguments as soon as it exists.</p>
 <div id="30" class="cell" data-execution_count="0">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>

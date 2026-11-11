@@ -163,9 +163,50 @@
 
 # %% [markdown]
 # Next, plot the utilization of the resource by using the `Plots` package.
-# Then, take a closer look at your plot: Does the capacity bind in any
-# period? Is the fluctuation limit $\sigma = 0.3$ active between any two
-# periods? Which groups were pushed away from their preferred period?
+# Give it the course look with `course_style...` and draw the capacity as
+# a dashed line with `hline!`. Then, take a closer look at your plot: Does
+# the capacity bind in any period? Is the fluctuation limit $\sigma = 0.3$
+# active between any two periods? Which groups were pushed away from their
+# preferred period?
+#
+# The next cell sets the look of the plots below: the course colors, quiet
+# grey labels and no frame. Run it once. A plot picks it up when you add
+# `course_style...` to its keywords, after a semicolon.
+
+# %%
+using Plots
+# The course look for plots, used like this: bar(x, y; course_style...)
+course_style = (
+    palette=["#537E8F", "#F6B265", "#3D5369", "#A7C7C6", "#DB6B6B", "#FCCF9C"],
+    background_color="#FFFDFC",
+    fontfamily="Helvetica",
+    titlefontfamily="Helvetica Bold",
+    titlefontsize=18,
+    titlefontcolor="#363D45",
+    titlelocation=:left,
+    foreground_color_text="#6B7480",
+    foreground_color_guide="#6B7480",
+    foreground_color_axis="#9AA1A8",
+    foreground_color_border="#9AA1A8",
+    yforeground_color_border="#FFFDFC", # no line on the left, the grid is enough
+    guidefontsize=12,
+    tickfontsize=11,
+    legendfontsize=11,
+    foreground_color_legend=nothing,
+    background_color_legend=nothing,
+    grid=:y,
+    gridcolor="#E8E4E0",
+    gridalpha=1,
+    framestyle=:axes,
+    tick_direction=:none,
+    yformatter=:plain,
+    dpi=300,
+    top_margin=4Plots.mm,
+    left_margin=8Plots.mm,
+    bottom_margin=6Plots.mm
+)
+
+
 
 # %%
 # YOUR CODE BELOW

@@ -39,6 +39,12 @@
 # > While we’ll practice some commands here, you’ll typically manage
 # > packages in Julia’s REPL (Read-Eval-Print Loop), which is like Julia’s
 # > command center.
+# >
+# > In the REPL, typing `]` switches to the package mode, and the prompt
+# > changes to `pkg>`, with the name of the active environment in front.
+# > There, `add DataFrames` does the same as `Pkg.add("DataFrames")`;
+# > backspace takes you back. Most packages show their installation in
+# > this `] add` form.
 #
 # ------------------------------------------------------------------------
 #
@@ -68,12 +74,9 @@
 # Note: This test passes as soon as Pkg is loaded in the current session,
 # even if an earlier cell imported it. To really test your own line,
 # restart the kernel first.
-try
-    Pkg.status()
-    println("Pkg module imported successfully!")
-catch
-    @error "The Pkg module was not imported yet! Have you used the correct syntax?"
-end
+@assert @isdefined(Pkg) "The Pkg module was not imported yet! Have you used the correct syntax?"
+Pkg.status()
+println("Pkg module imported successfully!")
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -136,12 +139,8 @@ Pkg.activate(".")
 
 # %%
 # Test your answer
-try
-    using DataFrames
-    println("Package added successfully!")
-catch
-    @error "Package was not added yet! Have you used the correct syntax?"
-end
+using DataFrames
+println("Package added successfully!")
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -174,11 +173,11 @@ end
 
 # %%
 # YOUR CODE BELOW
-remove_command = ""
+
 
 # %%
 # Test your answer
-@assert remove_command in ["add", "update", "rm"] "Please assign one of the strings \"add\", \"update\" or \"rm\" to remove_command."
+@assert @isdefined(remove_command) && remove_command in ["add", "update", "rm"] "Please assign one of the strings \"add\", \"update\" or \"rm\" to remove_command."
 @assert remove_command == "rm" "Not quite! Have another look at the list above: which function removes a package from the environment?"
 println("Correct! Pkg.rm(\"DataFrames\") removes the package from the current environment, but it stays in the depot on your computer.")
 

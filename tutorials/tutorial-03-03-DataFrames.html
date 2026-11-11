@@ -793,7 +793,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>Before we start, make sure you have the DataFrames package installed. If you’re not sure how to do this, check the previous tutorial on package management!</p>
+<p>The DataFrames package ships with the course environment, so you can use it right away. In your own projects, you add it first with <code>Pkg.add("DataFrames")</code>, as in the previous tutorial on package management.</p>
 </div>
 </div>
 </div>
@@ -909,7 +909,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> ages <span class="op">==</span> [<span class="fl">28</span>, <span class="fl">23</span>, <span class="fl">37</span>]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> ages <span class="op">==</span> [<span class="fl">28</span>, <span class="fl">23</span>, <span class="fl">37</span>] <span class="st">"ages should hold the Age column, [28, 23, 37]."</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Correct, the Ages column is: "</span>, ages)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -924,7 +924,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> employees.Salary[<span class="fl">1</span>] <span class="op">==</span> <span class="fl">59000</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> employees.Salary[<span class="fl">1</span>] <span class="op">==</span> <span class="fl">59000</span> <span class="st">"John's salary is </span><span class="sc">$</span>(employees.Salary[<span class="fl">1</span>])<span class="st"> but should be 59000."</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Modified DataFrame: "</span>)</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(employees)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -1008,7 +1008,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">nrow</span>(high_earners) <span class="op">==</span> <span class="fl">2</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">nrow</span>(high_earners) <span class="op">==</span> <span class="fl">2</span> <span class="st">"high_earners has </span><span class="sc">$</span>(<span class="fu">nrow</span>(high_earners))<span class="st"> rows, but 2 employees earn more than 60000."</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"High earners: "</span>)</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(high_earners)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -1029,7 +1029,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test your answer</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> sorted_df.Age[<span class="fl">1</span>] <span class="op">==</span> <span class="fl">23</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> sorted_df.Age[<span class="fl">1</span>] <span class="op">==</span> <span class="fl">23</span> <span class="st">"The youngest employee, 23 years old, should come first in sorted_df."</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"DataFrame sorted by age: "</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(sorted_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -1103,7 +1103,7 @@ Frank earns more than 60000</code></pre>
 </section>
 <section id="section-6---filling-a-new-dataframe-with-values" class="level1">
 <h1>Section 6 - Filling a new DataFrame with values</h1>
-<p>Do you remember the <code>push!</code> function? We can use it to fill a new DataFrame with values row by row. This pattern is worth remembering: later in the course, you will use it to collect the results of your optimization models in a DataFrame. For example, we can create a new DataFrame called <code>WorkingHours</code> and fill it with the values from the <code>employees</code> DataFrame. Imagine that the company has a policy, where employees above 30 work 30 hours a week, and employees under 30 work 40 hours a week:</p>
+<p>Do you remember the <code>push!</code> function? We can use it to fill a new DataFrame with values row by row. This pattern is worth remembering: later in the course, you will use it to collect the results of your optimization models in a DataFrame. For example, we can create a new DataFrame called <code>WorkingHours</code> and fill it with the values from the <code>employees</code> DataFrame. Imagine that the company has a policy, where employees over 30 work 30 hours a week, and employees 30 and under work 40 hours a week:</p>
 <div id="46" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new DataFrame</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>WorkingHours <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
@@ -1112,7 +1112,7 @@ Frank earns more than 60000</code></pre>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop over the rows of the employees DataFrame</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> <span class="fu">eachrow</span>(employees)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row.Age <span class="op">&lt;</span> <span class="fl">30</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row.Age <span class="op">&lt;=</span> <span class="fl">30</span></span>
 <span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(WorkingHours, (</span>
 <span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>            Name <span class="op">=</span> row.Name,</span>
 <span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>            Hours <span class="op">=</span> <span class="fl">40</span></span>

@@ -974,48 +974,88 @@ window.Quarto = {
 <section id="visualizing-the-results" class="level2">
 <h2 class="anchored" data-anchor-id="visualizing-the-results">Visualizing the Results</h2>
 <p>The following code then builds and uses a function to plot the results.</p>
-<div id="16" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">visualize_departments</span>(hexshape, X, p, rangeDepartments)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert solution matrix to regular Matrix</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    allAssignments <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">value</span>.(X))</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find assignments where value &gt; 0.5 (accounting for potential floating-point imprecision)</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    assignments <span class="op">=</span> <span class="fu">findall</span>(allAssignments <span class="op">.&gt;</span> <span class="fl">0.5</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create copy of hexshape to avoid modifying original</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    plot_data <span class="op">=</span> <span class="fu">copy</span>(hexshape)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Assign departments and initialize colors</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    plot_data.department <span class="op">=</span> rangeDepartments[<span class="fu">map</span>(x<span class="op">-&gt;</span>x[<span class="fl">1</span>], assignments)]</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    plot_data.color <span class="op">=</span> <span class="fu">fill</span>(<span class="fu">RGB</span>(<span class="fl">0</span><span class="op">/</span><span class="fl">255</span>, <span class="fl">0</span><span class="op">/</span><span class="fl">255</span>, <span class="fl">0</span><span class="op">/</span><span class="fl">255</span>), <span class="fu">nrow</span>(plot_data))</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get unique department locations and create color mapping</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    department_locations <span class="op">=</span> <span class="fu">unique</span>(rangeDepartments[<span class="fu">map</span>(x<span class="op">-&gt;</span>x[<span class="fl">1</span>], assignments)])</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    color_palette <span class="op">=</span> <span class="fu">cgrad</span>(<span class="op">:</span>Pastel1_9, p, categorical<span class="op">=</span><span class="cn">true</span>)</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    color_dict <span class="op">=</span> <span class="fu">Dict</span>(department_locations[i] <span class="op">=&gt;</span> color_palette[i] <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>p)</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Color non-department locations</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> hex <span class="kw">in</span> <span class="fu">eachrow</span>(plot_data)</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> hex.id <span class="kw">in</span> department_locations</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>            hex.color <span class="op">=</span> <span class="fu">RGB</span>(<span class="fl">0</span><span class="op">/</span><span class="fl">255</span>, <span class="fl">0</span><span class="op">/</span><span class="fl">255</span>, <span class="fl">0</span><span class="op">/</span><span class="fl">255</span>)</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>            hex.color <span class="op">=</span> color_dict[hex.department]</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create and return plot</span></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">plot</span>(</span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        plot_data.geometry,</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span>plot_data.color<span class="op">'</span>,</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=</span><span class="cn">false</span>,</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>        axis<span class="op">=</span><span class="cn">false</span>,</span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>        ticks<span class="op">=</span><span class="cn">false</span>,</span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>(<span class="fl">800</span>,<span class="fl">450</span>)</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the results</span></span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>plot_area <span class="op">=</span> <span class="fu">visualize_departments</span>(hexshape, X, p, rangeDepartments)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The next cell sets the look of the plots below: the course colors, quiet grey labels and no frame. Run it once. A plot picks it up when you add <code>course_style...</code> to its keywords, after a semicolon.</p>
+<div id="16" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The course look for plots, used like this: bar(x, y; course_style...)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>course_style <span class="op">=</span> (</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>[<span class="st">"#537E8F"</span>, <span class="st">"#F6B265"</span>, <span class="st">"#3D5369"</span>, <span class="st">"#A7C7C6"</span>, <span class="st">"#DB6B6B"</span>, <span class="st">"#FCCF9C"</span>],</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    background_color<span class="op">=</span><span class="st">"#FFFDFC"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    fontfamily<span class="op">=</span><span class="st">"Helvetica"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    titlefontfamily<span class="op">=</span><span class="st">"Helvetica Bold"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    titlefontsize<span class="op">=</span><span class="fl">18</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    titlefontcolor<span class="op">=</span><span class="st">"#363D45"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    titlelocation<span class="op">=:</span>left,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    foreground_color_text<span class="op">=</span><span class="st">"#6B7480"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    foreground_color_guide<span class="op">=</span><span class="st">"#6B7480"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    foreground_color_axis<span class="op">=</span><span class="st">"#9AA1A8"</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    foreground_color_border<span class="op">=</span><span class="st">"#9AA1A8"</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    yforeground_color_border<span class="op">=</span><span class="st">"#FFFDFC"</span>, <span class="co"># no line on the left, the grid is enough</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    guidefontsize<span class="op">=</span><span class="fl">12</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    tickfontsize<span class="op">=</span><span class="fl">11</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    legendfontsize<span class="op">=</span><span class="fl">11</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    foreground_color_legend<span class="op">=</span><span class="cn">nothing</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    background_color_legend<span class="op">=</span><span class="cn">nothing</span>,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    grid<span class="op">=:</span>y,</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    gridcolor<span class="op">=</span><span class="st">"#E8E4E0"</span>,</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    gridalpha<span class="op">=</span><span class="fl">1</span>,</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    framestyle<span class="op">=:</span>axes,</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    tick_direction<span class="op">=:</span>none,</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    yformatter<span class="op">=:</span>plain,</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    dpi<span class="op">=</span><span class="fl">300</span>,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    top_margin<span class="op">=</span><span class="fl">4</span>Plots.mm,</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    left_margin<span class="op">=</span><span class="fl">8</span>Plots.mm,</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    bottom_margin<span class="op">=</span><span class="fl">6</span>Plots.mm</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="18" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">visualize_departments</span>(hexshape, X, rangeDepartments, euclidianDistances)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert solution matrix to regular Matrix</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    allAssignments <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">value</span>.(X))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find assignments where value &gt; 0.5 (accounting for potential floating-point imprecision)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    assignments <span class="op">=</span> <span class="fu">findall</span>(allAssignments <span class="op">.&gt;</span> <span class="fl">0.5</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create copy of hexshape to avoid modifying original</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    plot_data <span class="op">=</span> <span class="fu">copy</span>(hexshape)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Assign each BA to its department</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    plot_data.department <span class="op">=</span> rangeDepartments[<span class="fu">map</span>(x<span class="op">-&gt;</span>x[<span class="fl">1</span>], assignments)]</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    department_locations <span class="op">=</span> <span class="fu">unique</span>(plot_data.department)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Give neighboring districts different colors: two districts are neighbors</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># if any of their BAs are adjacent (distance below 1.5)</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    colors <span class="op">=</span> [course_style.palette[[<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span>]]; <span class="st">"#EBADAD"</span>] <span class="co"># no dark blue, the departments are dark</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    district_color <span class="op">=</span> <span class="fu">Dict</span><span class="dt">{Int,String}</span>()</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> department_locations</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        own <span class="op">=</span> plot_data.department <span class="op">.==</span> d</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        taken <span class="op">=</span> [district_color[plot_data.department[k]] for k <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">nrow</span>(plot_data)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>            if <span class="fu">haskey</span>(district_color, plot_data.department[k]) <span class="op">&amp;&amp;</span> <span class="fu">any</span>(euclidianDistances[k, own] <span class="op">.&lt;</span> <span class="fl">1.5</span>)]</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        free <span class="op">=</span> <span class="fu">setdiff</span>(colors, taken)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        district_color[d] <span class="op">=</span> <span class="fu">isempty</span>(free) ? colors[<span class="fl">1</span>] <span class="op">:</span> <span class="fu">first</span>(free)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Departments in dark ink, all other BAs in the color of their district</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    plot_data.color <span class="op">=</span> [hex.id <span class="kw">in</span> department_locations ? <span class="st">"#363D45"</span> <span class="op">:</span> district_color[hex.department]</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        for hex <span class="kw">in</span> <span class="fu">eachrow</span>(plot_data)]</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create and return plot</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">plot</span>(</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>        plot_data.geometry;</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>        course_style<span class="op">...</span>,</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="fu">permutedims</span>(plot_data.color),</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>        linecolor<span class="op">=</span>course_style.background_color,</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=</span><span class="cn">false</span>,</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>        axis<span class="op">=</span><span class="cn">false</span>,</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>        ticks<span class="op">=</span><span class="cn">false</span>,</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>        grid<span class="op">=</span><span class="cn">false</span>,</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>(<span class="fl">800</span>, <span class="fl">450</span>)</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the results</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>plot_area <span class="op">=</span> <span class="fu">visualize_departments</span>(hexshape, X, rangeDepartments, euclidianDistances)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
@@ -1032,22 +1072,22 @@ window.Quarto = {
 <section id="conditional-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="conditional-constraints">Conditional Constraints</h2>
 <p>Before we start, we will quickly repeat some basic concepts on constraints and conditions in JuMP. You can add conditions to constraints by using the <code>;</code> operator. This is useful if you want to add a constraint only under certain conditions. In the example below, the constraint is only created if the Euclidean distance between two BAs is less than 1.5.</p>
-<div id="18" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(some_model,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    conditionalConstraint[</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        i<span class="op">=</span>rangeDepartments,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        j<span class="op">=</span>rangeBAs;</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        euclidianDistances[i,j] <span class="op">&lt;</span> <span class="fl">1.5</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        ],</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    X[i,j] <span class="op">&lt;=</span> <span class="fl">1</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Furthermore, we can use conditions within constraints by using the <code>for</code> keyword. For example, in the constraint below, the sum is only taken over the BAs that are within 1.5 units of BA <span class="math inline">\(i\)</span>.</p>
 <div id="20" class="cell" data-execution_count="0">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(some_model,</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    conditionalConstraint2[i<span class="op">=</span>rangeDepartments],</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> j <span class="kw">in</span> rangeBAs <span class="cf">if</span> euclidianDistances[i,j] <span class="op">&lt;</span> <span class="fl">1.5</span>) <span class="op">&gt;=</span> <span class="fl">1</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    conditionalConstraint[</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        i<span class="op">=</span>rangeDepartments,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        j<span class="op">=</span>rangeBAs;</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        euclidianDistances[i,j] <span class="op">&lt;</span> <span class="fl">1.5</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    X[i,j] <span class="op">&lt;=</span> <span class="fl">1</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Furthermore, we can use conditions within constraints by using the <code>for</code> keyword. For example, in the constraint below, the sum is only taken over the BAs that are within 1.5 units of BA <span class="math inline">\(i\)</span>.</p>
+<div id="22" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@constraint</span>(some_model,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    conditionalConstraint2[i<span class="op">=</span>rangeDepartments],</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(X[i,j] <span class="cf">for</span> j <span class="kw">in</span> rangeBAs <span class="cf">if</span> euclidianDistances[i,j] <span class="op">&lt;</span> <span class="fl">1.5</span>) <span class="op">&gt;=</span> <span class="fl">1</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-simple callout-warning">
 <div class="callout-body d-flex">
@@ -1074,29 +1114,29 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="22" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Solve the model again, this time with the contiguity constraint.</p>
 <div id="24" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Solve the model again, this time with the contiguity constraint.</p>
+<div id="26" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>The following code prints the model status and visualizes the districts. If your implementation is correct, the districts should be contiguous and the model should have reached optimality or found a feasible solution before hitting the time limit.</p>
-<div id="26" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, p, rangeDepartments))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="28" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, rangeDepartments, euclidianDistances))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
 <section id="compute-the-gap" class="level2">
 <h2 class="anchored" data-anchor-id="compute-the-gap">Compute the Gap</h2>
 <p>Based on your results, what is the gap between the solution in the previous task and this task? Here, we mean the relative increase in the objective value caused by the contiguity constraints, <span class="math inline">\((z_{\text{contiguity}} - z_{\text{base}})/z_{\text{base}}\)</span>. Before computing it: in which direction do you expect the objective value to change when constraints are added to a model? Write a comment answering the questions in the cell below. You can also use the cell to compute the gap based on the objective values.</p>
-<div id="28" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="30" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#=</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">=#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-simple callout-tip">
 <div class="callout-body d-flex">
@@ -1115,8 +1155,8 @@ window.Quarto = {
 <h1>3. Emergency Response Time Guarantees</h1>
 <p>Hamburg’s City Council has mandated that high-priority emergencies must receive a response within 20 minutes. Your previous model doesn’t guarantee this! Your task: Implement maximum response time constraints.</p>
 <p>Extend your model by an additional parameter <code>max_driving_time = 20</code> to ensure that no allocation with a driving time <span class="math inline">\(t_{i,j}\)</span> of <code>max_driving_time</code> minutes or more from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span> is possible. In other words, an assignment is only allowed if the driving time is <strong>strictly less</strong> than 20 minutes.</p>
-<div id="30" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="32" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-simple callout-tip">
 <div class="callout-body d-flex">
@@ -1139,21 +1179,21 @@ window.Quarto = {
 </div>
 </div>
 <p>Again, solve the model.</p>
-<div id="32" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="34" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The following code prints the model status and visualizes the districts. If your implementation is correct, the districts with previously longer driving times should have shrunk. Furthermore, the model should have reached optimality or found a feasible solution before hitting the time limit.</p>
-<div id="34" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, p, rangeDepartments))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="36" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, rangeDepartments, euclidianDistances))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
 <section id="planning-for-peak-demand" class="level1">
 <h1>4. Planning for Peak Demand</h1>
 <p>During major events or crime waves, districts need backup support from neighboring stations. The Police Union has emphasized this as a critical safety requirement for their officers. Your task: Design constraints ensuring each district has backup support within 20 minutes of driving time (strictly less than 20 minutes, as in the previous task).</p>
-<div id="36" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="38" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-simple callout-tip">
 <div class="callout-body d-flex">
@@ -1166,13 +1206,13 @@ window.Quarto = {
 </div>
 </div>
 <p>In case you came up with a solution, solve the model to optimize the layout of the districts.</p>
-<div id="38" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="40" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>If your implementation is correct, the districts are contiguous and distributed across the city. In addition, the model should have reached optimality or found a feasible solution before hitting the time limit.</p>
-<div id="40" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, p, rangeDepartments))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="42" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print_model_status</span>(pMedianModel)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(<span class="fu">visualize_departments</span>(hexshape, X, rangeDepartments, euclidianDistances))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>

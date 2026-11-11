@@ -218,9 +218,48 @@ println("Great, the model was solved correctly.")
 # ## Visualizing the Results
 #
 # The following code then builds and uses a function to plot the results.
+#
+# The next cell sets the look of the plots below: the course colors, quiet
+# grey labels and no frame. Run it once. A plot picks it up when you add
+# `course_style...` to its keywords, after a semicolon.
 
 # %%
-function visualize_departments(hexshape, X, p, rangeDepartments)
+using Plots
+# The course look for plots, used like this: bar(x, y; course_style...)
+course_style = (
+    palette=["#537E8F", "#F6B265", "#3D5369", "#A7C7C6", "#DB6B6B", "#FCCF9C"],
+    background_color="#FFFDFC",
+    fontfamily="Helvetica",
+    titlefontfamily="Helvetica Bold",
+    titlefontsize=18,
+    titlefontcolor="#363D45",
+    titlelocation=:left,
+    foreground_color_text="#6B7480",
+    foreground_color_guide="#6B7480",
+    foreground_color_axis="#9AA1A8",
+    foreground_color_border="#9AA1A8",
+    yforeground_color_border="#FFFDFC", # no line on the left, the grid is enough
+    guidefontsize=12,
+    tickfontsize=11,
+    legendfontsize=11,
+    foreground_color_legend=nothing,
+    background_color_legend=nothing,
+    grid=:y,
+    gridcolor="#E8E4E0",
+    gridalpha=1,
+    framestyle=:axes,
+    tick_direction=:none,
+    yformatter=:plain,
+    dpi=300,
+    top_margin=4Plots.mm,
+    left_margin=8Plots.mm,
+    bottom_margin=6Plots.mm
+)
+
+
+
+# %%
+function visualize_departments(hexshape, X, rangeDepartments, euclidianDistances)
     # Convert solution matrix to regular Matrix
     allAssignments = Matrix(value.(X))
 
@@ -230,37 +269,42 @@ function visualize_departments(hexshape, X, p, rangeDepartments)
     # Create copy of hexshape to avoid modifying original
     plot_data = copy(hexshape)
 
-    # Assign departments and initialize colors
+    # Assign each BA to its department
     plot_data.department = rangeDepartments[map(x->x[1], assignments)]
-    plot_data.color = fill(RGB(0/255, 0/255, 0/255), nrow(plot_data))
+    department_locations = unique(plot_data.department)
 
-    # Get unique department locations and create color mapping
-    department_locations = unique(rangeDepartments[map(x->x[1], assignments)])
-    color_palette = cgrad(:Pastel1_9, p, categorical=true)
-    color_dict = Dict(department_locations[i] => color_palette[i] for i in 1:p)
-
-    # Color non-department locations
-    for hex in eachrow(plot_data)
-        if hex.id in department_locations
-            hex.color = RGB(0/255, 0/255, 0/255)
-        else
-            hex.color = color_dict[hex.department]
-        end
+    # Give neighboring districts different colors: two districts are neighbors
+    # if any of their BAs are adjacent (distance below 1.5)
+    colors = [course_style.palette[[1, 2, 4, 5, 6]]; "#EBADAD"] # no dark blue, the departments are dark
+    district_color = Dict{Int,String}()
+    for d in department_locations
+        own = plot_data.department .== d
+        taken = [district_color[plot_data.department[k]] for k in 1:nrow(plot_data)
+            if haskey(district_color, plot_data.department[k]) && any(euclidianDistances[k, own] .< 1.5)]
+        free = setdiff(colors, taken)
+        district_color[d] = isempty(free) ? colors[1] : first(free)
     end
+
+    # Departments in dark ink, all other BAs in the color of their district
+    plot_data.color = [hex.id in department_locations ? "#363D45" : district_color[hex.department]
+        for hex in eachrow(plot_data)]
 
     # Create and return plot
     return plot(
-        plot_data.geometry,
-        color=plot_data.color',
+        plot_data.geometry;
+        course_style...,
+        color=permutedims(plot_data.color),
+        linecolor=course_style.background_color,
         legend=false,
         axis=false,
         ticks=false,
-        size=(800,450)
+        grid=false,
+        size=(800, 450)
     )
 end
 
 # Plot the results
-plot_area = visualize_departments(hexshape, X, p, rangeDepartments)
+plot_area = visualize_departments(hexshape, X, rangeDepartments, euclidianDistances)
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -353,7 +397,7 @@ plot_area = visualize_departments(hexshape, X, p, rangeDepartments)
 
 # %%
 print_model_status(pMedianModel)
-display(visualize_departments(hexshape, X, p, rangeDepartments))
+display(visualize_departments(hexshape, X, rangeDepartments, euclidianDistances))
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -432,7 +476,7 @@ display(visualize_departments(hexshape, X, p, rangeDepartments))
 
 # %%
 print_model_status(pMedianModel)
-display(visualize_departments(hexshape, X, p, rangeDepartments))
+display(visualize_departments(hexshape, X, rangeDepartments, euclidianDistances))
 
 # %% [markdown]
 # ------------------------------------------------------------------------
@@ -473,7 +517,7 @@ display(visualize_departments(hexshape, X, p, rangeDepartments))
 
 # %%
 print_model_status(pMedianModel)
-display(visualize_departments(hexshape, X, p, rangeDepartments))
+display(visualize_departments(hexshape, X, rangeDepartments, euclidianDistances))
 
 # %% [markdown]
 # ------------------------------------------------------------------------

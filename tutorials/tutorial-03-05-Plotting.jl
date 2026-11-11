@@ -24,21 +24,24 @@
 #
 # Welcome to this tutorial on plotting in Julia! We’ll be using the
 # powerful Plots.jl package to create beautiful and informative
-# visualizations. Don’t worry if you’re new to plotting – we’ll start with
+# visualizations. Don’t worry if you’re new to plotting. We’ll start with
 # the basics and gradually build up to more advanced techniques.
 #
-# In this tutorial, you’ll learn how to: 1. Create simple plots like line
-# graphs and scatter plots 2. Customize your plots with colors, labels,
-# and styles 3. Add multiple data series to a single plot 4. Save your
-# plots as image files for use in reports or presentations
+# In this tutorial, you’ll learn how to:
+#
+# 1.  Create simple plots like line graphs and scatter plots
+# 2.  Customize your plots with colors, labels, and styles
+# 3.  Add multiple data series to a single plot
+# 4.  Save your plots as image files for use in reports or presentations
+# 5.  Give your plots a clear look that puts the data first
 #
 # Follow the instructions, write your code in the designated code blocks,
 # and validate your results with `@assert` statements.
 #
-# Before we begin, let’s make sure you have the necessary packages
-# installed. If you’ve been following the course, you’ll need to install
-# the Plots and StatsPlots packages (StatsPlots adds statistical plot
-# recipes like `boxplot`, which we will use at the end of this tutorial):
+# We need the Plots and StatsPlots packages (StatsPlots adds statistical
+# plot recipes like `boxplot`, which we will use at the end of this
+# tutorial). Both ship with the course environment, so you can use them
+# right away. In your own projects, you add them first:
 
 # %%
 import Pkg
@@ -99,7 +102,7 @@ display(line_plot)
 #
 # Now it’s your turn! Create a scatter plot using the `scatter()` function
 # instead of `plot()`. Use a range from 1 to 20 for x, and generate 20
-# random numbers for y.
+# random numbers for y. Save the plot in the variable `scatter_plot`.
 
 # %%
 # YOUR CODE BELOW
@@ -158,7 +161,7 @@ println("Excellent! You've created a custom line plot.")
 # > **Note**
 # >
 # > Feel free to experiment with different options. There’s no “right”
-# > answer here – it’s all about what looks good to you!
+# > answer here: it’s all about what looks good to you!
 #
 # ------------------------------------------------------------------------
 #
@@ -302,6 +305,91 @@ box_plot = boxplot(
 display(box_plot)
 
 # %% [markdown]
+# ------------------------------------------------------------------------
+#
+# # Section 6 - The Course Look
+#
+# The plots above use the defaults of Plots.jl. They are correct, but a
+# reader should get their point at a glance. Four rules from the [plotting
+# lecture of our Python
+# course](https://beyondsimulations.github.io/Introduction-to-Python/lectures/lec_09_plotting.html)
+# get you most of the way:
+#
+# - **The title states the point**: “Category D sells most” says more than
+#   “Bar Plot Example”.
+# - **Every number axis has a label with its unit**, for example *Sales
+#   (units)*.
+# - **Bars start at 0**: a bar shows its number by its length, so a cut
+#   axis distorts the comparison.
+# - **Quiet everything that is not data**: no frame, light grid lines,
+#   grey labels, calm colors.
+#
+# The later tutorials share one style for this, called `course_style`.
+#
+# The next cell sets the look of the plots below: the course colors, quiet
+# grey labels and no frame. Run it once. A plot picks it up when you add
+# `course_style...` to its keywords, after a semicolon.
+
+# %%
+using Plots
+# The course look for plots, used like this: bar(x, y; course_style...)
+course_style = (
+    palette=["#537E8F", "#F6B265", "#3D5369", "#A7C7C6", "#DB6B6B", "#FCCF9C"],
+    background_color="#FFFDFC",
+    fontfamily="Helvetica",
+    titlefontfamily="Helvetica Bold",
+    titlefontsize=18,
+    titlefontcolor="#363D45",
+    titlelocation=:left,
+    foreground_color_text="#6B7480",
+    foreground_color_guide="#6B7480",
+    foreground_color_axis="#9AA1A8",
+    foreground_color_border="#9AA1A8",
+    yforeground_color_border="#FFFDFC", # no line on the left, the grid is enough
+    guidefontsize=12,
+    tickfontsize=11,
+    legendfontsize=11,
+    foreground_color_legend=nothing,
+    background_color_legend=nothing,
+    grid=:y,
+    gridcolor="#E8E4E0",
+    gridalpha=1,
+    framestyle=:axes,
+    tick_direction=:none,
+    yformatter=:plain,
+    dpi=300,
+    top_margin=4Plots.mm,
+    left_margin=8Plots.mm,
+    bottom_margin=6Plots.mm
+)
+
+
+
+# %% [markdown]
+# Here is the bar plot from above in the course look:
+
+# %%
+course_bar_plot = bar(
+    x_categories,
+    y_values;
+    title="Category D sells most: 30 units",
+    xlabel="Category",
+    ylabel="Sales (units)",
+    legend=false,
+    course_style...,
+    linecolor=course_style.background_color,
+    size=(800, 400)
+)
+display(course_bar_plot)
+
+# %% [markdown]
+# The three dots after `course_style` unpack all of its settings into the
+# call, as if you had typed each of them. You can add more settings after
+# it, like `size=(800, 400)` here, and if one of them is already in
+# `course_style`, the one after it wins. `course_style.background_color`
+# reads a single setting back, so the gaps between the bars match the
+# background.
+#
 # ------------------------------------------------------------------------
 #
 # # Conclusion

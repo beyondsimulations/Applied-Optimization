@@ -27,6 +27,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -804,6 +839,8 @@ window.Quarto = {
   <li><a href="#active-department-constraint" id="toc-active-department-constraint" class="nav-link" data-scroll-target="#active-department-constraint">Active Department Constraint?</a></li>
   <li><a href="#active-department-constraint-1" id="toc-active-department-constraint-1" class="nav-link" data-scroll-target="#active-department-constraint-1">Active Department Constraint</a></li>
   <li><a href="#p-median-problem" id="toc-p-median-problem" class="nav-link" data-scroll-target="#p-median-problem">p-Median Problem</a></li>
+  <li><a href="#why-median" id="toc-why-median" class="nav-link" data-scroll-target="#why-median">Why “Median”?</a></li>
+  <li><a href="#the-best-spot" id="toc-the-best-spot" class="nav-link" data-scroll-target="#the-best-spot">The Best Spot</a></li>
   <li><a href="#connection-to-facility-location" id="toc-connection-to-facility-location" class="nav-link" data-scroll-target="#connection-to-facility-location">Connection to Facility Location</a></li>
   </ul></li>
   <li><a href="#contiguous-compact" id="toc-contiguous-compact" class="nav-link" data-scroll-target="#contiguous-compact"><span class="flow">Contiguous &amp; Compact</span></a>
@@ -1623,7 +1660,7 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>Many textbooks use a separate variable <span class="math inline">\(Y_i\)</span> to model opening a facility. Using the “diagonal” <span class="math inline">\(X_{i,i}\)</span> instead saves these extra variables — both formulations are equivalent here.</p>
+<p>Many textbooks use a separate variable <span class="math inline">\(Y_i\)</span> to model opening a facility. Using the “diagonal” <span class="math inline">\(X_{i,i}\)</span> instead saves these extra variables. Both formulations are equivalent here.</p>
 </div>
 </div>
 </div>
@@ -1697,6 +1734,31 @@ X_{i,j} \leq X_{i,i} \quad \forall i \in \mathcal{I}, j \in \mathcal{J}
 &amp; X_{i,j} \leq X_{i,i} &amp;&amp;  \forall i \in \mathcal{I}, j \in \mathcal{J}  \\
 &amp; X_{i,j} \in \{0,1\}  &amp;&amp; \forall i \in \mathcal{I}, j \in \mathcal{J}
 \end{align}\]</span></p>
+</section>
+<section id="why-median" class="level2">
+<h2 class="anchored" data-anchor-id="why-median">Why “Median”?</h2>
+<p>Seven areas along one road, one department, and the driving time between two areas is how many steps apart they are:</p>
+<div id="4" class="cell" data-output-location="fragment" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> [<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">8</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">5</span>] <span class="co"># incidents per area</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">driving</span>(i) <span class="op">=</span> <span class="fu">sum</span>(w[j] <span class="op">*</span> <span class="fu">abs</span>(i <span class="op">-</span> j) <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">7</span>) <span class="co"># department in area i</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">driving</span>.(<span class="fl">1</span><span class="op">:</span><span class="fl">7</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[66, 47, 32, 33, 40, 49, 60]</code></pre>
+</div>
+</div>
+</section>
+<section id="the-best-spot" class="level2">
+<h2 class="anchored" data-anchor-id="the-best-spot">The Best Spot</h2>
+<div id="8" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="lecture-08-districting_files/figure-revealjs/cell-5-output-1.svg" class="img-fluid figure-img" alt="Two bar charts over the areas 1 to 7. The top one shows the incidents per area: 1, 2, 8, 3, 1, 1 and 5. The bottom one shows the weighted driving time with the department in each area: 66, 47, 32, 33, 40, 49 and 60, with the lowest value in area 3 highlighted."></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Area 3 is the <span class="highlight">weighted median</span>: no more than half of the incidents lie on either side of it.</p>
 </section>
 <section id="connection-to-facility-location" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="connection-to-facility-location">Connection to Facility Location</h2>
@@ -1909,7 +1971,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If BA <span class="math inline">\(j\)</span> is assigned to department <span class="math inline">\(i\)</span>, then at least <strong>two BAs</strong> that are adjacent to <span class="math inline">\(j\)</span> and closer to <span class="math inline">\(i\)</span> must <strong>also</strong> be assigned to department <span class="math inline">\(i\)</span> — if <span class="math inline">\(|\mathcal{N}_{i,j}| &gt; 1\)</span>!</p>
+<p>If BA <span class="math inline">\(j\)</span> is assigned to department <span class="math inline">\(i\)</span>, then at least <strong>two BAs</strong> that are adjacent to <span class="math inline">\(j\)</span> and closer to <span class="math inline">\(i\)</span> must <strong>also</strong> be assigned to department <span class="math inline">\(i\)</span>, if <span class="math inline">\(|\mathcal{N}_{i,j}| &gt; 1\)</span>!</p>
 </div>
 </div>
 </section>
@@ -2076,7 +2138,7 @@ X_{i,j} &amp;\leq \sum_{v \in \mathcal{N}_{i,j}}X_{i,v} &amp;&amp; \forall i \in
 <h2 class="smaller anchored" data-anchor-id="what-about-workload-balance">What About Workload Balance?</h2>
 <p><span class="question">Question:</span> <strong>Our model only minimizes driving time. Where does the better workload distribution come from?</strong></p>
 <ul>
-<li>The model does <strong>not</strong> balance workload directly — the effect is <span class="highlight">emergent</span></li>
+<li>The model does <strong>not</strong> balance workload directly: the effect is <span class="highlight">emergent</span></li>
 <li>Compact districts around well-placed departments also <strong>spread the expected workload</strong> more evenly</li>
 <li>This was measured in the <strong>simulation</strong>, not enforced by a constraint</li>
 </ul>

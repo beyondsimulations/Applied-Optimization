@@ -103,7 +103,7 @@
 #     cell and jumps to the next one. Output appears right below the code.
 #     Zed picks the kernel by itself: the kernel selector at the top right
 #     of the editor should show the kernel that starts with
-#     **applied-optimization** — that is the kernel you just installed. If
+#     **applied-optimization**: that is the kernel you just installed. If
 #     it shows another one (such as `julia-1.13`), click it and choose
 #     yours.
 #

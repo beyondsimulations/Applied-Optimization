@@ -133,8 +133,8 @@ println(secret_ingredient)
 
 # %% [markdown]
 # If you want to access the variable outside of the function, you have to
-# explicitly return it. You can do this by writing `return` in front of
-# the variable you want to return from the function.
+# return it, either by writing `return` in front of the variable or by
+# making it the last expression of the function.
 #
 # ## Exercise 2.1 - Return a Local Variable
 #
@@ -231,6 +231,11 @@ println("You solved it, the assertions are now correct!")
 # `operation` for two `Bool` arguments so that it returns `true` only if
 # both arguments are `true` (you can use `a && b` for this). This is
 # exactly how you extend an existing function with a new method in Julia.
+#
+# Before you write it, run `operation(true, true)`. Why does it return
+# `2`? (Hint: run `Bool <: Number`.) Your new method is more specific than
+# the one for `Number`, so Julia picks it for two `Bool` arguments as soon
+# as it exists.
 
 # %%
 # YOUR CODE BELOW

@@ -24,7 +24,7 @@
 #
 # This tutorial is another short intermission to give you an idea of the
 # structure of the exam. The mock exam sums to **60 points** and each
-# point corresponds to approximately one minute of work — so plan for
+# point corresponds to approximately one minute of work, so plan for
 # roughly 60 minutes. You can hand in your answers at the end to receive
 # half a **bonus point**, if at least 75% of the answers are correct and
 # you describe your work clearly. If you have any questions or suggestions

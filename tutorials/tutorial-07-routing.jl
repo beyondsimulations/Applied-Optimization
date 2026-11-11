@@ -292,18 +292,57 @@ println("Model solved successfully, great job!")
 # The following part extracts the results to plot the tours and requires
 # no changes on your part. It defines some functions that are used to plot
 # the results.
+#
+# The next cell sets the look of the plots below: the course colors, quiet
+# grey labels and no frame. Run it once. A plot picks it up when you add
+# `course_style...` to its keywords, after a semicolon.
+
+# %%
+using Plots
+# The course look for plots, used like this: bar(x, y; course_style...)
+course_style = (
+    palette=["#537E8F", "#F6B265", "#3D5369", "#A7C7C6", "#DB6B6B", "#FCCF9C"],
+    background_color="#FFFDFC",
+    fontfamily="Helvetica",
+    titlefontfamily="Helvetica Bold",
+    titlefontsize=18,
+    titlefontcolor="#363D45",
+    titlelocation=:left,
+    foreground_color_text="#6B7480",
+    foreground_color_guide="#6B7480",
+    foreground_color_axis="#9AA1A8",
+    foreground_color_border="#9AA1A8",
+    yforeground_color_border="#FFFDFC", # no line on the left, the grid is enough
+    guidefontsize=12,
+    tickfontsize=11,
+    legendfontsize=11,
+    foreground_color_legend=nothing,
+    background_color_legend=nothing,
+    grid=:y,
+    gridcolor="#E8E4E0",
+    gridalpha=1,
+    framestyle=:axes,
+    tick_direction=:none,
+    yformatter=:plain,
+    dpi=300,
+    top_margin=4Plots.mm,
+    left_margin=8Plots.mm,
+    bottom_margin=6Plots.mm
+)
+
+
 
 # %%
 function plot_routes(X, coord)
 
     Routes = [value(X[i,j]) >= 0.5 ? true : false for i in coord.location, j in coord.location]
 
-    fig = plot(
-        size=(800, 600),
-        background_color=:white,
-        framestyle=:box,
+    # A map needs no grid and no frame
+    fig = plot(;
+        course_style...,
         grid=false,
-        dpi=300
+        framestyle=:none,
+        size=(800, 600)
     )
 
     connections = findall(Routes)
@@ -313,41 +352,36 @@ function plot_routes(X, coord)
         yy = [coord[conn[1],:y]; coord[conn[2],:y]]
         plot!(
             fig, xx, yy,
-            color=:crimson,
+            color="#537E8F",
             label="",
-            linewidth=2,
-            linestyle=:solid,
-            alpha=0.7
+            linewidth=2.5
         )
     end
 
     scatter!(
-        fig, coord[1:1,:x], coord[1:1,:y],
-        marker=:star5,
-        color=:black,
-        markersize=15,
-        label="Warehouse",
-        markerstrokewidth=1
-    )
-    scatter!(
         fig, coord[2:end,:x], coord[2:end,:y],
         marker=:circle,
-        color=:steelblue,
+        color="#3D5369",
         markersize=8,
-        label="Distribution Centers",
-        markerstrokewidth=1
+        markerstrokecolor=course_style.background_color, # a ring keeps the dots apart from the lines
+        markerstrokewidth=2,
+        label="Distribution centers"
+    )
+    scatter!(
+        fig, coord[1:1,:x], coord[1:1,:y],
+        marker=:star5,
+        color="#F6B265",
+        markersize=16,
+        markerstrokecolor=course_style.background_color,
+        markerstrokewidth=2,
+        label="Warehouse"
     )
 
     plot!(
         fig,
-        title="Delivery Routes Optimization",
-        xlabel="Distance (km)",
-        ylabel="Distance (km)",
+        title="Delivery routes",
         legend=:bottomright,
-        legendfontsize=8,
-        foreground_color_legend=nothing,
-        background_color_legend=:transparent,
-        margin=5Plots.mm,
+        background_color_legend=course_style.background_color, # readable over route lines
         xlims=(minimum(coord.x) - 5, maximum(coord.x) + 5),
         ylims=(minimum(coord.y) - 5, maximum(coord.y) + 5)
     )
@@ -447,21 +481,21 @@ function plot_capacity_usage(X, U, coord)
 
     # Create bar plot
     fig = bar(
-        [u[2] for u in vehicle_routes],
+        [u[2] for u in vehicle_routes];
         xticks=(1:length(vehicle_routes), [u[1] for u in vehicle_routes]),
-        title="Capacity Usage per Vehicle",
+        title="Capacity usage per vehicle",
         xlabel="Last stop before returning to the warehouse",
-        ylabel="Capacity Usage (parcels)",
+        ylabel="Capacity usage (parcels)",
         label="",
-        color=:steelblue,
-        ylims=(0, capacity),
-        size=(800, 400),
-        dpi=300,
-        margin=5Plots.mm,
+        course_style...,
+        linecolor=course_style.background_color,
+        ylims=(0, 1.1 * capacity), # room above the capacity line
+        legend=:outertop,
+        size=(800, 400)
     )
 
-    # Add capacity limit line
-    hline!([capacity], color=:red, linestyle=:dash, label="Capacity Limit")
+    # Add capacity limit line, quiet and dashed: a yardstick, not an alarm
+    hline!([capacity], color="#6B7480", linestyle=:dash, label="Capacity limit")
 
     return fig
 end

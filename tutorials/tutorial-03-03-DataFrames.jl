@@ -30,9 +30,10 @@
 #
 # > **Note**
 # >
-# > Before we start, make sure you have the DataFrames package installed.
-# > If you’re not sure how to do this, check the previous tutorial on
-# > package management!
+# > The DataFrames package ships with the course environment, so you can
+# > use it right away. In your own projects, you add it first with
+# > `Pkg.add("DataFrames")`, as in the previous tutorial on package
+# > management.
 #
 # Let’s begin by importing the DataFrames package:
 
@@ -114,7 +115,7 @@ employees.Name[3]
 
 # %%
 # Test your answer
-@assert ages == [28, 23, 37]
+@assert ages == [28, 23, 37] "ages should hold the Age column, [28, 23, 37]."
 println("Correct, the Ages column is: ", ages)
 
 # %% [markdown]
@@ -128,7 +129,7 @@ println("Correct, the Ages column is: ", ages)
 
 # %%
 # Test your answer
-@assert employees.Salary[1] == 59000
+@assert employees.Salary[1] == 59000 "John's salary is $(employees.Salary[1]) but should be 59000."
 println("Modified DataFrame: ")
 println(employees)
 
@@ -163,7 +164,7 @@ all_franks = filter(row -> row.Name == "Frank", employees)
 
 # %%
 # Test your answer
-@assert nrow(high_earners) == 2
+@assert nrow(high_earners) == 2 "high_earners has $(nrow(high_earners)) rows, but 2 employees earn more than 60000."
 println("High earners: ")
 println(high_earners)
 
@@ -190,7 +191,7 @@ println(high_earners)
 
 # %%
 # Test your answer
-@assert sorted_df.Age[1] == 23
+@assert sorted_df.Age[1] == 23 "The youngest employee, 23 years old, should come first in sorted_df."
 println("DataFrame sorted by age: ")
 println(sorted_df)
 
@@ -273,8 +274,8 @@ println("Great job! All the bonuses are correct!")
 # optimization models in a DataFrame. For example, we can create a new
 # DataFrame called `WorkingHours` and fill it with the values from the
 # `employees` DataFrame. Imagine that the company has a policy, where
-# employees above 30 work 30 hours a week, and employees under 30 work 40
-# hours a week:
+# employees over 30 work 30 hours a week, and employees 30 and under work
+# 40 hours a week:
 
 # %%
 # Create a new DataFrame
@@ -284,7 +285,7 @@ WorkingHours = DataFrame(
 )
 # Loop over the rows of the employees DataFrame
 for row in eachrow(employees)
-    if row.Age < 30
+    if row.Age <= 30
         push!(WorkingHours, (
             Name = row.Name,
             Hours = 40

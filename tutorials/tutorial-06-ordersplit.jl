@@ -389,8 +389,8 @@ end
 # the SKU allocation for the optimal solution. To judge how good this is,
 # it also computes the average number of split orders over 100 random
 # allocations. Note that the random allocations are still *feasible*: each
-# SKU is stored in exactly one warehouse and no capacity is exceeded —
-# otherwise, the comparison would not be fair.
+# SKU is stored in exactly one warehouse and no capacity is exceeded.
+# Otherwise, the comparison would not be fair.
 
 # %%
 # Binary matrix indicating whether a SKU is allocated to a warehouse.

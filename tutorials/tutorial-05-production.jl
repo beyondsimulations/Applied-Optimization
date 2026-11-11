@@ -55,7 +55,6 @@ using CSV
 using DataFrames
 using Plots
 using StatsPlots
-plotly() # This will create interactive plots later on
 
 # %% [markdown]
 # > **Tip**
@@ -63,11 +62,6 @@ plotly() # This will create interactive plots later on
 # > If you haven’t installed the packages yet, you can do so by running
 # > `using Pkg` first and then
 # > `Pkg.add(["JuMP", "HiGHS", "CSV", "DataFrames", "Plots", "StatsPlots"])`.
-#
-# > **Note**
-# >
-# > Zed cannot show interactive plots yet. If you work in Zed, remove the
-# > `plotly()` line: your plots then appear as images.
 #
 # ------------------------------------------------------------------------
 #
@@ -399,7 +393,7 @@ number_capacity_constraints = count(c -> length(constraint_object(c).func.terms)
 
 # %%
 # Validate your solution
-@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit — check your model and re-run the cell"
+@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit. Check your model and re-run the cell"
 @assert 360000 <= objective_value(lotsizeModel) <= 900000 "Objective value should be between 360,000 and 900,000"
 
 # %% [markdown]
@@ -410,7 +404,7 @@ number_capacity_constraints = count(c -> length(constraint_object(c).func.terms)
 # different results. The solution for the first task will likely be in the
 # <span class="highlight">range of 550,000 to 700,000</span>, and the
 # validation above is deliberately generous to allow for this variation.
-# Don’t worry if the solver reports a large remaining gap — the best
+# Don’t worry if the solver reports a large remaining gap: the best
 # solution found is good enough for our purposes.
 #
 # ------------------------------------------------------------------------
@@ -425,6 +419,45 @@ number_capacity_constraints = count(c -> length(constraint_object(c).func.terms)
 # > The creation of the dataframes and the plots is implemented inside a
 # > function, as we will need to use it multiple times in the following
 # > tasks.
+#
+# The next cell sets the look of the plots below: the course colors, quiet
+# grey labels and no frame. Run it once. A plot picks it up when you add
+# `course_style...` to its keywords, after a semicolon.
+
+# %%
+using Plots
+# The course look for plots, used like this: bar(x, y; course_style...)
+course_style = (
+    palette=["#537E8F", "#F6B265", "#3D5369", "#A7C7C6", "#DB6B6B", "#FCCF9C"],
+    background_color="#FFFDFC",
+    fontfamily="Helvetica",
+    titlefontfamily="Helvetica Bold",
+    titlefontsize=18,
+    titlefontcolor="#363D45",
+    titlelocation=:left,
+    foreground_color_text="#6B7480",
+    foreground_color_guide="#6B7480",
+    foreground_color_axis="#9AA1A8",
+    foreground_color_border="#9AA1A8",
+    yforeground_color_border="#FFFDFC", # no line on the left, the grid is enough
+    guidefontsize=12,
+    tickfontsize=11,
+    legendfontsize=11,
+    foreground_color_legend=nothing,
+    background_color_legend=nothing,
+    grid=:y,
+    gridcolor="#E8E4E0",
+    gridalpha=1,
+    framestyle=:axes,
+    tick_direction=:none,
+    yformatter=:plain,
+    dpi=300,
+    top_margin=4Plots.mm,
+    left_margin=8Plots.mm,
+    bottom_margin=6Plots.mm
+)
+
+
 
 # %%
 # Create the production results
@@ -457,44 +490,47 @@ function create_production_results()
     return productionResults
 end
 
+# All plots in this tutorial: one bar per week, stacked by group
+function weekly_bars(period, values, group; ylabel, title)
+    p = groupedbar(
+        replace.(period, "week_" => ""), # "week_01" becomes "01"
+        values;
+        group=replace.(group, "_" => " "), # "Amber_Ale" becomes "Amber Ale"
+        bar_position=:stack,
+        xlabel="Week",
+        ylabel=ylabel,
+        title=title,
+        course_style...,
+        linecolor=course_style.background_color, # a thin gap between the stacked parts
+        ylims=:round, # bars start at 0, the axis ends on a round number
+        bar_width=0.8,
+        legend=:outertop,
+        legend_column=-1,
+        size=(1200, 600)
+    )
+    return p
+end
+
 # Create the production plot
 function create_production_plot(productionResults)
-    p = groupedbar(
+    p = weekly_bars(
         productionResults.period,
         productionResults.productQuantity,
-        group=productionResults.product,
-        ylabel="Production Quantity (Bottles)",
-        xlabel="Period",
-        title="Production Schedule by Beer Type",
-        size=(1200,600),
-        palette = :Set3,
-        legend=:outertopright,
-        xrotation = 45,
-        legendtitle="Beer Type",
-        bar_width=0.7,
-        grid=false,
-        dpi=300
+        productionResults.product;
+        ylabel="Production (bottles)",
+        title="Production schedule"
     )
     return p
 end
 
 # Create the warehouse stock plot
 function create_warehouse_plot(productionResults)
-    p = groupedbar(
+    p = weekly_bars(
         productionResults.period,
         productionResults.WarehouseStockPeriodEnd,
-        group=productionResults.product,
-        ylabel="Warehouse Stock",
-        xlabel="Period",
-        title="Warehouse Stock",
-        size=(1200,600),
-        palette = :Set3,
-        legend=:outertopright,
-        xrotation = 45,
-        legendtitle="Beer Type",
-        bar_width=0.7,
-        grid=false,
-        dpi=300
+        productionResults.product;
+        ylabel="Stock at week end (bottles)",
+        title="Warehouse stock"
     )
     return p
 end
@@ -562,21 +598,12 @@ end
 
 # Create the cost plot
 function create_cost_plot(stacked_costs)
-    p = groupedbar(
+    p = weekly_bars(
         stacked_costs.period,
-        stacked_costs.Cost,
-        group=stacked_costs.Cost_Type,
+        round.(stacked_costs.Cost), # whole euros keep the axis from dipping below 0
+        stacked_costs.Cost_Type;
         ylabel="Costs (€)",
-        xlabel="Period",
-        title="Setup and Inventory Costs per Period",
-        size=(1200,600),
-        palette=:Set2,
-        legend=:outertopright,
-        xrotation=45,
-        legendtitle="Cost Type",
-        bar_width=0.7,
-        grid=false,
-        dpi=300
+        title="Setup and inventory costs"
     )
     return p
 end
@@ -617,11 +644,11 @@ p = create_cost_plot(stacked_costs)
 
 # %%
 # Validate your solution
-# A balance constraint links at least two variables — fixing a single variable to zero is not enough
+# A balance constraint links at least two variables: fixing a single variable to zero is not enough
 balance_constraints = all_constraints(lotsizeModel, AffExpr, MOI.EqualTo{Float64})
 number_balance_constraints = count(c -> length(constraint_object(c).func.terms) >= 2, balance_constraints)
-@assert number_balance_constraints == length(dictBottlingTime) * length(dictAvailableTime) "You need one inventory balance constraint for each combination of beer type and period — did you add the balance for the first period?"
-@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit — check your model and re-run the cell"
+@assert number_balance_constraints == length(dictBottlingTime) * length(dictAvailableTime) "You need one inventory balance constraint for each combination of beer type and period. Did you add the balance for the first period?"
+@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit. Check your model and re-run the cell"
 @assert 500000 <= objective_value(lotsizeModel) <= 950000 "Objective value should be between 500,000 and 950,000"
 
 # %% [markdown]
@@ -662,14 +689,14 @@ p = create_cost_plot(stacked_costs)
 
 # %%
 # Validate your solution
-@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit — check your model and re-run the cell"
+@assert primal_status(lotsizeModel) == MOI.FEASIBLE_POINT "The solver found no feasible solution within the time limit. Check your model and re-run the cell"
 @assert 520000 <= objective_value(lotsizeModel) <= 950000 "Objective value should be between 520,000 and 950,000"
 @assert all(value(productQuantity[i,t]) <= 1e-6 for i in keys(dictBottlingTime), t in ["week_10", "week_11"]) "No production is allowed in week_10 and week_11"
 
 # %% [markdown]
 # Again, the solution space is smaller, so the true optimal objective
 # value can only increase. Because we stop the solver at the time limit,
-# the value you see can still be a bit lower than before — in that case,
+# the value you see can still be a bit lower than before. In that case,
 # the solver simply found a better solution for the restricted model than
 # it previously did for the unrestricted one. You can check the plots for
 # the production and warehouse stock to verify whether the production is
