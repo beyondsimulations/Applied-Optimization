@@ -171,19 +171,25 @@ println("Model components validated successfully!")
 
 # Visualization of Results
 
-Let's visualize our optimal solution:
+Let's visualize our optimal solution.
+
+{{< include ../include/plot_style.qmd >}}
 
 ```{julia}
 #| eval: false
-using Plots
 # Assuming the model has been solved!!!
 optimal_production = value.(production)
 
-bar(1:8, optimal_production,
-    title="Optimal Production Levels",
+bar(1:8, optimal_production;
+    title="Optimal production levels",
     xlabel="Product",
-    ylabel="Production Quantity",
-    legend=false)
+    ylabel="Production (units per day)",
+    legend=false,
+    course_style...,
+    linecolor=course_style.background_color,
+    xticks=1:8,
+    ylims=:round, # bars start at 0, the axis ends on a round number
+    size=(800, 400))
 ```
 
 Take a close look at the chart: the bars show exactly two levels. Products 1 to 4 are produced at their demand limit of 5, and products 5 to 8 at their capacity limit of 12. Every variable sits at its tightest upper bound - what does that tell you about the constraints in this model?

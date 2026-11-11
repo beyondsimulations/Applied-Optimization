@@ -18,6 +18,7 @@ In this tutorial, you'll learn how to:
 2. Customize your plots with colors, labels, and styles
 3. Add multiple data series to a single plot
 4. Save your plots as image files for use in reports or presentations
+5. Give your plots a clear look that puts the data first
 
 Follow the instructions, write your code in the designated code blocks, and validate your results with `@assert` statements.
 
@@ -281,6 +282,42 @@ box_plot = boxplot(
 )
 display(box_plot)
 ```
+
+---
+
+# Section 6 - The Course Look
+
+The plots above use the defaults of Plots.jl. They are correct, but a reader should get their point at a glance. Four rules from the [plotting lecture of our Python course](https://beyondsimulations.github.io/Introduction-to-Python/lectures/lec_09_plotting.html) get you most of the way:
+
+- **The title states the point**: "Category D sells most" says more than "Bar Plot Example".
+- **Every number axis has a label with its unit**, for example *Sales (units)*.
+- **Bars start at 0**: a bar shows its number by its length, so a cut axis distorts the comparison.
+- **Quiet everything that is not data**: no frame, light grid lines, grey labels, calm colors.
+
+The later tutorials share one style for this, called `course_style`.
+
+{{< include ../include/plot_style.qmd >}}
+
+Here is the bar plot from above in the course look:
+
+```{julia}
+#| eval: true
+#| fig-alt: "The bar plot from above in the course style: four slate-blue bars for the categories A to D with the sales 15, 23, 18 and 30 units, titled Category D sells most: 30 units. The y-axis is labeled Sales (units) and starts at 0, with light horizontal grid lines and no frame."
+course_bar_plot = bar(
+    x_categories,
+    y_values;
+    title="Category D sells most: 30 units",
+    xlabel="Category",
+    ylabel="Sales (units)",
+    legend=false,
+    course_style...,
+    linecolor=course_style.background_color,
+    size=(800, 400)
+)
+display(course_bar_plot)
+```
+
+The three dots after `course_style` unpack all of its settings into the call, as if you had typed each of them. You can add more settings after it, like `size=(800, 400)` here, and if one of them is already in `course_style`, the one after it wins. `course_style.background_color` reads a single setting back, so the gaps between the bars match the background.
 
 ---
 
