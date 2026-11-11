@@ -280,8 +280,8 @@
         mechanism: "The planner trusts every number in the file. An import error moves whole batches or leaves " +
           "orders unserved, and cleaning a real peak away, like the festival, costs sales too: an outlier is not " +
           "always an error.",
-        model: "That's why we look at the data before it becomes the demand `d[i][t]` of the brewery model in " +
-          `lecture 5 (in bottles there, 20 per crate): plot it, count missing values, and check how numbers like ` +
+        model: "That's why we look at the data before it becomes the weekly demand in " +
+          `lecture 5's bottling game: plot it, count missing values, and check how numbers like ` +
           `“${p.median},0” were read.`,
       };
     },
